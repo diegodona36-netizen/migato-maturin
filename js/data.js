@@ -23,46 +23,97 @@ export const PARROQUIAS_MATURIN = [
 ];
 
 export const SECTORES_DEFAULT = [
-  // San Simón
+  // 1. San Simón (Casco Central y alrededores)
   { nombre: 'Centro / Casco Central', parroquia: 'San Simón', lat: 9.7469, lng: -63.1812 },
   { nombre: 'Barrio Obrero', parroquia: 'San Simón', lat: 9.7420, lng: -63.1750 },
   { nombre: 'Brisas del Orinoco', parroquia: 'San Simón', lat: 9.7380, lng: -63.1880 },
   { nombre: 'Alberto Ravell', parroquia: 'San Simón', lat: 9.7410, lng: -63.1950 },
   { nombre: 'Campo Ayacucho', parroquia: 'San Simón', lat: 9.7520, lng: -63.1720 },
+  { nombre: '23 de Enero', parroquia: 'San Simón', lat: 9.7450, lng: -63.1860 },
+  { nombre: 'Palo Negro', parroquia: 'San Simón', lat: 9.7360, lng: -63.1790 },
+  { nombre: 'Las Avenidas', parroquia: 'San Simón', lat: 9.7510, lng: -63.1850 },
+  { nombre: 'Negro Primero', parroquia: 'San Simón', lat: 9.7390, lng: -63.1710 },
   
-  // Alto de Los Godos
+  // 2. Alto de Los Godos
+  { nombre: 'Los Godos I', parroquia: 'Alto de Los Godos', lat: 9.7280, lng: -63.1980 },
+  { nombre: 'Los Godos II', parroquia: 'Alto de Los Godos', lat: 9.7270, lng: -63.1960 },
   { nombre: 'Los Godos I y II', parroquia: 'Alto de Los Godos', lat: 9.7280, lng: -63.1980 },
   { nombre: 'Morichal', parroquia: 'Alto de Los Godos', lat: 9.7210, lng: -63.2050 },
   { nombre: 'La Muralla', parroquia: 'Alto de Los Godos', lat: 9.7340, lng: -63.2090 },
   { nombre: 'El Abanico', parroquia: 'Alto de Los Godos', lat: 9.7300, lng: -63.1910 },
+  { nombre: 'Los Guaritos I', parroquia: 'Alto de Los Godos', lat: 9.7210, lng: -63.1930 },
+  { nombre: 'Los Guaritos II', parroquia: 'Alto de Los Godos', lat: 9.7190, lng: -63.1950 },
+  { nombre: 'Los Guaritos III', parroquia: 'Alto de Los Godos', lat: 9.7170, lng: -63.1970 },
+  { nombre: 'Los Guaritos IV', parroquia: 'Alto de Los Godos', lat: 9.7150, lng: -63.1990 },
   { nombre: 'Los Guaritos', parroquia: 'Alto de Los Godos', lat: 9.7190, lng: -63.1950 },
+  { nombre: 'Fundemos', parroquia: 'Alto de Los Godos', lat: 9.7320, lng: -63.1860 },
+  { nombre: 'Coropal', parroquia: 'Alto de Los Godos', lat: 9.7260, lng: -63.2010 },
 
-  // Boquerón
+  // 3. Boquerón (Zona Norte)
+  { nombre: 'Tipuro I', parroquia: 'Boquerón', lat: 9.7920, lng: -63.1850 },
+  { nombre: 'Tipuro II', parroquia: 'Boquerón', lat: 9.7940, lng: -63.1830 },
   { nombre: 'Tipuro', parroquia: 'Boquerón', lat: 9.7920, lng: -63.1850 },
   { nombre: 'Palma Real', parroquia: 'Boquerón', lat: 9.8010, lng: -63.1790 },
   { nombre: 'Las Avenidas / Doña Menca', parroquia: 'Boquerón', lat: 9.7750, lng: -63.1820 },
   { nombre: 'El Rincón', parroquia: 'Boquerón', lat: 9.8150, lng: -63.1700 },
   { nombre: 'San Rafael', parroquia: 'Boquerón', lat: 9.7820, lng: -63.1900 },
+  { nombre: 'Boquerón Centro', parroquia: 'Boquerón', lat: 9.7850, lng: -63.1820 },
+  { nombre: 'Costo Arriba', parroquia: 'Boquerón', lat: 9.8250, lng: -63.1650 },
+  { nombre: 'Costo Abajo', parroquia: 'Boquerón', lat: 9.8180, lng: -63.1690 },
+  { nombre: 'Viboral', parroquia: 'Boquerón', lat: 9.7960, lng: -63.1620 },
 
-  // Las Cocuizas
+  // 4. Las Cocuizas (Zona Este)
+  { nombre: 'Las Cocuizas Centro', parroquia: 'Las Cocuizas', lat: 9.7610, lng: -63.1530 },
   { nombre: 'Las Cocuizas', parroquia: 'Las Cocuizas', lat: 9.7610, lng: -63.1530 },
   { nombre: 'Sabana Grande', parroquia: 'Las Cocuizas', lat: 9.7690, lng: -63.1380 },
   { nombre: 'El Silencio', parroquia: 'Las Cocuizas', lat: 9.7540, lng: -63.1610 },
   { nombre: 'La Floresta', parroquia: 'Las Cocuizas', lat: 9.7480, lng: -63.1550 },
+  { nombre: 'Los Cortijos de Cocuizas', parroquia: 'Las Cocuizas', lat: 9.7650, lng: -63.1480 },
+  { nombre: 'Brisas del Aeropuerto', parroquia: 'Las Cocuizas', lat: 9.7530, lng: -63.1450 },
+  { nombre: 'La Gran Victoria', parroquia: 'Las Cocuizas', lat: 9.7290, lng: -63.2380 },
 
-  // Santa Cruz
+  // 5. Santa Cruz (Zona Oeste)
+  { nombre: 'Santa Cruz Centro', parroquia: 'Santa Cruz', lat: 9.7250, lng: -63.2200 },
   { nombre: 'Santa Cruz', parroquia: 'Santa Cruz', lat: 9.7250, lng: -63.2200 },
   { nombre: 'Zona Industrial', parroquia: 'Santa Cruz', lat: 9.7150, lng: -63.2350 },
   { nombre: 'Las Garzas', parroquia: 'Santa Cruz', lat: 9.7320, lng: -63.2250 },
   { nombre: 'Los Cortijos', parroquia: 'Santa Cruz', lat: 9.7180, lng: -63.2120 },
+  { nombre: 'San Jaime', parroquia: 'Santa Cruz', lat: 9.6950, lng: -63.2100 },
+  { nombre: 'La Cruz', parroquia: 'Santa Cruz', lat: 9.7350, lng: -63.2420 },
 
-  // Otras Parroquias (Áreas rurales y periféricas de Maturín)
+  // 6. La Pica
+  { nombre: 'Caserío La Pica Centro', parroquia: 'La Pica', lat: 9.7890, lng: -63.0950 },
   { nombre: 'La Pica (Pueblo)', parroquia: 'La Pica', lat: 9.7890, lng: -63.0950 },
   { nombre: 'Vuelta Larga', parroquia: 'La Pica', lat: 9.7720, lng: -63.1150 },
+  { nombre: 'La Hormiga', parroquia: 'La Pica', lat: 9.7800, lng: -63.0800 },
+  { nombre: 'San Agustín', parroquia: 'La Pica', lat: 9.7650, lng: -63.0700 },
+  { nombre: 'Morichal Largo', parroquia: 'La Pica', lat: 9.7550, lng: -63.0600 },
+
+  // 7. Jusepín
+  { nombre: 'Casco Central Jusepín', parroquia: 'Jusepín', lat: 9.7450, lng: -63.5020 },
   { nombre: 'Jusepín', parroquia: 'Jusepín', lat: 9.7450, lng: -63.5020 },
+  { nombre: 'Campo Rojo', parroquia: 'Jusepín', lat: 9.7480, lng: -63.4980 },
+  { nombre: 'Quiriquire Viejo', parroquia: 'Jusepín', lat: 9.7520, lng: -63.4920 },
+  { nombre: 'La Floresta de Jusepín', parroquia: 'Jusepín', lat: 9.7420, lng: -63.5050 },
+
+  // 8. El Furrial
+  { nombre: 'Casco Central El Furrial', parroquia: 'El Furrial', lat: 9.6980, lng: -63.3420 },
   { nombre: 'El Furrial', parroquia: 'El Furrial', lat: 9.6980, lng: -63.3420 },
+  { nombre: 'Corocito', parroquia: 'El Furrial', lat: 9.6920, lng: -63.3500 },
+  { nombre: 'San Antonio', parroquia: 'El Furrial', lat: 9.7020, lng: -63.3350 },
+  { nombre: 'Bajo El Furrial', parroquia: 'El Furrial', lat: 9.6890, lng: -63.3450 },
+
+  // 9. San Vicente
+  { nombre: 'Pueblo San Vicente', parroquia: 'San Vicente', lat: 9.7100, lng: -63.2750 },
   { nombre: 'San Vicente', parroquia: 'San Vicente', lat: 9.7100, lng: -63.2750 },
-  { nombre: 'El Corozo', parroquia: 'El Corozo', lat: 9.6520, lng: -63.2450 }
+  { nombre: 'Pueblo Nuevo', parroquia: 'San Vicente', lat: 9.7150, lng: -63.2800 },
+  { nombre: 'San José de Buja', parroquia: 'San Vicente', lat: 9.6500, lng: -62.8500 },
+
+  // 10. El Corozo
+  { nombre: 'Casco El Corozo', parroquia: 'El Corozo', lat: 9.6520, lng: -63.2450 },
+  { nombre: 'El Corozo', parroquia: 'El Corozo', lat: 9.6520, lng: -63.2450 },
+  { nombre: 'El Guamo', parroquia: 'El Corozo', lat: 9.6450, lng: -63.2500 },
+  { nombre: 'Caripito Viejo', parroquia: 'El Corozo', lat: 9.6580, lng: -63.2380 }
 ];
 
 export const OPCIONES_PROBLEMA_AGUA = [
@@ -292,25 +343,44 @@ export class SurveyDataStore {
   }
 
   getSectorCoords(sectorName, parroquiaName) {
+    const sName = (sectorName || '').toLowerCase().trim();
+    const pName = (parroquiaName || '').toLowerCase().trim();
+
+    // 1. Coincidencia exacta de nombre de sector
     const match = SECTORES_DEFAULT.find(
-      s => s.nombre.toLowerCase() === (sectorName || '').toLowerCase()
+      s => s.nombre.toLowerCase() === sName && (!pName || s.parroquia.toLowerCase() === pName)
+    ) || SECTORES_DEFAULT.find(
+      s => s.nombre.toLowerCase() === sName
+    ) || SECTORES_DEFAULT.find(
+      s => s.nombre.toLowerCase().includes(sName) || sName.includes(s.nombre.toLowerCase())
     );
+
     if (match) return { lat: match.lat, lng: match.lng };
 
-    const matchParroquia = SECTORES_DEFAULT.find(
-      s => s.parroquia.toLowerCase() === (parroquiaName || '').toLowerCase()
-    );
-    if (matchParroquia) {
-      return {
-        lat: matchParroquia.lat + (Math.random() - 0.5) * 0.006,
-        lng: matchParroquia.lng + (Math.random() - 0.5) * 0.006
-      };
+    // 2. Coordenada fija del centro de cada Parroquia (NUNCA aleatorio)
+    const PARROQUIA_CENTRO = {
+      'san simón': { lat: 9.7469, lng: -63.1812 },
+      'san simon': { lat: 9.7469, lng: -63.1812 },
+      'alto de los godos': { lat: 9.7280, lng: -63.1980 },
+      'los godos': { lat: 9.7280, lng: -63.1980 },
+      'boquerón': { lat: 9.7920, lng: -63.1850 },
+      'boqueron': { lat: 9.7920, lng: -63.1850 },
+      'las cocuizas': { lat: 9.7610, lng: -63.1530 },
+      'cocuizas': { lat: 9.7610, lng: -63.1530 },
+      'santa cruz': { lat: 9.7250, lng: -63.2200 },
+      'la pica': { lat: 9.7890, lng: -63.0950 },
+      'jusepín': { lat: 9.7450, lng: -63.5020 },
+      'jusepin': { lat: 9.7450, lng: -63.5020 },
+      'el furrial': { lat: 9.6980, lng: -63.3420 },
+      'san vicente': { lat: 9.7100, lng: -63.2750 },
+      'el corozo': { lat: 9.6520, lng: -63.2450 }
+    };
+
+    if (PARROQUIA_CENTRO[pName]) {
+      return PARROQUIA_CENTRO[pName];
     }
 
-    return {
-      lat: MATURIN_COORDINATES.lat + (Math.random() - 0.5) * 0.015,
-      lng: MATURIN_COORDINATES.lng + (Math.random() - 0.5) * 0.015
-    };
+    return { lat: MATURIN_COORDINATES.lat, lng: MATURIN_COORDINATES.lng };
   }
 
   getStats() {
