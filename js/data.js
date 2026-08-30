@@ -647,8 +647,8 @@ const INITIAL_SURVEYS = [
   }
 ];
 
-const STORAGE_KEY = 'maturin_encuestas_data_v4';
-const GOOGLE_CONFIG_KEY = 'maturin_google_sheet_config_v4';
+const STORAGE_KEY = 'maturin_encuestas_data_v5';
+const GOOGLE_CONFIG_KEY = 'maturin_google_sheet_config_v5';
 const USER_PROFILE_KEY = 'maturin_encuestador_profile_v1';
 export const OFFICIAL_SHEET_URL = 'https://docs.google.com/spreadsheets/d/1Zyyp6Ox0wmRRtNmwcg8ge5IkZTfqGZ17gXrMWs5MY0E/edit?usp=sharing';
 
@@ -687,7 +687,7 @@ export class SurveyDataStore {
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) {
         const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.length > 0) {
+        if (Array.isArray(parsed) && parsed.length >= 30) {
           return parsed;
         }
       }
