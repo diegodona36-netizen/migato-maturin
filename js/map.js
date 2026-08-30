@@ -30,11 +30,10 @@ export class MaturinMap {
       zoomControl: true
     });
 
-    // Capa base de OpenStreetMap (estilo limpio y moderno)
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-      maxZoom: 19,
-      subdomains: 'abcd'
+    // Capa base oficial de OpenStreetMap (100% libre, sin marcas de agua ni API Keys)
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      maxZoom: 19
     }).addTo(this.map);
 
     this.markersLayer = L.layerGroup().addTo(this.map);
