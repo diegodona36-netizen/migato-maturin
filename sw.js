@@ -3,7 +3,7 @@
  * Permite que la aplicación funcione en zonas remotas de Maturín sin internet.
  */
 
-const CACHE_NAME = 'maturin-monitoreo-v7';
+const CACHE_NAME = 'maturin-monitoreo-v8';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
