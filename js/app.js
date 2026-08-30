@@ -71,10 +71,10 @@ class App {
     try {
       const surveys = await GoogleSheetsService.fetchSheetData(sheetUrl);
       if (surveys && surveys.length > 0) {
-        this.store.importSurveys(surveys, false);
+        this.store.importSurveys(surveys, true); // Reemplaza datos demo con encuestas reales
         this.renderAll();
         if (notify) {
-          this.showToast(`📊 ${surveys.length} encuestas sincronizadas en vivo desde Google.`);
+          this.showToast(`📊 ${surveys.length} encuestas reales sincronizadas desde Google.`);
         }
       }
     } catch (e) {
@@ -673,7 +673,7 @@ class App {
             this.showToast('⏳ Leyendo datos de Google Sheets...');
             const surveys = await GoogleSheetsService.fetchSheetData(sheetUrl);
             if (surveys && surveys.length > 0) {
-              this.store.importSurveys(surveys, false);
+              this.store.importSurveys(surveys, true);
               this.showToast(`🎉 ¡Conectado! Se importaron ${surveys.length} encuestas.`);
               this.renderAll();
             } else {
