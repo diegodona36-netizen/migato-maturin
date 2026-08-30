@@ -210,18 +210,27 @@ export class GoogleSheetsService {
       const rawEncuestadorFull = getVal(colIndex.encuestador) || '';
       const rawCedulaDirect = getVal(colIndex.cedula);
 
-      // Separar Nombre y Cédula si vienen juntos en el mismo campo
+      // Separar Nombre y Cédula de manera 100% flexible (con o sin V/E)
       let parsedNombre = rawEncuestadorFull;
       let parsedCedula = rawCedulaDirect;
+
       if (!parsedCedula && rawEncuestadorFull) {
-        const ciMatch = rawEncuestadorFull.match(/(V|E|v|e)?-?\s*([0-9]{6,9})/);
-        if (ciMatch) {
-          parsedCedula = `V-${ciMatch[2]}`;
-          parsedNombre = rawEncuestadorFull.replace(ciMatch[0], '').replace(/[-–]/g, '').trim();
+        const trimmed = rawEncuestadorFull.trim();
+        if (/^[0-9]{6,9}$/.test(trimmed)) {
+          parsedCedula = trimmed;
+          parsedNombre = `Encuestador (${trimmed})`;
+        } else {
+          const ciMatch = trimmed.match(/(V|E|v|e)?-?\s*([0-9]{6,9})/);
+          if (ciMatch) {
+            const prefix = ciMatch[1] ? ciMatch[1].toUpperCase() + '-' : '';
+            parsedCedula = `${prefix}${ciMatch[2]}`;
+            parsedNombre = trimmed.replace(ciMatch[0], '').replace(/[-–:,]/g, '').trim();
+          }
         }
       }
-      if (!parsedCedula) parsedCedula = `V-VOL-${String(index + 1).padStart(3, '0')}`;
-      if (!parsedNombre) parsedNombre = 'Voluntario MIGATO';
+
+      if (!parsedCedula) parsedCedula = `ENC-${String(index + 1).padStart(3, '0')}`;
+      if (!parsedNombre) parsedNombre = `Encuestador (${parsedCedula})`;
 
       const rawAguaEstado = getVal(colIndex.aguaEstado);
       const rawVialidadEstado = getVal(colIndex.vialidadEstado);
