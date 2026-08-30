@@ -16,21 +16,27 @@ export class VenezuelaOutageMap {
     const container = document.getElementById(this.containerId);
     if (!container) return;
 
-    // Centro geográfico de Venezuela
+    // Centro y límites estrictos sobre Venezuela
     this.map = L.map(this.containerId, {
-      center: [7.95, -65.9],
+      center: [7.9, -65.8],
       zoom: 6,
       minZoom: 5,
-      maxZoom: 10,
+      maxZoom: 9,
       zoomControl: true,
       attributionControl: false
     });
 
-    // Capa base limpia y ejecutiva (CartoDB Positron)
-    L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png", {
-      subdomains: "abcd",
-      maxZoom: 19
+    // Capa de mapa limpia SIN MARCAS DE AGUA (Esri World Light Gray Canvas)
+    L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}", {
+      maxZoom: 16,
+      subdomains: ["server", "services"]
     }).addTo(this.map);
+
+    // Ajustar límites para encuadrar perfectamente Venezuela
+    this.map.fitBounds([
+      [0.8, -73.4],
+      [12.3, -59.8]
+    ], { padding: [10, 10] });
 
     this.markersLayer = L.layerGroup().addTo(this.map);
   }
@@ -47,23 +53,29 @@ export class VenezuelaOutageMap {
       const color = this.getSeverityColor(state.severity);
       const radius = this.calcRadius(state.score);
 
-      // Marcador de burbuja proporcional
+      // Marcador vectorial ESTÁTICO (sin saltos ni movimientos CSS)
       const circle = L.circleMarker([state.lat, state.lng], {
         radius: radius,
         fillColor: color,
-        color: isSelected ? "#0f172a" : color,
+        color: isSelected ? "#0f172a" : "#ffffff",
         weight: isSelected ? 3 : 1.5,
-        opacity: 0.9,
+        opacity: 1.0,
         fillOpacity: isSelected ? 0.85 : 0.65,
-        className: "state-bubble-marker " + (state.severity === "CRÍTICO" ? "pulse-critical" : "")
+        className: "state-bubble-marker"
       });
 
-      // Tooltip informativo
+      // Tooltip informativo al pasar el cursor
       const tooltipContent = `
-        <div class="text-xs font-sans p-1">
-          <p class="font-bold text-slate-900">${state.nombre} <span class="text-[10px] text-red-600 font-bold">${state.tier}</span></p>
-          <p class="text-slate-600">⚡ Electricidad: <strong class="font-bold" style="color: ${color}">${state.electricidadPct}%</strong></p>
-          <p class="text-slate-500 text-[10px]">Score de Impacto: ${state.score.toLocaleString()}</p>
+        <div class="text-xs font-sans p-1.5 min-w-[140px]">
+          <div class="flex items-center justify-between gap-2 border-b pb-1 mb-1">
+            <strong class="text-slate-900 font-black">${state.nombre}</strong>
+            <span class="text-[9px] font-bold px-1 rounded bg-red-100 text-red-700">${state.tier}</span>
+          </div>
+          <div class="text-slate-600 text-[11px] space-y-0.5">
+            <p>⚡ Electricidad: <strong style="color: ${color}">${state.electricidadPct}%</strong></p>
+            <p>🌐 Conectividad: <strong class="text-slate-800">${state.conectividadPct}%</strong></p>
+            <p class="text-slate-400 text-[10px]">Score: ${state.score.toLocaleString()}</p>
+          </div>
         </div>
       `;
       circle.bindTooltip(tooltipContent, { direction: "top", offset: [0, -radius] });
@@ -76,12 +88,12 @@ export class VenezuelaOutageMap {
 
       this.markersLayer.addLayer(circle);
 
-      // Etiqueta de texto debajo de la burbuja
+      // Nombre del estado limpio y centrado
+      const labelHtml = `<span style="font-size: 9.5px; font-weight: 700; color: #334155; text-shadow: 0 1px 2px #fff, 0 -1px 2px #fff, 1px 0 2px #fff, -1px 0 2px #fff; pointer-events: none;">${state.nombre}</span>`;
       const textIcon = L.divIcon({
         className: "state-label-icon",
-        html: `<div class="text-[10px] font-bold text-slate-700 pointer-events-none drop-shadow-sm text-center -mt-2">${state.nombre}</div>`,
-        iconSize: [80, 20],
-        iconAnchor: [40, -radius + 4]
+        html: `<div style="text-align: center; width: 90px; margin-left: -45px; margin-top: ${radius + 2}px;">${labelHtml}</div>`,
+        iconSize: [0, 0]
       });
       L.marker([state.lat, state.lng], { icon: textIcon, interactive: false }).addTo(this.markersLayer);
     });
@@ -98,11 +110,11 @@ export class VenezuelaOutageMap {
   }
 
   calcRadius(score) {
-    if (score >= 8000) return 28;
-    if (score >= 4000) return 22;
-    if (score >= 2000) return 17;
-    if (score >= 1000) return 13;
-    if (score >= 400) return 10;
+    if (score >= 8000) return 26;
+    if (score >= 4000) return 20;
+    if (score >= 2000) return 15;
+    if (score >= 1000) return 12;
+    if (score >= 400) return 9;
     return 7;
   }
 }
