@@ -504,6 +504,22 @@ class App {
       });
     }
 
+    const formCustomCoords = document.getElementById('form-custom-coords');
+    if (formCustomCoords) {
+      formCustomCoords.addEventListener('input', () => {
+        const val = formCustomCoords.value.trim();
+        const extracted = GoogleSheetsIntegration.extractCoords(val);
+        if (extracted) {
+          if (formLat) formLat.value = extracted.lat;
+          if (formLng) formLng.value = extracted.lng;
+          if (labelGpsStatus) {
+            labelGpsStatus.textContent = `📍 Coordenadas detectadas: ${extracted.lat.toFixed(5)}, ${extracted.lng.toFixed(5)}`;
+            labelGpsStatus.className = 'text-[10px] text-emerald-600 font-bold';
+          }
+        }
+      });
+    }
+
     // Guardar encuesta directa
     const formNewSurvey = document.getElementById('form-new-survey');
     if (formNewSurvey) {
@@ -516,8 +532,17 @@ class App {
         const vialidadEstado = document.getElementById('form-vialidad-estado').value;
         const vialidadProblema = document.getElementById('form-vialidad-problema').value;
         const obs = document.getElementById('form-obs').value.trim();
-        const customLat = formLat && formLat.value ? parseFloat(formLat.value) : null;
-        const customLng = formLng && formLng.value ? parseFloat(formLng.value) : null;
+        
+        let customLat = formLat && formLat.value ? parseFloat(formLat.value) : null;
+        let customLng = formLng && formLng.value ? parseFloat(formLng.value) : null;
+
+        if (formCustomCoords && formCustomCoords.value.trim()) {
+          const extracted = GoogleSheetsIntegration.extractCoords(formCustomCoords.value.trim());
+          if (extracted) {
+            customLat = extracted.lat;
+            customLng = extracted.lng;
+          }
+        }
 
         if (!sector) {
           alert('Por favor indica el nombre del sector o comunidad.');
