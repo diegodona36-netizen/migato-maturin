@@ -272,9 +272,10 @@ export class GoogleSheetsService {
    */
   static extractCoords(text) {
     if (!text || typeof text !== 'string') return null;
+    const clean = text.trim();
 
-    // 1. Coordenadas directas: 9.7457, -63.1764 o similar
-    const directMatch = text.match(/(-?\d{1,2}\.\d+)\s*,\s*(-?\d{1,3}\.\d+)/);
+    // 1. Coordenadas directas: "9.7457, -63.1764" o "9.7457 -63.1764"
+    const directMatch = clean.match(/(-?\d{1,2}\.\d+)[,\s]+(-?\d{1,3}\.\d+)/);
     if (directMatch) {
       const lat = parseFloat(directMatch[1]);
       const lng = parseFloat(directMatch[2]);
@@ -283,13 +284,24 @@ export class GoogleSheetsService {
       }
     }
 
-    // 2. Coordenadas en URL (@lat,lng o q=lat,lng)
-    const urlMatch = text.match(/[@?&q=](-?\d{1,2}\.\d+),(-?\d{1,3}\.\d+)/);
+    // 2. Coordenadas en URL (@lat,lng o q=lat,lng o query=lat,lng)
+    const urlMatch = clean.match(/[@?&](?:q|query|loc)?=?(-?\d{1,2}\.\d+)[,\s]+(-?\d{1,3}\.\d+)/);
     if (urlMatch) {
-      return {
-        lat: parseFloat(urlMatch[1]),
-        lng: parseFloat(urlMatch[2])
-      };
+      const lat = parseFloat(urlMatch[1]);
+      const lng = parseFloat(urlMatch[2]);
+      if (lat >= 8.0 && lat <= 11.5 && lng >= -65.0 && lng <= -61.0) {
+        return { lat, lng };
+      }
+    }
+
+    // 3. URLs con !3d y !4d de Google Maps embeds
+    const embedMatch = clean.match(/!3d(-?\d{1,2}\.\d+)!4d(-?\d{1,3}\.\d+)/);
+    if (embedMatch) {
+      const lat = parseFloat(embedMatch[1]);
+      const lng = parseFloat(embedMatch[2]);
+      if (lat >= 8.0 && lat <= 11.5 && lng >= -65.0 && lng <= -61.0) {
+        return { lat, lng };
+      }
     }
 
     return null;
