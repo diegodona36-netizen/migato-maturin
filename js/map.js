@@ -98,22 +98,29 @@ export class MaturinMap {
 
       const pulseClass = estadoActual === 'rojo' ? 'pulse-red' : '';
 
-      // Crear icono HTML personalizado tipo pin moderno con badge
+      // Icono SVG de Precisión Milimétrica (Punta fijada exactamente al punto geográfico en [16, 42])
+      const iconEmoji = this.currentMode === 'vialidad' ? '🛣️' : '🚰';
+      const badgeHtml = sec.totalEncuestas > 1 
+        ? `<div class="pin-badge">${sec.totalEncuestas}</div>` 
+        : '';
+
       const iconHtml = `
         <div class="custom-map-pin ${pulseClass}" style="--pin-color: ${markerColor}">
-          <div class="pin-inner">
-            <span class="pin-icon">${this.currentMode === 'vialidad' ? '🛣️' : '🚰'}</span>
-          </div>
-          <div class="pin-badge">${sec.totalEncuestas}</div>
+          <svg width="32" height="42" viewBox="0 0 32 42" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:block;overflow:visible;">
+            <path d="M16 42C16 42 30 24 30 15C30 7.26801 23.732 1 16 1C8.26801 1 2 7.26801 2 15C2 24 16 42 16 42Z" fill="${markerColor}" stroke="#FFFFFF" stroke-width="2"/>
+            <circle cx="16" cy="15" r="9" fill="#FFFFFF"/>
+            <text x="16" y="19" text-anchor="middle" font-size="11" font-family="sans-serif">${iconEmoji}</text>
+          </svg>
+          ${badgeHtml}
         </div>
       `;
 
       const customIcon = L.divIcon({
         className: 'custom-leaflet-marker',
         html: iconHtml,
-        iconSize: [36, 44],
-        iconAnchor: [18, 42],
-        popupAnchor: [0, -38]
+        iconSize: [32, 42],
+        iconAnchor: [16, 42], // El pixel exacto (16, 42) es la punta inferior que toca el suelo
+        popupAnchor: [0, -42]
       });
 
       const marker = L.marker([sec.lat, sec.lng], { icon: customIcon });
