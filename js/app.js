@@ -71,7 +71,7 @@ class App {
     try {
       const surveys = await GoogleSheetsService.fetchSheetData(sheetUrl);
       if (surveys && surveys.length > 0) {
-        this.store.importSurveys(surveys, true); // Reemplaza datos demo con encuestas reales
+        this.store.importSurveys(surveys, false); // Fusiona encuestas reales con los 30 ejemplos
         this.renderAll();
         if (notify) {
           this.showToast(`📊 ${surveys.length} encuestas reales sincronizadas desde Google.`);
