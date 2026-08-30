@@ -676,6 +676,8 @@ class App {
               this.store.importSurveys(surveys, false);
               this.showToast(`🎉 ¡Conectado! Se importaron ${surveys.length} encuestas.`);
               this.renderAll();
+            } else {
+              this.showToast('🎉 ¡Conectado con éxito a Google Sheets! (A la espera de respuestas)');
             }
           } catch (err) {
             this.showToast(`❌ Error: ${err.message}`);
