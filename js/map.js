@@ -30,11 +30,25 @@ export class MaturinMap {
       zoomControl: true
     });
 
-    // Capa base oficial de OpenStreetMap (100% libre, sin marcas de agua ni API Keys)
-    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    // Capa 1: Calles (OpenStreetMap oficial libre)
+    const osmLayer = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
       maxZoom: 19
-    }).addTo(this.map);
+    });
+
+    // Capa 2: Satélite HD (Fotografía satelital real de Maturín sin API Keys)
+    const satelliteLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+      attribution: '&copy; Esri &mdash; Fotografía Satelital',
+      maxZoom: 19
+    });
+
+    osmLayer.addTo(this.map);
+
+    // Selector de Capas (Calles / Satélite)
+    L.control.layers({
+      '🗺️ Mapa de Calles': osmLayer,
+      '🛰️ Satélite HD': satelliteLayer
+    }, null, { position: 'topright' }).addTo(this.map);
 
     this.markersLayer = L.layerGroup().addTo(this.map);
   }
@@ -96,8 +110,6 @@ export class MaturinMap {
         ? '#F59E0B' 
         : '#10B981';
 
-      const pulseClass = estadoActual === 'rojo' ? 'pulse-red' : '';
-
       // Marcador Circular de Precisión Centrada (Punto central exacto anclado en [16, 16])
       const iconEmoji = this.currentMode === 'vialidad' ? '🛣️' : '🚰';
       const badgeHtml = sec.totalEncuestas > 1 
@@ -124,7 +136,7 @@ export class MaturinMap {
 
       const marker = L.marker([sec.lat, sec.lng], { icon: customIcon });
 
-      // Contenido del Popup informativo
+      // Contenido del Popup informativo con enlace a Google Maps
       const popupHtml = `
         <div class="p-3 max-w-xs font-sans text-slate-800">
           <div class="flex items-center justify-between border-b pb-2 mb-2">
@@ -167,8 +179,13 @@ export class MaturinMap {
             </div>
           ` : ''}
 
-          <div class="text-[10px] text-slate-400 text-right">
-            Última encuesta: ${sec.ultimaEncuesta ? sec.ultimaEncuesta.fecha : 'Reciente'}
+          <div class="pt-2 mt-2 border-t border-slate-100 flex items-center justify-between">
+            <a href="https://www.google.com/maps/search/?api=1&query=${sec.lat},${sec.lng}" target="_blank" rel="noopener" class="inline-flex items-center gap-1 text-xs font-bold text-blue-600 hover:text-blue-800 hover:underline">
+              <span>📍</span> Ver en Google Maps
+            </a>
+            <span class="text-[10px] text-slate-400">
+              ${sec.ultimaEncuesta ? sec.ultimaEncuesta.fecha : 'Reciente'}
+            </span>
           </div>
         </div>
       `;
