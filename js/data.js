@@ -321,11 +321,22 @@ export class SurveyDataStore {
   }
 
   importSurveys(newSurveys, overwrite = false) {
+    const formatted = newSurveys.map(s => {
+      const coords = (s.lat && s.lng) 
+        ? { lat: Number(s.lat), lng: Number(s.lng) } 
+        : this.getSectorCoords(s.sector, s.parroquia);
+      return {
+        ...s,
+        lat: coords.lat,
+        lng: coords.lng
+      };
+    });
+
     if (overwrite) {
-      this.surveys = newSurveys;
+      this.surveys = formatted;
     } else {
       const existingIds = new Set(this.surveys.map(s => s.id));
-      const filtered = newSurveys.filter(s => !existingIds.has(s.id));
+      const filtered = formatted.filter(s => !existingIds.has(s.id));
       this.surveys = [...filtered, ...this.surveys];
     }
     this.saveSurveys(this.surveys);
