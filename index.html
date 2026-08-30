@@ -893,21 +893,26 @@
           </div>
         </div>
 
-        <!-- Botón GPS de Alta Precisión (Opcional) -->
-        <div class="flex flex-wrap items-center justify-between p-3 rounded-2xl bg-slate-100 border border-slate-200 gap-2">
-          <div class="flex items-center gap-2">
-            <div class="w-7 h-7 rounded-lg bg-sky-500/20 text-sky-600 flex items-center justify-center">
-              <i data-lucide="crosshair" class="w-4 h-4"></i>
+        <!-- Botón GPS de Alta Precisión y Pegar Coordenadas de Google Maps -->
+        <div class="p-3 rounded-2xl bg-slate-100 border border-slate-200 space-y-2">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <div class="flex items-center gap-2">
+              <div class="w-7 h-7 rounded-lg bg-sky-500/20 text-sky-600 flex items-center justify-center">
+                <i data-lucide="crosshair" class="w-4 h-4"></i>
+              </div>
+              <div>
+                <span class="text-xs font-bold text-slate-800 block leading-tight">Ubicación GPS / Google Maps (Opcional)</span>
+                <span id="label-gps-status" class="text-[10px] text-slate-500">Usar coordenadas automáticas del sector</span>
+              </div>
             </div>
-            <div>
-              <span class="text-xs font-bold text-slate-800 block leading-tight">Ubicación GPS Exacta (Opcional)</span>
-              <span id="label-gps-status" class="text-[10px] text-slate-500">Usar coordenadas automáticas del sector</span>
-            </div>
+            <button type="button" id="btn-get-gps" class="px-3 py-1.5 rounded-xl bg-white hover:bg-slate-50 border border-slate-300 text-slate-700 text-xs font-bold shadow-sm transition flex items-center gap-1.5">
+              <i data-lucide="map-pin" class="w-3.5 h-3.5 text-sky-600"></i>
+              <span id="btn-gps-text">Obtener mi GPS</span>
+            </button>
           </div>
-          <button type="button" id="btn-get-gps" class="px-3 py-1.5 rounded-xl bg-white hover:bg-slate-50 border border-slate-300 text-slate-700 text-xs font-bold shadow-sm transition flex items-center gap-1.5">
-            <i data-lucide="map-pin" class="w-3.5 h-3.5 text-sky-600"></i>
-            <span id="btn-gps-text">Obtener mi GPS</span>
-          </button>
+          <div>
+            <input type="text" id="form-custom-coords" placeholder="O pega coordenadas o link de Google Maps (ej: 9.735464, -63.174337)" class="w-full px-3 py-1.5 text-xs bg-white border border-slate-300 rounded-xl text-slate-800 focus:ring-2 focus:ring-sky-500 focus:outline-none">
+          </div>
           <input type="hidden" id="form-lat" value="">
           <input type="hidden" id="form-lng" value="">
         </div>
@@ -1023,7 +1028,7 @@
   <div id="toast-container"></div>
 
   <!-- MAIN SCRIPT -->
-  <script type="module" src="js/app.js?v=14"></script>
+  <script type="module" src="js/app.js?v=15"></script>
 
 </body>
 </html>
