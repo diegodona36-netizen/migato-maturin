@@ -374,7 +374,7 @@ export class SurveyDataStore {
       console.warn('Error al cargar config de Google', e);
     }
     return {
-      sheetUrl: 'https://docs.google.com/spreadsheets/d/1cUvRb9qpUTQNUGqcFz2aJ8_TbpHRHvQzbM-wC7C7m8g/edit',
+      sheetUrl: 'https://docs.google.com/spreadsheets/d/1Zyyp6Ox0wmRRtNmwcg8ge5IkZTfqGZ17gXrMWs5MY0E/edit?usp=sharing',
       webhookUrl: '',
       autoSync: true,
       lastSync: null
