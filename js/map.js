@@ -98,19 +98,18 @@ export class MaturinMap {
 
       const pulseClass = estadoActual === 'rojo' ? 'pulse-red' : '';
 
-      // Icono SVG de Precisión Milimétrica (Punta fijada exactamente al punto geográfico en [16, 42])
+      // Marcador Circular de Precisión Centrada (Punto central exacto anclado en [16, 16])
       const iconEmoji = this.currentMode === 'vialidad' ? '🛣️' : '🚰';
       const badgeHtml = sec.totalEncuestas > 1 
         ? `<div class="pin-badge">${sec.totalEncuestas}</div>` 
         : '';
 
       const iconHtml = `
-        <div class="custom-map-pin ${pulseClass}" style="--pin-color: ${markerColor}">
-          <svg width="32" height="42" viewBox="0 0 32 42" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:block;overflow:visible;">
-            <path d="M16 42C16 42 30 24 30 15C30 7.26801 23.732 1 16 1C8.26801 1 2 7.26801 2 15C2 24 16 42 16 42Z" fill="${markerColor}" stroke="#FFFFFF" stroke-width="2"/>
-            <circle cx="16" cy="15" r="9" fill="#FFFFFF"/>
-            <text x="16" y="19" text-anchor="middle" font-size="11" font-family="sans-serif">${iconEmoji}</text>
-          </svg>
+        <div class="custom-target-marker" style="--marker-color: ${markerColor}">
+          <div class="target-pulse"></div>
+          <div class="target-core">
+            <span>${iconEmoji}</span>
+          </div>
           ${badgeHtml}
         </div>
       `;
@@ -118,9 +117,9 @@ export class MaturinMap {
       const customIcon = L.divIcon({
         className: 'custom-leaflet-marker',
         html: iconHtml,
-        iconSize: [32, 42],
-        iconAnchor: [16, 42], // El pixel exacto (16, 42) es la punta inferior que toca el suelo
-        popupAnchor: [0, -42]
+        iconSize: [32, 32],
+        iconAnchor: [16, 16], // El centro exacto [16, 16] está clavado en la coordenada
+        popupAnchor: [0, -18]
       });
 
       const marker = L.marker([sec.lat, sec.lng], { icon: customIcon });
