@@ -71,10 +71,10 @@ class App {
     try {
       const surveys = await GoogleSheetsService.fetchSheetData(sheetUrl);
       if (surveys && surveys.length > 0) {
-        this.store.importSurveys(surveys, false); // Fusiona encuestas reales con los 30 ejemplos
+        this.store.importSurveys(surveys, true); // Modo oficial: refleja exactamente las encuestas de Google Sheets
         this.renderAll();
         if (notify) {
-          this.showToast(`📊 ${surveys.length} encuestas reales sincronizadas desde Google.`);
+          this.showToast(`📊 ${surveys.length} encuestas oficiales sincronizadas desde Google.`);
         }
       }
     } catch (e) {
