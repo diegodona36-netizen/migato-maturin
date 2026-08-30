@@ -85,231 +85,62 @@ export const OPCIONES_PROBLEMA_VIALIDAD = [
 
 const INITIAL_SURVEYS = [
   {
-    id: 'ENC-V14205891-001',
-    fecha: '2026-08-28 09:30',
-    encuestador: 'Carlos Mendoza',
-    cedula: 'V-14205891',
-    parroquia: 'Alto de Los Godos',
-    sector: 'Los Godos I y II',
-    aguaEstado: 'rojo',
-    aguaProblema: 'Sin suministro continuo (> 5 días sin agua)',
-    aguaObs: 'Los vecinos tienen 12 días comprando cisternas a altos costos.',
-    vialidadEstado: 'amarillo',
-    vialidadProblema: 'Vía intransitable por baches / huecos profundos',
-    vialidadObs: 'Huecos en la calle principal cerca del ambulatorio.',
-    lat: 9.7280,
-    lng: -63.1980,
-    syncStatus: 'synced'
-  },
-  {
-    id: 'ENC-V18945120-002',
-    fecha: '2026-08-28 10:15',
-    encuestador: 'María Rondón',
-    cedula: 'V-18945120',
-    parroquia: 'Alto de Los Godos',
-    sector: 'La Muralla',
-    aguaEstado: 'rojo',
-    aguaProblema: 'Bomba o pozo subterráneo dañado',
-    aguaObs: 'La bomba del sector 3 se quemó hace 3 semanas.',
-    vialidadEstado: 'rojo',
-    vialidadProblema: 'Cierre de vía por bote de aguas servidas',
-    vialidadObs: 'Colapso de cloacas en la entrada del sector.',
-    lat: 9.7340,
-    lng: -63.2090,
-    syncStatus: 'synced'
-  },
-  {
-    id: 'ENC-V22104567-003',
-    fecha: '2026-08-28 11:00',
-    encuestador: 'Luis Gómez',
-    cedula: 'V-22104567',
-    parroquia: 'Boquerón',
-    sector: 'Tipuro',
-    aguaEstado: 'amarillo',
-    aguaProblema: 'Llega con baja presión (solo de noche)',
-    aguaObs: 'Llega agua cada dos días pero solo después de las 11:00 PM.',
-    vialidadEstado: 'verde',
-    vialidadProblema: 'Vía en buen estado y transitable',
-    vialidadObs: 'Avenida principal recién bacheada.',
-    lat: 9.7920,
-    lng: -63.1850,
-    syncStatus: 'synced'
-  },
-  {
-    id: 'ENC-V22104567-004',
-    fecha: '2026-08-28 11:45',
-    encuestador: 'Luis Gómez',
-    cedula: 'V-22104567',
-    parroquia: 'Boquerón',
-    sector: 'Palma Real',
-    aguaEstado: 'verde',
-    aguaProblema: 'Suministro regular y de calidad aceptable',
-    aguaObs: 'Tienen pozo privado en el conjunto.',
-    vialidadEstado: 'amarillo',
-    vialidadProblema: 'Falta de alumbrado público y señalización',
-    vialidadObs: 'Muchos tramos a oscuras en la noche.',
-    lat: 9.8010,
-    lng: -63.1790,
-    syncStatus: 'synced'
-  },
-  {
-    id: 'ENC-V20349811-005',
-    fecha: '2026-08-28 14:20',
-    encuestador: 'Elena Salazar',
-    cedula: 'V-20349811',
-    parroquia: 'Las Cocuizas',
-    sector: 'Sabana Grande',
-    aguaEstado: 'rojo',
-    aguaProblema: 'Agua turbia / no apta para consumo',
-    aguaObs: 'Sale agua con sedimentos y olor fétido.',
-    vialidadEstado: 'rojo',
-    vialidadProblema: 'Falta total de capa asfáltica (tierra o ripio)',
-    vialidadObs: 'Calles de tierra convertidas en lagunas por las lluvias.',
-    lat: 9.7690,
-    lng: -63.1380,
-    syncStatus: 'synced'
-  },
-  {
-    id: 'ENC-V20349811-006',
-    fecha: '2026-08-28 15:00',
-    encuestador: 'Elena Salazar',
-    cedula: 'V-20349811',
-    parroquia: 'Las Cocuizas',
-    sector: 'Las Cocuizas',
-    aguaEstado: 'amarillo',
-    aguaProblema: 'Bote de agua potable en vía pública',
-    aguaObs: 'Tubería matriz rota frente a la plaza.',
-    vialidadEstado: 'amarillo',
-    vialidadProblema: 'Vía intransitable por baches / huecos profundos',
-    vialidadObs: 'Baches causados por el mismo bote de agua.',
-    lat: 9.7610,
-    lng: -63.1530,
-    syncStatus: 'synced'
-  },
-  {
-    id: 'ENC-V14205891-007',
-    fecha: '2026-08-29 08:45',
-    encuestador: 'Carlos Mendoza',
-    cedula: 'V-14205891',
-    parroquia: 'San Simón',
-    sector: 'Centro / Casco Central',
-    aguaEstado: 'verde',
-    aguaProblema: 'Suministro regular y de calidad aceptable',
-    aguaObs: 'Servicio continuo por red de planta potabilizadora.',
-    vialidadEstado: 'amarillo',
-    vialidadProblema: 'Alcantarillado / drenaje colapsado o sin rejillas',
-    vialidadObs: 'Falta de tapas de bocas de visita en calle Junín y Chimborazo.',
-    lat: 9.7469,
-    lng: -63.1812,
-    syncStatus: 'synced'
-  },
-  {
-    id: 'ENC-V14205891-008',
-    fecha: '2026-08-29 09:20',
-    encuestador: 'Carlos Mendoza',
-    cedula: 'V-14205891',
-    parroquia: 'San Simón',
-    sector: 'Barrio Obrero',
-    aguaEstado: 'amarillo',
-    aguaProblema: 'Llega con baja presión (solo de noche)',
-    aguaObs: 'Requieren bombas hidroneumáticas para llenar tanques.',
-    vialidadEstado: 'amarillo',
-    vialidadProblema: 'Vía intransitable por baches / huecos profundos',
-    vialidadObs: 'Calles internas deterioradas.',
-    lat: 9.7420,
-    lng: -63.1750,
-    syncStatus: 'synced'
-  },
-  {
-    id: 'ENC-V18945120-009',
-    fecha: '2026-08-29 10:00',
-    encuestador: 'María Rondón',
-    cedula: 'V-18945120',
+    id: 'G-ENC-29879237-001',
+    fecha: '2026-08-29 22:11',
+    encuestador: 'Encuestador (29879237)',
+    cedula: '29879237',
     parroquia: 'Santa Cruz',
-    sector: 'Santa Cruz',
-    aguaEstado: 'rojo',
+    sector: 'Santa Cruz Centro',
+    aguaEstado: 'verde',
     aguaProblema: 'Sin suministro continuo (> 5 días sin agua)',
-    aguaObs: 'Sin agua desde el viernes pasado.',
-    vialidadEstado: 'rojo',
-    vialidadProblema: 'Vía intransitable por baches / huecos profundos',
-    vialidadObs: 'Deterioro grave en la avenida principal.',
+    aguaObs: '',
+    vialidadEstado: 'verde',
+    vialidadProblema: 'Alcantarillado / drenaje colapsado o sin rejillas',
+    vialidadObs: '',
     lat: 9.7250,
     lng: -63.2200,
     syncStatus: 'synced'
   },
   {
-    id: 'ENC-V18945120-010',
-    fecha: '2026-08-29 10:45',
-    encuestador: 'María Rondón',
-    cedula: 'V-18945120',
-    parroquia: 'Santa Cruz',
-    sector: 'Zona Industrial',
-    aguaEstado: 'amarillo',
-    aguaProblema: 'Bomba o pozo subterráneo dañado',
-    aguaObs: 'Presión baja en galpones y talleres.',
-    vialidadEstado: 'rojo',
-    vialidadProblema: 'Vía intransitable por baches / huecos profundos',
-    vialidadObs: 'Paso de camiones pesados ha destruido el pavimento.',
-    lat: 9.7150,
-    lng: -63.2350,
-    syncStatus: 'synced'
-  },
-  {
-    id: 'ENC-V25612384-011',
-    fecha: '2026-08-29 11:30',
-    encuestador: 'Roberto Silva',
-    cedula: 'V-25612384',
-    parroquia: 'La Pica',
-    sector: 'La Pica (Pueblo)',
-    aguaEstado: 'rojo',
-    aguaProblema: 'Sin suministro continuo (> 5 días sin agua)',
-    aguaObs: 'Pozo de agua paralizado por falta de mantenimiento.',
-    vialidadEstado: 'rojo',
-    vialidadProblema: 'Falta total de capa asfáltica (tierra o ripio)',
-    vialidadObs: 'Carretera principal hacia el penal y caseríos en pésimo estado.',
-    lat: 9.7890,
-    lng: -63.0950,
-    syncStatus: 'synced'
-  },
-  {
-    id: 'ENC-V25612384-012',
-    fecha: '2026-08-29 12:15',
-    encuestador: 'Roberto Silva',
-    cedula: 'V-25612384',
+    id: 'G-ENC-V14205891-002',
+    fecha: '2026-08-29 22:10',
+    encuestador: 'Encuestador (V-14205891)',
+    cedula: 'V-14205891',
     parroquia: 'Jusepín',
-    sector: 'Jusepín',
-    aguaEstado: 'amarillo',
-    aguaProblema: 'Agua turbia / no apta para consumo',
-    aguaObs: 'Agua chocolatosa que requiere decantación.',
+    sector: 'Campo Rojo',
+    aguaEstado: 'verde',
+    aguaProblema: 'Llega con baja presión (solo de noche)',
+    aguaObs: 'si',
     vialidadEstado: 'amarillo',
-    vialidadProblema: 'Falta de alumbrado público y señalización',
-    vialidadObs: 'Vía nacional con baja visibilidad nocturna.',
+    vialidadProblema: 'Falta total de capa asfáltica (tierra o ripio)',
+    vialidadObs: '',
     lat: 9.7450,
     lng: -63.5020,
     syncStatus: 'synced'
   },
   {
-    id: 'ENC-V20349811-013',
-    fecha: '2026-08-29 13:00',
-    encuestador: 'Elena Salazar',
-    cedula: 'V-20349811',
-    parroquia: 'El Furrial',
-    sector: 'El Furrial',
-    aguaEstado: 'rojo',
-    aguaProblema: 'Sin suministro continuo (> 5 días sin agua)',
-    aguaObs: 'Toda la comunidad depende de camiones cisternas.',
+    id: 'G-ENC-V14205891-003',
+    fecha: '2026-08-30 00:00',
+    encuestador: 'Encuestador (V-14205891)',
+    cedula: 'V-14205891',
+    parroquia: 'Santa Cruz',
+    sector: 'Las Garzas',
+    aguaEstado: 'verde',
+    aguaProblema: 'Bomba o pozo subterráneo dañado',
+    aguaObs: '',
     vialidadEstado: 'amarillo',
-    vialidadProblema: 'Vía intransitable por baches / huecos profundos',
-    vialidadObs: 'Vía principal transitable con precaución, calles transversales malas.',
-    lat: 9.6980,
-    lng: -63.3420,
+    vialidadProblema: 'Falta total de capa asfáltica (tierra o ripio)',
+    vialidadObs: '',
+    lat: 9.7320,
+    lng: -63.2250,
     syncStatus: 'synced'
   }
 ];
 
-const STORAGE_KEY = 'maturin_encuestas_data_v2';
-const GOOGLE_CONFIG_KEY = 'maturin_google_sheet_config_v2';
+const STORAGE_KEY = 'maturin_encuestas_data_v3';
+const GOOGLE_CONFIG_KEY = 'maturin_google_sheet_config_v3';
 const USER_PROFILE_KEY = 'maturin_encuestador_profile_v1';
+export const OFFICIAL_SHEET_URL = 'https://docs.google.com/spreadsheets/d/1Zyyp6Ox0wmRRtNmwcg8ge5IkZTfqGZ17gXrMWs5MY0E/edit?usp=sharing';
 
 export class SurveyDataStore {
   constructor() {
@@ -351,7 +182,7 @@ export class SurveyDataStore {
         }
       }
     } catch (e) {
-      console.warn('Error al cargar encuestas del localStorage, usando datos iniciales', e);
+      console.warn('Error al cargar encuestas del localStorage', e);
     }
     this.saveSurveys(INITIAL_SURVEYS);
     return [...INITIAL_SURVEYS];
@@ -369,12 +200,19 @@ export class SurveyDataStore {
   loadGoogleConfig() {
     try {
       const saved = localStorage.getItem(GOOGLE_CONFIG_KEY);
-      if (saved) return JSON.parse(saved);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (!parsed.sheetUrl || parsed.sheetUrl.includes('1cUvRb9qpUTQNUGqcFz2aJ8')) {
+          parsed.sheetUrl = OFFICIAL_SHEET_URL;
+          this.saveGoogleConfig(parsed);
+        }
+        return parsed;
+      }
     } catch (e) {
       console.warn('Error al cargar config de Google', e);
     }
     return {
-      sheetUrl: 'https://docs.google.com/spreadsheets/d/1Zyyp6Ox0wmRRtNmwcg8ge5IkZTfqGZ17gXrMWs5MY0E/edit?usp=sharing',
+      sheetUrl: OFFICIAL_SHEET_URL,
       webhookUrl: '',
       autoSync: true,
       lastSync: null
