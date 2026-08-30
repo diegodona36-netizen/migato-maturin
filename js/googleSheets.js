@@ -5,7 +5,7 @@
 
 export class GoogleSheetsService {
   /**
-   * Extrae el ID de la hoja y genera la URL de descarga CSV
+   * Extrae el ID de la hoja y genera la URL de descarga CSV con soporte CORS
    */
   static getCsvUrl(url) {
     if (!url || typeof url !== 'string') return null;
@@ -19,33 +19,66 @@ export class GoogleSheetsService {
     if (matches && matches[1]) {
       const sheetId = matches[1];
       const gidMatch = cleanUrl.match(/[#&?]gid=([0-9]+)/);
-      const gid = gidMatch ? gidMatch[1] : '0';
-      return `https://docs.google.com/spreadsheets/d/${sheetId}/export?format=csv&gid=${gid}`;
+      const gidParam = gidMatch ? `&gid=${gidMatch[1]}` : '';
+      return `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv${gidParam}`;
     }
 
     return cleanUrl;
   }
 
   /**
-   * Descarga y parsea el CSV de Google Sheets
+   * Descarga y parsea el CSV de Google Sheets con backend serverless y fallbacks
    */
   static async fetchSheetData(url) {
-    const csvUrl = this.getCsvUrl(url);
-    if (!csvUrl) {
+    if (!url || typeof url !== 'string') {
       throw new Error('La URL de Google Sheets no es válida.');
     }
 
+    const cleanUrl = url.trim();
+    let csvText = '';
+
+    // 1. Intentar a través de nuestro endpoint nativo de Vercel (Cero bloqueos CORS)
     try {
-      const response = await fetch(csvUrl);
-      if (!response.ok) {
-        throw new Error(`Error al conectar con Google Sheets (${response.status}: ${response.statusText}). Verifica permisos de lectura.`);
+      const apiEndpoint = `/api/sheet?url=${encodeURIComponent(cleanUrl)}`;
+      const res = await fetch(apiEndpoint);
+      if (res.ok) {
+        csvText = await res.text();
       }
-      const csvText = await response.text();
-      return this.parseCsv(csvText);
-    } catch (err) {
-      console.error('Error fetching Google Sheet:', err);
-      throw err;
+    } catch (apiErr) {
+      console.warn('Endpoint /api/sheet no disponible, usando fallback directo...', apiErr);
     }
+
+    // 2. Fallback directo a Google GVIZ
+    if (!csvText || csvText.includes('<!DOCTYPE html>')) {
+      const directUrl = this.getCsvUrl(cleanUrl);
+      try {
+        const res = await fetch(directUrl);
+        if (res.ok) {
+          csvText = await res.text();
+        }
+      } catch (e) {
+        console.warn('Fetch directo falló', e);
+      }
+    }
+
+    // 3. Fallback a proxy externo
+    if (!csvText || csvText.includes('<!DOCTYPE html>')) {
+      try {
+        const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(this.getCsvUrl(cleanUrl))}`;
+        const pResponse = await fetch(proxyUrl);
+        if (pResponse.ok) {
+          csvText = await pResponse.text();
+        }
+      } catch (pErr) {
+        console.warn('Proxy falló', pErr);
+      }
+    }
+
+    if (!csvText || csvText.includes('<!DOCTYPE html>') || csvText.includes('accounts.google.com')) {
+      throw new Error('No se pudo leer la hoja. Asegúrate de ir en tu Google Sheets a: Archivo ➔ Compartir ➔ Publicar en la web ➔ Publicar.');
+    }
+
+    return this.parseCsv(csvText);
   }
 
   /**
@@ -117,11 +150,15 @@ export class GoogleSheetsService {
     }
 
     if (lines.length < 2) {
-      throw new Error('La hoja de cálculo no contiene suficientes filas o datos.');
+      return [];
     }
 
     const headers = lines[0].map(h => h.toLowerCase());
-    const dataRows = lines.slice(1);
+    const dataRows = lines.slice(1).filter(r => r.some(cell => cell && cell.trim() !== ''));
+
+    if (dataRows.length === 0) {
+      return [];
+    }
 
     // Identificar todos los índices de columnas relevantes (soporta formularios con ramificación)
     const colIndex = {
