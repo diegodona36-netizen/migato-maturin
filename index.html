@@ -101,36 +101,36 @@
         </div>
 
         <!-- Acciones Rápidas -->
-        <div class="flex items-center gap-1.5 sm:gap-2">
+        <div class="flex items-center gap-1 sm:gap-2 shrink-0">
           
           <!-- Botón Instalar App (PWA) -->
-          <button id="btn-install-pwa" class="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-2 text-xs font-bold rounded-lg bg-migato-700 hover:bg-migato-600 text-white shadow-sm border border-migato-600 transition" title="Instalar como App en tu teléfono">
+          <button id="btn-install-pwa" class="hidden md:inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-2 text-xs font-bold rounded-lg bg-migato-700 hover:bg-migato-600 text-white shadow-sm border border-migato-600 transition" title="Instalar como App en tu teléfono">
             <i data-lucide="smartphone" class="w-4 h-4 text-indigo-200"></i>
-            <span class="hidden md:inline">Instalar App</span>
+            <span>Instalar App</span>
           </button>
 
           <!-- Botón Compartir QR -->
-          <button id="btn-open-qr-modal" class="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-2 text-xs font-bold rounded-lg bg-migato-900 hover:bg-migato-800 text-slate-200 border border-migato-700 transition" title="Ver Código QR para encuestadores">
+          <button id="btn-open-qr-modal" class="inline-flex items-center justify-center w-8 h-8 sm:w-auto sm:h-auto sm:px-2.5 sm:py-2 text-xs font-bold rounded-lg bg-migato-900 hover:bg-migato-800 text-slate-200 border border-migato-700 transition" title="Ver Código QR para encuestadores">
             <i data-lucide="qr-code" class="w-4 h-4 text-sky-400"></i>
-            <span class="hidden sm:inline">QR Móvil</span>
+            <span class="hidden sm:inline ml-1.5">QR Móvil</span>
           </button>
 
           <!-- Perfil Encuestador (Cédula) -->
-          <button id="btn-open-profile-modal" class="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-2 text-xs font-semibold rounded-lg bg-migato-900 hover:bg-migato-800 text-slate-200 border border-migato-700 transition" title="Mi Perfil y Cédula">
+          <button id="btn-open-profile-modal" class="inline-flex items-center justify-center w-8 h-8 sm:w-auto sm:h-auto sm:px-2.5 sm:py-2 text-xs font-semibold rounded-lg bg-migato-900 hover:bg-migato-800 text-slate-200 border border-migato-700 transition" title="Mi Perfil y Cédula">
             <i data-lucide="user-check" class="w-4 h-4 text-emerald-400"></i>
-            <span id="header-user-label" class="hidden lg:inline">Mi Cédula</span>
+            <span id="header-user-label" class="hidden lg:inline ml-1.5">Mi Cédula</span>
           </button>
 
           <!-- Botón Sincronizar con Contador de Pendientes -->
-          <button id="btn-sync-google" class="relative inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-2 text-xs sm:text-sm font-semibold rounded-lg bg-migato-900 hover:bg-migato-800 text-slate-200 border border-migato-700 transition shadow-sm" title="Sincronizar encuestas">
+          <button id="btn-sync-google" class="relative inline-flex items-center justify-center w-8 h-8 sm:w-auto sm:h-auto sm:px-2.5 sm:py-2 text-xs sm:text-sm font-semibold rounded-lg bg-migato-900 hover:bg-migato-800 text-slate-200 border border-migato-700 transition shadow-sm" title="Sincronizar encuestas">
             <i data-lucide="refresh-cw" id="icon-sync-spin" class="w-4 h-4 text-sky-400"></i>
-            <span class="hidden sm:inline">Sincronizar</span>
-            <span id="badge-pending-sync-count" class="hidden absolute -top-1.5 -right-1.5 bg-amber-500 text-slate-950 font-black text-[10px] px-1.5 py-0.2 rounded-full border-2 border-slate-900 shadow-sm animate-pulse">0</span>
+            <span class="hidden sm:inline ml-1.5">Sincronizar</span>
+            <span id="badge-pending-sync-count" class="hidden absolute -top-1 -right-1 bg-amber-500 text-slate-950 font-black text-[9px] px-1 rounded-full border border-slate-900 shadow-sm animate-pulse">0</span>
           </button>
 
           <!-- Botón Encuesta Directa -->
-          <button id="btn-open-new-survey" class="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs sm:text-sm font-bold rounded-xl bg-gradient-to-r from-blue-700 via-migato-700 to-indigo-800 hover:from-blue-600 hover:to-indigo-700 text-white shadow-md shadow-migato-900/60 transition">
-            <i data-lucide="plus-circle" class="w-4 h-4"></i>
+          <button id="btn-open-new-survey" class="inline-flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3.5 py-1.5 sm:py-2 text-xs sm:text-sm font-bold rounded-xl bg-gradient-to-r from-blue-700 via-migato-700 to-indigo-800 hover:from-blue-600 hover:to-indigo-700 text-white shadow-md shadow-migato-900/60 transition shrink-0">
+            <i data-lucide="plus-circle" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i>
             <span>+ Encuesta</span>
           </button>
         </div>
@@ -1025,19 +1025,19 @@
         </div>
 
         <!-- Botones de Acción -->
-        <div class="pt-3 border-t border-slate-100 flex items-center justify-between">
-          <span class="text-[11px] text-slate-400 flex items-center gap-1">
+        <div class="pt-3 border-t border-slate-100 flex flex-col-reverse sm:flex-row sm:items-center justify-between gap-3">
+          <span class="text-[11px] text-slate-400 flex items-center justify-center sm:justify-start gap-1">
             <i data-lucide="shield-check" class="w-3.5 h-3.5 text-emerald-500"></i>
             <span>Firmado con tu Cédula</span>
           </span>
 
-          <div class="flex items-center gap-2">
-            <button type="button" id="btn-cancel-modal-survey" class="px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-xl transition">
+          <div class="flex items-center gap-2 w-full sm:w-auto">
+            <button type="button" id="btn-cancel-modal-survey" class="flex-1 sm:flex-none px-4 py-2.5 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-xl transition text-center">
               Cancelar
             </button>
-            <button type="submit" class="px-6 py-2.5 text-xs font-bold text-white bg-gradient-to-r from-sky-600 to-blue-600 hover:from-sky-500 hover:to-blue-500 rounded-xl shadow-md shadow-sky-600/30 transition flex items-center gap-1.5">
+            <button type="submit" class="flex-1 sm:flex-none px-6 py-2.5 text-xs font-bold text-white bg-gradient-to-r from-sky-600 to-blue-600 hover:from-sky-500 hover:to-blue-500 rounded-xl shadow-md shadow-sky-600/30 transition flex items-center justify-center gap-1.5">
               <i data-lucide="save" class="w-4 h-4"></i>
-              <span>Guardar en Teléfono</span>
+              <span>Guardar</span>
             </button>
           </div>
         </div>
@@ -1047,11 +1047,17 @@
     </div>
   </div>
 
+  <!-- FLOATING ACTION BUTTON (+ ENCUESTA EN MÓVIL) -->
+  <button id="btn-fab-new-survey" class="sm:hidden fixed bottom-5 right-5 z-40 bg-gradient-to-r from-blue-700 via-migato-700 to-indigo-800 text-white rounded-full px-4 py-3.5 shadow-2xl border-2 border-white/80 flex items-center gap-2 font-bold text-xs shadow-indigo-950/60 active:scale-95 transition-transform" title="Registrar Nueva Encuesta">
+    <i data-lucide="plus-circle" class="w-5 h-5 text-sky-300"></i>
+    <span>+ Encuesta</span>
+  </button>
+
   <!-- TOAST CONTAINER -->
   <div id="toast-container"></div>
 
   <!-- MAIN SCRIPT -->
-  <script type="module" src="js/app.js?v=20"></script>
+  <script type="module" src="js/app.js?v=21"></script>
 
 </body>
 </html>
