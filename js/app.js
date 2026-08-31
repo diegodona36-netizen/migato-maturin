@@ -449,7 +449,9 @@ class App {
       modalSurvey.classList.remove('flex');
     };
 
+    const btnFabSurvey = document.getElementById('btn-fab-new-survey');
     if (btnOpenSurvey) btnOpenSurvey.addEventListener('click', openModal);
+    if (btnFabSurvey) btnFabSurvey.addEventListener('click', openModal);
     if (btnCloseSurvey) btnCloseSurvey.addEventListener('click', closeModal);
     if (btnCancelSurvey) btnCancelSurvey.addEventListener('click', closeModal);
 
