@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Maturín Drenajes • Diagnóstico Hidráulico & Riesgo de Inundación (HEC-RAS / GIS)</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Leaflet CSS & JS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="bg-slate-100 text-slate-800 min-h-screen flex flex-col antialiased">
+
+  <!-- ============================================================== -->
+  <!-- TOP GLOBAL HEADER -->
+  <!-- ============================================================== -->
+  <header class="bg-slate-900 text-white border-b border-slate-800 sticky top-0 z-30 shadow-md">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-3">
+        
+        <!-- Logo & Titulo -->
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-600 to-cyan-500 text-white flex items-center justify-center shadow-md shrink-0">
+            <i data-lucide="waves" class="w-6 h-6"></i>
+          </div>
+          <div>
+            <h1 class="text-base sm:text-lg font-black tracking-tight text-white flex items-center gap-2">
+              <span>Maturín • Diagnóstico Hidráulico de Drenajes</span>
+              <span class="text-[10px] font-bold bg-sky-500/20 text-sky-300 border border-sky-500/30 px-2 py-0.5 rounded-full uppercase">HEC-RAS & GIS</span>
+            </h1>
+            <p class="text-xs text-slate-400 font-medium">Modelado de Caños, Alcantarillados y Riesgo de Inundación • Monagas</p>
+          </div>
+        </div>
+
+        <!-- Acciones: Selector de Tormenta & Ficha de Inspección -->
+        <div class="flex flex-wrap items-center gap-2">
+          
+          <!-- Selector de Lluvia / Tormenta -->
+          <div class="inline-flex rounded-xl border border-slate-700 p-0.5 bg-slate-800 shadow-inner">
+            <button data-intensity="20" class="storm-btn px-2.5 sm:px-3 py-1.5 text-xs font-semibold rounded-lg text-slate-300 hover:bg-slate-700 transition" title="Lluvia Moderada 20 mm/h">
+              🟢 20 mm/h
+            </button>
+            <button data-intensity="50" class="storm-btn px-2.5 sm:px-3 py-1.5 text-xs font-bold rounded-lg bg-sky-600 text-white transition shadow-sm" title="Tormenta 5 Años 50 mm/h">
+              🟡 50 mm/h
+            </button>
+            <button data-intensity="90" class="storm-btn px-2.5 sm:px-3 py-1.5 text-xs font-bold rounded-lg text-slate-300 hover:bg-slate-700 transition" title="Vaguada Torrencial 90 mm/h">
+              🔴 90 mm/h
+            </button>
+          </div>
+
+          <!-- Botón Ficha Técnica (PIN) -->
+          <button id="btn-open-inspection-modal" class="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-xs font-bold shadow-md transition flex items-center gap-1.5">
+            <i data-lucide="clipboard-check" class="w-4 h-4"></i>
+            <span>+ Ficha Técnica (PIN)</span>
+          </button>
+
+          <!-- Exportar GeoJSON para QGIS -->
+          <button id="btn-export-qgis-geojson" class="p-2 text-slate-300 hover:text-white bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-xl transition" title="Exportar Capas GeoJSON para QGIS">
+            <i data-lucide="map" class="w-4 h-4 text-sky-400"></i>
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Navigation Tabs Bar -->
+    <div class="bg-slate-950 border-t border-slate-800 px-4 sm:px-6">
+      <div class="max-w-7xl mx-auto flex items-center overflow-x-auto no-scrollbar gap-1.5 py-1.5">
+        <button data-tab="tab-visor" class="nav-tab-btn px-3.5 py-2 text-xs sm:text-sm font-bold rounded-lg bg-sky-600 text-white transition flex items-center gap-1.5 shrink-0 shadow-sm">
+          <i data-lucide="map-pin" class="w-4 h-4"></i>
+          <span>Visor de Caños y Cuencas</span>
+        </button>
+
+        <button data-tab="tab-simulador" class="nav-tab-btn px-3.5 py-2 text-xs sm:text-sm font-medium rounded-lg text-slate-400 hover:bg-slate-800 transition flex items-center gap-1.5 shrink-0">
+          <i data-lucide="gauge" class="w-4 h-4"></i>
+          <span>Simulador HEC-RAS 2D</span>
+        </button>
+
+        <button data-tab="tab-puntos" class="nav-tab-btn px-3.5 py-2 text-xs sm:text-sm font-medium rounded-lg text-slate-400 hover:bg-slate-800 transition flex items-center gap-1.5 shrink-0">
+          <i data-lucide="alert-triangle" class="w-4 h-4"></i>
+          <span>Puntos Críticos y Alcantarillas</span>
+        </button>
+
+        <button data-tab="tab-obras" class="nav-tab-btn px-3.5 py-2 text-xs sm:text-sm font-medium rounded-lg text-slate-400 hover:bg-slate-800 transition flex items-center gap-1.5 shrink-0">
+          <i data-lucide="truck" class="w-4 h-4"></i>
+          <span>Plan de Obras y Mitigación</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ============================================================== -->
+  <!-- SUMMARY KPIS BAR -->
+  <!-- ============================================================== -->
+  <div class="max-w-7xl mx-auto w-full px-4 sm:px-6 pt-4">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
+      
+      <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-3">
+        <div class="w-11 h-11 rounded-xl bg-red-50 text-red-600 flex items-center justify-center shrink-0">
+          <i data-lucide="alert-octagon" class="w-6 h-6"></i>
+        </div>
+        <div>
+          <p class="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Desborde de Caños</p>
+          <h3 id="kpi-canales-desbordados" class="text-xl sm:text-2xl font-black text-red-600">Calculando...</h3>
+        </div>
+      </div>
+
+      <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-3">
+        <div class="w-11 h-11 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center shrink-0">
+          <i data-lucide="home" class="w-6 h-6"></i>
+        </div>
+        <div>
+          <p class="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Viviendas en Riesgo</p>
+          <h3 id="kpi-viviendas-afectadas" class="text-xl sm:text-2xl font-black text-slate-900">0</h3>
+        </div>
+      </div>
+
+      <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-3">
+        <div class="w-11 h-11 rounded-xl bg-sky-50 text-sky-600 flex items-center justify-center shrink-0">
+          <i data-lucide="layers" class="w-6 h-6"></i>
+        </div>
+        <div>
+          <p class="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Dragado Requerido</p>
+          <h3 id="kpi-dragado-total" class="text-xl sm:text-2xl font-black text-sky-600">0 m³</h3>
+        </div>
+      </div>
+
+      <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
+        <div>
+          <p class="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Alerta de Cuenca</p>
+          <span id="kpi-alerta-global" class="text-xs font-black px-2.5 py-1 rounded-full border bg-emerald-100 text-emerald-800 border-emerald-300 mt-1 inline-block">NORMAL</span>
+        </div>
+        <div class="w-9 h-9 rounded-xl bg-slate-50 flex items-center justify-center text-slate-400">
+          <i data-lucide="shield-alert" class="w-5 h-5"></i>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ============================================================== -->
+  <!-- MAIN CONTENT CONTAINER -->
+  <!-- ============================================================== -->
+  <main class="max-w-7xl mx-auto w-full px-4 sm:px-6 py-4 flex-1">
+
+    <!-- ------------------------------------------------------------ -->
+    <!-- TAB 1: VISOR DE CAÑOS Y CUENCAS (MAPA + PANEL) -->
+    <!-- ------------------------------------------------------------ -->
+    <div id="tab-visor" class="tab-content space-y-4">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        
+        <!-- MAPA GIS MATURÍN (2 Cols) -->
+        <div class="lg:col-span-2 bg-white rounded-2xl border border-slate-200 shadow-sm p-4 sm:p-5 flex flex-col">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-slate-100 gap-2">
+            <div>
+              <h2 class="text-sm font-black text-slate-900 tracking-wide uppercase flex items-center gap-2">
+                <span>Mapa Hidráulico de Drenajes • Maturín</span>
+                <span class="text-[10px] font-bold bg-sky-100 text-sky-800 px-2 py-0.5 rounded">7 Caños Digitalizados</span>
+              </h2>
+              <p class="text-[11px] text-slate-500 flex items-center gap-1.5 flex-wrap mt-0.5">
+                <span>Haz clic en un caño para ver su cálculo hidráulico</span>
+                <span class="text-slate-300">•</span>
+                <span class="inline-flex items-center gap-1 text-sky-600 font-bold"><span class="w-2 h-2 rounded-full bg-sky-500"></span> Flujo Normal</span>
+                <span class="inline-flex items-center gap-1 text-amber-600 font-bold"><span class="w-2 h-2 rounded-full bg-amber-500"></span> Bordo Crítico</span>
+                <span class="inline-flex items-center gap-1 text-rose-600 font-bold"><span class="w-2 h-2 rounded-full bg-rose-500"></span> Desborde 2D</span>
+              </p>
+            </div>
+            <div class="flex items-center gap-2">
+              <button onclick="window.drainageApp.runSimulation()" class="px-2.5 py-1 text-[11px] font-bold text-slate-600 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-lg transition flex items-center gap-1">
+                <i data-lucide="refresh-cw" class="w-3 h-3"></i> Recalcular
+              </button>
+            </div>
+          </div>
+
+          <!-- Leaflet Map Container -->
+          <div id="maturin-drainage-map" class="w-full h-[460px] sm:h-[520px] rounded-xl mt-3 border border-slate-100 shadow-inner z-10"></div>
+          
+          <div class="pt-2 text-right">
+            <span class="text-[10px] text-slate-400 font-mono">© ESRI • OPENSTREETMAP • MODELO HEC-RAS MATURÍN</span>
+          </div>
+        </div>
+
+        <!-- PANEL DE DETALLE DEL CAÑO SELECCIONADO (1 Col) -->
+        <div class="space-y-6">
+          
+          <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-5" id="canal-detail-panel">
+            <div class="animate-pulse space-y-3">
+              <div class="h-6 bg-slate-200 rounded w-1/2"></div>
+              <div class="h-16 bg-slate-100 rounded"></div>
+              <div class="h-24 bg-slate-100 rounded"></div>
+            </div>
+          </div>
+
+          <!-- Perfil Longitudinal HEC-RAS -->
+          <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 space-y-3">
+            <div class="flex items-center justify-between border-b pb-2">
+              <h3 class="text-xs font-black text-slate-900 tracking-wider uppercase flex items-center gap-1.5">
+                <i data-lucide="trending-up" class="w-4 h-4 text-sky-600"></i>
+                <span>Perfil Longitudinal de Agua</span>
+              </h3>
+              <span class="text-[10px] text-slate-400 font-mono">Cota vs Distancia</span>
+            </div>
+
+            <div class="h-48 relative">
+              <canvas id="longitudinal-profile-chart"></canvas>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ------------------------------------------------------------ -->
+    <!-- TAB 2: SIMULADOR HEC-RAS 2D (COMPARATIVO DE CAUDALES) -->
+    <!-- ------------------------------------------------------------ -->
+    <div id="tab-simulador" class="tab-content hidden space-y-4">
+      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 space-y-4">
+        
+        <div class="border-b pb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+          <div>
+            <h2 class="text-base font-black text-slate-900 uppercase tracking-wide flex items-center gap-2">
+              <i data-lucide="gauge" class="w-5 h-5 text-sky-600"></i>
+              <span>Simulación Hidráulica HEC-RAS: Capacidad vs Caudal de Tormenta</span>
+            </h2>
+            <p class="text-xs text-slate-500">
+              Evaluación del comportamiento de los 7 canales principales ante lluvias torrenciales en Maturín.
+            </p>
+          </div>
+        </div>
+
+        <!-- Bar Chart Container -->
+        <div class="h-80 w-full relative">
+          <canvas id="capacity-comparison-chart"></canvas>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4 border-t border-slate-100 text-xs">
+          <div class="p-3 bg-sky-50 rounded-xl border border-sky-100">
+            <p class="font-bold text-sky-950">📐 Ecuación de Manning (1D)</p>
+            <p class="text-slate-600 text-[11px] mt-1">Calcula el tirante normal en función de la rugosidad del fondo y la pendiente natural del terreno.</p>
+          </div>
+          <div class="p-3 bg-amber-50 rounded-xl border border-amber-100">
+            <p class="font-bold text-amber-950">🌊 Modelado de Manchas 2D</p>
+            <p class="text-slate-600 text-[11px] mt-1">Proyecta la inundación sobre las calles circundantes cuando el nivel del agua supera la profundidad del cauce.</p>
+          </div>
+          <div class="p-3 bg-emerald-50 rounded-xl border border-emerald-100">
+            <p class="font-bold text-emerald-950">🚜 Mitigación por Dragado</p>
+            <p class="text-slate-600 text-[11px] mt-1">Simula cómo la limpieza y retiro de sedimentos aumenta la capacidad de evacuación de agua hasta en un 65%.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ------------------------------------------------------------ -->
+    <!-- TAB 3: PUNTOS CRÍTICOS Y ALCANTARILLAS -->
+    <!-- ------------------------------------------------------------ -->
+    <div id="tab-puntos" class="tab-content hidden space-y-4">
+      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 space-y-4">
+        
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b pb-4">
+          <div>
+            <h2 class="text-base font-black text-slate-900 uppercase tracking-wide flex items-center gap-2">
+              <i data-lucide="alert-triangle" class="w-5 h-5 text-amber-500"></i>
+              <span>Matriz de Puntos Críticos y Alcantarillas Colapsadas</span>
+            </h2>
+            <p class="text-xs text-slate-500">
+              Inventario de puentes, cajones de paso y sumideros inspeccionados por las brigadas técnicas en Maturín.
+            </p>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <button id="btn-export-drenajes-csv" class="px-4 py-2 text-xs font-bold text-slate-700 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-xl transition flex items-center gap-1.5 shadow-sm">
+              <i data-lucide="download" class="w-4 h-4 text-emerald-600"></i>
+              <span>Exportar Matriz (CSV)</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Table -->
+        <div class="overflow-x-auto border border-slate-200 rounded-xl">
+          <table class="w-full text-xs text-left">
+            <thead class="bg-slate-50 border-b border-slate-200 text-slate-500 font-bold uppercase text-[10px]">
+              <tr>
+                <th class="px-4 py-3">Código</th>
+                <th class="px-4 py-3">Punto de Inspección / Parroquia</th>
+                <th class="px-4 py-3">Tipo Estructura</th>
+                <th class="px-4 py-3">% Colapso / Sedimento</th>
+                <th class="px-4 py-3">Nivel Riesgo</th>
+                <th class="px-4 py-3">Familias en Riesgo</th>
+                <th class="px-4 py-3">Obra Requerida</th>
+              </tr>
+            </thead>
+            <tbody id="puntos-criticos-tbody" class="divide-y divide-slate-100">
+              <!-- Inyectado dinámicamente -->
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ------------------------------------------------------------ -->
+    <!-- TAB 4: PLAN DE OBRAS Y MITIGACIÓN -->
+    <!-- ------------------------------------------------------------ -->
+    <div id="tab-obras" class="tab-content hidden space-y-4">
+      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 space-y-4">
+        
+        <div class="border-b pb-4">
+          <h2 class="text-base font-black text-slate-900 uppercase tracking-wide flex items-center gap-2">
+            <i data-lucide="truck" class="w-5 h-5 text-sky-600"></i>
+            <span>Plan Ejecutivo de Obras y Dragado de Maturín</span>
+          </h2>
+          <p class="text-xs text-slate-600 mt-1">
+            Recomendaciones de ingeniería civil con volúmenes de dragado y maquinaria requerida para mitigar inundaciones en el municipio.
+          </p>
+        </div>
+
+        <!-- Grid de Obras -->
+        <div id="plan-obras-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <!-- Inyectado dinámicamente -->
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ============================================================== -->
+  <!-- MODAL: FICHA TÉCNICA DE INSPECCIÓN (CON PIN DE BRIGADA) -->
+  <!-- ============================================================== -->
+  <div id="modal-inspection" class="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm hidden items-center justify-center p-3 sm:p-4 overflow-y-auto">
+    <div class="bg-white w-full max-w-xl rounded-2xl sm:rounded-3xl shadow-2xl border border-slate-100 overflow-hidden my-6 animate-in fade-in zoom-in-95 duration-200 max-h-[92vh] flex flex-col">
+      
+      <!-- Header Modal -->
+      <div class="bg-slate-900 text-white px-5 py-3.5 flex items-center justify-between border-b border-slate-800 shrink-0">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center">
+            <i data-lucide="shield-check" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h3 class="font-bold text-sm sm:text-base text-white">Ficha Técnica de Inspección</h3>
+            <p class="text-[11px] text-slate-400">Levantamiento de Campo • Brigada Técnica Interna</p>
+          </div>
+        </div>
+        <button id="btn-close-inspection-modal" class="text-slate-400 hover:text-white transition p-1">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <!-- Formulario -->
+      <form id="form-inspection" class="p-4 sm:p-6 space-y-4 overflow-y-auto flex-1">
+        
+        <!-- PIN de Seguridad de Brigada -->
+        <div class="p-3 bg-amber-50 border border-amber-200 rounded-xl flex items-center justify-between gap-2">
+          <div>
+            <label class="block text-xs font-bold text-amber-950 uppercase">PIN de Brigada / Equipo Político *</label>
+            <p class="text-[10px] text-amber-700">Protege la base de datos técnica (PIN por defecto: 2026)</p>
+          </div>
+          <input type="password" id="insp-pin" required placeholder="PIN" value="2026" class="w-24 px-3 py-1.5 text-xs text-center font-mono font-bold bg-white border border-amber-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:outline-none">
+        </div>
+
+        <!-- Inspector y Parroquia -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Nombre del Inspector / Brigadista *</label>
+            <input type="text" id="insp-inspector" required placeholder="Ej: Ing. Carlos Mendoza" class="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-300 rounded-xl text-slate-800 focus:ring-2 focus:ring-sky-500 focus:outline-none">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Parroquia *</label>
+            <select id="insp-parroquia" required class="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-300 rounded-xl text-slate-800 focus:ring-2 focus:ring-sky-500 focus:outline-none">
+              <option value="San Simón">San Simón</option>
+              <option value="Alto de Los Godos">Alto de Los Godos</option>
+              <option value="Boquerón">Boquerón</option>
+              <option value="Las Cocuizas">Las Cocuizas</option>
+              <option value="Santa Cruz">Santa Cruz</option>
+              <option value="San Vicente">San Vicente</option>
+              <option value="La Pica">La Pica</option>
+              <option value="Jusepín">Jusepín</option>
+              <option value="El Furrial">El Furrial</option>
+              <option value="El Corozo">El Corozo</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Caño Asignado y Nombre del Punto -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Caño / Eje de Drenaje *</label>
+            <select id="insp-cano-id" required class="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-300 rounded-xl text-slate-800 focus:ring-2 focus:ring-sky-500 focus:outline-none">
+              <option value="cano-orinoco">Caño Orinoco</option>
+              <option value="cano-godos">Caño Los Godos</option>
+              <option value="cano-avenidas">Caño Las Avenidas</option>
+              <option value="cano-universidad">Caño Universidad</option>
+              <option value="cano-poncha">Caño Poncha / Palo Negro</option>
+              <option value="cano-boqueron">Caño La Chivera / Tipuro</option>
+              <option value="rio-guarapiche">Río Guarapiche</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Punto / Sector Específico *</label>
+            <input type="text" id="insp-nombre-punto" required placeholder="Ej: Puente Calle 10 Brisas del Orinoco" class="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-300 rounded-xl text-slate-800 focus:ring-2 focus:ring-sky-500 focus:outline-none">
+          </div>
+        </div>
+
+        <!-- Tipo de Estructura y % Sedimentación -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Tipo de Estructura Hidráulica *</label>
+            <select id="insp-tipo-estructura" required class="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-300 rounded-xl text-slate-800 focus:ring-2 focus:ring-sky-500 focus:outline-none">
+              <option value="Cajón Doble Concreto">Cajón Doble Concreto</option>
+              <option value="Cajón Simple Concreto">Cajón Simple Concreto</option>
+              <option value="Alcantarilla Tubular Metálica/Concreto">Alcantarilla Tubular</option>
+              <option value="Canal Abierto de Tierra">Canal Abierto de Tierra</option>
+              <option value="Canal Embaulado">Canal Embaulado</option>
+              <option value="Puente Vehicular / Peatonal">Puente Vehicular / Peatonal</option>
+              <option value="Sumidero de Rejilla">Sumidero de Rejilla</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 uppercase mb-1">% Obstrucción / Basura (0-100%) *</label>
+            <input type="number" id="insp-sedimentacion" min="0" max="100" required value="70" class="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-300 rounded-xl text-slate-800 focus:ring-2 focus:ring-sky-500 focus:outline-none">
+          </div>
+        </div>
+
+        <!-- Estado de Talud y Nivel de Riesgo -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Estado de Taludes / Muros</label>
+            <input type="text" id="insp-talud" placeholder="Ej: Erosión en bases, maleza abundante" class="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-300 rounded-xl text-slate-800 focus:ring-2 focus:ring-sky-500 focus:outline-none">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Nivel de Riesgo *</label>
+            <select id="insp-riesgo" required class="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-300 rounded-xl text-slate-800 focus:ring-2 focus:ring-sky-500 focus:outline-none">
+              <option value="CRÍTICO">🔴 CRÍTICO (Desborde inminente)</option>
+              <option value="ALTO">🟠 ALTO (Bordo libre < 30cm)</option>
+              <option value="MEDIO">🟡 MEDIO (Riesgo moderado)</option>
+              <option value="BAJO">🟢 BAJO (Flujo despejado)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Familias en Riesgo y Obra Requerida -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Familias en Riesgo Directo *</label>
+            <input type="number" id="insp-familias" min="0" required placeholder="Ej: 120" class="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-300 rounded-xl text-slate-800 focus:ring-2 focus:ring-sky-500 focus:outline-none">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Obra / Acción Requerida *</label>
+            <input type="text" id="insp-obra" required placeholder="Ej: Dragado con Jumbo (200m³) y desmalezamiento" class="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-300 rounded-xl text-slate-800 focus:ring-2 focus:ring-sky-500 focus:outline-none">
+          </div>
+        </div>
+
+        <!-- GPS Coordenadas -->
+        <div class="p-3 bg-slate-100 rounded-xl border border-slate-200 flex items-center justify-between gap-2">
+          <div>
+            <span class="text-xs font-bold text-slate-800 block">Geolocalización GPS</span>
+            <span class="text-[10px] text-slate-500">Captura la coordenada exacta del puente o caño</span>
+          </div>
+          <button type="button" id="btn-insp-gps" class="px-3 py-1.5 bg-white hover:bg-slate-50 border border-slate-300 rounded-lg text-xs font-bold text-slate-700 transition flex items-center gap-1">
+            <i data-lucide="crosshair" class="w-3.5 h-3.5 text-sky-600"></i>
+            <span>Obtener GPS</span>
+          </button>
+        </div>
+        <input type="hidden" id="insp-lat" value="9.746">
+        <input type="hidden" id="insp-lng" value="-63.181">
+
+        <!-- Botones de Acción -->
+        <div class="pt-3 border-t border-slate-100 flex items-center justify-end gap-2 shrink-0">
+          <button type="button" id="btn-cancel-inspection" class="px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-xl transition">
+            Cancelar
+          </button>
+          <button type="submit" class="px-6 py-2.5 text-xs font-bold text-white bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 rounded-xl shadow-md transition flex items-center gap-1.5">
+            <i data-lucide="save" class="w-4 h-4"></i>
+            <span>Guardar Inspección</span>
+          </button>
+        </div>
+
+      </form>
+
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="bg-slate-900 text-slate-500 border-t border-slate-800 py-4 text-center text-xs">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
+      <p>Sistema de Diagnóstico Hidráulico y Drenajes de Maturín • Monagas</p>
+      <p class="font-mono text-[11px] text-slate-400">Modelado HEC-RAS 2D • QGIS Open Source</p>
+    </div>
+  </footer>
+
+  <!-- MAIN SCRIPT -->
+  <script type="module" src="js/app.js?v=1"></script>
+</body>
+</html>
