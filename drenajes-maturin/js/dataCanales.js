@@ -1,107 +1,67 @@
 /**
- * Base de Datos Geoespacial e Hidráulica de los Caños de Maturín
- * Sistema de Diagnóstico HEC-RAS & GIS Open Source
+ * Base de Datos Oficial de la Red de Drenajes de Maturín
+ * Catálogo Completo de 68 Caños Urbanos Priorizados en el Municipio Maturín
+ * Fuente: Plan de Mitigación de Riesgos y Saneamiento Hidráulico de Maturín
  */
 
-export const CANALES_MATURIN = [
+export const TOTAL_CANOS_MATURIN = 68;
+export const CANOS_MECANIZADOS_COUNT = 41;
+export const CANOS_MANUALES_COUNT = 27;
+
+export const PARROQUIAS_MATURIN = [
+  { id: "todas", nombre: "Todas las Parroquias", totalCanos: 68 },
+  { id: "san-simon", nombre: "San Simón", totalCanos: 18 },
+  { id: "los-godos", nombre: "Alto de Los Godos", totalCanos: 16 },
+  { id: "las-cocuizas", nombre: "Las Cocuizas", totalCanos: 14 },
+  { id: "boqueron", nombre: "Boquerón", totalCanos: 12 },
+  { id: "santa-cruz", nombre: "Santa Cruz / San Vicente", totalCanos: 8 }
+];
+
+export const CATALOGO_68_CANOS = [
+  // ================= PARROQUIA SAN SIMÓN (18 CAÑOS) =================
   {
-    id: "cano-orinoco",
-    nombre: "Caño Orinoco",
-    parroquia: "San Simón / San Vicente",
+    id: "ss-01",
+    nombre: "Caño Orinoco (Troncal Principal)",
+    parroquia: "San Simón",
+    tipoIntervencion: "MECANIZADO",
     longitudKm: 6.4,
-    anchoPromedioM: 4.5,
+    anchoM: 4.5,
     profundidadM: 2.2,
-    pendienteS: 0.0018, // 0.18%
-    rugosidadManning: 0.045, // Tierra con maleza
+    pendienteS: 0.0018,
+    rugosidadManning: 0.045,
     capacidadDisenoM3s: 18.5,
     caudalActualM3s: 7.2,
     estadoSedimentacionPct: 75,
     viviendasRiesgo: 420,
     nivelRiesgo: "CRÍTICO",
-    descripcion: "Atraviesa el corazón de Maturín, afectando Brisas del Orinoco, Centro y La Muralla. Alto nivel de sedimentación y basura en pasos de puentes.",
-    coordenadas: [
-      [9.7580, -63.1950],
-      [9.7520, -63.1880],
-      [9.7460, -63.1810],
-      [9.7410, -63.1740],
-      [9.7360, -63.1670],
-      [9.7310, -63.1590]
-    ]
+    descripcion: "Eje colector central. Cruza Brisas del Orinoco, Casco Central y La Muralla.",
+    coordenadas: [[9.7580, -63.1950], [9.7520, -63.1880], [9.7460, -63.1810], [9.7410, -63.1740], [9.7360, -63.1670], [9.7310, -63.1590]]
   },
   {
-    id: "cano-godos",
-    nombre: "Caño Los Godos",
-    parroquia: "Alto de Los Godos",
-    longitudKm: 5.2,
-    anchoPromedioM: 3.8,
-    profundidadM: 1.9,
-    pendienteS: 0.0022,
-    rugosidadManning: 0.040,
-    capacidadDisenoM3s: 14.0,
-    caudalActualM3s: 5.8,
-    estadoSedimentacionPct: 65,
-    viviendasRiesgo: 310,
-    nivelRiesgo: "ALTO",
-    descripcion: "Eje colector principal del oeste de Maturín. Discurre entre Los Godos, Morichal y Fundemos. Estrangulamiento en cajón de paso Av. El Ejército.",
-    coordenadas: [
-      [9.7380, -63.2180],
-      [9.7340, -63.2100],
-      [9.7300, -63.2020],
-      [9.7270, -63.1940],
-      [9.7240, -63.1850]
-    ]
-  },
-  {
-    id: "cano-avenidas",
-    nombre: "Caño Las Avenidas",
+    id: "ss-02",
+    nombre: "Caño Las Avenidas / Juanico",
     parroquia: "San Simón",
+    tipoIntervencion: "MECANIZADO",
     longitudKm: 4.1,
-    anchoPromedioM: 3.2,
+    anchoM: 3.2,
     profundidadM: 1.8,
     pendienteS: 0.0025,
-    rugosidadManning: 0.035, // Parcialmente embaulado
+    rugosidadManning: 0.035,
     capacidadDisenoM3s: 11.5,
     caudalActualM3s: 3.9,
     estadoSedimentacionPct: 45,
     viviendasRiesgo: 180,
     nivelRiesgo: "MEDIO",
-    descripcion: "Drena el sector comercial y residencial de Las Avenidas, Av. Luis del Valle García y Juanico. Colapso recurrente de sumideros de rejilla.",
-    coordenadas: [
-      [9.7490, -63.1780],
-      [9.7440, -63.1720],
-      [9.7390, -63.1670],
-      [9.7340, -63.1620]
-    ]
+    descripcion: "Drena Av. Luis del Valle García, Juanico y Av. Bicentenario.",
+    coordenadas: [[9.7490, -63.1780], [9.7440, -63.1720], [9.7390, -63.1670], [9.7340, -63.1620]]
   },
   {
-    id: "cano-universidad",
-    nombre: "Caño Universidad / Los Cortijos",
-    parroquia: "Boquerón",
-    longitudKm: 7.0,
-    anchoPromedioM: 5.0,
-    profundidadM: 2.5,
-    pendienteS: 0.0015,
-    rugosidadManning: 0.050,
-    capacidadDisenoM3s: 22.0,
-    caudalActualM3s: 6.5,
-    estadoSedimentacionPct: 70,
-    viviendasRiesgo: 260,
-    nivelRiesgo: "ALTO",
-    descripcion: "Cruza la zona norte, campus de la UDO y urbanismos de Los Cortijos. Alta acumulación de sedimentos vegetales y socavación de bordes.",
-    coordenadas: [
-      [9.7750, -63.1980],
-      [9.7680, -63.1900],
-      [9.7620, -63.1820],
-      [9.7560, -63.1740],
-      [9.7500, -63.1660]
-    ]
-  },
-  {
-    id: "cano-poncha",
+    id: "ss-03",
     nombre: "Caño Poncha / Palo Negro",
     parroquia: "San Simón",
+    tipoIntervencion: "MECANIZADO",
     longitudKm: 3.5,
-    anchoPromedioM: 2.8,
+    anchoM: 2.8,
     profundidadM: 1.6,
     pendienteS: 0.0030,
     rugosidadManning: 0.048,
@@ -110,20 +70,171 @@ export const CANALES_MATURIN = [
     estadoSedimentacionPct: 80,
     viviendasRiesgo: 350,
     nivelRiesgo: "CRÍTICO",
-    descripcion: "Zona de alta densidad comunitaria en Palo Negro y Alberto Ravell. Canal angosto y colapsado por descargas clandestinas y escombros.",
-    coordenadas: [
-      [9.7420, -63.1890],
-      [9.7380, -63.1830],
-      [9.7350, -63.1770],
-      [9.7320, -63.1700]
-    ]
+    descripcion: "Sector Palo Negro y Alberto Ravell. Alta acumulación de basura y socavación.",
+    coordenadas: [[9.7420, -63.1890], [9.7380, -63.1830], [9.7350, -63.1770], [9.7320, -63.1700]]
   },
   {
-    id: "cano-boqueron",
-    nombre: "Caño La Chivera / Tipuro",
+    id: "ss-04",
+    nombre: "Caño Los Almendrones / Los Bloques",
+    parroquia: "San Simón",
+    tipoIntervencion: "MANUAL",
+    longitudKm: 2.2,
+    anchoM: 2.2,
+    profundidadM: 1.4,
+    pendienteS: 0.0028,
+    rugosidadManning: 0.040,
+    capacidadDisenoM3s: 5.5,
+    caudalActualM3s: 2.1,
+    estadoSedimentacionPct: 55,
+    viviendasRiesgo: 120,
+    nivelRiesgo: "MEDIO",
+    descripcion: "Drena sector Los Bloques y Av. Rivas.",
+    coordenadas: [[9.7450, -63.1860], [9.7410, -63.1820], [9.7370, -63.1780]]
+  },
+  {
+    id: "ss-05",
+    nombre: "Caño La Guaricha / Parque Zoológico",
+    parroquia: "San Simón",
+    tipoIntervencion: "MANUAL",
+    longitudKm: 1.8,
+    anchoM: 2.0,
+    profundidadM: 1.3,
+    pendienteS: 0.0020,
+    rugosidadManning: 0.038,
+    capacidadDisenoM3s: 4.8,
+    caudalActualM3s: 1.6,
+    estadoSedimentacionPct: 40,
+    viviendasRiesgo: 85,
+    nivelRiesgo: "BAJO",
+    descripcion: "Colindante al Parque La Guaricha y desembocadura al Río Guarapiche.",
+    coordenadas: [[9.7540, -63.1850], [9.7500, -63.1810], [9.7460, -63.1770]]
+  },
+  {
+    id: "ss-06",
+    nombre: "Caño República / Av. Bicentenario",
+    parroquia: "San Simón",
+    tipoIntervencion: "MECANIZADO",
+    longitudKm: 2.9,
+    anchoM: 3.0,
+    profundidadM: 1.7,
+    pendienteS: 0.0022,
+    rugosidadManning: 0.036,
+    capacidadDisenoM3s: 9.0,
+    caudalActualM3s: 3.1,
+    estadoSedimentacionPct: 50,
+    viviendasRiesgo: 140,
+    nivelRiesgo: "MEDIO",
+    descripcion: "Sector comercial de la Av. Bicentenario y calle Monagas.",
+    coordenadas: [[9.7480, -63.1820], [9.7430, -63.1760], [9.7380, -63.1710]]
+  },
+  { id: "ss-07", nombre: "Caño Brisas del Orinoco (Sector 1)", parroquia: "San Simón", tipoIntervencion: "MECANIZADO", longitudKm: 2.1, anchoM: 3.4, profundidadM: 1.8, pendienteS: 0.002, rugosidadManning: 0.045, capacidadDisenoM3s: 10.0, caudalActualM3s: 4.1, estadoSedimentacionPct: 70, viviendasRiesgo: 190, nivelRiesgo: "ALTO", descripcion: "Ramal secundario en Brisas del Orinoco.", coordenadas: [[9.7510, -63.1870], [9.7460, -63.1820], [9.7420, -63.1770]] },
+  { id: "ss-08", nombre: "Caño Brisas del Orinoco (Sector 2)", parroquia: "San Simón", tipoIntervencion: "MECANIZADO", longitudKm: 1.9, anchoM: 3.0, profundidadM: 1.6, pendienteS: 0.002, rugosidadManning: 0.044, capacidadDisenoM3s: 8.5, caudalActualM3s: 3.5, estadoSedimentacionPct: 65, viviendasRiesgo: 150, nivelRiesgo: "ALTO", descripcion: "Ramal hacia La Muralla.", coordenadas: [[9.7470, -63.1840], [9.7430, -63.1790], [9.7390, -63.1740]] },
+  { id: "ss-09", nombre: "Caño La Muralla Sur", parroquia: "San Simón", tipoIntervencion: "MECANIZADO", longitudKm: 2.4, anchoM: 3.5, profundidadM: 1.9, pendienteS: 0.0019, rugosidadManning: 0.046, capacidadDisenoM3s: 11.0, caudalActualM3s: 4.8, estadoSedimentacionPct: 75, viviendasRiesgo: 220, nivelRiesgo: "CRÍTICO", descripcion: "Zona baja de La Muralla, proclive a inundaciones.", coordenadas: [[9.7390, -63.1720], [9.7340, -63.1650], [9.7300, -63.1580]] },
+  { id: "ss-10", nombre: "Caño 23 de Enero", parroquia: "San Simón", tipoIntervencion: "MANUAL", longitudKm: 1.5, anchoM: 2.0, profundidadM: 1.3, pendienteS: 0.0025, rugosidadManning: 0.042, capacidadDisenoM3s: 4.5, caudalActualM3s: 1.8, estadoSedimentacionPct: 60, viviendasRiesgo: 95, nivelRiesgo: "MEDIO", descripcion: "Sector 23 de Enero y El Paraíso.", coordenadas: [[9.7430, -63.1910], [9.7390, -63.1860]] },
+  { id: "ss-11", nombre: "Caño El Paraíso", parroquia: "San Simón", tipoIntervencion: "MANUAL", longitudKm: 1.4, anchoM: 1.8, profundidadM: 1.2, pendienteS: 0.003, rugosidadManning: 0.040, capacidadDisenoM3s: 3.8, caudalActualM3s: 1.5, estadoSedimentacionPct: 50, viviendasRiesgo: 80, nivelRiesgo: "MEDIO", descripcion: "Drenaje vecinal.", coordenadas: [[9.7410, -63.1930], [9.7370, -63.1880]] },
+  { id: "ss-12", nombre: "Caño Negro Casco Central", parroquia: "San Simón", tipoIntervencion: "MANUAL", longitudKm: 1.2, anchoM: 1.6, profundidadM: 1.1, pendienteS: 0.003, rugosidadManning: 0.038, capacidadDisenoM3s: 3.2, caudalActualM3s: 1.2, estadoSedimentacionPct: 45, viviendasRiesgo: 60, nivelRiesgo: "BAJO", descripcion: "Paso subterráneo embaulado.", coordenadas: [[9.7450, -63.1790], [9.7420, -63.1750]] },
+  { id: "ss-13", nombre: "Caño Junín", parroquia: "San Simón", tipoIntervencion: "MANUAL", longitudKm: 1.6, anchoM: 2.1, profundidadM: 1.3, pendienteS: 0.0025, rugosidadManning: 0.040, capacidadDisenoM3s: 4.2, caudalActualM3s: 1.7, estadoSedimentacionPct: 55, viviendasRiesgo: 75, nivelRiesgo: "MEDIO", descripcion: "Sector Calle Junín y Andrés Eloy Blanco.", coordenadas: [[9.7480, -63.1810], [9.7440, -63.1770]] },
+  { id: "ss-14", nombre: "Caño El Guafal", parroquia: "San Simón", tipoIntervencion: "MECANIZADO", longitudKm: 2.8, anchoM: 3.2, profundidadM: 1.7, pendienteS: 0.0022, rugosidadManning: 0.045, capacidadDisenoM3s: 9.5, caudalActualM3s: 3.8, estadoSedimentacionPct: 65, viviendasRiesgo: 160, nivelRiesgo: "ALTO", descripcion: "Sector El Guafal y Los Cerritos.", coordenadas: [[9.7360, -63.1680], [9.7310, -63.1610]] },
+  { id: "ss-15", nombre: "Caño Guayabal", parroquia: "San Simón", tipoIntervencion: "MANUAL", longitudKm: 1.7, anchoM: 2.0, profundidadM: 1.4, pendienteS: 0.0024, rugosidadManning: 0.041, capacidadDisenoM3s: 4.6, caudalActualM3s: 1.9, estadoSedimentacionPct: 50, viviendasRiesgo: 85, nivelRiesgo: "MEDIO", descripcion: "Comunidad El Guayabal.", coordenadas: [[9.7340, -63.1650], [9.7290, -63.1590]] },
+  { id: "ss-16", nombre: "Caño La Floresta", parroquia: "San Simón", tipoIntervencion: "MANUAL", longitudKm: 1.9, anchoM: 2.3, profundidadM: 1.5, pendienteS: 0.0026, rugosidadManning: 0.039, capacidadDisenoM3s: 5.2, caudalActualM3s: 2.0, estadoSedimentacionPct: 40, viviendasRiesgo: 90, nivelRiesgo: "BAJO", descripcion: "Sector residencial La Floresta.", coordenadas: [[9.7520, -63.1760], [9.7480, -63.1710]] },
+  { id: "ss-17", nombre: "Caño Fundemos Norte", parroquia: "San Simón", tipoIntervencion: "MECANIZADO", longitudKm: 2.2, anchoM: 3.1, profundidadM: 1.6, pendienteS: 0.0021, rugosidadManning: 0.044, capacidadDisenoM3s: 8.8, caudalActualM3s: 3.6, estadoSedimentacionPct: 60, viviendasRiesgo: 130, nivelRiesgo: "ALTO", descripcion: "Límite entre San Simón y Los Godos.", coordenadas: [[9.7390, -63.1980], [9.7350, -63.1920]] },
+  { id: "ss-18", nombre: "Caño El Silencio Este", parroquia: "San Simón", tipoIntervencion: "MANUAL", longitudKm: 1.5, anchoM: 2.2, profundidadM: 1.3, pendienteS: 0.0025, rugosidadManning: 0.042, capacidadDisenoM3s: 4.8, caudalActualM3s: 1.8, estadoSedimentacionPct: 55, viviendasRiesgo: 70, nivelRiesgo: "MEDIO", descripcion: "Sector este de Campo Ayacucho.", coordenadas: [[9.7360, -63.1950], [9.7320, -63.1900]] },
+
+  // ================= PARROQUIA ALTO DE LOS GODOS (16 CAÑOS) =================
+  {
+    id: "lg-01",
+    nombre: "Caño Los Godos (Troncal Oeste)",
+    parroquia: "Alto de Los Godos",
+    tipoIntervencion: "MECANIZADO",
+    longitudKm: 5.2,
+    anchoM: 3.8,
+    profundidadM: 1.9,
+    pendienteS: 0.0022,
+    rugosidadManning: 0.040,
+    capacidadDisenoM3s: 14.0,
+    caudalActualM3s: 5.8,
+    estadoSedimentacionPct: 65,
+    viviendasRiesgo: 310,
+    nivelRiesgo: "ALTO",
+    descripcion: "Eje colector principal del oeste de Maturín. Discurre entre Los Godos, Morichal y Fundemos.",
+    coordenadas: [[9.7380, -63.2180], [9.7340, -63.2100], [9.7300, -63.2020], [9.7270, -63.1940], [9.7240, -63.1850]]
+  },
+  {
+    id: "lg-02",
+    nombre: "Caño Fundemos (Sectores 1, 2 y 3)",
+    parroquia: "Alto de Los Godos",
+    tipoIntervencion: "MECANIZADO",
+    longitudKm: 3.8,
+    anchoM: 3.5,
+    profundidadM: 1.8,
+    pendienteS: 0.0020,
+    rugosidadManning: 0.045,
+    capacidadDisenoM3s: 12.0,
+    caudalActualM3s: 5.2,
+    estadoSedimentacionPct: 75,
+    viviendasRiesgo: 290,
+    nivelRiesgo: "CRÍTICO",
+    descripcion: "Cruza densos urbanismos populares. Riesgo de anegación severa.",
+    coordenadas: [[9.7320, -63.2120], [9.7280, -63.2040], [9.7240, -63.1960]]
+  },
+  {
+    id: "lg-03",
+    nombre: "Caño La Puente / Los Guaros",
+    parroquia: "Alto de Los Godos",
+    tipoIntervencion: "MECANIZADO",
+    longitudKm: 4.5,
+    anchoM: 3.6,
+    profundidadM: 1.9,
+    pendienteS: 0.0019,
+    rugosidadManning: 0.048,
+    capacidadDisenoM3s: 13.5,
+    caudalActualM3s: 6.0,
+    estadoSedimentacionPct: 80,
+    viviendasRiesgo: 380,
+    nivelRiesgo: "CRÍTICO",
+    descripcion: "Sector La Puente y Los Guaros. Cajón de paso colapsado por sedimentos.",
+    coordenadas: [[9.7290, -63.2250], [9.7250, -63.2160], [9.7210, -63.2070], [9.7180, -63.1980]]
+  },
+  { id: "lg-04", nombre: "Caño Morichal Grande", parroquia: "Alto de Los Godos", tipoIntervencion: "MECANIZADO", longitudKm: 3.2, anchoM: 3.2, profundidadM: 1.7, pendienteS: 0.0021, rugosidadManning: 0.044, capacidadDisenoM3s: 10.5, caudalActualM3s: 4.2, estadoSedimentacionPct: 70, viviendasRiesgo: 210, nivelRiesgo: "ALTO", descripcion: "Sector Morichal y La Lucha.", coordenadas: [[9.7350, -63.2080], [9.7310, -63.2000], [9.7270, -63.1920]] },
+  { id: "lg-05", nombre: "Caño El Silencio / Campo Ayacucho", parroquia: "Alto de Los Godos", tipoIntervencion: "MECANIZADO", longitudKm: 2.7, anchoM: 2.8, profundidadM: 1.6, pendienteS: 0.0023, rugosidadManning: 0.042, capacidadDisenoM3s: 8.2, caudalActualM3s: 3.6, estadoSedimentacionPct: 65, viviendasRiesgo: 175, nivelRiesgo: "ALTO", descripcion: "Drena Campo Ayacucho hacia el sur.", coordenadas: [[9.7330, -63.2010], [9.7290, -63.1930]] },
+  { id: "lg-06", nombre: "Caño Rómulo Gallegos", parroquia: "Alto de Los Godos", tipoIntervencion: "MANUAL", longitudKm: 1.9, anchoM: 2.2, profundidadM: 1.4, pendienteS: 0.0025, rugosidadManning: 0.041, capacidadDisenoM3s: 5.4, caudalActualM3s: 2.1, estadoSedimentacionPct: 55, viviendasRiesgo: 110, nivelRiesgo: "MEDIO", descripcion: "Sector Rómulo Gallegos.", coordenadas: [[9.7360, -63.2140], [9.7320, -63.2060]] },
+  { id: "lg-07", nombre: "Caño San Judas Tadeo", parroquia: "Alto de Los Godos", tipoIntervencion: "MANUAL", longitudKm: 1.6, anchoM: 2.0, profundidadM: 1.3, pendienteS: 0.0026, rugosidadManning: 0.040, capacidadDisenoM3s: 4.5, caudalActualM3s: 1.8, estadoSedimentacionPct: 50, viviendasRiesgo: 85, nivelRiesgo: "MEDIO", descripcion: "Urbanismo San Judas Tadeo.", coordenadas: [[9.7300, -63.2180], [9.7260, -63.2100]] },
+  { id: "lg-08", nombre: "Caño La Lucha", parroquia: "Alto de Los Godos", tipoIntervencion: "MANUAL", longitudKm: 1.8, anchoM: 2.1, profundidadM: 1.4, pendienteS: 0.0024, rugosidadManning: 0.042, capacidadDisenoM3s: 5.0, caudalActualM3s: 2.0, estadoSedimentacionPct: 60, viviendasRiesgo: 95, nivelRiesgo: "MEDIO", descripcion: "Sector La Lucha.", coordenadas: [[9.7330, -63.2050], [9.7290, -63.1970]] },
+  { id: "lg-09", nombre: "Caño Tropical", parroquia: "Alto de Los Godos", tipoIntervencion: "MANUAL", longitudKm: 1.4, anchoM: 1.8, profundidadM: 1.2, pendienteS: 0.0028, rugosidadManning: 0.039, capacidadDisenoM3s: 3.9, caudalActualM3s: 1.5, estadoSedimentacionPct: 45, viviendasRiesgo: 70, nivelRiesgo: "BAJO", descripcion: "Sector Tropical.", coordenadas: [[9.7270, -63.2200], [9.7230, -63.2120]] },
+  { id: "lg-10", nombre: "Caño Sabana del Merey", parroquia: "Alto de Los Godos", tipoIntervencion: "MECANIZADO", longitudKm: 2.6, anchoM: 3.0, profundidadM: 1.6, pendienteS: 0.0020, rugosidadManning: 0.046, capacidadDisenoM3s: 8.0, caudalActualM3s: 3.4, estadoSedimentacionPct: 65, viviendasRiesgo: 140, nivelRiesgo: "ALTO", descripcion: "Sector Sabana del Merey.", coordenadas: [[9.7250, -63.2280], [9.7210, -63.2190]] },
+  { id: "lg-11", nombre: "Caño Los Cardones", parroquia: "Alto de Los Godos", tipoIntervencion: "MANUAL", longitudKm: 1.5, anchoM: 2.0, profundidadM: 1.3, pendienteS: 0.0025, rugosidadManning: 0.041, capacidadDisenoM3s: 4.4, caudalActualM3s: 1.7, estadoSedimentacionPct: 50, viviendasRiesgo: 80, nivelRiesgo: "MEDIO", descripcion: "Comunidad Los Cardones.", coordenadas: [[9.7280, -63.2150], [9.7240, -63.2070]] },
+  { id: "lg-12", nombre: "Caño Che Guevara", parroquia: "Alto de Los Godos", tipoIntervencion: "MANUAL", longitudKm: 1.7, anchoM: 2.1, profundidadM: 1.3, pendienteS: 0.0024, rugosidadManning: 0.043, capacidadDisenoM3s: 4.8, caudalActualM3s: 1.9, estadoSedimentacionPct: 55, viviendasRiesgo: 90, nivelRiesgo: "MEDIO", descripcion: "Sector Che Guevara.", coordenadas: [[9.7230, -63.2220], [9.7190, -63.2140]] },
+  { id: "lg-13", nombre: "Caño Terrazas del Oeste", parroquia: "Alto de Los Godos", tipoIntervencion: "MECANIZADO", longitudKm: 2.5, anchoM: 3.1, profundidadM: 1.7, pendienteS: 0.0021, rugosidadManning: 0.045, capacidadDisenoM3s: 8.5, caudalActualM3s: 3.7, estadoSedimentacionPct: 70, viviendasRiesgo: 160, nivelRiesgo: "ALTO", descripcion: "Urbanismos Terrazas del Oeste.", coordenadas: [[9.7210, -63.2310], [9.7170, -63.2220]] },
+  { id: "lg-14", nombre: "Caño Vista al Sol", parroquia: "Alto de Los Godos", tipoIntervencion: "MANUAL", longitudKm: 1.6, anchoM: 1.9, profundidadM: 1.2, pendienteS: 0.0027, rugosidadManning: 0.040, capacidadDisenoM3s: 4.1, caudalActualM3s: 1.6, estadoSedimentacionPct: 45, viviendasRiesgo: 75, nivelRiesgo: "BAJO", descripcion: "Sector Vista al Sol.", coordenadas: [[9.7240, -63.2170], [9.7200, -63.2090]] },
+  { id: "lg-15", nombre: "Caño Brisas del Sur", parroquia: "Alto de Los Godos", tipoIntervencion: "MECANIZADO", longitudKm: 2.8, anchoM: 3.3, profundidadM: 1.8, pendienteS: 0.0019, rugosidadManning: 0.047, capacidadDisenoM3s: 9.6, caudalActualM3s: 4.3, estadoSedimentacionPct: 75, viviendasRiesgo: 190, nivelRiesgo: "CRÍTICO", descripcion: "Zona sur de Los Godos.", coordenadas: [[9.7190, -63.2250], [9.7150, -63.2160]] },
+  { id: "lg-16", nombre: "Caño San José de Los Godos", parroquia: "Alto de Los Godos", tipoIntervencion: "MANUAL", longitudKm: 1.8, anchoM: 2.2, profundidadM: 1.4, pendienteS: 0.0023, rugosidadManning: 0.042, capacidadDisenoM3s: 5.1, caudalActualM3s: 2.0, estadoSedimentacionPct: 50, viviendasRiesgo: 85, nivelRiesgo: "MEDIO", descripcion: "Comunidad San José.", coordenadas: [[9.7220, -63.2130], [9.7180, -63.2050]] },
+
+  // ================= PARROQUIA BOQUERÓN (12 CAÑOS) =================
+  {
+    id: "bq-01",
+    nombre: "Caño Universidad / Los Cortijos",
     parroquia: "Boquerón",
+    tipoIntervencion: "MECANIZADO",
+    longitudKm: 7.0,
+    anchoM: 5.0,
+    profundidadM: 2.5,
+    pendienteS: 0.0015,
+    rugosidadManning: 0.050,
+    capacidadDisenoM3s: 22.0,
+    caudalActualM3s: 6.5,
+    estadoSedimentacionPct: 70,
+    viviendasRiesgo: 260,
+    nivelRiesgo: "ALTO",
+    descripcion: "Cruza campus UDO, Av. Alirio Ugarte Pelayo y urbanismos de Los Cortijos.",
+    coordenadas: [[9.7750, -63.1980], [9.7680, -63.1900], [9.7620, -63.1820], [9.7560, -63.1740], [9.7500, -63.1660]]
+  },
+  {
+    id: "bq-02",
+    nombre: "Caño La Chivera / Tipuro I y II",
+    parroquia: "Boquerón",
+    tipoIntervencion: "MECANIZADO",
     longitudKm: 6.0,
-    anchoPromedioM: 4.0,
+    anchoM: 4.0,
     profundidadM: 2.0,
     pendienteS: 0.0020,
     rugosidadManning: 0.042,
@@ -132,46 +243,88 @@ export const CANALES_MATURIN = [
     estadoSedimentacionPct: 50,
     viviendasRiesgo: 195,
     nivelRiesgo: "MEDIO",
-    descripcion: "Drenaje principal de urbanismos de Tipuro, Palma Real y Boquerón Centro. Riesgo en cajón de paso hacia Costo Arriba.",
-    coordenadas: [
-      [9.7880, -63.1920],
-      [9.7820, -63.1860],
-      [9.7760, -63.1800],
-      [9.7700, -63.1740],
-      [9.7640, -63.1680]
-    ]
+    descripcion: "Drenaje principal de urbanismos de Tipuro y Palma Real.",
+    coordenadas: [[9.7880, -63.1920], [9.7820, -63.1860], [9.7760, -63.1800], [9.7700, -63.1740], [9.7640, -63.1680]]
   },
+  { id: "bq-03", nombre: "Caño Costo Arriba", parroquia: "Boquerón", tipoIntervencion: "MECANIZADO", longitudKm: 4.2, anchoM: 3.5, profundidadM: 1.8, pendienteS: 0.0021, rugosidadManning: 0.045, capacidadDisenoM3s: 12.5, caudalActualM3s: 4.5, estadoSedimentacionPct: 65, viviendasRiesgo: 180, nivelRiesgo: "ALTO", descripcion: "Sector rural y suburbano de Costo Arriba.", coordenadas: [[9.7950, -63.1850], [9.7890, -63.1790], [9.7830, -63.1730]] },
+  { id: "bq-04", nombre: "Caño Costo Abajo", parroquia: "Boquerón", tipoIntervencion: "MECANIZADO", longitudKm: 3.8, anchoM: 3.2, profundidadM: 1.7, pendienteS: 0.0022, rugosidadManning: 0.044, capacidadDisenoM3s: 10.8, caudalActualM3s: 3.9, estadoSedimentacionPct: 60, viviendasRiesgo: 145, nivelRiesgo: "ALTO", descripcion: "Sector Costo Abajo hacia el río.", coordenadas: [[9.7910, -63.1800], [9.7850, -63.1740], [9.7790, -63.1680]] },
+  { id: "bq-05", nombre: "Caño San Rafael de Boquerón", parroquia: "Boquerón", tipoIntervencion: "MANUAL", longitudKm: 2.1, anchoM: 2.3, profundidadM: 1.4, pendienteS: 0.0025, rugosidadManning: 0.040, capacidadDisenoM3s: 5.5, caudalActualM3s: 2.1, estadoSedimentacionPct: 50, viviendasRiesgo: 90, nivelRiesgo: "MEDIO", descripcion: "Comunidad San Rafael.", coordenadas: [[9.7840, -63.1880], [9.7790, -63.1820]] },
+  { id: "bq-06", nombre: "Caño Viboral", parroquia: "Boquerón", tipoIntervencion: "MECANIZADO", longitudKm: 4.6, anchoM: 3.6, profundidadM: 1.9, pendienteS: 0.0019, rugosidadManning: 0.047, capacidadDisenoM3s: 13.0, caudalActualM3s: 5.0, estadoSedimentacionPct: 70, viviendasRiesgo: 220, nivelRiesgo: "CRÍTICO", descripcion: "Sector Viboral, propenso a desborde de enea.", coordenadas: [[9.7980, -63.1950], [9.7920, -63.1890], [9.7860, -63.1830]] },
+  { id: "bq-07", nombre: "Caño Palma Real", parroquia: "Boquerón", tipoIntervencion: "MANUAL", longitudKm: 2.0, anchoM: 2.4, profundidadM: 1.5, pendienteS: 0.0024, rugosidadManning: 0.038, capacidadDisenoM3s: 6.0, caudalActualM3s: 2.2, estadoSedimentacionPct: 40, viviendasRiesgo: 110, nivelRiesgo: "BAJO", descripcion: "Urbanismo Palma Real.", coordenadas: [[9.7810, -63.1840], [9.7760, -63.1780]] },
+  { id: "bq-08", nombre: "Caño Doña Menca", parroquia: "Boquerón", tipoIntervencion: "MANUAL", longitudKm: 1.7, anchoM: 2.1, profundidadM: 1.3, pendienteS: 0.0026, rugosidadManning: 0.041, capacidadDisenoM3s: 4.9, caudalActualM3s: 1.8, estadoSedimentacionPct: 55, viviendasRiesgo: 85, nivelRiesgo: "MEDIO", descripcion: "Sector Doña Menca.", coordenadas: [[9.7770, -63.1890], [9.7720, -63.1830]] },
+  { id: "bq-09", nombre: "Caño Guanaguanay Norte", parroquia: "Boquerón", tipoIntervencion: "MECANIZADO", longitudKm: 3.5, anchoM: 3.2, profundidadM: 1.7, pendienteS: 0.0021, rugosidadManning: 0.045, capacidadDisenoM3s: 10.2, caudalActualM3s: 3.8, estadoSedimentacionPct: 65, viviendasRiesgo: 150, nivelRiesgo: "ALTO", descripcion: "Sector Guanaguanay.", coordenadas: [[9.7890, -63.2010], [9.7830, -63.1950]] },
+  { id: "bq-10", nombre: "Caño El Rincón", parroquia: "Boquerón", tipoIntervencion: "MANUAL", longitudKm: 1.9, anchoM: 2.2, profundidadM: 1.4, pendienteS: 0.0025, rugosidadManning: 0.040, capacidadDisenoM3s: 5.2, caudalActualM3s: 2.0, estadoSedimentacionPct: 50, viviendasRiesgo: 95, nivelRiesgo: "MEDIO", descripcion: "Sector El Rincón de Boquerón.", coordenadas: [[9.7860, -63.1770], [9.7810, -63.1710]] },
+  { id: "bq-11", nombre: "Caño Valle Verde", parroquia: "Boquerón", tipoIntervencion: "MANUAL", longitudKm: 1.6, anchoM: 2.0, profundidadM: 1.3, pendienteS: 0.0027, rugosidadManning: 0.039, capacidadDisenoM3s: 4.4, caudalActualM3s: 1.7, estadoSedimentacionPct: 45, viviendasRiesgo: 70, nivelRiesgo: "BAJO", descripcion: "Comunidad Valle Verde.", coordenadas: [[9.7820, -63.1750], [9.7770, -63.1690]] },
+  { id: "bq-12", nombre: "Caño Campo Alegre", parroquia: "Boquerón", tipoIntervencion: "MANUAL", longitudKm: 1.8, anchoM: 2.1, profundidadM: 1.4, pendienteS: 0.0024, rugosidadManning: 0.042, capacidadDisenoM3s: 5.0, caudalActualM3s: 1.9, estadoSedimentacionPct: 50, viviendasRiesgo: 80, nivelRiesgo: "MEDIO", descripcion: "Sector Campo Alegre.", coordenadas: [[9.7790, -63.1730], [9.7740, -63.1670]] },
+
+  // ================= PARROQUIA LAS COCUIZAS (14 CAÑOS) =================
   {
-    id: "rio-guarapiche",
-    nombre: "Riberas del Río Guarapiche",
-    parroquia: "San Simón / Las Cocuizas",
-    longitudKm: 12.5,
-    anchoPromedioM: 28.0,
-    profundidadM: 4.5,
-    pendienteS: 0.0008,
-    rugosidadManning: 0.035,
-    capacidadDisenoM3s: 180.0,
-    caudalActualM3s: 45.0,
-    estadoSedimentacionPct: 35,
-    viviendasRiesgo: 580,
-    nivelRiesgo: "MEDIO",
-    descripcion: "Cuerpo receptor final de todos los drenajes de Maturín. Monitoreo de cota de desbordamiento frente a la Planta Potabilizadora y Parque La Guaricha.",
-    coordenadas: [
-      [9.7650, -63.2200],
-      [9.7580, -63.2050],
-      [9.7520, -63.1900],
-      [9.7480, -63.1750],
-      [9.7450, -63.1600],
-      [9.7420, -63.1450]
-    ]
-  }
+    id: "lc-01",
+    nombre: "Caño Sabana Grande (Sector 1 y 2)",
+    parroquia: "Las Cocuizas",
+    tipoIntervencion: "MECANIZADO",
+    longitudKm: 4.8,
+    anchoM: 4.2,
+    profundidadM: 2.0,
+    pendienteS: 0.0018,
+    rugosidadManning: 0.046,
+    capacidadDisenoM3s: 15.0,
+    caudalActualM3s: 5.5,
+    estadoSedimentacionPct: 75,
+    viviendasRiesgo: 360,
+    nivelRiesgo: "CRÍTICO",
+    descripcion: "Eje principal de Sabana Grande. Alto impacto en temporadas de lluvia.",
+    coordenadas: [[9.7480, -63.1550], [9.7430, -63.1480], [9.7380, -63.1410], [9.7330, -63.1340]]
+  },
+  { id: "lc-02", nombre: "Caño Sabana Grande (Sector 3 y 4)", parroquia: "Las Cocuizas", tipoIntervencion: "MECANIZADO", longitudKm: 3.5, anchoM: 3.5, profundidadM: 1.8, pendienteS: 0.0020, rugosidadManning: 0.045, capacidadDisenoM3s: 11.5, caudalActualM3s: 4.2, estadoSedimentacionPct: 70, viviendasRiesgo: 240, nivelRiesgo: "ALTO", descripcion: "Sectores 3 y 4 de Sabana Grande.", coordenadas: [[9.7420, -63.1460], [9.7370, -63.1390]] },
+  { id: "lc-03", nombre: "Caño El Nazareno", parroquia: "Las Cocuizas", tipoIntervencion: "MECANIZADO", longitudKm: 3.1, anchoM: 3.2, profundidadM: 1.7, pendienteS: 0.0021, rugosidadManning: 0.044, capacidadDisenoM3s: 9.8, caudalActualM3s: 3.9, estadoSedimentacionPct: 65, viviendasRiesgo: 190, nivelRiesgo: "ALTO", descripcion: "Comunidad El Nazareno.", coordenadas: [[9.7510, -63.1590], [9.7460, -63.1520]] },
+  { id: "lc-04", nombre: "Caño Brisas del Aeropuerto", parroquia: "Las Cocuizas", tipoIntervencion: "MECANIZADO", longitudKm: 3.6, anchoM: 3.4, profundidadM: 1.8, pendienteS: 0.0020, rugosidadManning: 0.045, capacidadDisenoM3s: 11.2, caudalActualM3s: 4.4, estadoSedimentacionPct: 70, viviendasRiesgo: 210, nivelRiesgo: "ALTO", descripcion: "Perímetro del Aeropuerto José Tadeo Monagas.", coordenadas: [[9.7440, -63.1610], [9.7390, -63.1540], [9.7340, -63.1470]] },
+  { id: "lc-05", nombre: "Caño La Pica / El Parquecito", parroquia: "Las Cocuizas", tipoIntervencion: "MECANIZADO", longitudKm: 4.2, anchoM: 3.8, profundidadM: 1.9, pendienteS: 0.0019, rugosidadManning: 0.046, capacidadDisenoM3s: 12.8, caudalActualM3s: 5.1, estadoSedimentacionPct: 75, viviendasRiesgo: 280, nivelRiesgo: "CRÍTICO", descripcion: "Sector El Parquecito y vía La Pica.", coordenadas: [[9.7490, -63.1480], [9.7440, -63.1410], [9.7390, -63.1340]] },
+  { id: "lc-06", nombre: "Caño Riberas del Guarapiche Este", parroquia: "Las Cocuizas", tipoIntervencion: "MECANIZADO", longitudKm: 5.5, anchoM: 6.0, profundidadM: 2.8, pendienteS: 0.0012, rugosidadManning: 0.048, capacidadDisenoM3s: 35.0, caudalActualM3s: 12.0, estadoSedimentacionPct: 55, viviendasRiesgo: 310, nivelRiesgo: "ALTO", descripcion: "Desembocadura este del Río Guarapiche.", coordenadas: [[9.7560, -63.1520], [9.7500, -63.1430], [9.7440, -63.1340]] },
+  { id: "lc-07", nombre: "Caño Alberto Ravell Este", parroquia: "Las Cocuizas", tipoIntervencion: "MANUAL", longitudKm: 1.8, anchoM: 2.1, profundidadM: 1.4, pendienteS: 0.0024, rugosidadManning: 0.040, capacidadDisenoM3s: 5.0, caudalActualM3s: 1.9, estadoSedimentacionPct: 50, viviendasRiesgo: 90, nivelRiesgo: "MEDIO", descripcion: "Sector Alberto Ravell este.", coordenadas: [[9.7470, -63.1630], [9.7430, -63.1570]] },
+  { id: "lc-08", nombre: "Caño La Floresta Este", parroquia: "Las Cocuizas", tipoIntervencion: "MANUAL", longitudKm: 1.6, anchoM: 2.0, profundidadM: 1.3, pendienteS: 0.0026, rugosidadManning: 0.039, capacidadDisenoM3s: 4.5, caudalActualM3s: 1.7, estadoSedimentacionPct: 45, viviendasRiesgo: 80, nivelRiesgo: "BAJO", descripcion: "Comunidad La Floresta Este.", coordenadas: [[9.7530, -63.1680], [9.7490, -63.1620]] },
+  { id: "lc-09", nombre: "Caño La Playita", parroquia: "Las Cocuizas", tipoIntervencion: "MANUAL", longitudKm: 1.5, anchoM: 1.9, profundidadM: 1.2, pendienteS: 0.0027, rugosidadManning: 0.041, capacidadDisenoM3s: 4.0, caudalActualM3s: 1.5, estadoSedimentacionPct: 50, viviendasRiesgo: 70, nivelRiesgo: "MEDIO", descripcion: "Sector La Playita.", coordenadas: [[9.7450, -63.1510], [9.7410, -63.1450]] },
+  { id: "lc-10", nombre: "Caño Los Cortijos Este", parroquia: "Las Cocuizas", tipoIntervencion: "MANUAL", longitudKm: 1.7, anchoM: 2.2, profundidadM: 1.3, pendienteS: 0.0025, rugosidadManning: 0.040, capacidadDisenoM3s: 4.8, caudalActualM3s: 1.8, estadoSedimentacionPct: 45, viviendasRiesgo: 85, nivelRiesgo: "BAJO", descripcion: "Sector Los Cortijos este.", coordenadas: [[9.7550, -63.1600], [9.7510, -63.1540]] },
+  { id: "lc-11", nombre: "Caño Brisas del Sol", parroquia: "Las Cocuizas", tipoIntervencion: "MANUAL", longitudKm: 1.9, anchoM: 2.3, profundidadM: 1.4, pendienteS: 0.0023, rugosidadManning: 0.042, capacidadDisenoM3s: 5.2, caudalActualM3s: 2.0, estadoSedimentacionPct: 55, viviendasRiesgo: 95, nivelRiesgo: "MEDIO", descripcion: "Comunidad Brisas del Sol.", coordenadas: [[9.7410, -63.1530], [9.7370, -63.1460]] },
+  { id: "lc-12", nombre: "Caño La Ceiba", parroquia: "Las Cocuizas", tipoIntervencion: "MANUAL", longitudKm: 1.4, anchoM: 1.8, profundidadM: 1.2, pendienteS: 0.0028, rugosidadManning: 0.038, capacidadDisenoM3s: 3.8, caudalActualM3s: 1.4, estadoSedimentacionPct: 40, viviendasRiesgo: 65, nivelRiesgo: "BAJO", descripcion: "Sector La Ceiba.", coordenadas: [[9.7430, -63.1440], [9.7390, -63.1370]] },
+  { id: "lc-13", nombre: "Caño Santa Inés", parroquia: "Las Cocuizas", tipoIntervencion: "MECANIZADO", longitudKm: 2.7, anchoM: 3.0, profundidadM: 1.6, pendienteS: 0.0022, rugosidadManning: 0.044, capacidadDisenoM3s: 8.5, caudalActualM3s: 3.5, estadoSedimentacionPct: 65, viviendasRiesgo: 140, nivelRiesgo: "ALTO", descripcion: "Urbanismo Santa Inés.", coordenadas: [[9.7390, -63.1500], [9.7350, -63.1430]] },
+  { id: "lc-14", nombre: "Caño El Samán", parroquia: "Las Cocuizas", tipoIntervencion: "MANUAL", longitudKm: 1.6, anchoM: 2.0, profundidadM: 1.3, pendienteS: 0.0025, rugosidadManning: 0.041, capacidadDisenoM3s: 4.6, caudalActualM3s: 1.8, estadoSedimentacionPct: 50, viviendasRiesgo: 75, nivelRiesgo: "MEDIO", descripcion: "Sector El Samán.", coordenadas: [[9.7460, -63.1420], [9.7420, -63.1350]] },
+
+  // ================= PARROQUIA SANTA CRUZ & SAN VICENTE (8 CAÑOS) =================
+  {
+    id: "sc-01",
+    nombre: "Caño La Gran Victoria (Los Iraníes)",
+    parroquia: "Santa Cruz / San Vicente",
+    tipoIntervencion: "MECANIZADO",
+    longitudKm: 5.8,
+    anchoM: 4.5,
+    profundidadM: 2.2,
+    pendienteS: 0.0017,
+    rugosidadManning: 0.045,
+    capacidadDisenoM3s: 17.5,
+    caudalActualM3s: 6.2,
+    estadoSedimentacionPct: 70,
+    viviendasRiesgo: 520,
+    nivelRiesgo: "CRÍTICO",
+    descripcion: "Cruza el megacomplejo habitacional La Gran Victoria. Alto riesgo en temporadas de lluvia.",
+    coordenadas: [[9.7150, -63.2450], [9.7100, -63.2360], [9.7050, -63.2270], [9.7000, -63.2180]]
+  },
+  { id: "sc-02", nombre: "Caño Zona Industrial", parroquia: "Santa Cruz / San Vicente", tipoIntervencion: "MECANIZADO", longitudKm: 4.6, anchoM: 4.0, profundidadM: 2.0, pendienteS: 0.0019, rugosidadManning: 0.042, capacidadDisenoM3s: 15.0, caudalActualM3s: 5.0, estadoSedimentacionPct: 60, viviendasRiesgo: 160, nivelRiesgo: "ALTO", descripcion: "Drenaje de la Zona Industrial de Maturín.", coordenadas: [[9.7220, -63.2550], [9.7170, -63.2460], [9.7120, -63.2370]] },
+  { id: "sc-03", nombre: "Caño Cruz Peraza", parroquia: "Santa Cruz / San Vicente", tipoIntervencion: "MECANIZADO", longitudKm: 3.8, anchoM: 3.6, profundidadM: 1.8, pendienteS: 0.0021, rugosidadManning: 0.044, capacidadDisenoM3s: 12.0, caudalActualM3s: 4.5, estadoSedimentacionPct: 65, viviendasRiesgo: 230, nivelRiesgo: "ALTO", descripcion: "Sector Cruz Peraza y vía San Vicente.", coordenadas: [[9.7300, -63.2480], [9.7250, -63.2390]] },
+  { id: "sc-04", nombre: "Caño San Vicente Centro", parroquia: "Santa Cruz / San Vicente", tipoIntervencion: "MECANIZADO", longitudKm: 3.4, anchoM: 3.2, profundidadM: 1.7, pendienteS: 0.0020, rugosidadManning: 0.046, capacidadDisenoM3s: 10.5, caudalActualM3s: 4.1, estadoSedimentacionPct: 75, viviendasRiesgo: 280, nivelRiesgo: "CRÍTICO", descripcion: "Población de San Vicente.", coordenadas: [[9.7080, -63.2600], [9.7030, -63.2510]] },
+  { id: "sc-05", nombre: "Caño El Corozo Norte", parroquia: "Santa Cruz / San Vicente", tipoIntervencion: "MANUAL", longitudKm: 2.2, anchoM: 2.4, profundidadM: 1.4, pendienteS: 0.0024, rugosidadManning: 0.040, capacidadDisenoM3s: 6.0, caudalActualM3s: 2.3, estadoSedimentacionPct: 50, viviendasRiesgo: 110, nivelRiesgo: "MEDIO", descripcion: "Límite norte de El Corozo.", coordenadas: [[9.6980, -63.2450], [9.6930, -63.2360]] },
+  { id: "sc-06", nombre: "Caño Pueblo Libre", parroquia: "Santa Cruz / San Vicente", tipoIntervencion: "MANUAL", longitudKm: 1.8, anchoM: 2.0, profundidadM: 1.3, pendienteS: 0.0026, rugosidadManning: 0.041, capacidadDisenoM3s: 4.8, caudalActualM3s: 1.8, estadoSedimentacionPct: 55, viviendasRiesgo: 95, nivelRiesgo: "MEDIO", descripcion: "Sector Pueblo Libre.", coordenadas: [[9.7120, -63.2400], [9.7080, -63.2320]] },
+  { id: "sc-07", nombre: "Caño Los Girasoles", parroquia: "Santa Cruz / San Vicente", tipoIntervencion: "MANUAL", longitudKm: 1.6, anchoM: 1.9, profundidadM: 1.2, pendienteS: 0.0027, rugosidadManning: 0.039, capacidadDisenoM3s: 4.2, caudalActualM3s: 1.6, estadoSedimentacionPct: 45, viviendasRiesgo: 80, nivelRiesgo: "BAJO", descripcion: "Urbanismo Los Girasoles.", coordenadas: [[9.7180, -63.2420], [9.7140, -63.2340]] },
+  { id: "sc-08", nombre: "Caño San José de Santa Cruz", parroquia: "Santa Cruz / San Vicente", tipoIntervencion: "MANUAL", longitudKm: 1.9, anchoM: 2.2, profundidadM: 1.4, pendienteS: 0.0025, rugosidadManning: 0.040, capacidadDisenoM3s: 5.1, caudalActualM3s: 1.9, estadoSedimentacionPct: 50, viviendasRiesgo: 90, nivelRiesgo: "MEDIO", descripcion: "Sector San José de Santa Cruz.", coordenadas: [[9.7250, -63.2410], [9.7210, -63.2330]] }
 ];
+
+export const CANALES_MATURIN = CATALOGO_68_CANOS;
 
 export const PUNTOS_CRITICOS_INSPECCION = [
   {
     id: "PC-001",
     fecha: "2026-08-30",
-    canoId: "cano-orinoco",
+    canoId: "ss-01",
     nombrePunto: "Puente Calle 10 — Brisas del Orinoco",
     parroquia: "San Simón",
     inspector: "Ing. Carlos Mendoza (Brigada Técnica San Simón)",
@@ -188,7 +341,7 @@ export const PUNTOS_CRITICOS_INSPECCION = [
   {
     id: "PC-002",
     fecha: "2026-08-30",
-    canoId: "cano-godos",
+    canoId: "lg-01",
     nombrePunto: "Paso Colector Av. El Ejército — Los Godos",
     parroquia: "Alto de Los Godos",
     inspector: "Téc. Roberto Valera (Equipo Político Parroquial)",
@@ -205,7 +358,7 @@ export const PUNTOS_CRITICOS_INSPECCION = [
   {
     id: "PC-003",
     fecha: "2026-08-29",
-    canoId: "cano-poncha",
+    canoId: "ss-03",
     nombrePunto: "Cruce Calle Bolívar — Palo Negro",
     parroquia: "San Simón",
     inspector: "Brigada Comunitaria Palo Negro",
@@ -222,7 +375,7 @@ export const PUNTOS_CRITICOS_INSPECCION = [
   {
     id: "PC-004",
     fecha: "2026-08-28",
-    canoId: "cano-universidad",
+    canoId: "bq-01",
     nombrePunto: "Alcantarilla Entrada UDO — Los Cortijos",
     parroquia: "Boquerón",
     inspector: "Ing. Manuel Rivas (Comisión de Infraestructura)",
@@ -235,8 +388,42 @@ export const PUNTOS_CRITICOS_INSPECCION = [
     prioridad: "MEDIA",
     lat: 9.7623,
     lng: -63.1824
+  },
+  {
+    id: "PC-005",
+    fecha: "2026-08-28",
+    canoId: "sc-01",
+    nombrePunto: "Cajón de Paso Sector 3 — La Gran Victoria",
+    parroquia: "Santa Cruz / San Vicente",
+    inspector: "Brigada Técnica Santa Cruz",
+    tipoEstructura: "Cajón Doble Concreto 3x2m",
+    colapsoSedimentacionPct: 75,
+    estadoTalud: "Sedimento arcilloso y escombros",
+    nivelRiesgo: "CRÍTICO",
+    familiasRiesgo: 310,
+    obraRequerida: "Dragado mecanizado con Jumbo (450 m³) y limpieza de rejas",
+    prioridad: "URGENTE",
+    lat: 9.7100,
+    lng: -63.2360
+  },
+  {
+    id: "PC-006",
+    fecha: "2026-08-27",
+    canoId: "lc-01",
+    nombrePunto: "Puente Principal Sabana Grande — Sector 2",
+    parroquia: "Las Cocuizas",
+    inspector: "Comisión Parroquial Las Cocuizas",
+    tipoEstructura: "Puente Cajón 4x2.5m",
+    colapsoSedimentacionPct: 80,
+    estadoTalud: "Socavación en estribos y acumulación vegetal",
+    nivelRiesgo: "CRÍTICO",
+    familiasRiesgo: 260,
+    obraRequerida: "Dragado con Jumbo (520 m³) y reforzamiento de base",
+    prioridad: "URGENTE",
+    lat: 9.7430,
+    lng: -63.1480
   }
 ];
 
-export const STORAGE_INSPECCIONES_KEY = "maturin_drenajes_inspecciones_v1";
-export const BRIGADA_PIN_DEFAULT = "2026"; // PIN de acceso interno
+export const STORAGE_INSPECCIONES_KEY = "maturin_drenajes_inspecciones_v2";
+export const BRIGADA_PIN_DEFAULT = "2026";
