@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Maturín Drenajes • Diagnóstico Hidráulico & Riesgo de Inundación (HEC-RAS / GIS)</title>
+  <title>Maturín Drenajes • Red Oficial de 68 Caños (HEC-RAS / GIS)</title>
   
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -36,11 +36,11 @@
             <i data-lucide="waves" class="w-6 h-6"></i>
           </div>
           <div>
-            <h1 class="text-base sm:text-lg font-black tracking-tight text-white flex items-center gap-2">
+            <h1 class="text-base sm:text-lg font-black tracking-tight text-white flex items-center gap-2 flex-wrap">
               <span>Maturín • Diagnóstico Hidráulico de Drenajes</span>
-              <span class="text-[10px] font-bold bg-sky-500/20 text-sky-300 border border-sky-500/30 px-2 py-0.5 rounded-full uppercase">HEC-RAS & GIS</span>
+              <span class="text-[10px] font-bold bg-sky-500/20 text-sky-300 border border-sky-500/30 px-2 py-0.5 rounded-full uppercase">OFICIAL • 68 CAÑOS</span>
             </h1>
-            <p class="text-xs text-slate-400 font-medium">Modelado de Caños, Alcantarillados y Riesgo de Inundación • Monagas</p>
+            <p class="text-xs text-slate-400 font-medium">Modelado HEC-RAS 2D • 41 Mecanizados (Jumbo) • 27 Manuales</p>
           </div>
         </div>
 
@@ -80,7 +80,7 @@
       <div class="max-w-7xl mx-auto flex items-center overflow-x-auto no-scrollbar gap-1.5 py-1.5">
         <button data-tab="tab-visor" class="nav-tab-btn px-3.5 py-2 text-xs sm:text-sm font-bold rounded-lg bg-sky-600 text-white transition flex items-center gap-1.5 shrink-0 shadow-sm">
           <i data-lucide="map-pin" class="w-4 h-4"></i>
-          <span>Visor de Caños y Cuencas</span>
+          <span>Visor de Caños y Cuencas (68)</span>
         </button>
 
         <button data-tab="tab-simulador" class="nav-tab-btn px-3.5 py-2 text-xs sm:text-sm font-medium rounded-lg text-slate-400 hover:bg-slate-800 transition flex items-center gap-1.5 shrink-0">
@@ -95,7 +95,7 @@
 
         <button data-tab="tab-obras" class="nav-tab-btn px-3.5 py-2 text-xs sm:text-sm font-medium rounded-lg text-slate-400 hover:bg-slate-800 transition flex items-center gap-1.5 shrink-0">
           <i data-lucide="truck" class="w-4 h-4"></i>
-          <span>Plan de Obras y Mitigación</span>
+          <span>Plan de Obras y Dragado</span>
         </button>
       </div>
     </div>
@@ -104,7 +104,32 @@
   <!-- ============================================================== -->
   <!-- SUMMARY KPIS BAR -->
   <!-- ============================================================== -->
-  <div class="max-w-7xl mx-auto w-full px-4 sm:px-6 pt-4">
+  <div class="max-w-7xl mx-auto w-full px-4 sm:px-6 pt-4 space-y-3">
+    
+    <!-- Filtros de Parroquia y Tipo de Intervención -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 bg-white p-2.5 rounded-2xl border border-slate-200 shadow-sm">
+      
+      <!-- Parroquias Pills -->
+      <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5">
+        <span class="text-[11px] font-black text-slate-400 uppercase tracking-wider pl-1 shrink-0">Parroquia:</span>
+        <button data-parroquia="todas" class="parroquia-pill px-2.5 py-1 text-xs font-bold rounded-lg bg-sky-600 text-white transition shrink-0">Todas (68)</button>
+        <button data-parroquia="san-simon" class="parroquia-pill px-2.5 py-1 text-xs font-medium rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 transition shrink-0">San Simón (18)</button>
+        <button data-parroquia="los-godos" class="parroquia-pill px-2.5 py-1 text-xs font-medium rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 transition shrink-0">Los Godos (16)</button>
+        <button data-parroquia="las-cocuizas" class="parroquia-pill px-2.5 py-1 text-xs font-medium rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 transition shrink-0">Las Cocuizas (14)</button>
+        <button data-parroquia="boqueron" class="parroquia-pill px-2.5 py-1 text-xs font-medium rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 transition shrink-0">Boquerón (12)</button>
+        <button data-parroquia="santa-cruz" class="parroquia-pill px-2.5 py-1 text-xs font-medium rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 transition shrink-0">Santa Cruz (8)</button>
+      </div>
+
+      <!-- Tipo Intervención -->
+      <div class="flex items-center gap-1.5 shrink-0 pt-1 sm:pt-0 border-t sm:border-t-0 border-slate-100">
+        <button data-tipo="todos" class="tipo-intervencion-pill px-2 py-1 text-xs font-bold rounded-lg bg-purple-600 text-white transition">Todos</button>
+        <button data-tipo="MECANIZADO" class="tipo-intervencion-pill px-2 py-1 text-xs font-medium rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 transition">🚜 Mecanizado (41)</button>
+        <button data-tipo="MANUAL" class="tipo-intervencion-pill px-2 py-1 text-xs font-medium rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 transition">🧤 Manual (27)</button>
+      </div>
+
+    </div>
+
+    <!-- KPI Cards -->
     <div class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
       
       <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-3">
@@ -122,7 +147,7 @@
           <i data-lucide="home" class="w-6 h-6"></i>
         </div>
         <div>
-          <p class="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Viviendas en Riesgo</p>
+          <p class="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Familias en Riesgo</p>
           <h3 id="kpi-viviendas-afectadas" class="text-xl sm:text-2xl font-black text-slate-900">0</h3>
         </div>
       </div>
@@ -139,7 +164,7 @@
 
       <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
         <div>
-          <p class="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Alerta de Cuenca</p>
+          <p class="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Nivel de Alerta</p>
           <span id="kpi-alerta-global" class="text-xs font-black px-2.5 py-1 rounded-full border bg-emerald-100 text-emerald-800 border-emerald-300 mt-1 inline-block">NORMAL</span>
         </div>
         <div class="w-9 h-9 rounded-xl bg-slate-50 flex items-center justify-center text-slate-400">
@@ -166,13 +191,12 @@
           <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-slate-100 gap-2">
             <div>
               <h2 class="text-sm font-black text-slate-900 tracking-wide uppercase flex items-center gap-2">
-                <span>Mapa Hidráulico de Drenajes • Maturín</span>
-                <span class="text-[10px] font-bold bg-sky-100 text-sky-800 px-2 py-0.5 rounded">7 Caños Digitalizados</span>
+                <span>Mapa Hidráulico de Drenajes • Red 68 Caños</span>
               </h2>
               <p class="text-[11px] text-slate-500 flex items-center gap-1.5 flex-wrap mt-0.5">
                 <span>Haz clic en un caño para ver su cálculo hidráulico</span>
                 <span class="text-slate-300">•</span>
-                <span class="inline-flex items-center gap-1 text-sky-600 font-bold"><span class="w-2 h-2 rounded-full bg-sky-500"></span> Flujo Normal</span>
+                <span class="inline-flex items-center gap-1 text-sky-600 font-bold"><span class="w-2 h-2 rounded-full bg-sky-500"></span> Normal</span>
                 <span class="inline-flex items-center gap-1 text-amber-600 font-bold"><span class="w-2 h-2 rounded-full bg-amber-500"></span> Bordo Crítico</span>
                 <span class="inline-flex items-center gap-1 text-rose-600 font-bold"><span class="w-2 h-2 rounded-full bg-rose-500"></span> Desborde 2D</span>
               </p>
@@ -188,7 +212,7 @@
           <div id="maturin-drainage-map" class="w-full h-[460px] sm:h-[520px] rounded-xl mt-3 border border-slate-100 shadow-inner z-10"></div>
           
           <div class="pt-2 text-right">
-            <span class="text-[10px] text-slate-400 font-mono">© ESRI • OPENSTREETMAP • MODELO HEC-RAS MATURÍN</span>
+            <span class="text-[10px] text-slate-400 font-mono">© RED OFICIAL DE 68 CAÑOS • MODELO HEC-RAS 2D</span>
           </div>
         </div>
 
@@ -236,7 +260,7 @@
               <span>Simulación Hidráulica HEC-RAS: Capacidad vs Caudal de Tormenta</span>
             </h2>
             <p class="text-xs text-slate-500">
-              Evaluación del comportamiento de los 7 canales principales ante lluvias torrenciales en Maturín.
+              Evaluación del comportamiento de los caños de Maturín ante lluvias torrenciales.
             </p>
           </div>
         </div>
@@ -248,16 +272,16 @@
 
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4 border-t border-slate-100 text-xs">
           <div class="p-3 bg-sky-50 rounded-xl border border-sky-100">
-            <p class="font-bold text-sky-950">📐 Ecuación de Manning (1D)</p>
-            <p class="text-slate-600 text-[11px] mt-1">Calcula el tirante normal en función de la rugosidad del fondo y la pendiente natural del terreno.</p>
+            <p class="font-bold text-sky-950">📐 68 Caños Priorizados</p>
+            <p class="text-slate-600 text-[11px] mt-1">Censo oficial municipal dividido en 41 caños mecanizados (Jumbo) y 27 de saneamiento manual.</p>
           </div>
           <div class="p-3 bg-amber-50 rounded-xl border border-amber-100">
             <p class="font-bold text-amber-950">🌊 Modelado de Manchas 2D</p>
-            <p class="text-slate-600 text-[11px] mt-1">Proyecta la inundación sobre las calles circundantes cuando el nivel del agua supera la profundidad del cauce.</p>
+            <p class="text-slate-600 text-[11px] mt-1">Proyecta la inundación sobre las calles cuando el nivel del agua supera la profundidad del cauce.</p>
           </div>
           <div class="p-3 bg-emerald-50 rounded-xl border border-emerald-100">
             <p class="font-bold text-emerald-950">🚜 Mitigación por Dragado</p>
-            <p class="text-slate-600 text-[11px] mt-1">Simula cómo la limpieza y retiro de sedimentos aumenta la capacidad de evacuación de agua hasta en un 65%.</p>
+            <p class="text-slate-600 text-[11px] mt-1">Calcula los metros cúbicos de tierra y basura a remover con maquinaria pesada.</p>
           </div>
         </div>
 
@@ -321,7 +345,7 @@
         <div class="border-b pb-4">
           <h2 class="text-base font-black text-slate-900 uppercase tracking-wide flex items-center gap-2">
             <i data-lucide="truck" class="w-5 h-5 text-sky-600"></i>
-            <span>Plan Ejecutivo de Obras y Dragado de Maturín</span>
+            <span>Plan Ejecutivo de Obras y Dragado de Maturín (68 Caños)</span>
           </h2>
           <p class="text-xs text-slate-600 mt-1">
             Recomendaciones de ingeniería civil con volúmenes de dragado y maquinaria requerida para mitigar inundaciones en el municipio.
@@ -367,7 +391,7 @@
         <div class="p-3 bg-amber-50 border border-amber-200 rounded-xl flex items-center justify-between gap-2">
           <div>
             <label class="block text-xs font-bold text-amber-950 uppercase">PIN de Brigada / Equipo Político *</label>
-            <p class="text-[10px] text-amber-700">Protege la base de datos técnica (PIN por defecto: 2026)</p>
+            <p class="text-[10px] text-amber-700">Protege la base de datos técnica (PIN: 2026)</p>
           </div>
           <input type="password" id="insp-pin" required placeholder="PIN" value="2026" class="w-24 px-3 py-1.5 text-xs text-center font-mono font-bold bg-white border border-amber-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:outline-none">
         </div>
@@ -381,32 +405,21 @@
           <div>
             <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Parroquia *</label>
             <select id="insp-parroquia" required class="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-300 rounded-xl text-slate-800 focus:ring-2 focus:ring-sky-500 focus:outline-none">
-              <option value="San Simón">San Simón</option>
-              <option value="Alto de Los Godos">Alto de Los Godos</option>
-              <option value="Boquerón">Boquerón</option>
-              <option value="Las Cocuizas">Las Cocuizas</option>
-              <option value="Santa Cruz">Santa Cruz</option>
-              <option value="San Vicente">San Vicente</option>
-              <option value="La Pica">La Pica</option>
-              <option value="Jusepín">Jusepín</option>
-              <option value="El Furrial">El Furrial</option>
-              <option value="El Corozo">El Corozo</option>
+              <option value="San Simón">San Simón (18 caños)</option>
+              <option value="Alto de Los Godos">Alto de Los Godos (16 caños)</option>
+              <option value="Las Cocuizas">Las Cocuizas (14 caños)</option>
+              <option value="Boquerón">Boquerón (12 caños)</option>
+              <option value="Santa Cruz / San Vicente">Santa Cruz / San Vicente (8 caños)</option>
             </select>
           </div>
         </div>
 
-        <!-- Caño Asignado y Nombre del Punto -->
+        <!-- Caño Asignado (Selección de los 68 caños) y Nombre del Punto -->
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
-            <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Caño / Eje de Drenaje *</label>
+            <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Caño / Eje (Catálogo de 68) *</label>
             <select id="insp-cano-id" required class="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-300 rounded-xl text-slate-800 focus:ring-2 focus:ring-sky-500 focus:outline-none">
-              <option value="cano-orinoco">Caño Orinoco</option>
-              <option value="cano-godos">Caño Los Godos</option>
-              <option value="cano-avenidas">Caño Las Avenidas</option>
-              <option value="cano-universidad">Caño Universidad</option>
-              <option value="cano-poncha">Caño Poncha / Palo Negro</option>
-              <option value="cano-boqueron">Caño La Chivera / Tipuro</option>
-              <option value="rio-guarapiche">Río Guarapiche</option>
+              <!-- Inyectado dinámicamente con los 68 caños agrupados -->
             </select>
           </div>
           <div>
@@ -497,12 +510,12 @@
   <!-- FOOTER -->
   <footer class="bg-slate-900 text-slate-500 border-t border-slate-800 py-4 text-center text-xs">
     <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
-      <p>Sistema de Diagnóstico Hidráulico y Drenajes de Maturín • Monagas</p>
+      <p>Sistema Oficial de Diagnóstico Hidráulico y Drenajes de Maturín • 68 Caños Priorizados</p>
       <p class="font-mono text-[11px] text-slate-400">Modelado HEC-RAS 2D • QGIS Open Source</p>
     </div>
   </footer>
 
   <!-- MAIN SCRIPT -->
-  <script type="module" src="js/app.js?v=1"></script>
+  <script type="module" src="js/app.js?v=2"></script>
 </body>
 </html>
