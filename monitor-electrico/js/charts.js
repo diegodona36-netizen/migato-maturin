@@ -4,6 +4,151 @@
 export class OutageCharts {
   constructor() {
     this.nationalChart = null;
+    this.monagasChart = null;
+  }
+
+  renderMonagasTimeline(containerId, range = "24h") {
+    const canvas = document.getElementById(containerId);
+    if (!canvas) return;
+
+    const ctx = canvas.getContext("2d");
+    if (this.monagasChart) {
+      this.monagasChart.destroy();
+    }
+
+    const now = new Date();
+    const months = ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"];
+    const labels = [];
+    const monagasDisponibilidad = [];
+    const monagasVoltaje = [];
+
+    if (range === "24h") {
+      for (let i = 24; i >= 0; i--) {
+        const d = new Date(now.getTime() - (i * 3600 * 1000));
+        const hourStr = d.getHours().toString().padStart(2, "0") + ":00";
+        labels.push(i === 0 ? `Ahora (${hourStr})` : hourStr);
+
+        // Curva de Monagas con caída a las 19:40 y en la tarde
+        if (i >= 1 && i <= 3) {
+          monagasDisponibilidad.push(55 + Math.random() * 5);
+          monagasVoltaje.push(102 + Math.random() * 4);
+        } else if (i >= 8 && i <= 11) {
+          monagasDisponibilidad.push(68 + Math.random() * 6);
+          monagasVoltaje.push(108 + Math.random() * 5);
+        } else {
+          monagasDisponibilidad.push(88 + Math.random() * 8);
+          monagasVoltaje.push(118 + Math.random() * 4);
+        }
+      }
+    } else if (range === "48h") {
+      for (let i = 48; i >= 0; i -= 2) {
+        const d = new Date(now.getTime() - (i * 3600 * 1000));
+        const dayStr = i > 24 ? "Ayer" : "Hoy";
+        const hourStr = d.getHours().toString().padStart(2, "0") + ":00";
+        labels.push(`${dayStr} ${hourStr}`);
+
+        if ((i >= 1 && i <= 4) || (i >= 22 && i <= 26)) {
+          monagasDisponibilidad.push(50 + Math.random() * 8);
+          monagasVoltaje.push(100 + Math.random() * 6);
+        } else {
+          monagasDisponibilidad.push(85 + Math.random() * 8);
+          monagasVoltaje.push(116 + Math.random() * 5);
+        }
+      }
+    } else if (range === "7d") {
+      const daysOfWeek = ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"];
+      for (let i = 7; i >= 0; i--) {
+        const d = new Date(now.getTime() - (i * 24 * 3600 * 1000));
+        const dayName = daysOfWeek[d.getDay()];
+        const dayNum = d.getDate();
+        const monthName = months[d.getMonth()];
+        labels.push(i === 0 ? "Hoy" : `${dayName} ${dayNum} ${monthName}`);
+
+        if (i === 1 || i === 4) {
+          monagasDisponibilidad.push(48 + Math.random() * 8);
+          monagasVoltaje.push(102 + Math.random() * 6);
+        } else {
+          monagasDisponibilidad.push(78 + Math.random() * 8);
+          monagasVoltaje.push(114 + Math.random() * 6);
+        }
+      }
+    } else if (range === "30d") {
+      for (let i = 30; i >= 0; i -= 2) {
+        const d = new Date(now.getTime() - (i * 24 * 3600 * 1000));
+        const dayNum = d.getDate();
+        const monthName = months[d.getMonth()];
+        labels.push(i === 0 ? "Hoy" : `${dayNum} ${monthName}`);
+
+        monagasDisponibilidad.push(65 + Math.sin(i * 0.4) * 20 + Math.random() * 6);
+        monagasVoltaje.push(110 + Math.sin(i * 0.4) * 8 + Math.random() * 4);
+      }
+    }
+
+    this.monagasChart = new Chart(ctx, {
+      type: "line",
+      data: {
+        labels: labels,
+        datasets: [
+          {
+            label: "Disponibilidad Eléctrica en Monagas (%)",
+            data: monagasDisponibilidad,
+            borderColor: "#d97706",
+            backgroundColor: "rgba(217, 119, 6, 0.12)",
+            borderWidth: 2.5,
+            tension: 0.3,
+            fill: true,
+            pointRadius: range === "24h" ? 3 : 2
+          },
+          {
+            label: "Estabilidad de Tensión / Voltaje (Escala Relativa %)",
+            data: monagasVoltaje.map(v => (v / 120) * 100),
+            borderColor: "#0284c7",
+            borderWidth: 1.5,
+            borderDash: [4, 4],
+            tension: 0.2,
+            fill: false,
+            pointRadius: 0
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        interaction: { mode: "index", intersect: false },
+        plugins: {
+          legend: {
+            position: "top",
+            labels: { boxWidth: 12, font: { size: 11, family: "sans-serif" } }
+          },
+          tooltip: {
+            callbacks: {
+              label: function(context) {
+                if (context.datasetIndex === 0) {
+                  return "Disponibilidad Eléctrica: " + context.parsed.y.toFixed(1) + "%";
+                } else {
+                  return "Voltaje Estimado: " + ((context.parsed.y / 100) * 120).toFixed(0) + "V";
+                }
+              }
+            }
+          }
+        },
+        scales: {
+          y: {
+            min: 30,
+            max: 105,
+            ticks: {
+              callback: function(val) { return val + "%"; },
+              font: { size: 10 }
+            },
+            grid: { color: "#f1f5f9" }
+          },
+          x: {
+            ticks: { font: { size: 10 }, maxRotation: 45 },
+            grid: { display: false }
+          }
+        }
+      }
+    });
   }
 
   renderNationalTimeline(containerId, range = "24h") {
@@ -28,7 +173,6 @@ export class OutageCharts {
         const hourStr = d.getHours().toString().padStart(2, "0") + ":00";
         labels.push(i === 0 ? `Ahora (${hourStr})` : hourStr);
 
-        // Curva de 24h con caídas en horas pico
         if (i >= 2 && i <= 6) {
           sondeoData.push(58 + Math.sin(i) * 5);
           bgpData.push(98.8 + Math.random() * 0.4);
@@ -128,17 +272,11 @@ export class OutageCharts {
       options: {
         responsive: true,
         maintainAspectRatio: false,
-        interaction: {
-          mode: "index",
-          intersect: false
-        },
+        interaction: { mode: "index", intersect: false },
         plugins: {
           legend: {
             position: "top",
-            labels: {
-              boxWidth: 12,
-              font: { size: 11, family: "sans-serif" }
-            }
+            labels: { boxWidth: 12, font: { size: 11, family: "sans-serif" } }
           },
           tooltip: {
             callbacks: {
