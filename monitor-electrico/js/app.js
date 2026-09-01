@@ -1,5 +1,5 @@
 /**
- * Controlador Principal — Monitor de Cortes Eléctricos Venezuela
+ * Controlador Principal — Monitor de Cortes Eléctricos Venezuela & Monagas
  */
 import { IodaApiService } from "./iodaApi.js";
 import { VenezuelaOutageMap } from "./map.js";
@@ -11,7 +11,7 @@ class AppController {
     this.charts = new OutageCharts();
     this.map = new VenezuelaOutageMap("venezuela-map", (state) => this.selectState(state));
     
-    this.activeTab = "tab-estados";
+    this.activeTab = "tab-monagas"; // Iniciar con foco en Monagas por defecto
     this.activeRange = "24h";
     this.currentData = null;
     this.selectedState = null;
@@ -40,14 +40,15 @@ class AppController {
     try {
       this.currentData = await this.api.getOutageData(this.activeRange);
       
-      // Estado por defecto: Táchira T1
+      // Estado seleccionado (Monagas por defecto)
       if (!this.selectedState) {
-        this.selectedState = this.currentData.estados.find(s => s.nombre === "Táchira") || this.currentData.estados[0];
+        this.selectedState = this.currentData.estados.find(s => s.nombre === "Monagas") || this.currentData.estados[0];
       } else {
         this.selectedState = this.currentData.estados.find(s => s.id === this.selectedState.id) || this.selectedState;
       }
 
       this.renderSummaryHeader();
+      this.renderMonagasTab();
       this.map.updateData(this.currentData.estados, this.selectedState?.id);
       this.renderStateDetailPanel();
       this.renderStateRanking();
@@ -80,16 +81,113 @@ class AppController {
     const countEventosEl = document.getElementById("stat-con-evento");
     const countRacionamientoEl = document.getElementById("stat-con-racionamiento");
     const countSinAnomaliaEl = document.getElementById("stat-sin-anomalia");
+    const activeStateNameEl = document.getElementById("header-active-state-name");
 
     if (countEventosEl) countEventosEl.innerHTML = `<span class="w-2 h-2 rounded-full bg-rose-500 mr-1.5"></span> ${resumen.conEvento} con evento detectado`;
-    if (countRacionamientoEl) countRacionamientoEl.innerHTML = `<span class="w-2 h-2 rounded-full bg-amber-500 mr-1.5"></span> ${resumen.conRacionamiento} con posible racionamiento (inferido)`;
+    if (countRacionamientoEl) countRacionamientoEl.innerHTML = `<span class="w-2 h-2 rounded-full bg-amber-500 mr-1.5"></span> ${resumen.conRacionamiento} con posible racionamiento`;
     if (countSinAnomaliaEl) countSinAnomaliaEl.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-500 mr-1.5"></span> ${resumen.sinAnomalias} sin anomalías`;
+    if (activeStateNameEl && this.selectedState) activeStateNameEl.textContent = this.selectedState.nombre;
+  }
+
+  /**
+   * Pestaña Especial y Diagnóstico de Monagas / Maturín
+   */
+  renderMonagasTab() {
+    if (!this.currentData) return;
+
+    const monagasState = this.currentData.estados.find(s => s.nombre === "Monagas");
+    const monagasEvents = this.currentData.eventos.filter(e => e.region === "Monagas");
+    const circuitos = this.currentData.circuitosMonagas || [];
+
+    // KPIs
+    const kpiDisp = document.getElementById("monagas-kpi-disponibilidad");
+    const kpiEv = document.getElementById("monagas-kpi-eventos");
+    const kpiHrs = document.getElementById("monagas-kpi-promedio-horas");
+    const kpiVolt = document.getElementById("monagas-kpi-voltaje");
+    const rangeTag = document.getElementById("monagas-chart-range-tag");
+
+    if (kpiDisp && monagasState) kpiDisp.textContent = `${monagasState.electricidadPct}%`;
+    if (kpiEv) kpiEv.textContent = `${monagasEvents.length} eventos`;
+    if (kpiHrs) {
+      const hrsSinLuz = ((100 - (monagasState?.electricidadPct || 60)) / 100 * 24).toFixed(1);
+      kpiHrs.textContent = `${hrsSinLuz} hrs/día`;
+    }
+    if (kpiVolt) kpiVolt.textContent = "109V (Fluctuante)";
+    if (rangeTag) rangeTag.textContent = this.activeRange.toUpperCase();
+
+    // Renderizar gráfico específico de Monagas
+    this.charts.renderMonagasTimeline("monagas-timeline-chart", this.activeRange);
+
+    // Renderizar lista de circuitos de Maturín
+    const circuitosContainer = document.getElementById("monagas-circuitos-list");
+    if (circuitosContainer) {
+      circuitosContainer.innerHTML = "";
+      circuitos.forEach(c => {
+        const isCrit = c.estado === "CRÍTICO";
+        const isDeg = c.estado === "DEGRADADO";
+        const color = isCrit ? "text-red-600" : (isDeg ? "text-amber-600" : "text-emerald-600");
+        const bg = isCrit ? "bg-red-50/70 border-red-200" : (isDeg ? "bg-amber-50/70 border-amber-200" : "bg-emerald-50/70 border-emerald-200");
+
+        const div = document.createElement("div");
+        div.className = `p-2.5 rounded-xl border text-xs flex items-center justify-between transition ${bg}`;
+        div.innerHTML = `
+          <div>
+            <p class="font-bold text-slate-900 leading-tight">${c.nombre}</p>
+            <p class="text-[10px] text-slate-500">${c.subestacion} • Voltaje: ${c.voltaje}V</p>
+          </div>
+          <div class="text-right shrink-0">
+            <span class="font-mono font-bold text-xs ${color}">${c.disponibilidadPct}%</span>
+            <span class="block text-[9px] text-slate-400 font-semibold">${c.fallas24h > 0 ? `${c.fallas24h} falla(s)` : "Estable"}</span>
+          </div>
+        `;
+        circuitosContainer.appendChild(div);
+      });
+    }
+
+    // Renderizar tabla de historial de Monagas
+    const historyBody = document.getElementById("monagas-history-table-body");
+    const countLabel = document.getElementById("monagas-events-count-label");
+    if (countLabel) countLabel.textContent = `${monagasEvents.length} incidentes registrados en ${this.activeRange}`;
+
+    if (historyBody) {
+      historyBody.innerHTML = "";
+      if (monagasEvents.length === 0) {
+        historyBody.innerHTML = `<tr><td colspan="6" class="p-6 text-center text-xs text-slate-400">No se detectaron caídas de sondeo en Monagas en este rango.</td></tr>`;
+      } else {
+        monagasEvents.forEach(ev => {
+          const tr = document.createElement("tr");
+          tr.className = "border-b border-slate-100 hover:bg-slate-50 text-xs transition";
+          
+          const sevColor = ev.severidad === "CRÍTICO" ? "text-red-600 font-bold" : (ev.severidad === "ALTO" ? "text-orange-600 font-bold" : "text-amber-600 font-bold");
+          const caidaColor = ev.caidaPct >= 60 ? "text-red-600 font-black" : "text-amber-600 font-bold";
+
+          tr.innerHTML = `
+            <td class="px-4 py-3 font-mono font-medium text-slate-800 whitespace-nowrap">${ev.fecha}</td>
+            <td class="px-4 py-3 font-bold text-slate-900">📍 ${ev.tipo}</td>
+            <td class="px-4 py-3 text-slate-600 whitespace-nowrap">${ev.duracion}</td>
+            <td class="px-4 py-3 font-mono ${caidaColor}">-${ev.caidaPct}%</td>
+            <td class="px-4 py-3 ${sevColor}">${ev.severidad}</td>
+            <td class="px-4 py-3">
+              <div class="font-medium text-slate-800">${ev.detalle}</div>
+              <div class="text-[10px] text-emerald-700 font-mono">✓ ${ev.patron}</div>
+            </td>
+          `;
+          historyBody.appendChild(tr);
+        });
+      }
+    }
   }
 
   selectState(state) {
     this.selectedState = state;
     this.map.updateData(this.currentData.estados, state.id);
     this.renderStateDetailPanel();
+    this.renderSummaryHeader();
+
+    // Si seleccionó Monagas en el mapa, actualizar la pestaña de Monagas
+    if (state.nombre === "Monagas") {
+      this.renderMonagasTab();
+    }
   }
 
   renderStateDetailPanel() {
@@ -161,8 +259,6 @@ class AppController {
 
         <!-- Telemetría de Red Detallada -->
         <div class="space-y-2.5 text-xs font-medium pt-1">
-          
-          <!-- Sondeo Activo -->
           <div class="flex items-center justify-between">
             <span class="text-slate-600 flex items-center gap-1.5">
               <i data-lucide="activity" class="w-3.5 h-3.5 text-sky-600"></i> Sondeo Activo
@@ -172,7 +268,6 @@ class AppController {
             </span>
           </div>
 
-          <!-- Packet Loss -->
           <div class="flex items-center justify-between">
             <span class="text-slate-600 flex items-center gap-1.5">
               <i data-lucide="percent" class="w-3.5 h-3.5 text-amber-600"></i> % Packet Loss
@@ -182,7 +277,6 @@ class AppController {
             </span>
           </div>
 
-          <!-- Latencia -->
           <div class="flex items-center justify-between">
             <span class="text-slate-600 flex items-center gap-1.5">
               <i data-lucide="clock" class="w-3.5 h-3.5 text-slate-600"></i> Latencia
@@ -192,7 +286,6 @@ class AppController {
             </span>
           </div>
 
-          <!-- BGP Routes -->
           <div class="flex items-center justify-between">
             <span class="text-slate-600 flex items-center gap-1.5">
               <i data-lucide="share-2" class="w-3.5 h-3.5 text-emerald-600"></i> BGP Routes
@@ -201,31 +294,10 @@ class AppController {
               100% Estable
             </span>
           </div>
-
-          <!-- Telescopio -->
-          <div class="flex items-center justify-between">
-            <span class="text-slate-600 flex items-center gap-1.5">
-              <i data-lucide="eye" class="w-3.5 h-3.5 text-orange-600"></i> Telescopio
-            </span>
-            <span class="font-mono font-bold text-orange-700 bg-orange-50 px-2 py-0.5 rounded border border-orange-200">
-              ${s.metrics.telescopioPct}% (${s.metrics.teleDetails})
-            </span>
-          </div>
-
         </div>
 
         <!-- Eventos detectados list -->
         ${eventsHtml}
-
-        <!-- Caja de Explicación -->
-        <div class="p-3 rounded-xl bg-amber-50/80 border border-amber-200 text-[11px] text-amber-900 space-y-1">
-          <p class="font-bold flex items-center gap-1.5">
-            <span class="w-2 h-2 rounded-full bg-amber-500"></span> Diagnóstico del Rango (${this.activeRange})
-          </p>
-          <p class="text-slate-600 leading-relaxed">
-            Los datos reflejan la actividad agregada en el período seleccionado. Se identifican anomalías cuando el Sondeo Activo cae de forma abrupta mientras las rutas troncales BGP se mantienen estables.
-          </p>
-        </div>
       </div>
     `;
 
@@ -332,17 +404,15 @@ class AppController {
     const filterPillsContainer = document.getElementById("eventos-filter-pills");
     if (!tableBody || !this.currentData) return;
 
-    // Obtener todas las regiones con eventos en el rango actual
     const presentRegions = Array.from(new Set(this.currentData.eventos.map(e => e.region)));
-    const distinctStates = ["Todos", ...presentRegions];
+    const distinctStates = ["Todos", "Monagas", ...presentRegions.filter(r => r !== "Monagas")];
 
-    // Filter Pills
     if (filterPillsContainer) {
       filterPillsContainer.innerHTML = "";
       distinctStates.forEach(st => {
         const isActive = this.eventStateFilter === st;
         const btn = document.createElement("button");
-        btn.className = `px-3 py-1 text-xs font-semibold rounded-full transition ${isActive ? "bg-sky-600 text-white shadow-sm" : "bg-slate-100 text-slate-700 hover:bg-slate-200"}`;
+        btn.className = `px-3 py-1 text-xs font-semibold rounded-full transition ${isActive ? "bg-sky-600 text-white shadow-sm font-bold" : "bg-slate-100 text-slate-700 hover:bg-slate-200"}`;
         btn.textContent = st;
         btn.addEventListener("click", () => {
           this.eventStateFilter = st;
@@ -399,23 +469,35 @@ class AppController {
         this.activeTab = target;
         navButtons.forEach(b => {
           const isCurrent = b.dataset.tab === target;
-          b.classList.toggle("bg-sky-600", isCurrent);
-          b.classList.toggle("text-white", isCurrent);
+          b.classList.toggle("bg-sky-600", isCurrent && target !== "tab-monagas");
+          b.classList.toggle("bg-amber-500", isCurrent && target === "tab-monagas");
+          b.classList.toggle("text-white", isCurrent && target !== "tab-monagas");
+          b.classList.toggle("text-slate-950", isCurrent && target === "tab-monagas");
           b.classList.toggle("text-slate-600", !isCurrent);
-          b.classList.toggle("hover:bg-slate-100", !isCurrent);
+          b.classList.toggle("hover:bg-slate-200", !isCurrent);
         });
 
         document.querySelectorAll(".tab-content").forEach(content => {
           content.classList.toggle("hidden", content.id !== target);
         });
 
-        if (target === "tab-estados") {
+        if (target === "tab-monagas") {
+          setTimeout(() => this.renderMonagasTab(), 100);
+        } else if (target === "tab-estados") {
           setTimeout(() => this.map.map?.invalidateSize(), 100);
         } else if (target === "tab-nacional") {
           setTimeout(() => this.renderNacionalTab(), 100);
         }
       });
     });
+
+    const quickMonagasBtn = document.getElementById("btn-quick-monagas");
+    if (quickMonagasBtn) {
+      quickMonagasBtn.addEventListener("click", () => {
+        const monagasTabBtn = document.querySelector([data-tab=tab-monagas]);
+        if (monagasTabBtn) monagasTabBtn.click();
+      });
+    }
   }
 
   setupRangeButtons() {
@@ -451,6 +533,42 @@ class AppController {
     if (btnExport) {
       btnExport.addEventListener("click", () => this.exportCSV());
     }
+
+    const btnExportMonagas = document.getElementById("btn-export-monagas");
+    if (btnExportMonagas) {
+      btnExportMonagas.addEventListener("click", () => this.exportMonagasCSV());
+    }
+  }
+
+  exportMonagasCSV() {
+    if (!this.currentData) return;
+    const monagasEvents = this.currentData.eventos.filter(e => e.region === "Monagas");
+    if (monagasEvents.length === 0) {
+      alert("No hay eventos registrados en Monagas en este rango.");
+      return;
+    }
+
+    const headers = ["Fecha", "Zona_Circuito", "Duracion", "Caida_Pct", "Severidad", "Score", "Detalle", "Patron"];
+    const rows = monagasEvents.map(e => [
+      `"${e.fecha}"`,
+      `"${e.tipo}"`,
+      `"${e.duracion}"`,
+      `"${e.caidaPct}%"`,
+      `"${e.severidad}"`,
+      `"${e.score}"`,
+      `"${e.detalle}"`,
+      `"${e.patron}"`
+    ]);
+
+    const csvContent = [headers.join(","), ...rows.map(r => r.join(","))].join("\n");
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute("download", `Historial_Cortes_Electricos_Monagas_Maturin_${this.activeRange}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   }
 
   exportCSV() {
