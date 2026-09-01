@@ -40,7 +40,7 @@ class AppController {
     try {
       this.currentData = await this.api.getOutageData(this.activeRange);
       
-      // Estado por defecto: Táchira T1 (como en el screenshot oficial)
+      // Estado por defecto: Táchira T1
       if (!this.selectedState) {
         this.selectedState = this.currentData.estados.find(s => s.nombre === "Táchira") || this.currentData.estados[0];
       } else {
@@ -111,10 +111,10 @@ class AppController {
           <div class="p-3 rounded-xl bg-red-50/60 border border-red-100 text-xs space-y-1.5">
             <div class="flex items-center gap-1.5 font-bold text-red-950">
               <i data-lucide="zap" class="w-3.5 h-3.5 text-red-600"></i>
-              <span>Eventos eléctricos detectados:</span>
+              <span>Evento registrado (${this.activeRange}):</span>
             </div>
             <p class="text-[11px] text-slate-800 font-semibold">
-              ${ev.fecha} • -${ev.caidaPct}% • ${ev.duracion} • <span class="text-purple-600 font-bold">⚠️ en curso</span> • <span class="text-rose-600">📍 ${ev.tipo}</span>
+              ${ev.fecha} • -${ev.caidaPct}% • ${ev.duracion} • <span class="text-rose-600">📍 ${ev.tipo}</span>
             </p>
             <p class="text-[10px] text-emerald-700 font-medium">
               ✓ ${ev.patron}
@@ -153,7 +153,7 @@ class AppController {
             </p>
             <p class="text-3xl font-black ${elecScoreColor} mt-1">${s.electricidadPct}%</p>
             <p class="text-[10px] text-slate-500 mt-0.5 leading-tight">
-              ${s.eventCount > 0 ? `Posible interrupción eléctrica severa - ${s.eventCount} eventos` : "Monitoreo en curso"}
+              ${s.eventCount > 0 ? `Eventos detectados: ${s.eventCount}` : "Monitoreo regular"}
               <span class="font-bold text-emerald-700 block">confianza ${s.confianza.toLowerCase()}</span>
             </p>
           </div>
@@ -220,10 +220,10 @@ class AppController {
         <!-- Caja de Explicación -->
         <div class="p-3 rounded-xl bg-amber-50/80 border border-amber-200 text-[11px] text-amber-900 space-y-1">
           <p class="font-bold flex items-center gap-1.5">
-            <span class="w-2 h-2 rounded-full bg-amber-500"></span> Degradación leve
+            <span class="w-2 h-2 rounded-full bg-amber-500"></span> Diagnóstico del Rango (${this.activeRange})
           </p>
           <p class="text-slate-600 leading-relaxed">
-            Uno o más indicadores muestran reducción moderada. Puede ser congestión temporal, mantenimiento de red, o fluctuación normal.
+            Los datos reflejan la actividad agregada en el período seleccionado. Se identifican anomalías cuando el Sondeo Activo cae de forma abrupta mientras las rutas troncales BGP se mantienen estables.
           </p>
         </div>
       </div>
@@ -332,9 +332,12 @@ class AppController {
     const filterPillsContainer = document.getElementById("eventos-filter-pills");
     if (!tableBody || !this.currentData) return;
 
+    // Obtener todas las regiones con eventos en el rango actual
+    const presentRegions = Array.from(new Set(this.currentData.eventos.map(e => e.region)));
+    const distinctStates = ["Todos", ...presentRegions];
+
     // Filter Pills
     if (filterPillsContainer) {
-      const distinctStates = ["Todos", "Barinas", "Trujillo", "Táchira", "Zulia", "Falcón", "Guárico", "Cojedes"];
       filterPillsContainer.innerHTML = "";
       distinctStates.forEach(st => {
         const isActive = this.eventStateFilter === st;
@@ -356,7 +359,7 @@ class AppController {
 
     tableBody.innerHTML = "";
     if (events.length === 0) {
-      tableBody.innerHTML = `<tr><td colspan="6" class="p-6 text-center text-xs text-slate-400">No hay eventos registrados con este filtro.</td></tr>`;
+      tableBody.innerHTML = `<tr><td colspan="6" class="p-6 text-center text-xs text-slate-400">No hay eventos registrados en este período con el filtro seleccionado.</td></tr>`;
       return;
     }
 
@@ -365,7 +368,7 @@ class AppController {
       tr.className = "border-b border-slate-100 hover:bg-slate-50 transition text-xs";
 
       const fuenteBadge = ev.fuente === "SONDEO" ? "bg-amber-50 text-amber-700 border-amber-200" : "bg-purple-50 text-purple-700 border-purple-200";
-      const sevColor = ev.severidad === "CRÍTICO" ? "text-red-600 font-bold" : "text-orange-600 font-bold";
+      const sevColor = ev.severidad === "CRÍTICO" ? "text-red-600 font-bold" : (ev.severidad === "ALTO" ? "text-orange-600 font-bold" : "text-amber-600 font-bold");
 
       tr.innerHTML = `
         <td class="px-4 py-3 font-mono font-medium text-slate-800">${ev.fecha}</td>
@@ -423,6 +426,8 @@ class AppController {
         if (!range || range === this.activeRange) return;
 
         this.activeRange = range;
+        this.eventStateFilter = "Todos";
+
         rangeButtons.forEach(b => {
           const isCurrent = b.dataset.range === range;
           b.classList.toggle("bg-sky-600", isCurrent);
