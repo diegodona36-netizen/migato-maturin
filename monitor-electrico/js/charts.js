@@ -15,28 +15,76 @@ export class OutageCharts {
       this.nationalChart.destroy();
     }
 
-    const hoursCount = range === "24h" ? 24 : (range === "48h" ? 48 : 24);
+    const now = new Date();
+    const months = ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"];
     const labels = [];
     const sondeoData = [];
     const bgpData = [];
     const telescopioData = [];
 
-    const now = new Date();
-    for (let i = hoursCount; i >= 0; i--) {
-      const d = new Date(now.getTime() - (i * 3600 * 1000));
-      const hours = d.getHours().toString().padStart(2, "0") + ":00";
-      labels.push(hours);
+    if (range === "24h") {
+      for (let i = 24; i >= 0; i--) {
+        const d = new Date(now.getTime() - (i * 3600 * 1000));
+        const hourStr = d.getHours().toString().padStart(2, "0") + ":00";
+        labels.push(i === 0 ? `Ahora (${hourStr})` : hourStr);
 
-      // Simulación de curva nacional con caída en horas pico
-      if (i >= 3 && i <= 7) {
-        // Horario de corte detectado (caída de sondeo, BGP estable)
-        sondeoData.push(58 + Math.sin(i) * 4);
-        bgpData.push(98.5 + (Math.random() * 0.5));
-        telescopioData.push(52 + Math.sin(i) * 5);
-      } else {
-        sondeoData.push(92 + (Math.random() * 5));
-        bgpData.push(99 + (Math.random() * 0.8));
-        telescopioData.push(88 + (Math.random() * 6));
+        // Curva de 24h con caídas en horas pico
+        if (i >= 2 && i <= 6) {
+          sondeoData.push(58 + Math.sin(i) * 5);
+          bgpData.push(98.8 + Math.random() * 0.4);
+          telescopioData.push(50 + Math.sin(i) * 6);
+        } else {
+          sondeoData.push(92 + (Math.random() * 5));
+          bgpData.push(99.2 + (Math.random() * 0.5));
+          telescopioData.push(88 + (Math.random() * 6));
+        }
+      }
+    } else if (range === "48h") {
+      for (let i = 48; i >= 0; i -= 2) {
+        const d = new Date(now.getTime() - (i * 3600 * 1000));
+        const dayStr = i > 24 ? "Ayer" : "Hoy";
+        const hourStr = d.getHours().toString().padStart(2, "0") + ":00";
+        labels.push(`${dayStr} ${hourStr}`);
+
+        if ((i >= 2 && i <= 6) || (i >= 26 && i <= 30)) {
+          sondeoData.push(52 + Math.random() * 8);
+          bgpData.push(98.5 + Math.random() * 0.6);
+          telescopioData.push(48 + Math.random() * 8);
+        } else {
+          sondeoData.push(90 + (Math.random() * 7));
+          bgpData.push(99 + (Math.random() * 0.8));
+          telescopioData.push(85 + (Math.random() * 8));
+        }
+      }
+    } else if (range === "7d") {
+      const daysOfWeek = ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"];
+      for (let i = 7; i >= 0; i--) {
+        const d = new Date(now.getTime() - (i * 24 * 3600 * 1000));
+        const dayName = daysOfWeek[d.getDay()];
+        const dayNum = d.getDate();
+        const monthName = months[d.getMonth()];
+        labels.push(i === 0 ? "Hoy" : `${dayName} ${dayNum} ${monthName}`);
+
+        if (i === 1 || i === 3 || i === 5) {
+          sondeoData.push(68 + Math.random() * 6);
+          bgpData.push(99.0 + Math.random() * 0.5);
+          telescopioData.push(62 + Math.random() * 7);
+        } else {
+          sondeoData.push(89 + Math.random() * 6);
+          bgpData.push(99.5 + Math.random() * 0.4);
+          telescopioData.push(86 + Math.random() * 6);
+        }
+      }
+    } else if (range === "30d") {
+      for (let i = 30; i >= 0; i -= 2) {
+        const d = new Date(now.getTime() - (i * 24 * 3600 * 1000));
+        const dayNum = d.getDate();
+        const monthName = months[d.getMonth()];
+        labels.push(i === 0 ? "Hoy" : `${dayNum} ${monthName}`);
+
+        sondeoData.push(75 + Math.sin(i * 0.5) * 15 + (Math.random() * 5));
+        bgpData.push(98.8 + (Math.random() * 1.0));
+        telescopioData.push(70 + Math.sin(i * 0.5) * 14 + (Math.random() * 6));
       }
     }
 
@@ -46,17 +94,17 @@ export class OutageCharts {
         labels: labels,
         datasets: [
           {
-            label: "Sondeo Activo (Active Probing / Ping)",
+            label: "Sondeo Activo (Active Probing / Ping Residencial)",
             data: sondeoData,
             borderColor: "#0284c7",
             backgroundColor: "rgba(2, 132, 199, 0.08)",
             borderWidth: 2,
             tension: 0.3,
             fill: true,
-            pointRadius: 2
+            pointRadius: range === "24h" ? 3 : 2
           },
           {
-            label: "Rutas BGP (Enrutamiento Telecom)",
+            label: "Rutas BGP (Troncal Telecom CANTV/Móvil)",
             data: bgpData,
             borderColor: "#10b981",
             borderWidth: 2,
@@ -66,7 +114,7 @@ export class OutageCharts {
             pointRadius: 0
           },
           {
-            label: "Telescopio de Red (Darknet Traffic)",
+            label: "Telescopio de Red (Darknet Traffic UCSD)",
             data: telescopioData,
             borderColor: "#f97316",
             backgroundColor: "rgba(249, 115, 22, 0.05)",
@@ -80,6 +128,10 @@ export class OutageCharts {
       options: {
         responsive: true,
         maintainAspectRatio: false,
+        interaction: {
+          mode: "index",
+          intersect: false
+        },
         plugins: {
           legend: {
             position: "top",
@@ -89,8 +141,6 @@ export class OutageCharts {
             }
           },
           tooltip: {
-            mode: "index",
-            intersect: false,
             callbacks: {
               label: function(context) {
                 return context.dataset.label + ": " + context.parsed.y.toFixed(1) + "%";
@@ -100,7 +150,7 @@ export class OutageCharts {
         },
         scales: {
           y: {
-            min: 40,
+            min: 35,
             max: 105,
             ticks: {
               callback: function(val) { return val + "%"; },
