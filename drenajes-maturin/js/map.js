@@ -1,14 +1,12 @@
 /**
- * Motor Cartográfico GIS — Drenajes e Inundaciones de Maturín
+ * Motor Cartográfico GIS — Drenajes de Maturín (Puntos Reales de Infraestructura)
  */
 export class MaturinDrainageMap {
   constructor(containerId, onSelectCanalCallback) {
     this.containerId = containerId;
     this.onSelectCanalCallback = onSelectCanalCallback;
     this.map = null;
-    this.canalesLayer = null;
-    this.inundacionLayer = null;
-    this.puntosCriticosLayer = null;
+    this.markersLayer = null;
     this.selectedCanalId = null;
     this.initialized = false;
   }
@@ -20,7 +18,7 @@ export class MaturinDrainageMap {
 
     try {
       this.map = L.map(this.containerId, {
-        center: [9.746, -63.181],
+        center: [9.745, -63.181],
         zoom: 13,
         minZoom: 11,
         maxZoom: 17,
@@ -28,16 +26,13 @@ export class MaturinDrainageMap {
         attributionControl: false
       });
 
-      // Capa base limpia y profesional
-      L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}", {
-        maxZoom: 17,
-        subdomains: ["server", "services"]
+      // Capa base limpia y detallada con calles de Maturín
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        maxZoom: 18,
+        subdomains: ["a", "b", "c"]
       }).addTo(this.map);
 
-      this.inundacionLayer = L.layerGroup().addTo(this.map);
-      this.canalesLayer = L.layerGroup().addTo(this.map);
-      this.puntosCriticosLayer = L.layerGroup().addTo(this.map);
-
+      this.markersLayer = L.layerGroup().addTo(this.map);
       this.initialized = true;
     } catch (e) {
       console.warn("Inicialización de mapa pospuesta:", e.message);
@@ -49,103 +44,58 @@ export class MaturinDrainageMap {
     if (!this.initialized || !this.map) return;
 
     try {
-      this.canalesLayer.clearLayers();
-      this.inundacionLayer.clearLayers();
-      this.puntosCriticosLayer.clearLayers();
+      this.markersLayer.clearLayers();
 
-      // 1. Dibujar Manchas de Inundación 2D (Polígonos buffer)
-      simData.detalles.forEach(c => {
-        if (c.hidraulica.desborda && c.hidraulica.anchoInundacionM > 0) {
-          const bufferRadius = Math.max(15, c.hidraulica.anchoInundacionM * 0.8);
-          
-          c.coordenadas.forEach(coord => {
-            const circle = L.circle(coord, {
-              radius: bufferRadius,
-              fillColor: "#0284c7",
-              color: "#0369a1",
-              weight: 1,
-              opacity: 0.7,
-              fillOpacity: 0.35,
-              interactive: false
-            });
-            this.inundacionLayer.addLayer(circle);
-          });
-        }
-      });
-
-      // 2. Dibujar Ejes de Caños
-      simData.detalles.forEach(c => {
-        const isSelected = c.canalId === this.selectedCanalId;
-        const color = this.getSeverityColor(c.severidad);
-        const weight = isSelected ? 6 : (c.hidraulica.desborda ? 5 : 3.5);
-
-        const polyline = L.polyline(c.coordenadas, {
-          color: color,
-          weight: weight,
-          opacity: 0.95,
-          dashArray: c.hidraulica.desborda ? "4, 4" : null,
-          className: "canal-vector-line cursor-pointer"
-        });
-
-        const tooltipHtml = `
-          <div class="p-1.5 text-xs font-sans">
-            <p class="font-bold text-slate-900 text-sm">${c.nombre}</p>
-            <p class="text-slate-500 text-[10px]">${c.parroquia}</p>
-            <div class="mt-1 space-y-0.5 border-t pt-1">
-              <p>🌊 Caudal Q: <strong>${c.hidraulica.caudalQ} m³/s</strong></p>
-              <p>📏 Altura Agua: <strong>${c.hidraulica.tiranteM}m</strong> / ${c.hidraulica.profundidadCanalM}m</p>
-              <p>🚨 Estado: <strong style="color: ${color}">${c.severidad} ${c.hidraulica.desborda ? "(DESBORDE)" : ""}</strong></p>
-            </div>
-          </div>
-        `;
-        polyline.bindTooltip(tooltipHtml, { sticky: true });
-
-        polyline.on("click", () => {
-          if (this.onSelectCanalCallback) {
-            this.onSelectCanalCallback(c);
-          }
-        });
-
-        this.canalesLayer.addLayer(polyline);
-      });
-
-      // 3. Dibujar Puntos Críticos de Inspección
+      // Dibujar Puntos Críticos Reales (Puentes, Alcantarillas, Pasos de Caños)
       puntosCriticos.forEach(p => {
-        const markerColor = p.nivelRiesgo === "CRÍTICO" ? "#ef4444" : (p.nivelRiesgo === "ALTO" ? "#f97316" : "#10b981");
-        
+        const isSelected = p.canoId === this.selectedCanalId;
+        const color = p.nivelRiesgo === "CRÍTICO" ? "#ef4444" : (p.nivelRiesgo === "ALTO" ? "#f97316" : "#10b981");
+
         const marker = L.circleMarker([p.lat, p.lng], {
-          radius: 7,
-          fillColor: markerColor,
-          color: "#ffffff",
-          weight: 2,
+          radius: isSelected ? 11 : 8,
+          fillColor: color,
+          color: isSelected ? "#0f172a" : "#ffffff",
+          weight: isSelected ? 3 : 2,
           opacity: 1,
           fillOpacity: 0.95
         });
 
-        const pTooltip = `
-          <div class="p-1 text-xs">
-            <strong class="text-slate-900">${p.nombrePunto}</strong>
-            <p class="text-slate-500 text-[10px]">${p.tipoEstructura} • Colapso: ${p.colapsoSedimentacionPct}%</p>
-            <p class="text-[10px] text-red-600 font-bold">${p.familiasRiesgo} familias en riesgo</p>
+        const tooltipHtml = `
+          <div class="p-1.5 text-xs font-sans">
+            <div class="flex items-center justify-between gap-2 border-b pb-1 mb-1">
+              <strong class="text-slate-900 font-bold">${p.nombrePunto}</strong>
+              <span class="text-[9px] font-bold px-1 rounded bg-red-100 text-red-700">${p.prioridad || "ALTA"}</span>
+            </div>
+            <p class="text-slate-500 text-[11px]">${p.parroquia} • ${p.tipoEstructura}</p>
+            <div class="mt-1 space-y-0.5 border-t pt-1 text-[11px]">
+              <p>⚠️ Obstrucción: <strong style="color: ${color}">${p.colapsoSedimentacionPct}%</strong></p>
+              <p>🏠 Familias en Riesgo: <strong class="text-red-600">${p.familiasRiesgo}</strong></p>
+              <p class="text-slate-600 text-[10px]">🚜 ${p.obraRequerida}</p>
+            </div>
           </div>
         `;
-        marker.bindTooltip(pTooltip);
+        marker.bindTooltip(tooltipHtml, { direction: "top", offset: [0, -8] });
 
-        this.puntosCriticosLayer.addLayer(marker);
+        marker.on("click", () => {
+          if (this.onSelectCanalCallback) {
+            this.onSelectCanalCallback(p);
+          }
+        });
+
+        this.markersLayer.addLayer(marker);
+
+        // Etiqueta de texto sobre el punto
+        const labelHtml = `<span style="font-size: 10px; font-weight: 700; color: #1e293b; background: rgba(255,255,255,0.85); padding: 1px 4px; border-radius: 4px; border: 1px solid #cbd5e1; box-shadow: 0 1px 2px rgba(0,0,0,0.1);">${p.nombrePunto.split("—")[0]}</span>`;
+        const textIcon = L.divIcon({
+          className: "point-label-icon",
+          html: `<div style="text-align: center; white-space: nowrap; margin-left: -50%; margin-top: 10px;">${labelHtml}</div>`,
+          iconSize: [0, 0]
+        });
+        L.marker([p.lat, p.lng], { icon: textIcon, interactive: false }).addTo(this.markersLayer);
       });
 
     } catch (e) {
-      console.warn("Error actualizando mapa de drenajes:", e.message);
-    }
-  }
-
-  getSeverityColor(sev) {
-    switch (sev) {
-      case "CRÍTICO": return "#ef4444"; // Rojo
-      case "ALTO": return "#f97316";    // Naranja
-      case "ALERTA": return "#f59e0b";  // Amarillo
-      case "NORMAL":
-      default: return "#0284c7";       // Azul
+      console.warn("Error actualizando mapa de puntos críticos:", e.message);
     }
   }
 }
