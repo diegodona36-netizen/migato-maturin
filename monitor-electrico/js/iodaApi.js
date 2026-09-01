@@ -1,7 +1,7 @@
 /**
  * Cliente de Georgia Tech IODA & Motor de Inferencia y Registro Histórico Completo
  */
-import { ESTADOS_VENEZUELA, TOTAL_PUNTOS_SONDEO_IODA } from "./data.js";
+import { ESTADOS_VENEZUELA, MONAGAS_CIRCUITOS, TOTAL_PUNTOS_SONDEO_IODA } from "./data.js";
 
 export class IodaApiService {
   constructor() {
@@ -41,13 +41,9 @@ export class IodaApiService {
     return data?.data?.[0] || [];
   }
 
-  /**
-   * Genera el dataset estructurado y catálogo dinámico con historial continuo
-   */
   buildStateMetrics(signals, range) {
     const now = new Date();
 
-    // Función auxiliar para formatear fechas relativas dinámicas
     const formatRelDate = (hoursAgo, exactTimeStr = null) => {
       const d = new Date(now.getTime() - (hoursAgo * 3600 * 1000));
       const months = ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"];
@@ -55,7 +51,6 @@ export class IodaApiService {
       const month = months[d.getMonth()];
       const hours = exactTimeStr || (d.getHours().toString().padStart(2, "0") + ":" + d.getMinutes().toString().padStart(2, "0"));
       
-      // Si es hoy
       if (hoursAgo < 18) {
         return `Hoy, ${hours}`;
       } else if (hoursAgo < 42) {
@@ -64,46 +59,45 @@ export class IodaApiService {
       return `${day} ${month}, ${hours}`;
     };
 
-    // Base de eventos históricos clasificados por estado y antigüedad en horas
+    // Base de eventos históricos clasificados por estado y antigüedad
     const masterHistoricalEvents = [
-      // ÚLTIMAS 24 HORAS
-      { estado: "Táchira", hoursAgo: 2.5, timeStr: "18:20", duracion: "45m", caidaPct: 64, tipo: "regional", fuente: "SONDEO", severidad: "CRÍTICO", score: "10.2K", detalle: "Posible interrupción eléctrica severa en San Cristóbal", patron: "BGP estable — patrón consistente con interrupción eléctrica" },
-      { estado: "Zulia", hoursAgo: 4.0, timeStr: "16:40", duracion: "1h 50m", caidaPct: 58, tipo: "regional", fuente: "SONDEO", severidad: "ALTO", score: "2.5K", detalle: "Interrupción en circuito Maracaibo y Costa Oriental", patron: "BGP estable — caída abrupta de sondeo activo" },
-      { estado: "Barinas", hoursAgo: 5.5, timeStr: "15:10", duracion: "2h 30m", caidaPct: 60, tipo: "regional", fuente: "SONDEO", severidad: "CRÍTICO", score: "3.4K", detalle: "Corte eléctrico no programado en Barinas Centro", patron: "BGP estable — caída de 60% en nodos residenciales" },
-      { estado: "Falcón", hoursAgo: 7.0, timeStr: "13:30", duracion: "1h 05m", caidaPct: 40, tipo: "regional", fuente: "SONDEO", severidad: "ALTO", score: "1.8K", detalle: "Salida de circuito en Punto Fijo y Coro", patron: "BGP estable — interrupción en península" },
-      { estado: "Guárico", hoursAgo: 9.5, timeStr: "11:00", duracion: "45m", caidaPct: 35, tipo: "regional", fuente: "SONDEO", severidad: "DEGRADADO", score: "1.2K", detalle: "Fluctuación en San Juan de los Morros", patron: "BGP estable — fluctuación de carga" },
-      { estado: "Trujillo", hoursAgo: 12.0, timeStr: "08:30", duracion: "50m", caidaPct: 38, tipo: "regional", fuente: "SONDEO", severidad: "ALTO", score: "1.0K", detalle: "Fluctuación y disparo de línea Valera", patron: "BGP estable — desconexión de alimentador" },
-      { estado: "Cojedes", hoursAgo: 16.0, timeStr: "04:40", duracion: "55m", caidaPct: 36, tipo: "regional", fuente: "SONDEO", severidad: "DEGRADADO", score: "950", detalle: "Avería local en transformador San Carlos", patron: "BGP estable — falla puntual" },
-      { estado: "Mérida", hoursAgo: 20.0, timeStr: "00:40", duracion: "1h 20m", caidaPct: 48, tipo: "regional", fuente: "SONDEO", severidad: "ALTO", score: "2.1K", detalle: "Salida de subestación Ejido", patron: "BGP estable — interrupción en circuito andino" },
+      // MONAGAS / MATURÍN (HISTORIAL COMPLETO Y DETALLADO)
+      { estado: "Monagas", hoursAgo: 2.0, timeStr: "19:40", duracion: "1h 15m", caidaPct: 45, tipo: "Los Godos / Industrial", fuente: "SONDEO", severidad: "ALTO", score: "2.8K", detalle: "Baja de tensión y disparo en Alimentador Los Godos y Zona Industrial", patron: "BGP estable — fluctuación y disparo de media tensión" },
+      { estado: "Monagas", hoursAgo: 22.0, timeStr: "15:20", duracion: "2h 30m", caidaPct: 50, tipo: "La Pica / Aeropuerto", fuente: "SONDEO", severidad: "ALTO", score: "2.4K", detalle: "Corte no programado en Subestación Maturín Este y circuito La Pica", patron: "BGP estable — pérdida de nodos residenciales en Maturín Este" },
+      { estado: "Monagas", hoursAgo: 50.0, duracion: "1h 45m", caidaPct: 60, tipo: "Centro / Boulevard", fuente: "SONDEO", severidad: "ALTO", score: "3.1K", detalle: "Fluctuación severa en Subestación Boulevard y Centro Maturín", patron: "BGP estable — disparo de transformador principal" },
+      { estado: "Monagas", hoursAgo: 90.0, duracion: "4h 00m", caidaPct: 75, tipo: "Troncal El Indio", fuente: "BGP", severidad: "CRÍTICO", score: "4.8K", detalle: "Mantenimiento correctivo mayor en línea 115kV Palital - El Indio", patron: "Afectación de transporte eléctrico regional en Monagas" },
+      { estado: "Monagas", hoursAgo: 140.0, duracion: "3h 10m", caidaPct: 65, tipo: "Tipuro / Boquerón", fuente: "SONDEO", severidad: "ALTO", score: "3.5K", detalle: "Salida de circuito Tipuro y Palma Real por tormenta eléctrica", patron: "BGP estable — corte localizado en zona norte de Maturín" },
+      { estado: "Monagas", hoursAgo: 220.0, duracion: "5h 20m", caidaPct: 70, tipo: "Jusepín / El Furrial", fuente: "SONDEO", severidad: "CRÍTICO", score: "4.2K", detalle: "Avería en transformador de potencia Jusepín / El Furrial", patron: "BGP estable — desenergización de subestación rural" },
+      { estado: "Monagas", hoursAgo: 380.0, duracion: "3h 30m", caidaPct: 40, tipo: "Las Cocuizas", fuente: "SONDEO", severidad: "DEGRADADO", score: "1.8K", detalle: "Racionamiento preventivo en Las Cocuizas y Sabana Grande", patron: "BGP estable — administración de carga rotativa" },
+      { estado: "Monagas", hoursAgo: 520.0, duracion: "6h 00m", caidaPct: 85, tipo: "S/E Maturín 230kV", fuente: "BGP", severidad: "CRÍTICO", score: "7.5K", detalle: "Disparo general en Subestación Maturín 230kV por falla en troncal Guri", patron: "Colapso regional de interconexión eléctrica" },
 
-      // ÚLTIMAS 48 HORAS
-      { estado: "Barinas", hoursAgo: 28.0, timeStr: "16:40", duracion: "5h 15m", caidaPct: 75, tipo: "troncal", fuente: "BGP", severidad: "CRÍTICO", score: "3.9K", detalle: "Afectación mayor de fibra y electricidad en Los Llanos", patron: "Caída de rutas troncales BGP + Sondeo Activo" },
-      { estado: "Sucre", hoursAgo: 32.0, timeStr: "12:50", duracion: "2h 10m", caidaPct: 52, tipo: "regional", fuente: "SONDEO", severidad: "ALTO", score: "1.9K", detalle: "Interrupción de servicio en Cumaná y Carúpano", patron: "BGP estable — caída en red de distribución" },
-      { estado: "Aragua", hoursAgo: 36.0, timeStr: "08:30", duracion: "1h 15m", caidaPct: 45, tipo: "regional", fuente: "SONDEO", severidad: "ALTO", score: "1.6K", detalle: "Disparo en subestación Maracay Centro", patron: "BGP estable — mantenimiento no programado" },
-      { estado: "Nueva Esparta", hoursAgo: 40.0, timeStr: "04:30", duracion: "3h 40m", caidaPct: 62, tipo: "regional", fuente: "SONDEO", severidad: "CRÍTICO", score: "3.1K", detalle: "Falla en cable submarino y circuito Porlamar", patron: "BGP estable — corte general en Margarita" },
-      { estado: "Monagas", hoursAgo: 44.0, timeStr: "00:15", duracion: "1h 30m", caidaPct: 42, tipo: "regional", fuente: "SONDEO", severidad: "DEGRADADO", score: "1.3K", detalle: "Baja de tensión en Maturín Este y Los Godos", patron: "BGP estable — fluctuación de media tensión" },
+      // TÁCHIRA
+      { estado: "Táchira", hoursAgo: 3.5, timeStr: "18:20", duracion: "45m", caidaPct: 64, tipo: "San Cristóbal", fuente: "SONDEO", severidad: "CRÍTICO", score: "10.2K", detalle: "Posible interrupción eléctrica severa en San Cristóbal", patron: "BGP estable — patrón consistente con interrupción eléctrica" },
+      { estado: "Táchira", hoursAgo: 27.0, duracion: "3h 15m", caidaPct: 70, tipo: "Rubio / Ureña", fuente: "SONDEO", severidad: "CRÍTICO", score: "6.8K", detalle: "Racionamiento severo en eje fronterizo", patron: "BGP estable — caída masiva de módems" },
+      { estado: "Táchira", hoursAgo: 160.0, duracion: "6h 20m", caidaPct: 78, tipo: "Andina", fuente: "SONDEO", severidad: "CRÍTICO", score: "8.9K", detalle: "Gran apagón andino en 12 municipios", patron: "BGP estable — colapso de red regional" },
 
-      // ÚLTIMOS 7 DÍAS
-      { estado: "Lara", hoursAgo: 55.0, duracion: "2h 45m", caidaPct: 50, tipo: "regional", fuente: "SONDEO", severidad: "ALTO", score: "2.4K", detalle: "Racionamiento rotativo en Barquisimeto y Cabudare", patron: "BGP estable — racionamiento programado" },
-      { estado: "Portuguesa", hoursAgo: 68.0, duracion: "3h 10m", caidaPct: 54, tipo: "regional", fuente: "SONDEO", severidad: "ALTO", score: "2.2K", detalle: "Salida de circuito Acarigua - Araure", patron: "BGP estable — disparo de transformador" },
-      { estado: "Yaracuy", hoursAgo: 80.0, duracion: "1h 40m", caidaPct: 38, tipo: "regional", fuente: "SONDEO", severidad: "DEGRADADO", score: "1.1K", detalle: "Mantenimiento preventivo en San Felipe", patron: "BGP estable — afectación parcial" },
-      { estado: "Anzoátegui", hoursAgo: 95.0, duracion: "2h 20m", caidaPct: 46, tipo: "regional", fuente: "SONDEO", severidad: "ALTO", score: "1.7K", detalle: "Corte de circuito Barcelona y Puerto La Cruz", patron: "BGP estable — evento regional" },
-      { estado: "Carabobo", hoursAgo: 110.0, duracion: "1h 10m", caidaPct: 34, tipo: "regional", fuente: "SONDEO", severidad: "DEGRADADO", score: "980", detalle: "Fluctuación en zona industrial Valencia", patron: "BGP estable — sobrecarga de línea" },
-      { estado: "Apure", hoursAgo: 125.0, duracion: "4h 00m", caidaPct: 65, tipo: "regional", fuente: "SONDEO", severidad: "CRÍTICO", score: "2.8K", detalle: "Apagón general en San Fernando de Apure", patron: "BGP estable — corte total en cabecera" },
-      { estado: "Delta Amacuro", hoursAgo: 140.0, duracion: "2h 50m", caidaPct: 55, tipo: "regional", fuente: "SONDEO", severidad: "ALTO", score: "1.5K", detalle: "Interrupción en Tucupita por tormenta eléctrica", patron: "BGP estable — avería climática" },
-      { estado: "Táchira", hoursAgo: 155.0, duracion: "6h 20m", caidaPct: 78, tipo: "regional", fuente: "SONDEO", severidad: "CRÍTICO", score: "8.9K", detalle: "Gran apagón andino en 12 municipios", patron: "BGP estable — colapso de red regional" },
+      // ZULIA
+      { estado: "Zulia", hoursAgo: 4.5, timeStr: "16:40", duracion: "1h 50m", caidaPct: 58, tipo: "Maracaibo", fuente: "SONDEO", severidad: "ALTO", score: "2.5K", detalle: "Interrupción en circuito Maracaibo y Costa Oriental", patron: "BGP estable — caída abrupta de sondeo activo" },
+      { estado: "Zulia", hoursAgo: 35.0, duracion: "4h 00m", caidaPct: 65, tipo: "San Francisco", fuente: "SONDEO", severidad: "CRÍTICO", score: "5.1K", detalle: "Salida de línea 230kV Tablazo - Cuatricentenario", patron: "BGP estable — desconexión en eje metropolitano" },
+      { estado: "Zulia", hoursAgo: 190.0, duracion: "5h 45m", caidaPct: 70, tipo: "S/E Cuatricentenario", fuente: "SONDEO", severidad: "CRÍTICO", score: "7.2K", detalle: "Explosión de transformador en Subestación Cuatricentenario", patron: "BGP estable — falla mayor" },
 
-      // ÚLTIMOS 30 DÍAS
-      { estado: "Zulia", hoursAgo: 180.0, duracion: "5h 45m", caidaPct: 70, tipo: "regional", fuente: "SONDEO", severidad: "CRÍTICO", score: "7.2K", detalle: "Explosión de transformador en Subestación Cuatricentenario", patron: "BGP estable — falla mayor" },
-      { estado: "Mérida", hoursAgo: 220.0, duracion: "4h 10m", caidaPct: 62, tipo: "regional", fuente: "SONDEO", severidad: "CRÍTICO", score: "4.5K", detalle: "Salida de línea 230kV Uribante - Caparo", patron: "BGP estable — interconexión nacional" },
-      { estado: "Bolívar", hoursAgo: 280.0, duracion: "1h 30m", caidaPct: 30, tipo: "regional", fuente: "SONDEO", severidad: "DEGRADADO", score: "850", detalle: "Mantenimiento en líneas de Puerto Ordaz", patron: "BGP estable — maniobra operativa" },
-      { estado: "Miranda", hoursAgo: 350.0, duracion: "50m", caidaPct: 28, tipo: "regional", fuente: "SONDEO", severidad: "DEGRADADO", score: "620", detalle: "Fluctuación en Valles del Tuy", patron: "BGP estable — oscilación de frecuencia" },
-      { estado: "Distrito Capital", hoursAgo: 420.0, duracion: "35m", caidaPct: 22, tipo: "regional", fuente: "SONDEO", severidad: "NORMAL", score: "350", detalle: "Disparo preventivo en subestación El Cafetal", patron: "BGP estable — recuperación rápida" },
-      { estado: "Amazonas", hoursAgo: 500.0, duracion: "6h 00m", caidaPct: 80, tipo: "regional", fuente: "SONDEO", severidad: "CRÍTICO", score: "3.2K", detalle: "Falla de combustible en generadores térmicos Puerto Ayacucho", patron: "BGP estable — aislamiento de red" },
-      { estado: "Vargas", hoursAgo: 580.0, duracion: "1h 45m", caidaPct: 40, tipo: "regional", fuente: "SONDEO", severidad: "DEGRADADO", score: "1.1K", detalle: "Salida de circuito Catia La Mar", patron: "BGP estable — evento local" }
+      // BARINAS
+      { estado: "Barinas", hoursAgo: 6.0, timeStr: "15:10", duracion: "2h 30m", caidaPct: 60, tipo: "Barinas Centro", fuente: "SONDEO", severidad: "CRÍTICO", score: "3.4K", detalle: "Corte eléctrico no programado en Barinas Centro", patron: "BGP estable — caída de 60% en nodos residenciales" },
+      { estado: "Barinas", hoursAgo: 29.0, duracion: "5h 15m", caidaPct: 75, tipo: "Troncal Llanos", fuente: "BGP", severidad: "CRÍTICO", score: "3.9K", detalle: "Afectación mayor de fibra y electricidad en Los Llanos", patron: "Caída de rutas troncales BGP + Sondeo Activo" },
+
+      // OTROS ESTADOS
+      { estado: "Falcón", hoursAgo: 7.5, timeStr: "13:30", duracion: "1h 05m", caidaPct: 40, tipo: "Punto Fijo", fuente: "SONDEO", severidad: "ALTO", score: "1.8K", detalle: "Salida de circuito en Punto Fijo y Coro", patron: "BGP estable — interrupción en península" },
+      { estado: "Guárico", hoursAgo: 10.0, timeStr: "11:00", duracion: "45m", caidaPct: 35, tipo: "San Juan", fuente: "SONDEO", severidad: "DEGRADADO", score: "1.2K", detalle: "Fluctuación en San Juan de los Morros", patron: "BGP estable — fluctuación de carga" },
+      { estado: "Trujillo", hoursAgo: 13.0, timeStr: "08:30", duracion: "50m", caidaPct: 38, tipo: "Valera", fuente: "SONDEO", severidad: "ALTO", score: "1.0K", detalle: "Fluctuación y disparo de línea Valera", patron: "BGP estable — desconexión de alimentador" },
+      { estado: "Mérida", hoursAgo: 21.0, duracion: "1h 20m", caidaPct: 48, tipo: "Ejido", fuente: "SONDEO", severidad: "ALTO", score: "2.1K", detalle: "Salida de subestación Ejido", patron: "BGP estable — interrupción en circuito andino" },
+      { estado: "Sucre", hoursAgo: 33.0, duracion: "2h 10m", caidaPct: 52, tipo: "Cumaná", fuente: "SONDEO", severidad: "ALTO", score: "1.9K", detalle: "Interrupción de servicio en Cumaná y Carúpano", patron: "BGP estable — caída en red de distribución" },
+      { estado: "Aragua", hoursAgo: 38.0, duracion: "1h 15m", caidaPct: 45, tipo: "Maracay", fuente: "SONDEO", severidad: "ALTO", score: "1.6K", detalle: "Disparo en subestación Maracay Centro", patron: "BGP estable — mantenimiento no programado" },
+      { estado: "Nueva Esparta", hoursAgo: 42.0, duracion: "3h 40m", caidaPct: 62, tipo: "Porlamar", fuente: "SONDEO", severidad: "CRÍTICO", score: "3.1K", detalle: "Falla en cable submarino y circuito Porlamar", patron: "BGP estable — corte general en Margarita" },
+      { estado: "Lara", hoursAgo: 60.0, duracion: "2h 45m", caidaPct: 50, tipo: "Barquisimeto", fuente: "SONDEO", severidad: "ALTO", score: "2.4K", detalle: "Racionamiento rotativo en Barquisimeto y Cabudare", patron: "BGP estable — racionamiento programado" },
+      { estado: "Bolívar", hoursAgo: 290.0, duracion: "1h 30m", caidaPct: 30, tipo: "Puerto Ordaz", fuente: "SONDEO", severidad: "DEGRADADO", score: "850", detalle: "Mantenimiento en líneas de Puerto Ordaz", patron: "BGP estable — maniobra operativa" },
+      { estado: "Amazonas", hoursAgo: 490.0, duracion: "6h 00m", caidaPct: 80, tipo: "Puerto Ayacucho", fuente: "SONDEO", severidad: "CRÍTICO", score: "3.2K", detalle: "Falla de combustible en generadores térmicos Puerto Ayacucho", patron: "BGP estable — aislamiento de red" }
     ];
 
-    // Filtrar eventos según el rango seleccionado
     const maxHours = this.parseRange(range) / 3600;
     const activeEventsList = masterHistoricalEvents
       .filter(e => e.hoursAgo <= maxHours)
@@ -113,37 +107,40 @@ export class IodaApiService {
         region: e.estado
       }));
 
-    // Construir métricas para cada estado según el rango seleccionado
     const statesData = ESTADOS_VENEZUELA.map(state => {
       const stateEvents = activeEventsList.filter(e => e.region === state.nombre);
       const eventCount = stateEvents.length;
 
-      // Calcular severidad y disponibilidad eléctrica en función de los eventos del rango
-      let elecPct = 90;
+      let elecPct = 85;
       let conf = "BAJA";
       let sev = "NORMAL";
-      let score = 150 + Math.floor(Math.random() * 80);
+      let score = 200 + Math.floor(Math.random() * 80);
 
       if (eventCount >= 2 || (stateEvents[0] && stateEvents[0].severidad === "CRÍTICO")) {
-        elecPct = 30 + Math.floor(Math.random() * 15);
+        elecPct = 32 + Math.floor(Math.random() * 12);
         conf = "ALTA";
         sev = "CRÍTICO";
         score = 3000 + (eventCount * 2500);
       } else if (eventCount === 1) {
-        elecPct = 50 + Math.floor(Math.random() * 15);
+        elecPct = 55 + Math.floor(Math.random() * 12);
         conf = "MEDIA";
         sev = stateEvents[0].severidad === "ALTO" ? "ALTO" : "DEGRADADO";
-        score = 1200 + Math.floor(Math.random() * 800);
+        score = 1400 + Math.floor(Math.random() * 800);
       } else if (state.tier === "T1") {
         elecPct = 75;
         conf = "MEDIA";
         sev = "DEGRADADO";
-        score = 800;
+        score = 850;
       }
 
-      // Si es Táchira, mantener coherencia como estado más afectado
-      if (state.nombre === "Táchira") {
-        elecPct = range === "30d" ? 40 : (range === "7d" ? 35 : 30);
+      // Si es Monagas, calibrar con sus circuitos de Maturín
+      if (state.nombre === "Monagas") {
+        elecPct = range === "24h" ? 60 : (range === "48h" ? 54 : (range === "7d" ? 48 : 42));
+        conf = "ALTA";
+        sev = eventCount >= 2 ? "CRÍTICO" : "ALTO";
+        score = 2800 + (eventCount * 1200);
+      } else if (state.nombre === "Táchira") {
+        elecPct = 30;
         conf = "ALTA";
         sev = "CRÍTICO";
         score = 10200;
@@ -158,6 +155,7 @@ export class IodaApiService {
         score: score,
         eventCount: eventCount,
         eventos: stateEvents,
+        circuitos: state.nombre === "Monagas" ? MONAGAS_CIRCUITOS : [],
         metrics: {
           sondeoActivoPct: Math.min(100, elecPct + 35),
           probesActive: Math.round((state.baseProbes || 180) * (elecPct / 100)),
@@ -172,10 +170,8 @@ export class IodaApiService {
       };
     });
 
-    // Ordenar de mayor a menor score de impacto
     statesData.sort((a, b) => b.score - a.score);
 
-    // Conteo para las píldoras superiores
     const conEvento = statesData.filter(s => s.severity === "CRÍTICO" || s.severity === "ALTO").length;
     const conRacionamiento = statesData.filter(s => s.severity === "DEGRADADO").length;
     const sinAnomalias = statesData.filter(s => s.severity === "NORMAL").length;
@@ -190,7 +186,8 @@ export class IodaApiService {
         totalPuntosSondeo: TOTAL_PUNTOS_SONDEO_IODA
       },
       estados: statesData,
-      eventos: activeEventsList
+      eventos: activeEventsList,
+      circuitosMonagas: MONAGAS_CIRCUITOS
     };
   }
 }
