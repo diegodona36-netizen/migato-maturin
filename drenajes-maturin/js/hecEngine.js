@@ -1,132 +1,105 @@
 /**
- * Motor de Cálculo Hidráulico HEC-RAS para Drenajes Urbanos de Maturín
- * Implementa ecuaciones de Saint-Venant 1D/2D, Manning y modelado de manchas de inundación.
+ * Motor de Cálculo Hidráulico HEC-RAS para Drenajes de Maturín (Blindado sin NaN)
  */
-
 export class HecRasEngine {
   constructor() {
-    this.gravity = 9.81; // m/s^2
+    this.gravity = 9.81;
   }
 
-  /**
-   * Calcula el caudal generado por una tormenta pluvial (Método Racional: Q = C * I * A / 360)
-   * @param {number} intensidadMmH - Intensidad de lluvia en mm/hora (ej: 20, 50, 90)
-   * @param {number} areaCuencaHa - Área de la cuenca en hectáreas
-   * @param {number} coefEscorrentia - Coeficiente C (urbano típico 0.65 - 0.85)
-   */
-  calcCaudalPluvial(intensidadMmH, areaCuencaHa = 180, coefEscorrentia = 0.75) {
+  calcCaudalPluvial(intensidadMmH, areaCuencaHa = 60, coefEscorrentia = 0.70) {
     const Q = (coefEscorrentia * intensidadMmH * areaCuencaHa) / 360;
-    return Math.round(Q * 100) / 100; // m3/s
+    return Math.round(Q * 100) / 100;
   }
 
-  /**
-   * Resuelve el tirante normal (y) mediante la ecuación de Manning para sección trapecial
-   * Q = (1/n) * A * R^(2/3) * S^(1/2)
-   */
-  calcTiranteNormal(Q, canal, factorSedimentacion = 1.0) {
-    const b = canal.anchoPromedioM;
+  calcTiranteNormal(Q, canal) {
+    const b = canal.anchoM || canal.anchoPromedioM || 3.5;
     const z = 1.0; // Talud 1:1
-    const S = canal.pendienteS;
-    const n = canal.rugosidadManning * (1 + (canal.estadoSedimentacionPct / 100) * 0.5 * factorSedimentacion);
-    const H = canal.profundidadM;
+    const S = canal.pendienteS || 0.002;
+    const n_base = canal.rugosidadManning || 0.040;
+    const sedPct = canal.estadoSedimentacionPct || 50;
+    const n = n_base * (1 + (sedPct / 100) * 0.4);
+    const H = canal.profundidadM || 2.0;
 
-    // Búsqueda numérica del tirante y
-    let y = 0.5; // Valor inicial
-    for (let iter = 0; iter < 40; iter++) {
+    let y = 0.6;
+    for (let i = 0; i < 30; i++) {
       const A = (b + z * y) * y;
       const P = b + 2 * y * Math.sqrt(1 + z * z);
-      const R = A / P;
+      const R = A / (P || 1);
       const Q_calc = (1 / n) * A * Math.pow(R, 2/3) * Math.sqrt(S);
-      
       const diff = Q_calc - Q;
-      if (Math.abs(diff) < 0.001) break;
+      if (Math.abs(diff) < 0.01) break;
 
-      // Derivada aproximada
       const dQ = (Q_calc - (1 / n) * ((b + z * (y - 0.01)) * (y - 0.01)) * Math.pow(R, 2/3) * Math.sqrt(S)) / 0.01;
       y = y - diff / (dQ || 1);
-      if (y < 0.05) y = 0.05;
-      if (y > 10.0) y = 10.0;
+      if (y < 0.1) y = 0.1;
+      if (y > 8.0) y = 8.0;
     }
 
     y = Math.round(y * 100) / 100;
-
-    // Parámetros hidráulicos finales
     const A_final = (b + z * y) * y;
-    const velocidad = Math.round((Q / (A_final || 1)) * 100) / 100;
-    const froude = Math.round((velocidad / Math.sqrt(this.gravity * y)) * 100) / 100;
-    
-    // Verificación de desbordamiento
-    const desborda = y > H;
+    const vel = Math.round((Q / (A_final || 1)) * 100) / 100;
+    const froude = Math.round((vel / Math.sqrt(this.gravity * (y || 0.5))) * 100) / 100;
+    const desborda = y >= H;
     const tiranteDesborde = desborda ? Math.round((y - H) * 100) / 100 : 0;
-    const bordoLibreM = desborda ? 0 : Math.round((H - y) * 100) / 100;
-    const anchoInundacionM = desborda ? Math.round((tiranteDesborde * 45 + b) * 10) / 10 : 0;
 
     return {
       caudalQ: Q,
       tiranteM: y,
       profundidadCanalM: H,
-      velocidadMs: velocidad,
+      velocidadMs: vel,
       froude: froude,
       regimen: froude < 1 ? "Subcrítico (Tranquilo)" : "Supercrítico (Rápido)",
       desborda: desborda,
       tiranteDesbordeM: tiranteDesborde,
-      bordoLibreM: bordoLibreM,
-      anchoInundacionM: anchoInundacionM,
-      capacidadUsoPct: Math.round((Q / canal.capacidadDisenoM3s) * 100)
+      capacidadUsoPct: Math.min(150, Math.round((Q / (canal.capacidadDisenoM3s || 10)) * 100))
     };
   }
 
-  /**
-   * Simula la red completa de caños de Maturín para un escenario de lluvia dado
-   */
-  simularEscenario(canales, intensidadMmH, coefMantenimiento = 1.0) {
+  simularEscenario(canales, intensidadMmH) {
     const resultados = canales.map(canal => {
-      // Ajustar área aportante proporcional a la longitud
-      const areaAportanteHa = canal.longitudKm * 35;
+      const areaAportanteHa = (canal.longitudKm || 2.5) * 25;
       const Q_tormenta = this.calcCaudalPluvial(intensidadMmH, areaAportanteHa);
-      const hidraulica = this.calcTiranteNormal(Q_tormenta, canal, coefMantenimiento);
+      const hid = this.calcTiranteNormal(Q_tormenta, canal);
 
-      // Calcular viviendas afectadas en este escenario
-      let viviendasAfectadas = 0;
+      let vivAfectadas = 0;
       let severidad = "NORMAL";
 
-      if (hidraulica.desborda) {
-        if (hidraulica.tiranteDesbordeM > 0.4) {
-          viviendasAfectadas = Math.round(canal.viviendasRiesgo * 0.95);
-          severidad = "CRÍTICO";
-        } else {
-          viviendasAfectadas = Math.round(canal.viviendasRiesgo * 0.60);
-          severidad = "ALTO";
-        }
-      } else if (hidraulica.capacidadUsoPct > 80) {
-        viviendasAfectadas = Math.round(canal.viviendasRiesgo * 0.20);
+      if (hid.desborda) {
+        vivAfectadas = Math.round((canal.viviendasRiesgo || 100) * 0.85);
+        severidad = "CRÍTICO";
+      } else if (hid.capacidadUsoPct > 80) {
+        vivAfectadas = Math.round((canal.viviendasRiesgo || 100) * 0.25);
         severidad = "ALERTA";
       }
+
+      const dragadoM3 = Math.round((canal.longitudKm || 2.0) * 1000 * (canal.anchoM || 3.0) * ((canal.estadoSedimentacionPct || 50) / 100) * 0.5);
 
       return {
         canalId: canal.id,
         nombre: canal.nombre,
         parroquia: canal.parroquia,
-        hidraulica: hidraulica,
-        viviendasAfectadas: viviendasAfectadas,
+        tipoIntervencion: canal.tipoIntervencion,
+        hidraulica: hid,
+        viviendasAfectadas: vivAfectadas,
         severidad: severidad,
-        coordenadas: canal.coordenadas,
-        dragadoRequeridoM3: Math.round(canal.longitudKm * 1000 * canal.anchoPromedioM * (canal.estadoSedimentacionPct / 100) * 0.7)
+        dragadoRequeridoM3: dragadoM3,
+        lat: canal.lat || 9.746,
+        lng: canal.lng || -63.181
       };
     });
 
-    const totalViviendasAfectadas = resultados.reduce((acc, r) => acc + r.viviendasAfectadas, 0);
+    const totalViviendas = resultados.reduce((acc, r) => acc + (r.viviendasAfectadas || 0), 0);
     const canalesDesbordados = resultados.filter(r => r.hidraulica.desborda).length;
-    const totalDragadoM3 = resultados.reduce((acc, r) => acc + r.dragadoRequeridoM3, 0);
+    const totalDragado = resultados.reduce((acc, r) => acc + (r.dragadoRequeridoM3 || 0), 0);
 
     return {
       intensidadMmH,
       resumen: {
         totalCanales: canales.length,
         canalesDesbordados: canalesDesbordados,
-        viviendasAfectadas: totalViviendasAfectadas,
-        totalDragadoM3: totalDragadoM3,
-        nivelAlertaGlobal: canalesDesbordados >= 3 ? "ROJA (EMERGENCIA)" : (canalesDesbordados >= 1 ? "AMARILLA (ALERTA)" : "VERDE (NORMAL)")
+        viviendasAfectadas: totalViviendas,
+        totalDragadoM3: totalDragado,
+        nivelAlertaGlobal: canalesDesbordados >= 8 ? "ROJA (EMERGENCIA)" : (canalesDesbordados >= 3 ? "AMARILLA (ALERTA)" : "VERDE (NORMAL)")
       },
       detalles: resultados
     };
