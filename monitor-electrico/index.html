@@ -32,7 +32,7 @@
         
         <!-- Title & IODA Source -->
         <div class="flex items-center gap-3">
-          <div class="w-9 h-9 rounded-xl bg-sky-600 text-white flex items-center justify-center shadow-md shadow-sky-600/20">
+          <div class="w-9 h-9 rounded-xl bg-sky-600 text-white flex items-center justify-center shadow-md shadow-sky-600/20 shrink-0">
             <i data-lucide="globe" class="w-5 h-5"></i>
           </div>
           <div>
@@ -49,8 +49,15 @@
           </div>
         </div>
 
-        <!-- Controls: Time Range & Refresh -->
-        <div class="flex items-center gap-2 self-start md:self-auto">
+        <!-- Controls: State Selector, Time Range & Refresh -->
+        <div class="flex flex-wrap items-center gap-2">
+          
+          <!-- Botón de Acceso Rápido a Monagas -->
+          <button id="btn-quick-monagas" class="px-3 py-1.5 text-xs font-black bg-amber-500 hover:bg-amber-400 text-slate-950 rounded-xl shadow-sm transition flex items-center gap-1.5 border border-amber-600/30">
+            <i data-lucide="zap" class="w-3.5 h-3.5 fill-current"></i>
+            <span>📍 Monagas / Maturín</span>
+          </button>
+
           <div class="inline-flex rounded-xl border border-slate-200 p-0.5 bg-slate-50 shadow-inner">
             <button data-range="24h" class="range-btn px-3 py-1.5 text-xs font-bold rounded-lg bg-sky-600 text-white transition shadow-sm">24h</button>
             <button data-range="48h" class="range-btn px-3 py-1.5 text-xs font-semibold rounded-lg bg-white text-slate-700 hover:bg-slate-100 transition">48h</button>
@@ -68,25 +75,32 @@
 
     <!-- Navigation Tabs Bar -->
     <div class="bg-slate-50 border-t border-slate-200 px-4 sm:px-6">
-      <div class="max-w-7xl mx-auto flex items-center overflow-x-auto no-scrollbar gap-1 py-1">
-        <button data-tab="tab-estados" class="nav-tab-btn px-4 py-2 text-xs sm:text-sm font-bold rounded-lg bg-sky-600 text-white transition flex items-center gap-1.5 shrink-0">
+      <div class="max-w-7xl mx-auto flex items-center overflow-x-auto no-scrollbar gap-1.5 py-1.5">
+        
+        <!-- Pestaña Especial Monagas / Maturín -->
+        <button data-tab="tab-monagas" class="nav-tab-btn px-3.5 py-2 text-xs sm:text-sm font-black rounded-lg bg-amber-500 text-slate-950 border border-amber-600/30 transition flex items-center gap-1.5 shrink-0 shadow-sm">
+          <i data-lucide="map-pin" class="w-4 h-4 text-slate-950"></i>
+          <span>📍 Foco Monagas / Maturín</span>
+        </button>
+
+        <button data-tab="tab-estados" class="nav-tab-btn px-3.5 py-2 text-xs sm:text-sm font-bold rounded-lg text-slate-700 hover:bg-slate-200 transition flex items-center gap-1.5 shrink-0">
           <i data-lucide="map" class="w-4 h-4"></i>
-          <span>Estados</span>
+          <span>Todos los Estados</span>
         </button>
 
-        <button data-tab="tab-eventos" class="nav-tab-btn px-4 py-2 text-xs sm:text-sm font-medium rounded-lg text-slate-600 hover:bg-slate-100 transition flex items-center gap-1.5 shrink-0">
+        <button data-tab="tab-eventos" class="nav-tab-btn px-3.5 py-2 text-xs sm:text-sm font-medium rounded-lg text-slate-600 hover:bg-slate-200 transition flex items-center gap-1.5 shrink-0">
           <i data-lucide="activity" class="w-4 h-4"></i>
-          <span>Eventos</span>
+          <span>Historial de Eventos</span>
         </button>
 
-        <button data-tab="tab-cortes" class="nav-tab-btn px-4 py-2 text-xs sm:text-sm font-medium rounded-lg text-slate-600 hover:bg-slate-100 transition flex items-center gap-1.5 shrink-0">
+        <button data-tab="tab-cortes" class="nav-tab-btn px-3.5 py-2 text-xs sm:text-sm font-medium rounded-lg text-slate-600 hover:bg-slate-200 transition flex items-center gap-1.5 shrink-0">
           <i data-lucide="zap" class="w-4 h-4"></i>
-          <span>Cortes eléctricos</span>
+          <span>Cortes Eléctricos</span>
         </button>
 
-        <button data-tab="tab-nacional" class="nav-tab-btn px-4 py-2 text-xs sm:text-sm font-medium rounded-lg text-slate-600 hover:bg-slate-100 transition flex items-center gap-1.5 shrink-0">
+        <button data-tab="tab-nacional" class="nav-tab-btn px-3.5 py-2 text-xs sm:text-sm font-medium rounded-lg text-slate-600 hover:bg-slate-200 transition flex items-center gap-1.5 shrink-0">
           <i data-lucide="bar-chart-2" class="w-4 h-4"></i>
-          <span>Nacional</span>
+          <span>Curva Nacional</span>
         </button>
       </div>
     </div>
@@ -96,16 +110,22 @@
   <!-- SUMMARY STATUS PILLS BAR -->
   <!-- ============================================================== -->
   <div class="max-w-7xl mx-auto w-full px-4 sm:px-6 pt-4">
-    <div class="flex flex-wrap items-center gap-2 text-xs font-semibold">
-      <span id="stat-con-evento" class="px-3 py-1 rounded-full bg-rose-50 text-rose-700 border border-rose-200 shadow-sm flex items-center gap-1">
-        <span class="w-2 h-2 rounded-full bg-rose-500"></span> 20 con evento detectado
-      </span>
-      <span id="stat-con-racionamiento" class="px-3 py-1 rounded-full bg-amber-50 text-amber-800 border border-amber-200 shadow-sm flex items-center gap-1">
-        <span class="w-2 h-2 rounded-full bg-amber-500"></span> 0 con posible racionamiento (inferido)
-      </span>
-      <span id="stat-sin-anomalia" class="px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 shadow-sm flex items-center gap-1">
-        <span class="w-2 h-2 rounded-full bg-emerald-500"></span> 4 sin anomalías
-      </span>
+    <div class="flex flex-wrap items-center justify-between gap-3">
+      <div class="flex flex-wrap items-center gap-2 text-xs font-semibold">
+        <span id="stat-con-evento" class="px-3 py-1 rounded-full bg-rose-50 text-rose-700 border border-rose-200 shadow-sm flex items-center gap-1">
+          <span class="w-2 h-2 rounded-full bg-rose-500 mr-1.5"></span> Cargando...
+        </span>
+        <span id="stat-con-racionamiento" class="px-3 py-1 rounded-full bg-amber-50 text-amber-800 border border-amber-200 shadow-sm flex items-center gap-1">
+          <span class="w-2 h-2 rounded-full bg-amber-500 mr-1.5"></span> 0 con posible racionamiento
+        </span>
+        <span id="stat-sin-anomalia" class="px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 shadow-sm flex items-center gap-1">
+          <span class="w-2 h-2 rounded-full bg-emerald-500 mr-1.5"></span> 4 sin anomalías
+        </span>
+      </div>
+
+      <div class="text-xs font-medium text-slate-500 flex items-center gap-2">
+        <span>📍 Estado activo: <strong id="header-active-state-name" class="text-slate-900 font-bold">Monagas</strong></span>
+      </div>
     </div>
   </div>
 
@@ -115,9 +135,162 @@
   <main class="max-w-7xl mx-auto w-full px-4 sm:px-6 py-4 flex-1">
 
     <!-- ------------------------------------------------------------ -->
-    <!-- TAB 1: ESTADOS (MAPA + PANEL DE INSPECCIÓN) -->
+    <!-- TAB: FOCO MONAGAS / MATURÍN (TAB PRINCIPAL) -->
     <!-- ------------------------------------------------------------ -->
-    <div id="tab-estados" class="tab-content space-y-4">
+    <div id="tab-monagas" class="tab-content space-y-6">
+      
+      <!-- Banner Monagas / Maturín -->
+      <div class="bg-gradient-to-r from-slate-900 via-slate-800 to-amber-950 rounded-2xl p-5 sm:p-6 text-white shadow-md flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+        <div>
+          <div class="flex items-center gap-2.5">
+            <h2 class="text-xl sm:text-2xl font-black tracking-tight text-white flex items-center gap-2">
+              <span>Monagas • Diagnóstico Eléctrico Regional</span>
+              <span class="text-xs font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30 px-2 py-0.5 rounded-full">S/E El Indio & Palital</span>
+            </h2>
+          </div>
+          <p class="text-xs sm:text-sm text-slate-300 mt-1 max-w-2xl">
+            Historial cronológico de fallas, racionamiento y monitoreo de circuitos de media tensión en Maturín y municipios de Monagas.
+          </p>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-2">
+          <button id="btn-export-monagas" class="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-xs font-black text-slate-950 transition flex items-center gap-1.5 shadow-sm">
+            <i data-lucide="download" class="w-4 h-4"></i>
+            <span>Exportar Historial Monagas (CSV)</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- KPIs Rápidos de Monagas -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
+        
+        <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-3">
+          <div class="w-11 h-11 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center shrink-0">
+            <i data-lucide="zap" class="w-6 h-6"></i>
+          </div>
+          <div>
+            <p class="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Disponibilidad</p>
+            <h3 id="monagas-kpi-disponibilidad" class="text-2xl font-black text-amber-600">60%</h3>
+          </div>
+        </div>
+
+        <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-3">
+          <div class="w-11 h-11 rounded-xl bg-red-50 text-red-600 flex items-center justify-center shrink-0">
+            <i data-lucide="alert-octagon" class="w-6 h-6"></i>
+          </div>
+          <div>
+            <p class="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Fallas Registradas</p>
+            <h3 id="monagas-kpi-eventos" class="text-2xl font-black text-slate-900">8 eventos</h3>
+          </div>
+        </div>
+
+        <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-3">
+          <div class="w-11 h-11 rounded-xl bg-sky-50 text-sky-600 flex items-center justify-center shrink-0">
+            <i data-lucide="clock" class="w-6 h-6"></i>
+          </div>
+          <div>
+            <p class="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Promedio sin Luz</p>
+            <h3 id="monagas-kpi-promedio-horas" class="text-2xl font-black text-slate-900">3.8 hrs/día</h3>
+          </div>
+        </div>
+
+        <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-3">
+          <div class="w-11 h-11 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
+            <i data-lucide="gauge" class="w-6 h-6"></i>
+          </div>
+          <div>
+            <p class="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Voltaje Promedio</p>
+            <h3 id="monagas-kpi-voltaje" class="text-2xl font-black text-slate-900">110V</h3>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Gráfico de Monagas vs Historial de Eventos -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        
+        <!-- Gráfico Serie Temporal Monagas (2 Cols) -->
+        <div class="lg:col-span-2 bg-white rounded-2xl border border-slate-200 shadow-sm p-5 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between border-b pb-3 mb-4">
+              <div>
+                <h3 class="text-base font-black text-slate-900">Curva de Electricidad en Monagas</h3>
+                <p class="text-xs text-slate-500" id="monagas-chart-sub">Sondeo de módems residenciales y disponibilidad de red</p>
+              </div>
+              <span class="text-xs font-bold px-2 py-0.5 rounded bg-amber-50 text-amber-700 border border-amber-200" id="monagas-chart-range-tag">24 HORAS</span>
+            </div>
+            <div class="h-64 sm:h-72 relative">
+              <canvas id="monagas-timeline-chart"></canvas>
+            </div>
+          </div>
+
+          <div class="pt-3 border-t border-slate-100 text-xs text-slate-400 flex items-center justify-between mt-3">
+            <span>S/E 115kV El Indio • S/E Boulevard • S/E Maturín 230kV</span>
+            <span class="font-mono text-[10px]">Datos Georgia Tech IODA</span>
+          </div>
+        </div>
+
+        <!-- Estado de Circuitos de Maturín (1 Col) -->
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between border-b pb-3 mb-3">
+              <h3 class="text-xs font-black text-slate-900 uppercase tracking-wider">Circuitos de Maturín</h3>
+              <span class="text-[10px] text-amber-600 font-bold">Tiempo Real</span>
+            </div>
+            
+            <div class="space-y-2.5 max-h-72 overflow-y-auto pr-1" id="monagas-circuitos-list">
+              <!-- Inyectado dinámicamente -->
+            </div>
+          </div>
+
+          <div class="pt-3 border-t border-slate-100 text-[11px] text-slate-400">
+            * Haz clic en un circuito para ver incidencias asociadas
+          </div>
+        </div>
+
+      </div>
+
+      <!-- HISTORIAL CRONOLÓGICO COMPLETO DE MONAGAS -->
+      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 space-y-4">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b pb-3">
+          <div>
+            <h3 class="text-base font-black text-slate-900 flex items-center gap-2">
+              <i data-lucide="history" class="w-5 h-5 text-amber-500"></i>
+              <span>Historial Detallado de Eventos Eléctricos en Monagas / Maturín</span>
+            </h3>
+            <p class="text-xs text-slate-500">
+              Registro continuo de cortes de luz, caídas abruptas de sondeo, fluctuaciones y racionamiento.
+            </p>
+          </div>
+          <span class="text-xs font-bold text-slate-500 font-mono" id="monagas-events-count-label">Cargando eventos...</span>
+        </div>
+
+        <!-- Tabla Historial Monagas -->
+        <div class="overflow-x-auto border border-slate-200 rounded-xl">
+          <table class="w-full text-xs text-left">
+            <thead class="bg-slate-50 border-b border-slate-200 text-slate-500 font-bold uppercase text-[10px]">
+              <tr>
+                <th class="px-4 py-3">Fecha y Hora</th>
+                <th class="px-4 py-3">Zona / Circuito Afectado</th>
+                <th class="px-4 py-3">Duración</th>
+                <th class="px-4 py-3">Caída (%)</th>
+                <th class="px-4 py-3">Severidad</th>
+                <th class="px-4 py-3">Detalle Técnico / Patrón</th>
+              </tr>
+            </thead>
+            <tbody id="monagas-history-table-body" class="divide-y divide-slate-100">
+              <!-- Inyectado dinámicamente -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ------------------------------------------------------------ -->
+    <!-- TAB: ESTADOS (MAPA Y COMPARADOR NACIONAL) -->
+    <!-- ------------------------------------------------------------ -->
+    <div id="tab-estados" class="tab-content hidden space-y-4">
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         
         <!-- MAPA VENEZUELA (2 Cols) -->
@@ -125,10 +298,10 @@
           <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-slate-100 gap-2">
             <div>
               <h2 class="text-sm font-black text-slate-900 tracking-wide uppercase">
-                Mapa de Interrupciones • 24H
+                Mapa de Interrupciones Nacional • 24H
               </h2>
               <p class="text-[11px] text-slate-500 flex items-center gap-1.5 flex-wrap">
-                <span>Score acumulado • Color = severidad • Tamaño = impacto</span>
+                <span>Haz clic en cualquier estado para ver su diagnóstico</span>
                 <span class="text-slate-300">•</span>
                 <span class="inline-flex items-center gap-1 text-emerald-600 font-bold"><span class="w-2 h-2 rounded-full bg-emerald-500"></span> Normal</span>
                 <span class="inline-flex items-center gap-1 text-amber-600 font-bold"><span class="w-2 h-2 rounded-full bg-amber-500"></span> Degradado</span>
@@ -147,7 +320,7 @@
           <div id="venezuela-map" class="w-full h-[460px] sm:h-[540px] rounded-xl mt-3 border border-slate-100 shadow-inner z-10"></div>
           
           <div class="pt-2 text-right">
-            <span class="text-[10px] text-slate-400 font-mono">© OSM • CARTO • GEORGIA TECH IODA</span>
+            <span class="text-[10px] text-slate-400 font-mono">© OSM • ESRI • GEORGIA TECH IODA</span>
           </div>
         </div>
 
@@ -168,9 +341,9 @@
             <div class="flex items-center justify-between border-b pb-2">
               <h3 class="text-xs font-black text-slate-900 tracking-wider uppercase flex items-center gap-1.5">
                 <i data-lucide="list-ordered" class="w-4 h-4 text-sky-600"></i>
-                <span>Ranking por Estado • 24H</span>
+                <span>Ranking de Impacto • 24H</span>
               </h3>
-              <span class="text-[10px] text-slate-400 font-mono">Mayor Impacto</span>
+              <span class="text-[10px] text-slate-400 font-mono">Mayor a Menor</span>
             </div>
 
             <div class="overflow-x-auto max-h-60 overflow-y-auto">
@@ -196,7 +369,7 @@
     </div>
 
     <!-- ------------------------------------------------------------ -->
-    <!-- TAB 2: EVENTOS DETECTADOS -->
+    <!-- TAB: HISTORIAL COMPLETO DE EVENTOS -->
     <!-- ------------------------------------------------------------ -->
     <div id="tab-eventos" class="tab-content hidden space-y-4">
       <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 space-y-4">
@@ -205,7 +378,7 @@
           <div>
             <h2 class="text-base font-black text-slate-900 uppercase tracking-wide flex items-center gap-2">
               <i data-lucide="alert-triangle" class="w-5 h-5 text-amber-500"></i>
-              <span>Eventos Detectados</span>
+              <span>Historial Global de Eventos Eléctricos</span>
             </h2>
             <p class="text-xs text-slate-500">
               Historial cronológico de caídas de sondeo y eventos de red registrados en Venezuela.
@@ -248,7 +421,7 @@
     </div>
 
     <!-- ------------------------------------------------------------ -->
-    <!-- TAB 3: CORTES ELÉCTRICOS (DESGLOSE POR ESTADO) -->
+    <!-- TAB: CORTES ELÉCTRICOS POR ESTADO -->
     <!-- ------------------------------------------------------------ -->
     <div id="tab-cortes" class="tab-content hidden space-y-4">
       <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 space-y-4">
@@ -256,10 +429,10 @@
         <div class="border-b pb-4">
           <h2 class="text-base font-black text-slate-900 uppercase tracking-wide flex items-center gap-2">
             <i data-lucide="zap" class="w-5 h-5 text-amber-500"></i>
-            <span>Eventos Eléctricos Detectados</span>
+            <span>Cortes Eléctricos por Estado (Desglose Acordeón)</span>
           </h2>
           <p class="text-xs text-slate-600 mt-1 leading-relaxed">
-            Estados con al menos un clúster de alertas IODA (caída de sondeo, BGP estable) que supera el umbral calibrado contra el racionamiento ya declarado de ese estado — evidencia directa de un evento puntual, no solo degradación general de conectividad. Haz clic en un estado para ver el detalle de sus eventos aquí mismo.
+            Estados con al menos un clúster de alertas IODA (caída de sondeo, BGP estable). Haz clic en un estado para ver el detalle de sus eventos aquí mismo.
           </p>
         </div>
 
@@ -282,7 +455,7 @@
     </div>
 
     <!-- ------------------------------------------------------------ -->
-    <!-- TAB 4: NACIONAL (SERIE TEMPORAL) -->
+    <!-- TAB: NACIONAL (SERIE TEMPORAL) -->
     <!-- ------------------------------------------------------------ -->
     <div id="tab-nacional" class="tab-content hidden space-y-4">
       <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 space-y-4">
@@ -329,7 +502,7 @@
   <!-- ============================================================== -->
   <footer class="bg-white border-t border-slate-200 py-4 text-center text-xs text-slate-500">
     <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
-      <p>Monitor de Conectividad y Cortes Eléctricos — Venezuela</p>
+      <p>Monitor de Conectividad y Cortes Eléctricos — Venezuela & Monagas</p>
       <p class="font-mono text-[11px] text-slate-400">Datos basados en Georgia Tech IODA • CAIDA UC San Diego</p>
     </div>
   </footer>
