@@ -11,7 +11,7 @@ class AppController {
     this.charts = new OutageCharts();
     this.map = new VenezuelaOutageMap("venezuela-map", (state) => this.selectState(state));
     
-    this.activeTab = "tab-monagas"; // Iniciar con foco en Monagas por defecto
+    this.activeTab = "tab-monagas";
     this.activeRange = "24h";
     this.currentData = null;
     this.selectedState = null;
@@ -25,7 +25,6 @@ class AppController {
     this.setupRangeButtons();
     this.setupExportButton();
 
-    this.map.init();
     await this.refreshData();
 
     // Auto-actualizar cada 60 segundos
@@ -40,7 +39,6 @@ class AppController {
     try {
       this.currentData = await this.api.getOutageData(this.activeRange);
       
-      // Estado seleccionado (Monagas por defecto)
       if (!this.selectedState) {
         this.selectedState = this.currentData.estados.find(s => s.nombre === "Monagas") || this.currentData.estados[0];
       } else {
@@ -49,12 +47,22 @@ class AppController {
 
       this.renderSummaryHeader();
       this.renderMonagasTab();
-      this.map.updateData(this.currentData.estados, this.selectedState?.id);
       this.renderStateDetailPanel();
       this.renderStateRanking();
       this.renderCortesElectricosTab();
       this.renderEventosTab();
-      this.renderNacionalTab();
+
+      // Si la pestaña activa es estados, actualizar mapa
+      if (this.activeTab === "tab-estados") {
+        this.map.init();
+        this.map.updateData(this.currentData.estados, this.selectedState?.id);
+      } else if (this.activeTab === "tab-nacional") {
+        this.renderNacionalTab();
+      }
+
+      if (window.lucide) {
+        window.lucide.createIcons();
+      }
 
     } catch (e) {
       console.error("Error cargando datos:", e);
@@ -89,9 +97,6 @@ class AppController {
     if (activeStateNameEl && this.selectedState) activeStateNameEl.textContent = this.selectedState.nombre;
   }
 
-  /**
-   * Pestaña Especial y Diagnóstico de Monagas / Maturín
-   */
   renderMonagasTab() {
     if (!this.currentData) return;
 
@@ -99,7 +104,6 @@ class AppController {
     const monagasEvents = this.currentData.eventos.filter(e => e.region === "Monagas");
     const circuitos = this.currentData.circuitosMonagas || [];
 
-    // KPIs
     const kpiDisp = document.getElementById("monagas-kpi-disponibilidad");
     const kpiEv = document.getElementById("monagas-kpi-eventos");
     const kpiHrs = document.getElementById("monagas-kpi-promedio-horas");
@@ -184,7 +188,6 @@ class AppController {
     this.renderStateDetailPanel();
     this.renderSummaryHeader();
 
-    // Si seleccionó Monagas en el mapa, actualizar la pestaña de Monagas
     if (state.nombre === "Monagas") {
       this.renderMonagasTab();
     }
@@ -300,10 +303,6 @@ class AppController {
         ${eventsHtml}
       </div>
     `;
-
-    if (window.lucide) {
-      window.lucide.createIcons();
-    }
   }
 
   renderStateRanking() {
@@ -473,7 +472,7 @@ class AppController {
           b.classList.toggle("bg-amber-500", isCurrent && target === "tab-monagas");
           b.classList.toggle("text-white", isCurrent && target !== "tab-monagas");
           b.classList.toggle("text-slate-950", isCurrent && target === "tab-monagas");
-          b.classList.toggle("text-slate-600", !isCurrent);
+          b.classList.toggle("text-slate-700", !isCurrent);
           b.classList.toggle("hover:bg-slate-200", !isCurrent);
         });
 
@@ -482,11 +481,24 @@ class AppController {
         });
 
         if (target === "tab-monagas") {
-          setTimeout(() => this.renderMonagasTab(), 100);
+          setTimeout(() => {
+            this.renderMonagasTab();
+            if (window.lucide) window.lucide.createIcons();
+          }, 50);
         } else if (target === "tab-estados") {
-          setTimeout(() => this.map.map?.invalidateSize(), 100);
+          setTimeout(() => {
+            this.map.init();
+            this.map.updateData(this.currentData.estados, this.selectedState?.id);
+            this.map.map?.invalidateSize();
+            if (window.lucide) window.lucide.createIcons();
+          }, 50);
         } else if (target === "tab-nacional") {
-          setTimeout(() => this.renderNacionalTab(), 100);
+          setTimeout(() => {
+            this.renderNacionalTab();
+            if (window.lucide) window.lucide.createIcons();
+          }, 50);
+        } else {
+          if (window.lucide) window.lucide.createIcons();
         }
       });
     });
