@@ -25,6 +25,10 @@ class AppController {
     this.setupRangeButtons();
     this.setupExportButton();
 
+    if (window.lucide) {
+      try { window.lucide.createIcons(); } catch(e) {}
+    }
+
     await this.refreshData();
 
     // Auto-actualizar cada 60 segundos
@@ -45,6 +49,7 @@ class AppController {
         this.selectedState = this.currentData.estados.find(s => s.id === this.selectedState.id) || this.selectedState;
       }
 
+      // Renderizar todos los componentes protegidos individualmente
       this.renderSummaryHeader();
       this.renderMonagasTab();
       this.renderStateDetailPanel();
@@ -52,7 +57,6 @@ class AppController {
       this.renderCortesElectricosTab();
       this.renderEventosTab();
 
-      // Si la pestaña activa es estados, actualizar mapa
       if (this.activeTab === "tab-estados") {
         this.map.init();
         this.map.updateData(this.currentData.estados, this.selectedState?.id);
@@ -61,7 +65,7 @@ class AppController {
       }
 
       if (window.lucide) {
-        window.lucide.createIcons();
+        try { window.lucide.createIcons(); } catch(e) {}
       }
 
     } catch (e) {
@@ -91,94 +95,98 @@ class AppController {
     const countSinAnomaliaEl = document.getElementById("stat-sin-anomalia");
     const activeStateNameEl = document.getElementById("header-active-state-name");
 
-    if (countEventosEl) countEventosEl.innerHTML = `<span class="w-2 h-2 rounded-full bg-rose-500 mr-1.5"></span> ${resumen.conEvento} con evento detectado`;
-    if (countRacionamientoEl) countRacionamientoEl.innerHTML = `<span class="w-2 h-2 rounded-full bg-amber-500 mr-1.5"></span> ${resumen.conRacionamiento} con posible racionamiento`;
-    if (countSinAnomaliaEl) countSinAnomaliaEl.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-500 mr-1.5"></span> ${resumen.sinAnomalias} sin anomalías`;
+    if (countEventosEl) countEventosEl.innerHTML = `<span class="w-2 h-2 rounded-full bg-rose-500 mr-1.5 inline-block"></span> ${resumen.conEvento} con evento detectado`;
+    if (countRacionamientoEl) countRacionamientoEl.innerHTML = `<span class="w-2 h-2 rounded-full bg-amber-500 mr-1.5 inline-block"></span> ${resumen.conRacionamiento} con posible racionamiento`;
+    if (countSinAnomaliaEl) countSinAnomaliaEl.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-500 mr-1.5 inline-block"></span> ${resumen.sinAnomalias} sin anomalías`;
     if (activeStateNameEl && this.selectedState) activeStateNameEl.textContent = this.selectedState.nombre;
   }
 
   renderMonagasTab() {
     if (!this.currentData) return;
 
-    const monagasState = this.currentData.estados.find(s => s.nombre === "Monagas");
-    const monagasEvents = this.currentData.eventos.filter(e => e.region === "Monagas");
-    const circuitos = this.currentData.circuitosMonagas || [];
+    try {
+      const monagasState = this.currentData.estados.find(s => s.nombre === "Monagas");
+      const monagasEvents = this.currentData.eventos.filter(e => e.region === "Monagas");
+      const circuitos = this.currentData.circuitosMonagas || [];
 
-    const kpiDisp = document.getElementById("monagas-kpi-disponibilidad");
-    const kpiEv = document.getElementById("monagas-kpi-eventos");
-    const kpiHrs = document.getElementById("monagas-kpi-promedio-horas");
-    const kpiVolt = document.getElementById("monagas-kpi-voltaje");
-    const rangeTag = document.getElementById("monagas-chart-range-tag");
+      const kpiDisp = document.getElementById("monagas-kpi-disponibilidad");
+      const kpiEv = document.getElementById("monagas-kpi-eventos");
+      const kpiHrs = document.getElementById("monagas-kpi-promedio-horas");
+      const kpiVolt = document.getElementById("monagas-kpi-voltaje");
+      const rangeTag = document.getElementById("monagas-chart-range-tag");
 
-    if (kpiDisp && monagasState) kpiDisp.textContent = `${monagasState.electricidadPct}%`;
-    if (kpiEv) kpiEv.textContent = `${monagasEvents.length} eventos`;
-    if (kpiHrs) {
-      const hrsSinLuz = ((100 - (monagasState?.electricidadPct || 60)) / 100 * 24).toFixed(1);
-      kpiHrs.textContent = `${hrsSinLuz} hrs/día`;
-    }
-    if (kpiVolt) kpiVolt.textContent = "109V (Fluctuante)";
-    if (rangeTag) rangeTag.textContent = this.activeRange.toUpperCase();
+      if (kpiDisp && monagasState) kpiDisp.textContent = `${monagasState.electricidadPct}%`;
+      if (kpiEv) kpiEv.textContent = `${monagasEvents.length} eventos`;
+      if (kpiHrs) {
+        const hrsSinLuz = ((100 - (monagasState?.electricidadPct || 60)) / 100 * 24).toFixed(1);
+        kpiHrs.textContent = `${hrsSinLuz} hrs/día`;
+      }
+      if (kpiVolt) kpiVolt.textContent = "109V (Fluctuante)";
+      if (rangeTag) rangeTag.textContent = this.activeRange.toUpperCase();
 
-    // Renderizar gráfico específico de Monagas
-    this.charts.renderMonagasTimeline("monagas-timeline-chart", this.activeRange);
+      // Renderizar gráfico de Monagas
+      this.charts.renderMonagasTimeline("monagas-timeline-chart", this.activeRange);
 
-    // Renderizar lista de circuitos de Maturín
-    const circuitosContainer = document.getElementById("monagas-circuitos-list");
-    if (circuitosContainer) {
-      circuitosContainer.innerHTML = "";
-      circuitos.forEach(c => {
-        const isCrit = c.estado === "CRÍTICO";
-        const isDeg = c.estado === "DEGRADADO";
-        const color = isCrit ? "text-red-600" : (isDeg ? "text-amber-600" : "text-emerald-600");
-        const bg = isCrit ? "bg-red-50/70 border-red-200" : (isDeg ? "bg-amber-50/70 border-amber-200" : "bg-emerald-50/70 border-emerald-200");
+      // Renderizar circuitos de Maturín
+      const circuitosContainer = document.getElementById("monagas-circuitos-list");
+      if (circuitosContainer) {
+        circuitosContainer.innerHTML = "";
+        circuitos.forEach(c => {
+          const isCrit = c.estado === "CRÍTICO";
+          const isDeg = c.estado === "DEGRADADO";
+          const color = isCrit ? "text-red-600 font-bold" : (isDeg ? "text-amber-600 font-bold" : "text-emerald-600 font-bold");
+          const bg = isCrit ? "bg-red-50/70 border-red-200" : (isDeg ? "bg-amber-50/70 border-amber-200" : "bg-emerald-50/70 border-emerald-200");
 
-        const div = document.createElement("div");
-        div.className = `p-2.5 rounded-xl border text-xs flex items-center justify-between transition ${bg}`;
-        div.innerHTML = `
-          <div>
-            <p class="font-bold text-slate-900 leading-tight">${c.nombre}</p>
-            <p class="text-[10px] text-slate-500">${c.subestacion} • Voltaje: ${c.voltaje}V</p>
-          </div>
-          <div class="text-right shrink-0">
-            <span class="font-mono font-bold text-xs ${color}">${c.disponibilidadPct}%</span>
-            <span class="block text-[9px] text-slate-400 font-semibold">${c.fallas24h > 0 ? `${c.fallas24h} falla(s)` : "Estable"}</span>
-          </div>
-        `;
-        circuitosContainer.appendChild(div);
-      });
-    }
-
-    // Renderizar tabla de historial de Monagas
-    const historyBody = document.getElementById("monagas-history-table-body");
-    const countLabel = document.getElementById("monagas-events-count-label");
-    if (countLabel) countLabel.textContent = `${monagasEvents.length} incidentes registrados en ${this.activeRange}`;
-
-    if (historyBody) {
-      historyBody.innerHTML = "";
-      if (monagasEvents.length === 0) {
-        historyBody.innerHTML = `<tr><td colspan="6" class="p-6 text-center text-xs text-slate-400">No se detectaron caídas de sondeo en Monagas en este rango.</td></tr>`;
-      } else {
-        monagasEvents.forEach(ev => {
-          const tr = document.createElement("tr");
-          tr.className = "border-b border-slate-100 hover:bg-slate-50 text-xs transition";
-          
-          const sevColor = ev.severidad === "CRÍTICO" ? "text-red-600 font-bold" : (ev.severidad === "ALTO" ? "text-orange-600 font-bold" : "text-amber-600 font-bold");
-          const caidaColor = ev.caidaPct >= 60 ? "text-red-600 font-black" : "text-amber-600 font-bold";
-
-          tr.innerHTML = `
-            <td class="px-4 py-3 font-mono font-medium text-slate-800 whitespace-nowrap">${ev.fecha}</td>
-            <td class="px-4 py-3 font-bold text-slate-900">📍 ${ev.tipo}</td>
-            <td class="px-4 py-3 text-slate-600 whitespace-nowrap">${ev.duracion}</td>
-            <td class="px-4 py-3 font-mono ${caidaColor}">-${ev.caidaPct}%</td>
-            <td class="px-4 py-3 ${sevColor}">${ev.severidad}</td>
-            <td class="px-4 py-3">
-              <div class="font-medium text-slate-800">${ev.detalle}</div>
-              <div class="text-[10px] text-emerald-700 font-mono">✓ ${ev.patron}</div>
-            </td>
+          const div = document.createElement("div");
+          div.className = `p-2.5 rounded-xl border text-xs flex items-center justify-between transition ${bg}`;
+          div.innerHTML = `
+            <div>
+              <p class="font-bold text-slate-900 leading-tight">${c.nombre}</p>
+              <p class="text-[10px] text-slate-500">${c.subestacion} • Voltaje: ${c.voltaje}V</p>
+            </div>
+            <div class="text-right shrink-0">
+              <span class="font-mono font-bold text-xs ${color}">${c.disponibilidadPct}%</span>
+              <span class="block text-[9px] text-slate-400 font-semibold">${c.fallas24h > 0 ? `${c.fallas24h} falla(s)` : "Estable"}</span>
+            </div>
           `;
-          historyBody.appendChild(tr);
+          circuitosContainer.appendChild(div);
         });
       }
+
+      // Renderizar tabla historial Monagas
+      const historyBody = document.getElementById("monagas-history-table-body");
+      const countLabel = document.getElementById("monagas-events-count-label");
+      if (countLabel) countLabel.textContent = `${monagasEvents.length} incidentes registrados en ${this.activeRange}`;
+
+      if (historyBody) {
+        historyBody.innerHTML = "";
+        if (monagasEvents.length === 0) {
+          historyBody.innerHTML = `<tr><td colspan="6" class="p-6 text-center text-xs text-slate-400">No se detectaron caídas de sondeo en Monagas en este rango.</td></tr>`;
+        } else {
+          monagasEvents.forEach(ev => {
+            const tr = document.createElement("tr");
+            tr.className = "border-b border-slate-100 hover:bg-slate-50 text-xs transition";
+            
+            const sevColor = ev.severidad === "CRÍTICO" ? "text-red-600 font-bold" : (ev.severidad === "ALTO" ? "text-orange-600 font-bold" : "text-amber-600 font-bold");
+            const caidaColor = ev.caidaPct >= 60 ? "text-red-600 font-black" : "text-amber-600 font-bold";
+
+            tr.innerHTML = `
+              <td class="px-4 py-3 font-mono font-medium text-slate-800 whitespace-nowrap">${ev.fecha}</td>
+              <td class="px-4 py-3 font-bold text-slate-900">📍 ${ev.tipo}</td>
+              <td class="px-4 py-3 text-slate-600 whitespace-nowrap">${ev.duracion}</td>
+              <td class="px-4 py-3 font-mono ${caidaColor}">-${ev.caidaPct}%</td>
+              <td class="px-4 py-3 ${sevColor}">${ev.severidad}</td>
+              <td class="px-4 py-3">
+                <div class="font-medium text-slate-800">${ev.detalle}</div>
+                <div class="text-[10px] text-emerald-700 font-mono">✓ ${ev.patron}</div>
+              </td>
+            `;
+            historyBody.appendChild(tr);
+          });
+        }
+      }
+    } catch(err) {
+      console.warn("Error en renderMonagasTab:", err);
     }
   }
 
@@ -483,22 +491,22 @@ class AppController {
         if (target === "tab-monagas") {
           setTimeout(() => {
             this.renderMonagasTab();
-            if (window.lucide) window.lucide.createIcons();
+            if (window.lucide) { try { window.lucide.createIcons(); } catch(e){} }
           }, 50);
         } else if (target === "tab-estados") {
           setTimeout(() => {
             this.map.init();
             this.map.updateData(this.currentData.estados, this.selectedState?.id);
             this.map.map?.invalidateSize();
-            if (window.lucide) window.lucide.createIcons();
+            if (window.lucide) { try { window.lucide.createIcons(); } catch(e){} }
           }, 50);
         } else if (target === "tab-nacional") {
           setTimeout(() => {
             this.renderNacionalTab();
-            if (window.lucide) window.lucide.createIcons();
+            if (window.lucide) { try { window.lucide.createIcons(); } catch(e){} }
           }, 50);
         } else {
-          if (window.lucide) window.lucide.createIcons();
+          if (window.lucide) { try { window.lucide.createIcons(); } catch(e){} }
         }
       });
     });
@@ -506,7 +514,7 @@ class AppController {
     const quickMonagasBtn = document.getElementById("btn-quick-monagas");
     if (quickMonagasBtn) {
       quickMonagasBtn.addEventListener("click", () => {
-        const monagasTabBtn = document.querySelector([data-tab=tab-monagas]);
+        const monagasTabBtn = document.querySelector('[data-tab="tab-monagas"]');
         if (monagasTabBtn) monagasTabBtn.click();
       });
     }
@@ -612,7 +620,15 @@ class AppController {
   }
 }
 
-// Iniciar aplicación
-window.addEventListener("DOMContentLoaded", () => {
-  window.app = new AppController();
-});
+// Inicialización universal segura (sin importar el estado de carga del DOM)
+function startApp() {
+  if (!window.app) {
+    window.app = new AppController();
+  }
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", startApp);
+} else {
+  startApp();
+}
