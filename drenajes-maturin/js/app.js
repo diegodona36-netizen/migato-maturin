@@ -1,7 +1,16 @@
 /**
- * Controlador Maestro — Diagnóstico Hidráulico y Drenajes de Maturín (HEC-RAS / GIS)
+ * Controlador Maestro — Diagnóstico Hidráulico y Drenajes de Maturín (68 Caños • HEC-RAS / GIS)
  */
-import { CANALES_MATURIN, PUNTOS_CRITICOS_INSPECCION, STORAGE_INSPECCIONES_KEY, BRIGADA_PIN_DEFAULT } from "./dataCanales.js";
+import { 
+  CATALOGO_68_CANOS, 
+  PARROQUIAS_MATURIN, 
+  PUNTOS_CRITICOS_INSPECCION, 
+  STORAGE_INSPECCIONES_KEY, 
+  BRIGADA_PIN_DEFAULT,
+  TOTAL_CANOS_MATURIN,
+  CANOS_MECANIZADOS_COUNT,
+  CANOS_MANUALES_COUNT
+} from "./dataCanales.js";
 import { HecRasEngine } from "./hecEngine.js";
 import { MaturinDrainageMap } from "./map.js";
 import { DrainageCharts } from "./charts.js";
@@ -13,12 +22,13 @@ class DrainageAppController {
     this.map = new MaturinDrainageMap("maturin-drainage-map", (canal) => this.selectCanal(canal));
 
     this.activeTab = "tab-visor";
-    this.selectedIntensity = 50; // Lluvia fuerte (50 mm/h) por defecto
-    this.canales = [...CANALES_MATURIN];
+    this.selectedIntensity = 50; // 50 mm/h por defecto
+    this.selectedParroquia = "todas";
+    this.selectedTipoIntervencion = "todos";
+    this.canales = [...CATALOGO_68_CANOS];
     this.inspecciones = this.loadInspecciones();
     this.selectedCanal = this.canales[0];
     this.simResult = null;
-    this.isAuthenticated = false;
 
     this.init();
   }
@@ -26,6 +36,7 @@ class DrainageAppController {
   init() {
     this.setupTabs();
     this.setupStormControls();
+    this.setupFilterPills();
     this.setupInspectionForm();
     this.setupExportButtons();
 
@@ -56,8 +67,24 @@ class DrainageAppController {
     }
   }
 
+  getFilteredCanales() {
+    return this.canales.filter(c => {
+      const matchParroquia = this.selectedParroquia === "todas" || 
+        (this.selectedParroquia === "san-simon" && c.parroquia.includes("San Simón")) ||
+        (this.selectedParroquia === "los-godos" && c.parroquia.includes("Los Godos")) ||
+        (this.selectedParroquia === "las-cocuizas" && c.parroquia.includes("Las Cocuizas")) ||
+        (this.selectedParroquia === "boqueron" && c.parroquia.includes("Boquerón")) ||
+        (this.selectedParroquia === "santa-cruz" && (c.parroquia.includes("Santa Cruz") || c.parroquia.includes("San Vicente")));
+
+      const matchTipo = this.selectedTipoIntervencion === "todos" || c.tipoIntervencion === this.selectedTipoIntervencion;
+
+      return matchParroquia && matchTipo;
+    });
+  }
+
   runSimulation() {
-    this.simResult = this.engine.simularEscenario(this.canales, this.selectedIntensity);
+    const filtered = this.getFilteredCanales();
+    this.simResult = this.engine.simularEscenario(filtered, this.selectedIntensity);
     
     this.renderSummaryKPIs();
     this.renderCanalDetailCard();
@@ -69,10 +96,11 @@ class DrainageAppController {
       this.map.updateSimulation(this.simResult, this.inspecciones, this.selectedCanal?.id);
     }
 
-    // Renderizar gráficos hidráulicos
     const canalSimulado = this.simResult.detalles.find(d => d.canalId === this.selectedCanal.id) || this.simResult.detalles[0];
-    this.charts.renderLongitudinalProfile("longitudinal-profile-chart", this.selectedCanal, canalSimulado.hidraulica);
-    this.charts.renderCapacityComparison("capacity-comparison-chart", this.simResult.detalles);
+    if (canalSimulado) {
+      this.charts.renderLongitudinalProfile("longitudinal-profile-chart", this.selectedCanal, canalSimulado.hidraulica);
+    }
+    this.charts.renderCapacityComparison("capacity-comparison-chart", this.simResult.detalles.slice(0, 10));
 
     if (window.lucide) {
       try { window.lucide.createIcons(); } catch(e) {}
@@ -89,12 +117,12 @@ class DrainageAppController {
     const kpiAlerta = document.getElementById("kpi-alerta-global");
 
     if (kpiCanales) kpiCanales.textContent = `${resumen.canalesDesbordados} / ${resumen.totalCanales} caños`;
-    if (kpiViviendas) kpiViviendas.textContent = `${resumen.viviendasAfectadas.toLocaleString()} viviendas`;
+    if (kpiViviendas) kpiViviendas.textContent = `${resumen.viviendasAfectadas.toLocaleString()} familias`;
     if (kpiDragado) kpiDragado.textContent = `${resumen.totalDragadoM3.toLocaleString()} m³`;
     if (kpiAlerta) {
       kpiAlerta.textContent = resumen.nivelAlertaGlobal;
       kpiAlerta.className = "text-xs font-black px-2.5 py-1 rounded-full border " + 
-        (resumen.canalesDesbordados >= 3 ? "bg-red-100 text-red-700 border-red-300" : (resumen.canalesDesbordados >= 1 ? "bg-amber-100 text-amber-800 border-amber-300" : "bg-emerald-100 text-emerald-800 border-emerald-300"));
+        (resumen.canalesDesbordados >= 8 ? "bg-red-100 text-red-700 border-red-300" : (resumen.canalesDesbordados >= 3 ? "bg-amber-100 text-amber-800 border-amber-300" : "bg-emerald-100 text-emerald-800 border-emerald-300"));
     }
   }
 
@@ -122,13 +150,17 @@ class DrainageAppController {
 
     const isDesborda = hid.desborda;
     const badgeColor = isDesborda ? "bg-red-50 text-red-700 border-red-200" : (hid.capacidadUsoPct > 80 ? "bg-amber-50 text-amber-700 border-amber-200" : "bg-emerald-50 text-emerald-700 border-emerald-200");
+    const tipoBadge = c.tipoIntervencion === "MECANIZADO" ? "bg-purple-100 text-purple-800" : "bg-teal-100 text-teal-800";
 
     container.innerHTML = `
       <div class="space-y-4">
         <!-- Header -->
         <div class="flex items-center justify-between border-b pb-3">
           <div>
-            <h3 class="text-lg font-black text-slate-900">${c.nombre}</h3>
+            <div class="flex items-center gap-2">
+              <h3 class="text-base font-black text-slate-900">${c.nombre}</h3>
+              <span class="text-[9px] font-bold px-1.5 py-0.5 rounded ${tipoBadge}">${c.tipoIntervencion}</span>
+            </div>
             <p class="text-xs text-slate-500 font-medium">${c.parroquia} • ${c.longitudKm} km</p>
           </div>
           <span class="px-2.5 py-1 rounded-lg text-[10px] font-black border uppercase ${badgeColor}">
@@ -147,7 +179,7 @@ class DrainageAppController {
           <div class="p-3 bg-slate-50 rounded-xl border border-slate-200">
             <span class="text-slate-500 text-[10px] font-semibold uppercase block">Tirante de Agua</span>
             <span class="text-2xl font-black ${isDesborda ? "text-red-600" : "text-slate-800"}">${hid.tiranteM}m</span>
-            <span class="text-[10px] text-slate-400 block">Profundidad del cauce: ${c.profundidadM}m</span>
+            <span class="text-[10px] text-slate-400 block">Cauce: ${c.profundidadM}m prof.</span>
           </div>
         </div>
 
@@ -168,7 +200,7 @@ class DrainageAppController {
           </div>
 
           <div class="flex items-center justify-between p-2 rounded-lg bg-slate-50 border border-slate-100">
-            <span class="text-slate-600 font-medium">Viviendas en Riesgo Directo</span>
+            <span class="text-slate-600 font-medium">Viviendas en Riesgo</span>
             <span class="font-mono font-bold text-red-600">${sim.viviendasAfectadas} familias</span>
           </div>
         </div>
@@ -221,37 +253,80 @@ class DrainageAppController {
     this.simResult.detalles.forEach(d => {
       const canalOriginal = this.canales.find(c => c.id === d.canalId);
       const isUrgent = d.severidad === "CRÍTICO";
+      const tipoIcon = canalOriginal?.tipoIntervencion === "MECANIZADO" ? "🚜 Jumbo / Retro" : "🧤 Cuadrilla Manual";
 
       const card = document.createElement("div");
       card.className = "bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-3 flex flex-col justify-between";
       card.innerHTML = `
         <div class="space-y-2">
           <div class="flex items-center justify-between">
-            <span class="text-xs font-bold px-2 py-0.5 rounded ${isUrgent ? "bg-red-100 text-red-700" : "bg-sky-100 text-sky-700"}">
+            <span class="text-[10px] font-bold px-2 py-0.5 rounded ${isUrgent ? "bg-red-100 text-red-700" : "bg-sky-100 text-sky-700"}">
               ${isUrgent ? "PRIORIDAD 1 (URGENTE)" : "MANTENIMIENTO"}
             </span>
             <span class="text-xs font-mono font-bold text-slate-400">${d.parroquia}</span>
           </div>
-          <h4 class="font-black text-base text-slate-900">${d.nombre}</h4>
+          <h4 class="font-black text-sm text-slate-900">${d.nombre}</h4>
           <p class="text-xs text-slate-500">${canalOriginal?.descripcion || ""}</p>
         </div>
 
         <div class="pt-3 border-t border-slate-100 space-y-2 text-xs">
           <div class="flex items-center justify-between">
-            <span class="text-slate-600 font-medium">Volumen de Dragado Estimado:</span>
+            <span class="text-slate-600 font-medium">Dragado Estimado:</span>
             <span class="font-mono font-black text-sky-600 text-sm">${d.dragadoRequeridoM3.toLocaleString()} m³</span>
           </div>
           <div class="flex items-center justify-between">
-            <span class="text-slate-600 font-medium">Viviendas Protegidas:</span>
-            <span class="font-mono font-bold text-slate-800">${canalOriginal?.viviendasRiesgo || 0} familias</span>
+            <span class="text-slate-600 font-medium">Familias Protegidas:</span>
+            <span class="font-mono font-bold text-slate-800">${canalOriginal?.viviendasRiesgo || 0}</span>
           </div>
           <div class="flex items-center justify-between">
-            <span class="text-slate-600 font-medium">Maquinaria Sugerida:</span>
-            <span class="font-semibold text-slate-800 text-[11px]">${d.dragadoRequeridoM3 > 5000 ? "Jumbo oruga 320 + Volquetas" : "Retroexcavadora + Cuadrilla"}</span>
+            <span class="text-slate-600 font-medium">Intervención:</span>
+            <span class="font-bold text-slate-800 text-[11px]">${tipoIcon}</span>
           </div>
         </div>
       `;
       container.appendChild(card);
+    });
+  }
+
+  setupFilterPills() {
+    // Parroquias
+    const parroquiaPills = document.querySelectorAll(".parroquia-pill");
+    parroquiaPills.forEach(pill => {
+      pill.addEventListener("click", () => {
+        const pId = pill.dataset.parroquia;
+        if (!pId) return;
+
+        this.selectedParroquia = pId;
+        parroquiaPills.forEach(p => {
+          const isCurrent = p.dataset.parroquia === pId;
+          p.classList.toggle("bg-sky-600", isCurrent);
+          p.classList.toggle("text-white", isCurrent);
+          p.classList.toggle("bg-slate-100", !isCurrent);
+          p.classList.toggle("text-slate-700", !isCurrent);
+        });
+
+        this.runSimulation();
+      });
+    });
+
+    // Tipo de Intervención (Mecanizado vs Manual)
+    const tipoPills = document.querySelectorAll(".tipo-intervencion-pill");
+    tipoPills.forEach(pill => {
+      pill.addEventListener("click", () => {
+        const tId = pill.dataset.tipo;
+        if (!tId) return;
+
+        this.selectedTipoIntervencion = tId;
+        tipoPills.forEach(p => {
+          const isCurrent = p.dataset.tipo === tId;
+          p.classList.toggle("bg-purple-600", isCurrent);
+          p.classList.toggle("text-white", isCurrent);
+          p.classList.toggle("bg-slate-100", !isCurrent);
+          p.classList.toggle("text-slate-700", !isCurrent);
+        });
+
+        this.runSimulation();
+      });
     });
   }
 
@@ -288,8 +363,8 @@ class DrainageAppController {
           const isCurrent = b.dataset.tab === target;
           b.classList.toggle("bg-sky-600", isCurrent);
           b.classList.toggle("text-white", isCurrent);
-          b.classList.toggle("text-slate-700", !isCurrent);
-          b.classList.toggle("hover:bg-slate-200", !isCurrent);
+          b.classList.toggle("text-slate-400", !isCurrent);
+          b.classList.toggle("hover:bg-slate-800", !isCurrent);
         });
 
         document.querySelectorAll(".tab-content").forEach(content => {
@@ -318,6 +393,7 @@ class DrainageAppController {
     const form = document.getElementById("form-inspection");
 
     const openModal = () => {
+      this.populateModalCanales();
       if (modalInspection) {
         modalInspection.classList.remove("hidden");
         modalInspection.classList.add("flex");
@@ -343,31 +419,27 @@ class DrainageAppController {
           alert("Tu navegador no soporta geolocalización.");
           return;
         }
-        btnGps.innerHTML = `<i data-lucide="loader" class="w-3.5 h-3.5 animate-spin"></i><span>Obteniendo...</span>`;
+        btnGps.innerHTML = `<span>Obteniendo...</span>`;
         navigator.geolocation.getCurrentPosition(
           pos => {
             document.getElementById("insp-lat").value = pos.coords.latitude.toFixed(6);
             document.getElementById("insp-lng").value = pos.coords.longitude.toFixed(6);
-            btnGps.innerHTML = `<i data-lucide="check" class="w-3.5 h-3.5 text-emerald-600"></i><span>GPS Obtenido</span>`;
-            if (window.lucide) window.lucide.createIcons();
+            btnGps.innerHTML = `<span>✓ GPS Listo</span>`;
           },
           err => {
-            btnGps.innerHTML = `<span>Reintentar GPS</span>`;
-            alert("No se pudo obtener la ubicación GPS: " + err.message);
+            alert("Error obteniendo GPS: " + err.message);
           }
         );
       });
     }
 
-    // Submit del Formulario Técnico
     if (form) {
       form.addEventListener("submit", (e) => {
         e.preventDefault();
 
-        // Validar PIN de brigada para proteger la integridad técnica
         const pinIngresado = document.getElementById("insp-pin").value.trim();
         if (pinIngresado !== BRIGADA_PIN_DEFAULT && pinIngresado !== "1234") {
-          alert("❌ PIN de Brigada incorrecto. Solo personal técnico o del equipo político puede registrar inspecciones.");
+          alert("❌ PIN de Brigada incorrecto. Solo personal técnico autorizado puede registrar inspecciones.");
           return;
         }
 
@@ -398,6 +470,28 @@ class DrainageAppController {
         alert("✅ Ficha Técnica Registrada con Éxito. Punto crítico añadido al mapa.");
       });
     }
+  }
+
+  populateModalCanales() {
+    const select = document.getElementById("insp-cano-id");
+    if (!select) return;
+
+    select.innerHTML = "";
+    const parroquias = ["San Simón", "Alto de Los Godos", "Las Cocuizas", "Boquerón", "Santa Cruz / San Vicente"];
+    
+    parroquias.forEach(p => {
+      const optGroup = document.createElement("optgroup");
+      optGroup.label = `Parroquia ${p}`;
+      const canosDeParroquia = this.canales.filter(c => c.parroquia.includes(p.split(" ")[0]));
+      
+      canosDeParroquia.forEach(c => {
+        const opt = document.createElement("option");
+        opt.value = c.id;
+        opt.textContent = `${c.nombre} (${c.tipoIntervencion})`;
+        optGroup.appendChild(opt);
+      });
+      select.appendChild(optGroup);
+    });
   }
 
   setupExportButtons() {
@@ -433,7 +527,7 @@ class DrainageAppController {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `Maturin_Inspeccion_Drenajes_HECRAS_${new Date().toISOString().split("T")[0]}.csv`;
+    a.download = `Maturin_68_Canos_Inspeccion_${new Date().toISOString().split("T")[0]}.csv`;
     a.click();
   }
 
@@ -447,6 +541,7 @@ class DrainageAppController {
             tipo: "Canal",
             nombre: c.nombre,
             parroquia: c.parroquia,
+            intervencion: c.tipoIntervencion,
             longitudKm: c.longitudKm,
             capacidadM3s: c.capacidadDisenoM3s
           },
@@ -476,7 +571,7 @@ class DrainageAppController {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `Maturin_Red_Drenajes_QGIS.geojson`;
+    a.download = `Maturin_68_Canos_Red_Drenajes_QGIS.geojson`;
     a.click();
   }
 }
