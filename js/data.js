@@ -415,12 +415,18 @@ export class SurveyDataStore {
     const sectoresMap = {};
 
     this.surveys.forEach(s => {
-      if (agua[s.aguaEstado] !== undefined) agua[s.aguaEstado]++;
+      
+      const ae = (s.aguaEstado || "").toLowerCase();
+      if (agua[ae] !== undefined) agua[ae]++;
+
       if (s.aguaProblema) {
         agua.problemas[s.aguaProblema] = (agua.problemas[s.aguaProblema] || 0) + 1;
       }
 
-      if (vialidad[s.vialidadEstado] !== undefined) vialidad[s.vialidadEstado]++;
+      
+      const ve = (s.vialidadEstado || "").toLowerCase();
+      if (vialidad[ve] !== undefined) vialidad[ve]++;
+
       if (s.vialidadProblema) {
         vialidad.problemas[s.vialidadProblema] = (vialidad.problemas[s.vialidadProblema] || 0) + 1;
       }
