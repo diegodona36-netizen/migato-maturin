@@ -1,324 +1,184 @@
 /**
- * Módulo de Integración con Google Sheets y Formularios de Google
- * Incluye lectura de CSV, extracción inteligente de enlaces de Google Maps y webhook.
+ * Módulo de Integración Ultra-Robusto con Google Sheets (Soporte JSONP Nativo sin CORS)
  */
 
 export class GoogleSheetsService {
-  /**
-   * Extrae el ID de la hoja y genera la URL de descarga CSV con soporte CORS
-   */
-  static getCsvUrl(url) {
+  static getSheetId(url) {
     if (!url || typeof url !== 'string') return null;
-    const cleanUrl = url.trim();
-
-    if (cleanUrl.includes('output=csv') || cleanUrl.endsWith('.csv')) {
-      return cleanUrl;
-    }
-
-    const matches = cleanUrl.match(/\/spreadsheets\/d\/([a-zA-Z0-9-_]+)/);
-    if (matches && matches[1]) {
-      const sheetId = matches[1];
-      const gidMatch = cleanUrl.match(/[#&?]gid=([0-9]+)/);
-      const gidParam = gidMatch ? `&gid=${gidMatch[1]}` : '';
-      return `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv${gidParam}`;
-    }
-
-    return cleanUrl;
+    const matches = url.trim().match(/\/spreadsheets\/d\/([a-zA-Z0-9-_]+)/);
+    return matches ? matches[1] : null;
   }
 
-  /**
-   * Descarga y parsea el CSV de Google Sheets con backend serverless y fallbacks
-   */
   static async fetchSheetData(url) {
-    if (!url || typeof url !== 'string') {
-      throw new Error('La URL de Google Sheets no es válida.');
+    const sheetId = this.getSheetId(url);
+    if (!sheetId) {
+      throw new Error('URL de Google Sheets no válida.');
     }
 
-    const cleanUrl = url.trim();
-    let csvText = '';
+    const gidMatch = url.match(/[#&?]gid=([0-9]+)/);
+    const gidParam = gidMatch ? `&gid=${gidMatch[1]}` : '';
 
-    // 1. Intentar a través de nuestro endpoint nativo de Vercel (Cero bloqueos CORS)
+    // 1. Intentar primero vía JSONP (inyección dinámica que nunca falla por CORS)
     try {
-      const apiEndpoint = `/api/sheet?url=${encodeURIComponent(cleanUrl)}`;
-      const res = await fetch(apiEndpoint);
+      const gvizData = await this.fetchViaJsonp(sheetId, gidParam);
+      if (gvizData && gvizData.table) {
+        return this.parseGvizJson(gvizData.table);
+      }
+    } catch (jsonpErr) {
+      console.warn('JSONP falló, intentando fetch directo...', jsonpErr);
+    }
+
+    // 2. Fallback vía fetch directo a GViz
+    try {
+      const gvizUrl = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json${gidParam}`;
+      const res = await fetch(gvizUrl);
       if (res.ok) {
-        csvText = await res.text();
-      }
-    } catch (apiErr) {
-      console.warn('Endpoint /api/sheet no disponible, usando fallback directo...', apiErr);
-    }
-
-    // 2. Fallback directo a Google GVIZ
-    if (!csvText || csvText.includes('<!DOCTYPE html>')) {
-      const directUrl = this.getCsvUrl(cleanUrl);
-      try {
-        const res = await fetch(directUrl);
-        if (res.ok) {
-          csvText = await res.text();
+        const text = await res.text();
+        const jsonMatch = text.match(/google\.visualization\.Query\.setResponse\((.*)\);?/s) || text.match(/googleData\((.*)\);?/s);
+        if (jsonMatch && jsonMatch[1]) {
+          const parsed = JSON.parse(jsonMatch[1]);
+          if (parsed && parsed.table) {
+            return this.parseGvizJson(parsed.table);
+          }
         }
-      } catch (e) {
-        console.warn('Fetch directo falló', e);
       }
+    } catch (e) {
+      console.warn('Fetch GViz falló:', e);
     }
 
-    // 3. Fallback a proxy externo
-    if (!csvText || csvText.includes('<!DOCTYPE html>')) {
-      try {
-        const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(this.getCsvUrl(cleanUrl))}`;
-        const pResponse = await fetch(proxyUrl);
-        if (pResponse.ok) {
-          csvText = await pResponse.text();
-        }
-      } catch (pErr) {
-        console.warn('Proxy falló', pErr);
-      }
-    }
-
-    if (!csvText || csvText.includes('<!DOCTYPE html>') || csvText.includes('accounts.google.com')) {
-      throw new Error('No se pudo leer la hoja. Asegúrate de ir en tu Google Sheets a: Archivo ➔ Compartir ➔ Publicar en la web ➔ Publicar.');
-    }
-
-    return this.parseCsv(csvText);
+    throw new Error('No se pudo conectar con la hoja de Google Sheets.');
   }
 
-  /**
-   * Envía encuestas pendientes directamente al Webhook de Google Sheets
-   */
-  static async sendSurveysToWebhook(webhookUrl, surveys) {
-    if (!webhookUrl || typeof webhookUrl !== 'string') {
-      throw new Error('No se ha configurado la URL del Webhook de Google Apps Script.');
-    }
+  static fetchViaJsonp(sheetId, gidParam = '', timeoutMs = 8000) {
+    return new Promise((resolve, reject) => {
+      const callbackName = `migato_gviz_${Date.now()}_${Math.floor(Math.random() * 10000)}`;
+      const script = document.createElement('script');
+      const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=responseHandler:${callbackName}${gidParam}`;
 
-    try {
-      await fetch(webhookUrl, {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          action: 'bulk_insert',
-          surveys: surveys
-        })
-      });
-      return true;
-    } catch (err) {
-      console.error('Error enviando encuestas al Webhook:', err);
-      throw err;
-    }
+      let timer = setTimeout(() => {
+        cleanup();
+        reject(new Error('Timeout al consultar Google Sheets via JSONP'));
+      }, timeoutMs);
+
+      const cleanup = () => {
+        if (timer) clearTimeout(timer);
+        if (script.parentNode) script.parentNode.removeChild(script);
+        delete window[callbackName];
+      };
+
+      window[callbackName] = (data) => {
+        cleanup();
+        resolve(data);
+      };
+
+      script.src = url;
+      script.onerror = (err) => {
+        cleanup();
+        reject(err);
+      };
+
+      document.body.appendChild(script);
+    });
   }
 
-  /**
-   * Parser robusto de CSV respetando comillas y saltos de línea
-   */
-  static parseCsv(csvText) {
-    const lines = [];
-    let currentRow = [];
-    let currentCell = '';
-    let insideQuotes = false;
+  static parseGvizJson(table) {
+    const cols = (table.cols || []).map(c => (c.label || '').toLowerCase().trim());
+    const rawRows = table.rows || [];
 
-    for (let i = 0; i < csvText.length; i++) {
-      const char = csvText[i];
-      const nextChar = csvText[i + 1];
+    if (rawRows.length === 0) return [];
 
-      if (char === '"') {
-        if (insideQuotes && nextChar === '"') {
-          currentCell += '"';
-          i++;
-        } else {
-          insideQuotes = !insideQuotes;
-        }
-      } else if (char === ',' && !insideQuotes) {
-        currentRow.push(currentCell.trim());
-        currentCell = '';
-      } else if ((char === '\r' || char === '\n') && !insideQuotes) {
-        if (char === '\r' && nextChar === '\n') i++;
-        currentRow.push(currentCell.trim());
-        if (currentRow.length > 1 || (currentRow.length === 1 && currentRow[0] !== '')) {
-          lines.push(currentRow);
-        }
-        currentRow = [];
-        currentCell = '';
-      } else {
-        currentCell += char;
-      }
-    }
-
-    if (currentCell || currentRow.length > 0) {
-      currentRow.push(currentCell.trim());
-      lines.push(currentRow);
-    }
-
-    if (lines.length < 2) {
-      return [];
-    }
-
-    const headers = lines[0].map(h => h.toLowerCase());
-    const dataRows = lines.slice(1).filter(r => r.some(cell => cell && cell.trim() !== ''));
-
-    if (dataRows.length === 0) {
-      return [];
-    }
-
-    // Identificar todos los índices de columnas relevantes (soporta formularios con ramificación)
     const colIndex = {
-      fecha: headers.findIndex(h => h.includes('marca') || h.includes('fecha') || h.includes('timestamp')),
-      encuestador: headers.findIndex(h => h.includes('encuestador') || h.includes('nombre') || h.includes('voluntario')),
-      cedula: headers.findIndex(h => h.includes('cedula') || h.includes('cédula') || h.includes('ci') || h.includes('identidad')),
-      parroquia: headers.findIndex(h => h.includes('parroquia') && !h.includes('sector')),
-      // Encontrar todas las columnas de sector posibles (por cada parroquia en formularios ramificados)
-      sectorCols: headers.map((h, i) => (h.includes('sector') || h.includes('comunidad') || h.includes('zona')) ? i : -1).filter(i => i !== -1),
-      aguaEstado: headers.findIndex(h => h.includes('agua') && (h.includes('estado') || h.includes('semáforo') || h.includes('semaforo') || h.includes('nivel') || h.includes('condición'))),
-      aguaProblema: headers.findIndex(h => h.includes('agua') && (h.includes('problema') || h.includes('falla') || h.includes('tipo') || h.includes('motivo'))),
-      aguaObs: headers.findIndex(h => h.includes('agua') && (h.includes('obs') || h.includes('detalle') || h.includes('comentario') || h.includes('nota'))),
-      vialidadEstado: headers.findIndex(h => (h.includes('carretera') || h.includes('calle') || h.includes('vialidad')) && (h.includes('estado') || h.includes('semáforo') || h.includes('semaforo') || h.includes('nivel'))),
-      vialidadProblema: headers.findIndex(h => (h.includes('carretera') || h.includes('calle') || h.includes('vialidad')) && (h.includes('problema') || h.includes('falla') || h.includes('tipo'))),
-      vialidadObs: headers.findIndex(h => (h.includes('carretera') || h.includes('calle') || h.includes('vialidad')) && (h.includes('obs') || h.includes('detalle') || h.includes('comentario'))),
-      generalObs: headers.findIndex(h => h.includes('observaci') || h.includes('testimonio') || h.includes('comentario')),
-      mapsLink: headers.findIndex(h => h.includes('google') || h.includes('maps') || h.includes('ubicación') || h.includes('ubicacion') || h.includes('link') || h.includes('gps') || h.includes('coordenada')),
-      lat: headers.findIndex(h => h.includes('lat') || h.includes('latitud')),
-      lng: headers.findIndex(h => h.includes('lng') || h.includes('long') || h.includes('longitud'))
+      fecha: cols.findIndex(h => h.includes('marca') || h.includes('fecha') || h.includes('timestamp')),
+      encuestador: cols.findIndex(h => h.includes('encuestador') || h.includes('nombre') || h.includes('voluntario')),
+      cedula: cols.findIndex(h => h.includes('cedula') || h.includes('cédula') || h.includes('ci') || h.includes('identidad')),
+      parroquia: cols.findIndex(h => h.includes('parroquia') && !h.includes('sector')),
+      sectorCols: cols.map((h, i) => (h.includes('sector') || h.includes('comunidad') || h.includes('zona')) ? i : -1).filter(i => i !== -1),
+      aguaEstado: cols.findIndex(h => h.includes('agua') && (h.includes('estado') || h.includes('semáforo') || h.includes('semaforo') || h.includes('nivel') || h.includes('condición'))),
+      aguaProblema: cols.findIndex(h => h.includes('agua') && (h.includes('problema') || h.includes('falla') || h.includes('tipo') || h.includes('motivo'))),
+      aguaObs: cols.findIndex(h => h.includes('agua') && (h.includes('obs') || h.includes('detalle') || h.includes('comentario') || h.includes('nota'))),
+      vialidadEstado: cols.findIndex(h => (h.includes('carretera') || h.includes('calle') || h.includes('vialidad')) && (h.includes('estado') || h.includes('semáforo') || h.includes('semaforo') || h.includes('nivel'))),
+      vialidadProblema: cols.findIndex(h => (h.includes('carretera') || h.includes('calle') || h.includes('vialidad')) && (h.includes('problema') || h.includes('falla') || h.includes('tipo'))),
+      vialidadObs: cols.findIndex(h => (h.includes('carretera') || h.includes('calle') || h.includes('vialidad')) && (h.includes('obs') || h.includes('detalle') || h.includes('comentario'))),
+      generalObs: cols.findIndex(h => h.includes('observaci') || h.includes('testimonio') || h.includes('comentario')),
+      mapsLink: cols.findIndex(h => h.includes('google') || h.includes('maps') || h.includes('ubicación') || h.includes('ubicacion') || h.includes('link') || h.includes('gps') || h.includes('coordenada')),
+      lat: cols.findIndex(h => h.includes('lat') || h.includes('latitud')),
+      lng: cols.findIndex(h => h.includes('lng') || h.includes('long') || h.includes('longitud'))
     };
 
-    return dataRows.map((row, index) => {
-      const getVal = (idx) => (idx !== -1 && row[idx] !== undefined) ? row[idx].trim() : '';
-      
-      // Buscar el sector en cualquiera de las columnas de sectores
-      let foundSector = '';
-      let inferredParroquia = '';
+    const surveys = [];
+
+    rawRows.forEach((rowObj, index) => {
+      const cells = (rowObj.c || []).map(cell => {
+        if (!cell) return '';
+        if (cell.f) return cell.f.toString().trim();
+        if (cell.v !== undefined && cell.v !== null) return cell.v.toString().trim();
+        return '';
+      });
+
+      let parroquia = colIndex.parroquia !== -1 ? cells[colIndex.parroquia] : '';
+      if (!parroquia) {
+        parroquia = 'San Simón';
+      }
+
+      let sector = '';
       for (const sIdx of colIndex.sectorCols) {
-        const val = getVal(sIdx);
-        if (val) {
-          foundSector = val;
-          const headerName = headers[sIdx] || '';
-          // Si el encabezado dice "Sector de La Pica", inferir parroquia
-          if (headerName.includes('la pica')) inferredParroquia = 'La Pica';
-          else if (headerName.includes('godos')) inferredParroquia = 'Alto de Los Godos';
-          else if (headerName.includes('boquer')) inferredParroquia = 'Boquerón';
-          else if (headerName.includes('cocuizas')) inferredParroquia = 'Las Cocuizas';
-          else if (headerName.includes('santa cruz')) inferredParroquia = 'Santa Cruz';
-          else if (headerName.includes('san sim')) inferredParroquia = 'San Simón';
-          else if (headerName.includes('jusep')) inferredParroquia = 'Jusepín';
-          else if (headerName.includes('furrial')) inferredParroquia = 'El Furrial';
-          else if (headerName.includes('san vicente')) inferredParroquia = 'San Vicente';
-          else if (headerName.includes('corozo')) inferredParroquia = 'El Corozo';
+        if (cells[sIdx] && cells[sIdx].trim() !== '') {
+          sector = cells[sIdx].trim();
           break;
         }
       }
+      if (!sector) sector = 'Centro / Casco Central';
 
-      const rawParroquia = getVal(colIndex.parroquia) || inferredParroquia || 'San Simón';
-      const rawEncuestadorFull = getVal(colIndex.encuestador) || '';
-      const rawCedulaDirect = getVal(colIndex.cedula);
+      const parseSemaforo = (val) => {
+        if (!val) return 'verde';
+        const str = val.toLowerCase();
+        if (str.includes('rojo') || str.includes('critico') || str.includes('crítico') || str.includes('colapso')) return 'rojo';
+        if (str.includes('amarillo') || str.includes('medio') || str.includes('regular') || str.includes('intermitente')) return 'amarillo';
+        return 'verde';
+      };
 
-      // Separar Nombre y Cédula de manera 100% flexible (con o sin V/E)
-      let parsedNombre = rawEncuestadorFull;
-      let parsedCedula = rawCedulaDirect;
+      const aguaEstado = parseSemaforo(colIndex.aguaEstado !== -1 ? cells[colIndex.aguaEstado] : '');
+      const vialidadEstado = parseSemaforo(colIndex.vialidadEstado !== -1 ? cells[colIndex.vialidadEstado] : '');
 
-      if (!parsedCedula && rawEncuestadorFull) {
-        const trimmed = rawEncuestadorFull.trim();
-        if (/^[0-9]{6,9}$/.test(trimmed)) {
-          parsedCedula = trimmed;
-          parsedNombre = `Encuestador (${trimmed})`;
-        } else {
-          const ciMatch = trimmed.match(/(V|E|v|e)?-?\s*([0-9]{6,9})/);
-          if (ciMatch) {
-            const prefix = ciMatch[1] ? ciMatch[1].toUpperCase() + '-' : '';
-            parsedCedula = `${prefix}${ciMatch[2]}`;
-            parsedNombre = trimmed.replace(ciMatch[0], '').replace(/[-–:,]/g, '').trim();
+      const aguaProblema = colIndex.aguaProblema !== -1 ? cells[colIndex.aguaProblema] : 'Sin especificar';
+      const vialidadProblema = colIndex.vialidadProblema !== -1 ? cells[colIndex.vialidadProblema] : 'Sin especificar';
+
+      const observacion = (colIndex.generalObs !== -1 ? cells[colIndex.generalObs] : '') || 
+                          (colIndex.aguaObs !== -1 ? cells[colIndex.aguaObs] : '') || 
+                          (colIndex.vialidadObs !== -1 ? cells[colIndex.vialidadObs] : '');
+
+      let fecha = new Date().toISOString().replace('T', ' ').substring(0, 16);
+      if (colIndex.fecha !== -1 && cells[colIndex.fecha]) {
+        const rawFecha = cells[colIndex.fecha];
+        if (rawFecha.includes('/')) {
+          const parts = rawFecha.split(' ')[0].split('/');
+          if (parts.length === 3) {
+            const y = parts[2].length === 4 ? parts[2] : `20${parts[2]}`;
+            const m = parts[0].padStart(2, '0');
+            const d = parts[1].padStart(2, '0');
+            fecha = `${y}-${m}-${d}`;
           }
         }
       }
 
-      if (!parsedCedula) parsedCedula = `ENC-${String(index + 1).padStart(3, '0')}`;
-      if (!parsedNombre) parsedNombre = `Encuestador (${parsedCedula})`;
-
-      const rawAguaEstado = getVal(colIndex.aguaEstado);
-      const rawVialidadEstado = getVal(colIndex.vialidadEstado);
-      const rawMapsLink = getVal(colIndex.mapsLink);
-      const rawLat = getVal(colIndex.lat);
-      const rawLng = getVal(colIndex.lng);
-      const rawObsGeneral = getVal(colIndex.generalObs);
-
-      // Extraer coordenadas si pegaron un enlace de Google Maps o coordenadas directas
-      const parsedCoords = this.extractCoords(rawMapsLink || `${rawLat},${rawLng}`);
-
-      return {
-        id: `G-ENC-${parsedCedula.replace(/[^a-zA-Z0-9]/g, '')}-${String(index + 1).padStart(3, '0')}`,
-        fecha: getVal(colIndex.fecha) || new Date().toISOString().replace('T', ' ').substring(0, 16),
-        encuestador: parsedNombre,
-        cedula: parsedCedula,
-        parroquia: rawParroquia,
-        sector: foundSector || 'Sector de ' + rawParroquia,
-        aguaEstado: this.normalizeColor(rawAguaEstado),
-        aguaProblema: getVal(colIndex.aguaProblema) || 'Reporte de agua',
-        aguaObs: getVal(colIndex.aguaObs) || rawObsGeneral,
-        vialidadEstado: this.normalizeColor(rawVialidadEstado),
-        vialidadProblema: getVal(colIndex.vialidadProblema) || 'Reporte de vialidad',
-        vialidadObs: getVal(colIndex.vialidadObs) || rawObsGeneral,
-        mapsLink: rawMapsLink || null,
-        lat: parsedCoords ? parsedCoords.lat : (parseFloat(rawLat) || null),
-        lng: parsedCoords ? parsedCoords.lng : (parseFloat(rawLng) || null),
-        syncStatus: 'synced'
-      };
+      surveys.push({
+        id: `GS-${index + 1}-${Date.now()}`,
+        fecha: fecha,
+        parroquia: parroquia,
+        sector: sector,
+        aguaEstado: aguaEstado,
+        aguaProblema: aguaProblema,
+        aguaObs: observacion,
+        vialidadEstado: vialidadEstado,
+        vialidadProblema: vialidadProblema,
+        vialidadObs: observacion,
+        syncStatus: 'synced',
+        fuente: 'Google Sheets (Oficial)',
+        encuestador: (colIndex.encuestador !== -1 ? cells[colIndex.encuestador] : '') || 'Encuestador MIGATO',
+        cedula: (colIndex.cedula !== -1 ? cells[colIndex.cedula] : '') || 'N/A'
+      });
     });
-  }
 
-  /**
-   * Extrae coordenadas a partir de texto o enlaces de Google Maps
-   * Ejemplos soportados:
-   * - "9.7457, -63.1764"
-   * - "https://maps.google.com/?q=9.7457,-63.1764"
-   * - "https://www.google.com/maps/@9.7457,-63.1764,17z"
-   */
-  static extractCoords(text) {
-    if (!text || typeof text !== 'string') return null;
-    const clean = text.trim();
-
-    // 1. Coordenadas directas: "9.7457, -63.1764" o "9.7457 -63.1764"
-    const directMatch = clean.match(/(-?\d{1,2}\.\d+)[,\s]+(-?\d{1,3}\.\d+)/);
-    if (directMatch) {
-      const lat = parseFloat(directMatch[1]);
-      const lng = parseFloat(directMatch[2]);
-      if (lat >= 8.0 && lat <= 11.5 && lng >= -65.0 && lng <= -61.0) {
-        return { lat, lng };
-      }
-    }
-
-    // 2. Coordenadas en URL (@lat,lng o q=lat,lng o query=lat,lng)
-    const urlMatch = clean.match(/[@?&](?:q|query|loc)?=?(-?\d{1,2}\.\d+)[,\s]+(-?\d{1,3}\.\d+)/);
-    if (urlMatch) {
-      const lat = parseFloat(urlMatch[1]);
-      const lng = parseFloat(urlMatch[2]);
-      if (lat >= 8.0 && lat <= 11.5 && lng >= -65.0 && lng <= -61.0) {
-        return { lat, lng };
-      }
-    }
-
-    // 3. URLs con !3d y !4d de Google Maps embeds
-    const embedMatch = clean.match(/!3d(-?\d{1,2}\.\d+)!4d(-?\d{1,3}\.\d+)/);
-    if (embedMatch) {
-      const lat = parseFloat(embedMatch[1]);
-      const lng = parseFloat(embedMatch[2]);
-      if (lat >= 8.0 && lat <= 11.5 && lng >= -65.0 && lng <= -61.0) {
-        return { lat, lng };
-      }
-    }
-
-    return null;
-  }
-
-  static normalizeColor(value) {
-    if (!value) return 'amarillo';
-    const v = value.toLowerCase().trim();
-    if (v.includes('rojo') || v.includes('crítico') || v.includes('critico') || v.includes('malo') || v.includes('grave') || v.includes('🔴')) {
-      return 'rojo';
-    }
-    if (v.includes('verde') || v.includes('bueno') || v.includes('óptimo') || v.includes('optimo') || v.includes('excelente') || v.includes('🟢')) {
-      return 'verde';
-    }
-    if (v.includes('amarillo') || v.includes('regular') || v.includes('intermitente') || v.includes('falla') || v.includes('🟡')) {
-      return 'amarillo';
-    }
-    return 'amarillo';
+    return surveys;
   }
 }
