@@ -1,0 +1,46 @@
+/* Estilos para el Sistema de Gestión y Reporte — Juventud MIGATO */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap");
+
+body {
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.font-mono {
+  font-family: "JetBrains Mono", monospace;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Print Stylesheet para Informe de los Lunes */
+@media print {
+  header, footer, .no-print, nav, button {
+    display: none !important;
+  }
+  body {
+    background: white !important;
+    color: black !important;
+  }
+  .print-only {
+    display: block !important;
+  }
+  #printable-summary-content {
+    box-shadow: none !important;
+    border: none !important;
+    padding: 0 !important;
+    max-width: 100% !important;
+  }
+}
