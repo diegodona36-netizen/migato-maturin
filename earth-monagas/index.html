@@ -16,63 +16,63 @@
   <script src="https://unpkg.com/lucide@latest"></script>
 
   <!-- Custom Styles -->
-  <link rel="stylesheet" href="css/styles.css?v=5">
+  <link rel="stylesheet" href="css/styles.css?v=6">
 </head>
 <body class="bg-slate-950 text-slate-100 h-screen flex flex-col antialiased select-none overflow-hidden max-w-full">
 
   <!-- ============================================================== -->
-  <!-- 1. BARRA SUPERIOR DE HERRAMIENTAS (ROBUSTA Y 100% OPERATIVA)   -->
+  <!-- 1. BARRA SUPERIOR DE HERRAMIENTAS (CERO DEFORMACIONES MÓVILES) -->
   <!-- ============================================================== -->
   <header style="z-index: 2000;" class="bg-slate-900 border-b border-slate-800 shadow-xl shrink-0 w-full">
     
-    <!-- Fila 1: Identidad, Territorio Activo y Acceso a Lugares -->
-    <div class="px-2.5 sm:px-3 py-1.5 flex items-center justify-between border-b border-slate-800/60">
+    <!-- Fila 1: Lugares, Identidad y Selector de Territorio (Sin Saltos Feos) -->
+    <div class="px-2.5 sm:px-3 py-1.5 flex items-center justify-between gap-2 border-b border-slate-800/60 w-full">
       
-      <!-- Logo y Título -->
-      <div class="flex items-center gap-2">
-        <button id="btn-toggle-sidebar" class="px-2.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-400 border border-slate-700 flex items-center gap-1.5 active:scale-95 transition shadow" title="Abrir Panel de Lugares">
-          <i data-lucide="folder" class="w-4 h-4 text-amber-400"></i>
+      <!-- Identidad y Botón Lugares -->
+      <div class="flex items-center gap-2 shrink-0">
+        <button id="btn-toggle-sidebar" class="px-2.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-400 border border-slate-700 flex items-center gap-1.5 active:scale-95 transition shadow shrink-0" title="Abrir Panel de Lugares">
+          <i data-lucide="folder" class="w-4 h-4 text-amber-400 shrink-0"></i>
           <span class="text-xs font-black">Lugares</span>
         </button>
 
-        <div class="flex items-center gap-1.5">
+        <div class="flex items-center gap-1.5 shrink-0">
           <div class="w-6 h-6 rounded-lg bg-gradient-to-tr from-blue-600 to-sky-400 text-white flex items-center justify-center font-black shadow shrink-0">
             <i data-lucide="globe" class="w-3.5 h-3.5"></i>
           </div>
-          <span class="text-xs sm:text-sm font-black text-white tracking-wide">
-            Google Earth Pro
+          <span class="text-xs sm:text-sm font-black text-white tracking-wide whitespace-nowrap">
+            Google Earth <span class="hidden xs:inline">Pro</span>
           </span>
         </div>
       </div>
 
-      <!-- Selector de Parroquia Activa (Botón Destacado) -->
-      <button id="btn-open-parish-modal" class="px-2.5 py-1 rounded-xl bg-slate-950/80 hover:bg-slate-800 border border-sky-500/40 text-sky-300 text-xs font-bold flex items-center gap-1.5 active:scale-95 transition shadow-sm max-w-[220px] sm:max-w-none truncate" title="Cambiar Municipio o Parroquia">
+      <!-- Selector de Parroquia Activa (Pill Compacta que Nunca se Deforma) -->
+      <button id="btn-open-parish-modal" class="px-2.5 py-1.5 rounded-xl bg-slate-950/90 hover:bg-slate-800 border border-sky-500/40 text-sky-300 text-xs font-bold flex items-center gap-1.5 active:scale-95 transition shadow-sm shrink min-w-0 max-w-[170px] sm:max-w-xs" title="Cambiar Municipio o Parroquia">
         <i data-lucide="map-pin" class="w-3.5 h-3.5 text-amber-400 shrink-0"></i>
-        <span id="nav-current-location" class="truncate text-xs">Cargando territorio...</span>
+        <span id="nav-current-location" class="truncate text-xs font-black">Cargando...</span>
         <i data-lucide="chevron-down" class="w-3 h-3 text-slate-400 shrink-0"></i>
       </button>
 
     </div>
 
-    <!-- Fila 2: Botonera de Herramientas SIG (Desplazamiento horizontal fluido en móvil sin desbordes) -->
-    <div class="px-2 sm:px-3 py-1.5 flex items-center gap-1.5 overflow-x-auto no-scrollbar">
+    <!-- Fila 2: Botonera de Herramientas SIG (Desplazamiento Horizontal Fluido) -->
+    <div class="px-2 sm:px-3 py-1.5 flex items-center gap-1.5 overflow-x-auto no-scrollbar w-full">
       
       <!-- ⬡ Agregar Polígono (Sector) -->
       <button data-tool="poligono" id="btn-tool-polygon" class="btn-earth-tool px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-bold transition flex items-center gap-1.5 shrink-0 active:scale-95 shadow-sm" title="Dibujar Polígono de Sector">
         <i data-lucide="hexagon" class="w-4 h-4 text-sky-400"></i>
-        <span>Polígono</span>
+        <span class="whitespace-nowrap">Polígono</span>
       </button>
 
       <!-- 〰️ Agregar Ruta (Calles) -->
       <button data-tool="ruta" id="btn-tool-path" class="btn-earth-tool px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-bold transition flex items-center gap-1.5 shrink-0 active:scale-95 shadow-sm" title="Trazar Ruta / Calle">
         <i data-lucide="git-commit" class="w-4 h-4 text-emerald-400"></i>
-        <span>Ruta</span>
+        <span class="whitespace-nowrap">Ruta</span>
       </button>
 
       <!-- 📍 Marca de Posición -->
       <button data-tool="marca" id="btn-tool-placemark" class="btn-earth-tool px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-bold transition flex items-center gap-1.5 shrink-0 active:scale-95 shadow-sm" title="Punto de Interés">
         <i data-lucide="map-pin" class="w-4 h-4 text-red-400"></i>
-        <span>Marca</span>
+        <span class="whitespace-nowrap">Marca</span>
       </button>
 
       <div class="h-4 w-[1px] bg-slate-700 mx-1 shrink-0"></div>
@@ -80,26 +80,26 @@
       <!-- 🖼️ Superposición de Imagen -->
       <button id="btn-tool-overlay" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-bold transition flex items-center gap-1.5 shrink-0 active:scale-95 shadow-sm" title="Superponer y calcar plano escaneado">
         <i data-lucide="layers" class="w-4 h-4 text-purple-400"></i>
-        <span>Calcar Plano</span>
+        <span class="whitespace-nowrap">Calcar Plano</span>
       </button>
 
       <!-- 📁 Abrir KML / KMZ -->
       <button id="btn-open-kml-trigger" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-bold transition flex items-center gap-1.5 shrink-0 active:scale-95 shadow-sm" title="Abrir archivo KML / KMZ">
         <i data-lucide="folder-open" class="w-4 h-4 text-amber-400"></i>
-        <span>Abrir</span>
+        <span class="whitespace-nowrap">Abrir</span>
       </button>
       <input type="file" id="input-file-kml" accept=".kml,.kmz" class="hidden">
 
       <!-- 💾 Guardar KML -->
       <button id="btn-export-kml" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-bold transition flex items-center gap-1.5 shrink-0 active:scale-95 shadow-sm" title="Guardar KML de la Parroquia">
         <i data-lucide="save" class="w-4 h-4 text-emerald-400"></i>
-        <span>Guardar KML</span>
+        <span class="whitespace-nowrap">Guardar KML</span>
       </button>
 
       <!-- 🧭 Brújula Norte -->
       <button id="btn-compass-north" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-sky-400 border border-slate-700 text-xs font-bold transition flex items-center gap-1.5 shrink-0 active:scale-95 shadow-sm" title="Restablecer vista Norte">
         <i data-lucide="compass" class="w-4 h-4"></i>
-        <span>Norte</span>
+        <span class="whitespace-nowrap">Norte</span>
       </button>
 
     </div>
@@ -157,34 +157,34 @@
     <main class="flex-1 h-full relative overflow-hidden">
       <div id="earth-canvas"></div>
 
-      <!-- BANNER FLOTANTE DE DIBUJO PROFESIONAL (ESTILO GOOGLE EARTH PRO) -->
-      <div id="earth-drawing-banner" style="z-index: 1800;" class="hidden absolute bottom-6 sm:bottom-auto sm:top-4 inset-x-3 sm:inset-x-auto sm:left-1/2 sm:-translate-x-1/2 bg-slate-900/98 backdrop-blur-md border border-sky-500/80 p-2 sm:px-4 sm:py-2.5 rounded-2xl shadow-2xl flex flex-col sm:flex-row items-center gap-2.5 sm:gap-4 max-w-2xl">
+      <!-- BANNER FLOTANTE DE DIBUJO PROFESIONAL (RESPONSIVE SIN RECORTES) -->
+      <div id="earth-drawing-banner" style="z-index: 1800;" class="hidden absolute bottom-5 sm:bottom-auto sm:top-4 inset-x-2 sm:inset-x-auto sm:left-1/2 sm:-translate-x-1/2 bg-slate-900/98 backdrop-blur-md border-2 border-sky-500/90 p-2.5 sm:px-4 sm:py-2.5 rounded-2xl shadow-2xl flex-col sm:flex-row items-center gap-2 sm:gap-3.5 max-w-full sm:max-w-2xl">
         
-        <!-- Indicador de Estado y Medidas (SIN TRUNCAR) -->
-        <div class="flex items-center justify-between sm:justify-start w-full sm:w-auto gap-2.5 text-xs shrink-0">
-          <div class="flex items-center gap-2">
-            <span class="w-2.5 h-2.5 rounded-full bg-sky-400 shadow-[0_0_8px_rgba(56,189,248,0.8)]"></span>
-            <span id="earth-drawing-banner-text" class="text-white font-bold text-xs whitespace-nowrap">Trazando Polígono: Haz clics en el mapa</span>
+        <!-- Fila Superior del Banner: Texto e Indicador Métrico -->
+        <div class="flex items-center justify-between w-full sm:w-auto gap-2 text-xs">
+          <div class="flex items-center gap-1.5 min-w-0">
+            <span class="w-2.5 h-2.5 rounded-full bg-sky-400 shadow-[0_0_8px_rgba(56,189,248,0.8)] shrink-0"></span>
+            <span id="earth-drawing-banner-text" class="text-white font-bold text-xs truncate">Trazando Polígono</span>
           </div>
-          <span id="earth-live-measure" class="font-mono bg-slate-950 text-amber-400 px-2.5 py-1 rounded-lg border border-slate-800 font-black text-xs whitespace-nowrap">0 puntos</span>
+          <span id="earth-live-measure" class="font-mono bg-slate-950 text-amber-400 px-2 py-0.5 rounded-lg border border-slate-800 font-black text-xs shrink-0 whitespace-nowrap">0 puntos</span>
         </div>
 
-        <!-- Botonera de Acciones Claras -->
-        <div class="flex items-center justify-end w-full sm:w-auto gap-2 shrink-0">
+        <!-- Fila Inferior del Banner: Botones de Acción Claros -->
+        <div class="flex items-center justify-between sm:justify-end w-full sm:w-auto gap-1.5 shrink-0">
           <!-- Deshacer -->
-          <button id="btn-banner-undo" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-300 border border-slate-700 font-bold text-xs flex items-center gap-1.5 active:scale-95 shadow transition" title="Borrar último punto (Ctrl+Z)">
+          <button id="btn-banner-undo" class="flex-1 sm:flex-initial px-2.5 sm:px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-300 border border-slate-700 font-bold text-xs flex items-center justify-center gap-1 active:scale-95 shadow transition" title="Borrar último punto (Ctrl+Z)">
             <i data-lucide="undo" class="w-3.5 h-3.5"></i>
             <span>Deshacer</span>
           </button>
 
           <!-- Listo: Guardar -->
-          <button id="btn-banner-finish" class="px-3.5 py-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs shadow flex items-center gap-1.5 active:scale-95 transition" title="Finalizar trazado">
+          <button id="btn-banner-finish" class="flex-1 sm:flex-initial px-3 sm:px-3.5 py-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs shadow flex items-center justify-center gap-1 active:scale-95 transition" title="Finalizar trazado">
             <i data-lucide="check" class="w-4 h-4"></i>
             <span>Listo</span>
           </button>
 
           <!-- Cancelar -->
-          <button id="btn-banner-cancel" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 font-bold text-xs flex items-center gap-1.5 active:scale-95 transition" title="Cancelar trazado">
+          <button id="btn-banner-cancel" class="flex-1 sm:flex-initial px-2.5 sm:px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 font-bold text-xs flex items-center justify-center gap-1 active:scale-95 transition" title="Cancelar trazado">
             <i data-lucide="x" class="w-3.5 h-3.5 text-red-400"></i>
             <span>Cancelar</span>
           </button>
@@ -249,7 +249,7 @@
         <div class="prop-tab-content space-y-3" data-tab="desc">
           <div>
             <label class="block text-[11px] font-bold text-slate-300 uppercase mb-1">Nombre *</label>
-            <input type="text" id="prop-name" required placeholder="Ej: Sector La Puente / Calle 3" class="w-full px-3 py-2.5 text-base sm:text-xs bg-slate-800 border border-slate-700 rounded-xl text-white font-bold focus:outline-none focus:border-sky-500">
+            <input type="text" id="prop-name" required placeholder="Ej: Sector 1 / Morichal" class="w-full px-3 py-2.5 text-base sm:text-xs bg-slate-800 border border-slate-700 rounded-xl text-white font-bold focus:outline-none focus:border-sky-500">
           </div>
 
           <div>
@@ -401,6 +401,6 @@
   </div>
 
   <!-- SCRIPT -->
-  <script type="module" src="js/app.js?v=5"></script>
+  <script type="module" src="js/app.js?v=6"></script>
 </body>
 </html>
