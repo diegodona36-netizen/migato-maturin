@@ -268,6 +268,36 @@ export class AtlasMapEngine {
     this.map.setView([lat, lng], 17, { animate: true });
   }
 
+  locateUser() {
+    if (!navigator.geolocation) {
+      alert("Tu navegador o teléfono no soporta geolocalización GPS.");
+      return;
+    }
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        const lat = pos.coords.latitude;
+        const lng = pos.coords.longitude;
+        if (this.gpsMarker) {
+          this.map.removeLayer(this.gpsMarker);
+        }
+        this.gpsMarker = L.circleMarker([lat, lng], {
+          radius: 8,
+          fillColor: "#38bdf8",
+          color: "#ffffff",
+          weight: 3,
+          fillOpacity: 1,
+          className: "gps-pulse-dot"
+        }).addTo(this.map);
+        this.gpsMarker.bindPopup("<strong>📍 Estás aquí</strong>").openPopup();
+        this.map.setView([lat, lng], 17, { animate: true });
+      },
+      (err) => {
+        alert("No se pudo obtener la ubicación GPS. Verifica los permisos de ubicación en tu teléfono.");
+      },
+      { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+    );
+  }
+
   fitBounds(bounds) {
     this.map.fitBounds(bounds, { padding: [50, 50], duration: 1.0 });
   }
