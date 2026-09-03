@@ -1,0 +1,78 @@
+/* Estilos Oficiales para Google Earth Pro Web — Edición Monagas */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap");
+
+body {
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  overflow: hidden;
+  background-color: #090d16;
+  color: #f8fafc;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.font-mono {
+  font-family: "JetBrains Mono", monospace;
+}
+
+#earth-canvas {
+  width: 100%;
+  height: 100%;
+  background: #020617;
+}
+
+.leaflet-container canvas {
+  will-change: transform;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+}
+
+.earth-tooltip {
+  background: rgba(15, 23, 42, 0.95) !important;
+  color: #f8fafc !important;
+  border: 1px solid #334155 !important;
+  border-radius: 8px !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.6) !important;
+  padding: 6px 10px !important;
+}
+
+/* Google Earth Status Bar */
+.earth-status-bar {
+  background: #090d16;
+  border-top: 1px solid #1e293b;
+  color: #94a3b8;
+  font-size: 11px;
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #090d16;
+}
+::-webkit-scrollbar-thumb {
+  background: #334155;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #475569;
+}
+
+/* Leaflet Control Overrides */
+.leaflet-top.leaflet-right {
+  top: 10px;
+  right: 10px;
+}
+
+.leaflet-control-layers {
+  background: rgba(15, 23, 42, 0.9) !important;
+  backdrop-filter: blur(8px) !important;
+  border: 1px solid #334155 !important;
+  border-radius: 12px !important;
+  color: #f8fafc !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5) !important;
+}
+
+.leaflet-control-attribution {
+  display: none !important;
+}
