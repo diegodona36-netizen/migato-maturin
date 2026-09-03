@@ -101,7 +101,14 @@ class EarthMonagasApp {
 
     const munObj = CATALOGO_MONAGAS.find(m => m.id === munId);
     const navLoc = document.getElementById("nav-current-location");
-    if (navLoc) navLoc.textContent = `${parish.nombre} (${munObj.nombre})`;
+    if (navLoc) {
+      if (window.innerWidth < 640) {
+        navLoc.textContent = parish.nombre;
+      } else {
+        navLoc.textContent = `${parish.nombre} (${munObj.nombre})`;
+      }
+      navLoc.parentElement.title = `${parish.nombre} - Municipio ${munObj.nombre}`;
+    }
 
     // Actualizar título de pestaña
     document.title = `${parish.nombre} (${munObj.nombre}) • Google Earth Pro`;
