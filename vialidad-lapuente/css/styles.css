@@ -1,4 +1,4 @@
-/* Estilos para la Plataforma de Diagnóstico Vial — La Puente */
+/* Estilos para el Trazador Vial de Calles — La Puente */
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap");
 
 body {
@@ -16,14 +16,14 @@ body {
   background: #090d16;
 }
 
-/* Tramos interactivos */
-.tramo-line-interactive {
+/* Tramos de usuario interactivos */
+.tramo-user-line {
   cursor: pointer;
   transition: all 0.2s ease-in-out;
 }
 
-.tramo-line-interactive:hover {
-  filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.8));
+.tramo-user-line:hover {
+  filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.9));
 }
 
 /* Tooltip Customization */
@@ -64,19 +64,4 @@ body {
 ::-webkit-scrollbar-thumb {
   background: #334155;
   border-radius: 9999px;
-}
-
-/* Print Stylesheet */
-@media print {
-  header, aside, .no-print, button {
-    display: none !important;
-  }
-  body {
-    background: white !important;
-    color: black !important;
-    overflow: visible !important;
-  }
-  #map-vialidad {
-    height: 600px !important;
-  }
 }
