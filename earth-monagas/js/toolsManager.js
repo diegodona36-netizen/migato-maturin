@@ -53,12 +53,12 @@ export class ToolsManager {
       if (banner) {
         banner.classList.remove("hidden");
         banner.classList.add("flex");
-        if (toolName === "poligono") bannerText.textContent = "Polígono: Toca el mapa para marcar esquinas";
-        else if (toolName === "ruta") bannerText.textContent = "Ruta: Toca el mapa a lo largo de la calle";
-        else if (toolName === "marca") bannerText.textContent = "Marca: Toca donde colocar el marcador";
-        else if (toolName === "regla") bannerText.textContent = "Regla: Toca para medir distancias";
+        if (toolName === "poligono") bannerText.textContent = "Trazando Polígono: Haz clics en el mapa";
+        else if (toolName === "ruta") bannerText.textContent = "Trazando Ruta: Haz clics en la calle";
+        else if (toolName === "marca") bannerText.textContent = "Colocar Marca: Haz un clic en el mapa";
+        else if (toolName === "regla") bannerText.textContent = "Regla: Haz clics para medir distancias";
       }
-      if (liveMeasure) liveMeasure.textContent = "0 puntos";
+      if (liveMeasure) liveMeasure.textContent = "0 vértices";
     } else {
       this.map.getContainer().style.cursor = "";
       if (banner) {
@@ -156,6 +156,7 @@ export class ToolsManager {
             weight: 2.5,
             fillColor: "#38bdf8",
             fillOpacity: 0.35,
+            interactive: false,
             renderer: this.mapEngine.canvasRenderer
           });
           this.mapEngine.tempDrawingLayer.addLayer(this.previewShape);
@@ -174,6 +175,7 @@ export class ToolsManager {
             weight: 4,
             opacity: 0.95,
             dashArray: this.activeTool === "regla" ? "6, 6" : null,
+            interactive: false,
             renderer: this.mapEngine.canvasRenderer
           });
           this.mapEngine.tempDrawingLayer.addLayer(this.previewShape);
