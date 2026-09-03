@@ -16,16 +16,92 @@
   <script src="https://unpkg.com/lucide@latest"></script>
 
   <!-- Custom Styles -->
-  <link rel="stylesheet" href="css/styles.css?v=6">
+  <link rel="stylesheet" href="css/styles.css?v=7">
 </head>
 <body class="bg-slate-950 text-slate-100 h-screen flex flex-col antialiased select-none overflow-hidden max-w-full">
 
   <!-- ============================================================== -->
-  <!-- 1. BARRA SUPERIOR DE HERRAMIENTAS (CERO DEFORMACIONES MÓVILES) -->
+  <!-- 0. PANTALLA DE INICIO DE SESIÓN / CONTROL DE ACCESO TERRITORIAL -->
+  <!-- ============================================================== -->
+  <div id="modal-auth-login" style="z-index: 100000;" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md flex items-center justify-center p-3 sm:p-4">
+    <div class="bg-slate-900 border border-slate-700/80 w-full max-w-md rounded-3xl shadow-2xl overflow-hidden flex flex-col p-6 sm:p-7 space-y-5">
+      
+      <!-- Identidad y Escudo -->
+      <div class="text-center space-y-2">
+        <div class="inline-flex p-3 rounded-2xl bg-gradient-to-tr from-sky-600 to-blue-500 text-white shadow-xl shadow-sky-500/20 mb-1">
+          <i data-lucide="shield-check" class="w-8 h-8"></i>
+        </div>
+        <span class="text-[10px] font-black text-amber-400 uppercase tracking-widest block">Gobernación del Estado Monagas</span>
+        <h2 class="text-xl font-black text-white">Google Earth Pro • MIGATO</h2>
+        <p class="text-xs text-slate-400">
+          Acceso Seguro y Segmentación Confidencial por Parroquia
+        </p>
+      </div>
+
+      <!-- Formulario de Autenticación -->
+      <form id="form-auth-login" class="space-y-4">
+        <div>
+          <label class="block text-[11px] font-bold text-slate-300 uppercase mb-1.5 flex items-center justify-between">
+            <span>Usuario o Correo *</span>
+          </label>
+          <div class="relative">
+            <i data-lucide="user" class="w-4 h-4 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2"></i>
+            <input type="text" id="auth-input-user" required placeholder="Ej: op_alto_de_los_godos o admin" class="w-full pl-9 pr-3 py-2.5 bg-slate-950 border border-slate-700 rounded-xl text-white font-medium text-xs sm:text-sm focus:outline-none focus:border-sky-500 transition">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-[11px] font-bold text-slate-300 uppercase mb-1.5 flex items-center justify-between">
+            <span>Contraseña *</span>
+          </label>
+          <div class="relative">
+            <i data-lucide="lock" class="w-4 h-4 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2"></i>
+            <input type="password" id="auth-input-pass" required placeholder="••••••••" class="w-full pl-9 pr-3 py-2.5 bg-slate-950 border border-slate-700 rounded-xl text-white font-medium text-xs sm:text-sm focus:outline-none focus:border-sky-500 transition">
+          </div>
+        </div>
+
+        <!-- Mensaje de Error -->
+        <div id="auth-error-msg" class="hidden text-xs text-red-400 bg-red-950/40 border border-red-800/60 p-2.5 rounded-xl font-medium"></div>
+
+        <!-- Botón Entrar -->
+        <button type="submit" class="w-full py-3 bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 hover:to-blue-500 text-white font-black text-xs sm:text-sm rounded-xl shadow-lg shadow-sky-500/25 active:scale-95 transition flex items-center justify-center gap-2">
+          <i data-lucide="log-in" class="w-4 h-4"></i>
+          <span>Ingresar a Mi Jurisdicción</span>
+        </button>
+      </form>
+
+      <!-- Guía Rápida de Cuentas de Demostración -->
+      <div class="pt-3 border-t border-slate-800 text-[11px] text-slate-400 space-y-2 bg-slate-950/40 p-3 rounded-2xl">
+        <span class="font-bold text-slate-300 uppercase text-[10px] block">Credenciales Asignadas (Demostración):</span>
+        <div class="grid grid-cols-1 gap-1.5 font-mono text-[10px]">
+          <div class="flex items-center justify-between bg-slate-900/80 px-2 py-1 rounded border border-slate-800">
+            <span class="text-amber-400">👑 Central (Todos):</span>
+            <span class="text-slate-300">admin / admin2026*</span>
+          </div>
+          <div class="flex items-center justify-between bg-slate-900/80 px-2 py-1 rounded border border-slate-800">
+            <span class="text-sky-400">📍 Alto de Los Godos:</span>
+            <span class="text-slate-300">op_alto_de_los_godos / parroquia2026*</span>
+          </div>
+          <div class="flex items-center justify-between bg-slate-900/80 px-2 py-1 rounded border border-slate-800">
+            <span class="text-emerald-400">📍 San Simón (Maturín):</span>
+            <span class="text-slate-300">op_san_simon / parroquia2026*</span>
+          </div>
+          <div class="flex items-center justify-between bg-slate-900/80 px-2 py-1 rounded border border-slate-800">
+            <span class="text-purple-400">📍 Morón (Santa Bárbara):</span>
+            <span class="text-slate-300">op_moron / parroquia2026*</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ============================================================== -->
+  <!-- 1. BARRA SUPERIOR DE HERRAMIENTAS (SEGMENTADA CON AUTENTICACIÓN) -->
   <!-- ============================================================== -->
   <header style="z-index: 2000;" class="bg-slate-900 border-b border-slate-800 shadow-xl shrink-0 w-full">
     
-    <!-- Fila 1: Lugares, Identidad y Selector de Territorio (Sin Saltos Feos) -->
+    <!-- Fila 1: Lugares, Identidad, Usuario y Selector Territorial -->
     <div class="px-2.5 sm:px-3 py-1.5 flex items-center justify-between gap-2 border-b border-slate-800/60 w-full">
       
       <!-- Identidad y Botón Lugares -->
@@ -45,12 +121,23 @@
         </div>
       </div>
 
-      <!-- Selector de Parroquia Activa (Pill Compacta que Nunca se Deforma) -->
-      <button id="btn-open-parish-modal" class="px-2.5 py-1.5 rounded-xl bg-slate-950/90 hover:bg-slate-800 border border-sky-500/40 text-sky-300 text-xs font-bold flex items-center gap-1.5 active:scale-95 transition shadow-sm shrink min-w-0 max-w-[170px] sm:max-w-xs" title="Cambiar Municipio o Parroquia">
-        <i data-lucide="map-pin" class="w-3.5 h-3.5 text-amber-400 shrink-0"></i>
-        <span id="nav-current-location" class="truncate text-xs font-black">Cargando...</span>
-        <i data-lucide="chevron-down" class="w-3 h-3 text-slate-400 shrink-0"></i>
-      </button>
+      <!-- Zona de Usuario y Parroquia Asignada -->
+      <div class="flex items-center gap-1.5 shrink min-w-0">
+        
+        <!-- Selector o Indicador Territorial Bloqueado -->
+        <button id="btn-open-parish-modal" class="px-2.5 py-1.5 rounded-xl bg-slate-950/90 hover:bg-slate-800 border border-sky-500/40 text-sky-300 text-xs font-bold flex items-center gap-1.5 active:scale-95 transition shadow-sm shrink min-w-0 max-w-[170px] sm:max-w-xs" title="Territorio">
+          <i id="nav-lock-icon" data-lucide="map-pin" class="w-3.5 h-3.5 text-amber-400 shrink-0"></i>
+          <span id="nav-current-location" class="truncate text-xs font-black">Cargando...</span>
+          <i id="nav-arrow-icon" data-lucide="chevron-down" class="w-3 h-3 text-slate-400 shrink-0"></i>
+        </button>
+
+        <!-- Botón Salir / Logout -->
+        <button id="btn-user-logout" class="px-2.5 py-1.5 rounded-xl bg-slate-800 hover:bg-red-950/60 text-slate-400 hover:text-red-300 border border-slate-700 hover:border-red-700/50 text-xs font-bold transition flex items-center gap-1 shrink-0 active:scale-95" title="Cerrar Sesión">
+          <i data-lucide="log-out" class="w-3.5 h-3.5"></i>
+          <span class="hidden sm:inline">Salir</span>
+        </button>
+
+      </div>
 
     </div>
 
@@ -204,9 +291,9 @@
     </div>
 
     <div class="flex items-center gap-3 text-[9px] sm:text-[10px] shrink-0">
-      <span id="status-eye-alt">Ojo: 8.5 km</span>
+      <span id="status-user-role" class="text-sky-400 font-bold hidden sm:inline">Sesión Activa</span>
       <span class="hidden sm:inline text-slate-600">|</span>
-      <span class="hidden sm:inline text-slate-500">Google Earth Pro</span>
+      <span id="status-eye-alt">Ojo: 8.5 km</span>
     </div>
   </footer>
 
@@ -401,6 +488,6 @@
   </div>
 
   <!-- SCRIPT -->
-  <script type="module" src="js/app.js?v=6"></script>
+  <script type="module" src="js/app.js?v=7"></script>
 </body>
 </html>
