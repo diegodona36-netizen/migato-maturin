@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Diagnóstico Vial • Carretera Principal de La Puente</title>
+  <title>Trazador y Diagnóstico Vial • La Puente</title>
 
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -11,6 +11,10 @@
   <!-- Leaflet CSS & JS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <!-- Leaflet-Geoman -->
+  <link rel="stylesheet" href="https://unpkg.com/@geoman-io/leaflet-geoman-free@2.14.2/dist/leaflet-geoman.css" />
+  <script src="https://unpkg.com/@geoman-io/leaflet-geoman-free@2.14.2/dist/leaflet-geoman.min.js"></script>
 
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
@@ -20,44 +24,54 @@
 </head>
 <body class="bg-slate-950 text-slate-100 h-screen flex flex-col antialiased select-none">
 
-  <!-- ============================================================== -->
   <!-- TOP NAVBAR -->
-  <!-- ============================================================== -->
   <header class="bg-slate-900 border-b border-slate-800 z-30 px-4 py-2.5 flex items-center justify-between shadow-lg shrink-0">
     
     <div class="flex items-center gap-3">
       <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-amber-500 to-orange-600 text-slate-950 flex items-center justify-center font-black shadow-md shrink-0">
-        <i data-lucide="git-commit" class="w-5 h-5"></i>
+        <i data-lucide="pencil-ruler" class="w-5 h-5"></i>
       </div>
       <div>
         <h1 class="text-sm font-black text-white leading-tight flex items-center gap-2">
-          <span>Diagnóstico Vial • Carretera Principal de La Puente</span>
+          <span>Trazador Vial de Calles • La Puente</span>
           <span class="text-[10px] font-bold bg-amber-500/20 text-amber-400 border border-amber-500/30 px-2 py-0.5 rounded-full uppercase">
-            Alto de Los Godos
+            Trazo Libre
           </span>
         </h1>
-        <p class="text-[11px] text-slate-400 font-medium">Inspección tramo por tramo • Semáforo de asfalto y evidencias fotográficas</p>
+        <p class="text-[11px] text-slate-400 font-medium">Subraya y secciona tus calles con clics en el mapa y asígnales color</p>
       </div>
     </div>
 
-    <!-- Acciones Superiores -->
     <div class="flex items-center gap-2">
       
+      <!-- Botón Modo Trazar Calle -->
+      <button id="btn-activar-trazo" class="px-3.5 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-black shadow transition flex items-center gap-1.5 animate-pulse">
+        <i data-lucide="plus" class="w-4 h-4"></i>
+        <span>+ Trazar Nueva Calle</span>
+      </button>
+
+      <!-- Botón Finalizar Trazo (Oculto al inicio) -->
+      <button id="btn-finalizar-trazo" class="hidden px-3.5 py-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 text-xs font-black shadow transition items-center gap-1.5">
+        <i data-lucide="check" class="w-4 h-4"></i>
+        <span>Listo: Asignar Color</span>
+      </button>
+
+      <!-- Botón Cancelar Trazo (Oculto al inicio) -->
+      <button id="btn-cancelar-trazo" class="hidden px-2.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold transition items-center gap-1">
+        <i data-lucide="x" class="w-3.5 h-3.5"></i>
+        <span>Cancelar</span>
+      </button>
+
       <!-- Botón GPS en Vivo -->
-      <button id="btn-gps-locate" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-sky-400 text-xs font-bold transition flex items-center gap-1.5" title="Localizar mi posición con el GPS del celular">
+      <button id="btn-gps-locate" class="px-2.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-sky-400 text-xs font-bold transition flex items-center gap-1" title="Centrar mi ubicación en La Puente">
         <i data-lucide="crosshair" class="w-3.5 h-3.5"></i>
-        <span class="hidden sm:inline">Mi Ubicación GPS</span>
+        <span class="hidden md:inline">Mi GPS</span>
       </button>
 
-      <!-- Botón Exportar KML para Google Earth -->
-      <button id="btn-export-kml-road" class="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-400 text-slate-950 text-xs font-black shadow transition flex items-center gap-1.5">
-        <i data-lucide="download" class="w-3.5 h-3.5"></i>
-        <span>Descargar KML (Google Earth)</span>
-      </button>
-
-      <!-- Imprimir Ficha -->
-      <button id="btn-print-road-report" class="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-400 hover:text-white transition" title="Imprimir Informe">
-        <i data-lucide="printer" class="w-4 h-4"></i>
+      <!-- Exportar KML para Google Earth -->
+      <button id="btn-export-kml-road" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 text-xs font-bold transition flex items-center gap-1.5" title="Descargar archivo KML">
+        <i data-lucide="download" class="w-3.5 h-3.5 text-emerald-400"></i>
+        <span class="hidden sm:inline">KML</span>
       </button>
 
       <!-- Volver al portal -->
@@ -69,88 +83,82 @@
 
   </header>
 
-  <!-- ============================================================== -->
   <!-- MAIN WORKSPACE -->
-  <!-- ============================================================== -->
   <div class="flex-1 flex overflow-hidden relative">
 
-    <!-- SIDEBAR DE TRAMOS Y EVALUACIÓN -->
+    <!-- SIDEBAR DE TRAMOS -->
     <aside class="w-80 sm:w-96 bg-slate-900 border-r border-slate-800 flex flex-col justify-between overflow-y-auto z-20 shrink-0 shadow-2xl">
       
       <div class="p-4 space-y-4">
 
-        <!-- Banner de Métricas del Corredor -->
-        <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-3">
+        <!-- Banner de Instrucciones Rápidas -->
+        <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-2.5">
           <div class="flex items-center justify-between">
-            <span class="text-[10px] font-bold text-amber-400 bg-amber-500/10 border border-amber-500/20 px-2 py-0.5 rounded-full uppercase">
-              Corredor La Puente
+            <span class="text-[10px] font-bold text-amber-400 uppercase tracking-wider bg-amber-500/10 border border-amber-500/20 px-2 py-0.5 rounded-full">
+              Instrucciones
             </span>
-            <span class="text-[11px] text-slate-400 font-mono" id="kpi-total-longitud">3.5 km (18 tramos)</span>
+            <span id="kpi-contador-calles" class="text-xs font-mono text-slate-400 font-bold">0 calles trazadas</span>
           </div>
 
-          <!-- Barra de Distribución del Semáforo -->
-          <div>
-            <div class="flex items-center justify-between text-[10px] text-slate-400 mb-1">
-              <span>Estado de la Vía Evaluada:</span>
-              <span id="kpi-critico-pct" class="font-bold text-red-400">0% Crítico / Malo</span>
-            </div>
-            <div class="w-full h-3 rounded-full bg-slate-800 flex overflow-hidden border border-slate-700">
-              <div id="bar-rojo" style="width: 0%" class="bg-red-500 h-full transition-all duration-300" title="Crítico"></div>
-              <div id="bar-naranja" style="width: 0%" class="bg-orange-500 h-full transition-all duration-300" title="Malo"></div>
-              <div id="bar-amarillo" style="width: 0%" class="bg-amber-500 h-full transition-all duration-300" title="Regular"></div>
-              <div id="bar-verde" style="width: 0%" class="bg-emerald-500 h-full transition-all duration-300" title="Bueno"></div>
-            </div>
-          </div>
-
-          <!-- Cuadros de Datos Rápidos -->
-          <div class="grid grid-cols-2 gap-2 pt-1">
-            <div class="bg-slate-900/80 p-2.5 rounded-xl border border-slate-800">
-              <span class="text-[10px] text-slate-400 uppercase block">Avance Inspección</span>
-              <span id="kpi-avance-pct" class="text-base font-black font-mono text-white block">0% (0 m)</span>
-            </div>
-            <div class="bg-slate-900/80 p-2.5 rounded-xl border border-slate-800">
-              <span class="text-[10px] text-slate-400 uppercase block">Bacheo Requerido</span>
-              <span id="kpi-bacheo-metros" class="text-base font-black font-mono text-amber-400 block">0 m</span>
-            </div>
-          </div>
-
-          <p class="text-[10px] text-slate-400 leading-tight">
-            💡 <em>A medida que camines o avances por La Puente, toca el tramo en la lista o en el mapa para marcar su color de deterioro y tomar fotos.</em>
+          <p class="text-xs text-slate-300 leading-relaxed">
+            1. Toca <strong>"+ Trazar Nueva Calle"</strong>.<br>
+            2. Haz clics sobre el mapa siguiendo la calle de La Puente.<br>
+            3. Toca <strong>"Listo: Asignar Color"</strong> para elegir 🟢 Bueno, 🟡 Regular, 🟠 Malo o 🔴 Crítico.
           </p>
+
+          <!-- Barra de Distribución de Colores -->
+          <div class="pt-1">
+            <div class="w-full h-2.5 rounded-full bg-slate-800 flex overflow-hidden border border-slate-700">
+              <div id="bar-rojo" style="width: 0%" class="bg-red-500 h-full transition-all"></div>
+              <div id="bar-naranja" style="width: 0%" class="bg-orange-500 h-full transition-all"></div>
+              <div id="bar-amarillo" style="width: 0%" class="bg-amber-500 h-full transition-all"></div>
+              <div id="bar-verde" style="width: 0%" class="bg-emerald-500 h-full transition-all"></div>
+            </div>
+            <div class="flex justify-between text-[10px] text-slate-400 font-mono mt-1">
+              <span id="txt-longitud-total">0 metros trazados</span>
+              <span id="txt-danada-pct">0% en mal estado</span>
+            </div>
+          </div>
         </div>
 
         <!-- Leyenda de Colores -->
         <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 text-[11px] grid grid-cols-2 gap-2">
           <div class="flex items-center gap-1.5">
-            <span class="w-3 h-3 rounded-full bg-emerald-500 shrink-0"></span>
+            <span class="w-3 h-3 rounded-full bg-emerald-500 shrink-0 shadow-sm"></span>
             <span>🟢 Bueno / Óptimo</span>
           </div>
           <div class="flex items-center gap-1.5">
-            <span class="w-3 h-3 rounded-full bg-amber-500 shrink-0"></span>
+            <span class="w-3 h-3 rounded-full bg-amber-500 shrink-0 shadow-sm"></span>
             <span>🟡 Regular / Baches</span>
           </div>
           <div class="flex items-center gap-1.5">
-            <span class="w-3 h-3 rounded-full bg-orange-500 shrink-0"></span>
+            <span class="w-3 h-3 rounded-full bg-orange-500 shrink-0 shadow-sm"></span>
             <span>🟠 Malo / Huecos</span>
           </div>
           <div class="flex items-center gap-1.5">
-            <span class="w-3 h-3 rounded-full bg-red-500 shrink-0"></span>
+            <span class="w-3 h-3 rounded-full bg-red-500 shrink-0 shadow-sm"></span>
             <span>🔴 Crítico / Intransitable</span>
           </div>
         </div>
 
-        <!-- Lista Secuencial de Tramos -->
+        <!-- Lista de Calles Trazadas por el Usuario -->
         <div class="space-y-2">
-          <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">Tramos del Corredor (Oeste a Este):</span>
-          <div id="tramos-sidebar-list" class="space-y-1.5 max-h-[48vh] overflow-y-auto pr-1">
-            <!-- Inyectado dinámicamente con JS -->
+          <div class="flex items-center justify-between">
+            <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Calles Trazadas en La Puente:</span>
+            <button id="btn-borrar-todas" class="text-[10px] text-red-400 hover:text-red-300 font-bold transition">
+              Borrar Todo
+            </button>
+          </div>
+          
+          <div id="lista-tramos-trazados" class="space-y-2 max-h-[50vh] overflow-y-auto pr-1">
+            <!-- Inyectado con JS -->
           </div>
         </div>
 
       </div>
 
-      <div class="p-4 border-t border-slate-800 bg-slate-950 text-[11px] text-slate-500 text-center font-mono">
-        MIGATO • Plataforma de Ingeniería Vial
+      <div class="p-3 border-t border-slate-800 bg-slate-950 text-[11px] text-slate-500 text-center font-mono">
+        MIGATO • Diagnóstico Vial La Puente
       </div>
 
     </aside>
@@ -158,124 +166,113 @@
     <!-- MAP CONTAINER -->
     <main class="flex-1 h-full relative">
       <div id="map-vialidad"></div>
+
+      <!-- Banner Flotante Informativo en Modo Trazo -->
+      <div id="banner-trazando" class="hidden absolute top-4 left-1/2 -translate-x-1/2 z-30 bg-amber-500 text-slate-950 px-4 py-2 rounded-2xl shadow-2xl border-2 border-white font-bold text-xs flex items-center gap-2 animate-bounce">
+        <i data-lucide="map-pin" class="w-4 h-4"></i>
+        <span>Haz clics sobre la calle en el mapa para trazarla. Cuando termines, toca "Listo".</span>
+      </div>
     </main>
 
   </div>
 
-  <!-- ============================================================== -->
-  <!-- MODAL DE INSPECCIÓN Y ASIGNACIÓN DE COLOR AL TRAMO -->
-  <!-- ============================================================== -->
-  <div id="modal-inspect-tramo" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden items-center justify-center p-4">
-    <div class="bg-slate-900 border border-slate-700 w-full max-w-lg rounded-3xl p-6 text-white shadow-2xl space-y-4 max-h-[92vh] overflow-y-auto">
+  <!-- MODAL ASIGNAR COLOR Y DETALLES DEL TRAMO -->
+  <div id="modal-asignar-tramo" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-700 w-full max-w-md rounded-3xl p-6 text-white shadow-2xl space-y-4 animate-in fade-in max-h-[92vh] overflow-y-auto">
       
-      <!-- Header Modal -->
-      <div class="flex items-start justify-between border-b border-slate-800 pb-3 gap-2">
+      <div class="flex items-start justify-between border-b border-slate-800 pb-3">
         <div>
-          <span class="text-[10px] font-bold text-amber-400 uppercase tracking-wider">Ficha de Inspección Vial</span>
-          <h3 id="modal-tramo-title" class="text-base sm:text-lg font-black leading-tight text-white mt-0.5">Tramo 01</h3>
-          <p id="modal-tramo-meta" class="text-[11px] text-slate-400 font-mono mt-0.5">220 metros • Ancho: 9.0 m</p>
-          <p id="modal-tramo-refs" class="text-[10px] text-slate-500 italic mt-0.5"></p>
+          <span class="text-[10px] font-bold text-amber-400 uppercase tracking-wider">Asignar Condición a la Calle</span>
+          <h3 id="modal-tramo-longitud" class="text-lg font-black text-white font-mono mt-0.5">0 metros</h3>
         </div>
-        <button id="btn-close-inspect-modal" class="text-slate-400 hover:text-white p-1">
+        <button id="btn-close-modal" class="text-slate-400 hover:text-white p-1">
           <i data-lucide="x" class="w-5 h-5"></i>
         </button>
       </div>
 
-      <!-- Formulario de Evaluación -->
-      <form id="form-tramo-inspection" class="space-y-4">
-
-        <!-- 1. SELECTOR DE ESTADO / COLOR (4 BOTONES GRANDES) -->
+      <form id="form-guardar-tramo" class="space-y-4">
+        
+        <!-- Nombre de la Calle -->
         <div>
-          <label class="block text-xs font-bold text-slate-300 uppercase mb-2">1. Estado del Pavimento (Selecciona el Color):</label>
-          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+          <label class="block text-xs font-bold text-slate-300 uppercase mb-1">Nombre o Referencia de la Calle *</label>
+          <input type="text" id="input-tramo-nombre" required placeholder="Ej: Calle Principal / Entrada Los Guaros" class="w-full px-3 py-2 text-xs bg-slate-800 border border-slate-700 rounded-xl text-white focus:outline-none focus:border-amber-500 font-bold">
+        </div>
+
+        <!-- 4 BOTONES GRANDES DE COLOR -->
+        <div>
+          <label class="block text-xs font-bold text-slate-300 uppercase mb-2">Selecciona el Estado / Color *</label>
+          <div class="grid grid-cols-2 gap-2">
             
-            <button type="button" data-estado="verde" class="btn-select-estado p-2.5 rounded-2xl bg-emerald-950 border border-emerald-600 hover:bg-emerald-900 text-center transition flex flex-col items-center gap-1">
-              <span class="w-5 h-5 rounded-full bg-emerald-500 shadow-md"></span>
-              <span class="text-[11px] font-black text-emerald-300">Bueno</span>
-              <span class="text-[9px] text-slate-400">Sin baches</span>
+            <button type="button" data-color="verde" class="btn-color-pick p-3 rounded-2xl bg-emerald-950/80 border-2 border-emerald-600 hover:bg-emerald-900 text-left transition flex items-center gap-2.5">
+              <span class="w-5 h-5 rounded-full bg-emerald-500 shadow shrink-0"></span>
+              <div>
+                <strong class="text-xs font-black text-emerald-300 block">🟢 Bueno</strong>
+                <span class="text-[9px] text-slate-400">Sin huecos graves</span>
+              </div>
             </button>
 
-            <button type="button" data-estado="amarillo" class="btn-select-estado p-2.5 rounded-2xl bg-amber-950 border border-amber-600 hover:bg-amber-900 text-center transition flex flex-col items-center gap-1">
-              <span class="w-5 h-5 rounded-full bg-amber-500 shadow-md"></span>
-              <span class="text-[11px] font-black text-amber-300">Regular</span>
-              <span class="text-[9px] text-slate-400">Desgaste</span>
+            <button type="button" data-color="amarillo" class="btn-color-pick p-3 rounded-2xl bg-amber-950/80 border-2 border-amber-600 hover:bg-amber-900 text-left transition flex items-center gap-2.5">
+              <span class="w-5 h-5 rounded-full bg-amber-500 shadow shrink-0"></span>
+              <div>
+                <strong class="text-xs font-black text-amber-300 block">🟡 Regular</strong>
+                <span class="text-[9px] text-slate-400">Desgaste / Baches</span>
+              </div>
             </button>
 
-            <button type="button" data-estado="naranja" class="btn-select-estado p-2.5 rounded-2xl bg-orange-950 border border-orange-600 hover:bg-orange-900 text-center transition flex flex-col items-center gap-1">
-              <span class="w-5 h-5 rounded-full bg-orange-500 shadow-md"></span>
-              <span class="text-[11px] font-black text-orange-300">Malo</span>
-              <span class="text-[9px] text-slate-400">Huecos</span>
+            <button type="button" data-color="naranja" class="btn-color-pick p-3 rounded-2xl bg-orange-950/80 border-2 border-orange-600 hover:bg-orange-900 text-left transition flex items-center gap-2.5">
+              <span class="w-5 h-5 rounded-full bg-orange-500 shadow shrink-0"></span>
+              <div>
+                <strong class="text-xs font-black text-orange-300 block">🟠 Malo</strong>
+                <span class="text-[9px] text-slate-400">Huecos profundos</span>
+              </div>
             </button>
 
-            <button type="button" data-estado="rojo" class="btn-select-estado p-2.5 rounded-2xl bg-red-950 border border-red-600 hover:bg-red-900 text-center transition flex flex-col items-center gap-1">
-              <span class="w-5 h-5 rounded-full bg-red-500 shadow-md"></span>
-              <span class="text-[11px] font-black text-red-300">Crítico</span>
-              <span class="text-[9px] text-slate-400">Intransitable</span>
+            <button type="button" data-color="rojo" class="btn-color-pick p-3 rounded-2xl bg-red-950/80 border-2 border-red-600 hover:bg-red-900 text-left transition flex items-center gap-2.5">
+              <span class="w-5 h-5 rounded-full bg-red-500 shadow shrink-0"></span>
+              <div>
+                <strong class="text-xs font-black text-red-300 block">🔴 Crítico</strong>
+                <span class="text-[9px] text-slate-400">Intransitable</span>
+              </div>
             </button>
 
           </div>
         </div>
 
-        <!-- 2. TIPOLOGÍA DE FALLAS DETECTADAS -->
-        <div class="bg-slate-950 p-3.5 rounded-2xl border border-slate-800 space-y-2">
-          <label class="block text-[11px] font-bold text-slate-300 uppercase">2. Tipología de Fallas en este Tramo:</label>
-          <div id="fallas-checkboxes-container" class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-            <!-- Inyectado dinámicamente -->
-          </div>
-        </div>
-
-        <!-- 3. CARGA DE FOTOS DE EVIDENCIA -->
-        <div class="bg-slate-950 p-3.5 rounded-2xl border border-slate-800 space-y-2.5">
+        <!-- FOTO DEL BACHE (OPCIONAL) -->
+        <div class="bg-slate-950 p-3 rounded-2xl border border-slate-800 space-y-2">
           <div class="flex items-center justify-between">
-            <label class="block text-[11px] font-bold text-slate-300 uppercase">3. Fotos de Evidencia (Baches / Alcantarillas):</label>
-            <span class="text-[10px] text-slate-500">Compresión automática</span>
+            <label class="block text-[11px] font-bold text-slate-300 uppercase">Foto de Evidencia (Opcional):</label>
+            <span class="text-[10px] text-slate-500">Cámara / WhatsApp</span>
           </div>
 
-          <div class="flex items-center gap-2">
-            <button type="button" onclick="document.getElementById('input-photo-file').click()" class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-xs font-bold text-amber-400 transition flex items-center gap-1.5">
-              <i data-lucide="camera" class="w-4 h-4"></i>
-              <span>Tomar Foto / Subir de WhatsApp</span>
+          <button type="button" onclick="document.getElementById('input-camera-file').click()" class="w-full py-2 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-xs font-bold text-amber-400 transition flex items-center justify-center gap-2">
+            <i data-lucide="camera" class="w-4 h-4"></i>
+            <span>Tomar Foto / Subir Imagen</span>
+          </button>
+          <input type="file" id="input-camera-file" accept="image/*" class="hidden">
+
+          <div id="preview-foto-tramo" class="hidden relative rounded-xl overflow-hidden aspect-video bg-slate-950 border border-slate-700">
+            <img id="img-preview-tag" src="" class="w-full h-full object-cover">
+            <button type="button" id="btn-remove-foto" class="absolute top-1.5 right-1.5 p-1 bg-red-600 text-white rounded-lg shadow">
+              <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
             </button>
-            <input type="file" id="input-photo-file" multiple accept="image/*" class="hidden">
-          </div>
-
-          <!-- Miniaturas de fotos del tramo -->
-          <div id="tramo-photos-preview" class="grid grid-cols-2 sm:grid-cols-3 gap-2 pt-1"></div>
-        </div>
-
-        <!-- 4. OBSERVACIONES Y EVALUADOR -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <div>
-            <label class="block text-[11px] font-bold text-slate-300 uppercase mb-1">Observaciones / Detalles del Tramo</label>
-            <textarea id="input-tramo-obs" rows="2" placeholder="Ej: Falla de borde cerca de la panadería, agua empozada..." class="w-full px-3 py-2 text-xs bg-slate-800 border border-slate-700 rounded-xl text-white focus:outline-none focus:border-amber-500"></textarea>
-          </div>
-
-          <div class="space-y-2">
-            <div>
-              <label class="block text-[11px] font-bold text-slate-300 uppercase mb-1">Nombre del Evaluador</label>
-              <input type="text" id="input-tramo-evaluador" placeholder="Ej: Ing. Civil / Brigadista" class="w-full px-3 py-2 text-xs bg-slate-800 border border-slate-700 rounded-xl text-white focus:outline-none focus:border-amber-500">
-            </div>
-
-            <!-- Navegación Secuencial mientras avanzas -->
-            <div class="pt-1 flex items-center justify-between gap-1">
-              <button type="button" id="btn-tramo-anterior" class="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-[10px] font-bold text-slate-300 flex items-center gap-1">
-                <i data-lucide="arrow-left" class="w-3 h-3"></i> Anterior
-              </button>
-              <button type="button" id="btn-tramo-siguiente" class="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-[10px] font-bold text-slate-300 flex items-center gap-1">
-                Siguiente <i data-lucide="arrow-right" class="w-3 h-3"></i>
-              </button>
-            </div>
           </div>
         </div>
 
-        <!-- BOTÓN GUARDAR -->
+        <!-- Observación rápida -->
+        <div>
+          <label class="block text-xs font-bold text-slate-300 uppercase mb-1">Detalle o Falla (Opcional)</label>
+          <input type="text" id="input-tramo-detalle" placeholder="Ej: Bote de agua cloacal, hueco en el centro..." class="w-full px-3 py-2 text-xs bg-slate-800 border border-slate-700 rounded-xl text-white focus:outline-none focus:border-amber-500">
+        </div>
+
+        <!-- Botones Guardar -->
         <div class="pt-2 flex items-center justify-end gap-2 border-t border-slate-800">
-          <button type="button" onclick="window.vialidadApp.closeInspectionModal()" class="px-4 py-2 text-xs font-semibold text-slate-400 hover:text-white">
+          <button type="button" id="btn-cancelar-modal" class="px-4 py-2 text-xs font-semibold text-slate-400 hover:text-white">
             Cancelar
           </button>
           <button type="submit" class="px-6 py-2.5 text-xs font-black bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 text-slate-950 rounded-xl shadow-lg flex items-center gap-1.5">
             <i data-lucide="check" class="w-4 h-4"></i>
-            <span>Guardar Evaluación</span>
+            <span>Guardar Calle</span>
           </button>
         </div>
 
@@ -285,6 +282,6 @@
   </div>
 
   <!-- SCRIPT -->
-  <script type="module" src="js/app.js?v=1"></script>
+  <script type="module" src="js/app.js?v=2"></script>
 </body>
 </html>
