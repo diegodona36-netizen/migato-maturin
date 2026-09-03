@@ -1,197 +1,145 @@
 /**
- * Controlador Principal — Diagnóstico y Segmentación Vial La Puente
+ * Controlador Principal — Trazador de Calles y Diagnóstico Vial La Puente
  */
-import { TRAMOS_LA_PUENTE, ESTADOS_VIALES, TIPOLOGIAS_FALLA } from "./dataTramos.js";
-import { RoadStorageService } from "./storage.js";
 import { RoadMapViewer } from "./mapViewer.js";
+import { RoadStorageService } from "./storage.js";
 
-class VialidadLaPuenteApp {
+const STORAGE_KEY_CALLES = "vialidad_lapuente_calles_trazadas_v2";
+
+class TrazadorVialApp {
   constructor() {
-    this.tramos = [...TRAMOS_LA_PUENTE];
-    this.inspections = RoadStorageService.getInspections();
-    this.currentSelectedTramo = null;
-    this.tempFotos = [];
+    this.tramos = this.loadTramos();
     this.mapViewer = null;
+
+    // Estado temporal de trazado
+    this.tempPoints = null;
+    this.tempLongitudM = 0;
+    this.tempFoto = null;
+    this.selectedColor = "amarillo"; // default
+    this.editingTramoId = null;
 
     this.init();
   }
 
-  init() {
-    // 1. Inicializar Mapa
-    this.mapViewer = new RoadMapViewer("map-vialidad", (tramo, insp) => {
-      this.openInspectionModal(tramo, insp);
-    });
+  loadTramos() {
+    try {
+      const data = localStorage.getItem(STORAGE_KEY_CALLES);
+      return data ? JSON.parse(data) : [];
+    } catch (e) {
+      return [];
+    }
+  }
 
-    // 2. Renderizar Tramos y Métricas
+  saveTramos() {
+    try {
+      localStorage.setItem(STORAGE_KEY_CALLES, JSON.stringify(this.tramos));
+    } catch (e) {
+      console.error("Error guardando tramos:", e);
+    }
+  }
+
+  init() {
+    // 1. Inicializar Mapa con Callbacks
+    this.mapViewer = new RoadMapViewer(
+      "map-vialidad",
+      (points, longitudM) => this.onFinishDrawing(points, longitudM),
+      (tramo) => this.openEditModal(tramo)
+    );
+
+    // 2. Renderizar Calles Existentes
     this.refreshView();
 
-    // 3. Configurar Eventos de la Interfaz
+    // 3. Configurar Botones y Eventos
     this.setupEventListeners();
-    this.populateFallasCheckboxes();
 
     if (window.lucide) {
-      try { window.lucide.createIcons(); } catch (e) {}
+      try { window.lucide.createIcons(); } catch(e) {}
     }
   }
 
   refreshView() {
-    this.inspections = RoadStorageService.getInspections();
-    this.mapViewer.renderTramos(this.tramos, this.inspections);
-    this.updateKpis();
-    this.renderTramosList();
+    this.mapViewer.renderSavedTramos(this.tramos);
+    this.updateStats();
+    this.renderSidebarList();
   }
 
-  updateKpis() {
+  updateStats() {
+    const total = this.tramos.length;
     let totalMetros = 0;
-    let evaluadosMetros = 0;
-    let criticoMetros = 0;
-    let maloMetros = 0;
-    let regularMetros = 0;
-    let buenoMetros = 0;
+    let criticoM = 0;
+    let maloM = 0;
+    let regularM = 0;
+    let buenoM = 0;
 
     this.tramos.forEach(t => {
-      totalMetros += t.longitudM;
-      const insp = this.inspections[t.id];
-      if (insp && insp.estado && insp.estado !== "sin_inspeccionar") {
-        evaluadosMetros += t.longitudM;
-        if (insp.estado === "rojo") criticoMetros += t.longitudM;
-        else if (insp.estado === "naranja") maloMetros += t.longitudM;
-        else if (insp.estado === "amarillo") regularMetros += t.longitudM;
-        else if (insp.estado === "verde") buenoMetros += t.longitudM;
-      }
+      totalMetros += t.longitudM || 0;
+      if (t.color === "rojo") criticoM += t.longitudM;
+      else if (t.color === "naranja") maloM += t.longitudM;
+      else if (t.color === "amarillo") regularM += t.longitudM;
+      else if (t.color === "verde") buenoM += t.longitudM;
     });
 
-    const pctEvaluado = totalMetros > 0 ? Math.round((evaluadosMetros / totalMetros) * 100) : 0;
-    const metrosBacheo = criticoMetros + maloMetros + (regularMetros * 0.4);
+    const contadorEl = document.getElementById("kpi-contador-calles");
+    const longitudEl = document.getElementById("txt-longitud-total");
+    const danadaEl = document.getElementById("txt-danada-pct");
 
-    const elTotal = document.getElementById("kpi-total-longitud");
-    const elEvaluado = document.getElementById("kpi-avance-pct");
-    const elCritico = document.getElementById("kpi-critico-pct");
-    const elBacheo = document.getElementById("kpi-bacheo-metros");
+    if (contadorEl) contadorEl.textContent = `${total} calle(s) trazada(s)`;
+    if (longitudEl) longitudEl.textContent = `${totalMetros} metros trazados`;
 
-    if (elTotal) elTotal.textContent = `${(totalMetros / 1000).toFixed(1)} km (${this.tramos.length} tramos)`;
-    if (elEvaluado) elEvaluado.textContent = `${pctEvaluado}% (${evaluadosMetros} m)`;
-    if (elCritico) {
-      const pctCritico = evaluadosMetros > 0 ? Math.round(((criticoMetros + maloMetros) / evaluadosMetros) * 100) : 0;
-      elCritico.textContent = `${pctCritico}% Crítico / Malo`;
-    }
-    if (elBacheo) elBacheo.textContent = `${Math.round(metrosBacheo)} m lineales`;
+    const metrosDanados = criticoM + maloM;
+    const pctDanada = totalMetros > 0 ? Math.round((metrosDanados / totalMetros) * 100) : 0;
+    if (danadaEl) danadaEl.textContent = `${pctDanada}% en mal estado`;
 
-    // Actualizar barras de semáforo
+    // Barras de progreso
     const barRojo = document.getElementById("bar-rojo");
     const barNaranja = document.getElementById("bar-naranja");
     const barAmarillo = document.getElementById("bar-amarillo");
     const barVerde = document.getElementById("bar-verde");
 
-    if (barRojo && evaluadosMetros > 0) barRojo.style.width = `${(criticoMetros / evaluadosMetros) * 100}%`;
-    if (barNaranja && evaluadosMetros > 0) barNaranja.style.width = `${(maloMetros / evaluadosMetros) * 100}%`;
-    if (barAmarillo && evaluadosMetros > 0) barAmarillo.style.width = `${(regularMetros / evaluadosMetros) * 100}%`;
-    if (barVerde && evaluadosMetros > 0) barVerde.style.width = `${(buenoMetros / evaluadosMetros) * 100}%`;
+    if (barRojo) barRojo.style.width = totalMetros > 0 ? `${(criticoM / totalMetros) * 100}%` : "0%";
+    if (barNaranja) barNaranja.style.width = totalMetros > 0 ? `${(maloM / totalMetros) * 100}%` : "0%";
+    if (barAmarillo) barAmarillo.style.width = totalMetros > 0 ? `${(regularM / totalMetros) * 100}%` : "0%";
+    if (barVerde) barVerde.style.width = totalMetros > 0 ? `${(buenoM / totalMetros) * 100}%` : "0%";
   }
 
-  renderTramosList() {
-    const listContainer = document.getElementById("tramos-sidebar-list");
-    if (!listContainer) return;
+  renderSidebarList() {
+    const container = document.getElementById("lista-tramos-trazados");
+    if (!container) return;
 
-    listContainer.innerHTML = "";
-
-    this.tramos.forEach((t, idx) => {
-      const insp = this.inspections[t.id] || {};
-      const estadoId = insp.estado || "sin_inspeccionar";
-      const estado = ESTADOS_VIALES[estadoId] || ESTADOS_VIALES.sin_inspeccionar;
-
-      const item = document.createElement("div");
-      item.className = "p-3 rounded-xl border border-slate-800 bg-slate-950/70 hover:bg-slate-900 cursor-pointer transition flex items-center justify-between gap-2 group";
-      item.onclick = () => {
-        this.mapViewer.selectTramo(t.id);
-        this.openInspectionModal(t, insp);
-      };
-
-      item.innerHTML = `
-        <div class="flex items-center gap-2.5 overflow-hidden">
-          <span class="w-3 h-3 rounded-full shrink-0 shadow-sm" style="background-color: ${estado.color}"></span>
-          <div class="overflow-hidden">
-            <h4 class="text-xs font-bold text-slate-200 truncate group-hover:text-white transition">${t.nombre}</h4>
-            <p class="text-[10px] text-slate-400 font-mono">${t.longitudM} metros • ${estado.nombre}</p>
-          </div>
-        </div>
-        <div class="shrink-0 text-right">
-          ${(insp.fotos || []).length > 0 ? `<span class="text-[10px] text-amber-400 font-bold">📷 ${insp.fotos.length}</span>` : ''}
-          <i data-lucide="chevron-right" class="w-4 h-4 text-slate-600 group-hover:text-slate-300"></i>
+    if (this.tramos.length === 0) {
+      container.innerHTML = `
+        <div class="p-6 text-center border border-dashed border-slate-800 rounded-2xl text-slate-500 space-y-2">
+          <i data-lucide="edit-3" class="w-8 h-8 mx-auto text-slate-600"></i>
+          <p class="text-xs font-bold text-slate-400">Aún no has trazado calles en La Puente.</p>
+          <p class="text-[10px]">Toca "+ Trazar Nueva Calle" arriba para empezar a subrayar tus calles en el mapa.</p>
         </div>
       `;
-
-      listContainer.appendChild(item);
-    });
-
-    if (window.lucide) {
-      try { window.lucide.createIcons(); } catch(e){}
-    }
-  }
-
-  populateFallasCheckboxes() {
-    const container = document.getElementById("fallas-checkboxes-container");
-    if (!container) return;
-
-    container.innerHTML = TIPOLOGIAS_FALLA.map((falla, idx) => `
-      <label class="flex items-center gap-2 text-xs text-slate-300 hover:text-white cursor-pointer select-none">
-        <input type="checkbox" name="falla_tipo" value="${falla}" class="rounded bg-slate-800 border-slate-700 text-amber-500 focus:ring-0">
-        <span>${falla}</span>
-      </label>
-    `).join("");
-  }
-
-  openInspectionModal(tramo, insp = {}) {
-    this.currentSelectedTramo = tramo;
-    this.tempFotos = [...(insp.fotos || [])];
-
-    const modal = document.getElementById("modal-inspect-tramo");
-    if (!modal) return;
-
-    document.getElementById("modal-tramo-title").textContent = tramo.nombre;
-    document.getElementById("modal-tramo-meta").textContent = `${tramo.longitudM} metros de longitud • Ancho de calzada: ${tramo.anchoM} m`;
-    document.getElementById("modal-tramo-refs").textContent = `Puntos de Referencia: ${tramo.puntosReferencia.join(" • ")}`;
-
-    // Seleccionar color de estado
-    const currentEstado = insp.estado || "sin_inspeccionar";
-    document.querySelectorAll(".btn-select-estado").forEach(btn => {
-      const isSelected = btn.dataset.estado === currentEstado;
-      btn.classList.toggle("ring-4", isSelected);
-      btn.classList.toggle("ring-white/80", isSelected);
-    });
-
-    // Marcar fallas
-    const fallasSet = new Set(insp.fallas || []);
-    document.querySelectorAll("input[name='falla_tipo']").forEach(chk => {
-      chk.checked = fallasSet.has(chk.value);
-    });
-
-    // Observaciones y evaluador
-    document.getElementById("input-tramo-obs").value = insp.observaciones || "";
-    document.getElementById("input-tramo-evaluador").value = insp.evaluador || "";
-
-    // Miniaturas de fotos
-    this.renderPhotoPreviews();
-
-    modal.classList.remove("hidden");
-    modal.classList.add("flex");
-  }
-
-  renderPhotoPreviews() {
-    const container = document.getElementById("tramo-photos-preview");
-    if (!container) return;
-
-    if (this.tempFotos.length === 0) {
-      container.innerHTML = `<p class="text-[11px] text-slate-500 italic col-span-full">Sin fotos adjuntas para este tramo.</p>`;
+      if (window.lucide) { try { window.lucide.createIcons(); } catch(e){} }
       return;
     }
 
-    container.innerHTML = this.tempFotos.map((fUrl, idx) => `
-      <div class="relative rounded-xl overflow-hidden aspect-video bg-slate-950 border border-slate-700 group">
-        <img src="${fUrl}" class="w-full h-full object-cover">
-        <button type="button" onclick="window.vialidadApp.removeTempPhoto(${idx})" class="absolute top-1 right-1 p-1 bg-red-600 text-white rounded-lg opacity-80 group-hover:opacity-100 transition shadow" title="Eliminar foto">
-          <i data-lucide="x" class="w-3 h-3"></i>
-        </button>
+    const colorBadge = {
+      verde: "bg-emerald-500",
+      amarillo: "bg-amber-500",
+      naranja: "bg-orange-500",
+      rojo: "bg-red-500"
+    };
+
+    container.innerHTML = this.tramos.map((t, idx) => `
+      <div class="p-3 rounded-xl border border-slate-800 bg-slate-950/80 hover:bg-slate-900 cursor-pointer transition flex items-center justify-between gap-2 group" onclick="window.trazadorApp.focusAndEdit('${t.id}')">
+        <div class="flex items-center gap-2.5 overflow-hidden">
+          <span class="w-3.5 h-3.5 rounded-full shrink-0 shadow ${colorBadge[t.color] || 'bg-slate-500'}"></span>
+          <div class="overflow-hidden">
+            <h4 class="text-xs font-bold text-slate-200 truncate group-hover:text-white">${t.nombre}</h4>
+            <p class="text-[10px] text-slate-400 font-mono">${t.longitudM} m • <span class="capitalize text-slate-300 font-bold">${t.color}</span></p>
+          </div>
+        </div>
+        <div class="flex items-center gap-1 shrink-0">
+          ${t.foto ? `<span class="text-xs" title="Tiene foto">📷</span>` : ''}
+          <button type="button" onclick="event.stopPropagation(); window.trazadorApp.deleteTramo('${t.id}')" class="p-1 text-slate-500 hover:text-red-400 rounded opacity-70 group-hover:opacity-100 transition" title="Borrar tramo">
+            <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+          </button>
+        </div>
       </div>
     `).join("");
 
@@ -200,102 +148,245 @@ class VialidadLaPuenteApp {
     }
   }
 
-  removeTempPhoto(idx) {
-    this.tempFotos.splice(idx, 1);
-    this.renderPhotoPreviews();
+  focusAndEdit(tramoId) {
+    const tramo = this.tramos.find(t => t.id === tramoId);
+    if (!tramo) return;
+
+    if (tramo.puntos && tramo.puntos.length > 0) {
+      const center = tramo.puntos[Math.floor(tramo.puntos.length / 2)];
+      this.mapViewer.focusOn(center[0], center[1]);
+    }
+    this.openEditModal(tramo);
+  }
+
+  onFinishDrawing(points, longitudM) {
+    this.tempPoints = points;
+    this.tempLongitudM = longitudM;
+    this.editingTramoId = null;
+    this.tempFoto = null;
+    this.selectedColor = "amarillo";
+
+    // Ocultar botones de trazado
+    this.setDrawingUiState(false);
+
+    // Abrir Modal
+    const modal = document.getElementById("modal-asignar-tramo");
+    document.getElementById("modal-tramo-longitud").textContent = `${longitudM} metros`;
+    document.getElementById("input-tramo-nombre").value = `Calle La Puente ${this.tramos.length + 1}`;
+    document.getElementById("input-tramo-detalle").value = "";
+
+    this.selectColorButton("amarillo");
+    this.resetPhotoPreview();
+
+    if (modal) {
+      modal.classList.remove("hidden");
+      modal.classList.add("flex");
+    }
+  }
+
+  openEditModal(tramo) {
+    this.editingTramoId = tramo.id;
+    this.tempPoints = tramo.puntos;
+    this.tempLongitudM = tramo.longitudM;
+    this.tempFoto = tramo.foto || null;
+    this.selectedColor = tramo.color || "amarillo";
+
+    const modal = document.getElementById("modal-asignar-tramo");
+    document.getElementById("modal-tramo-longitud").textContent = `${tramo.longitudM} metros`;
+    document.getElementById("input-tramo-nombre").value = tramo.nombre;
+    document.getElementById("input-tramo-detalle").value = tramo.detalle || "";
+
+    this.selectColorButton(this.selectedColor);
+
+    if (this.tempFoto) {
+      this.showPhotoPreview(this.tempFoto);
+    } else {
+      this.resetPhotoPreview();
+    }
+
+    if (modal) {
+      modal.classList.remove("hidden");
+      modal.classList.add("flex");
+    }
+  }
+
+  selectColorButton(color) {
+    this.selectedColor = color;
+    document.querySelectorAll(".btn-color-pick").forEach(btn => {
+      const isSelected = btn.dataset.color === color;
+      btn.classList.toggle("ring-4", isSelected);
+      btn.classList.toggle("ring-white/90", isSelected);
+    });
+  }
+
+  showPhotoPreview(url) {
+    const previewBox = document.getElementById("preview-foto-tramo");
+    const img = document.getElementById("img-preview-tag");
+    if (previewBox && img) {
+      img.src = url;
+      previewBox.classList.remove("hidden");
+    }
+  }
+
+  resetPhotoPreview() {
+    const previewBox = document.getElementById("preview-foto-tramo");
+    const img = document.getElementById("img-preview-tag");
+    if (previewBox && img) {
+      img.src = "";
+      previewBox.classList.add("hidden");
+    }
+  }
+
+  deleteTramo(tramoId) {
+    if (confirm("¿Deseas eliminar este tramo trazado?")) {
+      this.tramos = this.tramos.filter(t => t.id !== tramoId);
+      this.saveTramos();
+      this.refreshView();
+    }
+  }
+
+  setDrawingUiState(isDrawing) {
+    const btnActivar = document.getElementById("btn-activar-trazo");
+    const btnFinalizar = document.getElementById("btn-finalizar-trazo");
+    const btnCancelar = document.getElementById("btn-cancelar-trazo");
+    const banner = document.getElementById("banner-trazando");
+
+    if (isDrawing) {
+      btnActivar.classList.add("hidden");
+      btnFinalizar.classList.remove("hidden");
+      btnFinalizar.classList.add("flex");
+      btnCancelar.classList.remove("hidden");
+      btnCancelar.classList.add("flex");
+      banner.classList.remove("hidden");
+    } else {
+      btnActivar.classList.remove("hidden");
+      btnFinalizar.classList.add("hidden");
+      btnFinalizar.classList.remove("flex");
+      btnCancelar.classList.add("hidden");
+      btnCancelar.classList.remove("flex");
+      banner.classList.add("hidden");
+    }
   }
 
   setupEventListeners() {
-    // Botones de Selección de Estado (Verde, Amarillo, Naranja, Rojo)
-    document.querySelectorAll(".btn-select-estado").forEach(btn => {
+    // 1. Botón Iniciar Trazo
+    const btnActivar = document.getElementById("btn-activar-trazo");
+    if (btnActivar) {
+      btnActivar.addEventListener("click", () => {
+        this.setDrawingUiState(true);
+        this.mapViewer.startDrawing();
+      });
+    }
+
+    // 2. Botón Finalizar Trazo
+    const btnFinalizar = document.getElementById("btn-finalizar-trazo");
+    if (btnFinalizar) {
+      btnFinalizar.addEventListener("click", () => {
+        this.mapViewer.finishDrawing();
+      });
+    }
+
+    // 3. Botón Cancelar Trazo
+    const btnCancelar = document.getElementById("btn-cancelar-trazo");
+    if (btnCancelar) {
+      btnCancelar.addEventListener("click", () => {
+        this.setDrawingUiState(false);
+        this.mapViewer.cancelDrawing();
+      });
+    }
+
+    // 4. Selector de Botones de Color
+    document.querySelectorAll(".btn-color-pick").forEach(btn => {
       btn.addEventListener("click", () => {
-        document.querySelectorAll(".btn-select-estado").forEach(b => {
-          b.classList.remove("ring-4", "ring-white/80");
-        });
-        btn.classList.add("ring-4", "ring-white/80");
-        btn.dataset.selected = "true";
+        this.selectColorButton(btn.dataset.color);
       });
     });
 
-    // Carga de Fotos
-    const fileInput = document.getElementById("input-photo-file");
-    if (fileInput) {
-      fileInput.addEventListener("change", async (e) => {
-        const files = Array.from(e.target.files);
-        for (let file of files) {
+    // 5. Carga de Foto de Cámara / WhatsApp
+    const cameraInput = document.getElementById("input-camera-file");
+    if (cameraInput) {
+      cameraInput.addEventListener("change", async (e) => {
+        if (e.target.files.length > 0) {
           try {
+            const file = e.target.files[0];
             const compressed = await RoadStorageService.compressImage(file, 1000, 0.75);
-            this.tempFotos.push(compressed);
+            this.tempFoto = compressed;
+            this.showPhotoPreview(compressed);
           } catch(err) {
             console.error("Error comprimiendo foto:", err);
           }
         }
-        this.renderPhotoPreviews();
       });
     }
 
-    // Guardar Tramo
-    const form = document.getElementById("form-tramo-inspection");
+    const btnRemoveFoto = document.getElementById("btn-remove-foto");
+    if (btnRemoveFoto) {
+      btnRemoveFoto.addEventListener("click", () => {
+        this.tempFoto = null;
+        this.resetPhotoPreview();
+      });
+    }
+
+    // 6. Guardar Calle en el Modal
+    const form = document.getElementById("form-guardar-tramo");
     if (form) {
       form.addEventListener("submit", (e) => {
         e.preventDefault();
-        if (!this.currentSelectedTramo) return;
 
-        let selectedEstado = "sin_inspeccionar";
-        document.querySelectorAll(".btn-select-estado").forEach(btn => {
-          if (btn.classList.contains("ring-4")) {
-            selectedEstado = btn.dataset.estado;
+        const nombre = document.getElementById("input-tramo-nombre").value.trim();
+        const detalle = document.getElementById("input-tramo-detalle").value.trim();
+
+        if (this.editingTramoId) {
+          // Editando existente
+          const index = this.tramos.findIndex(t => t.id === this.editingTramoId);
+          if (index !== -1) {
+            this.tramos[index].nombre = nombre;
+            this.tramos[index].color = this.selectedColor;
+            this.tramos[index].detalle = detalle;
+            this.tramos[index].foto = this.tempFoto;
           }
-        });
+        } else {
+          // Creando nuevo
+          const nuevoTramo = {
+            id: `PUENTE-${Date.now()}`,
+            nombre: nombre || `Calle La Puente ${this.tramos.length + 1}`,
+            color: this.selectedColor,
+            longitudM: this.tempLongitudM,
+            puntos: this.tempPoints,
+            detalle: detalle,
+            foto: this.tempFoto,
+            fecha: new Date().toISOString()
+          };
+          this.tramos.unshift(nuevoTramo);
+        }
 
-        const selectedFallas = [];
-        document.querySelectorAll("input[name='falla_tipo']:checked").forEach(chk => {
-          selectedFallas.push(chk.value);
-        });
-
-        const inspectionData = {
-          estado: selectedEstado,
-          fallas: selectedFallas,
-          observaciones: document.getElementById("input-tramo-obs").value,
-          evaluador: document.getElementById("input-tramo-evaluador").value,
-          fotos: [...this.tempFotos]
-        };
-
-        RoadStorageService.updateTramo(this.currentSelectedTramo.id, inspectionData);
-        this.closeInspectionModal();
+        this.saveTramos();
+        this.closeModal();
         this.refreshView();
       });
     }
 
-    // Botones de Tramo Siguiente / Anterior para inspección secuencial
-    const btnNext = document.getElementById("btn-tramo-siguiente");
-    const btnPrev = document.getElementById("btn-tramo-anterior");
+    // 7. Cerrar Modal
+    const btnCloseModal = document.getElementById("btn-close-modal");
+    const btnCancelModal = document.getElementById("btn-cancelar-modal");
+    const closeModalFn = () => this.closeModal();
 
-    if (btnNext) {
-      btnNext.addEventListener("click", () => {
-        if (!this.currentSelectedTramo) return;
-        const currentIdx = this.tramos.findIndex(t => t.id === this.currentSelectedTramo.id);
-        if (currentIdx < this.tramos.length - 1) {
-          const nextTramo = this.tramos[currentIdx + 1];
-          this.mapViewer.selectTramo(nextTramo.id);
-          this.openInspectionModal(nextTramo, this.inspections[nextTramo.id]);
+    if (btnCloseModal) btnCloseModal.addEventListener("click", closeModalFn);
+    if (btnCancelModal) btnCancelModal.addEventListener("click", closeModalFn);
+
+    // 8. Botón Borrar Todo
+    const btnBorrarTodo = document.getElementById("btn-borrar-todas");
+    if (btnBorrarTodo) {
+      btnBorrarTodo.addEventListener("click", () => {
+        if (confirm("¿Estás seguro de borrar todas las calles trazadas para comenzar desde cero?")) {
+          this.tramos = [];
+          this.saveTramos();
+          this.refreshView();
         }
       });
     }
 
-    if (btnPrev) {
-      btnPrev.addEventListener("click", () => {
-        if (!this.currentSelectedTramo) return;
-        const currentIdx = this.tramos.findIndex(t => t.id === this.currentSelectedTramo.id);
-        if (currentIdx > 0) {
-          const prevTramo = this.tramos[currentIdx - 1];
-          this.mapViewer.selectTramo(prevTramo.id);
-          this.openInspectionModal(prevTramo, this.inspections[prevTramo.id]);
-        }
-      });
-    }
-
-    // Botón GPS en Vivo ("Mi Ubicación")
+    // 9. GPS en Vivo
     const btnGps = document.getElementById("btn-gps-locate");
     if (btnGps) {
       btnGps.addEventListener("click", () => {
@@ -308,9 +399,9 @@ class VialidadLaPuenteApp {
             },
             (err) => {
               btnGps.classList.remove("animate-pulse");
-              alert("No se pudo obtener la ubicación GPS: " + err.message);
+              alert("No se pudo obtener el GPS: " + err.message);
             },
-            { enableHighAccuracy: true, timeout: 10000 }
+            { enableHighAccuracy: true }
           );
         } else {
           alert("Tu navegador no soporta geolocalización GPS.");
@@ -318,26 +409,15 @@ class VialidadLaPuenteApp {
       });
     }
 
-    // Exportar KML para Google Earth
+    // 10. Exportar KML para Google Earth
     const btnExportKml = document.getElementById("btn-export-kml-road");
     if (btnExportKml) {
       btnExportKml.addEventListener("click", () => this.exportKml());
     }
-
-    // Imprimir Reporte
-    const btnPrint = document.getElementById("btn-print-road-report");
-    if (btnPrint) {
-      btnPrint.addEventListener("click", () => window.print());
-    }
-
-    const btnCloseModal = document.getElementById("btn-close-inspect-modal");
-    if (btnCloseModal) {
-      btnCloseModal.addEventListener("click", () => this.closeInspectionModal());
-    }
   }
 
-  closeInspectionModal() {
-    const modal = document.getElementById("modal-inspect-tramo");
+  closeModal() {
+    const modal = document.getElementById("modal-asignar-tramo");
     if (modal) {
       modal.classList.add("hidden");
       modal.classList.remove("flex");
@@ -345,34 +425,29 @@ class VialidadLaPuenteApp {
   }
 
   exportKml() {
+    if (this.tramos.length === 0) {
+      alert("No hay calles trazadas para exportar. Toca '+ Trazar Nueva Calle' primero.");
+      return;
+    }
+
     let kml = `<?xml version="1.0" encoding="UTF-8"?>
 <kml xmlns="http://www.opengis.net/kml/2.2">
   <Document>
-    <name>Diagnóstico Vial — Carretera Principal de La Puente</name>
-    <description>Inspección por tramos coloreados y georreferenciados (Maturín, Monagas)</description>
+    <name>Calles Trazadas — Sector La Puente (Maturín)</name>
+    <description>Diagnóstico vial trazado en terreno</description>
 
-    <!-- Estilos de Color -->
-    <Style id="styleVerde"><LineStyle><color>ff10b981</color><width>6</width></LineStyle></Style>
-    <Style id="styleAmarillo"><LineStyle><color>fff59e0b</color><width>6</width></LineStyle></Style>
-    <Style id="styleNaranja"><LineStyle><color>fff97316</color><width>6</width></LineStyle></Style>
-    <Style id="styleRojo"><LineStyle><color>ffef4444</color><width>7</width></LineStyle></Style>
-    <Style id="styleGris"><LineStyle><color>ff64748b</color><width>4</width></LineStyle></Style>
+    <Style id="color_verde"><LineStyle><color>ff10b981</color><width>6</width></LineStyle></Style>
+    <Style id="color_amarillo"><LineStyle><color>fff59e0b</color><width>6</width></LineStyle></Style>
+    <Style id="color_naranja"><LineStyle><color>fff97316</color><width>6</width></LineStyle></Style>
+    <Style id="color_rojo"><LineStyle><color>ffef4444</color><width>7</width></LineStyle></Style>
 
     <Folder>
-      <name>Tramos Inspeccionados</name>
+      <name>Calles Evaluadas</name>
 `;
 
     this.tramos.forEach(t => {
-      const insp = this.inspections[t.id] || {};
-      const estado = insp.estado || "sin_inspeccionar";
-      let styleId = "#styleGris";
-
-      if (estado === "verde") styleId = "#styleVerde";
-      else if (estado === "amarillo") styleId = "#styleAmarillo";
-      else if (estado === "naranja") styleId = "#styleNaranja";
-      else if (estado === "rojo") styleId = "#styleRojo";
-
-      const coordsStr = t.coordenadas.map(([lat, lng]) => `${lng},${lat},0`).join(" ");
+      const coordsStr = t.puntos.map(([lat, lng]) => `${lng},${lat},0`).join(" ");
+      const styleId = `#color_${t.color || "amarillo"}`;
 
       kml += `
       <Placemark>
@@ -380,10 +455,8 @@ class VialidadLaPuenteApp {
         <description><![CDATA[
           <h3>${t.nombre}</h3>
           <p><strong>Longitud:</strong> ${t.longitudM} m</p>
-          <p><strong>Estado:</strong> ${estado.toUpperCase()}</p>
-          <p><strong>Fallas reportadas:</strong> ${(insp.fallas || []).join(", ") || "Ninguna"}</p>
-          <p><strong>Observaciones:</strong> ${insp.observaciones || "Sin observaciones"}</p>
-          <p><strong>Evaluador:</strong> ${insp.evaluador || "N/A"}</p>
+          <p><strong>Estado:</strong> ${t.color.toUpperCase()}</p>
+          <p><strong>Detalle:</strong> ${t.detalle || "Sin observaciones"}</p>
         ]]></description>
         <styleUrl>${styleId}</styleUrl>
         <LineString>
@@ -401,7 +474,7 @@ class VialidadLaPuenteApp {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `Vialidad_LaPuente_${new Date().toISOString().split("T")[0]}.kml`;
+    a.download = `Vialidad_LaPuente_Trazada_${new Date().toISOString().split("T")[0]}.kml`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -410,8 +483,8 @@ class VialidadLaPuenteApp {
 }
 
 function startApp() {
-  if (!window.vialidadApp) {
-    window.vialidadApp = new VialidadLaPuenteApp();
+  if (!window.trazadorApp) {
+    window.trazadorApp = new TrazadorVialApp();
   }
 }
 
