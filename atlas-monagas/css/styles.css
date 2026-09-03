@@ -1,9 +1,10 @@
-/* Estilos para el Atlas Territorial & Sala Situacional de Monagas */
+/* Estilos para el Atlas Territorial & Red Vial de Monagas — Mobile & Desktop */
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap");
 
 body {
   font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   overflow-x: hidden;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .font-mono {
@@ -18,6 +19,8 @@ body {
 
 .leaflet-container canvas {
   will-change: transform;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
 }
 
 .atlas-tooltip {
@@ -27,6 +30,23 @@ body {
   border-radius: 8px !important;
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5) !important;
   padding: 6px 10px !important;
+}
+
+/* GPS Pulse Dot */
+.gps-pulse-dot {
+  animation: gpsPulse 2s infinite;
+}
+
+@keyframes gpsPulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(56, 189, 248, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 16px rgba(56, 189, 248, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(56, 189, 248, 0);
+  }
 }
 
 /* Custom Scrollbars */
@@ -40,4 +60,11 @@ body {
 ::-webkit-scrollbar-thumb {
   background: #334155;
   border-radius: 9999px;
+}
+
+/* Safe areas for mobile notches */
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  .mobile-bottom-safe {
+    padding-bottom: calc(1rem + env(safe-area-inset-bottom));
+  }
 }
