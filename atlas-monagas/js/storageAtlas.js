@@ -1,8 +1,8 @@
 /**
- * Base de Datos y Motor de Persistencia Local / Nube para Atlas Monagas
+ * Persistencia y Almacenamiento de Líneas Viales — Atlas Monagas
  */
 
-const STORAGE_KEY = "atlas_monagas_poligonos_v1";
+const STORAGE_KEY = "atlas_monagas_lineas_v2";
 
 export class AtlasStorage {
   static getStore() {
@@ -20,105 +20,102 @@ export class AtlasStorage {
     } catch (e) {}
   }
 
-  static getParishData(munId, parishId) {
+  static getParishLines(munId, parishId) {
     const store = this.getStore();
     const key = `${munId}__${parishId}`;
-    return store[key] || {
-      poligonos: [],
-      metaVotantes: 0,
-      responsableGeneral: "",
-      telefonoGeneral: ""
-    };
+    return store[key] || [];
   }
 
-  static saveParishData(munId, parishId, data) {
+  static saveParishLines(munId, parishId, lines) {
     const store = this.getStore();
     const key = `${munId}__${parishId}`;
-    store[key] = {
-      ...this.getParishData(munId, parishId),
-      ...data,
-      ultimaActualizacion: new Date().toISOString()
-    };
+    store[key] = lines;
     this.saveStore(store);
-    return store[key];
+    return lines;
   }
 
   static getGlobalStats(catalogo) {
     const store = this.getStore();
     let totalParroquias = 0;
-    let parroquiasConDatos = 0;
-    let totalCuadrantes = 0;
-    let cuadrantesCubiertos = 0;
+    let parroquiasConLineas = 0;
+    let totalLineas = 0;
+    let totalMetros = 0;
+    let buenoM = 0;
+    let regularM = 0;
+    let maloM = 0;
+    let criticoM = 0;
 
     catalogo.forEach(mun => {
       mun.parroquias.forEach(p => {
         totalParroquias++;
         const key = `${mun.id}__${p.id}`;
-        const pData = store[key];
-        if (pData && pData.poligonos && pData.poligonos.length > 0) {
-          parroquiasConDatos++;
-          totalCuadrantes += pData.poligonos.length;
-          cuadrantesCubiertos += pData.poligonos.filter(c => c.estado === "cubierto").length;
+        const lines = store[key] || [];
+        if (lines.length > 0) {
+          parroquiasConLineas++;
+          totalLineas += lines.length;
+          lines.forEach(l => {
+            const m = l.longitudM || 0;
+            totalMetros += m;
+            if (l.color === "verde") buenoM += m;
+            else if (l.color === "amarillo") regularM += m;
+            else if (l.color === "naranja") maloM += m;
+            else if (l.color === "rojo") criticoM += m;
+          });
         }
       });
     });
 
-    const pctGlobal = totalCuadrantes > 0 ? Math.round((cuadrantesCubiertos / totalCuadrantes) * 100) : 0;
-
     return {
       totalMunicipios: catalogo.length,
       totalParroquias,
-      parroquiasConDatos,
-      totalCuadrantes,
-      cuadrantesCubiertos,
-      pctGlobal
+      parroquiasConLineas,
+      totalLineas,
+      totalMetros,
+      buenoM,
+      regularM,
+      maloM,
+      criticoM
     };
   }
 
-  static exportParishKml(munNombre, parish, poligonos) {
+  static exportParishKml(munNombre, parish, lines) {
     let kml = `<?xml version="1.0" encoding="UTF-8"?>
 <kml xmlns="http://www.opengis.net/kml/2.2">
   <Document>
-    <name>${parish.nombre} (${munNombre}) — Mapeo Territorial</name>
-    <description>Plano oficial y cuadrantes generados en MIGATO Atlas Monagas</description>
+    <name>${parish.nombre} (${munNombre}) — Trazado Vial</name>
+    <description>Líneas de calles y tramos viales georreferenciados</description>
 
-    <Style id="st_verde"><LineStyle><color>ff047857</color><width>2</width></LineStyle><PolyStyle><color>8010b981</color><fill>1</fill></PolyStyle></Style>
-    <Style id="st_amarillo"><LineStyle><color>ffb45309</color><width>2</width></LineStyle><PolyStyle><color>80f59e0b</color><fill>1</fill></PolyStyle></Style>
-    <Style id="st_rojo"><LineStyle><color>ffb91c1c</color><width>2</width></LineStyle><PolyStyle><color>80ef4444</color><fill>1</fill></PolyStyle></Style>
-    <Style id="st_disponible"><LineStyle><color>ff0284c7</color><width>1.5</width></LineStyle><PolyStyle><color>4038bdf8</color><fill>1</fill></PolyStyle></Style>
+    <Style id="color_verde"><LineStyle><color>ff10b981</color><width>6</width></LineStyle></Style>
+    <Style id="color_amarillo"><LineStyle><color>fff59e0b</color><width>6</width></LineStyle></Style>
+    <Style id="color_naranja"><LineStyle><color>fff97316</color><width>6</width></LineStyle></Style>
+    <Style id="color_rojo"><LineStyle><color>ffef4444</color><width>7</width></LineStyle></Style>
 
-    <!-- Límite Oficial Parroquial -->
+    <!-- Borde Oficial de la Parroquia -->
     <Placemark>
       <name>LÍMITE OFICIAL: ${parish.nombre}</name>
-      <Style><LineStyle><color>ffffffff</color><width>3.5</width></LineStyle><PolyStyle><color>00ffffff</color><fill>0</fill></PolyStyle></Style>
+      <Style><LineStyle><color>ffffffff</color><width>3</width></LineStyle><PolyStyle><color>00ffffff</color><fill>0</fill></PolyStyle></Style>
       <Polygon><outerBoundaryIs><LinearRing><coordinates>${parish.limite.map(([lat, lng]) => `${lng},${lat},0`).join(" ")}</coordinates></LinearRing></outerBoundaryIs></Polygon>
     </Placemark>
 
     <Folder>
-      <name>Cuadrantes y Polígonos de Trabajo</name>
+      <name>Calles y Tramos Mapeados</name>
 `;
 
-    poligonos.forEach(poly => {
-      let st = "#st_disponible";
-      if (poly.estado === "cubierto") st = "#st_verde";
-      else if (poly.estado === "en_despliegue") st = "#st_amarillo";
-      else if (poly.estado === "alerta") st = "#st_rojo";
-
-      const coordsStr = poly.vertices.map(([lat, lng]) => `${lng},${lat},0`).join(" ");
+    lines.forEach(l => {
+      const styleId = `#color_${l.color || "amarillo"}`;
+      const coordsStr = l.puntos.map(([lat, lng]) => `${lng},${lat},0`).join(" ");
 
       kml += `
       <Placemark>
-        <name>${poly.id} — ${poly.sector || parish.nombre}</name>
+        <name>${l.nombre}</name>
         <description><![CDATA[
-          <h3>${poly.id}</h3>
-          <p><strong>Parroquia:</strong> ${parish.nombre}</p>
-          <p><strong>Estado:</strong> ${(poly.estado || 'Disponible').toUpperCase()}</p>
-          <p><strong>Responsable:</strong> ${poly.responsable || 'Pendiente'}</p>
-          <p><strong>Contacto:</strong> ${poly.telefono || 'N/A'}</p>
-          <p><strong>Superficie:</strong> ${poly.areaHa || 0} Ha</p>
+          <h3>${l.nombre}</h3>
+          <p><strong>Longitud:</strong> ${l.longitudM} metros</p>
+          <p><strong>Estado:</strong> ${l.color.toUpperCase()}</p>
+          <p><strong>Detalle:</strong> ${l.detalle || "Sin observaciones"}</p>
         ]]></description>
-        <styleUrl>${st}</styleUrl>
-        <Polygon><outerBoundaryIs><LinearRing><coordinates>${coordsStr}</coordinates></LinearRing></outerBoundaryIs></Polygon>
+        <styleUrl>${styleId}</styleUrl>
+        <LineString><coordinates>${coordsStr}</coordinates></LineString>
       </Placemark>`;
     });
 
