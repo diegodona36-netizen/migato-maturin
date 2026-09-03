@@ -41,9 +41,7 @@ export class ToolsManager {
     // Actualizar botones de toolbar
     document.querySelectorAll(".btn-earth-tool").forEach(btn => {
       const isCurrent = btn.dataset.tool === toolName;
-      btn.classList.toggle("bg-sky-600", isCurrent);
-      btn.classList.toggle("text-white", isCurrent);
-      btn.classList.toggle("shadow-inner", isCurrent);
+      btn.classList.toggle("active-tool", isCurrent);
     });
 
     const banner = document.getElementById("earth-drawing-banner");
@@ -78,7 +76,7 @@ export class ToolsManager {
     this.previewShape = null;
 
     document.querySelectorAll(".btn-earth-tool").forEach(btn => {
-      btn.classList.remove("bg-sky-600", "text-white", "shadow-inner");
+      btn.classList.remove("active-tool");
     });
 
     const banner = document.getElementById("earth-drawing-banner");
