@@ -176,6 +176,11 @@ class AtlasMonagasApp {
     this.mapEngine.renderLines(this.parishLines);
     this.updateParishStats();
     this.renderParishSidebarList();
+
+    const elBadge = document.getElementById("mobile-badge-count");
+    const elQuick = document.getElementById("quick-count");
+    if (elBadge) elBadge.textContent = this.parishLines.length;
+    if (elQuick) elQuick.textContent = this.parishLines.length;
   }
 
   updateParishStats() {
@@ -451,32 +456,21 @@ class AtlasMonagasApp {
   }
 
   setDrawingUiState(isDrawing) {
-    const btnActivar = document.getElementById("btn-draw-street");
-    const btnFinalizar = document.getElementById("btn-finish-street");
-    const btnCancelar = document.getElementById("btn-cancel-street");
-    const btnDeshacer = document.getElementById("btn-undo-point");
-    const banner = document.getElementById("banner-drawing-live");
+    const barIdle = document.getElementById("bar-idle-controls");
+    const barDrawing = document.getElementById("bar-drawing-controls");
 
     if (isDrawing) {
-      btnActivar.classList.add("hidden");
-      btnFinalizar.classList.remove("hidden");
-      btnFinalizar.classList.add("flex");
-      btnCancelar.classList.remove("hidden");
-      btnCancelar.classList.add("flex");
-      btnDeshacer.classList.remove("hidden");
-      btnDeshacer.classList.add("flex");
-      banner.classList.remove("hidden");
-      banner.classList.add("flex");
+      if (barIdle) barIdle.classList.add("hidden");
+      if (barDrawing) {
+        barDrawing.classList.remove("hidden");
+        barDrawing.classList.add("flex");
+      }
     } else {
-      btnActivar.classList.remove("hidden");
-      btnFinalizar.classList.add("hidden");
-      btnFinalizar.classList.remove("flex");
-      btnCancelar.classList.add("hidden");
-      btnCancelar.classList.remove("flex");
-      btnDeshacer.classList.add("hidden");
-      btnDeshacer.classList.remove("flex");
-      banner.classList.add("hidden");
-      banner.classList.remove("flex");
+      if (barIdle) barIdle.classList.remove("hidden");
+      if (barDrawing) {
+        barDrawing.classList.add("hidden");
+        barDrawing.classList.remove("flex");
+      }
     }
   }
 
@@ -525,6 +519,33 @@ class AtlasMonagasApp {
   }
 
   setupEventListeners() {
+    // GPS Móvil
+    const btnGps = document.getElementById("btn-gps-locate");
+    if (btnGps) {
+      btnGps.addEventListener("click", () => {
+        if (this.mapEngine) {
+          this.mapEngine.locateUser();
+        }
+      });
+    }
+
+    // Toggle Sidebar Móvil
+    const sidebar = document.getElementById("sidebar-parroquia");
+    const btnToggleSide = document.getElementById("btn-toggle-mobile-sidebar");
+    const btnCloseSide = document.getElementById("btn-close-mobile-sidebar");
+    const btnQuickList = document.getElementById("btn-quick-list");
+
+    const toggleSidebar = () => {
+      if (sidebar) {
+        sidebar.classList.toggle("hidden");
+        sidebar.classList.toggle("flex");
+      }
+    };
+
+    if (btnToggleSide) btnToggleSide.addEventListener("click", toggleSidebar);
+    if (btnCloseSide) btnCloseSide.addEventListener("click", toggleSidebar);
+    if (btnQuickList) btnQuickList.addEventListener("click", toggleSidebar);
+
     // 1. Buscador Portal
     const searchInput = document.getElementById("input-search-territorio");
     if (searchInput) {
