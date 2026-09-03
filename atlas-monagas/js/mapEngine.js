@@ -1,26 +1,30 @@
 /**
- * Motor Cartográfico y Generador de Cuadrantes — Atlas Monagas
+ * Motor Cartográfico Especializado en LÍNEAS y TRAMOS VIALES — Atlas Monagas
+ * Cero polígonos internos. Renderizado en HTML5 Canvas GPU.
  */
 
 export class AtlasMapEngine {
-  constructor(containerId, onSelectPolygonCallback) {
+  constructor(containerId, onFinishDrawingCallback, onSelectLineCallback) {
     this.containerId = containerId;
-    this.onSelectPolygonCallback = onSelectPolygonCallback;
+    this.onFinishDrawingCallback = onFinishDrawingCallback;
+    this.onSelectLineCallback = onSelectLineCallback;
 
     this.map = null;
     this.canvasRenderer = null;
     this.boundaryLayer = null;
-    this.polygonLayer = null;
-    this.customDrawLayer = null;
+    this.linesLayerGroup = null;
+    this.drawingLayerGroup = null;
 
-    this.currentParish = null;
-    this.poligonos = [];
+    this.isDrawingMode = false;
+    this.currentDrawingPoints = [];
+    this.drawingLine = null;
+    this.drawingMarkers = [];
 
     this.init();
   }
 
   init() {
-    this.canvasRenderer = L.canvas({ padding: 0.5, tolerance: 12 });
+    this.canvasRenderer = L.canvas({ padding: 0.5, tolerance: 14 });
 
     const googleHybrid = L.tileLayer(
       "https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}",
@@ -51,167 +55,220 @@ export class AtlasMapEngine {
 
     L.control.zoom({ position: "topright" }).addTo(this.map);
     L.control.layers(
-      { "Satélite Google": googleHybrid, "Satélite Esri": esriSatellite, "Calles OSM": osmStreets },
+      { "Satélite Google (Nitidez)": googleHybrid, "Satélite Esri": esriSatellite, "Calles OSM": osmStreets },
       null,
       { position: "topright" }
     ).addTo(this.map);
 
     this.boundaryLayer = L.layerGroup().addTo(this.map);
-    this.polygonLayer = L.layerGroup().addTo(this.map);
-    this.customDrawLayer = L.layerGroup().addTo(this.map);
+    this.linesLayerGroup = L.layerGroup().addTo(this.map);
+    this.drawingLayerGroup = L.layerGroup().addTo(this.map);
+
+    this.map.on("click", (e) => this.handleMapClick(e));
   }
 
-  loadParish(parish, savedPolygons = []) {
-    this.currentParish = parish;
-    this.poligonos = [...savedPolygons];
-
-    // 1. Dibujar Límite Oficial Parroquial
+  loadParish(parish, savedLines = []) {
+    // 1. Mostrar únicamente el borde perimetral sutil de la parroquia
     this.boundaryLayer.clearLayers();
     const boundaryPoly = L.polygon(parish.limite, {
       color: "#ffffff",
-      weight: 3.5,
-      opacity: 0.95,
-      fillColor: "#38bdf8",
-      fillOpacity: 0.05,
+      weight: 3,
+      opacity: 0.85,
+      fill: false,
       dashArray: "8, 6",
       renderer: this.canvasRenderer
     });
     this.boundaryLayer.addLayer(boundaryPoly);
 
-    // Centrar mapa
     this.map.flyToBounds(boundaryPoly.getBounds(), { padding: [40, 40], duration: 1.0 });
 
-    // Si ya hay polígonos guardados, renderizarlos; si no, generar cuadrícula automática inicial
-    if (this.poligonos.length > 0) {
-      this.renderPolygons();
-    } else {
-      this.generateAutomaticGrid(600); // 600m estándar
+    // 2. Renderizar únicamente las LÍNEAS de calles
+    this.renderLines(savedLines);
+  }
+
+  startDrawing(startPoint = null) {
+    this.isDrawingMode = true;
+    this.currentDrawingPoints = [];
+    this.drawingMarkers = [];
+    this.drawingLayerGroup.clearLayers();
+    this.drawingLine = null;
+    this.map.getContainer().style.cursor = "crosshair";
+
+    if (startPoint && Array.isArray(startPoint)) {
+      this.addDrawingPoint(startPoint, true);
     }
   }
 
-  generateAutomaticGrid(radiusM = 600) {
-    if (!this.currentParish) return;
+  cancelDrawing() {
+    this.isDrawingMode = false;
+    this.currentDrawingPoints = [];
+    this.drawingMarkers = [];
+    this.drawingLayerGroup.clearLayers();
+    this.drawingLine = null;
+    this.map.getContainer().style.cursor = "";
+  }
 
-    const bounds = this.getBounds(this.currentParish.limite);
-    const centerLat = (bounds.minLat + bounds.maxLat) / 2;
+  undoLastPoint() {
+    if (this.currentDrawingPoints.length === 0) return;
 
-    const latMeters = 111320;
-    const lngMeters = 111320 * Math.cos((centerLat * Math.PI) / 180);
+    this.currentDrawingPoints.pop();
+    const lastMarker = this.drawingMarkers.pop();
+    if (lastMarker) {
+      this.drawingLayerGroup.removeLayer(lastMarker);
+    }
 
-    const dx = (Math.sqrt(3) * radiusM) / lngMeters;
-    const dy = (1.5 * radiusM) / latMeters;
-
-    this.poligonos = [];
-    let counter = 1;
-    let row = 0;
-
-    for (let lat = bounds.minLat - 0.003; lat <= bounds.maxLat + 0.003; lat += dy) {
-      const offsetLng = (row % 2 === 1) ? (dx / 2) : 0;
-      for (let lng = bounds.minLng - 0.003 + offsetLng; lng <= bounds.maxLng + 0.003 + offsetLng; lng += dx) {
-        const center = [lat, lng];
-        const vertices = this.getHexVertices(lat, lng, radiusM);
-
-        if (this.isPointInPoly(center, this.currentParish.limite)) {
-          const areaHa = Math.round((Math.PI * Math.pow(radiusM, 2) * 0.82699) / 10000 * 10) / 10;
-          this.poligonos.push({
-            id: `${this.currentParish.codigo}-C${String(counter).padStart(2, "0")}`,
-            center: center,
-            vertices: vertices,
-            areaHa: areaHa,
-            estado: "disponible", // disponible, en_despliegue, cubierto, alerta
-            responsable: "",
-            telefono: "",
-            sector: "",
-            observaciones: ""
-          });
-          counter++;
-        }
+    if (this.drawingLine) {
+      if (this.currentDrawingPoints.length > 0) {
+        this.drawingLine.setLatLngs(this.currentDrawingPoints);
+      } else {
+        this.drawingLayerGroup.removeLayer(this.drawingLine);
+        this.drawingLine = null;
       }
-      row++;
     }
 
-    this.renderPolygons();
+    const liveCounter = document.getElementById("live-drawing-meters");
+    if (liveCounter) {
+      const len = this.calculateLengthMeters(this.currentDrawingPoints);
+      liveCounter.textContent = `${len} m`;
+    }
   }
 
-  renderPolygons() {
-    this.polygonLayer.clearLayers();
+  finishDrawing() {
+    if (this.currentDrawingPoints.length < 2) {
+      alert("Debes marcar al menos dos puntos sobre la calle para trazar la línea.");
+      return null;
+    }
+
+    const points = [...this.currentDrawingPoints];
+    const longitudM = this.calculateLengthMeters(points);
+
+    this.isDrawingMode = false;
+    this.map.getContainer().style.cursor = "";
+    this.drawingLayerGroup.clearLayers();
+    this.drawingLine = null;
+
+    if (this.onFinishDrawingCallback) {
+      this.onFinishDrawingCallback(points, longitudM);
+    }
+    return { points, longitudM };
+  }
+
+  handleMapClick(e) {
+    if (!this.isDrawingMode) return;
+    this.addDrawingPoint([e.latlng.lat, e.latlng.lng]);
+  }
+
+  addDrawingPoint(latlng, isAnchor = false) {
+    this.currentDrawingPoints.push(latlng);
+
+    const marker = L.circleMarker(latlng, {
+      radius: isAnchor ? 6 : 4,
+      fillColor: isAnchor ? "#10b981" : "#f59e0b",
+      color: "#ffffff",
+      weight: 1.5,
+      fillOpacity: 1,
+      renderer: this.canvasRenderer
+    });
+
+    this.drawingLayerGroup.addLayer(marker);
+    this.drawingMarkers.push(marker);
+
+    if (this.drawingLine) {
+      this.drawingLine.setLatLngs(this.currentDrawingPoints);
+    } else if (this.currentDrawingPoints.length > 1) {
+      this.drawingLine = L.polyline(this.currentDrawingPoints, {
+        color: "#f59e0b",
+        weight: 6,
+        opacity: 0.95,
+        lineCap: "round",
+        lineJoin: "round",
+        dashArray: "6, 8",
+        renderer: this.canvasRenderer
+      });
+      this.drawingLayerGroup.addLayer(this.drawingLine);
+    }
+
+    const liveCounter = document.getElementById("live-drawing-meters");
+    if (liveCounter) {
+      const len = this.calculateLengthMeters(this.currentDrawingPoints);
+      liveCounter.textContent = `${len} m`;
+    }
+  }
+
+  calculateLengthMeters(points) {
+    let total = 0;
+    for (let i = 0; i < points.length - 1; i++) {
+      const p1 = L.latLng(points[i][0], points[i][1]);
+      const p2 = L.latLng(points[i + 1][0], points[i + 1][1]);
+      total += p1.distanceTo(p2);
+    }
+    return Math.round(total);
+  }
+
+  renderLines(lines) {
+    this.linesLayerGroup.clearLayers();
 
     const colorMap = {
-      cubierto: { fill: "#10b981", stroke: "#047857", opacity: 0.55 },
-      en_despliegue: { fill: "#f59e0b", stroke: "#b45309", opacity: 0.5 },
-      alerta: { fill: "#ef4444", stroke: "#b91c1c", opacity: 0.6 },
-      disponible: { fill: "#0284c7", stroke: "#38bdf8", opacity: 0.2 }
+      verde: "#10b981",
+      amarillo: "#f59e0b",
+      naranja: "#f97316",
+      rojo: "#ef4444"
     };
 
-    this.poligonos.forEach(poly => {
-      const cfg = colorMap[poly.estado] || colorMap.disponible;
+    lines.forEach(lineData => {
+      const color = colorMap[lineData.color] || "#64748b";
 
-      const pLayer = L.polygon(poly.vertices, {
-        color: cfg.stroke,
-        weight: 1.5,
-        fillColor: cfg.fill,
-        fillOpacity: cfg.opacity,
+      // Casing oscuro para que resalte sobre el satélite
+      const casing = L.polyline(lineData.puntos, {
+        color: "#090d16",
+        weight: 9,
+        opacity: 0.8,
+        lineCap: "round",
+        lineJoin: "round",
         renderer: this.canvasRenderer
       });
 
-      const estadoLabel = poly.estado === "cubierto" ? "🟢 CUBIERTO" :
-        (poly.estado === "en_despliegue" ? "🟡 EN DESPLIEGUE" :
-        (poly.estado === "alerta" ? "🔴 ALERTA / SIN CONTACTO" : "⚪ DISPONIBLE"));
-
-      pLayer.bindTooltip(`
-        <div class="p-1 text-xs font-mono">
-          <strong class="text-white block font-bold">${poly.id}</strong>
-          <span class="text-[10px] text-slate-300 font-normal">${poly.areaHa} Ha • ${poly.responsable || "Sin asignar"}</span>
-          <div class="text-[10px] font-bold mt-0.5">${estadoLabel}</div>
-        </div>
-      `, { sticky: true, className: "atlas-tooltip" });
-
-      pLayer.on("click", (e) => {
-        L.DomEvent.stopPropagation(e);
-        if (this.onSelectPolygonCallback) {
-          this.onSelectPolygonCallback(poly);
-        }
+      // Línea principal coloreada
+      const line = L.polyline(lineData.puntos, {
+        color: color,
+        weight: 6,
+        opacity: 1,
+        lineCap: "round",
+        lineJoin: "round",
+        renderer: this.canvasRenderer
       });
 
-      this.polygonLayer.addLayer(pLayer);
+      const tooltipContent = `
+        <div class="p-1 text-xs">
+          <strong class="text-white block font-bold">${lineData.nombre}</strong>
+          <span class="text-[10px] font-mono text-slate-300">${lineData.longitudM} metros</span>
+          <span class="block text-[10px] font-bold mt-0.5" style="color: ${color}">● ${lineData.color.toUpperCase()}</span>
+          ${lineData.detalle ? `<p class="text-[10px] text-slate-400 mt-0.5 italic">${lineData.detalle}</p>` : ''}
+        </div>
+      `;
+
+      line.bindTooltip(tooltipContent, { sticky: true, className: "atlas-tooltip" });
+
+      const handleClick = (e) => {
+        L.DomEvent.stopPropagation(e);
+        if (this.onSelectLineCallback) {
+          this.onSelectLineCallback(lineData);
+        }
+      };
+
+      casing.on("click", handleClick);
+      line.on("click", handleClick);
+
+      const group = L.featureGroup([casing, line]);
+      this.linesLayerGroup.addLayer(group);
     });
   }
 
-  getHexVertices(lat, lng, radiusM) {
-    const latMeters = 111320;
-    const lngMeters = 111320 * Math.cos((lat * Math.PI) / 180);
-    const vertices = [];
-
-    for (let i = 0; i < 6; i++) {
-      const angle = (60 * i + 30) * Math.PI / 180;
-      const dLat = (radiusM * Math.sin(angle)) / latMeters;
-      const dLng = (radiusM * Math.cos(angle)) / lngMeters;
-      vertices.push([lat + dLat, lng + dLng]);
-    }
-    vertices.push(vertices[0]);
-    return vertices;
+  focusOn(lat, lng) {
+    this.map.setView([lat, lng], 17, { animate: true });
   }
 
-  isPointInPoly(pt, poly) {
-    const x = pt[1], y = pt[0];
-    let inside = false;
-    for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) {
-      const xi = poly[i][1], yi = poly[i][0];
-      const xj = poly[j][1], yj = poly[j][0];
-      const intersect = ((yi > y) !== (yj > y)) && (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
-      if (intersect) inside = !inside;
-    }
-    return inside;
-  }
-
-  getBounds(poly) {
-    let minLat = 90, maxLat = -90, minLng = 180, maxLng = -180;
-    poly.forEach(([lat, lng]) => {
-      if (lat < minLat) minLat = lat;
-      if (lat > maxLat) maxLat = lat;
-      if (lng < minLng) minLng = lng;
-      if (lng > maxLng) maxLng = lng;
-    });
-    return { minLat, minLng, maxLat, maxLng };
+  fitBounds(bounds) {
+    this.map.fitBounds(bounds, { padding: [50, 50], duration: 1.0 });
   }
 }
