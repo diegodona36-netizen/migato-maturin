@@ -1,4 +1,4 @@
-/* Estilos Oficiales para Google Earth Pro Web — Edición Monagas */
+/* Estilos Oficiales para Google Earth Pro Web — Edición Monagas (Mobile & Desktop) */
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap");
 
 body {
@@ -34,6 +34,12 @@ body {
   padding: 6px 10px !important;
 }
 
+/* Vértices interactivos arrastrables */
+.earth-vertex-marker-wrapper {
+  background: transparent;
+  border: none;
+}
+
 /* Google Earth Status Bar */
 .earth-status-bar {
   background: #090d16;
@@ -44,8 +50,8 @@ body {
 
 /* Custom Scrollbars */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
 }
 ::-webkit-scrollbar-track {
   background: #090d16;
@@ -58,14 +64,14 @@ body {
   background: #475569;
 }
 
-/* Leaflet Control Overrides */
+/* Leaflet Control Overrides para evitar colisiones */
 .leaflet-top.leaflet-right {
   top: 10px;
   right: 10px;
 }
 
 .leaflet-control-layers {
-  background: rgba(15, 23, 42, 0.9) !important;
+  background: rgba(15, 23, 42, 0.92) !important;
   backdrop-filter: blur(8px) !important;
   border: 1px solid #334155 !important;
   border-radius: 12px !important;
@@ -75,4 +81,12 @@ body {
 
 .leaflet-control-attribution {
   display: none !important;
+}
+
+/* Safe areas para celulares con notch / barra inferior */
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  .earth-status-bar {
+    padding-bottom: env(safe-area-inset-bottom);
+    height: calc(1.75rem + env(safe-area-inset-bottom));
+  }
 }
