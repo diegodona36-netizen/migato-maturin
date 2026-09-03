@@ -16,7 +16,7 @@
   <script src="https://unpkg.com/lucide@latest"></script>
 
   <!-- Custom Styles -->
-  <link rel="stylesheet" href="css/styles.css?v=4">
+  <link rel="stylesheet" href="css/styles.css?v=5">
 </head>
 <body class="bg-slate-950 text-slate-100 h-screen flex flex-col antialiased select-none overflow-hidden max-w-full">
 
@@ -46,7 +46,7 @@
       </div>
 
       <!-- Selector de Parroquia Activa (Botón Destacado) -->
-      <button id="btn-open-parish-modal" class="px-2.5 py-1 rounded-xl bg-slate-950/80 hover:bg-slate-800 border border-sky-500/40 text-sky-300 text-xs font-bold flex items-center gap-1.5 active:scale-95 transition shadow-sm max-w-[200px] sm:max-w-none truncate" title="Cambiar Municipio o Parroquia">
+      <button id="btn-open-parish-modal" class="px-2.5 py-1 rounded-xl bg-slate-950/80 hover:bg-slate-800 border border-sky-500/40 text-sky-300 text-xs font-bold flex items-center gap-1.5 active:scale-95 transition shadow-sm max-w-[220px] sm:max-w-none truncate" title="Cambiar Municipio o Parroquia">
         <i data-lucide="map-pin" class="w-3.5 h-3.5 text-amber-400 shrink-0"></i>
         <span id="nav-current-location" class="truncate text-xs">Cargando territorio...</span>
         <i data-lucide="chevron-down" class="w-3 h-3 text-slate-400 shrink-0"></i>
@@ -97,8 +97,9 @@
       </button>
 
       <!-- 🧭 Brújula Norte -->
-      <button id="btn-compass-north" class="p-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-sky-400 border border-slate-700 transition flex items-center justify-center shrink-0 active:scale-95 shadow-sm" title="Restablecer vista Norte">
+      <button id="btn-compass-north" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-sky-400 border border-slate-700 text-xs font-bold transition flex items-center gap-1.5 shrink-0 active:scale-95 shadow-sm" title="Restablecer vista Norte">
         <i data-lucide="compass" class="w-4 h-4"></i>
+        <span>Norte</span>
       </button>
 
     </div>
@@ -156,35 +157,36 @@
     <main class="flex-1 h-full relative overflow-hidden">
       <div id="earth-canvas"></div>
 
-      <!-- BANNER FLOTANTE ERGONÓMICO DURANTE EL DIBUJO (TOP EN PC // BOTTOM EN MÓVIL) -->
-      <div id="earth-drawing-banner" style="z-index: 1800;" class="hidden absolute bottom-6 sm:bottom-auto sm:top-4 inset-x-3 sm:inset-x-auto sm:left-1/2 sm:-translate-x-1/2 bg-slate-900/95 backdrop-blur border-2 border-sky-500 p-2.5 rounded-2xl shadow-2xl flex-col sm:flex-row items-center gap-2 sm:gap-3 max-w-lg">
+      <!-- BANNER FLOTANTE DE DIBUJO PROFESIONAL (ESTILO GOOGLE EARTH PRO) -->
+      <div id="earth-drawing-banner" style="z-index: 1800;" class="hidden absolute bottom-6 sm:bottom-auto sm:top-4 inset-x-3 sm:inset-x-auto sm:left-1/2 sm:-translate-x-1/2 bg-slate-900/98 backdrop-blur-md border border-sky-500/80 p-2 sm:px-4 sm:py-2.5 rounded-2xl shadow-2xl flex flex-col sm:flex-row items-center gap-2.5 sm:gap-4 max-w-2xl">
         
-        <div class="flex items-center justify-between w-full sm:w-auto gap-2 text-xs">
-          <div class="flex items-center gap-1.5 truncate">
-            <span class="w-2 h-2 rounded-full bg-sky-400 animate-ping shrink-0"></span>
-            <span id="earth-drawing-banner-text" class="text-white font-bold text-xs truncate">Toca el mapa para marcar esquinas</span>
+        <!-- Indicador de Estado y Medidas (SIN TRUNCAR) -->
+        <div class="flex items-center justify-between sm:justify-start w-full sm:w-auto gap-2.5 text-xs shrink-0">
+          <div class="flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-sky-400 shadow-[0_0_8px_rgba(56,189,248,0.8)]"></span>
+            <span id="earth-drawing-banner-text" class="text-white font-bold text-xs whitespace-nowrap">Trazando Polígono: Haz clics en el mapa</span>
           </div>
-          <span id="earth-live-measure" class="font-mono bg-slate-950 text-amber-400 px-2 py-0.5 rounded border border-slate-800 font-black text-xs shrink-0">0 puntos</span>
+          <span id="earth-live-measure" class="font-mono bg-slate-950 text-amber-400 px-2.5 py-1 rounded-lg border border-slate-800 font-black text-xs whitespace-nowrap">0 puntos</span>
         </div>
 
-        <!-- Botonera con DESHACER PUNTO -->
-        <div class="flex items-center justify-end w-full sm:w-auto gap-1.5">
-          
-          <!-- ↩ Botón Deshacer Punto -->
-          <button id="btn-banner-undo" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-300 border border-slate-700 font-bold text-xs flex items-center gap-1 active:scale-95 shadow transition" title="Borrar último punto (Ctrl+Z)">
+        <!-- Botonera de Acciones Claras -->
+        <div class="flex items-center justify-end w-full sm:w-auto gap-2 shrink-0">
+          <!-- Deshacer -->
+          <button id="btn-banner-undo" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-300 border border-slate-700 font-bold text-xs flex items-center gap-1.5 active:scale-95 shadow transition" title="Borrar último punto (Ctrl+Z)">
             <i data-lucide="undo" class="w-3.5 h-3.5"></i>
             <span>Deshacer</span>
           </button>
 
-          <!-- ✔️ Listo: Propiedades -->
-          <button id="btn-banner-finish" class="px-3.5 py-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs shadow flex items-center gap-1 active:scale-95 transition">
+          <!-- Listo: Guardar -->
+          <button id="btn-banner-finish" class="px-3.5 py-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs shadow flex items-center gap-1.5 active:scale-95 transition" title="Finalizar trazado">
             <i data-lucide="check" class="w-4 h-4"></i>
             <span>Listo</span>
           </button>
 
-          <!-- ❌ Cancelar -->
-          <button id="btn-banner-cancel" class="px-2.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-400 font-bold text-xs flex items-center gap-1 active:scale-95 transition">
-            <i data-lucide="x" class="w-3.5 h-3.5"></i>
+          <!-- Cancelar -->
+          <button id="btn-banner-cancel" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 font-bold text-xs flex items-center gap-1.5 active:scale-95 transition" title="Cancelar trazado">
+            <i data-lucide="x" class="w-3.5 h-3.5 text-red-400"></i>
+            <span>Cancelar</span>
           </button>
         </div>
 
@@ -399,6 +401,6 @@
   </div>
 
   <!-- SCRIPT -->
-  <script type="module" src="js/app.js?v=4"></script>
+  <script type="module" src="js/app.js?v=5"></script>
 </body>
 </html>
