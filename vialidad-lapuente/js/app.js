@@ -1,5 +1,5 @@
 /**
- * Controlador Principal — Trazador de Calles y Diagnóstico Vial La Puente
+ * Controlador Principal — Trazado Tramo a Tramo Continuo y División de Tramos
  */
 import { RoadMapViewer } from "./mapViewer.js";
 import { RoadStorageService } from "./storage.js";
@@ -11,12 +11,12 @@ class TrazadorVialApp {
     this.tramos = this.loadTramos();
     this.mapViewer = null;
 
-    // Estado temporal de trazado
     this.tempPoints = null;
     this.tempLongitudM = 0;
     this.tempFoto = null;
-    this.selectedColor = "amarillo"; // default
+    this.selectedColor = "amarillo";
     this.editingTramoId = null;
+    this.nextStartAnchor = null;
 
     this.init();
   }
@@ -39,17 +39,13 @@ class TrazadorVialApp {
   }
 
   init() {
-    // 1. Inicializar Mapa con Callbacks
     this.mapViewer = new RoadMapViewer(
       "map-vialidad",
       (points, longitudM) => this.onFinishDrawing(points, longitudM),
       (tramo) => this.openEditModal(tramo)
     );
 
-    // 2. Renderizar Calles Existentes
     this.refreshView();
-
-    // 3. Configurar Botones y Eventos
     this.setupEventListeners();
 
     if (window.lucide) {
@@ -83,14 +79,13 @@ class TrazadorVialApp {
     const longitudEl = document.getElementById("txt-longitud-total");
     const danadaEl = document.getElementById("txt-danada-pct");
 
-    if (contadorEl) contadorEl.textContent = `${total} calle(s) trazada(s)`;
-    if (longitudEl) longitudEl.textContent = `${totalMetros} metros trazados`;
+    if (contadorEl) contadorEl.textContent = `${total} tramo(s)`;
+    if (longitudEl) longitudEl.textContent = `${totalMetros} m trazados`;
 
     const metrosDanados = criticoM + maloM;
     const pctDanada = totalMetros > 0 ? Math.round((metrosDanados / totalMetros) * 100) : 0;
     if (danadaEl) danadaEl.textContent = `${pctDanada}% en mal estado`;
 
-    // Barras de progreso
     const barRojo = document.getElementById("bar-rojo");
     const barNaranja = document.getElementById("bar-naranja");
     const barAmarillo = document.getElementById("bar-amarillo");
@@ -110,8 +105,8 @@ class TrazadorVialApp {
       container.innerHTML = `
         <div class="p-6 text-center border border-dashed border-slate-800 rounded-2xl text-slate-500 space-y-2">
           <i data-lucide="edit-3" class="w-8 h-8 mx-auto text-slate-600"></i>
-          <p class="text-xs font-bold text-slate-400">Aún no has trazado calles en La Puente.</p>
-          <p class="text-[10px]">Toca "+ Trazar Nueva Calle" arriba para empezar a subrayar tus calles en el mapa.</p>
+          <p class="text-xs font-bold text-slate-400">Aún no has trazado tramos en La Puente.</p>
+          <p class="text-[10px]">Toca "+ Trazar Nuevo Tramo" para empezar cuadra por cuadra.</p>
         </div>
       `;
       if (window.lucide) { try { window.lucide.createIcons(); } catch(e){} }
@@ -164,18 +159,19 @@ class TrazadorVialApp {
     this.tempLongitudM = longitudM;
     this.editingTramoId = null;
     this.tempFoto = null;
-    this.selectedColor = "amarillo";
+    this.selectedColor = "verde";
 
-    // Ocultar botones de trazado
     this.setDrawingUiState(false);
 
-    // Abrir Modal
     const modal = document.getElementById("modal-asignar-tramo");
     document.getElementById("modal-tramo-longitud").textContent = `${longitudM} metros`;
-    document.getElementById("input-tramo-nombre").value = `Calle La Puente ${this.tramos.length + 1}`;
+    document.getElementById("input-tramo-nombre").value = `Tramo ${this.tramos.length + 1}`;
     document.getElementById("input-tramo-detalle").value = "";
 
-    this.selectColorButton("amarillo");
+    // Ocultar botón dividir en nuevo tramo
+    document.getElementById("box-dividir-tramo").classList.add("hidden");
+
+    this.selectColorButton("verde");
     this.resetPhotoPreview();
 
     if (modal) {
@@ -195,6 +191,14 @@ class TrazadorVialApp {
     document.getElementById("modal-tramo-longitud").textContent = `${tramo.longitudM} metros`;
     document.getElementById("input-tramo-nombre").value = tramo.nombre;
     document.getElementById("input-tramo-detalle").value = tramo.detalle || "";
+
+    // Mostrar botón dividir si el tramo tiene más de 50 metros o más de 2 puntos
+    const boxDividir = document.getElementById("box-dividir-tramo");
+    if (tramo.puntos && tramo.puntos.length >= 2) {
+      boxDividir.classList.remove("hidden");
+    } else {
+      boxDividir.classList.add("hidden");
+    }
 
     this.selectColorButton(this.selectedColor);
 
@@ -238,17 +242,64 @@ class TrazadorVialApp {
   }
 
   deleteTramo(tramoId) {
-    if (confirm("¿Deseas eliminar este tramo trazado?")) {
+    if (confirm("¿Deseas eliminar este tramo?")) {
       this.tramos = this.tramos.filter(t => t.id !== tramoId);
       this.saveTramos();
       this.refreshView();
     }
   }
 
+  splitCurrentTramo() {
+    if (!this.editingTramoId) return;
+    const tramo = this.tramos.find(t => t.id === this.editingTramoId);
+    if (!tramo || !tramo.puntos || tramo.puntos.length < 2) return;
+
+    const midIndex = Math.floor(tramo.puntos.length / 2);
+    // Si solo tiene 2 puntos, interpolamos un punto intermedio
+    let puntosA, puntosB;
+    if (tramo.puntos.length === 2) {
+      const pMid = [
+        (tramo.puntos[0][0] + tramo.puntos[1][0]) / 2,
+        (tramo.puntos[0][1] + tramo.puntos[1][1]) / 2
+      ];
+      puntosA = [tramo.puntos[0], pMid];
+      puntosB = [pMid, tramo.puntos[1]];
+    } else {
+      puntosA = tramo.puntos.slice(0, midIndex + 1);
+      puntosB = tramo.puntos.slice(midIndex);
+    }
+
+    const lenA = this.mapViewer.calculateLengthMeters(puntosA);
+    const lenB = this.mapViewer.calculateLengthMeters(puntosB);
+
+    // Reemplazar el tramo original por Tramo A y agregar Tramo B
+    tramo.nombre = `${tramo.nombre} (Parte A)`;
+    tramo.puntos = puntosA;
+    tramo.longitudM = lenA;
+
+    const tramoB = {
+      id: `PUENTE-${Date.now()}`,
+      nombre: `${tramo.nombre.replace(' (Parte A)', '')} (Parte B)`,
+      color: "rojo", // Sugerido en rojo para diferenciarlo de inmediato
+      longitudM: lenB,
+      puntos: puntosB,
+      detalle: "Sección dividida para asignar color independiente",
+      foto: null,
+      fecha: new Date().toISOString()
+    };
+
+    this.tramos.push(tramoB);
+    this.saveTramos();
+    this.closeModal();
+    this.refreshView();
+    alert(`¡Tramo dividido con éxito!\nAhora tienes:\n- ${tramo.nombre} (${lenA}m)\n- ${tramoB.nombre} (${lenB}m en Rojo)\nPuedes tocar cualquiera de los dos para cambiarle el color.`);
+  }
+
   setDrawingUiState(isDrawing) {
     const btnActivar = document.getElementById("btn-activar-trazo");
     const btnFinalizar = document.getElementById("btn-finalizar-trazo");
     const btnCancelar = document.getElementById("btn-cancelar-trazo");
+    const btnDeshacer = document.getElementById("btn-deshacer-punto");
     const banner = document.getElementById("banner-trazando");
 
     if (isDrawing) {
@@ -257,15 +308,54 @@ class TrazadorVialApp {
       btnFinalizar.classList.add("flex");
       btnCancelar.classList.remove("hidden");
       btnCancelar.classList.add("flex");
+      btnDeshacer.classList.remove("hidden");
+      btnDeshacer.classList.add("flex");
       banner.classList.remove("hidden");
+      banner.classList.add("flex");
     } else {
       btnActivar.classList.remove("hidden");
       btnFinalizar.classList.add("hidden");
       btnFinalizar.classList.remove("flex");
       btnCancelar.classList.add("hidden");
       btnCancelar.classList.remove("flex");
+      btnDeshacer.classList.add("hidden");
+      btnDeshacer.classList.remove("flex");
       banner.classList.add("hidden");
+      banner.classList.remove("flex");
     }
+  }
+
+  saveCurrentFormData() {
+    const nombre = document.getElementById("input-tramo-nombre").value.trim();
+    const detalle = document.getElementById("input-tramo-detalle").value.trim();
+
+    let savedItem = null;
+
+    if (this.editingTramoId) {
+      const index = this.tramos.findIndex(t => t.id === this.editingTramoId);
+      if (index !== -1) {
+        this.tramos[index].nombre = nombre;
+        this.tramos[index].color = this.selectedColor;
+        this.tramos[index].detalle = detalle;
+        this.tramos[index].foto = this.tempFoto;
+        savedItem = this.tramos[index];
+      }
+    } else {
+      savedItem = {
+        id: `PUENTE-${Date.now()}`,
+        nombre: nombre || `Tramo ${this.tramos.length + 1}`,
+        color: this.selectedColor,
+        longitudM: this.tempLongitudM,
+        puntos: this.tempPoints,
+        detalle: detalle,
+        foto: this.tempFoto,
+        fecha: new Date().toISOString()
+      };
+      this.tramos.push(savedItem);
+    }
+
+    this.saveTramos();
+    return savedItem;
   }
 
   setupEventListeners() {
@@ -278,7 +368,15 @@ class TrazadorVialApp {
       });
     }
 
-    // 2. Botón Finalizar Trazo
+    // 2. Botón Deshacer Punto
+    const btnDeshacer = document.getElementById("btn-deshacer-punto");
+    if (btnDeshacer) {
+      btnDeshacer.addEventListener("click", () => {
+        this.mapViewer.undoLastPoint();
+      });
+    }
+
+    // 3. Botón Finalizar Trazo
     const btnFinalizar = document.getElementById("btn-finalizar-trazo");
     if (btnFinalizar) {
       btnFinalizar.addEventListener("click", () => {
@@ -286,7 +384,7 @@ class TrazadorVialApp {
       });
     }
 
-    // 3. Botón Cancelar Trazo
+    // 4. Botón Cancelar Trazo
     const btnCancelar = document.getElementById("btn-cancelar-trazo");
     if (btnCancelar) {
       btnCancelar.addEventListener("click", () => {
@@ -295,14 +393,14 @@ class TrazadorVialApp {
       });
     }
 
-    // 4. Selector de Botones de Color
+    // 5. Selector de Color
     document.querySelectorAll(".btn-color-pick").forEach(btn => {
       btn.addEventListener("click", () => {
         this.selectColorButton(btn.dataset.color);
       });
     });
 
-    // 5. Carga de Foto de Cámara / WhatsApp
+    // 6. Carga de Foto
     const cameraInput = document.getElementById("input-camera-file");
     if (cameraInput) {
       cameraInput.addEventListener("change", async (e) => {
@@ -327,46 +425,43 @@ class TrazadorVialApp {
       });
     }
 
-    // 6. Guardar Calle en el Modal
+    // 7. Guardar Solo Tramo
     const form = document.getElementById("form-guardar-tramo");
     if (form) {
       form.addEventListener("submit", (e) => {
         e.preventDefault();
-
-        const nombre = document.getElementById("input-tramo-nombre").value.trim();
-        const detalle = document.getElementById("input-tramo-detalle").value.trim();
-
-        if (this.editingTramoId) {
-          // Editando existente
-          const index = this.tramos.findIndex(t => t.id === this.editingTramoId);
-          if (index !== -1) {
-            this.tramos[index].nombre = nombre;
-            this.tramos[index].color = this.selectedColor;
-            this.tramos[index].detalle = detalle;
-            this.tramos[index].foto = this.tempFoto;
-          }
-        } else {
-          // Creando nuevo
-          const nuevoTramo = {
-            id: `PUENTE-${Date.now()}`,
-            nombre: nombre || `Calle La Puente ${this.tramos.length + 1}`,
-            color: this.selectedColor,
-            longitudM: this.tempLongitudM,
-            puntos: this.tempPoints,
-            detalle: detalle,
-            foto: this.tempFoto,
-            fecha: new Date().toISOString()
-          };
-          this.tramos.unshift(nuevoTramo);
-        }
-
-        this.saveTramos();
+        this.saveCurrentFormData();
         this.closeModal();
         this.refreshView();
       });
     }
 
-    // 7. Cerrar Modal
+    // 8. Guardar y Continuar Trazando el Siguiente Tramo
+    const btnContinuar = document.getElementById("btn-guardar-y-continuar");
+    if (btnContinuar) {
+      btnContinuar.addEventListener("click", () => {
+        const savedItem = this.saveCurrentFormData();
+        this.closeModal();
+        this.refreshView();
+
+        if (savedItem && savedItem.puntos && savedItem.puntos.length > 0) {
+          // Iniciar de inmediato el siguiente tramo desde la última coordenada
+          const lastCoord = savedItem.puntos[savedItem.puntos.length - 1];
+          this.setDrawingUiState(true);
+          this.mapViewer.startDrawing(lastCoord);
+        }
+      });
+    }
+
+    // 9. Dividir Tramo en Dos
+    const btnDividir = document.getElementById("btn-dividir-tramo-en-dos");
+    if (btnDividir) {
+      btnDividir.addEventListener("click", () => {
+        this.splitCurrentTramo();
+      });
+    }
+
+    // 10. Cerrar Modal
     const btnCloseModal = document.getElementById("btn-close-modal");
     const btnCancelModal = document.getElementById("btn-cancelar-modal");
     const closeModalFn = () => this.closeModal();
@@ -374,11 +469,11 @@ class TrazadorVialApp {
     if (btnCloseModal) btnCloseModal.addEventListener("click", closeModalFn);
     if (btnCancelModal) btnCancelModal.addEventListener("click", closeModalFn);
 
-    // 8. Botón Borrar Todo
+    // 11. Borrar Todo
     const btnBorrarTodo = document.getElementById("btn-borrar-todas");
     if (btnBorrarTodo) {
       btnBorrarTodo.addEventListener("click", () => {
-        if (confirm("¿Estás seguro de borrar todas las calles trazadas para comenzar desde cero?")) {
+        if (confirm("¿Estás seguro de borrar todos los tramos para comenzar de cero?")) {
           this.tramos = [];
           this.saveTramos();
           this.refreshView();
@@ -386,7 +481,7 @@ class TrazadorVialApp {
       });
     }
 
-    // 9. GPS en Vivo
+    // 12. GPS
     const btnGps = document.getElementById("btn-gps-locate");
     if (btnGps) {
       btnGps.addEventListener("click", () => {
@@ -409,7 +504,7 @@ class TrazadorVialApp {
       });
     }
 
-    // 10. Exportar KML para Google Earth
+    // 13. Exportar KML
     const btnExportKml = document.getElementById("btn-export-kml-road");
     if (btnExportKml) {
       btnExportKml.addEventListener("click", () => this.exportKml());
@@ -426,15 +521,15 @@ class TrazadorVialApp {
 
   exportKml() {
     if (this.tramos.length === 0) {
-      alert("No hay calles trazadas para exportar. Toca '+ Trazar Nueva Calle' primero.");
+      alert("No hay tramos trazados para exportar.");
       return;
     }
 
     let kml = `<?xml version="1.0" encoding="UTF-8"?>
 <kml xmlns="http://www.opengis.net/kml/2.2">
   <Document>
-    <name>Calles Trazadas — Sector La Puente (Maturín)</name>
-    <description>Diagnóstico vial trazado en terreno</description>
+    <name>Diagnóstico Vial — Sector La Puente (Maturín)</name>
+    <description>Tramos de vialidad coloreados por condición física</description>
 
     <Style id="color_verde"><LineStyle><color>ff10b981</color><width>6</width></LineStyle></Style>
     <Style id="color_amarillo"><LineStyle><color>fff59e0b</color><width>6</width></LineStyle></Style>
@@ -442,7 +537,7 @@ class TrazadorVialApp {
     <Style id="color_rojo"><LineStyle><color>ffef4444</color><width>7</width></LineStyle></Style>
 
     <Folder>
-      <name>Calles Evaluadas</name>
+      <name>Tramos Evaluados</name>
 `;
 
     this.tramos.forEach(t => {
@@ -474,7 +569,7 @@ class TrazadorVialApp {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `Vialidad_LaPuente_Trazada_${new Date().toISOString().split("T")[0]}.kml`;
+    a.download = `Vialidad_LaPuente_Tramos_${new Date().toISOString().split("T")[0]}.kml`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
