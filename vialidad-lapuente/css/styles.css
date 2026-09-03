@@ -17,19 +17,12 @@ body {
 }
 
 /* ========================================================================= */
-/* PREVENCIÓN DE DISTORSIÓN EN ZOOM: DESACTIVAR TRANSICIONES CSS EN VECTORES */
+/* MOTOR CANVAS: RENDERIZADO RÍGIDO Y ULTRA LIMPIO EN ZOOM                  */
 /* ========================================================================= */
-.leaflet-pane path,
-.leaflet-zoom-animated path,
-.tramo-user-line,
-path.leaflet-interactive {
-  transition: none !important; /* Desactiva la animación extraña del SVG al hacer zoom */
-  -webkit-transition: none !important;
-  cursor: pointer;
-}
-
-.tramo-user-line:hover {
-  filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.9));
+.leaflet-container canvas {
+  will-change: transform;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
 }
 
 /* Tooltip Customization */
