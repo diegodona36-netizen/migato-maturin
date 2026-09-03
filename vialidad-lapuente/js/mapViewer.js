@@ -181,7 +181,8 @@ export class RoadMapViewer {
         color: "#f59e0b",
         weight: 6,
         dashArray: "6, 8",
-        opacity: 0.95
+        opacity: 0.95,
+        smoothFactor: 0
       });
       this.drawingLayerGroup.addLayer(this.drawingLine);
     }
@@ -223,16 +224,18 @@ export class RoadMapViewer {
         weight: 10,
         opacity: 0.9,
         lineCap: "round",
-        lineJoin: "round"
+        lineJoin: "round",
+        smoothFactor: 0
       });
 
-      // Línea con su color asignado
+      // Línea con su color asignado (smoothFactor: 0 para evitar distorsión en zoom)
       const line = L.polyline(t.puntos, {
         color: color,
         weight: 6,
         opacity: 1,
         lineCap: "round",
         lineJoin: "round",
+        smoothFactor: 0,
         className: "tramo-user-line"
       });
 
