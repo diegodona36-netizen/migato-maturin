@@ -3,6 +3,7 @@
  * Robusto, 100% Operativo y Totalmente Individualizado
  */
 import { CATALOGO_MONAGAS } from "./catalogoMonagas.js";
+import { AuthManager } from "./authManager.js";
 import { EarthStore } from "./earthStore.js";
 import { EarthMapEngine } from "./mapEngine.js";
 import { PropertiesDialog } from "./propertiesDialog.js";
@@ -14,6 +15,7 @@ class EarthMonagasApp {
     this.mapEngine = null;
     this.propDialog = null;
     this.toolsManager = null;
+    this.authManager = new AuthManager();
 
     this.selectedMunId = "maturin";
     this.selectedParishId = "alto-de-los-godos";
@@ -59,6 +61,7 @@ class EarthMonagasApp {
     this.setupDragAndDrop();
     this.setupOverlayModal();
     this.setupParishSelectorModal();
+    this.setupAuth();
 
     // Cargar parroquia activa inicial
     this.selectParish(this.selectedMunId, this.selectedParishId);
@@ -156,9 +159,14 @@ class EarthMonagasApp {
       <div class="bg-slate-950/90 p-3 rounded-2xl border border-sky-500/40 mb-3 shadow-lg">
         <div class="flex items-center justify-between mb-1.5">
           <span class="text-[10px] font-bold text-sky-400 uppercase tracking-wider">${munObj?.nombre || 'Municipio'}</span>
+          ${this.authManager.canSwitchParish() ? `
           <button onclick="window.earthApp.openParishSelector()" class="text-[10px] text-amber-400 hover:text-amber-300 font-bold bg-amber-500/10 px-2.5 py-0.5 rounded-lg border border-amber-500/30 active:scale-95 transition">
             Cambiar ▾
-          </button>
+          </button>` : `
+          <span class="text-[10px] text-emerald-400 font-bold bg-emerald-950/60 px-2 py-0.5 rounded-lg border border-emerald-800/40 flex items-center gap-1">
+            <i data-lucide="lock" class="w-2.5 h-2.5"></i>
+            <span>Asignada</span>
+          </span>`}
         </div>
         <h4 class="text-sm font-black text-white truncate">${pData.nombre}</h4>
         <div class="flex items-center gap-2 mt-2">
@@ -290,6 +298,11 @@ class EarthMonagasApp {
   }
 
   openParishSelector() {
+    if (!this.authManager.canSwitchParish()) {
+      const user = this.authManager.getCurrentUser();
+      alert(`Acceso Restringido: Tu cuenta está asignada exclusivamente a la Parroquia ${user ? user.parroquiaNombre : 'asignada'} por razones de confidencialidad territorial.`);
+      return;
+    }
     const modal = document.getElementById("modal-select-parish");
     if (!modal) return;
     this.renderParishesCatalog();
@@ -396,6 +409,115 @@ class EarthMonagasApp {
 
     const parish = this.store.getParish(munId, parishId);
     this.mapEngine.renderParishItems(parish, (t, it) => this.propDialog.open(t, it));
+  }
+
+
+  setupAuth() {
+    const modalLogin = document.getElementById("modal-auth-login");
+    const formLogin = document.getElementById("form-auth-login");
+    const errorMsg = document.getElementById("auth-error-msg");
+    const btnLogout = document.getElementById("btn-user-logout");
+
+    // Formulario de inicio de sesión
+    if (formLogin) {
+      formLogin.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const userInput = document.getElementById("auth-input-user").value;
+        const passInput = document.getElementById("auth-input-pass").value;
+
+        const res = this.authManager.login(userInput, passInput);
+        if (!res.success) {
+          if (errorMsg) {
+            errorMsg.textContent = res.message;
+            errorMsg.classList.remove("hidden");
+          }
+          return;
+        }
+
+        if (errorMsg) errorMsg.classList.add("hidden");
+        if (modalLogin) {
+          modalLogin.classList.add("hidden");
+          modalLogin.classList.remove("flex");
+        }
+
+        this.applyUserScope();
+      });
+    }
+
+    // Botón de cierre de sesión
+    if (btnLogout) {
+      btnLogout.addEventListener("click", () => {
+        if (confirm("¿Deseas cerrar tu sesión de trabajo territorial?")) {
+          this.authManager.logout();
+          window.location.reload();
+        }
+      });
+    }
+
+    // Verificar si ya existe una sesión activa
+    if (!this.authManager.isAuthenticated()) {
+      if (modalLogin) {
+        modalLogin.classList.remove("hidden");
+        modalLogin.classList.add("flex");
+      }
+    } else {
+      if (modalLogin) {
+        modalLogin.classList.add("hidden");
+        modalLogin.classList.remove("flex");
+      }
+      this.applyUserScope();
+    }
+  }
+
+  applyUserScope() {
+    const user = this.authManager.getCurrentUser();
+    if (!user) return;
+
+    const navBtn = document.getElementById("btn-open-parish-modal");
+    const lockIcon = document.getElementById("nav-lock-icon");
+    const arrowIcon = document.getElementById("nav-arrow-icon");
+    const statusRole = document.getElementById("status-user-role");
+
+    if (user.rol === "operador") {
+      // Bloqueo estricto al territorio asignado
+      this.selectedMunId = user.municipioId;
+      this.selectedParishId = user.parroquiaId;
+
+      if (lockIcon) {
+        lockIcon.setAttribute("data-lucide", "lock");
+        lockIcon.classList.remove("text-amber-400");
+        lockIcon.classList.add("text-emerald-400");
+      }
+      if (arrowIcon) arrowIcon.classList.add("hidden");
+      if (navBtn) {
+        navBtn.classList.add("cursor-default");
+        navBtn.title = `Jurisdicción Asignada Exclusiva: ${user.parroquiaNombre}`;
+      }
+      if (statusRole) {
+        statusRole.textContent = `🔒 ${user.nombre}`;
+      }
+    } else if (user.rol === "coordinador") {
+      this.selectedMunId = user.municipioId;
+      const mun = CATALOGO_MONAGAS.find(m => m.id === this.selectedMunId);
+      if (mun && mun.parroquias.length > 0) {
+        this.selectedParishId = mun.parroquias[0].id;
+      }
+      if (statusRole) {
+        statusRole.textContent = `🏛️ ${user.nombre}`;
+      }
+    } else {
+      // Super Admin
+      if (statusRole) {
+        statusRole.textContent = `👑 Sala Central MIGATO`;
+      }
+    }
+
+    this.selectParish(this.selectedMunId, this.selectedParishId);
+    this.renderPlacesTree();
+
+    if (window.lucide) {
+      try { window.lucide.createIcons(); } catch(e){}
+    }
   }
 
   setupToolbarEvents() {
