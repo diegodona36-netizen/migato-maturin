@@ -110,6 +110,7 @@ export class EarthMapEngine {
       opacity: 0.9,
       fill: false,
       dashArray: "8, 6",
+      interactive: false,
       renderer: this.canvasRenderer
     });
 
