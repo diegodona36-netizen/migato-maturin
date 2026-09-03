@@ -16,14 +16,20 @@ body {
   background: #090d16;
 }
 
-/* Tramos de usuario interactivos */
-.tramo-user-line {
+/* ========================================================================= */
+/* PREVENCIÓN DE DISTORSIÓN EN ZOOM: DESACTIVAR TRANSICIONES CSS EN VECTORES */
+/* ========================================================================= */
+.leaflet-pane path,
+.leaflet-zoom-animated path,
+.tramo-user-line,
+path.leaflet-interactive {
+  transition: none !important; /* Desactiva la animación extraña del SVG al hacer zoom */
+  -webkit-transition: none !important;
   cursor: pointer;
-  transition: all 0.2s ease-in-out;
 }
 
 .tramo-user-line:hover {
-  filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.9));
+  filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.9));
 }
 
 /* Tooltip Customization */
