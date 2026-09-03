@@ -329,6 +329,76 @@ class AtlasMonagasApp {
     });
   }
 
+
+  loadSampleParishLines() {
+    if (!this.currentParish) return;
+    const [cLat, cLng] = this.currentParish.centro;
+
+    const sampleLines = [
+      {
+        id: "DEMO-" + Date.now() + "-1",
+        nombre: "Av. Principal (Tramo Óptimo)",
+        color: "verde",
+        longitudM: 520,
+        detalle: "Capa asfáltica en excelente estado",
+        puntos: [
+          [cLat - 0.0025, cLng - 0.0035],
+          [cLat - 0.0010, cLng - 0.0015],
+          [cLat + 0.0005, cLng + 0.0008]
+        ],
+        fecha: new Date().toISOString()
+      },
+      {
+        id: "DEMO-" + Date.now() + "-2",
+        nombre: "Av. Principal (Continuación con Baches)",
+        color: "amarillo",
+        longitudM: 340,
+        detalle: "Desgaste superficial y baches menores",
+        puntos: [
+          [cLat + 0.0005, cLng + 0.0008],
+          [cLat + 0.0020, cLng + 0.0025],
+          [cLat + 0.0032, cLng + 0.0038]
+        ],
+        fecha: new Date().toISOString()
+      },
+      {
+        id: "DEMO-" + Date.now() + "-3",
+        nombre: "Calle Transversal 1 (Sector Centro)",
+        color: "naranja",
+        longitudM: 280,
+        detalle: "Huecos profundos, bacheo prioritario",
+        puntos: [
+          [cLat - 0.0010, cLng - 0.0015],
+          [cLat + 0.0012, cLng - 0.0028],
+          [cLat + 0.0025, cLng - 0.0038]
+        ],
+        fecha: new Date().toISOString()
+      },
+      {
+        id: "DEMO-" + Date.now() + "-4",
+        nombre: "Callejón Sur (Punto Crítico)",
+        color: "rojo",
+        longitudM: 210,
+        detalle: "Falla de borde severa e intransitable",
+        puntos: [
+          [cLat + 0.0020, cLng + 0.0025],
+          [cLat + 0.0035, cLng + 0.0012],
+          [cLat + 0.0042, cLng + 0.0002]
+        ],
+        fecha: new Date().toISOString()
+      }
+    ];
+
+    this.parishLines = sampleLines;
+    this.saveParishLines();
+    this.refreshParishView();
+
+    const allCoords = sampleLines.flatMap(l => l.puntos);
+    if (allCoords.length > 0) {
+      this.mapEngine.map.fitBounds(L.polyline(allCoords).getBounds(), { padding: [60, 60] });
+    }
+  }
+
   deleteLine(lineId) {
     if (confirm("¿Deseas eliminar esta calle?")) {
       this.parishLines = this.parishLines.filter(l => l.id !== lineId);
@@ -608,6 +678,14 @@ class AtlasMonagasApp {
         );
         const fileName = `${this.currentParish.codigo}_${this.currentParish.nombre.replace(/\s+/g, '_')}_Vias.kml`;
         AtlasStorage.downloadText(kmlContent, fileName, "application/vnd.google-earth.kml+xml");
+      });
+    }
+
+    // Botón Ver Ejemplo / Demo de Calles
+    const btnDemo = document.getElementById('btn-load-sample-lines');
+    if (btnDemo) {
+      btnDemo.addEventListener('click', () => {
+        this.loadSampleParishLines();
       });
     }
 
