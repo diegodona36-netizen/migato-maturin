@@ -1,23 +1,29 @@
 /**
- * Visor Cartográfico Leaflet — Carretera Principal de La Puente
+ * Visor Cartográfico y Dibujador de Calles Interactivo — La Puente
  */
-import { ESTADOS_VIALES } from "./dataTramos.js";
 
 export class RoadMapViewer {
-  constructor(containerId, onSelectTramoCallback) {
+  constructor(containerId, onFinishDrawingCallback, onSelectTramoCallback) {
     this.containerId = containerId;
+    this.onFinishDrawingCallback = onFinishDrawingCallback;
     this.onSelectTramoCallback = onSelectTramoCallback;
+
     this.map = null;
     this.tramosLayerGroup = null;
-    this.markersLayerGroup = null;
+    this.drawingLayerGroup = null;
     this.userLocationLayer = null;
-    this.tramoLines = {};
-    this.selectedTramoId = null;
+
+    // Estado del modo trazador
+    this.isDrawingMode = false;
+    this.currentDrawingPoints = [];
+    this.drawingLine = null;
+    this.drawingMarkers = [];
 
     this.init();
   }
 
   init() {
+    // Capas Base: Satélite y Calles
     const esriSatellite = L.tileLayer(
       "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
       { maxZoom: 19, attribution: "Esri Satellite" }
@@ -28,72 +34,161 @@ export class RoadMapViewer {
       { maxZoom: 19, attribution: "OpenStreetMap" }
     );
 
+    // Centro exacto de La Puente (Maturín)
+    // Lat: 9.7185, Lng: -63.2120
     this.map = L.map(this.containerId, {
-      center: [9.7285, -63.2216], // Puente sobre el Caño Los Godos
-      zoom: 15,
+      center: [9.7185, -63.2120],
+      zoom: 16,
       zoomControl: false,
-      layers: [esriSatellite]
+      layers: [osmStreets]
     });
 
     L.control.zoom({ position: "topright" }).addTo(this.map);
-    L.control.layers({ "Satélite (Esri)": esriSatellite, "Calles (OSM)": osmStreets }, null, { position: "topright" }).addTo(this.map);
+    L.control.layers({ "Calles (OSM)": osmStreets, "Satélite (Esri)": esriSatellite }, null, { position: "topright" }).addTo(this.map);
 
     this.tramosLayerGroup = L.layerGroup().addTo(this.map);
-    this.markersLayerGroup = L.layerGroup().addTo(this.map);
+    this.drawingLayerGroup = L.layerGroup().addTo(this.map);
     this.userLocationLayer = L.layerGroup().addTo(this.map);
+
+    // Hito de Referencia: Sector La Puente
+    const hitoLaPuente = L.circleMarker([9.7185, -63.2120], {
+      radius: 7,
+      fillColor: "#f59e0b",
+      color: "#ffffff",
+      weight: 2,
+      opacity: 1,
+      fillOpacity: 0.95
+    }).bindTooltip("<strong>📍 Sector La Puente</strong>", { permanent: true, direction: "top", offset: [0, -8] });
+    this.map.addLayer(hitoLaPuente);
+
+    // Eventos de Clic en el Mapa para Trazar Calles
+    this.map.on("click", (e) => this.handleMapClick(e));
   }
 
-  renderTramos(tramos, inspectionsData) {
+  startDrawing() {
+    this.isDrawingMode = true;
+    this.currentDrawingPoints = [];
+    this.drawingMarkers = [];
+    this.drawingLayerGroup.clearLayers();
+    this.map.getContainer().style.cursor = "crosshair";
+  }
+
+  cancelDrawing() {
+    this.isDrawingMode = false;
+    this.currentDrawingPoints = [];
+    this.drawingMarkers = [];
+    this.drawingLayerGroup.clearLayers();
+    this.map.getContainer().style.cursor = "";
+  }
+
+  finishDrawing() {
+    if (this.currentDrawingPoints.length < 2) {
+      alert("Debes marcar al menos dos puntos sobre la calle para trazar el tramo.");
+      return null;
+    }
+
+    const points = [...this.currentDrawingPoints];
+    const longitudM = this.calculateLengthMeters(points);
+
+    this.isDrawingMode = false;
+    this.map.getContainer().style.cursor = "";
+    this.drawingLayerGroup.clearLayers();
+
+    if (this.onFinishDrawingCallback) {
+      this.onFinishDrawingCallback(points, longitudM);
+    }
+    return { points, longitudM };
+  }
+
+  handleMapClick(e) {
+    if (!this.isDrawingMode) return;
+
+    const latlng = [e.latlng.lat, e.latlng.lng];
+    this.currentDrawingPoints.push(latlng);
+
+    // Crear marcador en el vértice
+    const marker = L.circleMarker(latlng, {
+      radius: 5,
+      fillColor: "#f59e0b",
+      color: "#ffffff",
+      weight: 2,
+      fillOpacity: 1
+    });
+    this.drawingLayerGroup.addLayer(marker);
+    this.drawingMarkers.push(marker);
+
+    // Dibujar o actualizar línea temporal
+    if (this.drawingLine) {
+      this.drawingLine.setLatLngs(this.currentDrawingPoints);
+    } else {
+      this.drawingLine = L.polyline(this.currentDrawingPoints, {
+        color: "#f59e0b",
+        weight: 6,
+        dashArray: "6, 8",
+        opacity: 0.95
+      });
+      this.drawingLayerGroup.addLayer(this.drawingLine);
+    }
+  }
+
+  calculateLengthMeters(points) {
+    let total = 0;
+    for (let i = 0; i < points.length - 1; i++) {
+      const p1 = L.latLng(points[i][0], points[i][1]);
+      const p2 = L.latLng(points[i + 1][0], points[i + 1][1]);
+      total += p1.distanceTo(p2);
+    }
+    return Math.round(total);
+  }
+
+  renderSavedTramos(tramos) {
     this.tramosLayerGroup.clearLayers();
-    this.tramoLines = {};
 
-    tramos.forEach(tramo => {
-      const insp = inspectionsData[tramo.id] || {};
-      const estadoId = insp.estado || "sin_inspeccionar";
-      const estadoConfig = ESTADOS_VIALES[estadoId] || ESTADOS_VIALES.sin_inspeccionar;
-      const isSelected = tramo.id === this.selectedTramoId;
+    const colorMap = {
+      verde: "#10b981",
+      amarillo: "#f59e0b",
+      naranja: "#f97316",
+      rojo: "#ef4444"
+    };
 
-      // Línea de sombra/borde exterior (casing) para resaltar sobre cualquier mapa satelital
-      const casing = L.polyline(tramo.coordenadas, {
-        color: isSelected ? "#ffffff" : "#0f172a",
-        weight: isSelected ? 10 : 8,
-        opacity: 0.9,
+    tramos.forEach(t => {
+      const color = colorMap[t.color] || "#64748b";
+
+      // Casing exterior para visibilidad óptima
+      const casing = L.polyline(t.puntos, {
+        color: "#0f172a",
+        weight: 9,
+        opacity: 0.85,
         lineCap: "round",
         lineJoin: "round"
       });
 
-      // Línea central de color con el estado
-      const line = L.polyline(tramo.coordenadas, {
-        color: estadoConfig.color,
-        weight: isSelected ? 7 : 5,
+      // Línea principal de color
+      const line = L.polyline(t.puntos, {
+        color: color,
+        weight: 6,
         opacity: 1,
         lineCap: "round",
         lineJoin: "round",
-        className: "tramo-line-interactive"
+        className: "tramo-user-line"
       });
 
-      // Tooltip informativo
-      const fotosCount = (insp.fotos || []).length;
-      const tooltipHtml = `
-        <div class="p-1 text-xs font-sans">
-          <div class="flex items-center justify-between gap-2 border-b border-slate-700 pb-1 mb-1">
-            <strong class="text-white font-bold">${tramo.nombre}</strong>
-            <span class="text-[9px] font-mono px-1 rounded bg-slate-800 text-slate-300">${tramo.longitudM} m</span>
-          </div>
-          <p class="text-[11px] font-bold" style="color: ${estadoConfig.color}">● ${estadoConfig.nombre}</p>
-          ${fotosCount > 0 ? `<p class="text-[10px] text-amber-300 mt-0.5 font-bold">📷 ${fotosCount} foto(s) de evidencia</p>` : ''}
-          <p class="text-[10px] text-slate-400 mt-0.5">Ref: ${tramo.puntosReferencia.join(" • ")}</p>
+      const tooltipContent = `
+        <div class="p-1 text-xs">
+          <strong class="text-white block font-bold">${t.nombre}</strong>
+          <span class="text-[10px] font-mono text-slate-300">${t.longitudM} metros</span>
+          <span class="block text-[10px] font-bold mt-0.5" style="color: ${color}">● Estado: ${t.color.toUpperCase()}</span>
+          ${t.detalle ? `<p class="text-[10px] text-slate-400 mt-1 italic">${t.detalle}</p>` : ''}
+          ${t.foto ? `<p class="text-[10px] text-amber-300 font-bold mt-1">📷 Foto de evidencia</p>` : ''}
         </div>
       `;
 
-      line.bindTooltip(tooltipHtml, { sticky: true, className: "tramo-tooltip" });
+      line.bindTooltip(tooltipContent, { sticky: true, className: "tramo-tooltip" });
 
-      // Evento de clic para inspeccionar
       const handleClick = (e) => {
         L.DomEvent.stopPropagation(e);
-        this.selectTramo(tramo.id);
         if (this.onSelectTramoCallback) {
-          this.onSelectTramoCallback(tramo, insp);
+          this.onSelectTramoCallback(t);
         }
       };
 
@@ -102,72 +197,28 @@ export class RoadMapViewer {
 
       const group = L.featureGroup([casing, line]);
       this.tramosLayerGroup.addLayer(group);
-      this.tramoLines[tramo.id] = { casing, line, tramo };
     });
-
-    // Añadir hitos geográficos de referencia
-    this.renderMilestones();
-  }
-
-  renderMilestones() {
-    this.markersLayerGroup.clearLayers();
-
-    const hitos = [
-      { coords: [9.7348, -63.2082], label: "🏁 Inicio: Av. El Ejército / Fundemos", color: "#38bdf8" },
-      { coords: [9.7303, -63.2202], label: "🌉 Puente sobre Caño Los Godos", color: "#f59e0b" },
-      { coords: [9.7285, -63.2236], label: "🏛️ Plaza Bolívar / Módulo Policial", color: "#a855f7" },
-      { coords: [9.7216, -63.2369], label: "📍 Fin: Salida Vía El Furrial", color: "#38bdf8" }
-    ];
-
-    hitos.forEach(h => {
-      const marker = L.circleMarker(h.coords, {
-        radius: 6,
-        fillColor: h.color,
-        color: "#ffffff",
-        weight: 2,
-        opacity: 1,
-        fillOpacity: 0.95
-      });
-
-      marker.bindTooltip(`<strong>${h.label}</strong>`, { direction: "top", offset: [0, -6] });
-      this.markersLayerGroup.addLayer(marker);
-    });
-  }
-
-  selectTramo(tramoId) {
-    this.selectedTramoId = tramoId;
-    Object.keys(this.tramoLines).forEach(id => {
-      const item = this.tramoLines[id];
-      const isSelected = id === tramoId;
-      item.casing.setStyle({
-        color: isSelected ? "#ffffff" : "#0f172a",
-        weight: isSelected ? 10 : 8
-      });
-      item.line.setStyle({
-        weight: isSelected ? 7 : 5
-      });
-    });
-
-    if (this.tramoLines[tramoId]) {
-      this.map.panTo(this.tramoLines[tramoId].line.getBounds().getCenter(), { animate: true, duration: 0.8 });
-    }
   }
 
   updateUserLocation(lat, lng) {
     this.userLocationLayer.clearLayers();
 
-    const pulseMarker = L.circleMarker([lat, lng], {
+    const dot = L.circleMarker([lat, lng], {
       radius: 9,
       fillColor: "#38bdf8",
       color: "#ffffff",
       weight: 3,
       opacity: 1,
-      fillOpacity: 0.9,
+      fillOpacity: 0.95,
       className: "gps-pulse-dot"
     });
 
-    pulseMarker.bindTooltip("<strong>📍 Tu Ubicación Actual</strong>", { permanent: true, direction: "top" });
-    this.userLocationLayer.addLayer(pulseMarker);
-    this.map.setView([lat, lng], 16, { animate: true });
+    dot.bindTooltip("<strong>📍 Tu Posición Actual</strong>", { permanent: true, direction: "top" });
+    this.userLocationLayer.addLayer(dot);
+    this.map.setView([lat, lng], 17, { animate: true });
+  }
+
+  focusOn(lat, lng) {
+    this.map.setView([lat, lng], 17, { animate: true });
   }
 }
