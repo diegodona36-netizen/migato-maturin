@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Atlas Territorial & Sala Situacional • Estado Monagas</title>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Leaflet CSS & JS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen antialiased select-none">
+
+  <!-- ============================================================== -->
+  <!-- VISTA 1: PORTAL CENTRAL DE MUNICIPIOS Y SALA SITUACIONAL       -->
+  <!-- ============================================================== -->
+  <div id="view-portal" class="min-h-screen flex flex-col">
+    
+    <!-- Top Header Portal -->
+    <header class="bg-slate-900 border-b border-slate-800 px-6 py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 sticky top-0 z-30 shadow-xl">
+      <div class="flex items-center gap-3">
+        <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-sky-500 to-blue-600 text-white flex items-center justify-center font-black shadow-lg">
+          <i data-lucide="map" class="w-6 h-6"></i>
+        </div>
+        <div>
+          <h1 class="text-lg font-black text-white leading-tight flex items-center gap-2">
+            <span>Atlas Territorial de Monagas</span>
+            <span class="text-[10px] font-bold bg-sky-500/20 text-sky-400 border border-sky-500/30 px-2 py-0.5 rounded-full uppercase">
+              13 Municipios Oficiales
+            </span>
+          </h1>
+          <p class="text-xs text-slate-400 font-medium">Plataforma central para la carga, seccionamiento y despliegue de parroquias</p>
+        </div>
+      </div>
+
+      <!-- Buscador Global -->
+      <div class="flex items-center gap-3">
+        <div class="relative w-full sm:w-72">
+          <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2"></i>
+          <input type="text" id="input-search-territorio" placeholder="Buscar municipio o parroquia..." class="w-full pl-9 pr-3 py-2 text-xs bg-slate-800 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-sky-500 transition">
+        </div>
+
+        <a href="../" class="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white transition" title="Ir al Portal Principal">
+          <i data-lucide="home" class="w-4 h-4"></i>
+        </a>
+      </div>
+    </header>
+
+    <!-- Contenido Principal Portal -->
+    <main class="flex-1 max-w-7xl w-full mx-auto p-6 space-y-6">
+
+      <!-- BANNER DE KPIS GLOBALES DEL ESTADO -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl">
+          <span class="text-[11px] font-bold text-slate-400 uppercase block">Municipios</span>
+          <span id="kpi-mun-total" class="text-3xl font-black font-mono text-white block mt-1">13</span>
+          <span class="text-[10px] text-slate-500">100% catalogados</span>
+        </div>
+
+        <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl">
+          <span class="text-[11px] font-bold text-slate-400 uppercase block">Parroquias Oficiales</span>
+          <span id="kpi-parroq-total" class="text-3xl font-black font-mono text-sky-400 block mt-1">42</span>
+          <span class="text-[10px] text-slate-500">Listas para recibir planos</span>
+        </div>
+
+        <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl">
+          <span class="text-[11px] font-bold text-slate-400 uppercase block">Cuadrantes Mapeados</span>
+          <span id="kpi-cuad-total" class="text-3xl font-black font-mono text-amber-400 block mt-1">0</span>
+          <span class="text-[10px] text-slate-500">Polígonos generados</span>
+        </div>
+
+        <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl">
+          <span class="text-[11px] font-bold text-slate-400 uppercase block">Cobertura Estatal</span>
+          <span id="kpi-cob-global" class="text-3xl font-black font-mono text-emerald-400 block mt-1">0%</span>
+          <span class="text-[10px] text-slate-500">Avance consolidado</span>
+        </div>
+      </div>
+
+      <!-- INSTRUCCIONES -->
+      <div class="bg-slate-900/60 border border-slate-800/80 p-4 rounded-2xl flex items-center justify-between gap-4">
+        <div class="flex items-center gap-3">
+          <span class="w-8 h-8 rounded-lg bg-sky-500/10 text-sky-400 flex items-center justify-center shrink-0">
+            <i data-lucide="info" class="w-4 h-4"></i>
+          </span>
+          <p class="text-xs text-slate-300">
+            Haz clic sobre cualquier municipio para ver sus <strong>parroquias oficiales</strong>, entrar al mapa y asignar jefes de brigada a cada polígono o hexágono.
+          </p>
+        </div>
+      </div>
+
+      <!-- GRID DE LOS 13 MUNICIPIOS -->
+      <div>
+        <h2 class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4">Municipios del Estado Monagas:</h2>
+        <div id="grid-municipios" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+          <!-- Inyectado dinámicamente con JS -->
+        </div>
+      </div>
+
+    </main>
+
+  </div>
+
+  <!-- ============================================================== -->
+  <!-- MODAL: SELECTOR DE PARROQUIAS DE UN MUNICIPIO                  -->
+  <!-- ============================================================== -->
+  <div id="modal-parroquias-selector" style="z-index: 99999;" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-700 w-full max-w-lg rounded-3xl p-6 text-white shadow-2xl space-y-4 max-h-[90vh] flex flex-col">
+      
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3 shrink-0">
+        <div>
+          <span class="text-[10px] font-bold text-sky-400 uppercase tracking-wider" id="modal-mun-count">Parroquias Oficiales</span>
+          <h3 id="modal-mun-title" class="text-xl font-black text-white mt-0.5">Municipio</h3>
+        </div>
+        <button id="btn-close-mun-modal" class="text-slate-400 hover:text-white p-1">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <p class="text-xs text-slate-400 shrink-0">Selecciona la parroquia que deseas mapear o consultar:</p>
+
+      <div id="modal-parroquias-list" class="space-y-2 overflow-y-auto pr-1 flex-1">
+        <!-- Inyectado con JS -->
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ============================================================== -->
+  <!-- VISTA 2: SALA DE MAPEO Y CUADRANTES PARROQUIALES (FULLSCREEN)  -->
+  <!-- ============================================================== -->
+  <div id="view-mapa" class="h-screen hidden flex-col overflow-hidden">
+    
+    <!-- Top Navbar Mapa -->
+    <header style="z-index: 2000;" class="bg-slate-900 border-b border-slate-800 px-4 py-2.5 flex items-center justify-between shadow-lg shrink-0">
+      
+      <div class="flex items-center gap-3">
+        <button id="btn-back-to-portal" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold transition flex items-center gap-1.5 shadow">
+          <i data-lucide="arrow-left" class="w-4 h-4"></i>
+          <span>Volver a Municipios</span>
+        </button>
+
+        <div class="h-5 w-[1px] bg-slate-700"></div>
+
+        <div class="flex items-center gap-2 text-xs">
+          <span id="nav-mun-name" class="font-bold text-slate-400">Municipio</span>
+          <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-slate-600"></i>
+          <span id="nav-parish-name" class="font-black text-white">Parroquia</span>
+          <span class="text-[10px] font-mono text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-full font-bold ml-1">
+            ✓ Límite Oficial
+          </span>
+        </div>
+      </div>
+
+      <!-- Botón Exportar KML -->
+      <div class="flex items-center gap-2">
+        <button id="btn-export-parish-kml" class="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-400 text-slate-950 text-xs font-black shadow transition flex items-center gap-1.5">
+          <i data-lucide="download" class="w-3.5 h-3.5"></i>
+          <span>Descargar KML (Google Earth)</span>
+        </button>
+      </div>
+
+    </header>
+
+    <!-- Workspace Mapa -->
+    <div class="flex-1 flex overflow-hidden relative">
+
+      <!-- Sidebar Izquierdo de Parroquia -->
+      <aside style="z-index: 1500;" class="w-80 sm:w-96 bg-slate-900 border-r border-slate-800 flex flex-col justify-between overflow-y-auto shrink-0 shadow-2xl">
+        
+        <div class="p-4 space-y-4">
+
+          <!-- Tarjeta de Parroquia -->
+          <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-2">
+            <span id="side-parish-badge" class="text-[10px] font-bold text-sky-400 bg-sky-500/10 border border-sky-500/20 px-2 py-0.5 rounded-full uppercase">
+              Parroquia
+            </span>
+            <h2 id="side-parish-title" class="text-xl font-black text-white">Nombre</h2>
+            
+            <div class="pt-1">
+              <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider block mb-1">Sectores y Comunidades:</span>
+              <div id="side-parish-sectors" class="flex flex-wrap gap-1"></div>
+            </div>
+          </div>
+
+          <!-- Selector de Tamaño de Cuadrícula -->
+          <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-2.5">
+            <span class="text-xs font-bold text-white flex items-center gap-1.5">
+              <i data-lucide="grid" class="w-4 h-4 text-sky-400"></i>
+              <span>Tamaño de Cuadrantes / Hexágonos</span>
+            </span>
+
+            <div class="grid grid-cols-3 gap-1.5">
+              <button data-radius="350" class="btn-grid-res py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold transition text-center">
+                <span class="block text-[10px] text-slate-400">Denso</span>
+                <span>~350 m</span>
+              </button>
+              <button data-radius="600" class="btn-grid-res py-2 rounded-xl bg-sky-500 text-slate-950 text-xs font-black transition text-center shadow">
+                <span class="block text-[10px] opacity-85">Estándar</span>
+                <span>~600 m</span>
+              </button>
+              <button data-radius="1200" class="btn-grid-res py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold transition text-center">
+                <span class="block text-[10px] text-slate-400">Rural</span>
+                <span>~1.2 km</span>
+              </button>
+            </div>
+            <p class="text-[10px] text-slate-400 leading-tight">
+              Toca cualquier polígono en el mapa para asignar el responsable de brigada y cambiar el color.
+            </p>
+          </div>
+
+          <!-- Métricas de la Parroquia -->
+          <div class="grid grid-cols-2 gap-2">
+            <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
+              <span class="text-[10px] font-bold text-slate-400 uppercase block">Total Cuadrantes</span>
+              <span id="side-stat-total" class="text-2xl font-black font-mono text-white block mt-0.5">0</span>
+            </div>
+            <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
+              <span class="text-[10px] font-bold text-emerald-400 uppercase block">🟢 Cubiertos</span>
+              <span id="side-stat-cubiertos" class="text-2xl font-black font-mono text-emerald-400 block mt-0.5">0</span>
+            </div>
+            <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
+              <span class="text-[10px] font-bold text-amber-400 uppercase block">🟡 En Despliegue</span>
+              <span id="side-stat-despliegue" class="text-2xl font-black font-mono text-amber-400 block mt-0.5">0</span>
+            </div>
+            <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
+              <span class="text-[10px] font-bold text-sky-400 uppercase block">Avance Parroquia</span>
+              <span id="side-stat-cobertura" class="text-2xl font-black font-mono text-sky-400 block mt-0.5">0%</span>
+            </div>
+          </div>
+
+          <!-- Semáforo de Cobertura -->
+          <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 text-xs space-y-1.5">
+            <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">Semáforo de Despliegue:</span>
+            <div class="flex items-center gap-2 text-[11px]">
+              <span class="w-3 h-3 rounded-full bg-emerald-500 shrink-0"></span>
+              <span>Cubierto al 100% (Verde)</span>
+            </div>
+            <div class="flex items-center gap-2 text-[11px]">
+              <span class="w-3 h-3 rounded-full bg-amber-500 shrink-0"></span>
+              <span>En Despliegue / Patrulla (Amarillo)</span>
+            </div>
+            <div class="flex items-center gap-2 text-[11px]">
+              <span class="w-3 h-3 rounded-full bg-red-500 shrink-0"></span>
+              <span>Alerta / Sin Contacto (Rojo)</span>
+            </div>
+            <div class="flex items-center gap-2 text-[11px]">
+              <span class="w-3 h-3 rounded-full bg-sky-600 shrink-0"></span>
+              <span>Disponible / Sin Asignar (Azul)</span>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="p-3 border-t border-slate-800 bg-slate-950 text-[11px] text-slate-500 text-center font-mono">
+          Atlas Monagas • MIGATO
+        </div>
+
+      </aside>
+
+      <!-- Lienzo de Mapa Canvas -->
+      <main class="flex-1 h-full relative">
+        <div id="atlas-map-canvas"></div>
+      </main>
+
+    </div>
+
+  </div>
+
+  <!-- ============================================================== -->
+  <!-- MODAL ASIGNAR RESPONSABLE AL CUADRANTE (Z-INDEX 99999)         -->
+  <!-- ============================================================== -->
+  <div id="modal-edit-polygon" style="z-index: 99999;" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-700 w-full max-w-md rounded-3xl p-6 text-white shadow-2xl space-y-4">
+      
+      <div class="flex items-start justify-between border-b border-slate-800 pb-3">
+        <div>
+          <span class="text-[10px] font-bold text-sky-400 uppercase tracking-wider">Ficha de Cuadrante Territorial</span>
+          <h3 id="modal-poly-id" class="text-xl font-black font-mono text-white mt-0.5">MAT-SIM-C01</h3>
+          <p id="modal-poly-area" class="text-xs text-slate-400 font-mono">0 Ha</p>
+        </div>
+        <button id="btn-close-poly-modal" class="text-slate-400 hover:text-white p-1">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <form id="form-edit-poly" class="space-y-3">
+        <div>
+          <label class="block text-[11px] font-bold text-slate-300 uppercase mb-1">Responsable de Brigada / Cuadrante</label>
+          <input type="text" id="input-poly-responsable" placeholder="Ej: Carlos Gómez" class="w-full px-3 py-2 text-xs bg-slate-800 border border-slate-700 rounded-xl text-white focus:outline-none focus:border-sky-500 font-bold">
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-[11px] font-bold text-slate-300 uppercase mb-1">Teléfono / WhatsApp</label>
+            <input type="tel" id="input-poly-telefono" placeholder="Ej: 0414-1234567" class="w-full px-3 py-2 text-xs bg-slate-800 border border-slate-700 rounded-xl text-white font-mono focus:outline-none focus:border-sky-500">
+          </div>
+
+          <div>
+            <label class="block text-[11px] font-bold text-slate-300 uppercase mb-1">Estado de Despliegue</label>
+            <select id="select-poly-estado" class="w-full px-3 py-2 text-xs bg-slate-800 border border-slate-700 rounded-xl text-white font-bold focus:outline-none focus:border-sky-500">
+              <option value="disponible">⚪ Disponible / Sin Asignar</option>
+              <option value="en_despliegue">🟡 En Despliegue</option>
+              <option value="cubierto">🟢 100% Cubierto</option>
+              <option value="alerta">🔴 Alerta / Requiere Refuerzo</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-[11px] font-bold text-slate-300 uppercase mb-1">Sector o Comunidad de Referencia</label>
+          <input type="text" id="input-poly-sector" placeholder="Ej: Calle 3 cruce con Av. Principal" class="w-full px-3 py-2 text-xs bg-slate-800 border border-slate-700 rounded-xl text-white focus:outline-none focus:border-sky-500">
+        </div>
+
+        <div>
+          <label class="block text-[11px] font-bold text-slate-300 uppercase mb-1">Observaciones / Novedades</label>
+          <textarea id="input-poly-obs" rows="2" placeholder="Notas de campo, puntos críticos..." class="w-full px-3 py-2 text-xs bg-slate-800 border border-slate-700 rounded-xl text-white focus:outline-none focus:border-sky-500"></textarea>
+        </div>
+
+        <div class="pt-2 flex items-center justify-end gap-2 border-t border-slate-800">
+          <button type="button" onclick="document.getElementById('modal-edit-polygon').classList.add('hidden')" class="px-4 py-2 text-xs font-semibold text-slate-400 hover:text-white">
+            Cancelar
+          </button>
+          <button type="submit" class="px-6 py-2.5 text-xs font-black bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 text-white rounded-xl shadow-lg flex items-center gap-1.5">
+            <i data-lucide="check" class="w-4 h-4"></i>
+            <span>Guardar Cuadrante</span>
+          </button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+
+  <!-- SCRIPT -->
+  <script type="module" src="js/app.js?v=1"></script>
+</body>
+</html>
