@@ -53,11 +53,12 @@ export class AtlasMapEngine {
       layers: [googleHybrid]
     });
 
-    L.control.zoom({ position: "topright" }).addTo(this.map);
+    // Controles separados para evitar cualquier colisión en móviles y laptops
+    L.control.zoom({ position: "bottomleft" }).addTo(this.map);
     L.control.layers(
-      { "Satélite Google (Nitidez)": googleHybrid, "Satélite Esri": esriSatellite, "Calles OSM": osmStreets },
+      { "Satélite Google": googleHybrid, "Satélite Esri": esriSatellite, "Calles OSM": osmStreets },
       null,
-      { position: "topright" }
+      { position: "topleft" }
     ).addTo(this.map);
 
     this.boundaryLayer = L.layerGroup().addTo(this.map);
