@@ -19,7 +19,7 @@
   <script src="https://unpkg.com/lucide@latest"></script>
 
   <!-- Custom Styles -->
-  <link rel="stylesheet" href="css/styles.css?v=2">
+  <link rel="stylesheet" href="css/styles.css?v=3">
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen antialiased select-none">
 
@@ -71,7 +71,7 @@
 
         <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl">
           <span class="text-[11px] font-bold text-slate-400 uppercase block">Parroquias Oficiales</span>
-          <span id="kpi-parroq-total" class="text-3xl font-black font-mono text-amber-400 block mt-1">42</span>
+          <span id="kpi-parroq-total" class="text-3xl font-black font-mono text-amber-400 block mt-1">44</span>
           <span class="text-[10px] text-slate-500">Listas para recibir planos</span>
         </div>
 
@@ -174,7 +174,13 @@
         <input type="file" id="input-kml-file" accept=".kml,.kmz" class="hidden">
 
         <!-- Botón Trazar Calle -->
-        <button id="btn-draw-street" class="px-3.5 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-black shadow transition flex items-center gap-1.5">
+        <!-- Botón Ver Ejemplo / Demo -->
+        <button id="btn-load-sample-lines" class="px-3 py-1.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold transition flex items-center gap-1.5 shadow" title="Cargar muestra de calles trazadas con semáforos">
+          <i data-lucide="eye" class="w-3.5 h-3.5"></i>
+          <span>Ver Ejemplo (Demo)</span>
+        </button>
+
+        <button id="btn-draw-street"  class="px-3.5 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-black shadow transition flex items-center gap-1.5">
           <i data-lucide="plus" class="w-4 h-4"></i>
           <span>+ Trazar Nueva Calle</span>
         </button>
@@ -410,6 +416,6 @@
   </div>
 
   <!-- SCRIPT -->
-  <script type="module" src="js/app.js?v=2"></script>
+  <script type="module" src="js/app.js?v=3"></script>
 </body>
 </html>
