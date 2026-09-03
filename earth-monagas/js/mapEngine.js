@@ -58,6 +58,11 @@ export class EarthMapEngine {
       { position: "topright" }
     ).addTo(this.map);
 
+    // Botones de Zoom (+ y -) estilo Google Earth Pro aislados abajo a la derecha
+    L.control.zoom({
+      position: "bottomright"
+    }).addTo(this.map);
+
     // Grupos de capas
     this.boundaryLayer = L.layerGroup().addTo(this.map);
     this.polygonsLayer = L.layerGroup().addTo(this.map);
