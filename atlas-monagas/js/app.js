@@ -108,16 +108,16 @@ class AtlasMonagasApp {
 
     if (list) {
       list.innerHTML = mun.parroquias.map(p => `
-        <div onclick="window.atlasApp.launchParishMap('${mun.id}', '${p.id}')" class="p-3.5 rounded-xl border border-slate-800 bg-slate-950/80 hover:bg-slate-800 hover:border-amber-500/50 cursor-pointer transition flex items-center justify-between group">
-          <div>
-            <h4 class="text-sm font-bold text-white group-hover:text-amber-300 transition">${p.nombre}</h4>
-            <p class="text-xs text-slate-400 font-mono">${p.tipo} • Código: ${p.codigo}</p>
-            <p class="text-[10px] text-slate-500 mt-0.5 italic truncate max-w-xs">${p.sectores.join(", ")}</p>
+        <div onclick="window.atlasApp.launchParishMap('${mun.id}', '${p.id}')" class="p-3.5 rounded-2xl border border-slate-800 bg-slate-950/90 hover:bg-slate-800 hover:border-amber-500/50 active:scale-[0.98] cursor-pointer transition-all flex items-center justify-between gap-3 group shadow-sm">
+          <div class="min-w-0 flex-1">
+            <h4 class="text-sm font-black text-white group-hover:text-amber-300 transition truncate">${p.nombre}</h4>
+            <p class="text-[11px] text-slate-400 font-mono">${p.tipo} • <span class="text-amber-400/80">${p.codigo}</span></p>
+            <p class="text-[10px] text-slate-500 mt-0.5 truncate">${p.sectores.join(", ")}</p>
           </div>
-          <button class="px-3 py-1.5 rounded-lg bg-amber-500/10 text-amber-400 border border-amber-500/20 text-xs font-bold group-hover:bg-amber-500 group-hover:text-slate-950 transition flex items-center gap-1">
-            <span>Trazar Calles</span>
-            <i data-lucide="pencil-ruler" class="w-3.5 h-3.5"></i>
-          </button>
+          <div class="shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-500/15 text-amber-400 border border-amber-500/30 text-xs font-black group-hover:bg-amber-500 group-hover:text-slate-950 transition whitespace-nowrap shadow">
+            <span>Trazar</span>
+            <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+          </div>
         </div>
       `).join("");
     }
