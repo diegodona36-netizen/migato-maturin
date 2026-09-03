@@ -90,3 +90,21 @@ body {
     height: calc(1.75rem + env(safe-area-inset-bottom));
   }
 }
+
+
+/* Active Tool Button State */
+.btn-earth-tool.active-tool {
+  background-color: #0284c7 !important;
+  color: #ffffff !important;
+  border-color: #38bdf8 !important;
+  box-shadow: 0 0 12px rgba(56, 189, 248, 0.6) !important;
+}
+
+/* Horizontal scrollable toolbar on mobile without ugly scrollbars */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
