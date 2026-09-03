@@ -90,6 +90,16 @@ class EarthMonagasApp {
     });
 
     this.renderPlacesTree();
+    // En pantallas pequeñas, cerrar el panel de lugares al seleccionar parroquia para tener todo el mapa
+    if (window.innerWidth < 768) {
+      const sidebar = document.getElementById("earth-sidebar");
+      const backdrop = document.getElementById("sidebar-backdrop");
+      if (sidebar) {
+        sidebar.classList.add("hidden");
+        sidebar.classList.remove("flex");
+      }
+      if (backdrop) backdrop.classList.add("hidden");
+    }
   }
 
   renderPlacesTree(filterQuery = "") {
@@ -283,7 +293,14 @@ class EarthMonagasApp {
       this.toolsManager.setActiveTool("regla");
     });
 
-    // Finalizar / Cancelar dibujo desde el banner flotante
+    // Deshacer / Finalizar / Cancelar dibujo desde el banner flotante
+    const btnUndo = document.getElementById("btn-banner-undo");
+    if (btnUndo) {
+      btnUndo.addEventListener("click", () => {
+        this.toolsManager.undoLastPoint();
+      });
+    }
+
     document.getElementById("btn-banner-finish").addEventListener("click", () => {
       this.toolsManager.finishCurrentDrawing();
     });
@@ -320,15 +337,29 @@ class EarthMonagasApp {
       if (p) this.mapEngine.flyTo(p.centro[0], p.centro[1], p.zoom || 14);
     });
 
-    // 5. Toggle sidebar en móvil
+    // 5. Toggle y cierre ergonómico del sidebar en móvil
     const btnToggleSidebar = document.getElementById("btn-toggle-sidebar");
+    const btnCloseSidebar = document.getElementById("btn-close-sidebar");
     const sidebar = document.getElementById("earth-sidebar");
-    if (btnToggleSidebar && sidebar) {
-      btnToggleSidebar.addEventListener("click", () => {
-        sidebar.classList.toggle("hidden");
-        sidebar.classList.toggle("flex");
-      });
-    }
+    const backdrop = document.getElementById("sidebar-backdrop");
+
+    const toggleSidebar = (open = null) => {
+      if (!sidebar) return;
+      const willOpen = open !== null ? open : sidebar.classList.contains("hidden");
+      if (willOpen) {
+        sidebar.classList.remove("hidden");
+        sidebar.classList.add("flex");
+        if (backdrop) backdrop.classList.remove("hidden");
+      } else {
+        sidebar.classList.add("hidden");
+        sidebar.classList.remove("flex");
+        if (backdrop) backdrop.classList.add("hidden");
+      }
+    };
+
+    if (btnToggleSidebar) btnToggleSidebar.addEventListener("click", () => toggleSidebar());
+    if (btnCloseSidebar) btnCloseSidebar.addEventListener("click", () => toggleSidebar(false));
+    if (backdrop) backdrop.addEventListener("click", () => toggleSidebar(false));
   }
 
   setupDragAndDrop() {
