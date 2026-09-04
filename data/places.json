@@ -1,1 +1,114 @@
-{"aparicio":{"subparroquias":[{"id":"sub-aparicio-1","nombre":"Aparicio"}],"poligonos":[]}}
+{
+  "piar_aparicio": {
+    "munId": "piar",
+    "parishId": "aparicio",
+    "subparroquias": [
+      {
+        "id": "sub-aparicio-1",
+        "parroquiaId": "aparicio",
+        "nombre": "Sub-Parroquia 1 • Casco Aparicio",
+        "alias": "Aparicio Centro",
+        "colorBorde": "#c084fc",
+        "anchoBorde": 2.5,
+        "colorRelleno": "#a855f7",
+        "opacidad": 0.2,
+        "areaHa": 145.8,
+        "perimetroM": 4900,
+        "militantes": 850,
+        "casas": 420,
+        "visible": true,
+        "vertices": [
+          [9.9950, -63.5750],
+          [9.9980, -63.5450],
+          [9.9700, -63.5420],
+          [9.9680, -63.5720],
+          [9.9950, -63.5750]
+        ]
+      }
+    ],
+    "poligonos": [
+      {
+        "id": "poly-aparicio-centro",
+        "subParroquiaId": "sub-aparicio-1",
+        "nombre": "Sector Aparicio Centro",
+        "descripcion": "Comunidad Casco Central de Aparicio",
+        "militantes": 520,
+        "casas": 260,
+        "habitantes": 520,
+        "familias": 260,
+        "colorBorde": "#38bdf8",
+        "anchoBorde": 2,
+        "colorRelleno": "#38bdf8",
+        "opacidad": 0.35,
+        "areaHa": 35.4,
+        "perimetroM": 2100,
+        "visible": true,
+        "vertices": [
+          [9.9880, -63.5680],
+          [9.9900, -63.5520],
+          [9.9780, -63.5500],
+          [9.9760, -63.5660],
+          [9.9880, -63.5680]
+        ]
+      }
+    ],
+    "rutas": [],
+    "marcas": []
+  },
+  "aparicio": {
+    "munId": "piar",
+    "parishId": "aparicio",
+    "subparroquias": [
+      {
+        "id": "sub-aparicio-1",
+        "parroquiaId": "aparicio",
+        "nombre": "Sub-Parroquia 1 • Casco Aparicio",
+        "alias": "Aparicio Centro",
+        "colorBorde": "#c084fc",
+        "anchoBorde": 2.5,
+        "colorRelleno": "#a855f7",
+        "opacidad": 0.2,
+        "areaHa": 145.8,
+        "perimetroM": 4900,
+        "militantes": 850,
+        "casas": 420,
+        "visible": true,
+        "vertices": [
+          [9.9950, -63.5750],
+          [9.9980, -63.5450],
+          [9.9700, -63.5420],
+          [9.9680, -63.5720],
+          [9.9950, -63.5750]
+        ]
+      }
+    ],
+    "poligonos": [
+      {
+        "id": "poly-aparicio-centro",
+        "subParroquiaId": "sub-aparicio-1",
+        "nombre": "Sector Aparicio Centro",
+        "descripcion": "Comunidad Casco Central de Aparicio",
+        "militantes": 520,
+        "casas": 260,
+        "habitantes": 520,
+        "familias": 260,
+        "colorBorde": "#38bdf8",
+        "anchoBorde": 2,
+        "colorRelleno": "#38bdf8",
+        "opacidad": 0.35,
+        "areaHa": 35.4,
+        "perimetroM": 2100,
+        "visible": true,
+        "vertices": [
+          [9.9880, -63.5680],
+          [9.9900, -63.5520],
+          [9.9780, -63.5500],
+          [9.9760, -63.5660],
+          [9.9880, -63.5680]
+        ]
+      }
+    ],
+    "rutas": [],
+    "marcas": []
+  }
+}

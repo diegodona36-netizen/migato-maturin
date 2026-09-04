@@ -526,44 +526,19 @@ export class EarthStore {
 
       let success = false;
 
-      // 1. Intentar API Serverless de Vercel (/api/places)
+      // 1. Enviar a /api/places (GitHub Cloud Storage)
       try {
         const res = await fetch("/api/places", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload)
         });
-        if (res.ok) success = true;
-      } catch (e) {
-        console.warn("Fallo /api/places, usando fallback directo:", e);
-      }
-
-      // 2. Fallback directo a la base de datos cloud
-      if (!success) {
-        try {
-          const directUrl = "https://api.restful-api.dev/objects/ff808181a067127101a06ec2648014dc";
-          let currentCloud = {};
-          try {
-            const getR = await fetch(directUrl);
-            if (getR.ok) {
-              const gj = await getR.json();
-              currentCloud = gj.data || {};
-            }
-          } catch (e) {}
-
-          currentCloud[pKey] = payload;
-          const putR = await fetch(directUrl, {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              name: "earth_monagas_territorio_v1",
-              data: currentCloud
-            })
-          });
-          if (putR.ok) success = true;
-        } catch (e) {
-          console.error("Fallo fallback de base de datos:", e);
+        if (res.ok) {
+          const json = await res.json();
+          if (json.ok) success = true;
         }
+      } catch (e) {
+        console.warn("Error en /api/places:", e);
       }
 
       this.updateCloudStatus(success ? "online" : "error");
@@ -612,7 +587,7 @@ export class EarthStore {
       this.updateCloudStatus("syncing");
       let cloudData = null;
 
-      // 1. Intentar API Serverless
+      // 1. Intentar API Serverless (/api/places)
       try {
         const res = await fetch("/api/places");
         if (res.ok) {
@@ -621,13 +596,13 @@ export class EarthStore {
         }
       } catch (e) {}
 
-      // 2. Fallback directo
+      // 2. Fallback directo a GitHub Raw
       if (!cloudData) {
         try {
-          const res = await fetch("https://api.restful-api.dev/objects/ff808181a067127101a06ec2648014dc");
+          const rawUrl = "https://raw.githubusercontent.com/diegodona36-netizen/migato-maturin/main/data/places.json?v=" + Date.now();
+          const res = await fetch(rawUrl);
           if (res.ok) {
-            const json = await res.json();
-            cloudData = json.data || {};
+            cloudData = await res.json();
           }
         } catch (e) {}
       }

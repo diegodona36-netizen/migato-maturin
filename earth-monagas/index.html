@@ -32,7 +32,7 @@
   <meta http-equiv="Expires" content="0" />
 
   <!-- Custom Styles -->
-  <link rel="stylesheet" href="css/styles.css?v=57">
+  <link rel="stylesheet" href="css/styles.css?v=58">
 
   <!-- Script de Autenticación Rápida, Limpieza Integral de Caché y Activador de Herramientas -->
   <script>
@@ -275,7 +275,7 @@
         </button>
 
         <!-- Indicador de Militancia en Vivo (Header Pill) -->
-        <div id="header-militancia-tally" class="hidden xs:flex items-center gap-2 px-2.5 py-1.5 rounded-xl bg-slate-950/90 border border-slate-700/80 text-[11px] font-mono shadow-sm shrink-0" title="Balance de Militancia y Casas en esta Parroquia">
+        <div id="header-militancia-tally" class="hidden md:flex items-center gap-2 px-2.5 py-1.5 rounded-xl bg-slate-950/90 border border-slate-700/80 text-[11px] font-mono shadow-sm shrink-0" title="Balance de Militancia y Casas en esta Parroquia">
           <span class="text-sky-400 font-black flex items-center gap-1">
             <i data-lucide="users" class="w-3.5 h-3.5"></i>
             <span id="tally-militantes-val">0</span>
@@ -288,10 +288,10 @@
         </div>
 
         <!-- Botón y Estado de Base de Datos en la Nube (Sincronización en Vivo) -->
-        <button id="btn-cloud-sync" type="button" onclick="window.earthApp?.forceSyncCloud ? window.earthApp.forceSyncCloud() : (window.earthApp?.store?.syncFromCloud())" class="px-2.5 py-1.5 rounded-xl bg-slate-800 hover:bg-sky-950/70 text-slate-300 hover:text-sky-300 border border-slate-700 hover:border-sky-500/50 text-xs font-bold transition flex items-center gap-1.5 shrink-0 active:scale-95 shadow cursor-pointer" title="Base de Datos en la Red (Sincronizado entre computadoras y teléfonos)">
+        <button id="btn-cloud-sync" type="button" onclick="window.earthApp?.forceSyncCloud ? window.earthApp.forceSyncCloud() : (window.earthApp?.store?.syncFromCloud())" class="px-2 sm:px-2.5 py-1.5 rounded-xl bg-slate-800 hover:bg-sky-950/70 text-slate-300 hover:text-sky-300 border border-slate-700 hover:border-sky-500/50 text-xs font-bold transition flex items-center gap-1.5 shrink-0 active:scale-95 shadow cursor-pointer" title="Base de Datos en la Red (Sincronizado entre computadoras y teléfonos)">
           <span id="cloud-sync-dot" class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0"></span>
           <i data-lucide="cloud" class="w-3.5 h-3.5 text-sky-400 shrink-0"></i>
-          <span id="cloud-sync-text" class="hidden md:inline font-bold">En Red</span>
+          <span id="cloud-sync-text" class="hidden sm:inline font-bold">En Red</span>
         </button>
 
         <!-- Botón Reset Caché Rápido -->
@@ -1001,8 +1001,8 @@
       </div>
     </div>
 
-    <!-- CUERPO EXPANDIBLE (Oculto por defecto en móvil para dejar el satélite 100% libre, expandible con el botón 📝) -->
-    <div id="earth-drawing-body" class="space-y-2 hidden sm:block transition-all">
+    <!-- CUERPO DEL PANEL (Siempre visible con campos accesibles para no colapsar en pantallas móviles ni computadoras) -->
+    <div id="earth-drawing-body" class="space-y-2 block transition-all">
       <!-- Fila 2: Indicación de Acción para el Usuario -->
       <div class="bg-slate-950/80 rounded-xl p-2 border border-slate-800 flex items-center gap-2">
         <div class="w-6 h-6 rounded-lg bg-sky-500/20 text-sky-400 flex items-center justify-center shrink-0">
@@ -1075,7 +1075,7 @@
   </div>
 
   <!-- SCRIPT -->
-  <script type="module" src="js/app.js?v=57"></script>
+  <script type="module" src="js/app.js?v=58"></script>
   <script>
     if (window.lucide && typeof window.lucide.createIcons === 'function') {
       window.lucide.createIcons();

@@ -2,15 +2,15 @@
  * Controlador Principal — Google Earth Pro Web (Edición Estado Monagas)
  * Robusto, 100% Operativo y Totalmente Individualizado
  */
-import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=57";
-import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=57";
-import { getAllParishesForSelector } from "./usersCatalog.js?v=57";
-import { EarthStore } from "./earthStore.js?v=57";
-import { EarthMapEngine } from "./mapEngine.js?v=57";
-import { PropertiesDialog } from "./propertiesDialog.js?v=57";
-import { ToolsManager } from "./toolsManager.js?v=57";
-import { detectParishFromGeometry } from "./geoMonagas.js?v=57";
-import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=57";
+import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=58";
+import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=58";
+import { getAllParishesForSelector } from "./usersCatalog.js?v=58";
+import { EarthStore } from "./earthStore.js?v=58";
+import { EarthMapEngine } from "./mapEngine.js?v=58";
+import { PropertiesDialog } from "./propertiesDialog.js?v=58";
+import { ToolsManager } from "./toolsManager.js?v=58";
+import { detectParishFromGeometry } from "./geoMonagas.js?v=58";
+import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=58";
 
 class EarthMonagasApp {
   constructor() {
@@ -569,13 +569,54 @@ class EarthMonagasApp {
     const filteredRoutes = (pData.rutas || []).filter(r => !q || r.nombre.toLowerCase().includes(q));
     const filteredMarks = (pData.marcas || []).filter(m => !q || m.nombre.toLowerCase().includes(q));
 
-    let html = `
+    // Buscar otras parroquias que tengan datos sincronizados en la red (ej. Aparicio)
+    const otherParishesWithData = [];
+    if (this.store && this.store.state && this.store.state.municipios) {
+      Object.entries(this.store.state.municipios).forEach(([mId, mun]) => {
+        Object.entries(mun.parroquias || {}).forEach(([pId, p]) => {
+          if (mId === this.selectedMunId && pId === this.selectedParishId) return;
+          const subCount = (p.subparroquias || []).length;
+          const polyCount = (p.poligonos || []).length;
+          if (subCount > 0 || polyCount > 0) {
+            otherParishesWithData.push({ mId, pId, nombre: p.nombre, munNombre: mun.nombre, subCount, polyCount });
+          }
+        });
+      });
+    }
+
+    let html = "";
+
+    // Barra de acceso directo a otras parroquias sincronizadas en la red
+    if (otherParishesWithData.length > 0 && !q) {
+      html += `
+        <div class="mb-3 p-2.5 bg-slate-950/90 border border-purple-500/50 rounded-2xl shadow-lg space-y-1.5">
+          <div class="flex items-center justify-between">
+            <span class="text-[10px] font-black uppercase text-purple-300 tracking-wider flex items-center gap-1">
+              <span>🌐</span> Territorios con Datos en Red:
+            </span>
+            <span class="text-[9px] text-emerald-400 font-mono font-bold animate-pulse">● En Vivo</span>
+          </div>
+          <div class="flex flex-col gap-1">
+            ${otherParishesWithData.map(op => `
+              <button onclick="window.earthApp.selectParish('${op.mId}', '${op.pId}')" class="w-full px-2.5 py-1.5 rounded-xl bg-purple-950/60 hover:bg-purple-900/80 border border-purple-500/40 text-left text-xs font-bold text-white flex items-center justify-between active:scale-95 transition cursor-pointer group">
+                <span class="truncate group-hover:text-purple-300">📍 ${op.nombre} <span class="text-[10px] text-slate-400">(${op.munNombre})</span></span>
+                <span class="text-[10px] text-purple-300 font-mono shrink-0 ml-1 font-black bg-purple-900/80 px-1.5 py-0.5 rounded border border-purple-700/50">
+                  ${op.subCount} ejes • ${op.polyCount} sec ➔
+                </span>
+              </button>
+            `).join("")}
+          </div>
+        </div>
+      `;
+    }
+
+    html += `
       <!-- Tarjeta de Parroquia Activa con Resumen de Militancia -->
       <div class="bg-slate-950/90 p-3 rounded-2xl border border-sky-500/40 mb-3 shadow-lg">
         <div class="flex items-center justify-between mb-1.5">
           <span class="text-[10px] font-bold text-sky-400 uppercase tracking-wider">${munObj?.nombre || 'Municipio'}</span>
           ${this.authManager.canSwitchParish() ? `
-          <button onclick="window.earthApp.openParishSelector()" class="text-[10px] text-amber-400 hover:text-amber-300 font-bold bg-amber-500/10 px-2.5 py-0.5 rounded-lg border border-amber-500/30 active:scale-95 transition">
+          <button onclick="window.earthApp.openParishSelector()" class="text-[10px] text-amber-400 hover:text-amber-300 font-bold bg-amber-500/10 px-2.5 py-0.5 rounded-lg border border-amber-500/30 active:scale-95 transition cursor-pointer">
             Cambiar ▾
           </button>` : `
           <span class="text-[10px] text-emerald-400 font-bold bg-emerald-950/60 px-2 py-0.5 rounded-lg border border-emerald-800/40 flex items-center gap-1">
@@ -905,10 +946,18 @@ class EarthMonagasApp {
       const isCurrentMun = mun.id === this.selectedMunId;
       const parishesButtons = mun.parroquias.map(p => {
         const isCurrent = isCurrentMun && p.id === this.selectedParishId;
+        const parishStore = this.store.getParish(mun.id, p.id);
+        const subCount = (parishStore?.subparroquias || []).length;
+        const polyCount = (parishStore?.poligonos || []).length;
+        const hasData = subCount > 0 || polyCount > 0;
+
         return `
-          <button onclick="window.earthApp.selectParishFromModal('${mun.id}', '${p.id}')" class="px-3 py-2 rounded-xl text-left text-xs font-semibold transition flex items-center justify-between ${isCurrent ? 'bg-sky-600 text-white font-black shadow-lg' : 'bg-slate-800 hover:bg-slate-700 text-slate-200'}">
-            <span>${p.nombre}</span>
-            <i data-lucide="chevron-right" class="w-3.5 h-3.5 opacity-60"></i>
+          <button onclick="window.earthApp.selectParishFromModal('${mun.id}', '${p.id}')" class="px-3 py-2 rounded-xl text-left text-xs font-semibold transition flex items-center justify-between cursor-pointer ${isCurrent ? 'bg-sky-600 text-white font-black shadow-lg' : (hasData ? 'bg-purple-950/70 hover:bg-purple-900/90 text-purple-200 border border-purple-500/50' : 'bg-slate-800 hover:bg-slate-700 text-slate-200')}">
+            <span class="truncate">${p.nombre}</span>
+            <div class="flex items-center gap-1.5 shrink-0 ml-1">
+              ${hasData ? `<span class="text-[9px] font-mono px-1.5 py-0.5 rounded bg-purple-900/90 text-purple-300 border border-purple-700 font-black">${subCount} ejes • ${polyCount} sec</span>` : ''}
+              <i data-lucide="chevron-right" class="w-3.5 h-3.5 opacity-60"></i>
+            </div>
           </button>
         `;
       }).join("");
