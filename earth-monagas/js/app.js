@@ -2,15 +2,15 @@
  * Controlador Principal — Google Earth Pro Web (Edición Estado Monagas)
  * Robusto, 100% Operativo y Totalmente Individualizado
  */
-import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=46";
-import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=46";
-import { getAllParishesForSelector } from "./usersCatalog.js?v=46";
-import { EarthStore } from "./earthStore.js?v=46";
-import { EarthMapEngine } from "./mapEngine.js?v=46";
-import { PropertiesDialog } from "./propertiesDialog.js?v=46";
-import { ToolsManager } from "./toolsManager.js?v=46";
-import { detectParishFromGeometry } from "./geoMonagas.js?v=46";
-import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=46";
+import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=47";
+import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=47";
+import { getAllParishesForSelector } from "./usersCatalog.js?v=47";
+import { EarthStore } from "./earthStore.js?v=47";
+import { EarthMapEngine } from "./mapEngine.js?v=47";
+import { PropertiesDialog } from "./propertiesDialog.js?v=47";
+import { ToolsManager } from "./toolsManager.js?v=47";
+import { detectParishFromGeometry } from "./geoMonagas.js?v=47";
+import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=47";
 
 class EarthMonagasApp {
   constructor() {
@@ -817,8 +817,7 @@ class EarthMonagasApp {
       });
       this.focusSubParish(newItem.id);
       this.renderPlacesTree();
-      this.propDialog.open("subparroquia", newItem, targetMunId, targetParishId);
-      this.showToast(`🟪 <strong>${newItem.nombre}</strong> creado. Configura sus datos y pulsa <strong>[+ Sector Comunal]</strong> para trazar sectores dentro.`, "purple");
+      this.showToast(`🟪 <strong>${newItem.nombre}</strong> guardado en ${parish?.nombre || 'la Parroquia'}. Pulsa <strong>[+ Sector Comunal]</strong> para trazar sectores dentro.`, "purple");
       return;
     }
 
@@ -838,8 +837,8 @@ class EarthMonagasApp {
     this.updateMilitanciaTally();
     this.renderPlacesTree();
 
-    this.propDialog.open(type, newItem, targetMunId, targetParishId);
-    this.showToast(`📍 <strong>${newItem.nombre}</strong> fijado exitosamente. Configura sus datos y pulsa Guardar.`, "sky");
+    const toastColor = type === "poligono" ? "sky" : (type === "ruta" ? "emerald" : "rose");
+    this.showToast(`✅ <strong>${newItem.nombre}</strong> guardado con éxito en ${parish?.nombre || 'la Parroquia'}.`, toastColor);
   }
 
   handleSaveProperties(type, itemId, updatedFields, targetMunId = null, targetParishId = null) {
