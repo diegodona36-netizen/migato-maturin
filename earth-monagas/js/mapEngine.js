@@ -2,8 +2,8 @@
  * Motor Cartográfico Acelerado por GPU — Google Earth Pro Web (Monagas)
  * Integrado con Capas Jerárquicas Oficiales (INE 2021) y Edición de Vértices
  */
-import { GEO_ESTADO_OFICIAL, GEO_MUNICIPIOS_OFICIAL, GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=45";
-import { SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=45";
+import { GEO_ESTADO_OFICIAL, GEO_MUNICIPIOS_OFICIAL, GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=46";
+import { SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=46";
 
 export class EarthMapEngine {
   constructor(containerId, onCoordUpdate) {

@@ -2,15 +2,15 @@
  * Controlador Principal — Google Earth Pro Web (Edición Estado Monagas)
  * Robusto, 100% Operativo y Totalmente Individualizado
  */
-import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=45";
-import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=45";
-import { getAllParishesForSelector } from "./usersCatalog.js?v=45";
-import { EarthStore } from "./earthStore.js?v=45";
-import { EarthMapEngine } from "./mapEngine.js?v=45";
-import { PropertiesDialog } from "./propertiesDialog.js?v=45";
-import { ToolsManager } from "./toolsManager.js?v=45";
-import { detectParishFromGeometry } from "./geoMonagas.js?v=45";
-import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=45";
+import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=46";
+import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=46";
+import { getAllParishesForSelector } from "./usersCatalog.js?v=46";
+import { EarthStore } from "./earthStore.js?v=46";
+import { EarthMapEngine } from "./mapEngine.js?v=46";
+import { PropertiesDialog } from "./propertiesDialog.js?v=46";
+import { ToolsManager } from "./toolsManager.js?v=46";
+import { detectParishFromGeometry } from "./geoMonagas.js?v=46";
+import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=46";
 
 class EarthMonagasApp {
   constructor() {
@@ -94,14 +94,12 @@ class EarthMonagasApp {
     this.selectParish(this.selectedMunId, this.selectedParishId);
 
     window.activateEarthTool = (toolName) => {
-      if (this.propDialog) {
-        this.propDialog.openForCreate(toolName);
-      } else if (this.toolsManager) {
+      if (this.toolsManager) {
         this.toolsManager.setActiveTool(toolName);
       }
     };
     if (window._pendingEarthTool) {
-      window.activateEarthTool(window._pendingEarthTool);
+      this.toolsManager.setActiveTool(window._pendingEarthTool);
       window._pendingEarthTool = null;
     }
 
@@ -840,12 +838,8 @@ class EarthMonagasApp {
     this.updateMilitanciaTally();
     this.renderPlacesTree();
 
-    if (type === "marca") {
-      this.showToast(`📍 <strong>Marca de Posición</strong> colocada. Clic sobre el pin rojo en el mapa para editar sus datos.`, "sky");
-    } else {
-      this.propDialog.open(type, newItem, targetMunId, targetParishId);
-      this.showToast(`📍 <strong>${newItem.nombre}</strong> trazado exitosamente.`, "sky");
-    }
+    this.propDialog.open(type, newItem, targetMunId, targetParishId);
+    this.showToast(`📍 <strong>${newItem.nombre}</strong> fijado exitosamente. Configura sus datos y pulsa Guardar.`, "sky");
   }
 
   handleSaveProperties(type, itemId, updatedFields, targetMunId = null, targetParishId = null) {
