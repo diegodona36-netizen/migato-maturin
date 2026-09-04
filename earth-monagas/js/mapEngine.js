@@ -2,8 +2,8 @@
  * Motor Cartográfico Acelerado por GPU — Google Earth Pro Web (Monagas)
  * Integrado con Capas Jerárquicas Oficiales (INE 2021) y Edición de Vértices
  */
-import { GEO_ESTADO_OFICIAL, GEO_MUNICIPIOS_OFICIAL, GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=54";
-import { SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=54";
+import { GEO_ESTADO_OFICIAL, GEO_MUNICIPIOS_OFICIAL, GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=55";
+import { SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=55";
 
 export class EarthMapEngine {
   constructor(containerId, onCoordUpdate) {
@@ -476,10 +476,8 @@ export class EarthMapEngine {
 
     if (!parish) return;
 
-    // 0. Sub-Parroquias / Ejes Comunales (Nivel 4)
-    // Cargar las sub-parroquias de todo el municipio actual para que a primera vista en el municipio ya se vean
-    const munSubParishes = window.earthApp?.store?.getAllSubParishesInMun(window.earthApp?.selectedMunId) || [];
-    const subParishesToRender = munSubParishes.length > 0 ? munSubParishes : (parish.subparroquias || []);
+    // 0. Sub-Parroquias / Ejes Comunales (Nivel 4) - INDIVIDUALIZACIÓN ESTRICTA POR PARROQUIA
+    const subParishesToRender = parish.subparroquias || [];
 
     subParishesToRender.forEach(sp => {
       try {
@@ -521,11 +519,6 @@ export class EarthMapEngine {
             return;
           }
           L.DomEvent.stopPropagation(e);
-
-          // Si pertenece a otra parroquia del municipio, cambiar a esa parroquia
-          if (window.earthApp && sp.parishId && sp.parishId !== window.earthApp.selectedParishId) {
-            window.earthApp.selectParish(sp.munId || window.earthApp.selectedMunId, sp.parishId);
-          }
 
           // Enfocar eje en la app
           if (window.earthApp) {
