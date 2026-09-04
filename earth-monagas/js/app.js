@@ -2,15 +2,15 @@
  * Controlador Principal — Google Earth Pro Web (Edición Estado Monagas)
  * Robusto, 100% Operativo y Totalmente Individualizado
  */
-import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=40";
-import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=40";
-import { getAllParishesForSelector } from "./usersCatalog.js?v=40";
-import { EarthStore } from "./earthStore.js?v=40";
-import { EarthMapEngine } from "./mapEngine.js?v=40";
-import { PropertiesDialog } from "./propertiesDialog.js?v=40";
-import { ToolsManager } from "./toolsManager.js?v=40";
-import { detectParishFromGeometry } from "./geoMonagas.js?v=40";
-import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=40";
+import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=42";
+import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=42";
+import { getAllParishesForSelector } from "./usersCatalog.js?v=42";
+import { EarthStore } from "./earthStore.js?v=42";
+import { EarthMapEngine } from "./mapEngine.js?v=42";
+import { PropertiesDialog } from "./propertiesDialog.js?v=42";
+import { ToolsManager } from "./toolsManager.js?v=42";
+import { detectParishFromGeometry } from "./geoMonagas.js?v=42";
+import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=42";
 
 class EarthMonagasApp {
   constructor() {
@@ -1185,6 +1185,15 @@ class EarthMonagasApp {
 
 
   setupToolbarEvents() {
+    // 0. Delegación global infalible para cualquier botón de herramienta (barra superior o barra móvil inferior)
+    document.addEventListener("click", (e) => {
+      const toolBtn = e.target.closest("[data-tool]");
+      if (toolBtn && toolBtn.dataset.tool && this.toolsManager) {
+        const tool = toolBtn.dataset.tool;
+        this.toolsManager.setActiveTool(tool);
+      }
+    });
+
     // 1. Botones de herramientas principales
     // Conmutar herramientas avanzadas
     const btnAdvToggle = document.getElementById("btn-toggle-advanced-tools");
@@ -1202,7 +1211,8 @@ class EarthMonagasApp {
     // 0. Herramienta Sub-Parroquia / Eje Comunal (Nivel 4)
     const btnSubparish = document.getElementById("btn-tool-subparish");
     if (btnSubparish) {
-      btnSubparish.addEventListener("click", () => {
+      btnSubparish.addEventListener("click", (e) => {
+        e.preventDefault();
         this.toolsManager.setActiveTool("subparroquia");
       });
     }
@@ -1218,21 +1228,24 @@ class EarthMonagasApp {
 
     const btnPoly = document.getElementById("btn-tool-polygon");
     if (btnPoly) {
-      btnPoly.addEventListener("click", () => {
+      btnPoly.addEventListener("click", (e) => {
+        e.preventDefault();
         this.toolsManager.setActiveTool("poligono");
       });
     }
 
     const btnPath = document.getElementById("btn-tool-path");
     if (btnPath) {
-      btnPath.addEventListener("click", () => {
+      btnPath.addEventListener("click", (e) => {
+        e.preventDefault();
         this.toolsManager.setActiveTool("ruta");
       });
     }
 
     const btnPlacemark = document.getElementById("btn-tool-placemark");
     if (btnPlacemark) {
-      btnPlacemark.addEventListener("click", () => {
+      btnPlacemark.addEventListener("click", (e) => {
+        e.preventDefault();
         this.toolsManager.setActiveTool("marca");
       });
     }

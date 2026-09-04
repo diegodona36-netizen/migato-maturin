@@ -3,7 +3,7 @@
  * Gobernación del Estado Monagas • Plataforma Cartográfica MIGATO
  */
 
-import { CATALOGO_MONAGAS } from "./catalogoMonagas.js?v=40";
+import { CATALOGO_MONAGAS } from "./catalogoMonagas.js?v=42";
 
 // Generar usuarios predeterminados para las 44 parroquias + coordinadores + superadmin
 function buildInitialUsers() {

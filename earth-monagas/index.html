@@ -32,7 +32,7 @@
   <meta http-equiv="Expires" content="0" />
 
   <!-- Custom Styles -->
-  <link rel="stylesheet" href="css/styles.css?v=41">
+  <link rel="stylesheet" href="css/styles.css?v=42">
 
   <!-- Script de Autenticación Rápida y Limpieza Integral de Caché -->
   <script>
@@ -160,7 +160,7 @@
         <div>
           <div class="relative">
             <i data-lucide="user" class="w-4 h-4 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2"></i>
-            <input type="text" id="auth-input-user" placeholder="Escribe parroquia (ej: jusepin, el corozo) o admin" class="w-full pl-9 pr-3 py-2 bg-slate-950 border border-slate-700 rounded-xl text-white font-medium text-xs sm:text-sm focus:outline-none focus:border-sky-500 transition">
+            <input type="text" id="auth-input-user" placeholder="Escribe parroquia (ej: San Simón, Los Godos) o admin" class="w-full pl-9 pr-3 py-2 bg-slate-950 border border-slate-700 rounded-xl text-white font-medium text-xs sm:text-sm focus:outline-none focus:border-sky-500 transition">
           </div>
         </div>
 
@@ -528,25 +528,25 @@
         </button>
 
         <!-- Botón + Eje Móvil -->
-        <button type="button" onclick="document.getElementById('btn-tool-subparish').click()" class="pointer-events-auto px-3 py-2 rounded-2xl bg-slate-900/95 hover:bg-purple-900 text-purple-300 border border-purple-500/50 shadow-2xl backdrop-blur-md flex items-center gap-1.5 font-bold text-xs active:scale-95 transition">
+        <button type="button" data-tool="subparroquia" id="btn-mobile-subparish" onclick="window.earthApp?.toolsManager ? window.earthApp.toolsManager.setActiveTool('subparroquia') : document.getElementById('btn-tool-subparish').click()" class="btn-earth-tool pointer-events-auto px-3 py-2 rounded-2xl bg-slate-900/95 hover:bg-purple-900 text-purple-300 border border-purple-500/50 shadow-2xl backdrop-blur-md flex items-center gap-1.5 font-bold text-xs active:scale-95 transition" title="Dibujar Límite de Sub-Parroquia o Eje Comunal">
           <i data-lucide="shield" class="w-4 h-4 text-purple-400"></i>
           <span>+ Eje</span>
         </button>
 
         <!-- Botón + Sector Comunal Móvil -->
-        <button type="button" onclick="document.getElementById('btn-tool-polygon').click()" class="pointer-events-auto px-3.5 py-2 rounded-2xl bg-slate-900/95 hover:bg-sky-900 text-sky-300 border border-sky-500/50 shadow-2xl backdrop-blur-md flex items-center gap-1.5 font-black text-xs active:scale-95 transition">
+        <button type="button" data-tool="poligono" id="btn-mobile-polygon" onclick="window.earthApp?.toolsManager ? window.earthApp.toolsManager.setActiveTool('poligono') : document.getElementById('btn-tool-polygon').click()" class="btn-earth-tool pointer-events-auto px-3.5 py-2 rounded-2xl bg-slate-900/95 hover:bg-sky-900 text-sky-300 border border-sky-500/50 shadow-2xl backdrop-blur-md flex items-center gap-1.5 font-black text-xs active:scale-95 transition" title="Dibujar Sector Comunal">
           <i data-lucide="home" class="w-4 h-4 text-sky-400"></i>
           <span>+ Sector</span>
         </button>
 
         <!-- Botón + Ruta Móvil -->
-        <button type="button" onclick="document.getElementById('btn-tool-path').click()" class="pointer-events-auto px-3 py-2 rounded-2xl bg-slate-900/95 hover:bg-emerald-900 text-emerald-300 border border-emerald-500/50 shadow-2xl backdrop-blur-md flex items-center gap-1 font-bold text-xs active:scale-95 transition" title="Trazar Calle o Ruta">
+        <button type="button" data-tool="ruta" id="btn-mobile-path" onclick="window.earthApp?.toolsManager ? window.earthApp.toolsManager.setActiveTool('ruta') : document.getElementById('btn-tool-path').click()" class="btn-earth-tool pointer-events-auto px-3 py-2 rounded-2xl bg-slate-900/95 hover:bg-emerald-900 text-emerald-300 border border-emerald-500/50 shadow-2xl backdrop-blur-md flex items-center gap-1 font-bold text-xs active:scale-95 transition" title="Trazar Calle o Ruta">
           <i data-lucide="git-commit" class="w-4 h-4 text-emerald-400"></i>
           <span>+ Ruta</span>
         </button>
 
         <!-- Botón + Marca Móvil -->
-        <button type="button" onclick="document.getElementById('btn-tool-placemark').click()" class="pointer-events-auto px-3 py-2 rounded-2xl bg-slate-900/95 hover:bg-rose-900 text-rose-300 border border-rose-500/50 shadow-2xl backdrop-blur-md flex items-center gap-1 font-bold text-xs active:scale-95 transition" title="Punto de Interés">
+        <button type="button" data-tool="marca" id="btn-mobile-placemark" onclick="window.earthApp?.toolsManager ? window.earthApp.toolsManager.setActiveTool('marca') : document.getElementById('btn-tool-placemark').click()" class="btn-earth-tool pointer-events-auto px-3 py-2 rounded-2xl bg-slate-900/95 hover:bg-rose-900 text-rose-300 border border-rose-500/50 shadow-2xl backdrop-blur-md flex items-center gap-1 font-bold text-xs active:scale-95 transition" title="Punto de Interés">
           <i data-lucide="map-pin" class="w-4 h-4 text-rose-400"></i>
           <span>+ Marca</span>
         </button>
@@ -922,7 +922,7 @@
   </div>
 
   <!-- SCRIPT -->
-  <script type="module" src="js/app.js?v=41"></script>
+  <script type="module" src="js/app.js?v=42"></script>
   <script>
     if (window.lucide && typeof window.lucide.createIcons === 'function') {
       window.lucide.createIcons();

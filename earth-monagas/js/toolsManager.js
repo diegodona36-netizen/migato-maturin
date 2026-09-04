@@ -46,6 +46,10 @@ export class ToolsManager {
   }
 
   setActiveTool(toolName) {
+    if (this.activeTool === toolName) {
+      // Ya está activa esta herramienta, no reiniciar trazado en progreso
+      return;
+    }
     this.cancelActiveTool();
     this.activeTool = toolName;
 
@@ -72,6 +76,26 @@ export class ToolsManager {
       if (banner) {
         banner.classList.remove("hidden");
         banner.classList.add("flex");
+        // Ajustar color del borde y pulso del banner según la herramienta
+        banner.classList.remove("border-sky-500/90", "border-purple-500/90", "border-emerald-500/90", "border-rose-500/90");
+        const dot = banner.querySelector(".rounded-full.animate-pulse");
+        if (dot) {
+          dot.className = "w-2.5 h-2.5 rounded-full shrink-0 animate-pulse " + 
+            (toolName === "subparroquia" ? "bg-purple-400 shadow-[0_0_8px_rgba(192,132,252,0.8)]" :
+             toolName === "poligono" ? "bg-sky-400 shadow-[0_0_8px_rgba(56,189,248,0.8)]" :
+             toolName === "ruta" ? "bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)]" :
+             "bg-rose-400 shadow-[0_0_8px_rgba(251,113,133,0.8)]");
+        }
+        if (toolName === "subparroquia") {
+          banner.classList.add("border-purple-500/90");
+        } else if (toolName === "poligono") {
+          banner.classList.add("border-sky-500/90");
+        } else if (toolName === "ruta") {
+          banner.classList.add("border-emerald-500/90");
+        } else {
+          banner.classList.add("border-rose-500/90");
+        }
+
         const parishName = window.earthApp?.store?.getParish(window.earthApp?.selectedMunId, window.earthApp?.selectedParishId)?.nombre || "";
         const parishSuffix = parishName ? ` (${parishName})` : "";
         const activeSp = window.earthApp?.activeSubParroquiaId ? 
@@ -85,6 +109,19 @@ export class ToolsManager {
       }
       this.updateDrawingHint();
       if (liveMeasure) liveMeasure.textContent = "0 puntos";
+
+      // Feedback visual inmediato con toast informativo
+      if (window.earthApp && typeof window.earthApp.showToast === "function") {
+        if (toolName === "subparroquia") {
+          window.earthApp.showToast("🟪 <strong>Modo Sub-Parroquia / Eje Activo:</strong> Haz clics en el satélite para trazar los vértices del perímetro.", "purple");
+        } else if (toolName === "poligono") {
+          window.earthApp.showToast("🏘️ <strong>Modo Sector Comunal Activo:</strong> Haz clics en el satélite para delimitar el sector.", "sky");
+        } else if (toolName === "ruta") {
+          window.earthApp.showToast("〰️ <strong>Modo Ruta Activo:</strong> Haz clics en el satélite para trazar la vía.", "emerald");
+        } else if (toolName === "marca") {
+          window.earthApp.showToast("📍 <strong>Modo Marca Activo:</strong> Haz un clic en el mapa donde quieras colocar el punto de interés.", "rose");
+        }
+      }
     } else {
       if (this.map && this.map.doubleClickZoom) {
         this.map.doubleClickZoom.enable();
@@ -141,6 +178,9 @@ export class ToolsManager {
         this.createPlacemark(latlng);
         return;
       }
+
+      // 1. Guardar punto en la secuencia de geometría (VITAL para polígonos y rutas)
+      this.points.push(latlng);
 
       const isSub = this.activeTool === "subparroquia";
       const vertexBg = isSub ? "bg-purple-500" : "bg-sky-400";
@@ -332,14 +372,31 @@ export class ToolsManager {
     }
   }
 
+  cleanPoints(points) {
+    if (!points || points.length < 2) return points || [];
+    const cleaned = [points[0]];
+    for (let i = 1; i < points.length; i++) {
+      const prev = cleaned[cleaned.length - 1];
+      const cur = points[i];
+      // Si la distancia entre dos puntos seguidos es casi cero (< 0.5m), descartar duplicado
+      const d = L.latLng(prev[0], prev[1]).distanceTo(L.latLng(cur[0], cur[1]));
+      if (d > 0.5) {
+        cleaned.push(cur);
+      }
+    }
+    return cleaned;
+  }
+
   finishCurrentDrawing() {
+    const sanitizedPoints = this.cleanPoints(this.points);
+
     if (this.activeTool === "subparroquia") {
-      if (this.points.length < 3) {
+      if (sanitizedPoints.length < 3) {
         alert("Una sub-parroquia necesita al menos 3 esquinas para delimitar su perímetro.");
         return;
       }
-      const areaHa = this.calculatePolygonAreaHa(this.points);
-      const perimetroM = this.calculatePerimeterMeters(this.points);
+      const areaHa = this.calculatePolygonAreaHa(sanitizedPoints);
+      const perimetroM = this.calculatePerimeterMeters(sanitizedPoints);
       const newSubParish = {
         id: `SUBPAR-${Date.now()}`,
         nombre: "Nuevo Eje / Sub-Parroquia",
@@ -348,7 +405,7 @@ export class ToolsManager {
         anchoBorde: 2.5,
         colorRelleno: "#a855f7",
         opacidad: 0.2,
-        vertices: [...this.points],
+        vertices: [...sanitizedPoints],
         areaHa,
         perimetroM,
         visible: true,
@@ -360,12 +417,12 @@ export class ToolsManager {
     }
 
     if (this.activeTool === "poligono") {
-      if (this.points.length < 3) {
+      if (sanitizedPoints.length < 3) {
         alert("Un polígono necesita al menos 3 esquinas para formar un sector.");
         return;
       }
-      const areaHa = this.calculatePolygonAreaHa(this.points);
-      const perimetroM = this.calculatePerimeterMeters(this.points);
+      const areaHa = this.calculatePolygonAreaHa(sanitizedPoints);
+      const perimetroM = this.calculatePerimeterMeters(sanitizedPoints);
       const newPoly = {
         id: `POLY-${Date.now()}`,
         nombre: "Nuevo Sector Comunal",
@@ -374,7 +431,7 @@ export class ToolsManager {
         anchoBorde: 2,
         colorRelleno: "#38bdf8",
         opacidad: 0.35,
-        vertices: [...this.points],
+        vertices: [...sanitizedPoints],
         areaHa,
         perimetroM,
         visible: true,
@@ -384,18 +441,18 @@ export class ToolsManager {
       if (this.onFinishItemCallback) this.onFinishItemCallback("poligono", newPoly);
 
     } else if (this.activeTool === "ruta") {
-      if (this.points.length < 2) {
+      if (sanitizedPoints.length < 2) {
         alert("Una ruta necesita al menos 2 puntos para trazar la vía.");
         return;
       }
-      const longitudM = this.calculatePerimeterMeters(this.points);
+      const longitudM = this.calculatePerimeterMeters(sanitizedPoints);
       const newRoute = {
         id: `ROUTE-${Date.now()}`,
         nombre: "Nueva Calle / Ruta",
         descripcion: "",
         color: "#10b981",
         ancho: 4,
-        puntos: [...this.points],
+        puntos: [...sanitizedPoints],
         longitudM,
         visible: true,
         fecha: new Date().toISOString()
