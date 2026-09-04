@@ -51,6 +51,36 @@ export class PropertiesDialog {
         triggerLiveUpdate();
       });
     }
+    // Paleta de Colores Rápidos (1 toque para aplicar a todo el polígono)
+    document.querySelectorAll(".btn-quick-color").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const color = btn.dataset.color;
+        const name = btn.dataset.name;
+
+        // Actualizar inputs
+        const bColor = document.getElementById("prop-border-color");
+        const fColor = document.getElementById("prop-fill-color");
+        const labelName = document.getElementById("palette-color-name");
+
+        if (bColor) bColor.value = color;
+        if (fColor) fColor.value = color;
+        if (labelName) labelName.textContent = name;
+
+        // Resaltar botón activo
+        document.querySelectorAll(".btn-quick-color").forEach(b => {
+          const isCurrent = b === btn;
+          b.classList.toggle("border-white", isCurrent);
+          b.classList.toggle("border-slate-700", !isCurrent);
+          b.classList.toggle("scale-105", isCurrent);
+          const icon = b.querySelector(".check-icon");
+          if (icon) icon.classList.toggle("hidden", !isCurrent);
+        });
+
+        // Actualizar polígono en el mapa en vivo
+        triggerLiveUpdate();
+      });
+    });
+
     if (inputBorderColor) inputBorderColor.addEventListener("input", triggerLiveUpdate);
     if (inputBorderWidth) inputBorderWidth.addEventListener("input", triggerLiveUpdate);
     if (inputFillColor) inputFillColor.addEventListener("input", triggerLiveUpdate);
@@ -141,6 +171,20 @@ export class PropertiesDialog {
     }
 
     this.switchTab("desc");
+        // Sincronizar paleta rápida de colores
+    const currentColor = (item.colorBorde || item.color || "#38bdf8").toLowerCase();
+    document.querySelectorAll(".btn-quick-color").forEach(b => {
+      const match = b.dataset.color.toLowerCase() === currentColor;
+      b.classList.toggle("border-white", match);
+      b.classList.toggle("border-slate-700", !match);
+      const icon = b.querySelector(".check-icon");
+      if (icon) icon.classList.toggle("hidden", !match);
+      if (match) {
+        const labelName = document.getElementById("palette-color-name");
+        if (labelName) labelName.textContent = b.dataset.name;
+      }
+    });
+
     this.modalEl.classList.remove("hidden");
     this.modalEl.classList.add("flex");
   }
