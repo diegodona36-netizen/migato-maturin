@@ -192,6 +192,10 @@ export class PropertiesDialog {
   save() {
     if (!this.currentItem) return;
 
+    // Capturar ID y Tipo ANTES de cerrar para evitar referencias nulas
+    const targetType = this.currentType;
+    const targetId = this.currentItem.id;
+
     const name = document.getElementById("prop-name").value.trim() || "Sin Título";
     const desc = document.getElementById("prop-desc").value.trim();
 
@@ -200,20 +204,22 @@ export class PropertiesDialog {
       descripcion: desc
     };
 
-    if (this.currentType === "poligono") {
+    if (targetType === "poligono") {
       updated.colorBorde = document.getElementById("prop-border-color").value;
       updated.anchoBorde = parseInt(document.getElementById("prop-border-width").value) || 2;
       updated.colorRelleno = document.getElementById("prop-fill-color").value;
       updated.opacidad = parseFloat(document.getElementById("prop-poly-opacity").value) || 0.4;
-    } else if (this.currentType === "ruta") {
+    } else if (targetType === "ruta") {
       updated.color = document.getElementById("prop-border-color").value;
       updated.ancho = parseInt(document.getElementById("prop-border-width").value) || 4;
     }
 
+    // Cerrar primero el modal
     this.close();
 
+    // Notificar al guardador y re-renderizar mapa con los nuevos colores
     if (this.onSaveCallback) {
-      this.onSaveCallback(this.currentType, this.currentItem.id, updated);
+      this.onSaveCallback(targetType, targetId, updated);
     }
   }
 
