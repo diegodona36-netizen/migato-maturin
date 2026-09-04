@@ -49,9 +49,14 @@ class EarthMonagasApp {
       this.updateStatusBar(lat, lng, eyeAlt);
     });
 
-    this.propDialog = new PropertiesDialog((type, itemId, updated) => {
-      this.handleSaveProperties(type, itemId, updated);
-    });
+    this.propDialog = new PropertiesDialog(
+      (type, itemId, updated) => {
+        this.handleSaveProperties(type, itemId, updated);
+      },
+      (type, itemId, liveDraft) => {
+        this.handleLiveStylePreview(type, itemId, liveDraft);
+      }
+    );
 
     this.toolsManager = new ToolsManager(this.mapEngine, (type, newItem) => {
       this.handleFinishedDrawing(type, newItem);
