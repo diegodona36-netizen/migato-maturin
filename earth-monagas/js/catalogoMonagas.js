@@ -1,7 +1,8 @@
 /**
  * Catálogo Oficial Completo del Estado Monagas
- * 13 Municipios y sus 44 Parroquias Oficiales (Gaceta Oficial)
+ * 13 Municipios y sus 44 Parroquias Oficiales (Gaceta Oficial / INE 2021)
  */
+import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js";
 
 export const CATALOGO_MONAGAS = [
   // 1. MATURÍN (10 Parroquias)
@@ -622,3 +623,77 @@ export const CATALOGO_MONAGAS = [
     ]
   }
 ];
+
+// Alias de IDs de catálogo a IDs oficiales de INE
+const OFICIAL_ALIASES = {
+  "aragua": "capital-piar",
+  "caripe-centro": "capital-caripe",
+  "caicara": "capital-cedeno",
+  "temblador": "capital-libertador",
+  "punta-de-mata": "capital-ezequiel-zamora",
+  "san-antonio": "capital-acosta",
+  "quiriquire": "capital-punceres",
+  "santa-barbara-centro": "santa-barbara",
+  "barrancas": "capital-sotillo",
+  "los-barrancos": "los-barrancos-de-fajardo",
+  "caripito": "bolivar",
+  "aguasay-centro": "aguasay",
+  "uracoa-centro": "uracoa"
+};
+
+// Indexar polígonos oficiales del INE
+const oficialFeatureMap = new Map();
+if (GEO_PARROQUIAS_OFICIAL && GEO_PARROQUIAS_OFICIAL.features) {
+  GEO_PARROQUIAS_OFICIAL.features.forEach(f => {
+    if (f.properties && f.properties.id) {
+      oficialFeatureMap.set(f.properties.id, f);
+    }
+  });
+}
+
+// Aplicar geometrías oficiales del INE 2021 a las parroquias
+CATALOGO_MONAGAS.forEach(mun => {
+  mun.parroquias.forEach(parroquia => {
+    const targetId = OFICIAL_ALIASES[parroquia.id] || parroquia.id;
+    const feat = oficialFeatureMap.get(targetId);
+    if (feat && feat.geometry && feat.geometry.coordinates) {
+      if (feat.geometry.type === "Polygon") {
+        parroquia.limite = feat.geometry.coordinates[0].map(pt => [pt[1], pt[0]]);
+        parroquia.esOficialINE = true;
+      } else if (feat.geometry.type === "MultiPolygon") {
+        const largest = feat.geometry.coordinates.reduce((max, poly) => 
+          poly[0].length > max.length ? poly[0] : max, feat.geometry.coordinates[0][0]
+        );
+        parroquia.limite = largest.map(pt => [pt[1], pt[0]]);
+        parroquia.esOficialINE = true;
+      }
+    }
+  });
+});
+
+export { OFICIAL_ALIASES };
+
+/**
+ * Busca una parroquia y su municipio dentro de CATALOGO_MONAGAS.
+ * Admite IDs de catálogo, IDs oficiales del INE (con OFICIAL_ALIASES) y nombres.
+ */
+export function findParishInCatalog(queryIdOrName) {
+  if (!queryIdOrName) return null;
+  const q = String(queryIdOrName).toLowerCase().trim();
+
+  for (const mun of CATALOGO_MONAGAS) {
+    for (const p of mun.parroquias) {
+      const oficialId = OFICIAL_ALIASES[p.id] || p.id;
+      if (
+        p.id.toLowerCase() === q ||
+        oficialId.toLowerCase() === q ||
+        p.nombre.toLowerCase() === q ||
+        p.nombre.toLowerCase().replace(/\s+/g, '-').includes(q)
+      ) {
+        return { mun, parish: p };
+      }
+    }
+  }
+
+  return null;
+}

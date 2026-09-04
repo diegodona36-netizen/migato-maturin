@@ -1,6 +1,9 @@
 /**
  * Motor Cartográfico Acelerado por GPU — Google Earth Pro Web (Monagas)
+ * Integrado con Capas Jerárquicas Oficiales (INE 2021) y Edición de Vértices
  */
+import { GEO_ESTADO_OFICIAL, GEO_MUNICIPIOS_OFICIAL, GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=36";
+import { SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=36";
 
 export class EarthMapEngine {
   constructor(containerId, onCoordUpdate) {
@@ -10,13 +13,25 @@ export class EarthMapEngine {
     this.map = null;
     this.canvasRenderer = null;
 
-    // Capas
+    // Capas Base
     this.boundaryLayer = null;
     this.polygonsLayer = null;
     this.routesLayer = null;
     this.placemarksLayer = null;
     this.overlayLayer = null;
     this.tempDrawingLayer = null;
+
+    // Capas Jerárquicas Oficiales (LOD 1 a 5)
+    this.layerL1_Estado = null;
+    this.layerL2_Municipios = null;
+    this.layerL3_Parroquias = null;
+    this.layerL4_SubParroquias = null;
+    this.layerCentros = null;
+
+    // Estado de Edición de Vértices
+    this.editingPoly = null;
+    this.editingVertexMarkers = [];
+    this.onFinishGeometryEdit = null;
 
     this.init();
   }
@@ -51,7 +66,7 @@ export class EarthMapEngine {
       layers: [googleHybrid]
     });
 
-    // Control de capas clásico
+    // Control de capas satelitales clásico
     L.control.layers(
       { "Satélite Google (Híbrido)": googleHybrid, "Satélite Esri": esriSatellite, "Calles OSM": osmStreets },
       null,
@@ -63,13 +78,21 @@ export class EarthMapEngine {
       position: "bottomright"
     }).addTo(this.map);
 
-    // Grupos de capas
+    // Inicializar Grupos de Capas de Usuario
     this.boundaryLayer = L.layerGroup().addTo(this.map);
+    this.subParroquiasLayer = L.layerGroup().addTo(this.map);
     this.polygonsLayer = L.layerGroup().addTo(this.map);
     this.routesLayer = L.layerGroup().addTo(this.map);
     this.placemarksLayer = L.layerGroup().addTo(this.map);
     this.overlayLayer = L.layerGroup().addTo(this.map);
     this.tempDrawingLayer = L.layerGroup().addTo(this.map);
+
+    this.spotlightEnabled = false; // Satélite 100% limpio por defecto (Solo Alineación / Sin filtro oscuro)
+    this.currentParishLimite = null;
+    this.currentParishId = null;
+
+    // Inicializar Capas Jerárquicas Oficiales (LOD 1 a 5)
+    this.initHierarchicalLayers();
 
     // Seguimiento dinámico de coordenadas en la barra de estado
     this.map.on("mousemove", (e) => {
@@ -83,11 +106,159 @@ export class EarthMapEngine {
       if (this.onCoordUpdate) {
         this.onCoordUpdate(center.lat, center.lng, this.getEyeAltitude());
       }
+      const zoom = this.map.getZoom();
+      if (this.subParroquiasLayer) {
+        this.subParroquiasLayer.eachLayer(layer => {
+          const isFocused = window.earthApp?.activeSubParroquiaId;
+          if (zoom >= 14 || isFocused) {
+            layer.setStyle({ fillOpacity: 0, fill: false });
+          } else {
+            layer.setStyle({ fillOpacity: 0.15, fill: true });
+          }
+        });
+      }
     });
   }
 
+  /**
+   * Construye las capas oficiales de los 5 niveles jerárquicos
+   */
+  initHierarchicalLayers() {
+    // 1. Capa L1: Estado Monagas (Oficial INE/IGVSB)
+    this.layerL1_Estado = L.geoJSON(GEO_ESTADO_OFICIAL, {
+      style: {
+        color: "#f59e0b",
+        weight: 3.5,
+        opacity: 0.95,
+        fillColor: "#f59e0b",
+        fillOpacity: 0.06,
+        dashArray: "8, 6"
+      },
+      onEachFeature: (feature, layer) => {
+        layer.bindTooltip(`
+          <div class="p-1 font-mono text-xs">
+            <strong class="text-amber-400 block font-bold text-sm">Estado Monagas</strong>
+            <span class="text-[10px] text-slate-300">13 Municipios • 44 Parroquias • 536 Centros de Votación</span>
+          </div>
+        `, { sticky: true, className: "earth-tooltip" });
+      }
+    });
+
+    // 2. Capa L2: 13 Municipios (Oficial INE)
+    this.layerL2_Municipios = L.geoJSON(GEO_MUNICIPIOS_OFICIAL, {
+      style: (feature) => ({
+        color: feature.properties.color || "#38bdf8",
+        weight: 2,
+        opacity: 0.9,
+        fillColor: feature.properties.color || "#38bdf8",
+        fillOpacity: 0.12
+      }),
+      onEachFeature: (feature, layer) => {
+        const p = feature.properties;
+        layer.bindTooltip(`
+          <div class="p-1 font-mono text-xs">
+            <strong class="text-white block font-bold text-sm">Municipio ${p.nombre || p.ADM2_ES}</strong>
+            <span class="text-[10px] text-sky-300">Capital: ${p.capital || 'N/D'} • ${p.parroquias_count || ''} Parroquias</span>
+            ${p.electores ? `<span class="text-[10px] text-slate-400 block font-mono">Electores: ~${p.electores.toLocaleString()}</span>` : ''}
+          </div>
+        `, { sticky: true, className: "earth-tooltip" });
+      }
+    });
+
+    // 3. Capa L3: 44 Parroquias Oficiales (INE 2021)
+    this.layerL3_Parroquias = L.geoJSON(GEO_PARROQUIAS_OFICIAL, {
+      style: (feature) => ({
+        color: "#ffffff",
+        weight: 1.5,
+        opacity: 0.85,
+        fillColor: feature.properties.color || "#10b981",
+        fillOpacity: 0.14,
+        dashArray: "5, 4"
+      }),
+      onEachFeature: (feature, layer) => {
+        const p = feature.properties;
+        layer.bindTooltip(`
+          <div class="p-1 font-mono text-xs">
+            <strong class="text-emerald-400 block font-bold">${p.nombre || p.ADM3_ES}</strong>
+            <span class="text-[10px] text-slate-300">Municipio ${p.municipioNombre || p.ADM2_ES || 'Monagas'}</span>
+            <span class="text-[9px] text-amber-400 block mt-0.5">👉 Clic para seleccionar y mapear</span>
+          </div>
+        `, { sticky: true, className: "earth-tooltip" });
+
+        layer.on("click", (e) => {
+          L.DomEvent.stopPropagation(e);
+          if (window.earthApp) {
+            window.earthApp.selectParish(p.municipioId, p.id);
+          }
+        });
+      }
+    });
+
+    // 4. Capa L4: 10 Sub-Parroquias / Ejes de Alto de Los Godos
+    this.layerL4_SubParroquias = L.layerGroup();
+    SUBPARROQUIAS_GODOS.forEach(sp => {
+      if (sp.poligono && sp.poligono.length > 0) {
+        const poly = L.polygon(sp.poligono, {
+          color: sp.color || "#a855f7",
+          weight: 2,
+          opacity: 0.9,
+          fillColor: sp.color || "#a855f7",
+          fillOpacity: 0.22,
+          dashArray: "3, 3"
+        });
+        poly.bindTooltip(`
+          <div class="p-1 font-mono text-xs">
+            <strong class="text-purple-300 block font-bold">${sp.nombre}</strong>
+            <span class="text-[10px] text-slate-300">${sp.habitantesAprox ? `~${sp.habitantesAprox} hab` : ''}</span>
+          </div>
+        `, { sticky: true, className: "earth-tooltip" });
+        this.layerL4_SubParroquias.addLayer(poly);
+      }
+
+      const pin = L.circleMarker(sp.centro, {
+        radius: 6,
+        fillColor: sp.color || "#a855f7",
+        color: "#ffffff",
+        weight: 1.5,
+        fillOpacity: 0.9
+      });
+      pin.bindTooltip(`<strong>${sp.nombre}</strong><br><span class="text-[10px]">Centro de Referencia para Mapeo</span>`, { sticky: true, className: "earth-tooltip" });
+      this.layerL4_SubParroquias.addLayer(pin);
+    });
+  }
+
+  toggleHierarchicalLayer(levelKey, visible) {
+    const layerMap = {
+      'l1': this.layerL1_Estado,
+      'l2': this.layerL2_Municipios,
+      'l3': this.layerL3_Parroquias,
+      'l4': this.layerL4_SubParroquias,
+      'l5': this.polygonsLayer
+    };
+    const target = layerMap[levelKey];
+    if (!target) return;
+    if (visible) {
+      if (!this.map.hasLayer(target)) this.map.addLayer(target);
+    } else {
+      if (this.map.hasLayer(target)) this.map.removeLayer(target);
+    }
+  }
+
+  focusHierarchicalLayer(levelKey) {
+    const centerZoomMap = {
+      'l1': { center: [9.55, -63.15], zoom: 8 },
+      'l2': { center: [9.7469, -63.1812], zoom: 9 },
+      'l3': { center: [9.7469, -63.1812], zoom: 11 },
+      'l4': { center: [9.7280, -63.2060], zoom: 13 },
+      'l5': { center: [9.7260, -63.2180], zoom: 14 }
+    };
+    const target = centerZoomMap[levelKey];
+    if (target) {
+      this.map.flyTo(target.center, target.zoom, { duration: 1.2 });
+    }
+  }
+
   getEyeAltitude() {
-    // Estimación de la altitud visual de Google Earth según el nivel de zoom
     const z = this.map.getZoom();
     const altMap = {
       20: "120 m", 19: "250 m", 18: "500 m", 17: "1.0 km",
@@ -105,34 +276,230 @@ export class EarthMapEngine {
     this.map.flyToBounds(bounds, { padding: [50, 50], duration: 1.0 });
   }
 
-  showParishBoundary(limite) {
+  showParishBoundary(limite, parishId = null, flyCamera = true) {
+    this.currentParishLimite = limite;
+    this.currentParishId = parishId;
     this.boundaryLayer.clearLayers();
-    if (!limite || limite.length === 0) return;
 
-    const bPoly = L.polygon(limite, {
-      color: "#ffffff",
+    let coords = null;
+
+    // 1. Intentar obtener polígono oficial del INE desde GEO_PARROQUIAS_OFICIAL
+    if (parishId && GEO_PARROQUIAS_OFICIAL && GEO_PARROQUIAS_OFICIAL.features) {
+      const feat = GEO_PARROQUIAS_OFICIAL.features.find(f => f.properties && f.properties.id === parishId);
+      if (feat && feat.geometry) {
+        if (feat.geometry.type === "Polygon") {
+          coords = feat.geometry.coordinates[0].map(c => [c[1], c[0]]);
+        } else if (feat.geometry.type === "MultiPolygon") {
+          const polygons = feat.geometry.coordinates.map(p => p[0].map(c => [c[1], c[0]]));
+          coords = polygons.sort((a, b) => b.length - a.length)[0];
+        }
+      }
+    }
+
+    if (!coords && limite && limite.length > 0) {
+      coords = limite;
+    }
+
+    if (!coords || coords.length === 0) return;
+
+    // 2. Máscara de Foco (Efecto Reflector en Negro Azabache)
+    if (this.spotlightEnabled) {
+      const worldBox = [
+        [85, -180],
+        [85, 180],
+        [-85, 180],
+        [-85, -180]
+      ];
+
+      // Máscara invertida con orificio para la parroquia activa
+      const maskPoly = L.polygon([worldBox, coords], {
+        fillColor: "#020617",
+        fillOpacity: 0.78,
+        color: "#000000",
+        weight: 0,
+        interactive: false,
+        renderer: this.canvasRenderer
+      });
+      this.boundaryLayer.addLayer(maskPoly);
+    }
+
+    // 3. Contorno Neón Brillante para la Parroquia Iluminada
+    const bPoly = L.polygon(coords, {
+      color: "#38bdf8",
       weight: 2.5,
-      opacity: 0.9,
+      opacity: 0.95,
       fill: false,
-      dashArray: "8, 6",
+      dashArray: "6, 4",
       interactive: false,
       renderer: this.canvasRenderer
     });
 
     this.boundaryLayer.addLayer(bPoly);
-    this.map.flyToBounds(bPoly.getBounds(), { padding: [40, 40], duration: 1.0 });
+
+    if (flyCamera) {
+      this.map.flyToBounds(bPoly.getBounds(), { padding: [40, 40], duration: 1.2 });
+    }
+  }
+
+  showSubParishBoundary(spVertices, flyCamera = true) {
+    this.currentSubParishVertices = spVertices;
+    this.boundaryLayer.clearLayers();
+
+    if (!spVertices || spVertices.length < 3) return;
+
+    if (this.spotlightEnabled) {
+      const worldBox = [
+        [85, -180],
+        [85, 180],
+        [-85, 180],
+        [-85, -180]
+      ];
+
+      const maskPoly = L.polygon([worldBox, spVertices], {
+        fillColor: "#020617",
+        fillOpacity: 0.82,
+        color: "#000000",
+        weight: 0,
+        interactive: false,
+        renderer: this.canvasRenderer
+      });
+      this.boundaryLayer.addLayer(maskPoly);
+    }
+
+    const bPoly = L.polygon(spVertices, {
+      color: "#c084fc",
+      weight: 3,
+      opacity: 0.95,
+      fill: false,
+      dashArray: "6, 4",
+      interactive: false,
+      renderer: this.canvasRenderer
+    });
+    this.boundaryLayer.addLayer(bPoly);
+
+    if (flyCamera) {
+      this.map.flyToBounds(bPoly.getBounds(), { padding: [50, 50], duration: 1.2 });
+    }
+  }
+
+  toggleSpotlight(enabled = null) {
+    if (enabled !== null) {
+      this.spotlightEnabled = !!enabled;
+    } else {
+      this.spotlightEnabled = !this.spotlightEnabled;
+    }
+    if (this.currentSubParishVertices && window.earthApp?.activeSubParroquiaId) {
+      this.showSubParishBoundary(this.currentSubParishVertices, false);
+    } else if (this.currentParishLimite || this.currentParishId) {
+      this.showParishBoundary(this.currentParishLimite, this.currentParishId, false);
+    }
+    return this.spotlightEnabled;
+  }
+
+  setDrawingMode(isDrawing) {
+    this.isDrawingMode = !!isDrawing;
+    if (this.map) {
+      const container = this.map.getContainer();
+      if (container) {
+        container.classList.toggle("drawing-active", this.isDrawingMode);
+      }
+      this.map.closeTooltip();
+    }
+
+    // Ocultar cualquier máscara de sombra oscura mientras se dibuja para que el satélite esté 100% limpio
+    if (this.boundaryLayer) {
+      this.boundaryLayer.eachLayer(l => {
+        if (l.options && l.options.fillColor === "#020617") {
+          l.setStyle({ fillOpacity: this.isDrawingMode ? 0 : (this.spotlightEnabled ? 0.78 : 0) });
+        }
+      });
+    }
+
+    const groups = [
+      this.subParroquiasLayer,
+      this.polygonsLayer,
+      this.routesLayer,
+      this.placemarksLayer,
+      this.boundaryLayer
+    ];
+
+    groups.forEach(group => {
+      if (!group) return;
+      group.eachLayer(layer => {
+        if (this.isDrawingMode) {
+          if (layer._origInteractive === undefined) {
+            layer._origInteractive = layer.options.interactive !== false;
+          }
+          layer.options.interactive = false;
+          if (layer._path) layer._path.style.pointerEvents = "none";
+          if (layer.closeTooltip) layer.closeTooltip();
+        } else {
+          const wasInteractive = layer._origInteractive !== undefined ? layer._origInteractive : true;
+          layer.options.interactive = wasInteractive;
+          if (layer._path) layer._path.style.pointerEvents = "auto";
+        }
+      });
+    });
   }
 
   renderParishItems(parish, onSelectCallback) {
     this.polygonsLayer.clearLayers();
     this.routesLayer.clearLayers();
     this.placemarksLayer.clearLayers();
+    if (this.subParroquiasLayer) this.subParroquiasLayer.clearLayers();
 
     if (!parish) return;
 
-    // 1. Polígonos de Sectores
+    // 0. Sub-Parroquias / Ejes Comunales (Nivel 4)
+    (parish.subparroquias || []).forEach(sp => {
+      if (sp.visible === false || !sp.vertices || sp.vertices.length < 3) return;
+
+      const isDrawing = !!(window.earthApp?.toolsManager?.activeTool);
+
+      const spLayer = L.polygon(sp.vertices, {
+        color: sp.colorBorde || "#c084fc",
+        weight: isFocused ? 3.5 : (sp.anchoBorde || 2.5),
+        opacity: 0.95,
+        fillColor: sp.colorRelleno || "#a855f7",
+        // Sub-parroquias SIEMPRE en modo Solo Alineación (100% transparente para ver las calles y trazar sectores)
+        fill: false,
+        fillOpacity: 0,
+        dashArray: isFocused ? "8, 6" : "6, 4",
+        interactive: !isDrawing,
+        renderer: this.canvasRenderer
+      });
+
+      sp._leafletLayer = spLayer;
+
+      if (!isDrawing) {
+        spLayer.bindTooltip(`
+          <div class="p-1 font-mono text-xs">
+            <span class="text-[9px] uppercase tracking-wider text-purple-400 font-black block">Nivel 4 • Eje Comunal</span>
+            <strong class="text-white block font-bold text-sm">${sp.nombre}</strong>
+            <span class="text-[10px] text-purple-200">Área: ${sp.areaHa || 0} Ha • Per: ${sp.perimetroM || 0} m</span>
+            <span class="text-[9px] text-sky-400 block mt-1 font-bold">${isFocused ? '🎯 Eje Activo (Línea Limítrofe)' : '👉 Clic para seleccionar'}</span>
+          </div>
+        `, { sticky: true, className: "earth-tooltip" });
+      }
+
+      spLayer.on("click", (e) => {
+        if (window.earthApp?.toolsManager?.activeTool) {
+          L.DomEvent.stopPropagation(e);
+          window.earthApp.toolsManager.handleMapClick(e);
+          return;
+        }
+        L.DomEvent.stopPropagation(e);
+        if (onSelectCallback) onSelectCallback("subparroquia", sp);
+      });
+
+      if (this.subParroquiasLayer) this.subParroquiasLayer.addLayer(spLayer);
+    });
+
+    // 1. Polígonos de Sectores Comunales (Nivel 5)
     (parish.poligonos || []).forEach(poly => {
       if (poly.visible === false) return;
+
+      const isDrawing = !!(window.earthApp?.toolsManager?.activeTool);
 
       const pLayer = L.polygon(poly.vertices, {
         color: poly.colorBorde || "#38bdf8",
@@ -140,18 +507,34 @@ export class EarthMapEngine {
         opacity: 0.95,
         fillColor: poly.colorRelleno || "#38bdf8",
         fillOpacity: poly.opacidad !== undefined ? poly.opacidad : 0.35,
+        interactive: !isDrawing,
         renderer: this.canvasRenderer
       });
 
-      pLayer.bindTooltip(`
-        <div class="p-1 font-mono text-xs">
-          <strong class="text-white block font-bold">${poly.nombre}</strong>
-          <span class="text-[10px] text-sky-300">Área: ${poly.areaHa || 0} Ha • Per: ${poly.perimetroM || 0} m</span>
-          ${poly.descripcion ? `<p class="text-[10px] text-slate-300 mt-0.5">${poly.descripcion}</p>` : ''}
-        </div>
-      `, { sticky: true, className: "earth-tooltip" });
+      const milCount = poly.militantes !== undefined ? poly.militantes : (poly.habitantes || 0);
+      if (!isDrawing) {
+        pLayer.bindTooltip(`
+          <div class="p-1.5 font-mono text-xs max-w-[210px]">
+            <span class="text-[9px] uppercase text-sky-400 font-black block tracking-wider">Sector Comunal</span>
+            <strong class="text-white block font-bold text-sm truncate">${poly.nombre}</strong>
+            <div class="flex items-center gap-1.5 mt-1 text-[10px] text-slate-200">
+              <span class="text-sky-300 font-bold">👥 ${milCount} mil</span>
+              ${poly.casas ? `<span class="text-amber-300 font-bold">• 🏠 ${poly.casas} casas</span>` : ''}
+            </div>
+            ${poly.lider ? `<div class="text-[10px] text-slate-300 mt-0.5 truncate">👤 ${poly.lider}</div>` : ''}
+            ${poly.telefono ? `<div class="text-[10px] text-emerald-400 mt-0.5 font-bold">📱 ${poly.telefono}</div>` : ''}
+            <span class="text-[9px] text-slate-400 block mt-1">Área: ${poly.areaHa || 0} Ha • Per: ${poly.perimetroM || 0} m</span>
+            <span class="text-[9px] text-sky-400 font-bold block mt-1">👉 Clic para ver / editar Ficha</span>
+          </div>
+        `, { sticky: true, className: "earth-tooltip" });
+      }
 
       pLayer.on("click", (e) => {
+        if (window.earthApp?.toolsManager?.activeTool) {
+          L.DomEvent.stopPropagation(e);
+          window.earthApp.toolsManager.handleMapClick(e);
+          return;
+        }
         L.DomEvent.stopPropagation(e);
         if (onSelectCallback) onSelectCallback("poligono", poly);
       });
@@ -163,7 +546,6 @@ export class EarthMapEngine {
     (parish.rutas || []).forEach(r => {
       if (r.visible === false) return;
 
-      // Casing
       const casing = L.polyline(r.puntos, {
         color: "#0f172a",
         weight: (r.ancho || 4) + 3,
@@ -173,7 +555,6 @@ export class EarthMapEngine {
         renderer: this.canvasRenderer
       });
 
-      // Línea central
       const line = L.polyline(r.puntos, {
         color: r.color || "#10b981",
         weight: r.ancho || 4,
@@ -192,6 +573,10 @@ export class EarthMapEngine {
       `, { sticky: true, className: "earth-tooltip" });
 
       const handleClick = (e) => {
+        if (window.earthApp?.toolsManager?.activeTool) {
+          window.earthApp.toolsManager.handleMapClick(e);
+          return;
+        }
         L.DomEvent.stopPropagation(e);
         if (onSelectCallback) onSelectCallback("ruta", r);
       };
@@ -208,7 +593,7 @@ export class EarthMapEngine {
       if (m.visible === false) return;
 
       const marker = L.circleMarker([m.lat, m.lng], {
-        radius: 7,
+        radius: 6.5,
         fillColor: m.color || "#e11d48",
         color: "#ffffff",
         weight: 2,
@@ -216,12 +601,21 @@ export class EarthMapEngine {
         renderer: this.canvasRenderer
       });
 
-      marker.bindTooltip(`<strong>${m.nombre}</strong><br><span class="text-[10px]">${m.descripcion || ''}</span>`, {
+      marker.bindTooltip(`
+        <div class="p-1 font-mono text-xs">
+          <strong class="text-white block font-bold">${m.nombre}</strong>
+          <span class="text-[10px] text-slate-300">${m.descripcion || ''}</span>
+        </div>
+      `, {
         sticky: true,
         className: "earth-tooltip"
       });
 
       marker.on("click", (e) => {
+        if (window.earthApp?.toolsManager?.activeTool) {
+          window.earthApp.toolsManager.handleMapClick(e);
+          return;
+        }
         L.DomEvent.stopPropagation(e);
         if (onSelectCallback) onSelectCallback("marca", m);
       });
@@ -230,7 +624,74 @@ export class EarthMapEngine {
     });
   }
 
-  // Superposición de imagen (Image Overlay)
+  /**
+   * Modo Edición Interactiva de Vértices para Polígonos de Sectores
+   */
+  startEditingPolygonGeometry(poly, onUpdatedCallback) {
+    this.stopEditingPolygonGeometry();
+    this.editingPoly = poly;
+    this.editingVertexMarkers = [];
+
+    const banner = document.getElementById("earth-drawing-banner");
+    const bannerText = document.getElementById("earth-drawing-banner-text");
+    const liveMeasure = document.getElementById("earth-live-measure");
+
+    if (banner) {
+      banner.classList.remove("hidden");
+      banner.classList.add("flex");
+      if (bannerText) bannerText.textContent = `Ajustando ${poly.nombre}: Arrastra los puntos amarillos sobre el satélite`;
+      if (liveMeasure) liveMeasure.textContent = `${poly.vertices.length} vértices`;
+    }
+
+    const vertexIcon = L.divIcon({
+      className: "earth-vertex-marker-wrapper",
+      html: `<div class="w-4 h-4 bg-amber-400 border-2 border-slate-950 rounded-full shadow-lg cursor-move hover:scale-125 active:scale-95 transition"></div>`,
+      iconSize: [16, 16],
+      iconAnchor: [8, 8]
+    });
+
+    poly.vertices.forEach((pt, idx) => {
+      const m = L.marker(pt, {
+        draggable: true,
+        icon: vertexIcon,
+        zIndexOffset: 2000
+      }).addTo(this.tempDrawingLayer);
+
+      m.on("drag", (e) => {
+        const newPos = [e.latlng.lat, e.latlng.lng];
+        poly.vertices[idx] = newPos;
+        if (poly._leafletLayer) {
+          poly._leafletLayer.setLatLngs(poly.vertices);
+        }
+      });
+
+      this.editingVertexMarkers.push(m);
+    });
+
+    this.onFinishGeometryEdit = onUpdatedCallback;
+  }
+
+  finishEditingPolygonGeometry() {
+    if (this.editingPoly && this.onFinishGeometryEdit) {
+      this.onFinishGeometryEdit(this.editingPoly);
+    }
+    this.stopEditingPolygonGeometry();
+  }
+
+  stopEditingPolygonGeometry() {
+    this.editingPoly = null;
+    this.onFinishGeometryEdit = null;
+    this.tempDrawingLayer.clearLayers();
+    this.editingVertexMarkers = [];
+
+    const banner = document.getElementById("earth-drawing-banner");
+    if (banner) {
+      banner.classList.add("hidden");
+      banner.classList.remove("flex");
+    }
+  }
+
+  // Superposición de imagen (Image Overlay para Calcar Planos)
   addImageOverlay(url, bounds, opacity = 0.65) {
     this.overlayLayer.clearLayers();
     const overlay = L.imageOverlay(url, bounds, { opacity: opacity }).addTo(this.overlayLayer);

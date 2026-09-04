@@ -2,15 +2,19 @@
  * Controlador Principal — Google Earth Pro Web (Edición Estado Monagas)
  * Robusto, 100% Operativo y Totalmente Individualizado
  */
-import { CATALOGO_MONAGAS } from "./catalogoMonagas.js";
-import { AuthManager } from "./authManager.js";
-import { EarthStore } from "./earthStore.js";
-import { EarthMapEngine } from "./mapEngine.js";
-import { PropertiesDialog } from "./propertiesDialog.js";
-import { ToolsManager } from "./toolsManager.js";
+import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=36";
+import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=36";
+import { getAllParishesForSelector } from "./usersCatalog.js?v=36";
+import { EarthStore } from "./earthStore.js?v=36";
+import { EarthMapEngine } from "./mapEngine.js?v=36";
+import { PropertiesDialog } from "./propertiesDialog.js?v=36";
+import { ToolsManager } from "./toolsManager.js?v=36";
+import { detectParishFromGeometry } from "./geoMonagas.js?v=36";
+import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=36";
 
 class EarthMonagasApp {
   constructor() {
+    window.earthApp = this;
     this.store = null;
     this.mapEngine = null;
     this.propDialog = null;
@@ -18,7 +22,7 @@ class EarthMonagasApp {
     this.authManager = new AuthManager();
 
     this.selectedMunId = "maturin";
-    this.selectedParishId = "alto-de-los-godos";
+    this.selectedParishId = "jusepin";
 
     this.init();
   }
@@ -50,11 +54,17 @@ class EarthMonagasApp {
     });
 
     this.propDialog = new PropertiesDialog(
-      (type, itemId, updated) => {
-        this.handleSaveProperties(type, itemId, updated);
+      (type, itemId, updated, targetMunId, targetParishId) => {
+        this.handleSaveProperties(type, itemId, updated, targetMunId, targetParishId);
       },
       (type, itemId, liveDraft) => {
         this.handleLiveStylePreview(type, itemId, liveDraft);
+      },
+      (poly) => {
+        this.handleStartGeometryEdit(poly);
+      },
+      (polyId) => {
+        this.renderPlacesTree();
       }
     );
 
@@ -63,10 +73,12 @@ class EarthMonagasApp {
     });
 
     this.setupToolbarEvents();
+    this.setupSidebarTabs();
     this.setupDragAndDrop();
     this.setupOverlayModal();
     this.setupParishSelectorModal();
     this.setupAuth();
+    this.activeSubParroquiaId = null;
 
     // Cargar parroquia activa inicial
     this.selectParish(this.selectedMunId, this.selectedParishId);
@@ -103,6 +115,7 @@ class EarthMonagasApp {
   selectParish(munId, parishId) {
     this.selectedMunId = munId;
     this.selectedParishId = parishId;
+    this.activeSubParroquiaId = null;
 
     const parish = this.store.getParish(munId, parishId);
     if (!parish) return;
@@ -113,21 +126,30 @@ class EarthMonagasApp {
       if (window.innerWidth < 640) {
         navLoc.textContent = parish.nombre;
       } else {
-        navLoc.textContent = `${parish.nombre} (${munObj.nombre})`;
+        navLoc.textContent = `${parish.nombre} (${munObj ? munObj.nombre : 'Monagas'})`;
       }
-      navLoc.parentElement.title = `${parish.nombre} - Municipio ${munObj.nombre}`;
+      navLoc.parentElement.title = `${parish.nombre} - Municipio ${munObj ? munObj.nombre : 'Monagas'}`;
     }
 
     // Actualizar título de pestaña
-    document.title = `${parish.nombre} (${munObj.nombre}) • Google Earth Pro`;
+    document.title = `${parish.nombre} (${munObj ? munObj.nombre : 'Monagas'}) • Google Earth Pro`;
 
-    // Mostrar perímetro y elementos de esta parroquia
-    this.mapEngine.showParishBoundary(parish.limite);
+    // Actualizar indicador de parroquia en banner de dibujo si está activo
+    this.updateDrawingBannerParishText();
+
+    // Mostrar perímetro con máscara foco y elementos de esta parroquia
+    this.mapEngine.showParishBoundary(parish.limite, parish.id, true);
     this.mapEngine.renderParishItems(parish, (type, item) => {
-      this.propDialog.open(type, item);
+      if (type === "subparroquia") {
+        this.focusSubParish(item.id);
+      } else {
+        this.propDialog.open(type, item, this.selectedMunId, this.selectedParishId);
+      }
     });
 
+    this.updateMilitanciaTally();
     this.renderPlacesTree();
+    this.updateSpotlightButtonUI(this.mapEngine.spotlightEnabled);
 
     // En pantallas móviles, replegar el sidebar para ver el mapa 100%
     if (window.innerWidth < 768) {
@@ -138,6 +160,155 @@ class EarthMonagasApp {
         sidebar.classList.remove("flex");
       }
       if (backdrop) backdrop.classList.add("hidden");
+    }
+  }
+
+  updateMilitanciaTally() {
+    const parish = this.store.getParish(this.selectedMunId, this.selectedParishId);
+    if (!parish) return;
+
+    let totalMilitantes = 0;
+    let totalCasas = 0;
+
+    (parish.poligonos || []).forEach(p => {
+      totalMilitantes += parseInt(p.militantes !== undefined ? p.militantes : (p.habitantes || 0)) || 0;
+      totalCasas += parseInt(p.casas || 0) || 0;
+    });
+
+    const elMil = document.getElementById("tally-militantes-val");
+    const elCas = document.getElementById("tally-casas-val");
+    if (elMil) elMil.textContent = totalMilitantes.toLocaleString();
+    if (elCas) elCas.textContent = totalCasas.toLocaleString();
+  }
+
+  updateDrawingBannerParishText() {
+    const banner = document.getElementById("earth-drawing-banner");
+    const bannerText = document.getElementById("earth-drawing-banner-text");
+    if (banner && !banner.classList.contains("hidden") && this.toolsManager?.activeTool) {
+      const parish = this.store.getParish(this.selectedMunId, this.selectedParishId);
+      const parishName = parish ? parish.nombre : "";
+      const toolName = this.toolsManager.activeTool;
+      const parishSuffix = parishName ? ` (${parishName})` : "";
+      if (toolName === "subparroquia") bannerText.textContent = `Trazando Sub-Parroquia / Eje Comunal${parishSuffix}`;
+      else if (toolName === "poligono") bannerText.textContent = `Trazando Sector Comunal / Militancia${parishSuffix}`;
+      else if (toolName === "ruta") bannerText.textContent = `Trazando Ruta${parishSuffix}`;
+      else if (toolName === "marca") bannerText.textContent = `Colocar Marca${parishSuffix}`;
+    }
+  }
+
+  focusSubParish(subParishId, flyCamera = false) {
+    const parish = this.store.getParish(this.selectedMunId, this.selectedParishId);
+    if (!parish) return;
+    const sp = (parish.subparroquias || []).find(s => String(s.id) === String(subParishId));
+    if (!sp || !sp.vertices || sp.vertices.length < 3) return;
+
+    this.activeSubParroquiaId = String(subParishId);
+    if (flyCamera) {
+      if (this.mapEngine.spotlightEnabled) {
+        this.mapEngine.showSubParishBoundary(sp.vertices, true);
+      } else {
+        const bounds = L.polygon(sp.vertices).getBounds();
+        this.mapEngine.fitBounds(bounds);
+      }
+    }
+
+    // Re-renderizar elementos para que la sub-parroquia quede en modo "solo línea limítrofe" sin relleno que tape el satélite
+    this.mapEngine.renderParishItems(parish, (type, item) => {
+      if (type === "subparroquia") {
+        this.focusSubParish(item.id, false);
+      } else {
+        this.propDialog.open(type, item, this.selectedMunId, this.selectedParishId);
+      }
+    });
+
+    this.renderPlacesTree();
+  }
+
+  clearSubParishFocus() {
+    this.activeSubParroquiaId = null;
+    const parish = this.store.getParish(this.selectedMunId, this.selectedParishId);
+    if (parish) {
+      this.mapEngine.showParishBoundary(parish.limite, parish.id, true);
+      this.mapEngine.renderParishItems(parish, (type, item) => {
+        if (type === "subparroquia") {
+          this.focusSubParish(item.id);
+        } else {
+          this.propDialog.open(type, item, this.selectedMunId, this.selectedParishId);
+        }
+      });
+    }
+    this.renderPlacesTree();
+  }
+
+  deleteSubParish(subParishId) {
+    if (confirm("¿Deseas eliminar esta Sub-Parroquia / Eje Comunal?")) {
+      this.store.deleteItem(this.selectedMunId, this.selectedParishId, "subparroquias", subParishId);
+      if (this.activeSubParroquiaId === String(subParishId)) {
+        this.activeSubParroquiaId = null;
+      }
+      const parish = this.store.getParish(this.selectedMunId, this.selectedParishId);
+      this.mapEngine.renderParishItems(parish, (t, it) => {
+        if (t === "subparroquia") this.focusSubParish(it.id);
+        else this.propDialog.open(t, it, this.selectedMunId, this.selectedParishId);
+      });
+      this.renderPlacesTree();
+    }
+  }
+
+  renameSubParish(subParishId) {
+    const parish = this.store.getParish(this.selectedMunId, this.selectedParishId);
+    if (!parish) return;
+    const sp = (parish.subparroquias || []).find(s => String(s.id) === String(subParishId));
+    if (!sp) return;
+    const newName = prompt("Renombrar Sub-Parroquia o Eje Comunal:", sp.nombre);
+    if (newName && newName.trim()) {
+      sp.nombre = newName.trim();
+      this.store.saveToStorage();
+      this.renderPlacesTree();
+      this.mapEngine.renderParishItems(parish, (t, it) => {
+        if (t === "subparroquia") this.focusSubParish(it.id);
+        else this.propDialog.open(t, it, this.selectedMunId, this.selectedParishId);
+      });
+    }
+  }
+
+  editSubParishGeometry(subParishId) {
+    const parish = this.store.getParish(this.selectedMunId, this.selectedParishId);
+    if (!parish) return;
+    const sp = (parish.subparroquias || []).find(s => String(s.id) === String(subParishId));
+    if (!sp) return;
+
+    this.toolsManager.cancelActiveTool();
+    this.mapEngine.startEditingPolygonGeometry(sp, (updatedSp) => {
+      const areaHa = this.toolsManager.calculatePolygonAreaHa(updatedSp.vertices);
+      const perimetroM = this.toolsManager.calculatePerimeterMeters(updatedSp.vertices);
+      sp.vertices = updatedSp.vertices;
+      sp.areaHa = areaHa;
+      sp.perimetroM = perimetroM;
+      this.store.saveToStorage();
+      this.renderPlacesTree();
+      this.mapEngine.renderParishItems(parish, (t, it) => {
+        if (t === "subparroquia") this.focusSubParish(it.id);
+        else this.propDialog.open(t, it, this.selectedMunId, this.selectedParishId);
+      });
+    });
+  }
+
+  updateSpotlightButtonUI(isEnabled) {
+    const btn = document.getElementById("btn-toggle-spotlight");
+    const txt = document.getElementById("text-toggle-spotlight");
+    if (btn && txt) {
+      if (isEnabled) {
+        btn.classList.add("bg-purple-950/80", "text-purple-300", "border-purple-600/60");
+        btn.classList.remove("bg-slate-800", "text-amber-300", "border-slate-700");
+        txt.textContent = "Filtro Oscuro: ON";
+        btn.title = "Filtro oscuro activo (alrededores sombreados). Clic para quitar la sombra y ver solo la alineación en satélite limpio.";
+      } else {
+        btn.classList.remove("bg-purple-950/80", "text-purple-300", "border-purple-600/60");
+        btn.classList.add("bg-slate-800", "text-amber-300", "border-slate-700");
+        txt.textContent = "Solo Alineación (Limpio)";
+        btn.title = "Satélite 100% visible y limpio (sin filtro oscuro). Solo líneas limítrofes. Clic para activar sombra.";
+      }
     }
   }
 
@@ -155,12 +326,33 @@ class EarthMonagasApp {
 
     const q = filterQuery.toLowerCase().trim();
 
-    const filteredPolys = (pData.poligonos || []).filter(p => !q || p.nombre.toLowerCase().includes(q));
+    const allSubparroquias = pData.subparroquias || [];
+    const filteredSubparroquias = allSubparroquias.filter(sp => !q || sp.nombre.toLowerCase().includes(q));
+
+    let allPolys = pData.poligonos || [];
+    const activeSubParish = allSubparroquias.find(sp => String(sp.id) === String(this.activeSubParroquiaId));
+
+    // Calcular totales de militancia y casas en la parroquia
+    let totalMilitantes = 0;
+    let totalCasas = 0;
+    allPolys.forEach(p => {
+      totalMilitantes += parseInt(p.militantes !== undefined ? p.militantes : (p.habitantes || 0)) || 0;
+      totalCasas += parseInt(p.casas || 0) || 0;
+    });
+
+    // Si hay un eje comunal seleccionado y no hay filtro de texto, filtrar polígonos por ese eje
+    let displayPolys = allPolys;
+    if (this.activeSubParroquiaId && !q) {
+      displayPolys = allPolys.filter(p => String(p.subParroquiaId) === String(this.activeSubParroquiaId));
+    } else if (q) {
+      displayPolys = allPolys.filter(p => p.nombre.toLowerCase().includes(q));
+    }
+
     const filteredRoutes = (pData.rutas || []).filter(r => !q || r.nombre.toLowerCase().includes(q));
     const filteredMarks = (pData.marcas || []).filter(m => !q || m.nombre.toLowerCase().includes(q));
 
     let html = `
-      <!-- Tarjeta de Parroquia Activa -->
+      <!-- Tarjeta de Parroquia Activa con Resumen de Militancia -->
       <div class="bg-slate-950/90 p-3 rounded-2xl border border-sky-500/40 mb-3 shadow-lg">
         <div class="flex items-center justify-between mb-1.5">
           <span class="text-[10px] font-bold text-sky-400 uppercase tracking-wider">${munObj?.nombre || 'Municipio'}</span>
@@ -174,55 +366,109 @@ class EarthMonagasApp {
           </span>`}
         </div>
         <h4 class="text-sm font-black text-white truncate">${pData.nombre}</h4>
-        <div class="flex items-center gap-2 mt-2">
-          <span class="inline-flex items-center gap-1 text-[11px] font-bold text-sky-300 bg-sky-950/60 px-2 py-0.5 rounded-lg border border-sky-800/40">
-            <i data-lucide="layers" class="w-3 h-3"></i>
-            <span>${pData.poligonos?.length || 0} sectores</span>
+
+        <!-- Tally de Militancia Parroquial en Vivo -->
+        <div class="grid grid-cols-2 gap-2 mt-2 font-mono">
+          <div class="bg-sky-950/70 border border-sky-600/40 p-1.5 rounded-xl text-center shadow-sm">
+            <span class="text-[9px] text-sky-400 font-bold uppercase block mb-0.5">Total Militantes</span>
+            <span class="text-xs font-black text-sky-300">👥 ${totalMilitantes.toLocaleString()}</span>
+          </div>
+          <div class="bg-amber-950/70 border border-amber-600/40 p-1.5 rounded-xl text-center shadow-sm">
+            <span class="text-[9px] text-amber-400 font-bold uppercase block mb-0.5">Total Casas / Fam.</span>
+            <span class="text-xs font-black text-amber-300">🏠 ${totalCasas.toLocaleString()}</span>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-1.5 mt-2 flex-wrap">
+          <span class="inline-flex items-center gap-1 text-[10px] font-bold text-purple-300 bg-purple-950/60 px-2 py-0.5 rounded-lg border border-purple-800/40">
+            <i data-lucide="shield" class="w-2.5 h-2.5"></i>
+            <span>${allSubparroquias.length} ejes</span>
           </span>
-          <span class="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-300 bg-emerald-950/60 px-2 py-0.5 rounded-lg border border-emerald-800/40">
-            <i data-lucide="git-commit" class="w-3 h-3"></i>
-            <span>${pData.rutas?.length || 0} calles</span>
+          <span class="inline-flex items-center gap-1 text-[10px] font-bold text-sky-300 bg-sky-950/60 px-2 py-0.5 rounded-lg border border-sky-800/40">
+            <i data-lucide="layers" class="w-2.5 h-2.5"></i>
+            <span>${allPolys.length} sectores</span>
           </span>
         </div>
       </div>
+    `;
 
-      <!-- SECCIÓN: POLÍGONOS DE SECTORES -->
+    // Si hay foco en una sub-parroquia, mostrar banner informativo con botón de desbloquear
+    if (activeSubParish) {
+      html += `
+        <div class="mb-3 bg-purple-950/80 border border-purple-500/50 p-2.5 rounded-xl flex items-center justify-between shadow-lg">
+          <div class="flex items-center gap-2 min-w-0">
+            <span class="text-base leading-none">🎯</span>
+            <div class="truncate text-xs">
+              <span class="text-[9px] uppercase font-black text-purple-300 block tracking-wider">Eje Seleccionado</span>
+              <span class="text-white font-black truncate block text-xs">${activeSubParish.nombre}</span>
+              <span class="text-[10px] text-purple-200">${displayPolys.length} sectores dentro de este eje</span>
+            </div>
+          </div>
+          <div class="flex items-center gap-1.5 shrink-0">
+            <button onclick="window.earthApp.renameSubParish('${activeSubParish.id}')" class="text-[10px] text-purple-200 hover:text-white bg-purple-900/80 hover:bg-purple-800 px-2 py-1 rounded-lg border border-purple-500/50 transition font-bold" title="Renombrar eje">
+              ✏️ Renombrar
+            </button>
+            <button onclick="window.earthApp.clearSubParishFocus()" class="text-[10px] text-purple-200 hover:text-white bg-purple-900/80 hover:bg-purple-800 px-2 py-1 rounded-lg border border-purple-500/50 transition font-bold" title="Ver toda la parroquia">
+              ✕ Ver Todo
+            </button>
+          </div>
+        </div>
+      `;
+    }
+
+    html += `
+      <!-- SECCIÓN: SUB-PARROQUIAS / EJES COMUNALES (NIVEL 4) -->
       <div class="mb-3">
-        <div class="flex items-center justify-between px-2 py-1.5 bg-slate-950/60 rounded-xl border border-slate-800/60 mb-1.5">
-          <span class="flex items-center gap-1.5 text-xs font-black text-sky-400 uppercase tracking-wide">
-            <i data-lucide="layers" class="w-4 h-4"></i>
-            <span>Sectores / Polígonos (${filteredPolys.length})</span>
+        <div class="flex items-center justify-between px-2 py-1.5 bg-slate-950/60 rounded-xl border border-purple-900/40 mb-1.5">
+          <span class="flex items-center gap-1.5 text-xs font-black text-purple-400 uppercase tracking-wide">
+            <i data-lucide="shield" class="w-4 h-4 text-purple-400"></i>
+            <span>Sub-Parroquias / Ejes (${filteredSubparroquias.length})</span>
           </span>
-          <button onclick="document.getElementById('btn-tool-polygon').click()" class="text-[10px] font-bold text-sky-400 hover:text-sky-300 bg-sky-500/10 px-2 py-0.5 rounded border border-sky-500/20 active:scale-95 transition" title="Trazar nuevo sector">
-            + Nuevo
+          <button onclick="window.earthApp.toolsManager.setActiveTool('subparroquia')" class="text-[10px] font-bold text-purple-300 hover:text-purple-200 bg-purple-500/10 hover:bg-purple-500/20 px-2 py-0.5 rounded border border-purple-500/30 active:scale-95 transition" title="Trazar contorno de nuevo eje comunal">
+            + Trazar Eje
           </button>
         </div>
         <div class="space-y-1 mt-1">
     `;
 
-    if (filteredPolys.length === 0) {
+    if (filteredSubparroquias.length === 0) {
       html += `
         <div class="text-[11px] text-slate-500 px-3 py-2.5 italic bg-slate-950/40 rounded-xl border border-slate-800/40 text-center">
-          ${filterQuery ? `No se encontraron sectores con "<strong>${filterQuery}</strong>".<br><button onclick="document.getElementById('input-search-places').value=''; window.earthApp.renderPlacesTree('');" class="text-sky-400 underline mt-1">Borrar búsqueda</button>` : `No hay sectores trazados aún.<br>Usa el botón <strong>Polígono</strong> arriba para marcar uno.`}
+          ${filterQuery ? `No hay ejes con "<strong>${filterQuery}</strong>".` : `No hay sub-parroquias / ejes trazados aún.<br>Usa <strong>+ Trazar Eje</strong> o el botón <strong>+ Sub-Parroquia / Eje</strong> arriba.`}
         </div>
       `;
     } else {
-      filteredPolys.forEach(poly => {
+      filteredSubparroquias.forEach(sp => {
+        const isSelected = String(sp.id) === String(this.activeSubParroquiaId);
+        const secInSp = allPolys.filter(p => String(p.subParroquiaId) === String(sp.id));
+        const milInSp = secInSp.reduce((acc, p) => acc + (parseInt(p.militantes !== undefined ? p.militantes : (p.habitantes || 0)) || 0), 0);
         html += `
-          <div class="flex items-center justify-between py-2 px-2.5 bg-slate-950/70 hover:bg-slate-800 rounded-xl group text-xs border border-slate-800/60 transition shadow-sm">
-            <div class="flex items-center gap-2 truncate">
-              <input type="checkbox" ${poly.visible !== false ? 'checked' : ''} 
-                onchange="window.earthApp.toggleItemVisibility('${this.selectedMunId}', '${this.selectedParishId}', 'poligono', '${poly.id}')"
-                class="w-4 h-4 rounded bg-slate-900 border-slate-700 text-sky-500 focus:ring-0 cursor-pointer">
-              <span class="w-3 h-3 rounded-sm border shrink-0" style="background-color: ${poly.colorRelleno || '#38bdf8'}; border-color: ${poly.colorBorde || '#ffffff'};"></span>
-              <div class="truncate cursor-pointer" onclick="window.earthApp.focusAndEdit('poligono', '${poly.id}')">
-                <span class="text-slate-200 font-bold block truncate group-hover:text-sky-400">${poly.nombre}</span>
-                <span class="text-[10px] text-slate-500 font-mono">${poly.areaHa || 0} Ha • ${poly.perimetroM || 0} m</span>
+          <div class="flex items-center justify-between py-2 px-2.5 rounded-xl group text-xs border transition shadow-sm ${isSelected ? 'bg-purple-950/70 border-purple-500 shadow-purple-500/20 ring-1 ring-purple-500/40' : 'bg-slate-950/70 hover:bg-slate-800 border-slate-800/60'}">
+            <div class="flex items-center gap-2 truncate min-w-0">
+              <span class="w-3.5 h-3.5 rounded-md border shrink-0" style="background-color: ${sp.colorRelleno || '#a855f7'}; border-color: ${sp.colorBorde || '#c084fc'};"></span>
+              <div class="truncate cursor-pointer min-w-0" onclick="window.earthApp.focusSubParish('${sp.id}', false)">
+                <span class="text-slate-100 font-bold block truncate group-hover:text-purple-300 ${isSelected ? 'text-purple-300 font-black' : ''}">${sp.nombre}</span>
+                <div class="flex items-center gap-1.5 text-[10px] font-mono text-slate-400">
+                  <span class="text-purple-300 font-bold">👥 ${milInSp} mil</span>
+                  <span>• ${secInSp.length} sectores</span>
+                  <span>• ${sp.areaHa || 0} Ha</span>
+                </div>
               </div>
             </div>
-            <button onclick="window.earthApp.deleteItem('${this.selectedMunId}', '${this.selectedParishId}', 'poligono', '${poly.id}')" class="text-slate-500 hover:text-red-400 p-1 transition" title="Eliminar sector">
-              <i data-lucide="trash-2" class="w-4 h-4"></i>
-            </button>
+            <div class="flex items-center gap-1 shrink-0">
+              <button onclick="window.earthApp.renameSubParish('${sp.id}')" class="text-slate-400 hover:text-purple-300 p-1 transition" title="Renombrar eje comunal">
+                <i data-lucide="edit-2" class="w-3.5 h-3.5"></i>
+              </button>
+              <button onclick="window.earthApp.editSubParishGeometry('${sp.id}')" class="text-slate-400 hover:text-amber-300 p-1 transition" title="Ajustar vértices del perímetro">
+                <i data-lucide="move" class="w-3.5 h-3.5"></i>
+              </button>
+              <button onclick="window.earthApp.focusSubParish('${sp.id}', true)" class="text-purple-400 hover:text-purple-200 p-1 transition" title="Enfocar eje y hacer zoom">
+                <i data-lucide="crosshair" class="w-3.5 h-3.5"></i>
+              </button>
+              <button onclick="window.earthApp.deleteSubParish('${sp.id}')" class="text-slate-500 hover:text-red-400 p-1 transition" title="Eliminar eje">
+                <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+              </button>
+            </div>
           </div>
         `;
       });
@@ -232,40 +478,57 @@ class EarthMonagasApp {
         </div>
       </div>
 
-      <!-- SECCIÓN: RUTAS Y CALLES -->
+      <!-- SECCIÓN: SECTORES COMUNALES (NIVEL 5) -->
       <div class="mb-3">
-        <div class="flex items-center justify-between px-2 py-1 text-slate-400 font-bold text-[11px] uppercase tracking-wider">
-          <span class="flex items-center gap-1.5 text-emerald-300">
-            <i data-lucide="git-commit" class="w-3.5 h-3.5"></i>
-            <span>Vialidad / Calles (${filteredRoutes.length})</span>
+        <div class="flex items-center justify-between px-2 py-1.5 bg-slate-950/60 rounded-xl border border-sky-900/40 mb-1.5">
+          <span class="flex items-center gap-1.5 text-xs font-black text-sky-400 uppercase tracking-wide">
+            <i data-lucide="home" class="w-4 h-4 text-sky-400"></i>
+            <span>Sectores Comunales (${displayPolys.length})</span>
           </span>
+          <button onclick="document.getElementById('btn-tool-polygon').click()" class="text-[10px] font-bold text-sky-300 hover:text-sky-200 bg-sky-500/10 hover:bg-sky-500/20 px-2 py-0.5 rounded border border-sky-500/30 active:scale-95 transition" title="Trazar nuevo sector comunal">
+            ${this.activeSubParroquiaId ? '+ Trazar en este Eje' : '+ Nuevo Sector'}
+          </button>
         </div>
         <div class="space-y-1 mt-1">
     `;
 
-    if (filteredRoutes.length === 0) {
+    if (displayPolys.length === 0) {
       html += `
         <div class="text-[11px] text-slate-500 px-3 py-2.5 italic bg-slate-950/40 rounded-xl border border-slate-800/40 text-center">
-          No hay calles trazadas aún.<br>Usa el botón <strong>Ruta</strong> arriba para marcar una.
+          ${filterQuery ? `No se encontraron sectores con "<strong>${filterQuery}</strong>".<br><button onclick="document.getElementById('input-search-places').value=''; window.earthApp.renderPlacesTree('');" class="text-sky-400 underline mt-1">Borrar búsqueda</button>` : (this.activeSubParroquiaId ? `No hay sectores comunales trazados aún en este eje.<br>Haz clic en <strong>+ Sector Comunal</strong> para comenzar a delimitarlo.` : `No hay sectores comunales trazados aún.<br>Usa el botón <strong>+ Sector Comunal</strong> arriba para trazar el primero.`)}
         </div>
       `;
     } else {
-      filteredRoutes.forEach(r => {
+      displayPolys.forEach(poly => {
+        const milCount = poly.militantes !== undefined ? poly.militantes : (poly.habitantes || 0);
+        const cleanPhone = (poly.telefono || "").replace(/\D/g, "");
+        const waLink = cleanPhone ? (cleanPhone.startsWith("58") ? `https://wa.me/${cleanPhone}` : `https://wa.me/58${cleanPhone.replace(/^0/, '')}`) : null;
+
         html += `
           <div class="flex items-center justify-between py-2 px-2.5 bg-slate-950/70 hover:bg-slate-800 rounded-xl group text-xs border border-slate-800/60 transition shadow-sm">
-            <div class="flex items-center gap-2 truncate">
-              <input type="checkbox" ${r.visible !== false ? 'checked' : ''} 
-                onchange="window.earthApp.toggleItemVisibility('${this.selectedMunId}', '${this.selectedParishId}', 'ruta', '${r.id}')"
-                class="w-4 h-4 rounded bg-slate-900 border-slate-700 text-emerald-500 focus:ring-0 cursor-pointer">
-              <span class="w-3.5 h-1 shrink-0 rounded" style="background-color: ${r.color || '#10b981'};"></span>
-              <div class="truncate cursor-pointer" onclick="window.earthApp.focusAndEdit('ruta', '${r.id}')">
-                <span class="text-slate-200 font-bold block truncate group-hover:text-emerald-400">${r.nombre}</span>
-                <span class="text-[10px] text-slate-500 font-mono">${r.longitudM || 0} metros</span>
+            <div class="flex items-center gap-2 truncate min-w-0">
+              <input type="checkbox" ${poly.visible !== false ? 'checked' : ''} 
+                onchange="window.earthApp.toggleItemVisibility('${this.selectedMunId}', '${this.selectedParishId}', 'poligono', '${poly.id}')"
+                class="w-4 h-4 rounded bg-slate-900 border-slate-700 text-sky-500 focus:ring-0 cursor-pointer shrink-0">
+              <span class="w-3.5 h-3.5 rounded-md border shrink-0" style="background-color: ${poly.colorRelleno || '#38bdf8'}; border-color: ${poly.colorBorde || '#ffffff'};"></span>
+              <div class="truncate cursor-pointer min-w-0" onclick="window.earthApp.focusAndEdit('poligono', '${poly.id}')">
+                <span class="text-slate-200 font-bold block truncate group-hover:text-sky-400">${poly.nombre}</span>
+                <div class="flex items-center gap-1.5 text-[10px] font-mono flex-wrap">
+                  <span class="text-sky-400 font-bold">👥 ${milCount} mil</span>
+                  ${poly.casas ? `<span class="text-amber-400 font-bold">• 🏠 ${poly.casas} casas</span>` : ''}
+                  ${poly.lider ? `<span class="text-slate-300 truncate max-w-[85px]">• 👤 ${poly.lider}</span>` : ''}
+                  ${waLink ? `<a href="${waLink}" target="_blank" onclick="event.stopPropagation()" class="text-emerald-400 hover:text-emerald-300 font-bold bg-emerald-950/80 px-1 py-0.2 rounded border border-emerald-700/50 flex items-center gap-0.5">📱 WhatsApp</a>` : ''}
+                </div>
               </div>
             </div>
-            <button onclick="window.earthApp.deleteItem('${this.selectedMunId}', '${this.selectedParishId}', 'ruta', '${r.id}')" class="text-slate-500 hover:text-red-400 p-1 transition" title="Eliminar calle">
-              <i data-lucide="trash-2" class="w-4 h-4"></i>
-            </button>
+            <div class="flex items-center gap-1 shrink-0">
+              <button onclick="window.earthApp.focusAndEdit('poligono', '${poly.id}')" class="text-slate-400 hover:text-sky-300 p-1 transition" title="Editar ficha de militancia">
+                <i data-lucide="edit-2" class="w-3.5 h-3.5"></i>
+              </button>
+              <button onclick="window.earthApp.deleteItem('${this.selectedMunId}', '${this.selectedParishId}', 'poligono', '${poly.id}')" class="text-slate-500 hover:text-red-400 p-1 transition" title="Eliminar sector">
+                <i data-lucide="trash-2" class="w-4 h-4"></i>
+              </button>
+            </div>
           </div>
         `;
       });
@@ -275,6 +538,101 @@ class EarthMonagasApp {
         </div>
       </div>
     `;
+
+    // Solo mostrar rutas y marcas si existen o si no es operador de campo
+    const currentUser = this.authManager.getCurrentUser();
+    const isFieldOperator = currentUser && currentUser.rol === "operador";
+
+    if (!isFieldOperator || filteredRoutes.length > 0) {
+      html += `
+        <!-- SECCIÓN: RUTAS Y CALLES -->
+        <div class="mb-3">
+          <div class="flex items-center justify-between px-2 py-1 text-slate-400 font-bold text-[11px] uppercase tracking-wider">
+            <span class="flex items-center gap-1.5 text-emerald-300">
+              <i data-lucide="git-commit" class="w-3.5 h-3.5"></i>
+              <span>Vialidad / Calles (${filteredRoutes.length})</span>
+            </span>
+          </div>
+          <div class="space-y-1 mt-1">
+      `;
+
+      if (filteredRoutes.length === 0) {
+        html += `
+          <div class="text-[11px] text-slate-500 px-3 py-2.5 italic bg-slate-950/40 rounded-xl border border-slate-800/40 text-center">
+            No hay calles trazadas aún.
+          </div>
+        `;
+      } else {
+        filteredRoutes.forEach(r => {
+          html += `
+            <div class="flex items-center justify-between py-2 px-2.5 bg-slate-950/70 hover:bg-slate-800 rounded-xl group text-xs border border-slate-800/60 transition shadow-sm">
+              <div class="flex items-center gap-2 truncate">
+                <input type="checkbox" ${r.visible !== false ? 'checked' : ''} 
+                  onchange="window.earthApp.toggleItemVisibility('${this.selectedMunId}', '${this.selectedParishId}', 'ruta', '${r.id}')"
+                  class="w-4 h-4 rounded bg-slate-900 border-slate-700 text-emerald-500 focus:ring-0 cursor-pointer">
+                <span class="w-3.5 h-1 shrink-0 rounded" style="background-color: ${r.color || '#10b981'};"></span>
+                <div class="truncate cursor-pointer" onclick="window.earthApp.focusAndEdit('ruta', '${r.id}')">
+                  <span class="text-slate-200 font-bold block truncate group-hover:text-emerald-400">${r.nombre}</span>
+                  <span class="text-[10px] text-slate-500 font-mono">${r.longitudM || 0} metros</span>
+                </div>
+              </div>
+              <button onclick="window.earthApp.deleteItem('${this.selectedMunId}', '${this.selectedParishId}', 'ruta', '${r.id}')" class="text-slate-500 hover:text-red-400 p-1 transition" title="Eliminar calle">
+                <i data-lucide="trash-2" class="w-4 h-4"></i>
+              </button>
+            </div>
+          `;
+        });
+      }
+
+      html += `
+          </div>
+        </div>
+      `;
+    }
+
+    if (!isFieldOperator || filteredMarks.length > 0) {
+      html += `
+        <!-- SECCIÓN: PUNTOS DE INTERÉS / MARCAS -->
+        <div class="mb-3">
+          <div class="flex items-center justify-between px-2 py-1 text-slate-400 font-bold text-[11px] uppercase tracking-wider">
+            <span class="flex items-center gap-1.5 text-amber-300">
+              <i data-lucide="map-pin" class="w-3.5 h-3.5"></i>
+              <span>Puntos de Interés / Marcas (${filteredMarks.length})</span>
+            </span>
+          </div>
+          <div class="space-y-1 mt-1">
+      `;
+
+      if (filteredMarks.length === 0) {
+        html += `
+          <div class="text-[11px] text-slate-500 px-3 py-2 italic bg-slate-950/40 rounded-xl border border-slate-800 text-center">
+            No hay marcas aún.
+          </div>
+        `;
+      } else {
+        filteredMarks.forEach(m => {
+          html += `
+            <div class="flex items-center justify-between py-1.5 px-2.5 bg-slate-950/70 hover:bg-slate-800 rounded-xl group text-xs border border-slate-800/60 transition shadow-sm">
+              <div class="flex items-center gap-2 truncate cursor-pointer" onclick="window.earthApp.focusAndEdit('marca', '${m.id}')">
+                <span class="w-2.5 h-2.5 rounded-full shrink-0" style="background-color: ${m.color || '#e11d48'};"></span>
+                <div class="truncate">
+                  <span class="text-slate-200 font-bold block truncate group-hover:text-amber-400">${m.nombre}</span>
+                  <span class="text-[10px] text-slate-400 truncate block">${m.descripcion || ''}</span>
+                </div>
+              </div>
+              <button onclick="window.earthApp.deleteItem('${this.selectedMunId}', '${this.selectedParishId}', 'marca', '${m.id}')" class="text-slate-500 hover:text-red-400 p-1 transition shrink-0" title="Eliminar marca">
+                <i data-lucide="trash-2" class="w-4 h-4"></i>
+              </button>
+            </div>
+          `;
+        });
+      }
+
+      html += `
+          </div>
+        </div>
+      `;
+    }
 
     container.innerHTML = html;
 
@@ -362,39 +720,112 @@ class EarthMonagasApp {
   }
 
   focusAndEdit(type, itemId) {
-    const parish = this.store.getParish(this.selectedMunId, this.selectedParishId);
-    if (!parish || !parish[type === "poligono" ? "poligonos" : "rutas"]) return;
-
-    const list = type === "poligono" ? parish.poligonos : parish.rutas;
-    const item = list.find(i => i.id === itemId);
-    if (!item) return;
-
-    if (type === "poligono" && item.vertices.length > 0) {
-      this.mapEngine.map.fitBounds(L.polygon(item.vertices).getBounds(), { padding: [40, 40] });
-    } else if (type === "ruta" && item.puntos.length > 0) {
-      this.mapEngine.map.fitBounds(L.polyline(item.puntos).getBounds(), { padding: [40, 40] });
+    if (type === "subparroquia") {
+      this.focusSubParish(itemId);
+      return;
     }
 
-    this.propDialog.open(type, item);
+    let munId = this.selectedMunId;
+    let parishId = this.selectedParishId;
+    let parish = this.store.getParish(munId, parishId);
+    const key = type === "poligono" ? "poligonos" : (type === "ruta" ? "rutas" : "marcas");
+    let item = parish && parish[key] ? parish[key].find(i => String(i.id) === String(itemId)) : null;
+
+    if (!item) {
+      const anywhere = this.store.findItemAnywhere(key, itemId);
+      if (anywhere && anywhere.item) {
+        munId = anywhere.munId;
+        parishId = anywhere.parishId;
+        item = anywhere.item;
+        this.selectParish(munId, parishId);
+      }
+    }
+
+    if (!item) return;
+
+    if (type === "poligono" && item.vertices && item.vertices.length > 0) {
+      this.mapEngine.map.flyToBounds(L.polygon(item.vertices).getBounds(), { padding: [50, 50], maxZoom: 17, duration: 1.0 });
+    } else if (type === "ruta" && item.puntos && item.puntos.length > 0) {
+      this.mapEngine.map.flyToBounds(L.polyline(item.puntos).getBounds(), { padding: [50, 50], duration: 1.0 });
+    } else if (type === "marca" && item.lat !== undefined && item.lng !== undefined) {
+      this.mapEngine.flyTo(item.lat, item.lng, 16);
+    }
+
+    this.propDialog.open(type, item, munId, parishId);
   }
 
   handleFinishedDrawing(type, newItem) {
-    this.store.addItemToParish(this.selectedMunId, this.selectedParishId, type === "poligono" ? "poligonos" : "rutas", newItem);
+    // La parroquia activa donde el usuario está trabajando SIEMPRE es el destino asignado
+    const targetMunId = this.selectedMunId;
+    const targetParishId = this.selectedParishId;
 
-    const parish = this.store.getParish(this.selectedMunId, this.selectedParishId);
-    this.mapEngine.renderParishItems(parish, (t, it) => this.propDialog.open(t, it));
+    newItem.munId = targetMunId;
+    newItem.parishId = targetParishId;
 
-    this.propDialog.open(type, newItem);
+    if (type === "subparroquia") {
+      const spName = prompt("Nombre de la Sub-Parroquia o Eje Comunal:", newItem.nombre || "Eje Comunal 1");
+      if (spName && spName.trim()) {
+        newItem.nombre = spName.trim();
+      }
+      this.store.addItemToParish(targetMunId, targetParishId, "subparroquias", newItem);
+      this.activeSubParroquiaId = String(newItem.id);
+
+      const parish = this.store.getParish(targetMunId, targetParishId);
+      this.mapEngine.renderParishItems(parish, (t, it) => {
+        if (t === "subparroquia") this.focusSubParish(it.id);
+        else this.propDialog.open(t, it, targetMunId, targetParishId);
+      });
+      this.focusSubParish(newItem.id);
+      return;
+    }
+
+    if (type === "poligono" && this.activeSubParroquiaId) {
+      newItem.subParroquiaId = this.activeSubParroquiaId;
+    }
+
+    const key = type === "poligono" ? "poligonos" : (type === "ruta" ? "rutas" : "marcas");
+    this.store.addItemToParish(targetMunId, targetParishId, key, newItem);
+
+    const parish = this.store.getParish(targetMunId, targetParishId);
+    this.mapEngine.renderParishItems(parish, (t, it) => {
+      if (t === "subparroquia") this.focusSubParish(it.id);
+      else this.propDialog.open(t, it, targetMunId, targetParishId);
+    });
+
+    this.updateMilitanciaTally();
+    this.propDialog.open(type, newItem, targetMunId, targetParishId);
     this.renderPlacesTree();
   }
 
-  handleSaveProperties(type, itemId, updatedFields) {
+  handleSaveProperties(type, itemId, updatedFields, targetMunId = null, targetParishId = null) {
     const key = type === "poligono" ? "poligonos" : (type === "ruta" ? "rutas" : "marcas");
-    this.store.updateItem(this.selectedMunId, this.selectedParishId, key, itemId, updatedFields);
+    const destMunId = targetMunId || this.selectedMunId;
+    const destParishId = targetParishId || this.selectedParishId;
 
+    if (destMunId !== this.selectedMunId || destParishId !== this.selectedParishId) {
+      // Reubicar elemento a otra parroquia
+      this.store.moveItem(this.selectedMunId, this.selectedParishId, destMunId, destParishId, key, itemId, updatedFields);
+      // Cambiar de parroquia activa para enfocar y mostrar el elemento transferido
+      this.selectParish(destMunId, destParishId);
+    } else {
+      this.store.updateItem(this.selectedMunId, this.selectedParishId, key, itemId, updatedFields);
+      const parish = this.store.getParish(this.selectedMunId, this.selectedParishId);
+      this.mapEngine.renderParishItems(parish, (t, it) => this.propDialog.open(t, it, this.selectedMunId, this.selectedParishId));
+      this.updateMilitanciaTally();
+      this.renderPlacesTree();
+    }
+  }
+
+  handleLiveStylePreview(type, itemId, liveDraft) {
     const parish = this.store.getParish(this.selectedMunId, this.selectedParishId);
-    this.mapEngine.renderParishItems(parish, (t, it) => this.propDialog.open(t, it));
-    this.renderPlacesTree();
+    if (!parish) return;
+
+    const key = type === "poligono" ? "poligonos" : (type === "ruta" ? "rutas" : "marcas");
+    const item = (parish[key] || []).find(it => String(it.id) === String(itemId));
+    if (item) {
+      Object.assign(item, liveDraft);
+      this.mapEngine.renderParishItems(parish, (t, it) => this.propDialog.open(t, it, this.selectedMunId, this.selectedParishId));
+    }
   }
 
   deleteItem(munId, parishId, type, itemId) {
@@ -403,7 +834,8 @@ class EarthMonagasApp {
       this.store.deleteItem(munId, parishId, key, itemId);
 
       const parish = this.store.getParish(munId, parishId);
-      this.mapEngine.renderParishItems(parish, (t, it) => this.propDialog.open(t, it));
+      this.mapEngine.renderParishItems(parish, (t, it) => this.propDialog.open(t, it, munId, parishId));
+      this.updateMilitanciaTally();
       this.renderPlacesTree();
     }
   }
@@ -413,7 +845,66 @@ class EarthMonagasApp {
     this.store.toggleItemVisibility(munId, parishId, key, itemId);
 
     const parish = this.store.getParish(munId, parishId);
-    this.mapEngine.renderParishItems(parish, (t, it) => this.propDialog.open(t, it));
+    this.mapEngine.renderParishItems(parish, (t, it) => this.propDialog.open(t, it, munId, parishId));
+  }
+
+  handleStartGeometryEdit(poly) {
+    this.toolsManager.cancelActiveTool();
+    this.mapEngine.startEditingPolygonGeometry(poly, (updatedPoly) => {
+      const areaHa = this.toolsManager.calculatePolygonAreaHa(updatedPoly.vertices);
+      const perimetroM = this.toolsManager.calculatePerimeterMeters(updatedPoly.vertices);
+      this.handleSaveProperties("poligono", updatedPoly.id, {
+        vertices: updatedPoly.vertices,
+        areaHa,
+        perimetroM
+      });
+    });
+  }
+
+  setupSidebarTabs() {
+    const tabPlaces = document.getElementById("btn-sidebar-tab-places");
+    const tabLayers = document.getElementById("btn-sidebar-tab-layers");
+    const viewPlaces = document.getElementById("sidebar-view-places");
+    const viewLayers = document.getElementById("sidebar-view-layers");
+
+    if (tabPlaces && tabLayers) {
+      tabPlaces.addEventListener("click", () => {
+        tabPlaces.classList.add("text-amber-400", "border-b-2", "border-amber-500", "bg-slate-900");
+        tabPlaces.classList.remove("text-slate-400");
+        tabLayers.classList.remove("text-sky-400", "border-b-2", "border-sky-500", "bg-slate-900");
+        tabLayers.classList.add("text-slate-400");
+
+        if (viewPlaces) viewPlaces.classList.remove("hidden");
+        if (viewLayers) viewLayers.classList.add("hidden");
+      });
+
+      tabLayers.addEventListener("click", () => {
+        tabLayers.classList.add("text-sky-400", "border-b-2", "border-sky-500", "bg-slate-900");
+        tabLayers.classList.remove("text-slate-400");
+        tabPlaces.classList.remove("text-amber-400", "border-b-2", "border-amber-500", "bg-slate-900");
+        tabPlaces.classList.add("text-slate-400");
+
+        if (viewPlaces) viewPlaces.classList.add("hidden");
+        if (viewLayers) viewLayers.classList.remove("hidden");
+      });
+    }
+
+    const layerCheckboxes = [
+      { id: "chk-layer-l1", level: "l1" },
+      { id: "chk-layer-l2", level: "l2" },
+      { id: "chk-layer-l3", level: "l3" },
+      { id: "chk-layer-l4", level: "l4" },
+      { id: "chk-layer-l5", level: "l5" }
+    ];
+
+    layerCheckboxes.forEach(({ id, level }) => {
+      const chk = document.getElementById(id);
+      if (chk) {
+        chk.addEventListener("change", (e) => {
+          this.mapEngine.toggleHierarchicalLayer(level, e.target.checked);
+        });
+      }
+    });
   }
 
 
@@ -423,12 +914,16 @@ class EarthMonagasApp {
     const errorMsg = document.getElementById("auth-error-msg");
     const btnLogout = document.getElementById("btn-user-logout");
 
+    // Registro en el objeto global para acceso rápido desde HTML
+    window.earthQuickLogin = (role, pass) => this.quickLogin(role, pass);
+    window.quickLoginImmediate = (role, pass) => this.quickLogin(role, pass);
+
     // Formulario de inicio de sesión
     if (formLogin) {
       formLogin.addEventListener("submit", (e) => {
         e.preventDefault();
-        const userInput = document.getElementById("auth-input-user").value;
-        const passInput = document.getElementById("auth-input-pass").value;
+        const userInput = (document.getElementById("auth-input-user")?.value || "").trim() || "admin";
+        const passInput = (document.getElementById("auth-input-pass")?.value || "").trim();
 
         const res = this.authManager.login(userInput, passInput);
         if (!res.success) {
@@ -443,10 +938,43 @@ class EarthMonagasApp {
         if (modalLogin) {
           modalLogin.classList.add("hidden");
           modalLogin.classList.remove("flex");
+          modalLogin.style.setProperty("display", "none", "important");
         }
 
         this.applyUserScope();
       });
+    }
+
+    // Poblar selector de parroquias en el modal de inicio
+    const selectParishModal = document.getElementById("auth-select-parroquia");
+    if (selectParishModal) {
+      try {
+        const allP = getAllParishesForSelector();
+        selectParishModal.innerHTML = '<option value="">-- O selecciona tu Parroquia directa --</option>';
+        let curMun = "";
+        let optGroup = null;
+        allP.forEach(p => {
+          if (p.munNombre !== curMun) {
+            curMun = p.munNombre;
+            optGroup = document.createElement("optgroup");
+            optGroup.label = `Municipio ${curMun}`;
+            selectParishModal.appendChild(optGroup);
+          }
+          const opt = document.createElement("option");
+          opt.value = p.parishId;
+          opt.textContent = `📍 Parroquia ${p.parishNombre}`;
+          if (optGroup) optGroup.appendChild(opt);
+        });
+
+        selectParishModal.addEventListener("change", (e) => {
+          const val = e.target.value;
+          if (val) {
+            this.quickLogin(val, "admin");
+          }
+        });
+      } catch (err) {
+        console.warn("Error poblando selector modal:", err);
+      }
     }
 
     // Botón de cierre de sesión
@@ -459,18 +987,51 @@ class EarthMonagasApp {
       });
     }
 
+    // Comprobar si hay parámetro URL para auto-login (?u=admin o ?general=1 o ?p=jusepin)
+    const urlParams = new URLSearchParams(window.location.search);
+    const autoUser = urlParams.get("u") || urlParams.get("user") || urlParams.get("login");
+    const autoGeneral = urlParams.get("general");
+
+    if (autoGeneral === "1" || autoGeneral === "true" || autoUser) {
+      this.quickLogin(autoUser || "admin");
+      return;
+    }
+
     // Verificar si ya existe una sesión activa
     if (!this.authManager.isAuthenticated()) {
       if (modalLogin) {
         modalLogin.classList.remove("hidden");
         modalLogin.classList.add("flex");
+        modalLogin.style.display = "flex";
       }
     } else {
       if (modalLogin) {
         modalLogin.classList.add("hidden");
         modalLogin.classList.remove("flex");
+        modalLogin.style.setProperty("display", "none", "important");
       }
       this.applyUserScope();
+    }
+  }
+
+  quickLogin(identity = "admin", password = "admin") {
+    const res = this.authManager.login(identity, password || "admin");
+    const modalLogin = document.getElementById("modal-auth-login");
+    const errorMsg = document.getElementById("auth-error-msg");
+
+    if (res.success) {
+      if (errorMsg) errorMsg.classList.add("hidden");
+      if (modalLogin) {
+        modalLogin.classList.add("hidden");
+        modalLogin.classList.remove("flex");
+        modalLogin.style.setProperty("display", "none", "important");
+      }
+      this.applyUserScope();
+    } else {
+      if (errorMsg) {
+        errorMsg.textContent = res.message;
+        errorMsg.classList.remove("hidden");
+      }
     }
   }
 
@@ -479,17 +1040,21 @@ class EarthMonagasApp {
     if (!user) return;
 
     const navBtn = document.getElementById("btn-open-parish-modal");
-    const lockIcon = document.getElementById("nav-lock-icon");
+    const lockWrapper = document.getElementById("nav-lock-icon-wrapper");
     const arrowIcon = document.getElementById("nav-arrow-icon");
     const statusRole = document.getElementById("status-user-role");
+    const btnAdvToggle = document.getElementById("btn-toggle-advanced-tools");
+    const toolbarAdv = document.getElementById("toolbar-advanced-tools");
+    const tabLayers = document.getElementById("btn-sidebar-tab-layers");
 
     if (user.rol === "operador") {
+      this.isGeneralMode = false;
       // Bloqueo estricto al territorio asignado
       this.selectedMunId = user.municipioId;
       this.selectedParishId = user.parroquiaId;
 
-      if (lockIcon) {
-        lockIcon.outerHTML = '<i id="nav-lock-icon" data-lucide="lock" class="w-3.5 h-3.5 text-emerald-400 shrink-0"></i>';
+      if (lockWrapper) {
+        lockWrapper.innerHTML = '<i data-lucide="lock" class="w-3.5 h-3.5 text-emerald-400 shrink-0"></i>';
       }
       if (arrowIcon) arrowIcon.classList.add("hidden");
       if (navBtn) {
@@ -499,40 +1064,101 @@ class EarthMonagasApp {
       if (statusRole) {
         statusRole.textContent = `🔒 ${user.nombre}`;
       }
+      // Ocultar herramientas avanzadas en modo campo
+      if (btnAdvToggle) btnAdvToggle.classList.add("hidden");
+      if (toolbarAdv) {
+        toolbarAdv.classList.add("hidden");
+        toolbarAdv.classList.remove("flex");
+      }
+      if (tabLayers) tabLayers.classList.add("hidden");
     } else if (user.rol === "coordinador") {
+      this.isGeneralMode = false;
       this.selectedMunId = user.municipioId;
       const mun = CATALOGO_MONAGAS.find(m => m.id === this.selectedMunId);
       if (mun && mun.parroquias.length > 0) {
         this.selectedParishId = mun.parroquias[0].id;
       }
-      if (statusRole) {
-        statusRole.textContent = `🏛️ ${user.nombre}`;
-      }
-    } else {
-      // Super Admin
-      if (lockIcon) {
-        lockIcon.outerHTML = '<i id="nav-lock-icon" data-lucide="map-pin" class="w-3.5 h-3.5 text-amber-400 shrink-0"></i>';
+      if (lockWrapper) {
+        lockWrapper.innerHTML = '<i data-lucide="shield" class="w-3.5 h-3.5 text-sky-400 shrink-0"></i>';
       }
       if (arrowIcon) arrowIcon.classList.remove("hidden");
       if (navBtn) {
         navBtn.classList.remove("cursor-default");
-        navBtn.title = `Territorio General de Monagas`;
+        navBtn.title = `Coordinación Municipal ${user.municipioNombre}`;
       }
       if (statusRole) {
-        statusRole.textContent = `👑 Sala Central MIGATO`;
+        statusRole.textContent = `🏛️ ${user.nombre}`;
       }
+      if (btnAdvToggle) {
+        btnAdvToggle.classList.remove("hidden");
+        btnAdvToggle.classList.add("flex");
+      }
+      if (tabLayers) tabLayers.classList.remove("hidden");
+    } else {
+      // Super Admin / Usuario General (Acceso Total a Monagas)
+      this.isGeneralMode = true;
+      this.selectedMunId = this.selectedMunId || "maturin";
+      this.selectedParishId = this.selectedParishId || "jusepin";
+
+      if (lockWrapper) {
+        lockWrapper.innerHTML = '<i data-lucide="shield-check" class="w-3.5 h-3.5 text-amber-400 shrink-0"></i>';
+      }
+      if (arrowIcon) arrowIcon.classList.remove("hidden");
+      if (navBtn) {
+        navBtn.classList.remove("cursor-default");
+        navBtn.title = `Territorio General de Monagas (Acceso Completo)`;
+      }
+      if (statusRole) {
+        statusRole.textContent = `👑 Sala Central MIGATO (General)`;
+      }
+      if (btnAdvToggle) {
+        btnAdvToggle.classList.remove("hidden");
+        btnAdvToggle.classList.add("flex");
+      }
+      if (tabLayers) tabLayers.classList.remove("hidden");
     }
 
     this.selectParish(this.selectedMunId, this.selectedParishId);
     this.renderPlacesTree();
 
-    if (window.lucide) {
+    if (window.lucide && typeof window.lucide.createIcons === "function") {
       try { window.lucide.createIcons(); } catch(e){}
     }
   }
 
+
   setupToolbarEvents() {
     // 1. Botones de herramientas principales
+    // Conmutar herramientas avanzadas
+    const btnAdvToggle = document.getElementById("btn-toggle-advanced-tools");
+    const toolbarAdv = document.getElementById("toolbar-advanced-tools");
+    if (btnAdvToggle && toolbarAdv) {
+      btnAdvToggle.addEventListener("click", () => {
+        const isHidden = toolbarAdv.classList.contains("hidden");
+        toolbarAdv.classList.toggle("hidden", !isHidden);
+        toolbarAdv.classList.toggle("flex", isHidden);
+        btnAdvToggle.classList.toggle("bg-slate-700", isHidden);
+        btnAdvToggle.classList.toggle("text-white", isHidden);
+      });
+    }
+
+    // 0. Herramienta Sub-Parroquia / Eje Comunal (Nivel 4)
+    const btnSubparish = document.getElementById("btn-tool-subparish");
+    if (btnSubparish) {
+      btnSubparish.addEventListener("click", () => {
+        this.toolsManager.setActiveTool("subparroquia");
+      });
+    }
+
+    // 0.1 Botón Alternar Foco Parroquial
+    const btnSpotlight = document.getElementById("btn-toggle-spotlight");
+    if (btnSpotlight) {
+      btnSpotlight.addEventListener("click", () => {
+        const isEnabled = this.mapEngine.toggleSpotlight();
+        this.updateSpotlightButtonUI(isEnabled);
+      });
+    }
+
     const btnPoly = document.getElementById("btn-tool-polygon");
     if (btnPoly) {
       btnPoly.addEventListener("click", () => {
@@ -565,14 +1191,22 @@ class EarthMonagasApp {
     const btnFinish = document.getElementById("btn-banner-finish");
     if (btnFinish) {
       btnFinish.addEventListener("click", () => {
-        this.toolsManager.finishCurrentDrawing();
+        if (this.mapEngine && this.mapEngine.editingPoly) {
+          this.mapEngine.finishEditingPolygonGeometry();
+        } else {
+          this.toolsManager.finishCurrentDrawing();
+        }
       });
     }
 
     const btnCancel = document.getElementById("btn-banner-cancel");
     if (btnCancel) {
       btnCancel.addEventListener("click", () => {
-        this.toolsManager.cancelActiveTool();
+        if (this.mapEngine && this.mapEngine.editingPoly) {
+          this.mapEngine.stopEditingPolygonGeometry();
+        } else {
+          this.toolsManager.cancelActiveTool();
+        }
       });
     }
 
@@ -728,7 +1362,7 @@ class EarthMonagasApp {
       }
 
       const parish = this.store.getParish(this.selectedMunId, this.selectedParishId);
-      this.mapEngine.renderParishItems(parish, (t, it) => this.propDialog.open(t, it));
+      this.mapEngine.renderParishItems(parish, (t, it) => this.propDialog.open(t, it, this.selectedMunId, this.selectedParishId));
       this.renderPlacesTree();
       alert(`Google Earth Pro: Se importaron ${count} elementos KML en ${parish.nombre}`);
     } catch (err) {

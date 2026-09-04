@@ -48,18 +48,40 @@ export class ToolsManager {
     const bannerText = document.getElementById("earth-drawing-banner-text");
     const liveMeasure = document.getElementById("earth-live-measure");
 
+    const mobileBar = document.getElementById("mobile-field-actions");
     if (toolName) {
+      if (mobileBar) mobileBar.classList.add("hidden");
       this.map.getContainer().style.cursor = "crosshair";
+      if (this.map && this.map.doubleClickZoom) {
+        this.map.doubleClickZoom.disable();
+      }
+      if (this.mapEngine && typeof this.mapEngine.setDrawingMode === "function") {
+        this.mapEngine.setDrawingMode(true);
+      }
       if (banner) {
         banner.classList.remove("hidden");
         banner.classList.add("flex");
-        if (toolName === "poligono") bannerText.textContent = "Trazando Polígono: Haz clics en el mapa";
-        else if (toolName === "ruta") bannerText.textContent = "Trazando Ruta: Haz clics en la calle";
-        else if (toolName === "marca") bannerText.textContent = "Colocar Marca: Haz un clic en el mapa";
+        const parishName = window.earthApp?.store?.getParish(window.earthApp?.selectedMunId, window.earthApp?.selectedParishId)?.nombre || "";
+        const parishSuffix = parishName ? ` (${parishName})` : "";
+        const activeSp = window.earthApp?.activeSubParroquiaId ? 
+          window.earthApp?.store?.getParish(window.earthApp?.selectedMunId, window.earthApp?.selectedParishId)?.subparroquias?.find(s => String(s.id) === String(window.earthApp?.activeSubParroquiaId)) : null;
+        const spContext = activeSp ? ` (en ${activeSp.nombre})` : parishSuffix;
+        if (toolName === "subparroquia") bannerText.textContent = `Trazando Sub-Parroquia / Eje Comunal${parishSuffix}`;
+        else if (toolName === "poligono") bannerText.textContent = `Trazando Sector Comunal / Militancia${spContext}`;
+        else if (toolName === "ruta") bannerText.textContent = `Trazando Ruta / Calle${parishSuffix}`;
+        else if (toolName === "marca") bannerText.textContent = `Colocar Marca${parishSuffix}`;
         else if (toolName === "regla") bannerText.textContent = "Regla: Haz clics para medir distancias";
       }
-      if (liveMeasure) liveMeasure.textContent = "0 vértices";
+      this.updateDrawingHint();
+      if (liveMeasure) liveMeasure.textContent = "0 puntos";
     } else {
+      if (this.map && this.map.doubleClickZoom) {
+        this.map.doubleClickZoom.enable();
+      }
+      if (this.mapEngine && typeof this.mapEngine.setDrawingMode === "function") {
+        this.mapEngine.setDrawingMode(false);
+      }
+      if (mobileBar) mobileBar.classList.remove("hidden");
       this.map.getContainer().style.cursor = "";
       if (banner) {
         banner.classList.add("hidden");
@@ -74,6 +96,17 @@ export class ToolsManager {
     this.vertexMarkers = [];
     this.mapEngine.tempDrawingLayer.clearLayers();
     this.previewShape = null;
+
+    if (this.map && this.map.doubleClickZoom) {
+      this.map.doubleClickZoom.enable();
+    }
+
+    if (this.mapEngine && typeof this.mapEngine.setDrawingMode === "function") {
+      this.mapEngine.setDrawingMode(false);
+    }
+
+    const mobileBar = document.getElementById("mobile-field-actions");
+    if (mobileBar) mobileBar.classList.remove("hidden");
 
     document.querySelectorAll(".btn-earth-tool").forEach(btn => {
       btn.classList.remove("active-tool");
@@ -130,6 +163,7 @@ export class ToolsManager {
 
     this.updatePreviewShape();
     this.updateLiveMeasurements();
+    this.updateDrawingHint();
   }
 
   undoLastPoint() {
@@ -143,19 +177,51 @@ export class ToolsManager {
 
     this.updatePreviewShape();
     this.updateLiveMeasurements();
+    this.updateDrawingHint();
+  }
+
+  updateDrawingHint() {
+    const hint = document.getElementById("earth-drawing-banner-hint");
+    if (!hint) return;
+    const count = this.points.length;
+    if (this.activeTool === "poligono" || this.activeTool === "subparroquia") {
+      if (count === 0) {
+        hint.textContent = "👉 Haz clic sobre el satélite para colocar el 1er punto";
+      } else if (count === 1) {
+        hint.textContent = "👉 Haz clic para colocar el 2do punto";
+      } else if (count === 2) {
+        hint.textContent = "👉 Haz clic en el 3er punto para formar el sector";
+      } else {
+        hint.textContent = `✅ ${count} puntos colocados. Clic para más esquinas o pulsa [Listo ✅]`;
+      }
+    } else if (this.activeTool === "ruta" || this.activeTool === "regla") {
+      if (count === 0) {
+        hint.textContent = "👉 Haz clic para iniciar el trazado de la calle";
+      } else if (count === 1) {
+        hint.textContent = "👉 Haz clic para continuar el trazado de la vía";
+      } else {
+        hint.textContent = `✅ ${count} puntos. Clic para continuar o pulsa [Listo ✅]`;
+      }
+    } else if (this.activeTool === "marca") {
+      hint.textContent = "👉 Haz clic en el lugar exacto donde quieres colocar la marca";
+    }
   }
 
   updatePreviewShape() {
-    if (this.activeTool === "poligono") {
+    if (this.activeTool === "poligono" || this.activeTool === "subparroquia") {
+      const isSub = this.activeTool === "subparroquia";
+      const strokeColor = isSub ? "#c084fc" : "#38bdf8";
+      const fillColor = isSub ? "#a855f7" : "#38bdf8";
       if (this.points.length >= 2) {
         if (this.previewShape) {
           this.previewShape.setLatLngs(this.points);
         } else {
           this.previewShape = L.polygon(this.points, {
-            color: "#38bdf8",
-            weight: 2.5,
-            fillColor: "#38bdf8",
-            fillOpacity: 0.35,
+            color: strokeColor,
+            weight: isSub ? 3 : 2.5,
+            fillColor: fillColor,
+            fillOpacity: isSub ? 0.22 : 0.35,
+            dashArray: isSub ? "6, 4" : null,
             interactive: false,
             renderer: this.mapEngine.canvasRenderer
           });
@@ -191,7 +257,7 @@ export class ToolsManager {
     const meterLabel = document.getElementById("earth-live-measure");
     if (!meterLabel) return;
 
-    if (this.activeTool === "poligono" && this.points.length >= 3) {
+    if ((this.activeTool === "poligono" || this.activeTool === "subparroquia") && this.points.length >= 3) {
       const areaHa = this.calculatePolygonAreaHa(this.points);
       const perimM = this.calculatePerimeterMeters(this.points);
       meterLabel.textContent = `${areaHa} Ha • ${perimM} m`;
@@ -204,6 +270,32 @@ export class ToolsManager {
   }
 
   finishCurrentDrawing() {
+    if (this.activeTool === "subparroquia") {
+      if (this.points.length < 3) {
+        alert("Una sub-parroquia necesita al menos 3 esquinas para delimitar su perímetro.");
+        return;
+      }
+      const areaHa = this.calculatePolygonAreaHa(this.points);
+      const perimetroM = this.calculatePerimeterMeters(this.points);
+      const newSubParish = {
+        id: `SUBPAR-${Date.now()}`,
+        nombre: "Nuevo Eje / Sub-Parroquia",
+        descripcion: "Eje o Circuito Comunal",
+        colorBorde: "#c084fc",
+        anchoBorde: 2.5,
+        colorRelleno: "#a855f7",
+        opacidad: 0.2,
+        vertices: [...this.points],
+        areaHa,
+        perimetroM,
+        visible: true,
+        fecha: new Date().toISOString()
+      };
+      this.cancelActiveTool();
+      if (this.onFinishItemCallback) this.onFinishItemCallback("subparroquia", newSubParish);
+      return;
+    }
+
     if (this.activeTool === "poligono") {
       if (this.points.length < 3) {
         alert("Un polígono necesita al menos 3 esquinas para formar un sector.");
@@ -213,8 +305,8 @@ export class ToolsManager {
       const perimetroM = this.calculatePerimeterMeters(this.points);
       const newPoly = {
         id: `POLY-${Date.now()}`,
-        nombre: "Nuevo Sector / Polígono",
-        descripcion: "",
+        nombre: "Nuevo Sector Comunal",
+        descripcion: "Comunidad / Consejo Comunal",
         colorBorde: "#38bdf8",
         anchoBorde: 2,
         colorRelleno: "#38bdf8",

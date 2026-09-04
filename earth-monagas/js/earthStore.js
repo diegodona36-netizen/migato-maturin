@@ -1,13 +1,104 @@
 /**
  * Gestor de Estado y Árbol de Lugares (Places) — Google Earth Pro Web (Monagas)
  */
+import { SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js";
 
-const STORAGE_KEY = "earth_monagas_places_v1";
+const STORAGE_KEY = "earth_monagas_places_v2";
 
 export class EarthStore {
   constructor(catalogo) {
     this.catalogo = catalogo;
-    this.state = this.loadFromStorage() || this.buildInitialState();
+    const loaded = this.loadFromStorage();
+    this.state = loaded || this.buildInitialState();
+    this.ensureAllParishes(this.state);
+    this.purgeDummySectors(this.state);
+  }
+
+  ensureAllParishes(state) {
+    try {
+      if (!state.municipios) state.municipios = {};
+      this.catalogo.forEach(mun => {
+        if (!state.municipios[mun.id]) {
+          state.municipios[mun.id] = {
+            id: mun.id,
+            nombre: mun.nombre,
+            capital: mun.capital,
+            color: mun.color,
+            visible: true,
+            parroquias: {}
+          };
+        }
+        if (!state.municipios[mun.id].parroquias) state.municipios[mun.id].parroquias = {};
+        mun.parroquias.forEach(p => {
+          if (!state.municipios[mun.id].parroquias[p.id]) {
+            state.municipios[mun.id].parroquias[p.id] = {
+              id: p.id,
+              nombre: p.nombre,
+              codigo: p.codigo,
+              tipo: p.tipo,
+              centro: p.centro,
+              zoom: p.zoom,
+              limite: p.limite,
+              visible: true,
+              subparroquias: [],
+              poligonos: [],
+              rutas: [],
+              marcas: [],
+              superposiciones: []
+            };
+          } else {
+            const storedP = state.municipios[mun.id].parroquias[p.id];
+            if (!storedP.subparroquias) storedP.subparroquias = [];
+            if (!storedP.poligonos) storedP.poligonos = [];
+            if (!storedP.rutas) storedP.rutas = [];
+            if (!storedP.marcas) storedP.marcas = [];
+            if (!storedP.limite && p.limite) storedP.limite = p.limite;
+            if (!storedP.centro && p.centro) storedP.centro = p.centro;
+          }
+        });
+      });
+    } catch (e) {
+      console.warn("Error asegurando integridad de parroquias:", e);
+    }
+  }
+
+  purgeDummySectors(state) {
+    try {
+      if (!state?.municipios) return;
+      let changed = false;
+
+      // Purgar de todas las parroquias cualquier sector o marca sintética precargada
+      for (const mun of Object.values(state.municipios)) {
+        for (const p of Object.values(mun.parroquias || {})) {
+          if (p.poligonos && p.poligonos.length > 0) {
+            const initialLen = p.poligonos.length;
+            p.poligonos = p.poligonos.filter(poly => {
+              const isDummy = poly.esOficial === true ||
+                              (typeof poly.id === "string" && poly.id.startsWith("sec-lp-")) ||
+                              SECTORES_LAPUENTE.some(s => s.id === poly.id);
+              return !isDummy;
+            });
+            if (p.poligonos.length !== initialLen) changed = true;
+          }
+
+          if (p.marcas && p.marcas.length > 0) {
+            const initialMarksLen = p.marcas.length;
+            p.marcas = p.marcas.filter(m => {
+              const isDummyMark = (typeof m.id === "string" && (m.id.startsWith("ref-sub-godos") || m.id.startsWith("c-lp-"))) ||
+                                  m.tipo === "subparroquia_referencia";
+              return !isDummyMark;
+            });
+            if (p.marcas.length !== initialMarksLen) changed = true;
+          }
+        }
+      }
+
+      if (changed) {
+        this.saveToStorage();
+      }
+    } catch (e) {
+      console.warn("Error purgando sectores sintéticos:", e);
+    }
   }
 
   buildInitialState() {
@@ -38,6 +129,7 @@ export class EarthStore {
           zoom: p.zoom,
           limite: p.limite,
           visible: true,
+          subparroquias: [],
           poligonos: [],
           rutas: [],
           marcas: [],
@@ -55,11 +147,12 @@ export class EarthStore {
       if (!data) return null;
       const parsed = JSON.parse(data);
       // Validar estructura básica
-      if (parsed && parsed.municipios && Object.keys(parsed.municipios).length === this.catalogo.length) {
+      if (parsed && parsed.municipios && typeof parsed.municipios === "object") {
         return parsed;
       }
       return null;
     } catch (e) {
+      console.warn("Error cargando lugares desde storage:", e);
       return null;
     }
   }
@@ -71,12 +164,18 @@ export class EarthStore {
   }
 
   getParish(munId, parishId) {
+    if (!this.state?.municipios?.[munId]?.parroquias?.[parishId]) {
+      this.ensureAllParishes(this.state);
+    }
     return this.state?.municipios?.[munId]?.parroquias?.[parishId] || null;
   }
 
   addItemToParish(munId, parishId, type, item) {
     const parish = this.getParish(munId, parishId);
-    if (!parish) return;
+    if (!parish) {
+      console.warn(`[EarthStore] No se encontró la parroquia destino ${munId}/${parishId}`);
+      return null;
+    }
 
     if (!parish[type]) parish[type] = [];
     parish[type].push(item);
@@ -85,11 +184,18 @@ export class EarthStore {
   }
 
   updateItem(munId, parishId, type, itemId, updatedFields) {
-    const parish = this.getParish(munId, parishId);
-    if (!parish || !parish[type]) return null;
+    let parish = this.getParish(munId, parishId);
+    let idx = parish && parish[type] ? parish[type].findIndex(i => String(i.id) === String(itemId)) : -1;
 
-    const idx = parish[type].findIndex(i => i.id === itemId);
-    if (idx !== -1) {
+    if (idx === -1) {
+      const anywhere = this.findItemAnywhere(type, itemId);
+      if (anywhere && anywhere.item) {
+        parish = this.getParish(anywhere.munId, anywhere.parishId);
+        idx = parish && parish[type] ? parish[type].findIndex(i => String(i.id) === String(itemId)) : -1;
+      }
+    }
+
+    if (parish && idx !== -1) {
       parish[type][idx] = { ...parish[type][idx], ...updatedFields };
       this.saveToStorage();
       return parish[type][idx];
@@ -97,13 +203,79 @@ export class EarthStore {
     return null;
   }
 
-  deleteItem(munId, parishId, type, itemId) {
-    const parish = this.getParish(munId, parishId);
-    if (!parish || !parish[type]) return false;
+  moveItem(fromMunId, fromParishId, toMunId, toParishId, type, itemId, updatedFields = {}) {
+    // Si la parroquia de origen y destino es la misma, ejecutar actualización local
+    if (fromMunId === toMunId && fromParishId === toParishId) {
+      return this.updateItem(fromMunId, fromParishId, type, itemId, updatedFields);
+    }
 
-    parish[type] = parish[type].filter(i => i.id !== itemId);
+    const srcParish = this.getParish(fromMunId, fromParishId);
+    const destParish = this.getParish(toMunId, toParishId);
+    if (!destParish) return null;
+
+    if (!destParish[type]) destParish[type] = [];
+
+    let itemToMove = null;
+    if (srcParish && srcParish[type]) {
+      const idx = srcParish[type].findIndex(i => String(i.id) === String(itemId));
+      if (idx !== -1) {
+        [itemToMove] = srcParish[type].splice(idx, 1);
+      }
+    }
+
+    // Si no estaba en la parroquia de origen supuesta, buscar en todo el catálogo
+    if (!itemToMove) {
+      const anywhere = this.findItemAnywhere(type, itemId);
+      if (anywhere && anywhere.item) {
+        const anyParish = this.getParish(anywhere.munId, anywhere.parishId);
+        if (anyParish && anyParish[type]) {
+          const idx = anyParish[type].findIndex(i => String(i.id) === String(itemId));
+          if (idx !== -1) {
+            [itemToMove] = anyParish[type].splice(idx, 1);
+          }
+        }
+      }
+    }
+
+    if (!itemToMove) return null;
+
+    const merged = { ...itemToMove, ...updatedFields, munId: toMunId, parishId: toParishId };
+    destParish[type].push(merged);
     this.saveToStorage();
-    return true;
+    return merged;
+  }
+
+  findItemAnywhere(type, itemId) {
+    if (!this.state || !this.state.municipios) return null;
+    for (const [munId, mun] of Object.entries(this.state.municipios)) {
+      for (const [parishId, parish] of Object.entries(mun.parroquias || {})) {
+        const item = (parish[type] || []).find(i => String(i.id) === String(itemId));
+        if (item) {
+          return { munId, parishId, item };
+        }
+      }
+    }
+    return null;
+  }
+
+  deleteItem(munId, parishId, type, itemId) {
+    let parish = this.getParish(munId, parishId);
+    let idx = parish && parish[type] ? parish[type].findIndex(i => String(i.id) === String(itemId)) : -1;
+
+    if (idx === -1) {
+      const anywhere = this.findItemAnywhere(type, itemId);
+      if (anywhere && anywhere.item) {
+        parish = this.getParish(anywhere.munId, anywhere.parishId);
+        idx = parish && parish[type] ? parish[type].findIndex(i => String(i.id) === String(itemId)) : -1;
+      }
+    }
+
+    if (parish && parish[type] && idx !== -1) {
+      parish[type].splice(idx, 1);
+      this.saveToStorage();
+      return true;
+    }
+    return false;
   }
 
   toggleItemVisibility(munId, parishId, type, itemId) {

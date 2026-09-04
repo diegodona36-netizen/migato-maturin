@@ -154,3 +154,30 @@ body {
   background: #0284c7 !important;
   color: #ffffff !important;
 }
+
+/* Forzar ocultamiento del modal de autenticación */
+#modal-auth-login.hidden {
+  display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+/* Modo de dibujo activo: silenciar tooltips para que no estorben ni confundan al trazar */
+.drawing-active .leaflet-tooltip-pane,
+.drawing-active .earth-tooltip {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+.drawing-active,
+.drawing-active .leaflet-container,
+.drawing-active canvas {
+  cursor: crosshair !important;
+}
+
+.drawing-active .leaflet-overlay-pane path:not(.earth-vertex-marker-wrapper) {
+  pointer-events: none !important;
+}
+

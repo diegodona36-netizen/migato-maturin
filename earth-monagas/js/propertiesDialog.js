@@ -1,20 +1,36 @@
 /**
- * Diálogo Flotante de Propiedades — Estilo Google Earth Pro
- * Pestañas: Descripción, Estilo/Color, Medidas
+ * Diálogo Flotante de Propiedades y Carga de Militantes — Estilo Google Earth Pro
+ * Pestañas: Ficha Territorial, Militantes por Sector, Estilo y Color, Medidas
  */
+import { SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS, detectParishFromGeometry } from "./geoMonagas.js";
+import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js";
+import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js";
 
 export class PropertiesDialog {
-  constructor(onSaveCallback, onLiveChangeCallback) {
-    this.onLiveChangeCallback = onLiveChangeCallback;
-    this.onSaveCallback = onSaveCallback;
+  constructor(onSaveCallback, onLiveChangeCallback, onStartEditGeometry) {
+    if (typeof onSaveCallback !== "function" && typeof onLiveChangeCallback === "function") {
+      this.onSaveCallback = onLiveChangeCallback;
+      this.onLiveChangeCallback = onStartEditGeometry;
+      this.onStartEditGeometry = arguments[3];
+    } else {
+      this.onSaveCallback = onSaveCallback;
+      this.onLiveChangeCallback = onLiveChangeCallback;
+      this.onStartEditGeometry = onStartEditGeometry;
+    }
+
     this.currentItem = null;
     this.currentType = null; // 'poligono', 'ruta', 'marca'
+    this.currentMunId = "maturin";
+    this.currentParishId = "alto-de-los-godos";
+    this.detectedParishMatch = null;
     this.modalEl = document.getElementById("dialog-properties");
 
     this.initEvents();
   }
 
   initEvents() {
+    this.setupTerritorialSelectors();
+
     // Pestañas
     document.querySelectorAll(".prop-tab-btn").forEach(btn => {
       btn.addEventListener("click", () => {
@@ -36,7 +52,7 @@ export class PropertiesDialog {
         colorBorde: inputBorderColor ? inputBorderColor.value : "#38bdf8",
         anchoBorde: inputBorderWidth ? (parseInt(inputBorderWidth.value) || 2) : 2,
         colorRelleno: inputFillColor ? inputFillColor.value : "#38bdf8",
-        opacidad: inputOpacity ? (parseFloat(inputOpacity.value) || 0.4) : 0.4,
+        opacidad: inputOpacity ? (parseFloat(inputOpacity.value) || 0.38) : 0.38,
         color: inputBorderColor ? inputBorderColor.value : "#10b981",
         ancho: inputBorderWidth ? (parseInt(inputBorderWidth.value) || 4) : 4
       };
@@ -51,13 +67,13 @@ export class PropertiesDialog {
         triggerLiveUpdate();
       });
     }
-    // Paleta de Colores Rápidos (1 toque para aplicar a todo el polígono)
+
+    // Paleta de Colores Rápidos
     document.querySelectorAll(".btn-quick-color").forEach(btn => {
       btn.addEventListener("click", () => {
         const color = btn.dataset.color;
         const name = btn.dataset.name;
 
-        // Actualizar inputs
         const bColor = document.getElementById("prop-border-color");
         const fColor = document.getElementById("prop-fill-color");
         const labelName = document.getElementById("palette-color-name");
@@ -66,7 +82,6 @@ export class PropertiesDialog {
         if (fColor) fColor.value = color;
         if (labelName) labelName.textContent = name;
 
-        // Resaltar botón activo
         document.querySelectorAll(".btn-quick-color").forEach(b => {
           const isCurrent = b === btn;
           b.classList.toggle("border-white", isCurrent);
@@ -76,7 +91,6 @@ export class PropertiesDialog {
           if (icon) icon.classList.toggle("hidden", !isCurrent);
         });
 
-        // Actualizar polígono en el mapa en vivo
         triggerLiveUpdate();
       });
     });
@@ -85,7 +99,21 @@ export class PropertiesDialog {
     if (inputBorderWidth) inputBorderWidth.addEventListener("input", triggerLiveUpdate);
     if (inputFillColor) inputFillColor.addEventListener("input", triggerLiveUpdate);
 
-    // Guardar
+
+
+    // Botón Ajustar Vértices en Satélite
+    const btnEditGeo = document.getElementById("btn-prop-edit-geometry");
+    if (btnEditGeo) {
+      btnEditGeo.addEventListener("click", () => {
+        if (this.currentItem && this.onStartEditGeometry) {
+          const item = this.currentItem;
+          this.close();
+          this.onStartEditGeometry(item);
+        }
+      });
+    }
+
+    // Guardar vía Submit o Botón Aceptar
     const form = document.getElementById("form-properties");
     if (form) {
       form.addEventListener("submit", (e) => {
@@ -94,11 +122,78 @@ export class PropertiesDialog {
       });
     }
 
+    const btnSave = document.getElementById("btn-prop-save");
+    if (btnSave) {
+      btnSave.addEventListener("click", (e) => {
+        e.preventDefault();
+        this.save();
+      });
+    }
+
     // Cancelar
     const btnCancel = document.getElementById("btn-prop-cancel");
     const btnClose = document.getElementById("btn-prop-close");
-    if (btnCancel) btnCancel.addEventListener("click", () => this.close());
-    if (btnClose) btnClose.addEventListener("click", () => this.close());
+    if (btnCancel) btnCancel.addEventListener("click", () => this.cancel());
+    if (btnClose) btnClose.addEventListener("click", () => this.cancel());
+  }
+
+  setupTerritorialSelectors() {
+    const selMun = document.getElementById("prop-select-mun");
+    const selParish = document.getElementById("prop-select-parish");
+    const wrapSubParish = document.getElementById("wrapper-prop-select-subparish");
+    const btnApplyDetected = document.getElementById("btn-prop-apply-detected");
+
+    if (selMun) {
+      selMun.addEventListener("change", () => {
+        const munId = selMun.value;
+        this.populateParishesDropdown(munId);
+      });
+    }
+
+    if (selParish) {
+      selParish.addEventListener("change", () => {
+        if (wrapSubParish) {
+          wrapSubParish.classList.toggle("hidden", selParish.value !== "alto-de-los-godos");
+        }
+      });
+    }
+
+    if (btnApplyDetected) {
+      btnApplyDetected.addEventListener("click", () => {
+        if (this.detectedParishMatch) {
+          const { mun, parish } = this.detectedParishMatch;
+          if (selMun) {
+            selMun.value = mun.id;
+            this.populateParishesDropdown(mun.id, parish.id);
+          }
+          const hint = document.getElementById("prop-geo-detected-hint");
+          if (hint) hint.classList.add("hidden");
+        }
+      });
+    }
+  }
+
+  populateParishesDropdown(munId, selectedParishId = null) {
+    const selParish = document.getElementById("prop-select-parish");
+    const wrapSubParish = document.getElementById("wrapper-prop-select-subparish");
+    if (!selParish) return;
+
+    const munObj = CATALOGO_MONAGAS.find(m => m.id === munId);
+    if (!munObj) return;
+
+    selParish.innerHTML = munObj.parroquias.map(p => 
+      `<option value="${p.id}">${p.nombre}</option>`
+    ).join("");
+
+    if (selectedParishId && munObj.parroquias.some(p => p.id === selectedParishId)) {
+      selParish.value = selectedParishId;
+    } else if (munObj.parroquias.length > 0) {
+      selParish.value = munObj.parroquias[0].id;
+    }
+
+    if (wrapSubParish) {
+      wrapSubParish.classList.toggle("hidden", selParish.value !== "alto-de-los-godos");
+    }
   }
 
   switchTab(tabName) {
@@ -116,117 +211,263 @@ export class PropertiesDialog {
     });
   }
 
-  open(type, item) {
+  open(type, item, currentMunId = null, currentParishId = null) {
     this.currentType = type;
     this.currentItem = item;
+    this.currentMunId = currentMunId || item.munId || "maturin";
+    this.currentParishId = currentParishId || item.parishId || "alto-de-los-godos";
+
+    this.originalState = {
+      nombre: item.nombre,
+      descripcion: item.descripcion,
+      colorBorde: item.colorBorde,
+      anchoBorde: item.anchoBorde,
+      colorRelleno: item.colorRelleno,
+      opacidad: item.opacidad,
+      color: item.color,
+      ancho: item.ancho
+    };
 
     document.getElementById("prop-dialog-title").textContent = 
-      type === "poligono" ? "Google Earth — Propiedades del Polígono" :
-      (type === "ruta" ? "Google Earth — Propiedades de la Ruta / Calle" : "Google Earth — Propiedades de la Marca");
+      type === "poligono" ? `Google Earth — Ficha del Sector: ${item.nombre}` :
+      (type === "ruta" ? `Google Earth — Propiedades de la Calle: ${item.nombre}` : `Google Earth — Marca: ${item.nombre}`);
 
-    // Llenar Pestaña 1: Descripción
+    // Llenar Ficha Territorial
     document.getElementById("prop-name").value = item.nombre || "";
     document.getElementById("prop-desc").value = item.descripcion || "";
 
-    // Pestaña 2: Estilo y Color
-    const boxPolyStyle = document.getElementById("box-poly-fill-style");
-    if (type === "poligono") {
-      boxPolyStyle.classList.remove("hidden");
-      document.getElementById("prop-border-color").value = item.colorBorde || "#38bdf8";
-      document.getElementById("prop-border-width").value = item.anchoBorde || 2;
-      document.getElementById("prop-fill-color").value = item.colorRelleno || "#38bdf8";
-      const op = item.opacidad !== undefined ? item.opacidad : 0.4;
-      document.getElementById("prop-poly-opacity").value = op;
-      document.getElementById("prop-poly-opacity-val").textContent = `${Math.round(op * 100)}%`;
-    } else {
-      boxPolyStyle.classList.add("hidden");
-      document.getElementById("prop-border-color").value = item.color || "#10b981";
-      document.getElementById("prop-border-width").value = item.ancho || 4;
+    // Configurar selectores territoriales
+    const selMun = document.getElementById("prop-select-mun");
+    const selParish = document.getElementById("prop-select-parish");
+    const selSubParish = document.getElementById("prop-select-subparish");
+    const badgeDetected = document.getElementById("prop-badge-auto-detected");
+    const hintDetected = document.getElementById("prop-geo-detected-hint");
+    const textDetected = document.getElementById("prop-geo-detected-text");
+
+    if (selMun) {
+      selMun.innerHTML = CATALOGO_MONAGAS.map(m => 
+        `<option value="${m.id}">${m.nombre}</option>`
+      ).join("");
+      selMun.value = this.currentMunId;
     }
 
-    // Pestaña 3: Medidas
+    this.populateParishesDropdown(this.currentMunId, this.currentParishId);
+
+    if (selSubParish) {
+      const pStore = window.earthApp?.store?.getParish(this.currentMunId, this.currentParishId);
+      const parishSubparroquias = pStore?.subparroquias || [];
+      const list = parishSubparroquias.length > 0 ? parishSubparroquias : (this.currentParishId === "alto-de-los-godos" ? SUBPARROQUIAS_GODOS : []);
+      
+      if (list.length > 0) {
+        selSubParish.innerHTML = `<option value="">-- Sin Eje Asignado --</option>` + list.map(sp => 
+          `<option value="${sp.id}">${sp.nombre}</option>`
+        ).join("");
+        if (item.subParroquiaId) {
+          selSubParish.value = item.subParroquiaId;
+        } else if (window.earthApp?.activeSubParroquiaId) {
+          selSubParish.value = window.earthApp.activeSubParroquiaId;
+        }
+        selSubParish.parentElement?.classList.remove("hidden");
+      } else {
+        selSubParish.innerHTML = `<option value="">-- Sin Ejes Creados --</option>`;
+      }
+    }
+
+    // Auto-detección espacial por coordenadas
+    const geom = item.vertices || item.puntos || (item.lat !== undefined ? [item.lat, item.lng] : null);
+    const detected = detectParishFromGeometry(geom, GEO_PARROQUIAS_OFICIAL);
+    this.detectedParishMatch = null;
+
+    if (detected) {
+      const match = findParishInCatalog(detected.parishId);
+      if (match) {
+        this.detectedParishMatch = match;
+        if (badgeDetected) {
+          badgeDetected.textContent = `📍 ${match.parish.nombre}`;
+          badgeDetected.title = `Detectado en: Parroquia ${match.parish.nombre} (Municipio ${match.mun.nombre})`;
+          badgeDetected.classList.remove("hidden");
+        }
+
+        if (match.parish.id !== this.currentParishId) {
+          if (hintDetected && textDetected) {
+            textDetected.textContent = `📍 Geometría detectada en: Parroquia ${match.parish.nombre} (${match.mun.nombre})`;
+            hintDetected.classList.remove("hidden");
+          }
+        } else {
+          if (hintDetected) hintDetected.classList.add("hidden");
+        }
+      }
+    } else {
+      if (badgeDetected) badgeDetected.classList.add("hidden");
+      if (hintDetected) hintDetected.classList.add("hidden");
+    }
+
+    const boxSocio = document.getElementById("box-prop-socio");
+    const boxMilitancia = document.getElementById("box-prop-militancia");
+    const boxLiderazgo = document.getElementById("box-prop-liderazgo");
+    const btnEditGeo = document.getElementById("btn-prop-edit-geometry");
+    const boxPolyStyle = document.getElementById("box-poly-fill-style");
     const rowArea = document.getElementById("row-measure-area");
-    const rowPerimeter = document.getElementById("row-measure-perimeter");
     const rowLength = document.getElementById("row-measure-length");
 
     if (type === "poligono") {
-      rowArea.classList.remove("hidden");
-      rowPerimeter.classList.remove("hidden");
-      rowLength.classList.add("hidden");
+      if (boxSocio) boxSocio.classList.remove("hidden");
+      if (boxMilitancia) boxMilitancia.classList.remove("hidden");
+      if (boxLiderazgo) boxLiderazgo.classList.remove("hidden");
+      if (btnEditGeo) btnEditGeo.classList.remove("hidden");
+      if (boxPolyStyle) boxPolyStyle.classList.remove("hidden");
+      if (rowArea) rowArea.classList.remove("hidden");
+      if (rowLength) rowLength.classList.add("hidden");
 
-      document.getElementById("val-measure-area-ha").textContent = `${item.areaHa || 0} Ha`;
-      document.getElementById("val-measure-area-m2").textContent = `${Math.round((item.areaHa || 0) * 10000).toLocaleString()} m²`;
-      document.getElementById("val-measure-perimeter").textContent = `${item.perimetroM || 0} metros`;
-    } else if (type === "ruta") {
-      rowArea.classList.add("hidden");
-      rowPerimeter.classList.add("hidden");
-      rowLength.classList.remove("hidden");
+      // Valores de militancia y censo comunitario
+      const inMilitantes = document.getElementById("prop-militantes");
+      const inCasas = document.getElementById("prop-casas");
+      const inLider = document.getElementById("prop-lider");
+      const inTelefono = document.getElementById("prop-telefono");
+      const inFamilias = document.getElementById("prop-familias");
+      const inHab = document.getElementById("prop-habitantes");
 
-      document.getElementById("val-measure-length-m").textContent = `${item.longitudM || 0} metros`;
-      document.getElementById("val-measure-length-km").textContent = `${((item.longitudM || 0) / 1000).toFixed(2)} km`;
+      const numMilitantes = item.militantes !== undefined ? item.militantes : (item.habitantes || 0);
+      const numCasas = item.casas || 0;
+
+      if (inMilitantes) inMilitantes.value = numMilitantes;
+      if (inCasas) inCasas.value = numCasas;
+      if (inLider) inLider.value = item.lider || "";
+      if (inTelefono) inTelefono.value = item.telefono || "";
+      if (inFamilias) inFamilias.value = item.familias || numCasas;
+      if (inHab) inHab.value = numMilitantes;
+
+      // Medidas
+      const valHa = document.getElementById("val-measure-area-ha");
+      const valM2 = document.getElementById("val-measure-area-m2");
+      const valPer = document.getElementById("val-measure-perimeter");
+      if (valHa) valHa.textContent = `${item.areaHa || 0} Ha`;
+      if (valM2) valM2.textContent = `${Math.round((item.areaHa || 0) * 10000).toLocaleString()} m²`;
+      if (valPer) valPer.textContent = `${item.perimetroM || 0} m`;
     } else {
-      rowArea.classList.add("hidden");
-      rowPerimeter.classList.add("hidden");
-      rowLength.classList.add("hidden");
+      if (boxSocio) boxSocio.classList.add("hidden");
+      if (boxMilitancia) boxMilitancia.classList.add("hidden");
+      if (boxLiderazgo) boxLiderazgo.classList.add("hidden");
+      if (btnEditGeo) btnEditGeo.classList.add("hidden");
+      if (boxPolyStyle) boxPolyStyle.classList.add("hidden");
+      if (rowArea) rowArea.classList.add("hidden");
+      if (rowLength) rowLength.classList.remove("hidden");
+
+      if (type === "ruta") {
+        const valLenM = document.getElementById("val-measure-length-m");
+        const valLenKm = document.getElementById("val-measure-length-km");
+        if (valLenM) valLenM.textContent = `${item.longitudM || 0} m`;
+        if (valLenKm) valLenKm.textContent = `${((item.longitudM || 0) / 1000).toFixed(2)} km`;
+      }
     }
 
-    this.switchTab("desc");
-        // Sincronizar paleta rápida de colores
-    const currentColor = (item.colorBorde || item.color || "#38bdf8").toLowerCase();
+    // Estilo y Color
+    const inBorderColor = document.getElementById("prop-border-color");
+    const inBorderWidth = document.getElementById("prop-border-width");
+    const inFillColor = document.getElementById("prop-fill-color");
+    const inOpacity = document.getElementById("prop-poly-opacity");
+    const inOpacityVal = document.getElementById("prop-poly-opacity-val");
+
+    const itemColor = item.colorRelleno || item.color || "#38bdf8";
+    if (inBorderColor) inBorderColor.value = item.colorBorde || item.color || "#38bdf8";
+    if (inBorderWidth) inBorderWidth.value = item.anchoBorde || item.ancho || 2;
+    if (inFillColor) inFillColor.value = itemColor;
+    if (inOpacity) {
+      const op = item.opacidad !== undefined ? item.opacidad : 0.38;
+      inOpacity.value = op;
+      if (inOpacityVal) inOpacityVal.textContent = `${Math.round(op * 100)}%`;
+    }
+
+    // Resaltar color activo en la paleta rápida
+    const activeHex = itemColor.toLowerCase();
     document.querySelectorAll(".btn-quick-color").forEach(b => {
-      const match = b.dataset.color.toLowerCase() === currentColor;
-      b.classList.toggle("border-white", match);
-      b.classList.toggle("border-slate-700", !match);
+      const isMatch = b.dataset.color.toLowerCase() === activeHex;
+      b.classList.toggle("border-white", isMatch);
+      b.classList.toggle("border-slate-700", !isMatch);
+      b.classList.toggle("scale-105", isMatch);
       const icon = b.querySelector(".check-icon");
-      if (icon) icon.classList.toggle("hidden", !match);
-      if (match) {
+      if (icon) icon.classList.toggle("hidden", !isMatch);
+      if (isMatch) {
         const labelName = document.getElementById("palette-color-name");
         if (labelName) labelName.textContent = b.dataset.name;
       }
     });
 
+    // Iniciar siempre en la primera pestaña (Ficha de Militancia)
+    this.switchTab("desc");
+
+    // Abrir Modal
     this.modalEl.classList.remove("hidden");
     this.modalEl.classList.add("flex");
+
+    if (window.lucide) {
+      try { window.lucide.createIcons(); } catch(e){}
+    }
   }
 
   save() {
     if (!this.currentItem) return;
 
-    // Capturar ID y Tipo ANTES de cerrar para evitar referencias nulas
-    const targetType = this.currentType;
-    const targetId = this.currentItem.id;
+    const nombre = document.getElementById("prop-name").value.trim() || this.currentItem.nombre;
+    const descripcion = document.getElementById("prop-desc").value.trim();
 
-    const name = document.getElementById("prop-name").value.trim() || "Sin Título";
-    const desc = document.getElementById("prop-desc").value.trim();
+    const inMilitantes = document.getElementById("prop-militantes");
+    const inCasas = document.getElementById("prop-casas");
+    const inLider = document.getElementById("prop-lider");
+    const inTelefono = document.getElementById("prop-telefono");
+    const inFamilias = document.getElementById("prop-familias");
+    const inHab = document.getElementById("prop-habitantes");
+
+    const inMun = document.getElementById("prop-select-mun");
+    const inParish = document.getElementById("prop-select-parish");
+    const inSubParish = document.getElementById("prop-select-subparish");
+
+    const targetMunId = inMun && inMun.value ? inMun.value : (this.currentMunId || "maturin");
+    const targetParishId = inParish && inParish.value ? inParish.value : (this.currentParishId || "alto-de-los-godos");
+    const subParroquiaId = (inSubParish && inSubParish.value) ? inSubParish.value : (this.currentItem.subParroquiaId || null);
+
+    const militantesVal = inMilitantes ? (parseInt(inMilitantes.value) || 0) : (this.currentItem.militantes || this.currentItem.habitantes || 0);
+    const casasVal = inCasas ? (parseInt(inCasas.value) || 0) : (this.currentItem.casas || 0);
+    const liderVal = inLider ? inLider.value.trim() : (this.currentItem.lider || "");
+    const telefonoVal = inTelefono ? inTelefono.value.trim() : (this.currentItem.telefono || "");
 
     const updated = {
-      nombre: name,
-      descripcion: desc
+      nombre,
+      descripcion,
+      colorBorde: document.getElementById("prop-border-color")?.value || "#38bdf8",
+      anchoBorde: parseInt(document.getElementById("prop-border-width")?.value) || 2,
+      colorRelleno: document.getElementById("prop-fill-color")?.value || "#38bdf8",
+      opacidad: parseFloat(document.getElementById("prop-poly-opacity")?.value) || 0.38,
+      color: document.getElementById("prop-border-color")?.value || "#38bdf8",
+      ancho: parseInt(document.getElementById("prop-border-width")?.value) || 2,
+      militantes: militantesVal,
+      casas: casasVal,
+      familias: inFamilias ? (parseInt(inFamilias.value) || casasVal) : casasVal,
+      habitantes: inHab ? (parseInt(inHab.value) || militantesVal) : militantesVal,
+      lider: liderVal,
+      telefono: telefonoVal,
+      munId: targetMunId,
+      parishId: targetParishId,
+      subParroquiaId
     };
 
-    if (targetType === "poligono") {
-      updated.colorBorde = document.getElementById("prop-border-color").value;
-      updated.anchoBorde = parseInt(document.getElementById("prop-border-width").value) || 2;
-      updated.colorRelleno = document.getElementById("prop-fill-color").value;
-      updated.opacidad = parseFloat(document.getElementById("prop-poly-opacity").value) || 0.4;
-    } else if (targetType === "ruta") {
-      updated.color = document.getElementById("prop-border-color").value;
-      updated.ancho = parseInt(document.getElementById("prop-border-width").value) || 4;
-    }
-
-    // Cerrar primero el modal
-    this.close();
-
-    // Notificar al guardador y re-renderizar mapa con los nuevos colores
     if (this.onSaveCallback) {
-      this.onSaveCallback(targetType, targetId, updated);
+      this.onSaveCallback(this.currentType, this.currentItem.id, updated, targetMunId, targetParishId);
     }
+    this.close();
+  }
+
+  cancel() {
+    if (this.currentItem && this.originalState && this.onLiveChangeCallback) {
+      this.onLiveChangeCallback(this.currentType, this.currentItem.id, this.originalState);
+    }
+    this.close();
   }
 
   close() {
-    this.modalEl.classList.add("hidden");
-    this.modalEl.classList.remove("flex");
     this.currentItem = null;
     this.currentType = null;
+    this.modalEl.classList.add("hidden");
+    this.modalEl.classList.remove("flex");
   }
 }
