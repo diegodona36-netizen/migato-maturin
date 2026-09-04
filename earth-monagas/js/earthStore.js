@@ -1,7 +1,7 @@
 /**
  * Gestor de Estado y Árbol de Lugares (Places) — Google Earth Pro Web (Monagas)
  */
-import { SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=50";
+import { SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=51";
 
 const STORAGE_KEY = "earth_monagas_places_v3";
 

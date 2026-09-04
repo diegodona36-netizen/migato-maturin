@@ -2,8 +2,8 @@
  * Motor Cartográfico Acelerado por GPU — Google Earth Pro Web (Monagas)
  * Integrado con Capas Jerárquicas Oficiales (INE 2021) y Edición de Vértices
  */
-import { GEO_ESTADO_OFICIAL, GEO_MUNICIPIOS_OFICIAL, GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=50";
-import { SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=50";
+import { GEO_ESTADO_OFICIAL, GEO_MUNICIPIOS_OFICIAL, GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=51";
+import { SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=51";
 
 export class EarthMapEngine {
   constructor(containerId, onCoordUpdate) {
@@ -325,7 +325,7 @@ export class EarthMapEngine {
       // Máscara invertida con orificio para la parroquia activa (SVG con fill-rule: evenodd)
       const maskPoly = L.polygon([worldBox, coords], {
         fillColor: "#000000",
-        fillOpacity: 0.88,
+        fillOpacity: 0.38,
         color: "#000000",
         weight: 0,
         fillRule: "evenodd",
@@ -369,7 +369,7 @@ export class EarthMapEngine {
 
       const maskPoly = L.polygon([worldBox, spVertices], {
         fillColor: "#000000",
-        fillOpacity: 0.88,
+        fillOpacity: 0.38,
         color: "#000000",
         weight: 0,
         fillRule: "evenodd",
@@ -424,12 +424,12 @@ export class EarthMapEngine {
         } catch(e) {}
       }
 
-      // Mantener la máscara oscura de los alrededores durante el trazado para máxima concentración
+      // Mantener la máscara de los alrededores translúcida durante el trazado para enlazar polígonos
       if (this.boundaryLayer) {
         this.boundaryLayer.eachLayer(l => {
           try {
             if (l.options && (l.options.fillColor === "#020617" || l.options.fillColor === "#000000")) {
-              l.setStyle({ fillOpacity: 0.88 });
+              l.setStyle({ fillOpacity: 0.38 });
             }
           } catch(e) {}
         });
