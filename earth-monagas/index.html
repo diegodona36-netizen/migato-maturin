@@ -347,17 +347,52 @@
 
         <!-- PESTAÑA 2: ESTILO Y COLOR -->
         <div class="prop-tab-content hidden space-y-3" data-tab="style">
+          
+          <!-- PALETA RÁPIDA DE COLORES (1 TOQUE PARA CAMBIAR TODO EL POLÍGONO) -->
+          <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="text-[11px] font-black text-amber-400 uppercase tracking-wider">
+                🎨 Colores Rápidos (Toca uno para aplicar):
+              </span>
+              <span id="palette-color-name" class="text-[10px] font-mono text-slate-400">Azul Celeste</span>
+            </div>
+            
+            <div class="grid grid-cols-7 gap-2 pt-1">
+              <button type="button" data-color="#38bdf8" data-name="Azul Celeste" class="btn-quick-color h-9 rounded-xl bg-sky-400 border-2 border-white shadow-lg flex items-center justify-center hover:scale-105 active:scale-95 transition" title="Azul Celeste">
+                <i data-lucide="check" class="w-4 h-4 text-slate-950 font-black check-icon"></i>
+              </button>
+              <button type="button" data-color="#10b981" data-name="Verde Esmeralda" class="btn-quick-color h-9 rounded-xl bg-emerald-500 border-2 border-slate-700 hover:border-white shadow flex items-center justify-center hover:scale-105 active:scale-95 transition" title="Verde Esmeralda">
+                <i data-lucide="check" class="w-4 h-4 text-slate-950 font-black check-icon hidden"></i>
+              </button>
+              <button type="button" data-color="#f59e0b" data-name="Amarillo Alerta" class="btn-quick-color h-9 rounded-xl bg-amber-500 border-2 border-slate-700 hover:border-white shadow flex items-center justify-center hover:scale-105 active:scale-95 transition" title="Amarillo Alerta">
+                <i data-lucide="check" class="w-4 h-4 text-slate-950 font-black check-icon hidden"></i>
+              </button>
+              <button type="button" data-color="#ef4444" data-name="Rojo Crítico" class="btn-quick-color h-9 rounded-xl bg-red-500 border-2 border-slate-700 hover:border-white shadow flex items-center justify-center hover:scale-105 active:scale-95 transition" title="Rojo Crítico">
+                <i data-lucide="check" class="w-4 h-4 text-white font-black check-icon hidden"></i>
+              </button>
+              <button type="button" data-color="#a855f7" data-name="Morado / Violeta" class="btn-quick-color h-9 rounded-xl bg-purple-500 border-2 border-slate-700 hover:border-white shadow flex items-center justify-center hover:scale-105 active:scale-95 transition" title="Morado">
+                <i data-lucide="check" class="w-4 h-4 text-white font-black check-icon hidden"></i>
+              </button>
+              <button type="button" data-color="#f97316" data-name="Naranja Teja" class="btn-quick-color h-9 rounded-xl bg-orange-500 border-2 border-slate-700 hover:border-white shadow flex items-center justify-center hover:scale-105 active:scale-95 transition" title="Naranja">
+                <i data-lucide="check" class="w-4 h-4 text-slate-950 font-black check-icon hidden"></i>
+              </button>
+              <button type="button" data-color="#ffffff" data-name="Blanco Puro" class="btn-quick-color h-9 rounded-xl bg-white border-2 border-slate-700 hover:border-sky-400 shadow flex items-center justify-center hover:scale-105 active:scale-95 transition" title="Blanco">
+                <i data-lucide="check" class="w-4 h-4 text-slate-950 font-black check-icon hidden"></i>
+              </button>
+            </div>
+          </div>
+
           <!-- Líneas / Borde -->
           <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-2">
             <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Líneas / Contorno</span>
             <div class="grid grid-cols-2 gap-3 items-center">
               <div>
-                <label class="block text-[10px] text-slate-400 mb-1">Color de Línea</label>
-                <input type="color" id="prop-border-color" value="#38bdf8" class="w-full h-8 bg-slate-800 border border-slate-700 rounded cursor-pointer">
+                <label class="block text-[10px] text-slate-400 mb-1">Color Personalizado</label>
+                <input type="color" id="prop-border-color" value="#38bdf8" class="w-full h-8 bg-slate-800 border border-slate-700 rounded-lg cursor-pointer">
               </div>
               <div>
-                <label class="block text-[10px] text-slate-400 mb-1">Ancho (Píxeles)</label>
-                <input type="number" id="prop-border-width" value="3" min="1" max="15" class="w-full px-2 py-1.5 text-xs bg-slate-800 border border-slate-700 rounded text-white font-mono">
+                <label class="block text-[10px] text-slate-400 mb-1">Ancho de Línea (px)</label>
+                <input type="number" id="prop-border-width" value="3" min="1" max="15" class="w-full px-2 py-1.5 text-xs bg-slate-800 border border-slate-700 rounded-lg text-white font-mono">
               </div>
             </div>
           </div>
@@ -368,7 +403,7 @@
             <div class="grid grid-cols-2 gap-3 items-center">
               <div>
                 <label class="block text-[10px] text-slate-400 mb-1">Color de Relleno</label>
-                <input type="color" id="prop-fill-color" value="#38bdf8" class="w-full h-8 bg-slate-800 border border-slate-700 rounded cursor-pointer">
+                <input type="color" id="prop-fill-color" value="#38bdf8" class="w-full h-8 bg-slate-800 border border-slate-700 rounded-lg cursor-pointer">
               </div>
               <div>
                 <div class="flex justify-between text-[10px] text-slate-400 mb-1">
@@ -379,6 +414,7 @@
               </div>
             </div>
           </div>
+
         </div>
 
         <!-- PESTAÑA 3: MEDIDAS -->
