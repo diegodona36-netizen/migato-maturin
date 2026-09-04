@@ -1,7 +1,7 @@
 /**
  * Gestor de Estado y Árbol de Lugares (Places) — Google Earth Pro Web (Monagas)
  */
-import { SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=53";
+import { SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=54";
 
 const STORAGE_KEY = "earth_monagas_places_v3";
 
@@ -202,6 +202,104 @@ export const DEFAULT_SAN_SIMON_POLIGONOS = [
   }
 ];
 
+export const DEFAULT_COROZO_SUBPARROQUIAS = [
+  {
+    id: "sub-corozo-1",
+    parroquiaId: "el-corozo",
+    nombre: "Sub-Parroquia 1 • Casco El Corozo",
+    alias: "El Corozo Centro",
+    colorBorde: "#c084fc",
+    anchoBorde: 2.5,
+    colorRelleno: "#a855f7",
+    opacidad: 0.2,
+    areaHa: 310.5,
+    perimetroM: 7200,
+    militantes: 1850,
+    casas: 980,
+    visible: true,
+    vertices: [
+      [9.7000, -63.2450],
+      [9.7030, -63.2150],
+      [9.6650, -63.2100],
+      [9.6550, -63.2400],
+      [9.7000, -63.2450]
+    ]
+  },
+  {
+    id: "sub-corozo-2",
+    parroquiaId: "el-corozo",
+    nombre: "Sub-Parroquia 2 • Amana del Tamarindo",
+    alias: "Amana",
+    colorBorde: "#a855f7",
+    anchoBorde: 2.5,
+    colorRelleno: "#9333ea",
+    opacidad: 0.2,
+    areaHa: 280.2,
+    perimetroM: 6800,
+    militantes: 1420,
+    casas: 740,
+    visible: true,
+    vertices: [
+      [9.7030, -63.2150],
+      [9.7050, -63.1950],
+      [9.6550, -63.1850],
+      [9.6650, -63.2100],
+      [9.7030, -63.2150]
+    ]
+  }
+];
+
+export const DEFAULT_COROZO_POLIGONOS = [
+  {
+    id: "poly-corozo-centro",
+    subParroquiaId: "sub-corozo-1",
+    nombre: "Sector El Corozo Centro",
+    descripcion: "Comunidad Central de El Corozo",
+    militantes: 620,
+    casas: 310,
+    habitantes: 620,
+    familias: 310,
+    colorBorde: "#38bdf8",
+    anchoBorde: 2,
+    colorRelleno: "#38bdf8",
+    opacidad: 0.35,
+    areaHa: 45.2,
+    perimetroM: 2700,
+    visible: true,
+    vertices: [
+      [9.6860, -63.2320],
+      [9.6870, -63.2180],
+      [9.6730, -63.2160],
+      [9.6720, -63.2300],
+      [9.6860, -63.2320]
+    ]
+  },
+  {
+    id: "poly-amana-centro",
+    subParroquiaId: "sub-corozo-2",
+    nombre: "Sector Amana del Tamarindo",
+    descripcion: "Comunidad Amana",
+    militantes: 480,
+    casas: 240,
+    habitantes: 480,
+    familias: 240,
+    colorBorde: "#38bdf8",
+    anchoBorde: 2,
+    colorRelleno: "#38bdf8",
+    opacidad: 0.35,
+    areaHa: 38.6,
+    perimetroM: 2500,
+    visible: true,
+    vertices: [
+      [9.6880, -63.2100],
+      [9.6900, -63.1980],
+      [9.6770, -63.1960],
+      [9.6750, -63.2080],
+      [9.6880, -63.2100]
+    ]
+  }
+];
+
 export class EarthStore {
   constructor(catalogo) {
     this.catalogo = catalogo;
@@ -297,6 +395,16 @@ export class EarthStore {
               })).filter(s => s.vertices && s.vertices.length >= 3);
             }
           }
+
+          // Precarga oficial para El Corozo si está vacía
+          if (mun.id === "maturin" && p.id === "el-corozo") {
+            if (storedP.subparroquias.length === 0) {
+              storedP.subparroquias = JSON.parse(JSON.stringify(DEFAULT_COROZO_SUBPARROQUIAS));
+            }
+            if (storedP.poligonos.length === 0) {
+              storedP.poligonos = JSON.parse(JSON.stringify(DEFAULT_COROZO_POLIGONOS));
+            }
+          }
         });
       });
     } catch (e) {
@@ -382,6 +490,20 @@ export class EarthStore {
       this.ensureAllParishes(this.state);
     }
     return this.state?.municipios?.[munId]?.parroquias?.[parishId] || null;
+  }
+
+  getAllSubParishesInMun(munId) {
+    if (!this.state || !this.state.municipios) return [];
+    const mun = this.state.municipios[munId];
+    if (!mun || !mun.parroquias) return [];
+    const list = [];
+    Object.keys(mun.parroquias).forEach(pId => {
+      const p = mun.parroquias[pId];
+      (p.subparroquias || []).forEach(sp => {
+        list.push(Object.assign({}, sp, { munId, parishId: pId }));
+      });
+    });
+    return list;
   }
 
   addItemToParish(munId, parishId, type, item) {

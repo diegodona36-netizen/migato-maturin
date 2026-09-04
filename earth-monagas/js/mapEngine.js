@@ -2,8 +2,8 @@
  * Motor Cartográfico Acelerado por GPU — Google Earth Pro Web (Monagas)
  * Integrado con Capas Jerárquicas Oficiales (INE 2021) y Edición de Vértices
  */
-import { GEO_ESTADO_OFICIAL, GEO_MUNICIPIOS_OFICIAL, GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=53";
-import { SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=53";
+import { GEO_ESTADO_OFICIAL, GEO_MUNICIPIOS_OFICIAL, GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=54";
+import { SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=54";
 
 export class EarthMapEngine {
   constructor(containerId, onCoordUpdate) {
@@ -477,7 +477,11 @@ export class EarthMapEngine {
     if (!parish) return;
 
     // 0. Sub-Parroquias / Ejes Comunales (Nivel 4)
-    (parish.subparroquias || []).forEach(sp => {
+    // Cargar las sub-parroquias de todo el municipio actual para que a primera vista en el municipio ya se vean
+    const munSubParishes = window.earthApp?.store?.getAllSubParishesInMun(window.earthApp?.selectedMunId) || [];
+    const subParishesToRender = munSubParishes.length > 0 ? munSubParishes : (parish.subparroquias || []);
+
+    subParishesToRender.forEach(sp => {
       try {
         if (sp.visible === false || !sp.vertices || sp.vertices.length < 3) return;
 
@@ -517,6 +521,11 @@ export class EarthMapEngine {
             return;
           }
           L.DomEvent.stopPropagation(e);
+
+          // Si pertenece a otra parroquia del municipio, cambiar a esa parroquia
+          if (window.earthApp && sp.parishId && sp.parishId !== window.earthApp.selectedParishId) {
+            window.earthApp.selectParish(sp.munId || window.earthApp.selectedMunId, sp.parishId);
+          }
 
           // Enfocar eje en la app
           if (window.earthApp) {
@@ -744,97 +753,85 @@ export class EarthMapEngine {
 
   /**
    * Controla la visualización por niveles de detalle (LOD) y fragmentación:
-   * - Zoom < 14: Predominan las Sub-Parroquias (Nivel 4). Los sectores comunales permanecen sutiles.
-   * - Zoom >= 14 o Sub-Parroquia enfocada: FRAGMENTACIÓN COMPLETA a Sectores Comunales (Nivel 5).
+   * - Zoom < 14 (Vista general del Municipio): SOLAMENTE se ven las SUB-PARROQUIAS. Los sectores comunales permanecen totalmente cerrados/ocultos.
+   * - Zoom >= 14 (Vista de detalle): SE CIERRAN LAS SUB-PARROQUIAS por completo y SOLAMENTE se ven los SECTORES COMUNALES.
    */
   updateHierarchicalLOD() {
     if (!this.map) return;
     const zoom = this.map.getZoom();
-    const activeSubId = window.earthApp?.activeSubParroquiaId;
+    const activeTool = window.earthApp?.toolsManager?.activeTool;
+    const isDrawing = !!activeTool;
 
-    // 1. Capa de Sub-Parroquias (Nivel 4)
-    if (this.subParroquiasLayer) {
-      this.subParroquiasLayer.eachLayer(layer => {
-        const sp = layer._spData;
-        if (!sp) return;
-        const isThisFocused = activeSubId && String(sp.id) === String(activeSubId);
+    // Umbral de transición (Zoom 14 es el punto de fragmentación)
+    const isCloseZoom = zoom >= 14;
 
-        if (isThisFocused) {
-          layer.setStyle({
-            color: "#c084fc",
-            weight: 3.5,
-            dashArray: "8, 6",
-            fill: true,
-            fillOpacity: 0.04
-          });
-        } else if (activeSubId) {
-          layer.setStyle({
-            color: "#a855f7",
-            weight: 1.5,
-            dashArray: "4, 4",
-            fill: true,
-            fillOpacity: 0.02
-          });
-        } else if (zoom >= 14) {
-          layer.setStyle({
-            color: sp.colorBorde || "#c084fc",
-            weight: 2.5,
-            dashArray: "6, 4",
-            fill: true,
-            fillOpacity: 0.03
-          });
+    if (isCloseZoom) {
+      // 1. Zoom cercano (>= 14): Las sub-parroquias SE CIERRAN por completo
+      if (this.subParroquiasLayer) {
+        if (!isDrawing || activeTool !== "subparroquia") {
+          if (this.map.hasLayer(this.subParroquiasLayer)) {
+            this.map.removeLayer(this.subParroquiasLayer);
+          }
         } else {
-          layer.setStyle({
-            color: sp.colorBorde || "#c084fc",
-            weight: 3,
-            dashArray: null,
-            fill: true,
-            fillOpacity: 0.18
-          });
-        }
-      });
-    }
-
-    // 2. Capa de Sectores Comunales (Nivel 5) — Fragmentación por Zoom
-    if (this.polygonsLayer) {
-      this.polygonsLayer.eachLayer(layer => {
-        const poly = layer._polyData;
-        if (!poly) return;
-        const belongsToActive = !activeSubId || String(poly.subParroquiaId) === String(activeSubId);
-
-        if (zoom < 13 && !activeSubId) {
-          // Zoom lejano: los sectores se sintetizan dentro del eje comunal
-          layer.setStyle({
-            opacity: 0.25,
-            fillOpacity: 0.05,
-            weight: 1
-          });
-        } else if (zoom === 13 && !activeSubId) {
-          // Zoom intermedio: visible pero sutil
-          layer.setStyle({
-            opacity: 0.6,
-            fillOpacity: 0.15,
-            weight: 1.5
-          });
-        } else {
-          // Zoom >= 14 o Eje Enfocado: FRAGMENTACIÓN COMPLETA
-          if (belongsToActive) {
-            layer.setStyle({
-              opacity: 0.95,
-              fillOpacity: poly.opacidad !== undefined ? poly.opacidad : 0.35,
-              weight: poly.anchoBorde || 2,
-              color: poly.colorBorde || "#38bdf8"
-            });
-          } else {
-            // Sector de otro eje comunal cuando uno está enfocado: atenuado
-            layer.setStyle({
-              opacity: 0.25,
-              fillOpacity: 0.06,
-              weight: 1
-            });
+          if (!this.map.hasLayer(this.subParroquiasLayer)) {
+            this.map.addLayer(this.subParroquiasLayer);
           }
         }
-      });
+      }
+
+      // 2. Zoom cercano (>= 14): SOLAMENTE se ven los sectores comunales
+      if (this.polygonsLayer) {
+        if (!this.map.hasLayer(this.polygonsLayer)) {
+          this.map.addLayer(this.polygonsLayer);
+        }
+        this.polygonsLayer.eachLayer(layer => {
+          const poly = layer._polyData;
+          if (poly) {
+            layer.setStyle({
+              opacity: 0.95,
+              fill: true,
+              fillOpacity: poly.opacidad !== undefined ? poly.opacidad : 0.35,
+              weight: poly.anchoBorde || 2,
+              color: poly.colorBorde || "#38bdf8",
+              fillColor: poly.colorRelleno || "#38bdf8"
+            });
+          }
+        });
+      }
+    } else {
+      // 1. Zoom lejano (< 14, al entrar al municipio): SOLAMENTE se ven las sub-parroquias
+      if (this.subParroquiasLayer) {
+        if (!this.map.hasLayer(this.subParroquiasLayer)) {
+          this.map.addLayer(this.subParroquiasLayer);
+        }
+        this.subParroquiasLayer.eachLayer(layer => {
+          const sp = layer._spData;
+          if (sp) {
+            layer.setStyle({
+              color: sp.colorBorde || "#c084fc",
+              weight: sp.anchoBorde || 2.5,
+              opacity: 0.95,
+              fill: true,
+              fillColor: sp.colorRelleno || "#a855f7",
+              fillOpacity: sp.opacidad !== undefined ? sp.opacidad : 0.22,
+              dashArray: null
+            });
+          }
+        });
+      }
+
+      // 2. Zoom lejano (< 14): Los sectores comunales SE CIERRAN por completo (no se ven)
+      if (this.polygonsLayer) {
+        if (!isDrawing || activeTool !== "poligono") {
+          if (this.map.hasLayer(this.polygonsLayer)) {
+            this.map.removeLayer(this.polygonsLayer);
+          }
+        } else {
+          if (!this.map.hasLayer(this.polygonsLayer)) {
+            this.map.addLayer(this.polygonsLayer);
+          }
+        }
+      }
     }
   }
 
