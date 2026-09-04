@@ -2,8 +2,8 @@
  * Motor Cartográfico Acelerado por GPU — Google Earth Pro Web (Monagas)
  * Integrado con Capas Jerárquicas Oficiales (INE 2021) y Edición de Vértices
  */
-import { GEO_ESTADO_OFICIAL, GEO_MUNICIPIOS_OFICIAL, GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=49";
-import { SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=49";
+import { GEO_ESTADO_OFICIAL, GEO_MUNICIPIOS_OFICIAL, GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=50";
+import { SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=50";
 
 export class EarthMapEngine {
   constructor(containerId, onCoordUpdate) {
@@ -38,6 +38,7 @@ export class EarthMapEngine {
 
   init() {
     this.canvasRenderer = L.canvas({ padding: 0.5, tolerance: 12 });
+    this.svgRenderer = L.svg({ padding: 0.5 });
 
     const googleHybrid = L.tileLayer(
       "https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}",
@@ -289,7 +290,13 @@ export class EarthMapEngine {
 
     // 1. Intentar obtener polígono oficial del INE desde GEO_PARROQUIAS_OFICIAL
     if (parishId && GEO_PARROQUIAS_OFICIAL && GEO_PARROQUIAS_OFICIAL.features) {
-      const feat = GEO_PARROQUIAS_OFICIAL.features.find(f => f.properties && f.properties.id === parishId);
+      const cleanId = String(parishId).toLowerCase().replace(/_/g, "-");
+      const feat = GEO_PARROQUIAS_OFICIAL.features.find(f => {
+        if (!f.properties) return false;
+        const fId = String(f.properties.id || "").toLowerCase().replace(/_/g, "-");
+        const fNom = String(f.properties.nombre || "").toLowerCase();
+        return fId === cleanId || fNom === cleanId;
+      });
       if (feat && feat.geometry) {
         if (feat.geometry.type === "Polygon") {
           coords = feat.geometry.coordinates[0].map(c => [c[1], c[0]]);
@@ -306,23 +313,24 @@ export class EarthMapEngine {
 
     if (!coords || coords.length === 0) return;
 
-    // 2. Máscara de Foco (Efecto Reflector en Negro Azabache)
+    // 2. Máscara de Foco (Efecto Reflector en Negro Azabache Universal SVG)
     if (this.spotlightEnabled) {
       const worldBox = [
-        [85, -180],
-        [85, 180],
-        [-85, 180],
-        [-85, -180]
+        [-90, -180],
+        [-90, 180],
+        [90, 180],
+        [90, -180]
       ];
 
-      // Máscara invertida con orificio para la parroquia activa
+      // Máscara invertida con orificio para la parroquia activa (SVG con fill-rule: evenodd)
       const maskPoly = L.polygon([worldBox, coords], {
-        fillColor: "#020617",
-        fillOpacity: 0.78,
+        fillColor: "#000000",
+        fillOpacity: 0.88,
         color: "#000000",
         weight: 0,
+        fillRule: "evenodd",
         interactive: false,
-        renderer: this.canvasRenderer
+        renderer: this.svgRenderer
       });
       this.boundaryLayer.addLayer(maskPoly);
     }
@@ -353,19 +361,20 @@ export class EarthMapEngine {
 
     if (this.spotlightEnabled) {
       const worldBox = [
-        [85, -180],
-        [85, 180],
-        [-85, 180],
-        [-85, -180]
+        [-90, -180],
+        [-90, 180],
+        [90, 180],
+        [90, -180]
       ];
 
       const maskPoly = L.polygon([worldBox, spVertices], {
-        fillColor: "#020617",
-        fillOpacity: 0.82,
+        fillColor: "#000000",
+        fillOpacity: 0.88,
         color: "#000000",
         weight: 0,
+        fillRule: "evenodd",
         interactive: false,
-        renderer: this.canvasRenderer
+        renderer: this.svgRenderer
       });
       this.boundaryLayer.addLayer(maskPoly);
     }
@@ -420,7 +429,7 @@ export class EarthMapEngine {
         this.boundaryLayer.eachLayer(l => {
           try {
             if (l.options && (l.options.fillColor === "#020617" || l.options.fillColor === "#000000")) {
-              l.setStyle({ fillOpacity: 0.82 });
+              l.setStyle({ fillOpacity: 0.88 });
             }
           } catch(e) {}
         });

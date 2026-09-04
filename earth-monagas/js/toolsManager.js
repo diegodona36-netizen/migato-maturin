@@ -204,7 +204,7 @@ export class ToolsManager {
     }
 
     const mobileBar = document.getElementById("mobile-field-actions");
-    if (mobileBar) mobileBar.classList.remove("hidden");
+    if (mobileBar) mobileBar.classList.add("hidden");
 
     document.querySelectorAll(".btn-earth-tool").forEach(btn => {
       btn.classList.remove("active-tool");
