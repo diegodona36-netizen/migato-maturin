@@ -12,8 +12,13 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-  <!-- Lucide Icons -->
-  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Lucide Icons (Local de Alta Disponibilidad + CDN de Respaldo) -->
+  <script src="js/lucide.min.js"></script>
+  <script>
+    if (!window.lucide) {
+      document.write('<script src="https://cdn.jsdelivr.net/npm/lucide@latest/dist/umd/lucide.min.js"><\/script>');
+    }
+  </script>
 
   <!-- Custom Styles -->
   <link rel="stylesheet" href="css/styles.css?v=7">
@@ -524,6 +529,6 @@
   </div>
 
   <!-- SCRIPT -->
-  <script type="module" src="js/app.js?v=8"></script>
+  <script type="module" src="js/app.js?v=9"></script>
 </body>
 </html>
