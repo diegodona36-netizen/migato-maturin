@@ -2,8 +2,8 @@
  * Motor Cartográfico Acelerado por GPU — Google Earth Pro Web (Monagas)
  * Integrado con Capas Jerárquicas Oficiales (INE 2021) y Edición de Vértices
  */
-import { GEO_ESTADO_OFICIAL, GEO_MUNICIPIOS_OFICIAL, GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=47";
-import { SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=47";
+import { GEO_ESTADO_OFICIAL, GEO_MUNICIPIOS_OFICIAL, GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=48";
+import { SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=48";
 
 export class EarthMapEngine {
   constructor(containerId, onCoordUpdate) {
@@ -402,59 +402,71 @@ export class EarthMapEngine {
 
   setDrawingMode(isDrawing) {
     this.isDrawingMode = !!isDrawing;
-    if (this.map) {
-      const container = this.map.getContainer();
-      if (container) {
-        container.classList.toggle("drawing-active", this.isDrawingMode);
-      }
-      this.map.closeTooltip();
-    }
-
-    // Ocultar cualquier máscara de sombra oscura mientras se dibuja para que el satélite esté 100% limpio
-    if (this.boundaryLayer) {
-      this.boundaryLayer.eachLayer(l => {
-        if (l.options && l.options.fillColor === "#020617") {
-          l.setStyle({ fillOpacity: this.isDrawingMode ? 0 : (this.spotlightEnabled ? 0.78 : 0) });
+    try {
+      if (this.map) {
+        const container = this.map.getContainer();
+        if (container) {
+          container.classList.toggle("drawing-active", this.isDrawingMode);
         }
-      });
-    }
+        try {
+          if (typeof this.map.closePopup === "function") {
+            this.map.closePopup();
+          }
+        } catch(e) {}
+      }
 
-    const groups = [
-      this.subParroquiasLayer,
-      this.polygonsLayer,
-      this.routesLayer,
-      this.placemarksLayer,
-      this.boundaryLayer,
-      this.layerL1_Estado,
-      this.layerL2_Municipios,
-      this.layerL3_Parroquias,
-      this.layerL4_SubParroquias
-    ];
-
-    groups.forEach(group => {
-      if (!group || typeof group.eachLayer !== "function") return;
-      try {
-        group.eachLayer(layer => {
-          if (!layer) return;
+      // Ocultar cualquier máscara de sombra oscura mientras se dibuja para que el satélite esté 100% limpio
+      if (this.boundaryLayer) {
+        this.boundaryLayer.eachLayer(l => {
           try {
-            if (this.isDrawingMode) {
-              if (layer._origInteractive === undefined) {
-                layer._origInteractive = Boolean(layer.options && layer.options.interactive !== false);
-              }
-              if (layer.options) layer.options.interactive = false;
-              if (layer._path && layer._path.style) layer._path.style.pointerEvents = "none";
-              if (layer._icon && layer._icon.style) layer._icon.style.pointerEvents = "none";
-              if (typeof layer.closeTooltip === "function") layer.closeTooltip();
-            } else {
-              const wasInteractive = layer._origInteractive !== undefined ? layer._origInteractive : true;
-              if (layer.options) layer.options.interactive = wasInteractive;
-              if (layer._path && layer._path.style) layer._path.style.pointerEvents = "auto";
-              if (layer._icon && layer._icon.style) layer._icon.style.pointerEvents = "auto";
+            if (l.options && l.options.fillColor === "#020617") {
+              l.setStyle({ fillOpacity: this.isDrawingMode ? 0 : (this.spotlightEnabled ? 0.78 : 0) });
             }
-          } catch (eLayer) {}
+          } catch(e) {}
         });
-      } catch (eGroup) {}
-    });
+      }
+
+      const groups = [
+        this.subParroquiasLayer,
+        this.polygonsLayer,
+        this.routesLayer,
+        this.placemarksLayer,
+        this.boundaryLayer,
+        this.layerL1_Estado,
+        this.layerL2_Municipios,
+        this.layerL3_Parroquias,
+        this.layerL4_SubParroquias
+      ];
+
+      groups.forEach(group => {
+        if (!group || typeof group.eachLayer !== "function") return;
+        try {
+          group.eachLayer(layer => {
+            if (!layer) return;
+            try {
+              if (this.isDrawingMode) {
+                if (layer._origInteractive === undefined) {
+                  layer._origInteractive = Boolean(layer.options && layer.options.interactive !== false);
+                }
+                if (layer.options) layer.options.interactive = false;
+                if (layer._path && layer._path.style) layer._path.style.pointerEvents = "none";
+                if (layer._icon && layer._icon.style) layer._icon.style.pointerEvents = "none";
+                if (typeof layer.getTooltip === "function" && layer.getTooltip() && typeof layer.closeTooltip === "function") {
+                  try { layer.closeTooltip(); } catch(e) {}
+                }
+              } else {
+                const wasInteractive = layer._origInteractive !== undefined ? layer._origInteractive : true;
+                if (layer.options) layer.options.interactive = wasInteractive;
+                if (layer._path && layer._path.style) layer._path.style.pointerEvents = "auto";
+                if (layer._icon && layer._icon.style) layer._icon.style.pointerEvents = "auto";
+              }
+            } catch (eLayer) {}
+          });
+        } catch (eGroup) {}
+      });
+    } catch(err) {
+      console.warn("[setDrawingMode] Error:", err);
+    }
   }
 
   renderParishItems(parish, onSelectCallback) {

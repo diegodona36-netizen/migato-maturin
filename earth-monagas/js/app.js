@@ -2,15 +2,15 @@
  * Controlador Principal — Google Earth Pro Web (Edición Estado Monagas)
  * Robusto, 100% Operativo y Totalmente Individualizado
  */
-import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=47";
-import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=47";
-import { getAllParishesForSelector } from "./usersCatalog.js?v=47";
-import { EarthStore } from "./earthStore.js?v=47";
-import { EarthMapEngine } from "./mapEngine.js?v=47";
-import { PropertiesDialog } from "./propertiesDialog.js?v=47";
-import { ToolsManager } from "./toolsManager.js?v=47";
-import { detectParishFromGeometry } from "./geoMonagas.js?v=47";
-import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=47";
+import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=48";
+import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=48";
+import { getAllParishesForSelector } from "./usersCatalog.js?v=48";
+import { EarthStore } from "./earthStore.js?v=48";
+import { EarthMapEngine } from "./mapEngine.js?v=48";
+import { PropertiesDialog } from "./propertiesDialog.js?v=48";
+import { ToolsManager } from "./toolsManager.js?v=48";
+import { detectParishFromGeometry } from "./geoMonagas.js?v=48";
+import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=48";
 
 class EarthMonagasApp {
   constructor() {
@@ -1251,45 +1251,12 @@ class EarthMonagasApp {
       });
     }
 
-    // 0. Herramienta Sub-Parroquia / Eje Comunal (Nivel 4)
-    const btnSubparish = document.getElementById("btn-tool-subparish");
-    if (btnSubparish) {
-      btnSubparish.addEventListener("click", (e) => {
-        e.preventDefault();
-        window.activateEarthTool("subparroquia");
-      });
-    }
-
     // 0.1 Botón Alternar Foco Parroquial
     const btnSpotlight = document.getElementById("btn-toggle-spotlight");
     if (btnSpotlight) {
       btnSpotlight.addEventListener("click", () => {
         const isEnabled = this.mapEngine.toggleSpotlight();
         this.updateSpotlightButtonUI(isEnabled);
-      });
-    }
-
-    const btnPoly = document.getElementById("btn-tool-polygon");
-    if (btnPoly) {
-      btnPoly.addEventListener("click", (e) => {
-        e.preventDefault();
-        window.activateEarthTool("poligono");
-      });
-    }
-
-    const btnPath = document.getElementById("btn-tool-path");
-    if (btnPath) {
-      btnPath.addEventListener("click", (e) => {
-        e.preventDefault();
-        window.activateEarthTool("ruta");
-      });
-    }
-
-    const btnPlacemark = document.getElementById("btn-tool-placemark");
-    if (btnPlacemark) {
-      btnPlacemark.addEventListener("click", (e) => {
-        e.preventDefault();
-        window.activateEarthTool("marca");
       });
     }
 
