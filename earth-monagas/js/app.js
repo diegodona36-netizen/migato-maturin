@@ -203,7 +203,7 @@ class EarthMonagasApp {
     if (filteredPolys.length === 0) {
       html += `
         <div class="text-[11px] text-slate-500 px-3 py-2.5 italic bg-slate-950/40 rounded-xl border border-slate-800/40 text-center">
-          No hay sectores trazados aún.<br>Usa el botón <strong>Polígono</strong> arriba para marcar uno.
+          ${filterQuery ? `No se encontraron sectores con "<strong>${filterQuery}</strong>".<br><button onclick="document.getElementById('input-search-places').value=''; window.earthApp.renderPlacesTree('');" class="text-sky-400 underline mt-1">Borrar búsqueda</button>` : `No hay sectores trazados aún.<br>Usa el botón <strong>Polígono</strong> arriba para marcar uno.`}
         </div>
       `;
     } else {
@@ -489,9 +489,7 @@ class EarthMonagasApp {
       this.selectedParishId = user.parroquiaId;
 
       if (lockIcon) {
-        lockIcon.setAttribute("data-lucide", "lock");
-        lockIcon.classList.remove("text-amber-400");
-        lockIcon.classList.add("text-emerald-400");
+        lockIcon.outerHTML = '<i id="nav-lock-icon" data-lucide="lock" class="w-3.5 h-3.5 text-emerald-400 shrink-0"></i>';
       }
       if (arrowIcon) arrowIcon.classList.add("hidden");
       if (navBtn) {
@@ -512,6 +510,14 @@ class EarthMonagasApp {
       }
     } else {
       // Super Admin
+      if (lockIcon) {
+        lockIcon.outerHTML = '<i id="nav-lock-icon" data-lucide="map-pin" class="w-3.5 h-3.5 text-amber-400 shrink-0"></i>';
+      }
+      if (arrowIcon) arrowIcon.classList.remove("hidden");
+      if (navBtn) {
+        navBtn.classList.remove("cursor-default");
+        navBtn.title = `Territorio General de Monagas`;
+      }
       if (statusRole) {
         statusRole.textContent = `👑 Sala Central MIGATO`;
       }
