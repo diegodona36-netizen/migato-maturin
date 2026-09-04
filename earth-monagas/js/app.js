@@ -2,15 +2,15 @@
  * Controlador Principal — Google Earth Pro Web (Edición Estado Monagas)
  * Robusto, 100% Operativo y Totalmente Individualizado
  */
-import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=37";
-import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=37";
-import { getAllParishesForSelector } from "./usersCatalog.js?v=37";
-import { EarthStore } from "./earthStore.js?v=37";
-import { EarthMapEngine } from "./mapEngine.js?v=37";
-import { PropertiesDialog } from "./propertiesDialog.js?v=37";
-import { ToolsManager } from "./toolsManager.js?v=37";
-import { detectParishFromGeometry } from "./geoMonagas.js?v=37";
-import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=37";
+import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=38";
+import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=38";
+import { getAllParishesForSelector } from "./usersCatalog.js?v=38";
+import { EarthStore } from "./earthStore.js?v=38";
+import { EarthMapEngine } from "./mapEngine.js?v=38";
+import { PropertiesDialog } from "./propertiesDialog.js?v=38";
+import { ToolsManager } from "./toolsManager.js?v=38";
+import { detectParishFromGeometry } from "./geoMonagas.js?v=38";
+import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=38";
 
 class EarthMonagasApp {
   constructor() {
@@ -766,6 +766,25 @@ class EarthMonagasApp {
     this.propDialog.open(type, item, munId, parishId);
   }
 
+  showToast(message, type = "success") {
+    let toast = document.getElementById("earth-toast-msg");
+    if (!toast) {
+      toast = document.createElement("div");
+      toast.id = "earth-toast-msg";
+      document.body.appendChild(toast);
+    }
+    const bgClass = type === "purple" ? "bg-purple-950/95 border-purple-500/80 text-purple-200 shadow-purple-950/50" : (type === "sky" ? "bg-sky-950/95 border-sky-500/80 text-sky-200 shadow-sky-950/50" : "bg-emerald-950/95 border-emerald-500/80 text-emerald-200 shadow-emerald-950/50");
+    toast.className = `fixed top-14 left-1/2 -translate-x-1/2 z-[2500] px-4 py-2.5 rounded-2xl shadow-2xl border text-xs font-bold flex items-center gap-2 transition-all duration-300 pointer-events-none opacity-100 scale-100 backdrop-blur-md ${bgClass}`;
+    toast.innerHTML = message;
+
+    clearTimeout(this._toastTimeout);
+    this._toastTimeout = setTimeout(() => {
+      if (toast) {
+        toast.classList.add("opacity-0", "scale-95");
+      }
+    }, 5000);
+  }
+
   handleFinishedDrawing(type, newItem) {
     // La parroquia activa donde el usuario está trabajando SIEMPRE es el destino asignado
     const targetMunId = this.selectedMunId;
@@ -788,6 +807,7 @@ class EarthMonagasApp {
         else this.propDialog.open(t, it, targetMunId, targetParishId);
       });
       this.focusSubParish(newItem.id);
+      this.showToast(`🟪 <strong>${newItem.nombre}</strong> creado. Pulsa <strong>[+ Sector Comunal]</strong> para trazar sectores dentro.`, "purple");
       return;
     }
 
@@ -807,6 +827,7 @@ class EarthMonagasApp {
     this.updateMilitanciaTally();
     this.propDialog.open(type, newItem, targetMunId, targetParishId);
     this.renderPlacesTree();
+    this.showToast(`📍 <strong>${newItem.nombre}</strong> trazado exitosamente.`, "sky");
   }
 
   handleSaveProperties(type, itemId, updatedFields, targetMunId = null, targetParishId = null) {
