@@ -2,8 +2,8 @@
  * Motor Cartográfico Acelerado por GPU — Google Earth Pro Web (Monagas)
  * Integrado con Capas Jerárquicas Oficiales (INE 2021) y Edición de Vértices
  */
-import { GEO_ESTADO_OFICIAL, GEO_MUNICIPIOS_OFICIAL, GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=48";
-import { SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=48";
+import { GEO_ESTADO_OFICIAL, GEO_MUNICIPIOS_OFICIAL, GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=49";
+import { SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=49";
 
 export class EarthMapEngine {
   constructor(containerId, onCoordUpdate) {
@@ -87,7 +87,7 @@ export class EarthMapEngine {
     this.overlayLayer = L.layerGroup().addTo(this.map);
     this.tempDrawingLayer = L.layerGroup().addTo(this.map);
 
-    this.spotlightEnabled = false; // Satélite 100% limpio por defecto (Solo Alineación / Sin filtro oscuro)
+    this.spotlightEnabled = true; // Modo Foco activo por defecto: alrededores en negro para concentrarse 100% en la parroquia
     this.currentParishLimite = null;
     this.currentParishId = null;
 
@@ -415,12 +415,12 @@ export class EarthMapEngine {
         } catch(e) {}
       }
 
-      // Ocultar cualquier máscara de sombra oscura mientras se dibuja para que el satélite esté 100% limpio
+      // Mantener la máscara oscura de los alrededores durante el trazado para máxima concentración
       if (this.boundaryLayer) {
         this.boundaryLayer.eachLayer(l => {
           try {
-            if (l.options && l.options.fillColor === "#020617") {
-              l.setStyle({ fillOpacity: this.isDrawingMode ? 0 : (this.spotlightEnabled ? 0.78 : 0) });
+            if (l.options && (l.options.fillColor === "#020617" || l.options.fillColor === "#000000")) {
+              l.setStyle({ fillOpacity: 0.82 });
             }
           } catch(e) {}
         });

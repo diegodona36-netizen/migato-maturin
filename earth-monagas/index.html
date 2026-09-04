@@ -32,7 +32,7 @@
   <meta http-equiv="Expires" content="0" />
 
   <!-- Custom Styles -->
-  <link rel="stylesheet" href="css/styles.css?v=48">
+  <link rel="stylesheet" href="css/styles.css?v=49">
 
   <!-- Script de Autenticación Rápida, Limpieza Integral de Caché y Activador de Herramientas -->
   <script>
@@ -278,12 +278,6 @@
 
     <!-- Fila 2: Botonera de Herramientas SIG (Ultra Limpia para Operadores) -->
     <div class="px-2 sm:px-3 py-1.5 flex items-center gap-2 overflow-x-auto no-scrollbar w-full">
-      
-      <!-- 👁️ Filtro de Vista: Solo Alineación (Satélite Limpio) vs Sombra -->
-      <button id="btn-toggle-spotlight" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-300 border border-slate-700 text-xs font-bold transition flex items-center gap-1.5 shrink-0 active:scale-95 shadow-sm" title="Alternar filtro: Solo Alineación (Satélite 100% visible) o Fondo Oscuro">
-        <i data-lucide="layers" class="w-4 h-4 text-amber-400"></i>
-        <span class="whitespace-nowrap" id="text-toggle-spotlight">Solo Alineación</span>
-      </button>
 
       <!-- 🟪 Agregar Sub-Parroquia / Eje Comunal (Nivel 4) -->
       <button data-tool="subparroquia" id="btn-tool-subparish" onclick="window.activateEarthTool('subparroquia')" class="btn-earth-tool px-3.5 py-1.5 rounded-xl bg-slate-800 hover:bg-purple-950 text-purple-300 hover:text-purple-100 border border-purple-800/60 text-xs font-black transition flex items-center gap-1.5 shrink-0 active:scale-95 shadow-sm cursor-pointer" title="Dibujar Límite de Sub-Parroquia o Eje Comunal">
@@ -987,7 +981,7 @@
   </div>
 
   <!-- SCRIPT -->
-  <script type="module" src="js/app.js?v=48"></script>
+  <script type="module" src="js/app.js?v=49"></script>
   <script>
     if (window.lucide && typeof window.lucide.createIcons === 'function') {
       window.lucide.createIcons();
