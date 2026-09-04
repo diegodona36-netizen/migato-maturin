@@ -2,15 +2,15 @@
  * Controlador Principal — Google Earth Pro Web (Edición Estado Monagas)
  * Robusto, 100% Operativo y Totalmente Individualizado
  */
-import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=39";
-import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=39";
-import { getAllParishesForSelector } from "./usersCatalog.js?v=39";
-import { EarthStore } from "./earthStore.js?v=39";
-import { EarthMapEngine } from "./mapEngine.js?v=39";
-import { PropertiesDialog } from "./propertiesDialog.js?v=39";
-import { ToolsManager } from "./toolsManager.js?v=39";
-import { detectParishFromGeometry } from "./geoMonagas.js?v=39";
-import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=39";
+import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=40";
+import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=40";
+import { getAllParishesForSelector } from "./usersCatalog.js?v=40";
+import { EarthStore } from "./earthStore.js?v=40";
+import { EarthMapEngine } from "./mapEngine.js?v=40";
+import { PropertiesDialog } from "./propertiesDialog.js?v=40";
+import { ToolsManager } from "./toolsManager.js?v=40";
+import { detectParishFromGeometry } from "./geoMonagas.js?v=40";
+import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=40";
 
 class EarthMonagasApp {
   constructor() {
@@ -22,7 +22,7 @@ class EarthMonagasApp {
     this.authManager = new AuthManager();
 
     this.selectedMunId = "maturin";
-    this.selectedParishId = "jusepin";
+    this.selectedParishId = "san-simon";
 
     this.init();
   }
@@ -30,7 +30,17 @@ class EarthMonagasApp {
   init() {
     this.store = new EarthStore(CATALOGO_MONAGAS);
 
-    // Leer parámetro URL para individualización (?p=caicara o ?p=alto-de-los-godos)
+    // Restaurar última parroquia activa trabajada por el usuario
+    try {
+      const savedMun = localStorage.getItem("migato_last_mun");
+      const savedParish = localStorage.getItem("migato_last_parish");
+      if (savedMun && savedParish && this.store.getParish(savedMun, savedParish)) {
+        this.selectedMunId = savedMun;
+        this.selectedParishId = savedParish;
+      }
+    } catch (e) {}
+
+    // Leer parámetro URL para individualización (?p=caicara o ?p=san-simon)
     const urlParams = new URLSearchParams(window.location.search);
     const paramParish = urlParams.get("p") || urlParams.get("parroquia");
     if (paramParish) {
@@ -116,6 +126,11 @@ class EarthMonagasApp {
     this.selectedMunId = munId;
     this.selectedParishId = parishId;
     this.activeSubParroquiaId = null;
+
+    try {
+      localStorage.setItem("migato_last_mun", munId);
+      localStorage.setItem("migato_last_parish", parishId);
+    } catch(e) {}
 
     const parish = this.store.getParish(munId, parishId);
     if (!parish) return;
@@ -673,11 +688,6 @@ class EarthMonagasApp {
   }
 
   openParishSelector() {
-    if (!this.authManager.canSwitchParish()) {
-      const user = this.authManager.getCurrentUser();
-      alert(`Acceso Restringido: Tu cuenta está asignada exclusivamente a la Parroquia ${user ? user.parroquiaNombre : 'asignada'} por razones de confidencialidad territorial.`);
-      return;
-    }
     const modal = document.getElementById("modal-select-parish");
     if (!modal) return;
     this.renderParishesCatalog();
@@ -971,7 +981,7 @@ class EarthMonagasApp {
         if (modalLogin) {
           modalLogin.classList.add("hidden");
           modalLogin.classList.remove("flex");
-          modalLogin.style.setProperty("display", "none", "important");
+          modalLogin.style.display = "none";
         }
 
         this.applyUserScope();
@@ -1030,18 +1040,14 @@ class EarthMonagasApp {
       return;
     }
 
-    // Verificar si ya existe una sesión activa
+    // Iniciar siempre sesión directamente para acceso inmediato sin bloqueos de pantalla
     if (!this.authManager.isAuthenticated()) {
-      if (modalLogin) {
-        modalLogin.classList.remove("hidden");
-        modalLogin.classList.add("flex");
-        modalLogin.style.display = "flex";
-      }
+      this.quickLogin("admin");
     } else {
       if (modalLogin) {
         modalLogin.classList.add("hidden");
         modalLogin.classList.remove("flex");
-        modalLogin.style.setProperty("display", "none", "important");
+        modalLogin.style.display = "none";
       }
       this.applyUserScope();
     }
@@ -1057,7 +1063,7 @@ class EarthMonagasApp {
       if (modalLogin) {
         modalLogin.classList.add("hidden");
         modalLogin.classList.remove("flex");
-        modalLogin.style.setProperty("display", "none", "important");
+        modalLogin.style.display = "none";
       }
       this.applyUserScope();
     } else {
@@ -1135,7 +1141,7 @@ class EarthMonagasApp {
       // Super Admin / Usuario General (Acceso Total a Monagas)
       this.isGeneralMode = true;
       this.selectedMunId = this.selectedMunId || "maturin";
-      this.selectedParishId = this.selectedParishId || "jusepin";
+      this.selectedParishId = this.selectedParishId || "san-simon";
 
       if (lockWrapper) {
         lockWrapper.innerHTML = '<i data-lucide="shield-check" class="w-3.5 h-3.5 text-amber-400 shrink-0"></i>';

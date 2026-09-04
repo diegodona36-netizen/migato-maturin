@@ -8,9 +8,15 @@
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
 
-  <!-- Leaflet CSS & JS -->
+  <!-- Leaflet CSS & JS con CDN de Respaldo -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script>
+    if (typeof L === 'undefined') {
+      document.write('<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />');
+      document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"><\/script>');
+    }
+  </script>
 
   <!-- Lucide Icons (Local de Alta Disponibilidad + CDN de Respaldo) -->
   <script src="js/lucide.min.js"></script>
@@ -26,7 +32,7 @@
   <meta http-equiv="Expires" content="0" />
 
   <!-- Custom Styles -->
-  <link rel="stylesheet" href="css/styles.css?v=39">
+  <link rel="stylesheet" href="css/styles.css?v=40">
 
   <!-- Script de Autenticación Rápida y Limpieza Integral de Caché -->
   <script>
@@ -81,12 +87,12 @@
   <!-- ============================================================== -->
   <!-- 0. PANTALLA DE INICIO DE SESIÓN / CONTROL DE ACCESO TERRITORIAL -->
   <!-- ============================================================== -->
-  <div id="modal-auth-login" style="z-index: 100000;" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+  <div id="modal-auth-login" style="display: none; z-index: 100000;" class="hidden fixed inset-0 bg-slate-950/95 backdrop-blur-md items-center justify-center p-3 sm:p-4 overflow-y-auto">
     <div class="relative bg-slate-900 border border-slate-700/80 w-full max-w-md rounded-3xl shadow-2xl overflow-hidden flex flex-col p-5 sm:p-7 space-y-4 my-auto">
       
       <!-- Botón de Reset de Caché y Botón de Cierre Rápido -->
       <div class="absolute top-4 right-4 flex items-center gap-2">
-        <button type="button" onclick="window.forceCleanCacheAndReload ? window.forceCleanCacheAndReload() : (localStorage.clear(), location.reload(true))" class="px-2.5 py-1 text-[10px] font-bold text-amber-300 bg-amber-950/60 hover:bg-amber-900 border border-amber-500/40 rounded-lg transition flex items-center gap-1 cursor-pointer" title="Resetear Caché de Google y Recargar">
+        <button type="button" onclick="window.forceCleanCacheAndReload ? window.forceCleanCacheAndReload() : (sessionStorage.clear(), location.reload(true))" class="px-2.5 py-1 text-[10px] font-bold text-amber-300 bg-amber-950/60 hover:bg-amber-900 border border-amber-500/40 rounded-lg transition flex items-center gap-1 cursor-pointer" title="Resetear Caché de Google y Recargar">
           <i data-lucide="refresh-cw" class="w-3 h-3"></i>
           <span>Reset Caché</span>
         </button>
@@ -118,13 +124,13 @@
           <span class="text-[11px] font-bold bg-slate-950/10 px-2 py-0.5 rounded">1 Clic ➔</span>
         </button>
 
-        <!-- 📍 PARROQUIA JUSEPÍN (DESTACADA) -->
-        <button type="button" onclick="quickLoginImmediate('jusepin')" class="w-full py-3 px-4 bg-gradient-to-r from-sky-600 to-blue-600 hover:from-sky-500 hover:to-blue-500 text-white font-black text-xs sm:text-sm rounded-xl shadow-xl shadow-sky-500/25 active:scale-95 transition flex items-center justify-between group cursor-pointer border border-sky-400/60">
+        <!-- 📍 MATURÍN CENTRO (SAN SIMÓN - CAPITAL) -->
+        <button type="button" onclick="quickLoginImmediate('san-simon')" class="w-full py-3 px-4 bg-gradient-to-r from-sky-600 to-blue-600 hover:from-sky-500 hover:to-blue-500 text-white font-black text-xs sm:text-sm rounded-xl shadow-xl shadow-sky-500/25 active:scale-95 transition flex items-center justify-between group cursor-pointer border border-sky-400/60">
           <div class="flex items-center gap-2">
             <span class="text-base">📍</span>
             <div class="text-left">
-              <span class="tracking-wide uppercase block font-black">Entrar a Parroquia Jusepín</span>
-              <span class="text-[10px] text-sky-200 font-normal">Maturín • Mapa y Comunas de Jusepín</span>
+              <span class="tracking-wide uppercase block font-black">Entrar a Maturín Centro (San Simón)</span>
+              <span class="text-[10px] text-sky-200 font-normal">Capital del Estado Monagas • Mapa Central</span>
             </div>
           </div>
           <span class="text-[11px] font-bold bg-white/20 px-2 py-0.5 rounded group-hover:translate-x-1 transition">Entrar ➔</span>
@@ -242,7 +248,7 @@
         </div>
 
         <!-- Botón Reset Caché Rápido -->
-        <button onclick="window.forceCleanCacheAndReload ? window.forceCleanCacheAndReload() : (localStorage.clear(), location.reload(true))" class="px-2.5 py-1.5 rounded-xl bg-slate-800 hover:bg-amber-950/60 text-slate-400 hover:text-amber-300 border border-slate-700 hover:border-amber-500/50 text-xs font-bold transition flex items-center gap-1 shrink-0 active:scale-95" title="Resetear Caché de Google y Recargar">
+        <button onclick="window.forceCleanCacheAndReload ? window.forceCleanCacheAndReload() : (sessionStorage.clear(), location.reload(true))" class="px-2.5 py-1.5 rounded-xl bg-slate-800 hover:bg-amber-950/60 text-slate-400 hover:text-amber-300 border border-slate-700 hover:border-amber-500/50 text-xs font-bold transition flex items-center gap-1 shrink-0 active:scale-95" title="Resetear Caché de Google y Recargar">
           <i data-lucide="refresh-cw" class="w-3.5 h-3.5 text-amber-400"></i>
           <span class="hidden sm:inline">Caché</span>
         </button>
@@ -916,7 +922,7 @@
   </div>
 
   <!-- SCRIPT -->
-  <script type="module" src="js/app.js?v=39"></script>
+  <script type="module" src="js/app.js?v=40"></script>
   <script>
     if (window.lucide && typeof window.lucide.createIcons === 'function') {
       window.lucide.createIcons();

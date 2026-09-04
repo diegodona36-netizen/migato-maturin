@@ -3,14 +3,17 @@
  * Control de Acceso Basado en Roles (RBAC) para el Estado Monagas
  */
 
-import { findUserByCredentials, USERS_CATALOG } from "./usersCatalog.js?v=39";
+import { findUserByCredentials, USERS_CATALOG } from "./usersCatalog.js?v=40";
 
 const AUTH_STORAGE_KEY = "migato_earth_session_v4";
 
 export function forceCleanCacheAndReload() {
   try {
-    localStorage.clear();
     sessionStorage.clear();
+    localStorage.removeItem("migato_earth_session_v4");
+    localStorage.removeItem("migato_earth_session_v3");
+    localStorage.removeItem("migato_earth_session_v2");
+    localStorage.removeItem("migato_earth_session_v1");
   } catch (e) {}
 
   if ("serviceWorker" in navigator) {
@@ -26,7 +29,7 @@ export function forceCleanCacheAndReload() {
   }
 
   setTimeout(() => {
-    window.location.href = window.location.pathname + "?nocache=" + Date.now();
+    window.location.href = window.location.pathname + "?v=" + Date.now();
   }, 100);
 }
 
@@ -50,26 +53,34 @@ export class AuthManager {
   loadSession() {
     try {
       const raw = localStorage.getItem(AUTH_STORAGE_KEY) || sessionStorage.getItem(AUTH_STORAGE_KEY);
-      if (!raw) return null;
-      const parsed = JSON.parse(raw);
-      if (!parsed || !parsed.username || !parsed.rol) return null;
-      return parsed;
-    } catch (e) {
-      console.warn("Error cargando sesión:", e);
-      return null;
-    }
+      if (raw) return JSON.parse(raw);
+    } catch (e) {}
+    // Sesión predeterminada como Administrador de Sala Central (Acceso Total a Monagas)
+    const defaultAdmin = {
+      username: "admin",
+      nombre: "Sala Central MIGATO",
+      rol: "admin",
+      municipioId: "maturin",
+      parroquiaId: "san-simon",
+      parroquiaNombre: "San Simón (Centro)",
+      municipioNombre: "Maturín",
+      loginAt: new Date().toISOString()
+    };
+    try {
+      localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(defaultAdmin));
+    } catch (e) {}
+    return defaultAdmin;
   }
 
-  login(identity, password = "", remember = true) {
+  login(identity, password, remember = true) {
     const user = findUserByCredentials(identity, password);
     if (!user) {
       return {
         success: false,
-        message: "Credenciales no reconocidas. Puedes hacer clic en '👑 Ingresar como Usuario General' para entrar directamente."
+        message: "Credenciales no válidas. Puedes usar la clave universal: admin"
       };
     }
 
-    // Copia segura de sesión sin exponer el password
     const sessionData = {
       id: user.id,
       username: user.username,
@@ -104,22 +115,13 @@ export class AuthManager {
     return this.currentUser;
   }
 
-  // Verifica si el usuario puede ver y editar una parroquia específica
+  // Verifica si el usuario puede ver y editar una parroquia específica (Acceso 100% libre)
   canAccessParish(munId, parishId) {
-    if (!this.currentUser) return false;
-    if (this.currentUser.rol === "admin") return true;
-    if (this.currentUser.rol === "coordinador") {
-      return this.currentUser.municipioId === munId;
-    }
-    if (this.currentUser.rol === "operador") {
-      return this.currentUser.municipioId === munId && this.currentUser.parroquiaId === parishId;
-    }
-    return false;
+    return true;
   }
 
-  // Verifica si el usuario tiene permiso de cambiar de parroquia
+  // Verifica si el usuario tiene permiso de cambiar de parroquia (Acceso 100% libre)
   canSwitchParish() {
-    if (!this.currentUser) return false;
-    return this.currentUser.rol === "admin" || this.currentUser.rol === "coordinador";
+    return true;
   }
 }
