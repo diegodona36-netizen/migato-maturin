@@ -143,7 +143,12 @@ export class EarthStore {
 
   loadFromStorage() {
     try {
-      const data = localStorage.getItem(STORAGE_KEY);
+      let data = localStorage.getItem(STORAGE_KEY);
+      if (!data) {
+        data = localStorage.getItem("earth_monagas_places") ||
+               localStorage.getItem("earth_monagas_places_v1") ||
+               localStorage.getItem("earth_places_monagas");
+      }
       if (!data) return null;
       const parsed = JSON.parse(data);
       // Validar estructura básica

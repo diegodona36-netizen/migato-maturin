@@ -2,8 +2,8 @@
  * Motor Cartográfico Acelerado por GPU — Google Earth Pro Web (Monagas)
  * Integrado con Capas Jerárquicas Oficiales (INE 2021) y Edición de Vértices
  */
-import { GEO_ESTADO_OFICIAL, GEO_MUNICIPIOS_OFICIAL, GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=36";
-import { SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=36";
+import { GEO_ESTADO_OFICIAL, GEO_MUNICIPIOS_OFICIAL, GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=37";
+import { SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=37";
 
 export class EarthMapEngine {
   constructor(containerId, onCoordUpdate) {
@@ -452,72 +452,80 @@ export class EarthMapEngine {
 
     // 0. Sub-Parroquias / Ejes Comunales (Nivel 4)
     (parish.subparroquias || []).forEach(sp => {
-      if (sp.visible === false || !sp.vertices || sp.vertices.length < 3) return;
+      try {
+        if (sp.visible === false || !sp.vertices || sp.vertices.length < 3) return;
 
-      const isDrawing = !!(window.earthApp?.toolsManager?.activeTool);
+        const isDrawing = !!(window.earthApp?.toolsManager?.activeTool);
+        const isFocused = String(window.earthApp?.activeSubParroquiaId || "") === String(sp.id || "");
 
-      const spLayer = L.polygon(sp.vertices, {
-        color: sp.colorBorde || "#c084fc",
-        weight: isFocused ? 3.5 : (sp.anchoBorde || 2.5),
-        opacity: 0.95,
-        fillColor: sp.colorRelleno || "#a855f7",
-        // Sub-parroquias SIEMPRE en modo Solo Alineación (100% transparente para ver las calles y trazar sectores)
-        fill: false,
-        fillOpacity: 0,
-        dashArray: isFocused ? "8, 6" : "6, 4",
-        interactive: !isDrawing,
-        renderer: this.canvasRenderer
-      });
+        const spLayer = L.polygon(sp.vertices, {
+          color: sp.colorBorde || "#c084fc",
+          weight: isFocused ? 3.5 : (sp.anchoBorde || 2.5),
+          opacity: 0.95,
+          fillColor: sp.colorRelleno || "#a855f7",
+          // Sub-parroquias SIEMPRE en modo Solo Alineación (100% transparente para ver las calles y trazar sectores)
+          fill: false,
+          fillOpacity: 0,
+          dashArray: isFocused ? "8, 6" : "6, 4",
+          interactive: !isDrawing,
+          renderer: this.canvasRenderer
+        });
 
-      sp._leafletLayer = spLayer;
+        sp._leafletLayer = spLayer;
 
-      if (!isDrawing) {
-        spLayer.bindTooltip(`
-          <div class="p-1 font-mono text-xs">
-            <span class="text-[9px] uppercase tracking-wider text-purple-400 font-black block">Nivel 4 • Eje Comunal</span>
-            <strong class="text-white block font-bold text-sm">${sp.nombre}</strong>
-            <span class="text-[10px] text-purple-200">Área: ${sp.areaHa || 0} Ha • Per: ${sp.perimetroM || 0} m</span>
-            <span class="text-[9px] text-sky-400 block mt-1 font-bold">${isFocused ? '🎯 Eje Activo (Línea Limítrofe)' : '👉 Clic para seleccionar'}</span>
-          </div>
-        `, { sticky: true, className: "earth-tooltip" });
-      }
-
-      spLayer.on("click", (e) => {
-        if (window.earthApp?.toolsManager?.activeTool) {
-          L.DomEvent.stopPropagation(e);
-          window.earthApp.toolsManager.handleMapClick(e);
-          return;
+        if (!isDrawing) {
+          spLayer.bindTooltip(`
+            <div class="p-1 font-mono text-xs">
+              <span class="text-[9px] uppercase tracking-wider text-purple-400 font-black block">Nivel 4 • Eje Comunal</span>
+              <strong class="text-white block font-bold text-sm">${sp.nombre}</strong>
+              <span class="text-[10px] text-purple-200">Área: ${sp.areaHa || 0} Ha • Per: ${sp.perimetroM || 0} m</span>
+              <span class="text-[9px] text-sky-400 block mt-1 font-bold">${isFocused ? '🎯 Eje Activo (Línea Limítrofe)' : '👉 Clic para seleccionar'}</span>
+            </div>
+          `, { sticky: true, className: "earth-tooltip" });
         }
-        L.DomEvent.stopPropagation(e);
-        if (onSelectCallback) onSelectCallback("subparroquia", sp);
-      });
 
-      if (this.subParroquiasLayer) this.subParroquiasLayer.addLayer(spLayer);
+        spLayer.on("click", (e) => {
+          if (window.earthApp?.toolsManager?.activeTool) {
+            L.DomEvent.stopPropagation(e);
+            window.earthApp.toolsManager.handleMapClick(e);
+            return;
+          }
+          L.DomEvent.stopPropagation(e);
+          if (onSelectCallback) onSelectCallback("subparroquia", sp);
+        });
+
+        if (this.subParroquiasLayer) this.subParroquiasLayer.addLayer(spLayer);
+      } catch (err) {
+        console.warn("[MapEngine] Error renderizando sub-parroquia:", sp, err);
+      }
     });
 
     // 1. Polígonos de Sectores Comunales (Nivel 5)
     (parish.poligonos || []).forEach(poly => {
-      if (poly.visible === false) return;
+      try {
+        if (poly.visible === false || !poly.vertices || poly.vertices.length < 3) return;
 
-      const isDrawing = !!(window.earthApp?.toolsManager?.activeTool);
+        const isDrawing = !!(window.earthApp?.toolsManager?.activeTool);
 
-      const pLayer = L.polygon(poly.vertices, {
-        color: poly.colorBorde || "#38bdf8",
-        weight: poly.anchoBorde || 2,
-        opacity: 0.95,
-        fillColor: poly.colorRelleno || "#38bdf8",
-        fillOpacity: poly.opacidad !== undefined ? poly.opacidad : 0.35,
-        interactive: !isDrawing,
-        renderer: this.canvasRenderer
-      });
+        const pLayer = L.polygon(poly.vertices, {
+          color: poly.colorBorde || "#38bdf8",
+          weight: poly.anchoBorde || 2,
+          opacity: 0.95,
+          fillColor: poly.colorRelleno || "#38bdf8",
+          fillOpacity: poly.opacidad !== undefined ? poly.opacidad : 0.35,
+          interactive: !isDrawing,
+          renderer: this.canvasRenderer
+        });
 
-      const milCount = poly.militantes !== undefined ? poly.militantes : (poly.habitantes || 0);
-      if (!isDrawing) {
-        pLayer.bindTooltip(`
-          <div class="p-1.5 font-mono text-xs max-w-[210px]">
-            <span class="text-[9px] uppercase text-sky-400 font-black block tracking-wider">Sector Comunal</span>
-            <strong class="text-white block font-bold text-sm truncate">${poly.nombre}</strong>
-            <div class="flex items-center gap-1.5 mt-1 text-[10px] text-slate-200">
+        poly._leafletLayer = pLayer;
+
+        const milCount = poly.militantes !== undefined ? poly.militantes : (poly.habitantes || 0);
+        if (!isDrawing) {
+          pLayer.bindTooltip(`
+            <div class="p-1.5 font-mono text-xs max-w-[210px]">
+              <span class="text-[9px] uppercase text-sky-400 font-black block tracking-wider">Sector Comunal</span>
+              <strong class="text-white block font-bold text-sm truncate">${poly.nombre}</strong>
+              <div class="flex items-center gap-1.5 mt-1 text-[10px] text-slate-200">
               <span class="text-sky-300 font-bold">👥 ${milCount} mil</span>
               ${poly.casas ? `<span class="text-amber-300 font-bold">• 🏠 ${poly.casas} casas</span>` : ''}
             </div>
@@ -539,7 +547,10 @@ export class EarthMapEngine {
         if (onSelectCallback) onSelectCallback("poligono", poly);
       });
 
-      this.polygonsLayer.addLayer(pLayer);
+        this.polygonsLayer.addLayer(pLayer);
+      } catch (err) {
+        console.warn("[MapEngine] Error renderizando sector comunal:", poly, err);
+      }
     });
 
     // 2. Rutas / Calles

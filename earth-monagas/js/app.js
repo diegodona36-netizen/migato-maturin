@@ -2,15 +2,15 @@
  * Controlador Principal — Google Earth Pro Web (Edición Estado Monagas)
  * Robusto, 100% Operativo y Totalmente Individualizado
  */
-import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=36";
-import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=36";
-import { getAllParishesForSelector } from "./usersCatalog.js?v=36";
-import { EarthStore } from "./earthStore.js?v=36";
-import { EarthMapEngine } from "./mapEngine.js?v=36";
-import { PropertiesDialog } from "./propertiesDialog.js?v=36";
-import { ToolsManager } from "./toolsManager.js?v=36";
-import { detectParishFromGeometry } from "./geoMonagas.js?v=36";
-import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=36";
+import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=37";
+import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=37";
+import { getAllParishesForSelector } from "./usersCatalog.js?v=37";
+import { EarthStore } from "./earthStore.js?v=37";
+import { EarthMapEngine } from "./mapEngine.js?v=37";
+import { PropertiesDialog } from "./propertiesDialog.js?v=37";
+import { ToolsManager } from "./toolsManager.js?v=37";
+import { detectParishFromGeometry } from "./geoMonagas.js?v=37";
+import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=37";
 
 class EarthMonagasApp {
   constructor() {
@@ -493,9 +493,10 @@ class EarthMonagasApp {
     `;
 
     if (displayPolys.length === 0) {
+      const otherCount = allPolys.length;
       html += `
-        <div class="text-[11px] text-slate-500 px-3 py-2.5 italic bg-slate-950/40 rounded-xl border border-slate-800/40 text-center">
-          ${filterQuery ? `No se encontraron sectores con "<strong>${filterQuery}</strong>".<br><button onclick="document.getElementById('input-search-places').value=''; window.earthApp.renderPlacesTree('');" class="text-sky-400 underline mt-1">Borrar búsqueda</button>` : (this.activeSubParroquiaId ? `No hay sectores comunales trazados aún en este eje.<br>Haz clic en <strong>+ Sector Comunal</strong> para comenzar a delimitarlo.` : `No hay sectores comunales trazados aún.<br>Usa el botón <strong>+ Sector Comunal</strong> arriba para trazar el primero.`)}
+        <div class="text-[11px] text-slate-400 px-3 py-2.5 italic bg-slate-950/40 rounded-xl border border-slate-800/40 text-center">
+          ${filterQuery ? `No se encontraron sectores con "<strong>${filterQuery}</strong>".<br><button onclick="document.getElementById('input-search-places').value=''; window.earthApp.renderPlacesTree('');" class="text-sky-400 underline mt-1">Borrar búsqueda</button>` : (this.activeSubParroquiaId ? (otherCount > 0 ? `No hay sectores trazados aún dentro de este eje específico (${otherCount} en el resto de la parroquia).<br><button onclick="window.earthApp.clearSubParishFocus()" class="text-sky-400 font-bold underline mt-1.5 inline-block">👀 Ver todos los ${otherCount} sectores</button>` : `No hay sectores comunales trazados aún en este eje.<br>Haz clic en <strong>+ Sector Comunal</strong> para comenzar a delimitarlo.`) : `No hay sectores comunales trazados aún.<br>Usa el botón <strong>+ Sector Comunal</strong> arriba para trazar el primero.`)}
         </div>
       `;
     } else {
@@ -532,6 +533,17 @@ class EarthMonagasApp {
           </div>
         `;
       });
+    }
+
+    if (this.activeSubParroquiaId && allPolys.length > displayPolys.length && !filterQuery) {
+      const otherCount = allPolys.length - displayPolys.length;
+      html += `
+        <div class="mt-2 pt-2 border-t border-slate-800/60 text-center">
+          <button onclick="window.earthApp.clearSubParishFocus()" class="w-full py-1.5 px-2 bg-slate-900/60 hover:bg-slate-800 border border-slate-700/50 rounded-lg text-[11px] text-sky-400 hover:text-sky-300 font-bold flex items-center justify-center gap-1.5 transition">
+            <span>Ver ${otherCount} sectores más de la parroquia ▾</span>
+          </button>
+        </div>
+      `;
     }
 
     html += `

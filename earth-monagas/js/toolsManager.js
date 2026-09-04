@@ -212,7 +212,30 @@ export class ToolsManager {
       const isSub = this.activeTool === "subparroquia";
       const strokeColor = isSub ? "#c084fc" : "#38bdf8";
       const fillColor = isSub ? "#a855f7" : "#38bdf8";
-      if (this.points.length >= 2) {
+
+      if (this.points.length === 2) {
+        // Con 2 puntos: mostrar línea conectora clara
+        if (this.previewShape && !(this.previewShape instanceof L.Polyline && !(this.previewShape instanceof L.Polygon))) {
+          this.mapEngine.tempDrawingLayer.removeLayer(this.previewShape);
+          this.previewShape = null;
+        }
+        if (this.previewShape) {
+          this.previewShape.setLatLngs(this.points);
+        } else {
+          this.previewShape = L.polyline(this.points, {
+            color: strokeColor,
+            weight: isSub ? 3 : 2.5,
+            dashArray: "6, 4",
+            interactive: false
+          });
+          this.mapEngine.tempDrawingLayer.addLayer(this.previewShape);
+        }
+      } else if (this.points.length >= 3) {
+        // Con 3 o más puntos: mostrar polígono cerrado con relleno
+        if (this.previewShape && !(this.previewShape instanceof L.Polygon)) {
+          this.mapEngine.tempDrawingLayer.removeLayer(this.previewShape);
+          this.previewShape = null;
+        }
         if (this.previewShape) {
           this.previewShape.setLatLngs(this.points);
         } else {
@@ -222,8 +245,7 @@ export class ToolsManager {
             fillColor: fillColor,
             fillOpacity: isSub ? 0.22 : 0.35,
             dashArray: isSub ? "6, 4" : null,
-            interactive: false,
-            renderer: this.mapEngine.canvasRenderer
+            interactive: false
           });
           this.mapEngine.tempDrawingLayer.addLayer(this.previewShape);
         }
@@ -241,8 +263,7 @@ export class ToolsManager {
             weight: 4,
             opacity: 0.95,
             dashArray: this.activeTool === "regla" ? "6, 6" : null,
-            interactive: false,
-            renderer: this.mapEngine.canvasRenderer
+            interactive: false
           });
           this.mapEngine.tempDrawingLayer.addLayer(this.previewShape);
         }
