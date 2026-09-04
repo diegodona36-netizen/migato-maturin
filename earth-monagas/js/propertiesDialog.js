@@ -230,7 +230,16 @@ export class PropertiesDialog {
 
     document.getElementById("prop-dialog-title").textContent = 
       type === "poligono" ? `Google Earth — Ficha del Sector: ${item.nombre}` :
-      (type === "ruta" ? `Google Earth — Propiedades de la Calle: ${item.nombre}` : `Google Earth — Marca: ${item.nombre}`);
+      (type === "subparroquia" ? `Google Earth — Sub-Parroquia / Eje Comunal: ${item.nombre}` :
+      (type === "ruta" ? `Google Earth — Propiedades de la Calle: ${item.nombre}` : `Google Earth — Marca de Posición: ${item.nombre}`));
+
+    const lblName = document.getElementById("prop-name-label");
+    if (lblName) {
+      if (type === "subparroquia") lblName.textContent = "Nombre del Eje / Sub-Parroquia *";
+      else if (type === "poligono") lblName.textContent = "Nombre del Sector / Comunidad *";
+      else if (type === "ruta") lblName.textContent = "Nombre de la Calle / Ruta *";
+      else if (type === "marca") lblName.textContent = "Nombre del Punto de Interés / Marca *";
+    }
 
     // Llenar Ficha Territorial
     document.getElementById("prop-name").value = item.nombre || "";
@@ -240,9 +249,14 @@ export class PropertiesDialog {
     const selMun = document.getElementById("prop-select-mun");
     const selParish = document.getElementById("prop-select-parish");
     const selSubParish = document.getElementById("prop-select-subparish");
+    const wrapSubParish = document.getElementById("wrapper-prop-select-subparish");
     const badgeDetected = document.getElementById("prop-badge-auto-detected");
     const hintDetected = document.getElementById("prop-geo-detected-hint");
     const textDetected = document.getElementById("prop-geo-detected-text");
+
+    if (wrapSubParish) {
+      wrapSubParish.classList.toggle("hidden", type !== "poligono");
+    }
 
     if (selMun) {
       selMun.innerHTML = CATALOGO_MONAGAS.map(m => 
@@ -253,7 +267,7 @@ export class PropertiesDialog {
 
     this.populateParishesDropdown(this.currentMunId, this.currentParishId);
 
-    if (selSubParish) {
+    if (selSubParish && type === "poligono") {
       const pStore = window.earthApp?.store?.getParish(this.currentMunId, this.currentParishId);
       const parishSubparroquias = pStore?.subparroquias || [];
       const list = parishSubparroquias.length > 0 ? parishSubparroquias : (this.currentParishId === "alto-de-los-godos" ? SUBPARROQUIAS_GODOS : []);
@@ -310,32 +324,35 @@ export class PropertiesDialog {
     const rowArea = document.getElementById("row-measure-area");
     const rowLength = document.getElementById("row-measure-length");
 
-    if (type === "poligono") {
-      if (boxSocio) boxSocio.classList.remove("hidden");
-      if (boxMilitancia) boxMilitancia.classList.remove("hidden");
-      if (boxLiderazgo) boxLiderazgo.classList.remove("hidden");
+    if (type === "poligono" || type === "subparroquia") {
+      const isSub = type === "subparroquia";
+      if (boxSocio) boxSocio.classList.toggle("hidden", isSub);
+      if (boxMilitancia) boxMilitancia.classList.toggle("hidden", isSub);
+      if (boxLiderazgo) boxLiderazgo.classList.toggle("hidden", isSub);
       if (btnEditGeo) btnEditGeo.classList.remove("hidden");
       if (boxPolyStyle) boxPolyStyle.classList.remove("hidden");
       if (rowArea) rowArea.classList.remove("hidden");
       if (rowLength) rowLength.classList.add("hidden");
 
-      // Valores de militancia y censo comunitario
-      const inMilitantes = document.getElementById("prop-militantes");
-      const inCasas = document.getElementById("prop-casas");
-      const inLider = document.getElementById("prop-lider");
-      const inTelefono = document.getElementById("prop-telefono");
-      const inFamilias = document.getElementById("prop-familias");
-      const inHab = document.getElementById("prop-habitantes");
+      if (!isSub) {
+        // Valores de militancia y censo comunitario
+        const inMilitantes = document.getElementById("prop-militantes");
+        const inCasas = document.getElementById("prop-casas");
+        const inLider = document.getElementById("prop-lider");
+        const inTelefono = document.getElementById("prop-telefono");
+        const inFamilias = document.getElementById("prop-familias");
+        const inHab = document.getElementById("prop-habitantes");
 
-      const numMilitantes = item.militantes !== undefined ? item.militantes : (item.habitantes || 0);
-      const numCasas = item.casas || 0;
+        const numMilitantes = item.militantes !== undefined ? item.militantes : (item.habitantes || 0);
+        const numCasas = item.casas || 0;
 
-      if (inMilitantes) inMilitantes.value = numMilitantes;
-      if (inCasas) inCasas.value = numCasas;
-      if (inLider) inLider.value = item.lider || "";
-      if (inTelefono) inTelefono.value = item.telefono || "";
-      if (inFamilias) inFamilias.value = item.familias || numCasas;
-      if (inHab) inHab.value = numMilitantes;
+        if (inMilitantes) inMilitantes.value = numMilitantes;
+        if (inCasas) inCasas.value = numCasas;
+        if (inLider) inLider.value = item.lider || "";
+        if (inTelefono) inTelefono.value = item.telefono || "";
+        if (inFamilias) inFamilias.value = item.familias || numCasas;
+        if (inHab) inHab.value = numMilitantes;
+      }
 
       // Medidas
       const valHa = document.getElementById("val-measure-area-ha");
@@ -351,13 +368,15 @@ export class PropertiesDialog {
       if (btnEditGeo) btnEditGeo.classList.add("hidden");
       if (boxPolyStyle) boxPolyStyle.classList.add("hidden");
       if (rowArea) rowArea.classList.add("hidden");
-      if (rowLength) rowLength.classList.remove("hidden");
 
       if (type === "ruta") {
+        if (rowLength) rowLength.classList.remove("hidden");
         const valLenM = document.getElementById("val-measure-length-m");
         const valLenKm = document.getElementById("val-measure-length-km");
         if (valLenM) valLenM.textContent = `${item.longitudM || 0} m`;
         if (valLenKm) valLenKm.textContent = `${((item.longitudM || 0) / 1000).toFixed(2)} km`;
+      } else {
+        if (rowLength) rowLength.classList.add("hidden");
       }
     }
 
@@ -431,14 +450,18 @@ export class PropertiesDialog {
     const liderVal = inLider ? inLider.value.trim() : (this.currentItem.lider || "");
     const telefonoVal = inTelefono ? inTelefono.value.trim() : (this.currentItem.telefono || "");
 
+    const defaultBorder = this.currentType === "subparroquia" ? "#c084fc" : (this.currentType === "ruta" ? "#10b981" : (this.currentType === "marca" ? "#ef4444" : "#38bdf8"));
+    const defaultFill = this.currentType === "subparroquia" ? "#a855f7" : "#38bdf8";
+    const defaultOpacity = this.currentType === "subparroquia" ? 0.2 : 0.38;
+
     const updated = {
       nombre,
       descripcion,
-      colorBorde: document.getElementById("prop-border-color")?.value || "#38bdf8",
+      colorBorde: document.getElementById("prop-border-color")?.value || defaultBorder,
       anchoBorde: parseInt(document.getElementById("prop-border-width")?.value) || 2,
-      colorRelleno: document.getElementById("prop-fill-color")?.value || "#38bdf8",
-      opacidad: parseFloat(document.getElementById("prop-poly-opacity")?.value) || 0.38,
-      color: document.getElementById("prop-border-color")?.value || "#38bdf8",
+      colorRelleno: document.getElementById("prop-fill-color")?.value || defaultFill,
+      opacidad: parseFloat(document.getElementById("prop-poly-opacity")?.value) || defaultOpacity,
+      color: document.getElementById("prop-border-color")?.value || defaultBorder,
       ancho: parseInt(document.getElementById("prop-border-width")?.value) || 2,
       militantes: militantesVal,
       casas: casasVal,
@@ -448,7 +471,7 @@ export class PropertiesDialog {
       telefono: telefonoVal,
       munId: targetMunId,
       parishId: targetParishId,
-      subParroquiaId
+      subParroquiaId: this.currentType === "subparroquia" ? null : subParroquiaId
     };
 
     if (this.onSaveCallback) {

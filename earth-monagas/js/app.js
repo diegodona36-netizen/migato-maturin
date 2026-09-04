@@ -275,16 +275,7 @@ class EarthMonagasApp {
     if (!parish) return;
     const sp = (parish.subparroquias || []).find(s => String(s.id) === String(subParishId));
     if (!sp) return;
-    const newName = prompt("Renombrar Sub-Parroquia o Eje Comunal:", sp.nombre);
-    if (newName && newName.trim()) {
-      sp.nombre = newName.trim();
-      this.store.saveToStorage();
-      this.renderPlacesTree();
-      this.mapEngine.renderParishItems(parish, (t, it) => {
-        if (t === "subparroquia") this.focusSubParish(it.id);
-        else this.propDialog.open(t, it, this.selectedMunId, this.selectedParishId);
-      });
-    }
+    this.propDialog.open("subparroquia", sp, this.selectedMunId, this.selectedParishId);
   }
 
   editSubParishGeometry(subParishId) {
@@ -439,9 +430,7 @@ class EarthMonagasApp {
             <i data-lucide="shield" class="w-4 h-4 text-purple-400"></i>
             <span>Sub-Parroquias / Ejes (${filteredSubparroquias.length})</span>
           </span>
-          <button onclick="window.earthApp.toolsManager.setActiveTool('subparroquia')" class="text-[10px] font-bold text-purple-300 hover:text-purple-200 bg-purple-500/10 hover:bg-purple-500/20 px-2 py-0.5 rounded border border-purple-500/30 active:scale-95 transition" title="Trazar contorno de nuevo eje comunal">
-            + Trazar Eje
-          </button>
+          <span class="text-[10px] font-mono font-bold text-purple-300/80 bg-purple-950/80 px-2 py-0.5 rounded-md border border-purple-800/50">Nivel 4</span>
         </div>
         <div class="space-y-1 mt-1">
     `;
@@ -449,7 +438,7 @@ class EarthMonagasApp {
     if (filteredSubparroquias.length === 0) {
       html += `
         <div class="text-[11px] text-slate-500 px-3 py-2.5 italic bg-slate-950/40 rounded-xl border border-slate-800/40 text-center">
-          ${filterQuery ? `No hay ejes con "<strong>${filterQuery}</strong>".` : `No hay sub-parroquias / ejes trazados aún.<br>Usa <strong>+ Trazar Eje</strong> o el botón <strong>+ Sub-Parroquia / Eje</strong> arriba.`}
+          ${filterQuery ? `No hay ejes con "<strong>${filterQuery}</strong>".` : `No hay sub-parroquias / ejes trazados aún.<br>Usa el botón <strong>+ Sub-Parroquia</strong> en la barra superior.`}
         </div>
       `;
     } else {
@@ -471,7 +460,7 @@ class EarthMonagasApp {
               </div>
             </div>
             <div class="flex items-center gap-1 shrink-0">
-              <button onclick="window.earthApp.renameSubParish('${sp.id}')" class="text-slate-400 hover:text-purple-300 p-1 transition" title="Renombrar eje comunal">
+              <button onclick="window.earthApp.renameSubParish('${sp.id}')" class="text-slate-400 hover:text-purple-300 p-1 transition" title="Propiedades y nombre del eje comunal">
                 <i data-lucide="edit-2" class="w-3.5 h-3.5"></i>
               </button>
               <button onclick="window.earthApp.editSubParishGeometry('${sp.id}')" class="text-slate-400 hover:text-amber-300 p-1 transition" title="Ajustar vértices del perímetro">
@@ -500,9 +489,7 @@ class EarthMonagasApp {
             <i data-lucide="home" class="w-4 h-4 text-sky-400"></i>
             <span>Sectores Comunales (${displayPolys.length})</span>
           </span>
-          <button onclick="document.getElementById('btn-tool-polygon').click()" class="text-[10px] font-bold text-sky-300 hover:text-sky-200 bg-sky-500/10 hover:bg-sky-500/20 px-2 py-0.5 rounded border border-sky-500/30 active:scale-95 transition" title="Trazar nuevo sector comunal">
-            ${this.activeSubParroquiaId ? '+ Trazar en este Eje' : '+ Nuevo Sector'}
-          </button>
+          <span class="text-[10px] font-mono font-bold text-sky-300/80 bg-sky-950/80 px-2 py-0.5 rounded-md border border-sky-800/50">Nivel 5</span>
         </div>
         <div class="space-y-1 mt-1">
     `;
@@ -511,7 +498,7 @@ class EarthMonagasApp {
       const otherCount = allPolys.length;
       html += `
         <div class="text-[11px] text-slate-400 px-3 py-2.5 italic bg-slate-950/40 rounded-xl border border-slate-800/40 text-center">
-          ${filterQuery ? `No se encontraron sectores con "<strong>${filterQuery}</strong>".<br><button onclick="document.getElementById('input-search-places').value=''; window.earthApp.renderPlacesTree('');" class="text-sky-400 underline mt-1">Borrar búsqueda</button>` : (this.activeSubParroquiaId ? (otherCount > 0 ? `No hay sectores trazados aún dentro de este eje específico (${otherCount} en el resto de la parroquia).<br><button onclick="window.earthApp.clearSubParishFocus()" class="text-sky-400 font-bold underline mt-1.5 inline-block">👀 Ver todos los ${otherCount} sectores</button>` : `No hay sectores comunales trazados aún en este eje.<br>Haz clic en <strong>+ Sector Comunal</strong> para comenzar a delimitarlo.`) : `No hay sectores comunales trazados aún.<br>Usa el botón <strong>+ Sector Comunal</strong> arriba para trazar el primero.`)}
+          ${filterQuery ? `No se encontraron sectores con "<strong>${filterQuery}</strong>".<br><button onclick="document.getElementById('input-search-places').value=''; window.earthApp.renderPlacesTree('');" class="text-sky-400 underline mt-1">Borrar búsqueda</button>` : (this.activeSubParroquiaId ? (otherCount > 0 ? `No hay sectores trazados aún dentro de este eje específico (${otherCount} en el resto de la parroquia).<br><button onclick="window.earthApp.clearSubParishFocus()" class="text-sky-400 font-bold underline mt-1.5 inline-block">👀 Ver todos los ${otherCount} sectores</button>` : `No hay sectores comunales trazados aún en este eje.<br>Usa el botón <strong>+ Sector Comunal</strong> en la barra superior para trazar dentro.`) : `No hay sectores comunales trazados aún.<br>Usa el botón <strong>+ Sector Comunal</strong> arriba para trazar el primero.`)}
         </div>
       `;
     } else {
@@ -804,10 +791,12 @@ class EarthMonagasApp {
     newItem.parishId = targetParishId;
 
     if (type === "subparroquia") {
-      const spName = prompt("Nombre de la Sub-Parroquia o Eje Comunal:", newItem.nombre || "Eje Comunal 1");
-      if (spName && spName.trim()) {
-        newItem.nombre = spName.trim();
+      const parishStore = this.store.getParish(targetMunId, targetParishId);
+      const existingCount = (parishStore?.subparroquias || []).length;
+      if (!newItem.nombre || newItem.nombre === "Nuevo Eje / Sub-Parroquia") {
+        newItem.nombre = `Eje Comunal ${existingCount + 1}`;
       }
+
       this.store.addItemToParish(targetMunId, targetParishId, "subparroquias", newItem);
       this.activeSubParroquiaId = String(newItem.id);
 
@@ -817,7 +806,9 @@ class EarthMonagasApp {
         else this.propDialog.open(t, it, targetMunId, targetParishId);
       });
       this.focusSubParish(newItem.id);
-      this.showToast(`🟪 <strong>${newItem.nombre}</strong> creado. Pulsa <strong>[+ Sector Comunal]</strong> para trazar sectores dentro.`, "purple");
+      this.renderPlacesTree();
+      this.propDialog.open("subparroquia", newItem, targetMunId, targetParishId);
+      this.showToast(`🟪 <strong>${newItem.nombre}</strong> creado. Configura sus datos y pulsa <strong>[+ Sector Comunal]</strong> para trazar sectores dentro.`, "purple");
       return;
     }
 
@@ -825,7 +816,7 @@ class EarthMonagasApp {
       newItem.subParroquiaId = this.activeSubParroquiaId;
     }
 
-    const key = type === "poligono" ? "poligonos" : (type === "ruta" ? "rutas" : "marcas");
+    const key = type === "poligono" ? "poligonos" : (type === "ruta" ? "rutas" : (type === "subparroquia" ? "subparroquias" : "marcas"));
     this.store.addItemToParish(targetMunId, targetParishId, key, newItem);
 
     const parish = this.store.getParish(targetMunId, targetParishId);
@@ -835,13 +826,18 @@ class EarthMonagasApp {
     });
 
     this.updateMilitanciaTally();
-    this.propDialog.open(type, newItem, targetMunId, targetParishId);
     this.renderPlacesTree();
-    this.showToast(`📍 <strong>${newItem.nombre}</strong> trazado exitosamente.`, "sky");
+
+    if (type === "marca") {
+      this.showToast(`📍 <strong>Marca de Posición</strong> colocada. Clic sobre el pin rojo en el mapa para editar sus datos.`, "sky");
+    } else {
+      this.propDialog.open(type, newItem, targetMunId, targetParishId);
+      this.showToast(`📍 <strong>${newItem.nombre}</strong> trazado exitosamente.`, "sky");
+    }
   }
 
   handleSaveProperties(type, itemId, updatedFields, targetMunId = null, targetParishId = null) {
-    const key = type === "poligono" ? "poligonos" : (type === "ruta" ? "rutas" : "marcas");
+    const key = type === "poligono" ? "poligonos" : (type === "ruta" ? "rutas" : (type === "subparroquia" ? "subparroquias" : "marcas"));
     const destMunId = targetMunId || this.selectedMunId;
     const destParishId = targetParishId || this.selectedParishId;
 
@@ -853,7 +849,10 @@ class EarthMonagasApp {
     } else {
       this.store.updateItem(this.selectedMunId, this.selectedParishId, key, itemId, updatedFields);
       const parish = this.store.getParish(this.selectedMunId, this.selectedParishId);
-      this.mapEngine.renderParishItems(parish, (t, it) => this.propDialog.open(t, it, this.selectedMunId, this.selectedParishId));
+      this.mapEngine.renderParishItems(parish, (t, it) => {
+        if (t === "subparroquia") this.focusSubParish(it.id);
+        else this.propDialog.open(t, it, this.selectedMunId, this.selectedParishId);
+      });
       this.updateMilitanciaTally();
       this.renderPlacesTree();
     }
@@ -863,40 +862,51 @@ class EarthMonagasApp {
     const parish = this.store.getParish(this.selectedMunId, this.selectedParishId);
     if (!parish) return;
 
-    const key = type === "poligono" ? "poligonos" : (type === "ruta" ? "rutas" : "marcas");
+    const key = type === "poligono" ? "poligonos" : (type === "ruta" ? "rutas" : (type === "subparroquia" ? "subparroquias" : "marcas"));
     const item = (parish[key] || []).find(it => String(it.id) === String(itemId));
     if (item) {
       Object.assign(item, liveDraft);
-      this.mapEngine.renderParishItems(parish, (t, it) => this.propDialog.open(t, it, this.selectedMunId, this.selectedParishId));
+      this.mapEngine.renderParishItems(parish, (t, it) => {
+        if (t === "subparroquia") this.focusSubParish(it.id);
+        else this.propDialog.open(t, it, this.selectedMunId, this.selectedParishId);
+      });
     }
   }
 
   deleteItem(munId, parishId, type, itemId) {
     if (confirm("¿Deseas eliminar este elemento de Google Earth?")) {
-      const key = type === "poligono" ? "poligonos" : (type === "ruta" ? "rutas" : "marcas");
+      const key = type === "poligono" ? "poligonos" : (type === "ruta" ? "rutas" : (type === "subparroquia" ? "subparroquias" : "marcas"));
       this.store.deleteItem(munId, parishId, key, itemId);
 
       const parish = this.store.getParish(munId, parishId);
-      this.mapEngine.renderParishItems(parish, (t, it) => this.propDialog.open(t, it, munId, parishId));
+      this.mapEngine.renderParishItems(parish, (t, it) => {
+        if (t === "subparroquia") this.focusSubParish(it.id);
+        else this.propDialog.open(t, it, munId, parishId);
+      });
       this.updateMilitanciaTally();
       this.renderPlacesTree();
     }
   }
 
   toggleItemVisibility(munId, parishId, type, itemId) {
-    const key = type === "poligono" ? "poligonos" : "rutas";
+    const key = type === "poligono" ? "poligonos" : (type === "ruta" ? "rutas" : (type === "subparroquia" ? "subparroquias" : "marcas"));
     this.store.toggleItemVisibility(munId, parishId, key, itemId);
 
     const parish = this.store.getParish(munId, parishId);
-    this.mapEngine.renderParishItems(parish, (t, it) => this.propDialog.open(t, it, munId, parishId));
+    this.mapEngine.renderParishItems(parish, (t, it) => {
+      if (t === "subparroquia") this.focusSubParish(it.id);
+      else this.propDialog.open(t, it, munId, parishId);
+    });
   }
 
   handleStartGeometryEdit(poly) {
     this.toolsManager.cancelActiveTool();
+    const isSub = this.propDialog?.currentType === "subparroquia";
+    const type = isSub ? "subparroquia" : "poligono";
     this.mapEngine.startEditingPolygonGeometry(poly, (updatedPoly) => {
       const areaHa = this.toolsManager.calculatePolygonAreaHa(updatedPoly.vertices);
       const perimetroM = this.toolsManager.calculatePerimeterMeters(updatedPoly.vertices);
-      this.handleSaveProperties("poligono", updatedPoly.id, {
+      this.handleSaveProperties(type, updatedPoly.id, {
         vertices: updatedPoly.vertices,
         areaHa,
         perimetroM

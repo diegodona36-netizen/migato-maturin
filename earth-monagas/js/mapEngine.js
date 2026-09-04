@@ -470,9 +470,8 @@ export class EarthMapEngine {
           weight: isFocused ? 3.5 : (sp.anchoBorde || 2.5),
           opacity: 0.95,
           fillColor: sp.colorRelleno || "#a855f7",
-          // Sub-parroquias SIEMPRE en modo Solo Alineación (100% transparente para ver las calles y trazar sectores)
-          fill: false,
-          fillOpacity: 0,
+          fill: true,
+          fillOpacity: isFocused ? 0.12 : 0.07,
           dashArray: isFocused ? "8, 6" : "6, 4",
           interactive: !isDrawing,
           renderer: this.canvasRenderer
@@ -606,28 +605,43 @@ export class EarthMapEngine {
       this.routesLayer.addLayer(group);
     });
 
-    // 3. Marcas de Posición / Placemarks
+    // 3. Marcas de Posición / Placemarks (Pushpins de Alta Visibilidad estilo Google Earth)
     (parish.marcas || []).forEach(m => {
-      if (m.visible === false) return;
+      if (m.visible === false || m.lat === undefined || m.lng === undefined) return;
 
-      const marker = L.circleMarker([m.lat, m.lng], {
-        radius: 6.5,
-        fillColor: m.color || "#e11d48",
-        color: "#ffffff",
-        weight: 2,
-        fillOpacity: 1,
-        renderer: this.canvasRenderer
+      const isDrawing = !!(window.earthApp?.toolsManager?.activeTool);
+      const pinColor = m.color || "#ef4444";
+      const pinIcon = L.divIcon({
+        className: "earth-placemark-pin-wrapper",
+        html: `
+          <div style="transform: translate(-50%, -100%); cursor: pointer; filter: drop-shadow(0 3px 6px rgba(0,0,0,0.8));">
+            <svg width="26" height="34" viewBox="0 0 24 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 0C5.37 0 0 5.37 0 12C0 20.25 12 32 12 32C12 32 24 20.25 24 12C24 5.37 18.63 0 12 0Z" fill="${pinColor}" stroke="#ffffff" stroke-width="1.8"/>
+              <circle cx="12" cy="11" r="4.5" fill="#ffffff"/>
+            </svg>
+          </div>
+        `,
+        iconSize: [26, 34],
+        iconAnchor: [13, 34]
       });
 
-      marker.bindTooltip(`
-        <div class="p-1 font-mono text-xs">
-          <strong class="text-white block font-bold">${m.nombre}</strong>
-          <span class="text-[10px] text-slate-300">${m.descripcion || ''}</span>
-        </div>
-      `, {
-        sticky: true,
-        className: "earth-tooltip"
+      const marker = L.marker([m.lat, m.lng], {
+        icon: pinIcon,
+        interactive: !isDrawing,
+        zIndexOffset: 600
       });
+
+      if (!isDrawing) {
+        marker.bindTooltip(`
+          <div class="p-1 font-mono text-xs max-w-[200px]">
+            <span class="text-[9px] uppercase text-rose-400 font-bold block">Marca de Posición</span>
+            <strong class="text-white block font-bold truncate">${m.nombre}</strong>
+            <span class="text-[10px] text-slate-300 block">Lat: ${Number(m.lat).toFixed(5)}, Lng: ${Number(m.lng).toFixed(5)}</span>
+            ${m.descripcion ? `<p class="text-[10px] text-slate-300 mt-0.5 truncate">${m.descripcion}</p>` : ''}
+            <span class="text-[9px] text-sky-400 font-bold block mt-1">👉 Clic para ver / editar</span>
+          </div>
+        `, { sticky: true, className: "earth-tooltip" });
+      }
 
       marker.on("click", (e) => {
         if (window.earthApp?.toolsManager?.activeTool) {

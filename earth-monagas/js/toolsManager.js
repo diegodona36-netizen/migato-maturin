@@ -20,6 +20,17 @@ export class ToolsManager {
 
   initMapEvents() {
     this.map.on("click", (e) => this.handleMapClick(e));
+    this.map.on("dblclick", (e) => {
+      if (this.activeTool) {
+        if (e && e.originalEvent) {
+          try {
+            e.originalEvent.preventDefault();
+            e.originalEvent.stopPropagation();
+          } catch(err) {}
+        }
+        this.finishCurrentDrawing();
+      }
+    });
   }
 
   initKeyboardEvents() {
@@ -131,13 +142,12 @@ export class ToolsManager {
         return;
       }
 
-      const pointIndex = this.points.length;
-      this.points.push(latlng);
-
-      // Vértice interactivo arrastrable (Draggable Vertex Marker)
+      const isSub = this.activeTool === "subparroquia";
+      const vertexBg = isSub ? "bg-purple-500" : "bg-sky-400";
+      const vertexBorder = isSub ? "border-purple-200" : "border-white";
       const vertexIcon = L.divIcon({
         className: "earth-vertex-marker-wrapper",
-        html: `<div class="w-3.5 h-3.5 bg-sky-400 border-2 border-white rounded-full shadow-lg cursor-move hover:scale-125 active:scale-95 transition"></div>`,
+        html: `<div class="w-3.5 h-3.5 ${vertexBg} border-2 ${vertexBorder} rounded-full shadow-lg cursor-move hover:scale-125 active:scale-95 transition"></div>`,
         iconSize: [14, 14],
         iconAnchor: [7, 7]
       });
@@ -146,6 +156,17 @@ export class ToolsManager {
         draggable: true,
         icon: vertexIcon,
         zIndexOffset: 1000
+      });
+
+      // Doble clic sobre cualquier vértice para terminar el trazado de inmediato
+      marker.on("dblclick", (ev) => {
+        if (ev && ev.originalEvent) {
+          try {
+            ev.originalEvent.preventDefault();
+            ev.originalEvent.stopPropagation();
+          } catch(err) {}
+        }
+        this.finishCurrentDrawing();
       });
 
       // Evento de arrastre para acomodar vértices en vivo
@@ -200,7 +221,7 @@ export class ToolsManager {
       } else if (count === 2) {
         hint.textContent = "👉 Haz clic en el 3er punto para formar el sector";
       } else {
-        hint.textContent = `✅ ${count} puntos colocados. Clic para más esquinas o pulsa [Listo ✅]`;
+        hint.textContent = `✅ ${count} puntos colocados. Doble clic en el mapa o pulsa [Listo ✅]`;
       }
     } else if (this.activeTool === "ruta" || this.activeTool === "regla") {
       if (count === 0) {
@@ -208,10 +229,10 @@ export class ToolsManager {
       } else if (count === 1) {
         hint.textContent = "👉 Haz clic para continuar el trazado de la vía";
       } else {
-        hint.textContent = `✅ ${count} puntos. Clic para continuar o pulsa [Listo ✅]`;
+        hint.textContent = `✅ ${count} puntos. Doble clic para terminar o pulsa [Listo ✅]`;
       }
     } else if (this.activeTool === "marca") {
-      hint.textContent = "👉 Haz clic en el lugar exacto donde quieres colocar la marca";
+      hint.textContent = "👉 Haz clic en el lugar exacto del satélite donde colocar la marca";
     }
   }
 
@@ -393,7 +414,7 @@ export class ToolsManager {
       descripcion: "",
       lat: latlng[0],
       lng: latlng[1],
-      color: "#e11d48",
+      color: "#ef4444",
       visible: true,
       fecha: new Date().toISOString()
     };

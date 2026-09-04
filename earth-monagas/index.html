@@ -32,7 +32,7 @@
   <meta http-equiv="Expires" content="0" />
 
   <!-- Custom Styles -->
-  <link rel="stylesheet" href="css/styles.css?v=40">
+  <link rel="stylesheet" href="css/styles.css?v=41">
 
   <!-- Script de Autenticación Rápida y Limpieza Integral de Caché -->
   <script>
@@ -273,14 +273,14 @@
       </button>
 
       <!-- 🟪 Agregar Sub-Parroquia / Eje Comunal (Nivel 4) -->
-      <button data-tool="subparroquia" id="btn-tool-subparish" class="btn-earth-tool px-3.5 py-1.5 rounded-xl bg-purple-950/80 hover:bg-purple-900 text-purple-200 border border-purple-600/60 text-xs font-black transition flex items-center gap-1.5 shrink-0 active:scale-95 shadow-sm" title="Dibujar Límite de Sub-Parroquia o Eje Comunal">
+      <button data-tool="subparroquia" id="btn-tool-subparish" class="btn-earth-tool px-3.5 py-1.5 rounded-xl bg-slate-800 hover:bg-purple-950 text-purple-300 hover:text-purple-100 border border-purple-800/60 text-xs font-black transition flex items-center gap-1.5 shrink-0 active:scale-95 shadow-sm" title="Dibujar Límite de Sub-Parroquia o Eje Comunal">
         <i data-lucide="shield" class="w-4 h-4 text-purple-400"></i>
-        <span class="whitespace-nowrap">+ Sub-Parroquia / Eje</span>
+        <span class="whitespace-nowrap">+ Sub-Parroquia</span>
       </button>
 
       <!-- 🏘️ Agregar Sector Comunal / Comuna (Nivel 5) -->
-      <button data-tool="poligono" id="btn-tool-polygon" class="btn-earth-tool px-4 py-1.5 rounded-xl bg-gradient-to-r from-sky-600 to-blue-600 hover:from-sky-500 text-white border border-sky-400/60 text-xs font-black transition flex items-center gap-1.5 shrink-0 active:scale-95 shadow-lg" title="Dibujar Sector Comunal / Militancia">
-        <i data-lucide="home" class="w-4 h-4 text-sky-200"></i>
+      <button data-tool="poligono" id="btn-tool-polygon" class="btn-earth-tool px-4 py-1.5 rounded-xl bg-slate-800 hover:bg-sky-950 text-sky-300 hover:text-sky-100 border border-sky-800/60 text-xs font-black transition flex items-center gap-1.5 shrink-0 active:scale-95 shadow-sm" title="Dibujar Sector Comunal / Militancia">
+        <i data-lucide="home" class="w-4 h-4 text-sky-400"></i>
         <span class="whitespace-nowrap">+ Sector Comunal</span>
       </button>
 
@@ -289,14 +289,14 @@
         <div class="h-4 w-[1px] bg-slate-700 mx-1 shrink-0"></div>
 
         <!-- 〰️ Agregar Ruta (Calles) -->
-        <button data-tool="ruta" id="btn-tool-path" class="btn-earth-tool px-2.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 text-xs font-medium transition flex items-center gap-1 shrink-0 active:scale-95" title="Trazar Ruta / Calle">
+        <button data-tool="ruta" id="btn-tool-path" class="btn-earth-tool px-2.5 py-1.5 rounded-xl bg-slate-800 hover:bg-emerald-950 text-emerald-300 hover:text-emerald-100 border border-slate-700 text-xs font-medium transition flex items-center gap-1 shrink-0 active:scale-95" title="Trazar Ruta / Calle">
           <i data-lucide="git-commit" class="w-3.5 h-3.5 text-emerald-400"></i>
           <span class="whitespace-nowrap">Ruta</span>
         </button>
 
         <!-- 📍 Marca de Posición -->
-        <button data-tool="marca" id="btn-tool-placemark" class="btn-earth-tool px-2.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 text-xs font-medium transition flex items-center gap-1 shrink-0 active:scale-95" title="Punto de Interés">
-          <i data-lucide="map-pin" class="w-3.5 h-3.5 text-red-400"></i>
+        <button data-tool="marca" id="btn-tool-placemark" class="btn-earth-tool px-2.5 py-1.5 rounded-xl bg-slate-800 hover:bg-rose-950 text-rose-300 hover:text-rose-100 border border-slate-700 text-xs font-medium transition flex items-center gap-1 shrink-0 active:scale-95" title="Punto de Interés">
+          <i data-lucide="map-pin" class="w-3.5 h-3.5 text-rose-400"></i>
           <span class="whitespace-nowrap">Marca</span>
         </button>
 
@@ -520,33 +520,33 @@
       </div>
 
       <!-- BARRA FLOTANTE MÓVIL PARA EL PULGAR (MODO CAMPO) -->
-      <div id="mobile-field-actions" style="z-index: 1700;" class="absolute bottom-5 inset-x-0 flex justify-center items-center gap-2 px-3 pointer-events-none md:hidden">
+      <div id="mobile-field-actions" style="z-index: 1700;" class="absolute bottom-5 inset-x-0 flex justify-center items-center gap-1.5 sm:gap-2 px-3 pointer-events-none md:hidden">
         <!-- Botón Lugares Móvil -->
-        <button type="button" onclick="document.getElementById('btn-toggle-sidebar').click()" class="pointer-events-auto px-3 py-2.5 rounded-2xl bg-slate-900/95 hover:bg-slate-800 text-amber-400 border border-amber-500/40 shadow-2xl backdrop-blur-md flex items-center gap-1.5 font-bold text-xs active:scale-95 transition">
+        <button type="button" onclick="document.getElementById('btn-toggle-sidebar').click()" class="pointer-events-auto px-3 py-2 rounded-2xl bg-slate-900/95 hover:bg-slate-800 text-amber-400 border border-amber-500/40 shadow-2xl backdrop-blur-md flex items-center gap-1.5 font-bold text-xs active:scale-95 transition">
           <i data-lucide="folder" class="w-4 h-4 text-amber-400"></i>
           <span>Lugares</span>
         </button>
 
         <!-- Botón + Eje Móvil -->
-        <button type="button" onclick="document.getElementById('btn-tool-subparish').click()" class="pointer-events-auto px-3.5 py-2.5 rounded-2xl bg-purple-950/95 hover:bg-purple-900 text-purple-200 border border-purple-500/60 shadow-2xl backdrop-blur-md flex items-center gap-1.5 font-bold text-xs active:scale-95 transition">
+        <button type="button" onclick="document.getElementById('btn-tool-subparish').click()" class="pointer-events-auto px-3 py-2 rounded-2xl bg-slate-900/95 hover:bg-purple-900 text-purple-300 border border-purple-500/50 shadow-2xl backdrop-blur-md flex items-center gap-1.5 font-bold text-xs active:scale-95 transition">
           <i data-lucide="shield" class="w-4 h-4 text-purple-400"></i>
           <span>+ Eje</span>
         </button>
 
         <!-- Botón + Sector Comunal Móvil -->
-        <button type="button" onclick="document.getElementById('btn-tool-polygon').click()" class="pointer-events-auto px-3.5 py-2.5 rounded-2xl bg-gradient-to-r from-sky-600 to-blue-600 hover:from-sky-500 text-white border border-sky-400/50 shadow-2xl backdrop-blur-md flex items-center gap-1.5 font-black text-xs active:scale-95 transition">
-          <i data-lucide="home" class="w-4 h-4"></i>
+        <button type="button" onclick="document.getElementById('btn-tool-polygon').click()" class="pointer-events-auto px-3.5 py-2 rounded-2xl bg-slate-900/95 hover:bg-sky-900 text-sky-300 border border-sky-500/50 shadow-2xl backdrop-blur-md flex items-center gap-1.5 font-black text-xs active:scale-95 transition">
+          <i data-lucide="home" class="w-4 h-4 text-sky-400"></i>
           <span>+ Sector</span>
         </button>
 
         <!-- Botón + Ruta Móvil -->
-        <button type="button" onclick="document.getElementById('btn-tool-path').click()" class="pointer-events-auto px-3 py-2.5 rounded-2xl bg-slate-900/95 hover:bg-slate-800 text-emerald-300 border border-emerald-500/40 shadow-2xl backdrop-blur-md flex items-center gap-1 font-bold text-xs active:scale-95 transition" title="Trazar Calle o Ruta">
+        <button type="button" onclick="document.getElementById('btn-tool-path').click()" class="pointer-events-auto px-3 py-2 rounded-2xl bg-slate-900/95 hover:bg-emerald-900 text-emerald-300 border border-emerald-500/50 shadow-2xl backdrop-blur-md flex items-center gap-1 font-bold text-xs active:scale-95 transition" title="Trazar Calle o Ruta">
           <i data-lucide="git-commit" class="w-4 h-4 text-emerald-400"></i>
           <span>+ Ruta</span>
         </button>
 
         <!-- Botón + Marca Móvil -->
-        <button type="button" onclick="document.getElementById('btn-tool-placemark').click()" class="pointer-events-auto px-3 py-2.5 rounded-2xl bg-slate-900/95 hover:bg-slate-800 text-rose-300 border border-rose-500/40 shadow-2xl backdrop-blur-md flex items-center gap-1 font-bold text-xs active:scale-95 transition" title="Punto de Interés">
+        <button type="button" onclick="document.getElementById('btn-tool-placemark').click()" class="pointer-events-auto px-3 py-2 rounded-2xl bg-slate-900/95 hover:bg-rose-900 text-rose-300 border border-rose-500/50 shadow-2xl backdrop-blur-md flex items-center gap-1 font-bold text-xs active:scale-95 transition" title="Punto de Interés">
           <i data-lucide="map-pin" class="w-4 h-4 text-rose-400"></i>
           <span>+ Marca</span>
         </button>
@@ -611,9 +611,9 @@
         <!-- PESTAÑA 1: FICHA DE MILITANCIA & TERRITORIO (ULTRA DIRECTA PARA EL CAMPO) -->
         <div class="prop-tab-content space-y-3" data-tab="desc">
           
-          <!-- Nombre del Sector -->
+          <!-- Nombre del Sector / Comunidad / Eje -->
           <div>
-            <label class="block text-[11px] font-bold text-slate-300 uppercase mb-1">Nombre del Sector / Comunidad *</label>
+            <label id="prop-name-label" class="block text-[11px] font-bold text-slate-300 uppercase mb-1">Nombre del Sector / Comunidad *</label>
             <input type="text" id="prop-name" required placeholder="Ej: Sector La Florida, Sector 1, Central..." class="w-full px-3.5 py-2.5 text-xs sm:text-sm bg-slate-800 border border-slate-700 rounded-xl text-white font-black focus:outline-none focus:border-sky-500 shadow-inner">
           </div>
 
@@ -922,7 +922,7 @@
   </div>
 
   <!-- SCRIPT -->
-  <script type="module" src="js/app.js?v=40"></script>
+  <script type="module" src="js/app.js?v=41"></script>
   <script>
     if (window.lucide && typeof window.lucide.createIcons === 'function') {
       window.lucide.createIcons();
