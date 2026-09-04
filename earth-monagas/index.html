@@ -32,7 +32,7 @@
   <meta http-equiv="Expires" content="0" />
 
   <!-- Custom Styles -->
-  <link rel="stylesheet" href="css/styles.css?v=51">
+  <link rel="stylesheet" href="css/styles.css?v=52">
 
   <!-- Script de Autenticación Rápida, Limpieza Integral de Caché y Activador de Herramientas -->
   <script>
@@ -46,6 +46,16 @@
         }
       } catch(err) {
         console.warn("[activateEarthTool] Error:", err);
+      }
+    };
+
+    // 0.1 Alternar expansión del panel de trazado en móvil/escritorio
+    window.toggleDrawingBannerExpand = function() {
+      const body = document.getElementById("earth-drawing-body");
+      if (!body) return;
+      body.classList.toggle("hidden");
+      if (window.lucide && typeof window.lucide.createIcons === 'function') {
+        window.lucide.createIcons();
       }
     };
 
@@ -894,66 +904,82 @@
   <!-- ============================================================== -->
   <!-- 5. PANEL FLOTANTE DE TRAZADO EN VIVO (ESTACIÓN GOOGLE EARTH)   -->
   <!-- ============================================================== -->
-  <div id="earth-drawing-banner" style="display: none; z-index: 99999;" class="hidden fixed top-24 right-3 sm:right-6 inset-x-2 sm:inset-x-auto w-auto sm:w-[420px] bg-slate-900/98 backdrop-blur-2xl border-2 border-sky-500/90 p-3 sm:p-4 rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.95)] flex flex-col gap-3 pointer-events-auto transition-all">
+  <div id="earth-drawing-banner" style="display: none; z-index: 99999;" class="hidden fixed bottom-8 sm:bottom-auto sm:top-24 sm:right-6 inset-x-2 sm:inset-x-auto w-auto sm:w-[410px] bg-slate-900/98 backdrop-blur-2xl border-2 border-sky-500/90 p-2.5 sm:p-3.5 rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.95)] flex flex-col gap-2 pointer-events-auto transition-all max-h-[85vh] overflow-y-auto">
     
-    <!-- Fila 1: Cabecera con Badge de Herramienta y Parroquia Activa -->
-    <div class="flex items-center justify-between pb-2 border-b border-slate-800 gap-2">
-      <div class="flex items-center gap-2 min-w-0">
-        <span id="earth-drawing-banner-dot" class="w-3 h-3 rounded-full bg-sky-400 shadow-[0_0_10px_rgba(56,189,248,0.9)] shrink-0 animate-pulse"></span>
+    <!-- Fila 1: Cabecera con Badge de Herramienta, Métrica Compacta y Botones -->
+    <div class="flex items-center justify-between pb-1.5 sm:pb-2 border-b border-slate-800 gap-1.5">
+      <div class="flex items-center gap-1.5 sm:gap-2 min-w-0 flex-1">
+        <span id="earth-drawing-banner-dot" class="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-sky-400 shadow-[0_0_10px_rgba(56,189,248,0.9)] shrink-0 animate-pulse"></span>
         <div class="truncate">
-          <span id="earth-drawing-banner-text" class="text-white font-black text-xs block truncate uppercase tracking-wide">Trazando Sector Comunal</span>
-          <span id="earth-drawing-banner-parish" class="text-[11px] text-amber-400 font-bold block truncate">📍 Monagas</span>
+          <span id="earth-drawing-banner-text" class="text-white font-black text-[11px] sm:text-xs block truncate uppercase tracking-wide">Trazando Sector</span>
+          <span id="earth-drawing-banner-parish" class="text-[10px] sm:text-[11px] text-amber-400 font-bold block truncate">📍 Monagas</span>
         </div>
       </div>
-      <button type="button" id="btn-banner-cancel-x" onclick="window.earthApp?.toolsManager?.cancelActiveTool()" class="p-1 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition cursor-pointer" title="Cerrar / Cancelar trazado">
-        <i data-lucide="x" class="w-4 h-4 text-slate-400"></i>
-      </button>
-    </div>
 
-    <!-- Fila 2: Indicación de Acción para el Usuario -->
-    <div class="bg-slate-950/80 rounded-xl p-2.5 border border-slate-800 flex items-center gap-2.5">
-      <div class="w-7 h-7 rounded-lg bg-sky-500/20 text-sky-400 flex items-center justify-center shrink-0">
-        <i data-lucide="mouse-pointer" class="w-4 h-4 animate-bounce"></i>
-      </div>
-      <div class="min-w-0 flex-1">
-        <span id="earth-drawing-banner-hint" class="text-[11px] sm:text-xs text-sky-200 block font-semibold leading-tight">👉 Haz clics sobre el satélite para colocar esquinas, o pulsa [1-Clic]</span>
-      </div>
-    </div>
+      <div class="flex items-center gap-1 shrink-0">
+        <!-- Indicador Compacto en Vivo (Visible siempre para no necesitar abrir el panel) -->
+        <span id="earth-live-measure-compact" class="font-mono text-[10px] sm:text-xs font-black text-amber-300 bg-slate-950 px-2 py-0.5 rounded-md border border-slate-800 shrink-0">0 pts</span>
 
-    <!-- Fila 3: Indicadores Métricos en Vivo (Vértices, Hectáreas, Perímetro) -->
-    <div class="grid grid-cols-2 gap-2 text-center text-xs">
-      <div class="bg-slate-950/90 rounded-xl p-2 border border-slate-800">
-        <span class="text-[10px] text-slate-400 font-bold uppercase block">Puntos / Vértices</span>
-        <span id="earth-live-measure" class="font-mono text-amber-400 font-black text-xs sm:text-sm">0 puntos</span>
-      </div>
-      <div class="bg-slate-950/90 rounded-xl p-2 border border-slate-800">
-        <span id="earth-live-measure-sub-label" class="text-[10px] text-slate-400 font-bold uppercase block">Superficie / Área</span>
-        <span id="earth-live-measure-sub" class="font-mono text-emerald-400 font-black text-xs sm:text-sm">0.00 Ha</span>
+        <!-- Botón Expandir/Minimizar Formulario de Detalles -->
+        <button type="button" id="btn-banner-toggle-collapse" onclick="window.toggleDrawingBannerExpand()" class="px-2 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-sky-300 text-[10px] sm:text-xs font-bold flex items-center gap-1 border border-slate-700 active:scale-95 transition cursor-pointer" title="Expandir/Minimizar formulario de datos">
+          <span>📝</span>
+          <span id="earth-drawing-expand-label" class="hidden sm:inline">Datos</span>
+        </button>
+
+        <!-- Botón Cancelar X -->
+        <button type="button" id="btn-banner-cancel-x" onclick="window.earthApp?.toolsManager?.cancelActiveTool()" class="p-1 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition cursor-pointer shrink-0" title="Cerrar / Cancelar trazado">
+          <i data-lucide="x" class="w-4 h-4 text-slate-400"></i>
+        </button>
       </div>
     </div>
 
-    <!-- Fila 4: Formulario Rápido (Nombre y Datos de Militancia) -->
-    <div class="space-y-2">
-      <div>
-        <label class="block text-[10px] font-black text-slate-300 uppercase tracking-wider mb-1">Nombre / Identificador *</label>
-        <input type="text" id="earth-draw-name-input" placeholder="Nombre del polígono o ruta..." class="w-full px-3 py-1.5 bg-slate-950 border border-slate-700 rounded-xl text-xs text-white font-bold focus:outline-none focus:border-sky-500 shadow-inner">
+    <!-- CUERPO EXPANDIBLE (Oculto por defecto en móvil para dejar el satélite 100% libre, expandible con el botón 📝) -->
+    <div id="earth-drawing-body" class="space-y-2 hidden sm:block transition-all">
+      <!-- Fila 2: Indicación de Acción para el Usuario -->
+      <div class="bg-slate-950/80 rounded-xl p-2 border border-slate-800 flex items-center gap-2">
+        <div class="w-6 h-6 rounded-lg bg-sky-500/20 text-sky-400 flex items-center justify-center shrink-0">
+          <i data-lucide="mouse-pointer" class="w-3.5 h-3.5 animate-bounce"></i>
+        </div>
+        <div class="min-w-0 flex-1">
+          <span id="earth-drawing-banner-hint" class="text-[10px] sm:text-xs text-sky-200 block font-semibold leading-tight">👉 Haz clics sobre el satélite para colocar esquinas, o pulsa [1-Clic]</span>
+        </div>
       </div>
 
-      <!-- Campos extra exclusivos para Sector Comunal (Militantes y Casas) -->
-      <div id="earth-draw-sector-extra" class="grid grid-cols-2 gap-2">
+      <!-- Fila 3: Indicadores Métricos Detallados -->
+      <div class="grid grid-cols-2 gap-2 text-center text-xs">
+        <div class="bg-slate-950/90 rounded-xl p-1.5 sm:p-2 border border-slate-800">
+          <span class="text-[9px] sm:text-[10px] text-slate-400 font-bold uppercase block">Puntos / Vértices</span>
+          <span id="earth-live-measure" class="font-mono text-amber-400 font-black text-xs sm:text-sm">0 puntos</span>
+        </div>
+        <div class="bg-slate-950/90 rounded-xl p-1.5 sm:p-2 border border-slate-800">
+          <span id="earth-live-measure-sub-label" class="text-[9px] sm:text-[10px] text-slate-400 font-bold uppercase block">Superficie / Área</span>
+          <span id="earth-live-measure-sub" class="font-mono text-emerald-400 font-black text-xs sm:text-sm">0.00 Ha</span>
+        </div>
+      </div>
+
+      <!-- Fila 4: Formulario Rápido (Nombre y Datos de Militancia) -->
+      <div class="space-y-1.5">
         <div>
-          <label class="block text-[10px] font-bold text-sky-400 uppercase mb-0.5">Militantes</label>
-          <input type="number" id="earth-draw-militantes" min="0" value="0" class="w-full px-2.5 py-1 bg-slate-950 border border-slate-700 rounded-lg text-xs text-white font-mono font-bold focus:outline-none focus:border-sky-500">
+          <label class="block text-[9px] sm:text-[10px] font-black text-slate-300 uppercase tracking-wider mb-0.5">Nombre / Identificador *</label>
+          <input type="text" id="earth-draw-name-input" placeholder="Nombre del polígono o ruta..." class="w-full px-2.5 py-1.5 bg-slate-950 border border-slate-700 rounded-xl text-xs text-white font-bold focus:outline-none focus:border-sky-500 shadow-inner">
         </div>
-        <div>
-          <label class="block text-[10px] font-bold text-amber-400 uppercase mb-0.5">Casas / Familias</label>
-          <input type="number" id="earth-draw-casas" min="0" value="0" class="w-full px-2.5 py-1 bg-slate-950 border border-slate-700 rounded-lg text-xs text-white font-mono font-bold focus:outline-none focus:border-sky-500">
+
+        <!-- Campos extra exclusivos para Sector Comunal (Militantes y Casas) -->
+        <div id="earth-draw-sector-extra" class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block text-[9px] font-bold text-sky-400 uppercase mb-0.5">Militantes</label>
+            <input type="number" id="earth-draw-militantes" min="0" value="0" class="w-full px-2 py-1 bg-slate-950 border border-slate-700 rounded-lg text-xs text-white font-mono font-bold focus:outline-none focus:border-sky-500">
+          </div>
+          <div>
+            <label class="block text-[9px] font-bold text-amber-400 uppercase mb-0.5">Casas / Familias</label>
+            <input type="number" id="earth-draw-casas" min="0" value="0" class="w-full px-2 py-1 bg-slate-950 border border-slate-700 rounded-lg text-xs text-white font-mono font-bold focus:outline-none focus:border-sky-500">
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- Fila 5: Botonera de Acción Directa -->
-    <div class="flex items-center gap-2 pt-1 border-t border-slate-800/80">
+    <!-- Fila 5: Botonera de Acción Directa (Siempre visible en la parte inferior) -->
+    <div class="flex items-center gap-1.5 sm:gap-2 pt-1 border-t border-slate-800/80">
       <!-- Deshacer punto -->
       <button type="button" id="btn-banner-undo" class="px-2.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-300 border border-slate-700 font-bold text-xs flex items-center justify-center gap-1 active:scale-95 transition cursor-pointer shrink-0" title="Borrar último punto colocado (Ctrl+Z)">
         <i data-lucide="undo" class="w-3.5 h-3.5"></i>
@@ -969,7 +995,7 @@
       <!-- Guardar y Crear -->
       <button type="button" id="btn-banner-finish" class="flex-1 px-3 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs shadow-lg flex items-center justify-center gap-1.5 active:scale-95 transition cursor-pointer" title="Guardar polígono en esta parroquia">
         <i data-lucide="save" class="w-4 h-4"></i>
-        <span id="btn-banner-finish-text">Guardar en Parroquia</span>
+        <span id="btn-banner-finish-text">Guardar</span>
       </button>
 
       <!-- Cancelar -->
@@ -981,7 +1007,7 @@
   </div>
 
   <!-- SCRIPT -->
-  <script type="module" src="js/app.js?v=51"></script>
+  <script type="module" src="js/app.js?v=52"></script>
   <script>
     if (window.lucide && typeof window.lucide.createIcons === 'function') {
       window.lucide.createIcons();

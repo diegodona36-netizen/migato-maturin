@@ -2,15 +2,15 @@
  * Controlador Principal — Google Earth Pro Web (Edición Estado Monagas)
  * Robusto, 100% Operativo y Totalmente Individualizado
  */
-import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=51";
-import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=51";
-import { getAllParishesForSelector } from "./usersCatalog.js?v=51";
-import { EarthStore } from "./earthStore.js?v=51";
-import { EarthMapEngine } from "./mapEngine.js?v=51";
-import { PropertiesDialog } from "./propertiesDialog.js?v=51";
-import { ToolsManager } from "./toolsManager.js?v=51";
-import { detectParishFromGeometry } from "./geoMonagas.js?v=51";
-import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=51";
+import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=52";
+import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=52";
+import { getAllParishesForSelector } from "./usersCatalog.js?v=52";
+import { EarthStore } from "./earthStore.js?v=52";
+import { EarthMapEngine } from "./mapEngine.js?v=52";
+import { PropertiesDialog } from "./propertiesDialog.js?v=52";
+import { ToolsManager } from "./toolsManager.js?v=52";
+import { detectParishFromGeometry } from "./geoMonagas.js?v=52";
+import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=52";
 
 class EarthMonagasApp {
   constructor() {

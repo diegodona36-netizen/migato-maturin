@@ -160,6 +160,12 @@ export class ToolsManager {
         this.updateDrawingHint();
         if (liveMeasure) liveMeasure.textContent = "0 puntos";
         if (liveMeasureSub) liveMeasureSub.textContent = (toolName === "ruta" ? "0 m" : (toolName === "marca" ? "Sin fijar" : "0.00 Ha"));
+        const compactLabel = document.getElementById("earth-live-measure-compact");
+        if (compactLabel) compactLabel.textContent = "0 pts";
+        const drawBody = document.getElementById("earth-drawing-body");
+        if (drawBody && window.innerWidth < 640) {
+          drawBody.classList.add("hidden");
+        }
 
         if (window.lucide && typeof window.lucide.createIcons === "function") {
           try { window.lucide.createIcons(); } catch(e){}
@@ -493,11 +499,14 @@ export class ToolsManager {
     const subLabel = document.getElementById("earth-live-measure-sub");
     const btnFinish = document.getElementById("btn-banner-finish");
 
+    const compactLabel = document.getElementById("earth-live-measure-compact");
+
     if (this.activeTool === "poligono" || this.activeTool === "subparroquia") {
       const areaHa = this.calculatePolygonAreaHa(this.points);
       const perimM = this.calculatePerimeterMeters(this.points);
       if (meterLabel) meterLabel.textContent = `${this.points.length} puntos`;
       if (subLabel) subLabel.textContent = `${areaHa} Ha • ${perimM} m`;
+      if (compactLabel) compactLabel.textContent = `${this.points.length} pts • ${areaHa} Ha`;
 
       if (btnFinish) {
         if (this.points.length >= 3) {
@@ -512,6 +521,7 @@ export class ToolsManager {
       const lenM = this.calculatePerimeterMeters(this.points);
       if (meterLabel) meterLabel.textContent = `${this.points.length} puntos`;
       if (subLabel) subLabel.textContent = `${lenM} m (${(lenM / 1000).toFixed(2)} km)`;
+      if (compactLabel) compactLabel.textContent = `${this.points.length} pts • ${(lenM / 1000).toFixed(2)} km`;
 
       if (btnFinish) {
         if (this.points.length >= 2) {
@@ -527,6 +537,7 @@ export class ToolsManager {
       if (subLabel && this.points.length > 0) {
         subLabel.textContent = `${this.points[0][0].toFixed(5)}, ${this.points[0][1].toFixed(5)}`;
       }
+      if (compactLabel) compactLabel.textContent = this.points.length > 0 ? "1 marca" : "0 marcas";
       if (btnFinish) {
         if (this.points.length >= 1) {
           btnFinish.classList.remove("opacity-50", "pointer-events-none");
