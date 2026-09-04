@@ -122,48 +122,56 @@ export class ToolsManager {
 
   handleMapClick(e) {
     if (!this.activeTool) return;
+    try {
+      if (!e || !e.latlng) return;
+      const latlng = [e.latlng.lat, e.latlng.lng];
 
-    const latlng = [e.latlng.lat, e.latlng.lng];
-
-    if (this.activeTool === "marca") {
-      this.createPlacemark(latlng);
-      return;
-    }
-
-    const pointIndex = this.points.length;
-    this.points.push(latlng);
-
-    // Vértice interactivo arrastrable (Draggable Vertex Marker)
-    const vertexIcon = L.divIcon({
-      className: "earth-vertex-marker-wrapper",
-      html: `<div class="w-3.5 h-3.5 bg-sky-400 border-2 border-white rounded-full shadow-lg cursor-move hover:scale-125 active:scale-95 transition"></div>`,
-      iconSize: [14, 14],
-      iconAnchor: [7, 7]
-    });
-
-    const marker = L.marker(latlng, {
-      draggable: true,
-      icon: vertexIcon,
-      zIndexOffset: 1000
-    });
-
-    // Evento de arrastre para acomodar vértices en vivo
-    marker.on("drag", (ev) => {
-      const newPos = [ev.latlng.lat, ev.latlng.lng];
-      const idx = this.vertexMarkers.indexOf(marker);
-      if (idx !== -1) {
-        this.points[idx] = newPos;
-        this.updatePreviewShape();
-        this.updateLiveMeasurements();
+      if (this.activeTool === "marca") {
+        this.createPlacemark(latlng);
+        return;
       }
-    });
 
-    this.mapEngine.tempDrawingLayer.addLayer(marker);
-    this.vertexMarkers.push(marker);
+      const pointIndex = this.points.length;
+      this.points.push(latlng);
 
-    this.updatePreviewShape();
-    this.updateLiveMeasurements();
-    this.updateDrawingHint();
+      // Vértice interactivo arrastrable (Draggable Vertex Marker)
+      const vertexIcon = L.divIcon({
+        className: "earth-vertex-marker-wrapper",
+        html: `<div class="w-3.5 h-3.5 bg-sky-400 border-2 border-white rounded-full shadow-lg cursor-move hover:scale-125 active:scale-95 transition"></div>`,
+        iconSize: [14, 14],
+        iconAnchor: [7, 7]
+      });
+
+      const marker = L.marker(latlng, {
+        draggable: true,
+        icon: vertexIcon,
+        zIndexOffset: 1000
+      });
+
+      // Evento de arrastre para acomodar vértices en vivo
+      marker.on("drag", (ev) => {
+        try {
+          const newPos = [ev.latlng.lat, ev.latlng.lng];
+          const idx = this.vertexMarkers.indexOf(marker);
+          if (idx !== -1) {
+            this.points[idx] = newPos;
+            this.updatePreviewShape();
+            this.updateLiveMeasurements();
+          }
+        } catch(dragErr) {
+          console.warn("[ToolsManager] Error arrastrando vértice:", dragErr);
+        }
+      });
+
+      this.mapEngine.tempDrawingLayer.addLayer(marker);
+      this.vertexMarkers.push(marker);
+
+      this.updatePreviewShape();
+      this.updateLiveMeasurements();
+      this.updateDrawingHint();
+    } catch (err) {
+      console.error("[ToolsManager] Error en handleMapClick:", err);
+    }
   }
 
   undoLastPoint() {
@@ -208,69 +216,82 @@ export class ToolsManager {
   }
 
   updatePreviewShape() {
-    if (this.activeTool === "poligono" || this.activeTool === "subparroquia") {
-      const isSub = this.activeTool === "subparroquia";
-      const strokeColor = isSub ? "#c084fc" : "#38bdf8";
-      const fillColor = isSub ? "#a855f7" : "#38bdf8";
+    try {
+      if (this.activeTool === "poligono" || this.activeTool === "subparroquia") {
+        const isSub = this.activeTool === "subparroquia";
+        const strokeColor = isSub ? "#c084fc" : "#38bdf8";
+        const fillColor = isSub ? "#a855f7" : "#38bdf8";
 
-      if (this.points.length === 2) {
-        // Con 2 puntos: mostrar línea conectora clara
-        if (this.previewShape && !(this.previewShape instanceof L.Polyline && !(this.previewShape instanceof L.Polygon))) {
+        if (this.points.length === 2) {
+          // Con 2 puntos: mostrar línea conectora clara
+          if (this.previewShape && this.previewShapeType !== "polyline") {
+            this.mapEngine.tempDrawingLayer.removeLayer(this.previewShape);
+            this.previewShape = null;
+          }
+          if (this.previewShape) {
+            this.previewShape.setLatLngs(this.points);
+          } else {
+            this.previewShape = L.polyline(this.points, {
+              color: strokeColor,
+              weight: isSub ? 3 : 2.5,
+              dashArray: "6, 4",
+              interactive: false
+            });
+            this.previewShapeType = "polyline";
+            this.mapEngine.tempDrawingLayer.addLayer(this.previewShape);
+          }
+        } else if (this.points.length >= 3) {
+          // Con 3 o más puntos: mostrar polígono cerrado con relleno
+          if (this.previewShape && this.previewShapeType !== "polygon") {
+            this.mapEngine.tempDrawingLayer.removeLayer(this.previewShape);
+            this.previewShape = null;
+          }
+          if (this.previewShape) {
+            this.previewShape.setLatLngs(this.points);
+          } else {
+            this.previewShape = L.polygon(this.points, {
+              color: strokeColor,
+              weight: isSub ? 3 : 2.5,
+              fillColor: fillColor,
+              fillOpacity: isSub ? 0.22 : 0.35,
+              dashArray: isSub ? "6, 4" : null,
+              interactive: false
+            });
+            this.previewShapeType = "polygon";
+            this.mapEngine.tempDrawingLayer.addLayer(this.previewShape);
+          }
+        } else if (this.previewShape) {
           this.mapEngine.tempDrawingLayer.removeLayer(this.previewShape);
           this.previewShape = null;
+          this.previewShapeType = null;
         }
-        if (this.previewShape) {
-          this.previewShape.setLatLngs(this.points);
-        } else {
-          this.previewShape = L.polyline(this.points, {
-            color: strokeColor,
-            weight: isSub ? 3 : 2.5,
-            dashArray: "6, 4",
-            interactive: false
-          });
-          this.mapEngine.tempDrawingLayer.addLayer(this.previewShape);
-        }
-      } else if (this.points.length >= 3) {
-        // Con 3 o más puntos: mostrar polígono cerrado con relleno
-        if (this.previewShape && !(this.previewShape instanceof L.Polygon)) {
+      } else if (this.activeTool === "ruta" || this.activeTool === "regla") {
+        if (this.points.length >= 2) {
+          if (this.previewShape && this.previewShapeType !== "route") {
+            this.mapEngine.tempDrawingLayer.removeLayer(this.previewShape);
+            this.previewShape = null;
+          }
+          if (this.previewShape) {
+            this.previewShape.setLatLngs(this.points);
+          } else {
+            this.previewShape = L.polyline(this.points, {
+              color: this.activeTool === "regla" ? "#f59e0b" : "#10b981",
+              weight: 4,
+              opacity: 0.95,
+              dashArray: this.activeTool === "regla" ? "6, 6" : null,
+              interactive: false
+            });
+            this.previewShapeType = "route";
+            this.mapEngine.tempDrawingLayer.addLayer(this.previewShape);
+          }
+        } else if (this.previewShape) {
           this.mapEngine.tempDrawingLayer.removeLayer(this.previewShape);
           this.previewShape = null;
+          this.previewShapeType = null;
         }
-        if (this.previewShape) {
-          this.previewShape.setLatLngs(this.points);
-        } else {
-          this.previewShape = L.polygon(this.points, {
-            color: strokeColor,
-            weight: isSub ? 3 : 2.5,
-            fillColor: fillColor,
-            fillOpacity: isSub ? 0.22 : 0.35,
-            dashArray: isSub ? "6, 4" : null,
-            interactive: false
-          });
-          this.mapEngine.tempDrawingLayer.addLayer(this.previewShape);
-        }
-      } else if (this.previewShape) {
-        this.mapEngine.tempDrawingLayer.removeLayer(this.previewShape);
-        this.previewShape = null;
       }
-    } else if (this.activeTool === "ruta" || this.activeTool === "regla") {
-      if (this.points.length >= 2) {
-        if (this.previewShape) {
-          this.previewShape.setLatLngs(this.points);
-        } else {
-          this.previewShape = L.polyline(this.points, {
-            color: this.activeTool === "regla" ? "#f59e0b" : "#10b981",
-            weight: 4,
-            opacity: 0.95,
-            dashArray: this.activeTool === "regla" ? "6, 6" : null,
-            interactive: false
-          });
-          this.mapEngine.tempDrawingLayer.addLayer(this.previewShape);
-        }
-      } else if (this.previewShape) {
-        this.mapEngine.tempDrawingLayer.removeLayer(this.previewShape);
-        this.previewShape = null;
-      }
+    } catch (err) {
+      console.warn("[ToolsManager] Error actualizando preview shape:", err);
     }
   }
 

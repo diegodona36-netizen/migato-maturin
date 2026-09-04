@@ -26,7 +26,7 @@
   <meta http-equiv="Expires" content="0" />
 
   <!-- Custom Styles -->
-  <link rel="stylesheet" href="css/styles.css?v=38">
+  <link rel="stylesheet" href="css/styles.css?v=39">
 
   <!-- Script de Autenticación Rápida y Limpieza Integral de Caché -->
   <script>
@@ -278,14 +278,8 @@
         <span class="whitespace-nowrap">+ Sector Comunal</span>
       </button>
 
-      <!-- Botón para Conmutar Modo Avanzado (Para Administrador / Sala Central) -->
-      <button id="btn-toggle-advanced-tools" type="button" class="hidden px-2.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white border border-slate-700 text-xs font-bold transition items-center gap-1 shrink-0" title="Ver / Ocultar Herramientas Avanzadas">
-        <i data-lucide="wrench" class="w-3.5 h-3.5"></i>
-        <span class="hidden sm:inline">Avanzado</span>
-      </button>
-
-      <!-- CONTENEDOR DE HERRAMIENTAS AVANZADAS (Oculto por defecto para operadores) -->
-      <div id="toolbar-advanced-tools" class="hidden items-center gap-1.5 shrink-0">
+      <!-- CONTENEDOR DE HERRAMIENTAS (Directamente visibles para todos los usuarios) -->
+      <div id="toolbar-advanced-tools" class="flex items-center gap-1.5 shrink-0">
         <div class="h-4 w-[1px] bg-slate-700 mx-1 shrink-0"></div>
 
         <!-- 〰️ Agregar Ruta (Calles) -->
@@ -534,9 +528,21 @@
         </button>
 
         <!-- Botón + Sector Comunal Móvil -->
-        <button type="button" onclick="document.getElementById('btn-tool-polygon').click()" class="pointer-events-auto px-4 py-2.5 rounded-2xl bg-gradient-to-r from-sky-600 to-blue-600 hover:from-sky-500 text-white border border-sky-400/50 shadow-2xl backdrop-blur-md flex items-center gap-1.5 font-black text-xs active:scale-95 transition">
+        <button type="button" onclick="document.getElementById('btn-tool-polygon').click()" class="pointer-events-auto px-3.5 py-2.5 rounded-2xl bg-gradient-to-r from-sky-600 to-blue-600 hover:from-sky-500 text-white border border-sky-400/50 shadow-2xl backdrop-blur-md flex items-center gap-1.5 font-black text-xs active:scale-95 transition">
           <i data-lucide="home" class="w-4 h-4"></i>
           <span>+ Sector</span>
+        </button>
+
+        <!-- Botón + Ruta Móvil -->
+        <button type="button" onclick="document.getElementById('btn-tool-path').click()" class="pointer-events-auto px-3 py-2.5 rounded-2xl bg-slate-900/95 hover:bg-slate-800 text-emerald-300 border border-emerald-500/40 shadow-2xl backdrop-blur-md flex items-center gap-1 font-bold text-xs active:scale-95 transition" title="Trazar Calle o Ruta">
+          <i data-lucide="git-commit" class="w-4 h-4 text-emerald-400"></i>
+          <span>+ Ruta</span>
+        </button>
+
+        <!-- Botón + Marca Móvil -->
+        <button type="button" onclick="document.getElementById('btn-tool-placemark').click()" class="pointer-events-auto px-3 py-2.5 rounded-2xl bg-slate-900/95 hover:bg-slate-800 text-rose-300 border border-rose-500/40 shadow-2xl backdrop-blur-md flex items-center gap-1 font-bold text-xs active:scale-95 transition" title="Punto de Interés">
+          <i data-lucide="map-pin" class="w-4 h-4 text-rose-400"></i>
+          <span>+ Marca</span>
         </button>
       </div>
     </main>
@@ -910,7 +916,7 @@
   </div>
 
   <!-- SCRIPT -->
-  <script type="module" src="js/app.js?v=38"></script>
+  <script type="module" src="js/app.js?v=39"></script>
   <script>
     if (window.lucide && typeof window.lucide.createIcons === 'function') {
       window.lucide.createIcons();

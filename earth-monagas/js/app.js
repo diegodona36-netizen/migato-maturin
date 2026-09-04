@@ -2,15 +2,15 @@
  * Controlador Principal — Google Earth Pro Web (Edición Estado Monagas)
  * Robusto, 100% Operativo y Totalmente Individualizado
  */
-import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=38";
-import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=38";
-import { getAllParishesForSelector } from "./usersCatalog.js?v=38";
-import { EarthStore } from "./earthStore.js?v=38";
-import { EarthMapEngine } from "./mapEngine.js?v=38";
-import { PropertiesDialog } from "./propertiesDialog.js?v=38";
-import { ToolsManager } from "./toolsManager.js?v=38";
-import { detectParishFromGeometry } from "./geoMonagas.js?v=38";
-import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=38";
+import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=39";
+import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=39";
+import { getAllParishesForSelector } from "./usersCatalog.js?v=39";
+import { EarthStore } from "./earthStore.js?v=39";
+import { EarthMapEngine } from "./mapEngine.js?v=39";
+import { PropertiesDialog } from "./propertiesDialog.js?v=39";
+import { ToolsManager } from "./toolsManager.js?v=39";
+import { detectParishFromGeometry } from "./geoMonagas.js?v=39";
+import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=39";
 
 class EarthMonagasApp {
   constructor() {
@@ -1097,11 +1097,11 @@ class EarthMonagasApp {
       if (statusRole) {
         statusRole.textContent = `🔒 ${user.nombre}`;
       }
-      // Ocultar herramientas avanzadas en modo campo
+      // Herramientas de dibujo (Ruta, Marca) siempre visibles en modo campo
       if (btnAdvToggle) btnAdvToggle.classList.add("hidden");
       if (toolbarAdv) {
-        toolbarAdv.classList.add("hidden");
-        toolbarAdv.classList.remove("flex");
+        toolbarAdv.classList.remove("hidden");
+        toolbarAdv.classList.add("flex");
       }
       if (tabLayers) tabLayers.classList.add("hidden");
     } else if (user.rol === "coordinador") {
@@ -1126,6 +1126,10 @@ class EarthMonagasApp {
         btnAdvToggle.classList.remove("hidden");
         btnAdvToggle.classList.add("flex");
       }
+      if (toolbarAdv) {
+        toolbarAdv.classList.remove("hidden");
+        toolbarAdv.classList.add("flex");
+      }
       if (tabLayers) tabLayers.classList.remove("hidden");
     } else {
       // Super Admin / Usuario General (Acceso Total a Monagas)
@@ -1147,6 +1151,10 @@ class EarthMonagasApp {
       if (btnAdvToggle) {
         btnAdvToggle.classList.remove("hidden");
         btnAdvToggle.classList.add("flex");
+      }
+      if (toolbarAdv) {
+        toolbarAdv.classList.remove("hidden");
+        toolbarAdv.classList.add("flex");
       }
       if (tabLayers) tabLayers.classList.remove("hidden");
     }

@@ -2,8 +2,8 @@
  * Motor Cartográfico Acelerado por GPU — Google Earth Pro Web (Monagas)
  * Integrado con Capas Jerárquicas Oficiales (INE 2021) y Edición de Vértices
  */
-import { GEO_ESTADO_OFICIAL, GEO_MUNICIPIOS_OFICIAL, GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=38";
-import { SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=38";
+import { GEO_ESTADO_OFICIAL, GEO_MUNICIPIOS_OFICIAL, GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=39";
+import { SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=39";
 
 export class EarthMapEngine {
   constructor(containerId, onCoordUpdate) {
@@ -424,21 +424,28 @@ export class EarthMapEngine {
     ];
 
     groups.forEach(group => {
-      if (!group) return;
-      group.eachLayer(layer => {
-        if (this.isDrawingMode) {
-          if (layer._origInteractive === undefined) {
-            layer._origInteractive = layer.options.interactive !== false;
-          }
-          layer.options.interactive = false;
-          if (layer._path) layer._path.style.pointerEvents = "none";
-          if (layer.closeTooltip) layer.closeTooltip();
-        } else {
-          const wasInteractive = layer._origInteractive !== undefined ? layer._origInteractive : true;
-          layer.options.interactive = wasInteractive;
-          if (layer._path) layer._path.style.pointerEvents = "auto";
-        }
-      });
+      if (!group || typeof group.eachLayer !== "function") return;
+      try {
+        group.eachLayer(layer => {
+          if (!layer) return;
+          try {
+            if (this.isDrawingMode) {
+              if (layer._origInteractive === undefined) {
+                layer._origInteractive = Boolean(layer.options && layer.options.interactive !== false);
+              }
+              if (layer.options) layer.options.interactive = false;
+              if (layer._path && layer._path.style) layer._path.style.pointerEvents = "none";
+              if (layer._icon && layer._icon.style) layer._icon.style.pointerEvents = "none";
+              if (typeof layer.closeTooltip === "function") layer.closeTooltip();
+            } else {
+              const wasInteractive = layer._origInteractive !== undefined ? layer._origInteractive : true;
+              if (layer.options) layer.options.interactive = wasInteractive;
+              if (layer._path && layer._path.style) layer._path.style.pointerEvents = "auto";
+              if (layer._icon && layer._icon.style) layer._icon.style.pointerEvents = "auto";
+            }
+          } catch (eLayer) {}
+        });
+      } catch (eGroup) {}
     });
   }
 
