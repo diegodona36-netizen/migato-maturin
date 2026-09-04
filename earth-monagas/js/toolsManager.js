@@ -121,7 +121,12 @@ export class ToolsManager {
           } else if (toolName === "poligono") {
             banner.classList.add("border-sky-500/90");
             if (bannerDot) bannerDot.className = "w-3 h-3 rounded-full bg-sky-400 shadow-[0_0_10px_rgba(56,189,248,0.9)] shrink-0 animate-pulse";
-            if (bannerText) bannerText.textContent = "Trazando Sector Comunal / Militancia";
+            const activeSub = (parishStore?.subparroquias || []).find(sp => String(sp.id) === String(window.earthApp?.activeSubParroquiaId));
+            if (activeSub) {
+              if (bannerText) bannerText.innerHTML = `Trazando Sector en: <span class="text-purple-300 font-black">${activeSub.nombre}</span>`;
+            } else {
+              if (bannerText) bannerText.textContent = "Trazando Sector Comunal / Militancia";
+            }
             const count = (parishStore?.poligonos || []).length + 1;
             if (nameInput) nameInput.value = `Sector Comunal ${count}`;
             if (sectorExtra) sectorExtra.classList.remove("hidden");
@@ -147,10 +152,20 @@ export class ToolsManager {
           }
 
           if (bannerParish) {
-            bannerParish.textContent = `📍 ${parishName}`;
+            const activeSub = (parishStore?.subparroquias || []).find(sp => String(sp.id) === String(window.earthApp?.activeSubParroquiaId));
+            if (toolName === "poligono" && activeSub) {
+              bannerParish.textContent = `📍 ${parishName} • 🟪 ${activeSub.nombre}`;
+            } else {
+              bannerParish.textContent = `📍 ${parishName}`;
+            }
           }
           if (btnFinishText) {
-            btnFinishText.textContent = `Guardar en ${parishName}`;
+            const activeSub = (parishStore?.subparroquias || []).find(sp => String(sp.id) === String(window.earthApp?.activeSubParroquiaId));
+            if (toolName === "poligono" && activeSub) {
+              btnFinishText.textContent = `Guardar en ${activeSub.nombre}`;
+            } else {
+              btnFinishText.textContent = `Guardar en ${parishName}`;
+            }
           }
           if (btnFinish) {
             btnFinish.classList.remove("pointer-events-none", "opacity-50");
@@ -230,8 +245,19 @@ export class ToolsManager {
   generateQuickQuadrant() {
     if (!this.map) return;
     try {
-      const center = this.map.getCenter();
-      const bounds = this.map.getBounds();
+      let center = this.map.getCenter();
+      let bounds = this.map.getBounds();
+
+      if (this.activeTool === "poligono" && window.earthApp?.activeSubParroquiaId) {
+        const pStore = window.earthApp?.store?.getParish(window.earthApp?.selectedMunId, window.earthApp?.selectedParishId);
+        const activeSub = (pStore?.subparroquias || []).find(sp => String(sp.id) === String(window.earthApp?.activeSubParroquiaId));
+        if (activeSub?.vertices && activeSub.vertices.length >= 3) {
+          const spBounds = L.polygon(activeSub.vertices).getBounds();
+          center = spBounds.getCenter();
+          bounds = spBounds;
+        }
+      }
+
       const latSpan = Math.abs(bounds.getNorth() - bounds.getSouth()) * 0.16;
       const lngSpan = Math.abs(bounds.getEast() - bounds.getWest()) * 0.16;
 

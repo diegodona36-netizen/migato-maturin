@@ -2,9 +2,9 @@
  * Diálogo Flotante de Propiedades y Carga de Militantes — Estilo Google Earth Pro
  * Pestañas: Ficha Territorial, Militantes por Sector, Estilo y Color, Medidas
  */
-import { SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS, detectParishFromGeometry } from "./geoMonagas.js?v=52";
-import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=52";
-import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=52";
+import { SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS, detectParishFromGeometry } from "./geoMonagas.js?v=53";
+import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=53";
+import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=53";
 
 export class PropertiesDialog {
   constructor(onSaveCallback, onLiveChangeCallback, onStartEditGeometry) {
@@ -467,6 +467,7 @@ export class PropertiesDialog {
     const boxMilitancia = document.getElementById("box-prop-militancia");
     const boxLiderazgo = document.getElementById("box-prop-liderazgo");
     const boxPolyStyle = document.getElementById("box-poly-fill-style");
+    const boxSubparishInfo = document.getElementById("box-prop-subparish-info");
     const rowArea = document.getElementById("row-measure-area");
     const rowLength = document.getElementById("row-measure-length");
 
@@ -479,6 +480,26 @@ export class PropertiesDialog {
       if (boxPolyStyle) boxPolyStyle.classList.remove("hidden");
       if (rowArea) rowArea.classList.remove("hidden");
       if (rowLength) rowLength.classList.add("hidden");
+
+      if (boxSubparishInfo) {
+        boxSubparishInfo.classList.toggle("hidden", !isSub);
+        if (isSub) {
+          if (wrapSubParish) wrapSubParish.classList.add("hidden");
+          const childSecs = (pStore?.poligonos || []).filter(p => String(p.subParroquiaId) === String(item.id));
+          const countEl = document.getElementById("prop-subparish-sectors-count");
+          if (countEl) countEl.textContent = `${childSecs.length} Sectores`;
+
+          const btnAddSector = document.getElementById("btn-prop-add-sector-to-subparish");
+          if (btnAddSector) {
+            btnAddSector.onclick = () => {
+              this.close();
+              window.earthApp?.startSectorInSubParish(item.id);
+            };
+          }
+        } else {
+          if (wrapSubParish) wrapSubParish.classList.remove("hidden");
+        }
+      }
 
       if (!isSub) {
         // Valores de militancia y censo comunitario

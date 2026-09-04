@@ -2,15 +2,15 @@
  * Controlador Principal — Google Earth Pro Web (Edición Estado Monagas)
  * Robusto, 100% Operativo y Totalmente Individualizado
  */
-import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=52";
-import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=52";
-import { getAllParishesForSelector } from "./usersCatalog.js?v=52";
-import { EarthStore } from "./earthStore.js?v=52";
-import { EarthMapEngine } from "./mapEngine.js?v=52";
-import { PropertiesDialog } from "./propertiesDialog.js?v=52";
-import { ToolsManager } from "./toolsManager.js?v=52";
-import { detectParishFromGeometry } from "./geoMonagas.js?v=52";
-import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=52";
+import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=53";
+import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=53";
+import { getAllParishesForSelector } from "./usersCatalog.js?v=53";
+import { EarthStore } from "./earthStore.js?v=53";
+import { EarthMapEngine } from "./mapEngine.js?v=53";
+import { PropertiesDialog } from "./propertiesDialog.js?v=53";
+import { ToolsManager } from "./toolsManager.js?v=53";
+import { detectParishFromGeometry } from "./geoMonagas.js?v=53";
+import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=53";
 
 class EarthMonagasApp {
   constructor() {
@@ -94,12 +94,36 @@ class EarthMonagasApp {
     this.selectParish(this.selectedMunId, this.selectedParishId);
 
     window.activateEarthTool = (toolName) => {
+      if (toolName === "poligono") {
+        const parish = this.store.getParish(this.selectedMunId, this.selectedParishId);
+        const subps = parish?.subparroquias || [];
+
+        // Caso 1: Cero sub-parroquias delimitadas en esta parroquia
+        if (subps.length === 0) {
+          this.showSubParishRequiredModal(parish);
+          return;
+        }
+
+        // Caso 2: Solo existe 1 sub-parroquia y ninguna seleccionada -> auto-vincular
+        if (subps.length === 1 && !this.activeSubParroquiaId) {
+          this.activeSubParroquiaId = String(subps[0].id);
+          this.focusSubParish(subps[0].id, false);
+          this.showToast(`📌 Sector asignado a la Sub-Parroquia: <strong>${subps[0].nombre}</strong>`, "purple");
+        }
+
+        // Caso 3: Múltiples sub-parroquias y ninguna activa seleccionada -> preguntar al usuario
+        if (subps.length > 1 && !this.activeSubParroquiaId) {
+          this.showSelectSubParishModal(subps, parish);
+          return;
+        }
+      }
+
       if (this.toolsManager) {
         this.toolsManager.setActiveTool(toolName);
       }
     };
     if (window._pendingEarthTool) {
-      this.toolsManager.setActiveTool(window._pendingEarthTool);
+      window.activateEarthTool(window._pendingEarthTool);
       window._pendingEarthTool = null;
     }
 
@@ -246,6 +270,9 @@ class EarthMonagasApp {
       }
     });
 
+    if (typeof this.mapEngine.updateHierarchicalLOD === "function") {
+      this.mapEngine.updateHierarchicalLOD();
+    }
     this.renderPlacesTree();
   }
 
@@ -262,7 +289,170 @@ class EarthMonagasApp {
         }
       });
     }
+    if (typeof this.mapEngine.updateHierarchicalLOD === "function") {
+      this.mapEngine.updateHierarchicalLOD();
+    }
     this.renderPlacesTree();
+  }
+
+  startSectorInSubParish(subParishId) {
+    const parish = this.store.getParish(this.selectedMunId, this.selectedParishId);
+    const sp = (parish?.subparroquias || []).find(s => String(s.id) === String(subParishId));
+    if (!sp) return;
+
+    if (this.mapEngine?.map) {
+      try { this.mapEngine.map.closePopup(); } catch(e) {}
+    }
+    this.closeSubParishModal();
+
+    this.focusSubParish(subParishId, true);
+    this.activeSubParroquiaId = String(subParishId);
+
+    if (this.toolsManager) {
+      this.toolsManager.setActiveTool("poligono");
+    }
+    this.showToast(`🎯 Trazando Sector Comunal dentro de: <strong>${sp.nombre}</strong>`, "sky");
+  }
+
+  openSubParishFicha(subParishId) {
+    if (this.mapEngine?.map) {
+      try { this.mapEngine.map.closePopup(); } catch(e) {}
+    }
+    const parish = this.store.getParish(this.selectedMunId, this.selectedParishId);
+    const sp = (parish?.subparroquias || []).find(s => String(s.id) === String(subParishId));
+    if (sp && this.propDialog) {
+      this.propDialog.open("subparroquia", sp, this.selectedMunId, this.selectedParishId);
+    }
+  }
+
+  findSubParish(subParishId) {
+    const parish = this.store.getParish(this.selectedMunId, this.selectedParishId);
+    return (parish?.subparroquias || []).find(s => String(s.id) === String(subParishId));
+  }
+
+  closeSubParishModal() {
+    const modal = document.getElementById("modal-select-subparish");
+    if (modal) {
+      modal.classList.add("hidden");
+      modal.classList.remove("flex");
+    }
+  }
+
+  showSubParishRequiredModal(parish) {
+    const modal = document.getElementById("modal-select-subparish");
+    const title = document.getElementById("modal-subparish-title");
+    const body = document.getElementById("modal-subparish-body");
+    if (!modal || !body) return;
+
+    if (title) title.textContent = "Nivel 4 Requerido • Sub-Parroquia / Eje";
+
+    body.innerHTML = `
+      <div class="bg-purple-950/40 border border-purple-500/40 rounded-2xl p-3.5 text-xs text-slate-200 leading-relaxed space-y-2">
+        <div class="flex items-center gap-2 text-purple-300 font-bold">
+          <span class="text-base">📌</span>
+          <span>Estructura Jerárquica Obligatoria</span>
+        </div>
+        <p>
+          Para organizar tus comunidades, cada <strong>Sector Comunal (Nivel 5)</strong> debe pertenecer a una <strong>Sub-Parroquia o Eje Comunal (Nivel 4)</strong>.
+        </p>
+        <p class="text-slate-400">
+          Actualmente la parroquia <strong>${parish?.nombre || 'activa'}</strong> no tiene ninguna sub-parroquia delimitada. Delimita primero el perímetro de la sub-parroquia en el satélite.
+        </p>
+      </div>
+
+      <div class="flex flex-col sm:flex-row gap-2 pt-1">
+        <button type="button" onclick="window.earthApp?.closeSubParishModal(); window.activateEarthTool('subparroquia');" class="flex-1 py-2.5 px-4 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-black text-xs flex items-center justify-center gap-2 shadow-lg active:scale-95 transition cursor-pointer">
+          <i data-lucide="shield" class="w-4 h-4"></i>
+          <span>➕ Delimitar Sub-Parroquia Ahora</span>
+        </button>
+        <button type="button" onclick="window.earthApp?.closeSubParishModal();" class="py-2.5 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-medium text-xs transition cursor-pointer">
+          Cancelar
+        </button>
+      </div>
+    `;
+
+    modal.classList.remove("hidden");
+    modal.classList.add("flex");
+    if (window.lucide) { try { window.lucide.createIcons(); } catch(e){} }
+  }
+
+  showSelectSubParishModal(subps, parish) {
+    const modal = document.getElementById("modal-select-subparish");
+    const title = document.getElementById("modal-subparish-title");
+    const body = document.getElementById("modal-subparish-body");
+    if (!modal || !body) return;
+
+    if (title) title.textContent = "Seleccionar Sub-Parroquia / Eje Comunal";
+
+    body.innerHTML = `
+      <p class="text-xs text-slate-300 leading-relaxed">
+        Indica en cuál de las <strong>${subps.length} sub-parroquias</strong> de <strong>${parish?.nombre || 'la parroquia'}</strong> se ubicará este nuevo sector comunal:
+      </p>
+
+      <div class="max-h-60 overflow-y-auto space-y-1.5 pr-1 font-mono">
+        ${subps.map(sp => {
+          const childSectors = (parish?.poligonos || []).filter(p => String(p.subParroquiaId) === String(sp.id));
+          return `
+            <div onclick="window.earthApp?.startSectorInSubParish('${sp.id}');" class="p-2.5 rounded-xl bg-slate-950/80 hover:bg-purple-950/60 border border-slate-800 hover:border-purple-500/60 transition cursor-pointer flex items-center justify-between group">
+              <div class="flex items-center gap-2.5 min-w-0">
+                <span class="w-3.5 h-3.5 rounded-md border shrink-0" style="background-color: ${sp.colorRelleno || '#a855f7'}; border-color: ${sp.colorBorde || '#c084fc'};"></span>
+                <div class="truncate">
+                  <strong class="text-white text-xs block truncate group-hover:text-purple-300">${sp.nombre}</strong>
+                  <span class="text-[10px] text-slate-400">${sp.areaHa || 0} Ha • ${childSectors.length} sectores</span>
+                </div>
+              </div>
+              <span class="text-xs text-sky-400 group-hover:translate-x-0.5 transition font-black shrink-0">Trazar ➔</span>
+            </div>
+          `;
+        }).join("")}
+      </div>
+
+      <div class="pt-2 border-t border-slate-800 flex items-center justify-between gap-2">
+        <button type="button" onclick="window.earthApp?.closeSubParishModal(); window.activateEarthTool('subparroquia');" class="text-xs text-purple-400 hover:text-purple-300 underline font-bold flex items-center gap-1 cursor-pointer">
+          <span>+ Nueva Sub-Parroquia</span>
+        </button>
+        <button type="button" onclick="window.earthApp?.closeSubParishModal(); window.earthApp?.toolsManager?.setActiveTool('poligono');" class="text-[11px] text-slate-400 hover:text-slate-200 bg-slate-800/80 px-2.5 py-1.5 rounded-lg border border-slate-700 transition cursor-pointer" title="Detectar automáticamente según las coordenadas del sector">
+          🎯 Auto-detectar en mapa
+        </button>
+      </div>
+    `;
+
+    modal.classList.remove("hidden");
+    modal.classList.add("flex");
+    if (window.lucide) { try { window.lucide.createIcons(); } catch(e){} }
+  }
+
+  detectSubParishFromGeometry(vertices, subparroquias) {
+    if (!vertices || vertices.length < 3 || !subparroquias || subparroquias.length === 0) return null;
+    let sumLat = 0, sumLng = 0;
+    vertices.forEach(v => {
+      sumLat += (v.lat !== undefined ? v.lat : v[0]);
+      sumLng += (v.lng !== undefined ? v.lng : v[1]);
+    });
+    const centroid = { lat: sumLat / vertices.length, lng: sumLng / vertices.length };
+
+    for (const sp of subparroquias) {
+      if (!sp.vertices || sp.vertices.length < 3) continue;
+      if (this.isPointInPolygon(centroid, sp.vertices)) {
+        return sp;
+      }
+    }
+    return null;
+  }
+
+  isPointInPolygon(point, vs) {
+    const x = point.lat !== undefined ? point.lat : point[0];
+    const y = point.lng !== undefined ? point.lng : point[1];
+    let inside = false;
+    for (let i = 0, j = vs.length - 1; i < vs.length; j = i++) {
+      const xi = vs[i].lat !== undefined ? vs[i].lat : vs[i][0];
+      const yi = vs[i].lng !== undefined ? vs[i].lng : vs[i][1];
+      const xj = vs[j].lat !== undefined ? vs[j].lat : vs[j][0];
+      const yj = vs[j].lng !== undefined ? vs[j].lng : vs[j][1];
+      const intersect = ((yi > y) !== (yj > y)) && (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
+      if (intersect) inside = !inside;
+    }
+    return inside;
   }
 
   deleteSubParish(subParishId) {
@@ -470,6 +660,9 @@ class EarthMonagasApp {
               </div>
             </div>
             <div class="flex items-center gap-1 shrink-0">
+              <button onclick="window.earthApp.startSectorInSubParish('${sp.id}')" class="text-sky-400 hover:text-sky-200 p-1 transition" title="➕ Trazar Sector Comunal dentro de este eje">
+                <i data-lucide="plus-circle" class="w-3.5 h-3.5"></i>
+              </button>
               <button onclick="window.earthApp.renameSubParish('${sp.id}')" class="text-slate-400 hover:text-purple-300 p-1 transition" title="Propiedades y nombre del eje comunal">
                 <i data-lucide="edit-2" class="w-3.5 h-3.5"></i>
               </button>
@@ -821,8 +1014,18 @@ class EarthMonagasApp {
       return;
     }
 
-    if (type === "poligono" && this.activeSubParroquiaId) {
-      newItem.subParroquiaId = this.activeSubParroquiaId;
+    if (type === "poligono") {
+      const parishStore = this.store.getParish(targetMunId, targetParishId);
+      const subps = parishStore?.subparroquias || [];
+      const detectedSp = this.detectSubParishFromGeometry(newItem.vertices, subps);
+
+      if (detectedSp) {
+        newItem.subParroquiaId = String(detectedSp.id);
+      } else if (this.activeSubParroquiaId) {
+        newItem.subParroquiaId = this.activeSubParroquiaId;
+      } else if (subps.length === 1) {
+        newItem.subParroquiaId = String(subps[0].id);
+      }
     }
 
     const key = type === "poligono" ? "poligonos" : (type === "ruta" ? "rutas" : (type === "subparroquia" ? "subparroquias" : "marcas"));
@@ -838,7 +1041,14 @@ class EarthMonagasApp {
     this.renderPlacesTree();
 
     const toastColor = type === "poligono" ? "sky" : (type === "ruta" ? "emerald" : "rose");
-    this.showToast(`✅ <strong>${newItem.nombre}</strong> guardado con éxito en ${parish?.nombre || 'la Parroquia'}.`, toastColor);
+    let msg = `✅ <strong>${newItem.nombre}</strong> guardado con éxito en ${parish?.nombre || 'la Parroquia'}.`;
+    if (type === "poligono" && newItem.subParroquiaId) {
+      const spObj = (parish?.subparroquias || []).find(s => String(s.id) === String(newItem.subParroquiaId));
+      if (spObj) {
+        msg = `✅ Sector <strong>${newItem.nombre}</strong> guardado y vinculado a: <strong class="text-purple-300">${spObj.nombre}</strong>.`;
+      }
+    }
+    this.showToast(msg, toastColor);
   }
 
   handleSaveProperties(type, itemId, updatedFields, targetMunId = null, targetParishId = null) {
@@ -864,8 +1074,17 @@ class EarthMonagasApp {
         return;
       }
 
-      if (type === "poligono" && !draft.subParroquiaId && this.activeSubParroquiaId) {
-        draft.subParroquiaId = this.activeSubParroquiaId;
+      if (type === "poligono" && !draft.subParroquiaId) {
+        const parishStore = this.store.getParish(destMunId, destParishId);
+        const subps = parishStore?.subparroquias || [];
+        const detectedSp = this.detectSubParishFromGeometry(draft.vertices, subps);
+        if (detectedSp) {
+          draft.subParroquiaId = String(detectedSp.id);
+        } else if (this.activeSubParroquiaId) {
+          draft.subParroquiaId = this.activeSubParroquiaId;
+        } else if (subps.length === 1) {
+          draft.subParroquiaId = String(subps[0].id);
+        }
       }
 
       this.store.addItemToParish(destMunId, destParishId, key, draft);
@@ -876,7 +1095,15 @@ class EarthMonagasApp {
       });
       this.updateMilitanciaTally();
       this.renderPlacesTree();
-      this.showToast(`✅ <strong>${draft.nombre}</strong> guardado y creado exitosamente.`, "emerald");
+
+      let msg = `✅ <strong>${draft.nombre}</strong> guardado y creado exitosamente.`;
+      if (type === "poligono" && draft.subParroquiaId) {
+        const spObj = (parish?.subparroquias || []).find(s => String(s.id) === String(draft.subParroquiaId));
+        if (spObj) {
+          msg = `✅ Sector <strong>${draft.nombre}</strong> vinculado a: <strong class="text-purple-300">${spObj.nombre}</strong>.`;
+        }
+      }
+      this.showToast(msg, "emerald");
       return;
     }
 

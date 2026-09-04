@@ -2,8 +2,8 @@
  * Motor Cartográfico Acelerado por GPU — Google Earth Pro Web (Monagas)
  * Integrado con Capas Jerárquicas Oficiales (INE 2021) y Edición de Vértices
  */
-import { GEO_ESTADO_OFICIAL, GEO_MUNICIPIOS_OFICIAL, GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=52";
-import { SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=52";
+import { GEO_ESTADO_OFICIAL, GEO_MUNICIPIOS_OFICIAL, GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=53";
+import { SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=53";
 
 export class EarthMapEngine {
   constructor(containerId, onCoordUpdate) {
@@ -107,17 +107,7 @@ export class EarthMapEngine {
       if (this.onCoordUpdate) {
         this.onCoordUpdate(center.lat, center.lng, this.getEyeAltitude());
       }
-      const zoom = this.map.getZoom();
-      if (this.subParroquiasLayer) {
-        this.subParroquiasLayer.eachLayer(layer => {
-          const isFocused = window.earthApp?.activeSubParroquiaId;
-          if (zoom >= 14 || isFocused) {
-            layer.setStyle({ fillOpacity: 0, fill: false });
-          } else {
-            layer.setStyle({ fillOpacity: 0.15, fill: true });
-          }
-        });
-      }
+      this.updateHierarchicalLOD();
     });
   }
 
@@ -506,6 +496,7 @@ export class EarthMapEngine {
           renderer: this.canvasRenderer
         });
 
+        spLayer._spData = sp;
         sp._leafletLayer = spLayer;
 
         if (!isDrawing) {
@@ -514,7 +505,7 @@ export class EarthMapEngine {
               <span class="text-[9px] uppercase tracking-wider text-purple-400 font-black block">Nivel 4 • Eje Comunal</span>
               <strong class="text-white block font-bold text-sm">${sp.nombre}</strong>
               <span class="text-[10px] text-purple-200">Área: ${sp.areaHa || 0} Ha • Per: ${sp.perimetroM || 0} m</span>
-              <span class="text-[9px] text-sky-400 block mt-1 font-bold">${isFocused ? '🎯 Eje Activo (Línea Limítrofe)' : '👉 Clic para seleccionar'}</span>
+              <span class="text-[9px] text-sky-400 block mt-1 font-bold">${isFocused ? '🎯 Eje Activo (Línea Limítrofe)' : '👉 Clic para opciones y trazar sector'}</span>
             </div>
           `, { sticky: true, className: "earth-tooltip" });
         }
@@ -526,7 +517,69 @@ export class EarthMapEngine {
             return;
           }
           L.DomEvent.stopPropagation(e);
-          if (onSelectCallback) onSelectCallback("subparroquia", sp);
+
+          // Enfocar eje en la app
+          if (window.earthApp) {
+            window.earthApp.focusSubParish(sp.id, false);
+          }
+
+          // Métricas de sectores hijos dentro de esta sub-parroquia
+          const pStore = window.earthApp?.store?.getParish(window.earthApp?.selectedMunId, window.earthApp?.selectedParishId);
+          const childSectors = (pStore?.poligonos || []).filter(p => String(p.subParroquiaId) === String(sp.id));
+          const totalMil = childSectors.reduce((acc, c) => acc + (parseInt(c.militantes !== undefined ? c.militantes : (c.habitantes || 0)) || 0), 0);
+          const clickLatLng = e.latlng || L.polygon(sp.vertices).getBounds().getCenter();
+
+          const popupContent = `
+            <div class="p-2.5 font-mono text-slate-100 min-w-[240px] max-w-[280px]">
+              <div class="flex items-center justify-between gap-2 border-b border-purple-800/60 pb-1.5 mb-2">
+                <span class="text-[9px] uppercase tracking-wider text-purple-400 font-black flex items-center gap-1">
+                  <span>🟪 Nivel 4 • Eje Comunal</span>
+                </span>
+                <span class="text-[10px] px-2 py-0.5 rounded-md bg-purple-950 text-purple-300 font-bold border border-purple-700/60">
+                  ${childSectors.length} Sectores
+                </span>
+              </div>
+
+              <strong class="text-white block font-bold text-sm leading-snug mb-1.5">${sp.nombre}</strong>
+
+              <div class="text-[11px] text-slate-300 space-y-1 bg-slate-950/80 p-2 rounded-xl border border-slate-800 mb-2.5">
+                <div class="flex items-center justify-between">
+                  <span class="text-slate-400">Área:</span>
+                  <span class="text-purple-300 font-bold">${sp.areaHa || 0} Ha</span>
+                </div>
+                <div class="flex items-center justify-between">
+                  <span class="text-slate-400">Militancia:</span>
+                  <span class="text-sky-300 font-bold">👥 ${totalMil.toLocaleString()}</span>
+                </div>
+              </div>
+
+              <div class="space-y-1.5">
+                <button type="button" onclick="window.earthApp?.startSectorInSubParish('${sp.id}');" class="w-full py-2 px-3 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-black text-xs flex items-center justify-center gap-1.5 shadow-lg active:scale-95 transition cursor-pointer">
+                  <span>➕ Trazar Sector Comunal aquí</span>
+                </button>
+                <div class="grid grid-cols-2 gap-1.5">
+                  <button type="button" onclick="window.earthApp?.openSubParishFicha('${sp.id}');" class="py-1.5 px-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-[11px] border border-slate-700 text-center transition cursor-pointer">
+                    📋 Ficha
+                  </button>
+                  <button type="button" onclick="window.earthApp?.clearSubParishFocus();" class="py-1.5 px-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-[11px] border border-slate-700 text-center transition cursor-pointer">
+                    👁️ Ver Todo
+                  </button>
+                </div>
+              </div>
+            </div>
+          `;
+
+          L.popup({
+            className: "earth-popup-subparish",
+            autoPan: true,
+            closeButton: true,
+            offset: [0, -10]
+          })
+          .setLatLng(clickLatLng)
+          .setContent(popupContent)
+          .openOn(this.map);
+
+          if (onSelectCallback) onSelectCallback("subparroquia", sp, e);
         });
 
         if (this.subParroquiasLayer) this.subParroquiasLayer.addLayer(spLayer);
@@ -552,6 +605,7 @@ export class EarthMapEngine {
           renderer: this.canvasRenderer
         });
 
+        pLayer._polyData = poly;
         poly._leafletLayer = pLayer;
 
         const milCount = poly.militantes !== undefined ? poly.militantes : (poly.habitantes || 0);
@@ -683,6 +737,105 @@ export class EarthMapEngine {
 
       this.placemarksLayer.addLayer(marker);
     });
+
+    // Actualizar LOD y fragmentación según zoom y selección
+    this.updateHierarchicalLOD();
+  }
+
+  /**
+   * Controla la visualización por niveles de detalle (LOD) y fragmentación:
+   * - Zoom < 14: Predominan las Sub-Parroquias (Nivel 4). Los sectores comunales permanecen sutiles.
+   * - Zoom >= 14 o Sub-Parroquia enfocada: FRAGMENTACIÓN COMPLETA a Sectores Comunales (Nivel 5).
+   */
+  updateHierarchicalLOD() {
+    if (!this.map) return;
+    const zoom = this.map.getZoom();
+    const activeSubId = window.earthApp?.activeSubParroquiaId;
+
+    // 1. Capa de Sub-Parroquias (Nivel 4)
+    if (this.subParroquiasLayer) {
+      this.subParroquiasLayer.eachLayer(layer => {
+        const sp = layer._spData;
+        if (!sp) return;
+        const isThisFocused = activeSubId && String(sp.id) === String(activeSubId);
+
+        if (isThisFocused) {
+          layer.setStyle({
+            color: "#c084fc",
+            weight: 3.5,
+            dashArray: "8, 6",
+            fill: true,
+            fillOpacity: 0.04
+          });
+        } else if (activeSubId) {
+          layer.setStyle({
+            color: "#a855f7",
+            weight: 1.5,
+            dashArray: "4, 4",
+            fill: true,
+            fillOpacity: 0.02
+          });
+        } else if (zoom >= 14) {
+          layer.setStyle({
+            color: sp.colorBorde || "#c084fc",
+            weight: 2.5,
+            dashArray: "6, 4",
+            fill: true,
+            fillOpacity: 0.03
+          });
+        } else {
+          layer.setStyle({
+            color: sp.colorBorde || "#c084fc",
+            weight: 3,
+            dashArray: null,
+            fill: true,
+            fillOpacity: 0.18
+          });
+        }
+      });
+    }
+
+    // 2. Capa de Sectores Comunales (Nivel 5) — Fragmentación por Zoom
+    if (this.polygonsLayer) {
+      this.polygonsLayer.eachLayer(layer => {
+        const poly = layer._polyData;
+        if (!poly) return;
+        const belongsToActive = !activeSubId || String(poly.subParroquiaId) === String(activeSubId);
+
+        if (zoom < 13 && !activeSubId) {
+          // Zoom lejano: los sectores se sintetizan dentro del eje comunal
+          layer.setStyle({
+            opacity: 0.25,
+            fillOpacity: 0.05,
+            weight: 1
+          });
+        } else if (zoom === 13 && !activeSubId) {
+          // Zoom intermedio: visible pero sutil
+          layer.setStyle({
+            opacity: 0.6,
+            fillOpacity: 0.15,
+            weight: 1.5
+          });
+        } else {
+          // Zoom >= 14 o Eje Enfocado: FRAGMENTACIÓN COMPLETA
+          if (belongsToActive) {
+            layer.setStyle({
+              opacity: 0.95,
+              fillOpacity: poly.opacidad !== undefined ? poly.opacidad : 0.35,
+              weight: poly.anchoBorde || 2,
+              color: poly.colorBorde || "#38bdf8"
+            });
+          } else {
+            // Sector de otro eje comunal cuando uno está enfocado: atenuado
+            layer.setStyle({
+              opacity: 0.25,
+              fillOpacity: 0.06,
+              weight: 1
+            });
+          }
+        }
+      });
+    }
   }
 
   /**

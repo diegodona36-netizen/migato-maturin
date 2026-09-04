@@ -34,6 +34,26 @@ body {
   padding: 6px 10px !important;
 }
 
+/* Popup de Acción Rápida para Sub-Parroquias / Ejes Comunales */
+.earth-popup-subparish .leaflet-popup-content-wrapper {
+  background: rgba(15, 23, 42, 0.96) !important;
+  backdrop-filter: blur(16px) !important;
+  color: #f8fafc !important;
+  border: 1.5px solid rgba(168, 85, 247, 0.65) !important;
+  border-radius: 16px !important;
+  box-shadow: 0 20px 35px -5px rgba(0, 0, 0, 0.8), 0 0 20px rgba(168, 85, 247, 0.3) !important;
+  padding: 2px !important;
+}
+.earth-popup-subparish .leaflet-popup-tip {
+  background: rgba(15, 23, 42, 0.96) !important;
+  border: 1.5px solid rgba(168, 85, 247, 0.65) !important;
+}
+.earth-popup-subparish .leaflet-popup-close-button {
+  color: #c084fc !important;
+  padding: 6px !important;
+  font-size: 16px !important;
+}
+
 /* Vértices interactivos arrastrables */
 .earth-vertex-marker-wrapper {
   background: transparent;
