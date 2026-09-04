@@ -2,15 +2,15 @@
  * Controlador Principal — Google Earth Pro Web (Edición Estado Monagas)
  * Robusto, 100% Operativo y Totalmente Individualizado
  */
-import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=56";
-import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=56";
-import { getAllParishesForSelector } from "./usersCatalog.js?v=56";
-import { EarthStore } from "./earthStore.js?v=56";
-import { EarthMapEngine } from "./mapEngine.js?v=56";
-import { PropertiesDialog } from "./propertiesDialog.js?v=56";
-import { ToolsManager } from "./toolsManager.js?v=56";
-import { detectParishFromGeometry } from "./geoMonagas.js?v=56";
-import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=56";
+import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=57";
+import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=57";
+import { getAllParishesForSelector } from "./usersCatalog.js?v=57";
+import { EarthStore } from "./earthStore.js?v=57";
+import { EarthMapEngine } from "./mapEngine.js?v=57";
+import { PropertiesDialog } from "./propertiesDialog.js?v=57";
+import { ToolsManager } from "./toolsManager.js?v=57";
+import { detectParishFromGeometry } from "./geoMonagas.js?v=57";
+import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=57";
 
 class EarthMonagasApp {
   constructor() {
@@ -1762,18 +1762,20 @@ class EarthMonagasApp {
   }
 
   onCloudDataMerged() {
-    const parish = this.store.getParish(this.selectedMunId, this.selectedParishId);
-    if (parish) {
-      this.mapEngine.renderParishItems(parish, (type, item) => {
-        if (type === "subparroquia") {
-          this.focusSubParish(item.id);
-        } else {
-          this.propDialog.open(type, item, this.selectedMunId, this.selectedParishId);
-        }
-      });
-      this.renderPlacesTree();
-      this.updateMilitanciaTally();
+    if (this.selectedMunId && this.selectedParishId) {
+      const parish = this.store.getParish(this.selectedMunId, this.selectedParishId);
+      if (parish) {
+        this.mapEngine.renderParishItems(parish, (type, item) => {
+          if (type === "subparroquia") {
+            this.focusSubParish(item.id);
+          } else {
+            this.propDialog.open(type, item, this.selectedMunId, this.selectedParishId);
+          }
+        });
+      }
     }
+    this.renderPlacesTree();
+    this.updateMilitanciaTally();
   }
 }
 

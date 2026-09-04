@@ -641,11 +641,14 @@ export class EarthStore {
 
       Object.keys(cloudData).forEach(key => {
         const remoteP = cloudData[key];
-        if (!remoteP || !remoteP.parishId) return;
+        if (!remoteP || typeof remoteP !== "object") return;
 
-        let localP = this.getParish(remoteP.munId, remoteP.parishId);
+        const parishId = remoteP.parishId || (key.includes("_") ? key.split("_")[1] : key);
+        const munId = remoteP.munId || (key.includes("_") ? key.split("_")[0] : null);
+
+        let localP = munId ? this.getParish(munId, parishId) : null;
         if (!localP) {
-          const anyParish = this.findParishById(remoteP.parishId);
+          const anyParish = this.findParishById(parishId);
           if (anyParish) localP = anyParish.parish;
         }
 
