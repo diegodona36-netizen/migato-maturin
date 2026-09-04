@@ -307,6 +307,8 @@ export class EarthStore {
     this.state = loaded || this.buildInitialState();
     this.ensureAllParishes(this.state);
     this.purgeDummySectors(this.state);
+    this.cloudDebounceTimer = null;
+    this.cloudSyncState = "idle";
   }
 
   ensureAllParishes(state) {
@@ -485,6 +487,217 @@ export class EarthStore {
     } catch (e) {}
   }
 
+  // ==========================================
+  // SINCRONIZACIÓN Y BASE DE DATOS EN LA RED
+  // ==========================================
+
+  updateCloudStatus(status) {
+    this.cloudSyncState = status;
+    if (typeof window !== "undefined" && typeof window.updateEarthCloudBadge === "function") {
+      window.updateEarthCloudBadge(status);
+    }
+  }
+
+  scheduleCloudSync(munId, parishId) {
+    if (this.cloudDebounceTimer) clearTimeout(this.cloudDebounceTimer);
+    this.updateCloudStatus("syncing");
+    this.cloudDebounceTimer = setTimeout(() => {
+      this.syncToCloud(munId, parishId);
+    }, 400);
+  }
+
+  async syncToCloud(munId, parishId) {
+    try {
+      this.updateCloudStatus("syncing");
+      const parish = this.getParish(munId, parishId);
+      if (!parish) return false;
+
+      const pKey = `${munId}_${parishId}`;
+      const payload = {
+        munId,
+        parishId,
+        pKey,
+        subparroquias: parish.subparroquias || [],
+        poligonos: parish.poligonos || [],
+        rutas: parish.rutas || [],
+        marcas: parish.marcas || [],
+        updatedAt: Date.now()
+      };
+
+      let success = false;
+
+      // 1. Intentar API Serverless de Vercel (/api/places)
+      try {
+        const res = await fetch("/api/places", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+        if (res.ok) success = true;
+      } catch (e) {
+        console.warn("Fallo /api/places, usando fallback directo:", e);
+      }
+
+      // 2. Fallback directo a la base de datos cloud
+      if (!success) {
+        try {
+          const directUrl = "https://api.restful-api.dev/objects/ff808181a067127101a06ec2648014dc";
+          let currentCloud = {};
+          try {
+            const getR = await fetch(directUrl);
+            if (getR.ok) {
+              const gj = await getR.json();
+              currentCloud = gj.data || {};
+            }
+          } catch (e) {}
+
+          currentCloud[pKey] = payload;
+          const putR = await fetch(directUrl, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              name: "earth_monagas_territorio_v1",
+              data: currentCloud
+            })
+          });
+          if (putR.ok) success = true;
+        } catch (e) {
+          console.error("Fallo fallback de base de datos:", e);
+        }
+      }
+
+      this.updateCloudStatus(success ? "online" : "error");
+      return success;
+    } catch (err) {
+      console.error("Error en syncToCloud:", err);
+      this.updateCloudStatus("error");
+      return false;
+    }
+  }
+
+  async syncAllLocalToCloud() {
+    try {
+      if (!this.state || !this.state.municipios) return;
+      this.updateCloudStatus("syncing");
+
+      const parishesToSync = [];
+      Object.keys(this.state.municipios).forEach(mId => {
+        const mun = this.state.municipios[mId];
+        if (mun && mun.parroquias) {
+          Object.keys(mun.parroquias).forEach(pId => {
+            const p = mun.parroquias[pId];
+            const hasData = (p.subparroquias && p.subparroquias.length > 0) ||
+                            (p.poligonos && p.poligonos.length > 0) ||
+                            (p.rutas && p.rutas.length > 0) ||
+                            (p.marcas && p.marcas.length > 0);
+            if (hasData) {
+              parishesToSync.push({ mId, pId });
+            }
+          });
+        }
+      });
+
+      for (const p of parishesToSync) {
+        await this.syncToCloud(p.mId, p.pId);
+      }
+      this.updateCloudStatus("online");
+    } catch (e) {
+      console.error("Error en syncAllLocalToCloud:", e);
+      this.updateCloudStatus("error");
+    }
+  }
+
+  async syncFromCloud() {
+    try {
+      this.updateCloudStatus("syncing");
+      let cloudData = null;
+
+      // 1. Intentar API Serverless
+      try {
+        const res = await fetch("/api/places");
+        if (res.ok) {
+          const json = await res.json();
+          if (json.ok && json.data) cloudData = json.data;
+        }
+      } catch (e) {}
+
+      // 2. Fallback directo
+      if (!cloudData) {
+        try {
+          const res = await fetch("https://api.restful-api.dev/objects/ff808181a067127101a06ec2648014dc");
+          if (res.ok) {
+            const json = await res.json();
+            cloudData = json.data || {};
+          }
+        } catch (e) {}
+      }
+
+      if (!cloudData || typeof cloudData !== "object") {
+        this.updateCloudStatus("online");
+        return false;
+      }
+
+      let changesApplied = false;
+
+      Object.keys(cloudData).forEach(key => {
+        const remoteP = cloudData[key];
+        if (!remoteP || !remoteP.parishId) return;
+
+        let localP = this.getParish(remoteP.munId, remoteP.parishId);
+        if (!localP) {
+          const anyParish = this.findParishById(remoteP.parishId);
+          if (anyParish) localP = anyParish.parish;
+        }
+
+        if (localP) {
+          ["subparroquias", "poligonos", "rutas", "marcas"].forEach(type => {
+            if (Array.isArray(remoteP[type]) && remoteP[type].length > 0) {
+              if (!Array.isArray(localP[type])) localP[type] = [];
+              remoteP[type].forEach(remoteItem => {
+                if (!remoteItem || !remoteItem.id) return;
+                const localIdx = localP[type].findIndex(li => String(li.id) === String(remoteItem.id));
+                if (localIdx === -1) {
+                  localP[type].push(remoteItem);
+                  changesApplied = true;
+                } else {
+                  const localItem = localP[type][localIdx];
+                  if (JSON.stringify(localItem) !== JSON.stringify(remoteItem)) {
+                    localP[type][localIdx] = Object.assign({}, localItem, remoteItem);
+                    changesApplied = true;
+                  }
+                }
+              });
+            }
+          });
+        }
+      });
+
+      if (changesApplied) {
+        this.saveToStorage();
+        if (window.earthApp && typeof window.earthApp.onCloudDataMerged === "function") {
+          window.earthApp.onCloudDataMerged();
+        }
+      }
+
+      this.updateCloudStatus("online");
+      return changesApplied;
+    } catch (e) {
+      console.error("Error en syncFromCloud:", e);
+      this.updateCloudStatus("error");
+      return false;
+    }
+  }
+
+  findParishById(parishId) {
+    if (!this.state || !this.state.municipios) return null;
+    for (const [munId, mun] of Object.entries(this.state.municipios)) {
+      if (mun.parroquias && mun.parroquias[parishId]) {
+        return { munId, parishId, parish: mun.parroquias[parishId] };
+      }
+    }
+    return null;
+  }
+
   getParish(munId, parishId) {
     if (!this.state?.municipios?.[munId]?.parroquias?.[parishId]) {
       this.ensureAllParishes(this.state);
@@ -516,6 +729,7 @@ export class EarthStore {
     if (!parish[type]) parish[type] = [];
     parish[type].push(item);
     this.saveToStorage();
+    this.scheduleCloudSync(munId, parishId);
     return item;
   }
 
@@ -534,6 +748,7 @@ export class EarthStore {
     if (parish && idx !== -1) {
       parish[type][idx] = { ...parish[type][idx], ...updatedFields };
       this.saveToStorage();
+      this.scheduleCloudSync(munId, parishId);
       return parish[type][idx];
     }
     return null;
@@ -578,6 +793,8 @@ export class EarthStore {
     const merged = { ...itemToMove, ...updatedFields, munId: toMunId, parishId: toParishId };
     destParish[type].push(merged);
     this.saveToStorage();
+    this.scheduleCloudSync(fromMunId, fromParishId);
+    this.scheduleCloudSync(toMunId, toParishId);
     return merged;
   }
 
@@ -609,6 +826,7 @@ export class EarthStore {
     if (parish && parish[type] && idx !== -1) {
       parish[type].splice(idx, 1);
       this.saveToStorage();
+      this.scheduleCloudSync(munId, parishId);
       return true;
     }
     return false;

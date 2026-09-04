@@ -2,9 +2,9 @@
  * Diálogo Flotante de Propiedades y Carga de Militantes — Estilo Google Earth Pro
  * Pestañas: Ficha Territorial, Militantes por Sector, Estilo y Color, Medidas
  */
-import { SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS, detectParishFromGeometry } from "./geoMonagas.js?v=55";
-import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=55";
-import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=55";
+import { detectParishFromGeometry } from "./geoMonagas.js?v=56";
+import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=56";
+import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=56";
 
 export class PropertiesDialog {
   constructor(onSaveCallback, onLiveChangeCallback, onStartEditGeometry) {
@@ -160,7 +160,7 @@ export class PropertiesDialog {
         const munId = selMun ? selMun.value : this.currentMunId;
         const pStore = window.earthApp?.store?.getParish(munId, selParish.value);
         const parishSubparroquias = pStore?.subparroquias || [];
-        const list = parishSubparroquias.length > 0 ? parishSubparroquias : (selParish.value === "alto-de-los-godos" ? SUBPARROQUIAS_GODOS : []);
+        const list = parishSubparroquias;
         const selSubParish = document.getElementById("prop-select-subparish");
         if (wrapSubParish && selSubParish) {
           if (list.length > 0) {
@@ -213,7 +213,7 @@ export class PropertiesDialog {
     if (wrapSubParish && selSubParish) {
       const pStore = window.earthApp?.store?.getParish(munId, selParish.value);
       const parishSubparroquias = pStore?.subparroquias || [];
-      const list = parishSubparroquias.length > 0 ? parishSubparroquias : (selParish.value === "alto-de-los-godos" ? SUBPARROQUIAS_GODOS : []);
+      const list = parishSubparroquias;
       if (list.length > 0) {
         selSubParish.innerHTML = `<option value="">-- Sin Eje Asignado --</option>` + list.map(sp => 
           `<option value="${sp.id}">${sp.nombre}</option>`
@@ -417,7 +417,7 @@ export class PropertiesDialog {
     if (selSubParish && type === "poligono") {
       const pStore = window.earthApp?.store?.getParish(this.currentMunId, this.currentParishId);
       const parishSubparroquias = pStore?.subparroquias || [];
-      const list = parishSubparroquias.length > 0 ? parishSubparroquias : (this.currentParishId === "alto-de-los-godos" ? SUBPARROQUIAS_GODOS : []);
+      const list = parishSubparroquias;
       
       if (list.length > 0) {
         selSubParish.innerHTML = `<option value="">-- Sin Eje Asignado --</option>` + list.map(sp => 

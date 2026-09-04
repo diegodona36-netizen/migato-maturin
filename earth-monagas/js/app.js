@@ -2,15 +2,15 @@
  * Controlador Principal — Google Earth Pro Web (Edición Estado Monagas)
  * Robusto, 100% Operativo y Totalmente Individualizado
  */
-import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=55";
-import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=55";
-import { getAllParishesForSelector } from "./usersCatalog.js?v=55";
-import { EarthStore } from "./earthStore.js?v=55";
-import { EarthMapEngine } from "./mapEngine.js?v=55";
-import { PropertiesDialog } from "./propertiesDialog.js?v=55";
-import { ToolsManager } from "./toolsManager.js?v=55";
-import { detectParishFromGeometry } from "./geoMonagas.js?v=55";
-import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=55";
+import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=56";
+import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=56";
+import { getAllParishesForSelector } from "./usersCatalog.js?v=56";
+import { EarthStore } from "./earthStore.js?v=56";
+import { EarthMapEngine } from "./mapEngine.js?v=56";
+import { PropertiesDialog } from "./propertiesDialog.js?v=56";
+import { ToolsManager } from "./toolsManager.js?v=56";
+import { detectParishFromGeometry } from "./geoMonagas.js?v=56";
+import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=56";
 
 class EarthMonagasApp {
   constructor() {
@@ -92,6 +92,18 @@ class EarthMonagasApp {
 
     // Cargar parroquia activa inicial
     this.selectParish(this.selectedMunId, this.selectedParishId);
+
+    // Sincronización continua con la base de datos en la nube (compartida entre computadoras)
+    setTimeout(() => {
+      this.store.syncAllLocalToCloud().then(() => {
+        this.store.syncFromCloud();
+      });
+    }, 1500);
+
+    // Polling en segundo plano cada 25 segundos para recibir cambios en vivo de otras computadoras
+    setInterval(() => {
+      this.store.syncFromCloud();
+    }, 25000);
 
     window.activateEarthTool = (toolName) => {
       if (toolName === "poligono") {
@@ -1729,6 +1741,38 @@ class EarthMonagasApp {
         };
         reader.readAsDataURL(file);
       });
+    }
+  }
+
+  async forceSyncCloud() {
+    const dot = document.getElementById("cloud-sync-dot");
+    const text = document.getElementById("cloud-sync-text");
+    if (dot) dot.className = "w-2 h-2 rounded-full bg-amber-400 animate-spin shrink-0";
+    if (text) text.textContent = "Sincronizando...";
+
+    // 1. Subir cualquier dato local (incluyendo Aparicio creado aquí)
+    await this.store.syncAllLocalToCloud();
+    // 2. Descargar datos de la nube creados en otras computadoras
+    const changes = await this.store.syncFromCloud();
+
+    if (dot) dot.className = "w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0";
+    if (text) text.textContent = "En Red";
+
+    this.showToast("☁️ Red Sincronizada: Base de datos online al día con todas las computadoras", "sky");
+  }
+
+  onCloudDataMerged() {
+    const parish = this.store.getParish(this.selectedMunId, this.selectedParishId);
+    if (parish) {
+      this.mapEngine.renderParishItems(parish, (type, item) => {
+        if (type === "subparroquia") {
+          this.focusSubParish(item.id);
+        } else {
+          this.propDialog.open(type, item, this.selectedMunId, this.selectedParishId);
+        }
+      });
+      this.renderPlacesTree();
+      this.updateMilitanciaTally();
     }
   }
 }

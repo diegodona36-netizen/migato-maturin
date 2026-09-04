@@ -2,8 +2,7 @@
  * Motor Cartográfico Acelerado por GPU — Google Earth Pro Web (Monagas)
  * Integrado con Capas Jerárquicas Oficiales (INE 2021) y Edición de Vértices
  */
-import { GEO_ESTADO_OFICIAL, GEO_MUNICIPIOS_OFICIAL, GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=55";
-import { SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=55";
+import { GEO_ESTADO_OFICIAL, GEO_MUNICIPIOS_OFICIAL, GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=56";
 
 export class EarthMapEngine {
   constructor(containerId, onCoordUpdate) {
@@ -189,37 +188,8 @@ export class EarthMapEngine {
       }
     });
 
-    // 4. Capa L4: 10 Sub-Parroquias / Ejes de Alto de Los Godos
+    // 4. Capa L4: Sub-Parroquias / Ejes (Dinámica, según parroquia activa)
     this.layerL4_SubParroquias = L.layerGroup();
-    SUBPARROQUIAS_GODOS.forEach(sp => {
-      if (sp.poligono && sp.poligono.length > 0) {
-        const poly = L.polygon(sp.poligono, {
-          color: sp.color || "#a855f7",
-          weight: 2,
-          opacity: 0.9,
-          fillColor: sp.color || "#a855f7",
-          fillOpacity: 0.22,
-          dashArray: "3, 3"
-        });
-        poly.bindTooltip(`
-          <div class="p-1 font-mono text-xs">
-            <strong class="text-purple-300 block font-bold">${sp.nombre}</strong>
-            <span class="text-[10px] text-slate-300">${sp.habitantesAprox ? `~${sp.habitantesAprox} hab` : ''}</span>
-          </div>
-        `, { sticky: true, className: "earth-tooltip" });
-        this.layerL4_SubParroquias.addLayer(poly);
-      }
-
-      const pin = L.circleMarker(sp.centro, {
-        radius: 6,
-        fillColor: sp.color || "#a855f7",
-        color: "#ffffff",
-        weight: 1.5,
-        fillOpacity: 0.9
-      });
-      pin.bindTooltip(`<strong>${sp.nombre}</strong><br><span class="text-[10px]">Centro de Referencia para Mapeo</span>`, { sticky: true, className: "earth-tooltip" });
-      this.layerL4_SubParroquias.addLayer(pin);
-    });
   }
 
   toggleHierarchicalLayer(levelKey, visible) {
@@ -476,7 +446,8 @@ export class EarthMapEngine {
 
     if (!parish) return;
 
-    // 0. Sub-Parroquias / Ejes Comunales (Nivel 4) - INDIVIDUALIZACIÓN ESTRICTA POR PARROQUIA
+    // 0. Sub-Parroquias / Ejes Comunales (Nivel 4)
+    // Cargar únicamente las sub-parroquias de la parroquia activa para evitar polígonos fuera de su territorio
     const subParishesToRender = parish.subparroquias || [];
 
     subParishesToRender.forEach(sp => {
@@ -519,6 +490,7 @@ export class EarthMapEngine {
             return;
           }
           L.DomEvent.stopPropagation(e);
+
 
           // Enfocar eje en la app
           if (window.earthApp) {

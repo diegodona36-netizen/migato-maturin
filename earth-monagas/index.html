@@ -32,7 +32,7 @@
   <meta http-equiv="Expires" content="0" />
 
   <!-- Custom Styles -->
-  <link rel="stylesheet" href="css/styles.css?v=55">
+  <link rel="stylesheet" href="css/styles.css?v=56">
 
   <!-- Script de Autenticación Rápida, Limpieza Integral de Caché y Activador de Herramientas -->
   <script>
@@ -103,6 +103,23 @@
         }, 200);
       }
     }
+
+    // Indicador visual de persistencia en la nube
+    window.updateEarthCloudBadge = function(status) {
+      const dot = document.getElementById("cloud-sync-dot");
+      const text = document.getElementById("cloud-sync-text");
+      if (!dot) return;
+      if (status === "syncing") {
+        dot.className = "w-2 h-2 rounded-full bg-amber-400 animate-spin shrink-0";
+        if (text) text.textContent = "Guardando...";
+      } else if (status === "online") {
+        dot.className = "w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0";
+        if (text) text.textContent = "En Red";
+      } else if (status === "error") {
+        dot.className = "w-2 h-2 rounded-full bg-rose-500 shrink-0";
+        if (text) text.textContent = "Reintentando";
+      }
+    };
   </script>
 </head>
 <body class="bg-slate-950 text-slate-100 h-screen flex flex-col antialiased select-none overflow-hidden max-w-full">
@@ -269,6 +286,13 @@
             <span id="tally-casas-val">0</span>
           </span>
         </div>
+
+        <!-- Botón y Estado de Base de Datos en la Nube (Sincronización en Vivo) -->
+        <button id="btn-cloud-sync" type="button" onclick="window.earthApp?.forceSyncCloud ? window.earthApp.forceSyncCloud() : (window.earthApp?.store?.syncFromCloud())" class="px-2.5 py-1.5 rounded-xl bg-slate-800 hover:bg-sky-950/70 text-slate-300 hover:text-sky-300 border border-slate-700 hover:border-sky-500/50 text-xs font-bold transition flex items-center gap-1.5 shrink-0 active:scale-95 shadow cursor-pointer" title="Base de Datos en la Red (Sincronizado entre computadoras y teléfonos)">
+          <span id="cloud-sync-dot" class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0"></span>
+          <i data-lucide="cloud" class="w-3.5 h-3.5 text-sky-400 shrink-0"></i>
+          <span id="cloud-sync-text" class="hidden md:inline font-bold">En Red</span>
+        </button>
 
         <!-- Botón Reset Caché Rápido -->
         <button onclick="window.forceCleanCacheAndReload ? window.forceCleanCacheAndReload() : (sessionStorage.clear(), location.reload(true))" class="px-2.5 py-1.5 rounded-xl bg-slate-800 hover:bg-amber-950/60 text-slate-400 hover:text-amber-300 border border-slate-700 hover:border-amber-500/50 text-xs font-bold transition flex items-center gap-1 shrink-0 active:scale-95" title="Resetear Caché de Google y Recargar">
@@ -1051,7 +1075,7 @@
   </div>
 
   <!-- SCRIPT -->
-  <script type="module" src="js/app.js?v=55"></script>
+  <script type="module" src="js/app.js?v=56"></script>
   <script>
     if (window.lucide && typeof window.lucide.createIcons === 'function') {
       window.lucide.createIcons();
