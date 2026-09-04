@@ -2,15 +2,15 @@
  * Controlador Principal — Google Earth Pro Web (Edición Estado Monagas)
  * Robusto, 100% Operativo y Totalmente Individualizado
  */
-import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=42";
-import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=42";
-import { getAllParishesForSelector } from "./usersCatalog.js?v=42";
-import { EarthStore } from "./earthStore.js?v=42";
-import { EarthMapEngine } from "./mapEngine.js?v=42";
-import { PropertiesDialog } from "./propertiesDialog.js?v=42";
-import { ToolsManager } from "./toolsManager.js?v=42";
-import { detectParishFromGeometry } from "./geoMonagas.js?v=42";
-import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=42";
+import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=43";
+import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=43";
+import { getAllParishesForSelector } from "./usersCatalog.js?v=43";
+import { EarthStore } from "./earthStore.js?v=43";
+import { EarthMapEngine } from "./mapEngine.js?v=43";
+import { PropertiesDialog } from "./propertiesDialog.js?v=43";
+import { ToolsManager } from "./toolsManager.js?v=43";
+import { detectParishFromGeometry } from "./geoMonagas.js?v=43";
+import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=43";
 
 class EarthMonagasApp {
   constructor() {
@@ -92,6 +92,16 @@ class EarthMonagasApp {
 
     // Cargar parroquia activa inicial
     this.selectParish(this.selectedMunId, this.selectedParishId);
+
+    window.activateEarthTool = (toolName) => {
+      if (this.toolsManager) {
+        this.toolsManager.setActiveTool(toolName);
+      }
+    };
+    if (window._pendingEarthTool) {
+      this.toolsManager.setActiveTool(window._pendingEarthTool);
+      window._pendingEarthTool = null;
+    }
 
     if (window.lucide) {
       try { window.lucide.createIcons(); } catch(e){}

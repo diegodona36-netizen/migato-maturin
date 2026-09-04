@@ -2,8 +2,8 @@
  * Motor Cartográfico Acelerado por GPU — Google Earth Pro Web (Monagas)
  * Integrado con Capas Jerárquicas Oficiales (INE 2021) y Edición de Vértices
  */
-import { GEO_ESTADO_OFICIAL, GEO_MUNICIPIOS_OFICIAL, GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=42";
-import { SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=42";
+import { GEO_ESTADO_OFICIAL, GEO_MUNICIPIOS_OFICIAL, GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=43";
+import { SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=43";
 
 export class EarthMapEngine {
   constructor(containerId, onCoordUpdate) {
@@ -186,6 +186,10 @@ export class EarthMapEngine {
         `, { sticky: true, className: "earth-tooltip" });
 
         layer.on("click", (e) => {
+          if (this.isDrawingMode || window.earthApp?.toolsManager?.activeTool) {
+            window.earthApp?.toolsManager?.handleMapClick(e);
+            return;
+          }
           L.DomEvent.stopPropagation(e);
           if (window.earthApp) {
             window.earthApp.selectParish(p.municipioId, p.id);
@@ -420,7 +424,11 @@ export class EarthMapEngine {
       this.polygonsLayer,
       this.routesLayer,
       this.placemarksLayer,
-      this.boundaryLayer
+      this.boundaryLayer,
+      this.layerL1_Estado,
+      this.layerL2_Municipios,
+      this.layerL3_Parroquias,
+      this.layerL4_SubParroquias
     ];
 
     groups.forEach(group => {
@@ -671,6 +679,8 @@ export class EarthMapEngine {
     if (banner) {
       banner.classList.remove("hidden");
       banner.classList.add("flex");
+      banner.style.display = "flex";
+      banner.style.zIndex = "9999";
       if (bannerText) bannerText.textContent = `Ajustando ${poly.nombre}: Arrastra los puntos amarillos sobre el satélite`;
       if (liveMeasure) liveMeasure.textContent = `${poly.vertices.length} vértices`;
     }
@@ -720,6 +730,7 @@ export class EarthMapEngine {
     if (banner) {
       banner.classList.add("hidden");
       banner.classList.remove("flex");
+      banner.style.display = "none";
     }
   }
 

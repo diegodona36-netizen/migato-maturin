@@ -76,6 +76,8 @@ export class ToolsManager {
       if (banner) {
         banner.classList.remove("hidden");
         banner.classList.add("flex");
+        banner.style.display = "flex";
+        banner.style.zIndex = "9999";
         // Ajustar color del borde y pulso del banner según la herramienta
         banner.classList.remove("border-sky-500/90", "border-purple-500/90", "border-emerald-500/90", "border-rose-500/90");
         const dot = banner.querySelector(".rounded-full.animate-pulse");
@@ -113,7 +115,7 @@ export class ToolsManager {
       // Feedback visual inmediato con toast informativo
       if (window.earthApp && typeof window.earthApp.showToast === "function") {
         if (toolName === "subparroquia") {
-          window.earthApp.showToast("🟪 <strong>Modo Sub-Parroquia / Eje Activo:</strong> Haz clics en el satélite para trazar los vértices del perímetro.", "purple");
+          window.earthApp.showToast("🟪 <strong>Modo Sub-Parroquia Activo:</strong> Haz clics en el satélite para trazar los vértices del perímetro.", "purple");
         } else if (toolName === "poligono") {
           window.earthApp.showToast("🏘️ <strong>Modo Sector Comunal Activo:</strong> Haz clics en el satélite para delimitar el sector.", "sky");
         } else if (toolName === "ruta") {
@@ -134,6 +136,7 @@ export class ToolsManager {
       if (banner) {
         banner.classList.add("hidden");
         banner.classList.remove("flex");
+        banner.style.display = "none";
       }
     }
   }
@@ -164,6 +167,7 @@ export class ToolsManager {
     if (banner) {
       banner.classList.add("hidden");
       banner.classList.remove("flex");
+      banner.style.display = "none";
     }
     this.map.getContainer().style.cursor = "";
   }
@@ -183,13 +187,13 @@ export class ToolsManager {
       this.points.push(latlng);
 
       const isSub = this.activeTool === "subparroquia";
-      const vertexBg = isSub ? "bg-purple-500" : "bg-sky-400";
+      const vertexBg = isSub ? "bg-purple-600" : "bg-sky-500";
       const vertexBorder = isSub ? "border-purple-200" : "border-white";
       const vertexIcon = L.divIcon({
         className: "earth-vertex-marker-wrapper",
-        html: `<div class="w-3.5 h-3.5 ${vertexBg} border-2 ${vertexBorder} rounded-full shadow-lg cursor-move hover:scale-125 active:scale-95 transition"></div>`,
-        iconSize: [14, 14],
-        iconAnchor: [7, 7]
+        html: `<div class="w-5 h-5 ${vertexBg} border-2 ${vertexBorder} rounded-full shadow-[0_0_12px_rgba(255,255,255,0.95)] cursor-move hover:scale-125 active:scale-95 transition flex items-center justify-center text-[10px] font-black text-white leading-none">${this.points.length}</div>`,
+        iconSize: [20, 20],
+        iconAnchor: [10, 10]
       });
 
       const marker = L.marker(latlng, {
@@ -230,6 +234,18 @@ export class ToolsManager {
       this.updatePreviewShape();
       this.updateLiveMeasurements();
       this.updateDrawingHint();
+
+      // Feedback en vivo por cada vértice fijado
+      if (window.earthApp && typeof window.earthApp.showToast === "function") {
+        const pNum = this.points.length;
+        if (pNum === 1) {
+          window.earthApp.showToast(`📍 Vértice 1 fijado. Haz clic en el siguiente vértice.`, isSub ? "purple" : "sky");
+        } else if (pNum === 2) {
+          window.earthApp.showToast(`📍 Vértice 2 fijado. Haz clic en el 3er vértice para cerrar el perímetro.`, isSub ? "purple" : "sky");
+        } else if (pNum === 3) {
+          window.earthApp.showToast(`✅ 3 vértices colocados. Doble clic en el mapa o pulsa [Listo ✅] para guardar.`, isSub ? "purple" : "sky");
+        }
+      }
     } catch (err) {
       console.error("[ToolsManager] Error en handleMapClick:", err);
     }

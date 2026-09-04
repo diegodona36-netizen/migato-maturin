@@ -3,7 +3,204 @@
  */
 import { SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js";
 
-const STORAGE_KEY = "earth_monagas_places_v2";
+const STORAGE_KEY = "earth_monagas_places_v3";
+
+export const DEFAULT_SAN_SIMON_SUBPARROQUIAS = [
+  {
+    id: "sub-ss-casco",
+    parroquiaId: "san-simon",
+    nombre: "Sub-Parroquia 1 • Casco Central",
+    alias: "Centro Histórico",
+    colorBorde: "#c084fc",
+    anchoBorde: 2.5,
+    colorRelleno: "#a855f7",
+    opacidad: 0.18,
+    areaHa: 195.4,
+    perimetroM: 5800,
+    militantes: 3420,
+    casas: 2150,
+    visible: true,
+    vertices: [
+      [9.7560, -63.1890],
+      [9.7570, -63.1740],
+      [9.7440, -63.1730],
+      [9.7430, -63.1880],
+      [9.7560, -63.1890]
+    ]
+  },
+  {
+    id: "sub-ss-palonegro",
+    parroquiaId: "san-simon",
+    nombre: "Sub-Parroquia 2 • Palo Negro / Brisas",
+    alias: "Palo Negro - Brisas del Orinoco",
+    colorBorde: "#c084fc",
+    anchoBorde: 2.5,
+    colorRelleno: "#a855f7",
+    opacidad: 0.18,
+    areaHa: 230.8,
+    perimetroM: 6100,
+    militantes: 4180,
+    casas: 2840,
+    visible: true,
+    vertices: [
+      [9.7540, -63.1740],
+      [9.7530, -63.1600],
+      [9.7360, -63.1610],
+      [9.7380, -63.1750],
+      [9.7540, -63.1740]
+    ]
+  },
+  {
+    id: "sub-ss-muralla",
+    parroquiaId: "san-simon",
+    nombre: "Sub-Parroquia 3 • La Muralla",
+    alias: "La Muralla / El Guafal",
+    colorBorde: "#c084fc",
+    anchoBorde: 2.5,
+    colorRelleno: "#a855f7",
+    opacidad: 0.18,
+    areaHa: 182.2,
+    perimetroM: 5200,
+    militantes: 2950,
+    casas: 1980,
+    visible: true,
+    vertices: [
+      [9.7430, -63.1990],
+      [9.7440, -63.1860],
+      [9.7310, -63.1850],
+      [9.7300, -63.1980],
+      [9.7430, -63.1990]
+    ]
+  }
+];
+
+export const DEFAULT_SAN_SIMON_POLIGONOS = [
+  {
+    id: "sec-ss-1",
+    subParroquiaId: "sub-ss-casco",
+    nombre: "Sector Casco Central Comercial",
+    colorBorde: "#38bdf8",
+    anchoBorde: 2,
+    colorRelleno: "#38bdf8",
+    opacidad: 0.35,
+    militantes: 840,
+    casas: 520,
+    familias: 610,
+    habitantes: 2100,
+    lider: "Carmen Rondón",
+    telefono: "0414-7654321",
+    areaHa: 54.2,
+    perimetroM: 2980,
+    visible: true,
+    vertices: [
+      [9.7530, -63.1860],
+      [9.7540, -63.1780],
+      [9.7460, -63.1770],
+      [9.7450, -63.1850],
+      [9.7530, -63.1860]
+    ]
+  },
+  {
+    id: "sec-ss-2",
+    subParroquiaId: "sub-ss-casco",
+    nombre: "Sector Plaza Bolívar - Ayacucho",
+    colorBorde: "#38bdf8",
+    anchoBorde: 2,
+    colorRelleno: "#38bdf8",
+    opacidad: 0.35,
+    militantes: 620,
+    casas: 390,
+    familias: 450,
+    habitantes: 1650,
+    lider: "José Gregorio Salazar",
+    telefono: "0424-9123456",
+    areaHa: 42.1,
+    perimetroM: 2650,
+    visible: true,
+    vertices: [
+      [9.7550, -63.1830],
+      [9.7560, -63.1750],
+      [9.7500, -63.1740],
+      [9.7490, -63.1820],
+      [9.7550, -63.1830]
+    ]
+  },
+  {
+    id: "sec-ss-3",
+    subParroquiaId: "sub-ss-palonegro",
+    nombre: "Sector Brisas del Orinoco",
+    colorBorde: "#38bdf8",
+    anchoBorde: 2,
+    colorRelleno: "#38bdf8",
+    opacidad: 0.35,
+    militantes: 1250,
+    casas: 890,
+    familias: 1020,
+    habitantes: 3600,
+    lider: "Maritza Figuera",
+    telefono: "0416-8349201",
+    areaHa: 78.6,
+    perimetroM: 3560,
+    visible: true,
+    vertices: [
+      [9.7490, -63.1720],
+      [9.7480, -63.1620],
+      [9.7400, -63.1630],
+      [9.7410, -63.1730],
+      [9.7490, -63.1720]
+    ]
+  },
+  {
+    id: "sec-ss-4",
+    subParroquiaId: "sub-ss-palonegro",
+    nombre: "Sector Palo Negro",
+    colorBorde: "#38bdf8",
+    anchoBorde: 2,
+    colorRelleno: "#38bdf8",
+    opacidad: 0.35,
+    militantes: 980,
+    casas: 680,
+    familias: 790,
+    habitantes: 2800,
+    lider: "Héctor Maestre",
+    telefono: "0412-5551234",
+    areaHa: 61.4,
+    perimetroM: 3120,
+    visible: true,
+    vertices: [
+      [9.7530, -63.1730],
+      [9.7520, -63.1620],
+      [9.7470, -63.1630],
+      [9.7480, -63.1740],
+      [9.7530, -63.1730]
+    ]
+  },
+  {
+    id: "sec-ss-5",
+    subParroquiaId: "sub-ss-muralla",
+    nombre: "Sector La Muralla",
+    colorBorde: "#38bdf8",
+    anchoBorde: 2,
+    colorRelleno: "#38bdf8",
+    opacidad: 0.35,
+    militantes: 1120,
+    casas: 750,
+    familias: 860,
+    habitantes: 3100,
+    lider: "Yulimar Velásquez",
+    telefono: "0414-9988776",
+    areaHa: 72.0,
+    perimetroM: 3410,
+    visible: true,
+    vertices: [
+      [9.7410, -63.1970],
+      [9.7420, -63.1880],
+      [9.7340, -63.1870],
+      [9.7330, -63.1960],
+      [9.7410, -63.1970]
+    ]
+  }
+];
 
 export class EarthStore {
   constructor(catalogo) {
@@ -46,14 +243,59 @@ export class EarthStore {
               marcas: [],
               superposiciones: []
             };
-          } else {
-            const storedP = state.municipios[mun.id].parroquias[p.id];
-            if (!storedP.subparroquias) storedP.subparroquias = [];
-            if (!storedP.poligonos) storedP.poligonos = [];
-            if (!storedP.rutas) storedP.rutas = [];
-            if (!storedP.marcas) storedP.marcas = [];
-            if (!storedP.limite && p.limite) storedP.limite = p.limite;
-            if (!storedP.centro && p.centro) storedP.centro = p.centro;
+          }
+
+          const storedP = state.municipios[mun.id].parroquias[p.id];
+          if (!storedP.subparroquias) storedP.subparroquias = [];
+          if (!storedP.poligonos) storedP.poligonos = [];
+          if (!storedP.rutas) storedP.rutas = [];
+          if (!storedP.marcas) storedP.marcas = [];
+          if (!storedP.limite && p.limite) storedP.limite = p.limite;
+          if (!storedP.centro && p.centro) storedP.centro = p.centro;
+
+          // Precarga oficial para San Simón si está vacía
+          if (mun.id === "maturin" && p.id === "san-simon") {
+            if (storedP.subparroquias.length === 0) {
+              storedP.subparroquias = JSON.parse(JSON.stringify(DEFAULT_SAN_SIMON_SUBPARROQUIAS));
+            }
+            if (storedP.poligonos.length === 0) {
+              storedP.poligonos = JSON.parse(JSON.stringify(DEFAULT_SAN_SIMON_POLIGONOS));
+            }
+          }
+
+          // Precarga oficial para Alto de Los Godos si está vacía
+          if (mun.id === "maturin" && p.id === "alto-de-los-godos") {
+            if (storedP.subparroquias.length === 0 && Array.isArray(SUBPARROQUIAS_GODOS)) {
+              storedP.subparroquias = SUBPARROQUIAS_GODOS.map(sp => ({
+                id: sp.id,
+                parroquiaId: "alto-de-los-godos",
+                nombre: sp.nombre,
+                alias: sp.alias || sp.nombre,
+                colorBorde: sp.color || "#c084fc",
+                anchoBorde: 2.5,
+                colorRelleno: sp.color || "#a855f7",
+                opacidad: 0.18,
+                visible: true,
+                vertices: sp.poligono ? [...sp.poligono] : []
+              })).filter(s => s.vertices && s.vertices.length >= 3);
+            }
+            if (storedP.poligonos.length === 0 && Array.isArray(SECTORES_LAPUENTE)) {
+              storedP.poligonos = SECTORES_LAPUENTE.map(sec => ({
+                id: sec.id,
+                subParroquiaId: sec.subParroquiaId || "sub-godos-6",
+                nombre: sec.nombre,
+                casas: sec.casas || 0,
+                familias: sec.familias || 0,
+                habitantes: sec.habitantes || 0,
+                militantes: sec.habitantes || 0,
+                colorBorde: sec.colorBorde || "#38bdf8",
+                anchoBorde: 2,
+                colorRelleno: sec.colorRelleno || "#38bdf8",
+                opacidad: sec.opacidad !== undefined ? sec.opacidad : 0.35,
+                visible: true,
+                vertices: sec.poligono ? [...sec.poligono] : []
+              })).filter(s => s.vertices && s.vertices.length >= 3);
+            }
           }
         });
       });
@@ -63,42 +305,8 @@ export class EarthStore {
   }
 
   purgeDummySectors(state) {
-    try {
-      if (!state?.municipios) return;
-      let changed = false;
-
-      // Purgar de todas las parroquias cualquier sector o marca sintética precargada
-      for (const mun of Object.values(state.municipios)) {
-        for (const p of Object.values(mun.parroquias || {})) {
-          if (p.poligonos && p.poligonos.length > 0) {
-            const initialLen = p.poligonos.length;
-            p.poligonos = p.poligonos.filter(poly => {
-              const isDummy = poly.esOficial === true ||
-                              (typeof poly.id === "string" && poly.id.startsWith("sec-lp-")) ||
-                              SECTORES_LAPUENTE.some(s => s.id === poly.id);
-              return !isDummy;
-            });
-            if (p.poligonos.length !== initialLen) changed = true;
-          }
-
-          if (p.marcas && p.marcas.length > 0) {
-            const initialMarksLen = p.marcas.length;
-            p.marcas = p.marcas.filter(m => {
-              const isDummyMark = (typeof m.id === "string" && (m.id.startsWith("ref-sub-godos") || m.id.startsWith("c-lp-"))) ||
-                                  m.tipo === "subparroquia_referencia";
-              return !isDummyMark;
-            });
-            if (p.marcas.length !== initialMarksLen) changed = true;
-          }
-        }
-      }
-
-      if (changed) {
-        this.saveToStorage();
-      }
-    } catch (e) {
-      console.warn("Error purgando sectores sintéticos:", e);
-    }
+    // Mantener la integridad de los datos territoriales oficiales
+    return;
   }
 
   buildInitialState() {
@@ -145,7 +353,8 @@ export class EarthStore {
     try {
       let data = localStorage.getItem(STORAGE_KEY);
       if (!data) {
-        data = localStorage.getItem("earth_monagas_places") ||
+        data = localStorage.getItem("earth_monagas_places_v2") ||
+               localStorage.getItem("earth_monagas_places") ||
                localStorage.getItem("earth_monagas_places_v1") ||
                localStorage.getItem("earth_places_monagas");
       }

@@ -32,10 +32,23 @@
   <meta http-equiv="Expires" content="0" />
 
   <!-- Custom Styles -->
-  <link rel="stylesheet" href="css/styles.css?v=42">
+  <link rel="stylesheet" href="css/styles.css?v=43">
 
-  <!-- Script de Autenticación Rápida y Limpieza Integral de Caché -->
+  <!-- Script de Autenticación Rápida, Limpieza Integral de Caché y Activador de Herramientas -->
   <script>
+    // 0. Activación directa e infalible de herramientas de dibujo
+    window.activateEarthTool = function(toolName) {
+      try {
+        if (window.earthApp && window.earthApp.toolsManager) {
+          window.earthApp.toolsManager.setActiveTool(toolName);
+        } else {
+          window._pendingEarthTool = toolName;
+        }
+      } catch(err) {
+        console.warn("[activateEarthTool] Error:", err);
+      }
+    };
+
     // 1. Desregistrar cualquier Service Worker residual del dominio
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.getRegistrations().then(function(regs) {
@@ -273,13 +286,13 @@
       </button>
 
       <!-- 🟪 Agregar Sub-Parroquia / Eje Comunal (Nivel 4) -->
-      <button data-tool="subparroquia" id="btn-tool-subparish" class="btn-earth-tool px-3.5 py-1.5 rounded-xl bg-slate-800 hover:bg-purple-950 text-purple-300 hover:text-purple-100 border border-purple-800/60 text-xs font-black transition flex items-center gap-1.5 shrink-0 active:scale-95 shadow-sm" title="Dibujar Límite de Sub-Parroquia o Eje Comunal">
+      <button data-tool="subparroquia" id="btn-tool-subparish" onclick="window.activateEarthTool('subparroquia')" class="btn-earth-tool px-3.5 py-1.5 rounded-xl bg-slate-800 hover:bg-purple-950 text-purple-300 hover:text-purple-100 border border-purple-800/60 text-xs font-black transition flex items-center gap-1.5 shrink-0 active:scale-95 shadow-sm cursor-pointer" title="Dibujar Límite de Sub-Parroquia o Eje Comunal">
         <i data-lucide="shield" class="w-4 h-4 text-purple-400"></i>
         <span class="whitespace-nowrap">+ Sub-Parroquia</span>
       </button>
 
       <!-- 🏘️ Agregar Sector Comunal / Comuna (Nivel 5) -->
-      <button data-tool="poligono" id="btn-tool-polygon" class="btn-earth-tool px-4 py-1.5 rounded-xl bg-slate-800 hover:bg-sky-950 text-sky-300 hover:text-sky-100 border border-sky-800/60 text-xs font-black transition flex items-center gap-1.5 shrink-0 active:scale-95 shadow-sm" title="Dibujar Sector Comunal / Militancia">
+      <button data-tool="poligono" id="btn-tool-polygon" onclick="window.activateEarthTool('poligono')" class="btn-earth-tool px-4 py-1.5 rounded-xl bg-slate-800 hover:bg-sky-950 text-sky-300 hover:text-sky-100 border border-sky-800/60 text-xs font-black transition flex items-center gap-1.5 shrink-0 active:scale-95 shadow-sm cursor-pointer" title="Dibujar Sector Comunal / Militancia">
         <i data-lucide="home" class="w-4 h-4 text-sky-400"></i>
         <span class="whitespace-nowrap">+ Sector Comunal</span>
       </button>
@@ -289,13 +302,13 @@
         <div class="h-4 w-[1px] bg-slate-700 mx-1 shrink-0"></div>
 
         <!-- 〰️ Agregar Ruta (Calles) -->
-        <button data-tool="ruta" id="btn-tool-path" class="btn-earth-tool px-2.5 py-1.5 rounded-xl bg-slate-800 hover:bg-emerald-950 text-emerald-300 hover:text-emerald-100 border border-slate-700 text-xs font-medium transition flex items-center gap-1 shrink-0 active:scale-95" title="Trazar Ruta / Calle">
+        <button data-tool="ruta" id="btn-tool-path" onclick="window.activateEarthTool('ruta')" class="btn-earth-tool px-2.5 py-1.5 rounded-xl bg-slate-800 hover:bg-emerald-950 text-emerald-300 hover:text-emerald-100 border border-slate-700 text-xs font-medium transition flex items-center gap-1 shrink-0 active:scale-95 cursor-pointer" title="Trazar Ruta / Calle">
           <i data-lucide="git-commit" class="w-3.5 h-3.5 text-emerald-400"></i>
           <span class="whitespace-nowrap">Ruta</span>
         </button>
 
         <!-- 📍 Marca de Posición -->
-        <button data-tool="marca" id="btn-tool-placemark" class="btn-earth-tool px-2.5 py-1.5 rounded-xl bg-slate-800 hover:bg-rose-950 text-rose-300 hover:text-rose-100 border border-slate-700 text-xs font-medium transition flex items-center gap-1 shrink-0 active:scale-95" title="Punto de Interés">
+        <button data-tool="marca" id="btn-tool-placemark" onclick="window.activateEarthTool('marca')" class="btn-earth-tool px-2.5 py-1.5 rounded-xl bg-slate-800 hover:bg-rose-950 text-rose-300 hover:text-rose-100 border border-slate-700 text-xs font-medium transition flex items-center gap-1 shrink-0 active:scale-95 cursor-pointer" title="Punto de Interés">
           <i data-lucide="map-pin" class="w-3.5 h-3.5 text-rose-400"></i>
           <span class="whitespace-nowrap">Marca</span>
         </button>
@@ -482,7 +495,7 @@
       <div id="earth-canvas"></div>
 
       <!-- BANNER FLOTANTE DE DIBUJO PROFESIONAL (RESPONSIVE SIN RECORTES) -->
-      <div id="earth-drawing-banner" style="z-index: 1800;" class="hidden absolute bottom-5 sm:bottom-auto sm:top-4 inset-x-2 sm:inset-x-auto sm:left-1/2 sm:-translate-x-1/2 bg-slate-900/98 backdrop-blur-md border-2 border-sky-500/90 p-2.5 sm:px-4 sm:py-2.5 rounded-2xl shadow-2xl flex-col sm:flex-row items-center gap-2 sm:gap-3.5 max-w-full sm:max-w-2xl">
+      <div id="earth-drawing-banner" style="z-index: 9999; display: none;" class="hidden absolute bottom-5 sm:bottom-auto sm:top-4 inset-x-2 sm:inset-x-auto sm:left-1/2 sm:-translate-x-1/2 bg-slate-900/98 backdrop-blur-md border-2 border-sky-500/90 p-2.5 sm:px-4 sm:py-2.5 rounded-2xl shadow-2xl flex-col sm:flex-row items-center gap-2 sm:gap-3.5 max-w-full sm:max-w-2xl">
         
         <!-- Fila Superior del Banner: Texto e Indicador Métrico -->
         <div class="flex items-center justify-between w-full sm:w-auto gap-2 text-xs">
@@ -499,19 +512,19 @@
         <!-- Fila Inferior del Banner: Botones de Acción Claros -->
         <div class="flex items-center justify-between sm:justify-end w-full sm:w-auto gap-1.5 shrink-0">
           <!-- Deshacer -->
-          <button id="btn-banner-undo" class="flex-1 sm:flex-initial px-2.5 sm:px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-300 border border-slate-700 font-bold text-xs flex items-center justify-center gap-1 active:scale-95 shadow transition" title="Borrar último punto (Ctrl+Z)">
+          <button id="btn-banner-undo" class="flex-1 sm:flex-initial px-2.5 sm:px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-300 border border-slate-700 font-bold text-xs flex items-center justify-center gap-1 active:scale-95 shadow transition cursor-pointer" title="Borrar último punto (Ctrl+Z)">
             <i data-lucide="undo" class="w-3.5 h-3.5"></i>
             <span>Deshacer</span>
           </button>
 
           <!-- Listo: Guardar -->
-          <button id="btn-banner-finish" class="flex-1 sm:flex-initial px-3 sm:px-3.5 py-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs shadow flex items-center justify-center gap-1 active:scale-95 transition" title="Finalizar trazado">
+          <button id="btn-banner-finish" class="flex-1 sm:flex-initial px-3 sm:px-3.5 py-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs shadow flex items-center justify-center gap-1 active:scale-95 transition cursor-pointer" title="Finalizar trazado">
             <i data-lucide="check" class="w-4 h-4"></i>
             <span>Listo</span>
           </button>
 
           <!-- Cancelar -->
-          <button id="btn-banner-cancel" class="flex-1 sm:flex-initial px-2.5 sm:px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 font-bold text-xs flex items-center justify-center gap-1 active:scale-95 transition" title="Cancelar trazado">
+          <button id="btn-banner-cancel" class="flex-1 sm:flex-initial px-2.5 sm:px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 font-bold text-xs flex items-center justify-center gap-1 active:scale-95 transition cursor-pointer" title="Cancelar trazado">
             <i data-lucide="x" class="w-3.5 h-3.5 text-red-400"></i>
             <span>Cancelar</span>
           </button>
@@ -522,35 +535,36 @@
       <!-- BARRA FLOTANTE MÓVIL PARA EL PULGAR (MODO CAMPO) -->
       <div id="mobile-field-actions" style="z-index: 1700;" class="absolute bottom-5 inset-x-0 flex justify-center items-center gap-1.5 sm:gap-2 px-3 pointer-events-none md:hidden">
         <!-- Botón Lugares Móvil -->
-        <button type="button" onclick="document.getElementById('btn-toggle-sidebar').click()" class="pointer-events-auto px-3 py-2 rounded-2xl bg-slate-900/95 hover:bg-slate-800 text-amber-400 border border-amber-500/40 shadow-2xl backdrop-blur-md flex items-center gap-1.5 font-bold text-xs active:scale-95 transition">
+        <button type="button" onclick="document.getElementById('btn-toggle-sidebar').click()" class="pointer-events-auto px-3 py-2 rounded-2xl bg-slate-900/95 hover:bg-slate-800 text-amber-400 border border-amber-500/40 shadow-2xl backdrop-blur-md flex items-center gap-1.5 font-bold text-xs active:scale-95 transition cursor-pointer">
           <i data-lucide="folder" class="w-4 h-4 text-amber-400"></i>
           <span>Lugares</span>
         </button>
 
         <!-- Botón + Eje Móvil -->
-        <button type="button" data-tool="subparroquia" id="btn-mobile-subparish" onclick="window.earthApp?.toolsManager ? window.earthApp.toolsManager.setActiveTool('subparroquia') : document.getElementById('btn-tool-subparish').click()" class="btn-earth-tool pointer-events-auto px-3 py-2 rounded-2xl bg-slate-900/95 hover:bg-purple-900 text-purple-300 border border-purple-500/50 shadow-2xl backdrop-blur-md flex items-center gap-1.5 font-bold text-xs active:scale-95 transition" title="Dibujar Límite de Sub-Parroquia o Eje Comunal">
+        <button type="button" data-tool="subparroquia" id="btn-mobile-subparish" onclick="window.activateEarthTool('subparroquia')" class="btn-earth-tool pointer-events-auto px-3 py-2 rounded-2xl bg-slate-900/95 hover:bg-purple-900 text-purple-300 border border-purple-500/50 shadow-2xl backdrop-blur-md flex items-center gap-1.5 font-bold text-xs active:scale-95 transition cursor-pointer" title="Dibujar Límite de Sub-Parroquia o Eje Comunal">
           <i data-lucide="shield" class="w-4 h-4 text-purple-400"></i>
           <span>+ Eje</span>
         </button>
 
         <!-- Botón + Sector Comunal Móvil -->
-        <button type="button" data-tool="poligono" id="btn-mobile-polygon" onclick="window.earthApp?.toolsManager ? window.earthApp.toolsManager.setActiveTool('poligono') : document.getElementById('btn-tool-polygon').click()" class="btn-earth-tool pointer-events-auto px-3.5 py-2 rounded-2xl bg-slate-900/95 hover:bg-sky-900 text-sky-300 border border-sky-500/50 shadow-2xl backdrop-blur-md flex items-center gap-1.5 font-black text-xs active:scale-95 transition" title="Dibujar Sector Comunal">
+        <button type="button" data-tool="poligono" id="btn-mobile-polygon" onclick="window.activateEarthTool('poligono')" class="btn-earth-tool pointer-events-auto px-3.5 py-2 rounded-2xl bg-slate-900/95 hover:bg-sky-900 text-sky-300 border border-sky-500/50 shadow-2xl backdrop-blur-md flex items-center gap-1.5 font-black text-xs active:scale-95 transition cursor-pointer" title="Dibujar Sector Comunal">
           <i data-lucide="home" class="w-4 h-4 text-sky-400"></i>
           <span>+ Sector</span>
         </button>
 
         <!-- Botón + Ruta Móvil -->
-        <button type="button" data-tool="ruta" id="btn-mobile-path" onclick="window.earthApp?.toolsManager ? window.earthApp.toolsManager.setActiveTool('ruta') : document.getElementById('btn-tool-path').click()" class="btn-earth-tool pointer-events-auto px-3 py-2 rounded-2xl bg-slate-900/95 hover:bg-emerald-900 text-emerald-300 border border-emerald-500/50 shadow-2xl backdrop-blur-md flex items-center gap-1 font-bold text-xs active:scale-95 transition" title="Trazar Calle o Ruta">
+        <button type="button" data-tool="ruta" id="btn-mobile-path" onclick="window.activateEarthTool('ruta')" class="btn-earth-tool pointer-events-auto px-3 py-2 rounded-2xl bg-slate-900/95 hover:bg-emerald-900 text-emerald-300 border border-emerald-500/50 shadow-2xl backdrop-blur-md flex items-center gap-1 font-bold text-xs active:scale-95 transition cursor-pointer" title="Trazar Calle o Ruta">
           <i data-lucide="git-commit" class="w-4 h-4 text-emerald-400"></i>
           <span>+ Ruta</span>
         </button>
 
         <!-- Botón + Marca Móvil -->
-        <button type="button" data-tool="marca" id="btn-mobile-placemark" onclick="window.earthApp?.toolsManager ? window.earthApp.toolsManager.setActiveTool('marca') : document.getElementById('btn-tool-placemark').click()" class="btn-earth-tool pointer-events-auto px-3 py-2 rounded-2xl bg-slate-900/95 hover:bg-rose-900 text-rose-300 border border-rose-500/50 shadow-2xl backdrop-blur-md flex items-center gap-1 font-bold text-xs active:scale-95 transition" title="Punto de Interés">
+        <button type="button" data-tool="marca" id="btn-mobile-placemark" onclick="window.activateEarthTool('marca')" class="btn-earth-tool pointer-events-auto px-3 py-2 rounded-2xl bg-slate-900/95 hover:bg-rose-900 text-rose-300 border border-rose-500/50 shadow-2xl backdrop-blur-md flex items-center gap-1 font-bold text-xs active:scale-95 transition cursor-pointer" title="Punto de Interés">
           <i data-lucide="map-pin" class="w-4 h-4 text-rose-400"></i>
           <span>+ Marca</span>
         </button>
       </div>
+
     </main>
 
   </div>
@@ -922,7 +936,7 @@
   </div>
 
   <!-- SCRIPT -->
-  <script type="module" src="js/app.js?v=42"></script>
+  <script type="module" src="js/app.js?v=43"></script>
   <script>
     if (window.lucide && typeof window.lucide.createIcons === 'function') {
       window.lucide.createIcons();
