@@ -4,7 +4,8 @@
  */
 
 export class PropertiesDialog {
-  constructor(onSaveCallback) {
+  constructor(onSaveCallback, onLiveChangeCallback) {
+    this.onLiveChangeCallback = onLiveChangeCallback;
     this.onSaveCallback = onSaveCallback;
     this.currentItem = null;
     this.currentType = null; // 'poligono', 'ruta', 'marca'
@@ -22,14 +23,37 @@ export class PropertiesDialog {
       });
     });
 
-    // Cambios en vivo de color u opacidad para previsualización
+    // Cambios en vivo de color u opacidad para previsualización instantánea
     const inputOpacity = document.getElementById("prop-poly-opacity");
     const labelOpacity = document.getElementById("prop-poly-opacity-val");
+    const inputBorderColor = document.getElementById("prop-border-color");
+    const inputBorderWidth = document.getElementById("prop-border-width");
+    const inputFillColor = document.getElementById("prop-fill-color");
+
+    const triggerLiveUpdate = () => {
+      if (!this.currentItem) return;
+      const draft = {
+        colorBorde: inputBorderColor ? inputBorderColor.value : "#38bdf8",
+        anchoBorde: inputBorderWidth ? (parseInt(inputBorderWidth.value) || 2) : 2,
+        colorRelleno: inputFillColor ? inputFillColor.value : "#38bdf8",
+        opacidad: inputOpacity ? (parseFloat(inputOpacity.value) || 0.4) : 0.4,
+        color: inputBorderColor ? inputBorderColor.value : "#10b981",
+        ancho: inputBorderWidth ? (parseInt(inputBorderWidth.value) || 4) : 4
+      };
+      if (this.onLiveChangeCallback) {
+        this.onLiveChangeCallback(this.currentType, this.currentItem.id, draft);
+      }
+    };
+
     if (inputOpacity && labelOpacity) {
       inputOpacity.addEventListener("input", (e) => {
         labelOpacity.textContent = `${Math.round(e.target.value * 100)}%`;
+        triggerLiveUpdate();
       });
     }
+    if (inputBorderColor) inputBorderColor.addEventListener("input", triggerLiveUpdate);
+    if (inputBorderWidth) inputBorderWidth.addEventListener("input", triggerLiveUpdate);
+    if (inputFillColor) inputFillColor.addEventListener("input", triggerLiveUpdate);
 
     // Guardar
     const form = document.getElementById("form-properties");
