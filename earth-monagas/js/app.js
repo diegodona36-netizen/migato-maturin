@@ -2,15 +2,15 @@
  * Controlador Principal — Google Earth Pro Web (Edición Estado Monagas)
  * Robusto, 100% Operativo y Totalmente Individualizado
  */
-import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=43";
-import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=43";
-import { getAllParishesForSelector } from "./usersCatalog.js?v=43";
-import { EarthStore } from "./earthStore.js?v=43";
-import { EarthMapEngine } from "./mapEngine.js?v=43";
-import { PropertiesDialog } from "./propertiesDialog.js?v=43";
-import { ToolsManager } from "./toolsManager.js?v=43";
-import { detectParishFromGeometry } from "./geoMonagas.js?v=43";
-import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=43";
+import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=44";
+import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=44";
+import { getAllParishesForSelector } from "./usersCatalog.js?v=44";
+import { EarthStore } from "./earthStore.js?v=44";
+import { EarthMapEngine } from "./mapEngine.js?v=44";
+import { PropertiesDialog } from "./propertiesDialog.js?v=44";
+import { ToolsManager } from "./toolsManager.js?v=44";
+import { detectParishFromGeometry } from "./geoMonagas.js?v=44";
+import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=44";
 
 class EarthMonagasApp {
   constructor() {
@@ -94,12 +94,14 @@ class EarthMonagasApp {
     this.selectParish(this.selectedMunId, this.selectedParishId);
 
     window.activateEarthTool = (toolName) => {
-      if (this.toolsManager) {
+      if (this.propDialog) {
+        this.propDialog.openForCreate(toolName);
+      } else if (this.toolsManager) {
         this.toolsManager.setActiveTool(toolName);
       }
     };
     if (window._pendingEarthTool) {
-      this.toolsManager.setActiveTool(window._pendingEarthTool);
+      window.activateEarthTool(window._pendingEarthTool);
       window._pendingEarthTool = null;
     }
 
@@ -847,6 +849,44 @@ class EarthMonagasApp {
   }
 
   handleSaveProperties(type, itemId, updatedFields, targetMunId = null, targetParishId = null) {
+    if (updatedFields?.isNew || this.propDialog?.currentItem?.isNew) {
+      const draft = Object.assign({}, this.propDialog?.currentItem || {}, updatedFields);
+      delete draft.isNew;
+
+      const destMunId = targetMunId || this.selectedMunId;
+      const destParishId = targetParishId || this.selectedParishId;
+      const key = type === "poligono" ? "poligonos" : (type === "ruta" ? "rutas" : (type === "subparroquia" ? "subparroquias" : "marcas"));
+
+      if (type === "subparroquia") {
+        this.store.addItemToParish(destMunId, destParishId, "subparroquias", draft);
+        this.activeSubParroquiaId = String(draft.id);
+        const parish = this.store.getParish(destMunId, destParishId);
+        this.mapEngine.renderParishItems(parish, (t, it) => {
+          if (t === "subparroquia") this.focusSubParish(it.id);
+          else this.propDialog.open(t, it, destMunId, destParishId);
+        });
+        this.focusSubParish(draft.id);
+        this.renderPlacesTree();
+        this.showToast(`🟪 <strong>${draft.nombre}</strong> creado exitosamente.`, "purple");
+        return;
+      }
+
+      if (type === "poligono" && !draft.subParroquiaId && this.activeSubParroquiaId) {
+        draft.subParroquiaId = this.activeSubParroquiaId;
+      }
+
+      this.store.addItemToParish(destMunId, destParishId, key, draft);
+      const parish = this.store.getParish(destMunId, destParishId);
+      this.mapEngine.renderParishItems(parish, (t, it) => {
+        if (t === "subparroquia") this.focusSubParish(it.id);
+        else this.propDialog.open(t, it, destMunId, destParishId);
+      });
+      this.updateMilitanciaTally();
+      this.renderPlacesTree();
+      this.showToast(`✅ <strong>${draft.nombre}</strong> guardado y creado exitosamente.`, "emerald");
+      return;
+    }
+
     const key = type === "poligono" ? "poligonos" : (type === "ruta" ? "rutas" : (type === "subparroquia" ? "subparroquias" : "marcas"));
     const destMunId = targetMunId || this.selectedMunId;
     const destParishId = targetParishId || this.selectedParishId;
@@ -1198,9 +1238,9 @@ class EarthMonagasApp {
     // 0. Delegación global infalible para cualquier botón de herramienta (barra superior o barra móvil inferior)
     document.addEventListener("click", (e) => {
       const toolBtn = e.target.closest("[data-tool]");
-      if (toolBtn && toolBtn.dataset.tool && this.toolsManager) {
+      if (toolBtn && toolBtn.dataset.tool) {
         const tool = toolBtn.dataset.tool;
-        this.toolsManager.setActiveTool(tool);
+        window.activateEarthTool(tool);
       }
     });
 
@@ -1223,7 +1263,7 @@ class EarthMonagasApp {
     if (btnSubparish) {
       btnSubparish.addEventListener("click", (e) => {
         e.preventDefault();
-        this.toolsManager.setActiveTool("subparroquia");
+        window.activateEarthTool("subparroquia");
       });
     }
 
@@ -1240,7 +1280,7 @@ class EarthMonagasApp {
     if (btnPoly) {
       btnPoly.addEventListener("click", (e) => {
         e.preventDefault();
-        this.toolsManager.setActiveTool("poligono");
+        window.activateEarthTool("poligono");
       });
     }
 
@@ -1248,7 +1288,7 @@ class EarthMonagasApp {
     if (btnPath) {
       btnPath.addEventListener("click", (e) => {
         e.preventDefault();
-        this.toolsManager.setActiveTool("ruta");
+        window.activateEarthTool("ruta");
       });
     }
 
@@ -1256,7 +1296,7 @@ class EarthMonagasApp {
     if (btnPlacemark) {
       btnPlacemark.addEventListener("click", (e) => {
         e.preventDefault();
-        this.toolsManager.setActiveTool("marca");
+        window.activateEarthTool("marca");
       });
     }
 

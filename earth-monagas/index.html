@@ -32,14 +32,16 @@
   <meta http-equiv="Expires" content="0" />
 
   <!-- Custom Styles -->
-  <link rel="stylesheet" href="css/styles.css?v=43">
+  <link rel="stylesheet" href="css/styles.css?v=44">
 
   <!-- Script de Autenticación Rápida, Limpieza Integral de Caché y Activador de Herramientas -->
   <script>
     // 0. Activación directa e infalible de herramientas de dibujo
     window.activateEarthTool = function(toolName) {
       try {
-        if (window.earthApp && window.earthApp.toolsManager) {
+        if (window.earthApp && window.earthApp.propDialog) {
+          window.earthApp.propDialog.openForCreate(toolName);
+        } else if (window.earthApp && window.earthApp.toolsManager) {
           window.earthApp.toolsManager.setActiveTool(toolName);
         } else {
           window._pendingEarthTool = toolName;
@@ -936,7 +938,7 @@
   </div>
 
   <!-- SCRIPT -->
-  <script type="module" src="js/app.js?v=43"></script>
+  <script type="module" src="js/app.js?v=44"></script>
   <script>
     if (window.lucide && typeof window.lucide.createIcons === 'function') {
       window.lucide.createIcons();

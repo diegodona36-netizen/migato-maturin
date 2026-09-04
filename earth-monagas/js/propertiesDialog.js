@@ -2,9 +2,9 @@
  * Diálogo Flotante de Propiedades y Carga de Militantes — Estilo Google Earth Pro
  * Pestañas: Ficha Territorial, Militantes por Sector, Estilo y Color, Medidas
  */
-import { SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS, detectParishFromGeometry } from "./geoMonagas.js?v=43";
-import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=43";
-import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=43";
+import { SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS, detectParishFromGeometry } from "./geoMonagas.js?v=44";
+import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=44";
+import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=44";
 
 export class PropertiesDialog {
   constructor(onSaveCallback, onLiveChangeCallback, onStartEditGeometry) {
@@ -101,13 +101,18 @@ export class PropertiesDialog {
 
 
 
-    // Botón Ajustar Vértices en Satélite
+    // Botón Ajustar Vértices en Satélite o Trazar en el Satélite
     const btnEditGeo = document.getElementById("btn-prop-edit-geometry");
     if (btnEditGeo) {
       btnEditGeo.addEventListener("click", () => {
-        if (this.currentItem && this.onStartEditGeometry) {
-          const item = this.currentItem;
-          this.close();
+        if (!this.currentItem) return;
+        const item = this.currentItem;
+        const isNew = !!item.isNew;
+        const type = this.currentType;
+        this.close();
+        if (isNew) {
+          window.earthApp?.toolsManager?.setActiveTool(type);
+        } else if (this.onStartEditGeometry) {
           this.onStartEditGeometry(item);
         }
       });
@@ -152,8 +157,21 @@ export class PropertiesDialog {
 
     if (selParish) {
       selParish.addEventListener("change", () => {
-        if (wrapSubParish) {
-          wrapSubParish.classList.toggle("hidden", selParish.value !== "alto-de-los-godos");
+        const munId = selMun ? selMun.value : this.currentMunId;
+        const pStore = window.earthApp?.store?.getParish(munId, selParish.value);
+        const parishSubparroquias = pStore?.subparroquias || [];
+        const list = parishSubparroquias.length > 0 ? parishSubparroquias : (selParish.value === "alto-de-los-godos" ? SUBPARROQUIAS_GODOS : []);
+        const selSubParish = document.getElementById("prop-select-subparish");
+        if (wrapSubParish && selSubParish) {
+          if (list.length > 0) {
+            selSubParish.innerHTML = `<option value="">-- Sin Eje Asignado --</option>` + list.map(sp => 
+              `<option value="${sp.id}">${sp.nombre}</option>`
+            ).join("");
+            wrapSubParish.classList.remove("hidden");
+          } else {
+            selSubParish.innerHTML = `<option value="">-- Sin Ejes Creados --</option>`;
+            wrapSubParish.classList.add("hidden");
+          }
         }
       });
     }
@@ -176,6 +194,7 @@ export class PropertiesDialog {
   populateParishesDropdown(munId, selectedParishId = null) {
     const selParish = document.getElementById("prop-select-parish");
     const wrapSubParish = document.getElementById("wrapper-prop-select-subparish");
+    const selSubParish = document.getElementById("prop-select-subparish");
     if (!selParish) return;
 
     const munObj = CATALOGO_MONAGAS.find(m => m.id === munId);
@@ -191,8 +210,19 @@ export class PropertiesDialog {
       selParish.value = munObj.parroquias[0].id;
     }
 
-    if (wrapSubParish) {
-      wrapSubParish.classList.toggle("hidden", selParish.value !== "alto-de-los-godos");
+    if (wrapSubParish && selSubParish) {
+      const pStore = window.earthApp?.store?.getParish(munId, selParish.value);
+      const parishSubparroquias = pStore?.subparroquias || [];
+      const list = parishSubparroquias.length > 0 ? parishSubparroquias : (selParish.value === "alto-de-los-godos" ? SUBPARROQUIAS_GODOS : []);
+      if (list.length > 0) {
+        selSubParish.innerHTML = `<option value="">-- Sin Eje Asignado --</option>` + list.map(sp => 
+          `<option value="${sp.id}">${sp.nombre}</option>`
+        ).join("");
+        wrapSubParish.classList.remove("hidden");
+      } else {
+        selSubParish.innerHTML = `<option value="">-- Sin Ejes Creados --</option>`;
+        wrapSubParish.classList.add("hidden");
+      }
     }
   }
 
@@ -211,11 +241,98 @@ export class PropertiesDialog {
     });
   }
 
+  openForCreate(type) {
+    const munId = window.earthApp?.selectedMunId || "maturin";
+    const parishId = window.earthApp?.selectedParishId || "san-simon";
+    const parish = window.earthApp?.store?.getParish(munId, parishId);
+    const center = parish?.centro || [9.7469, -63.1812];
+
+    const offset = 0.003;
+    const defaultVertices = [
+      [center[0] + offset, center[1] - offset],
+      [center[0] + offset, center[1] + offset],
+      [center[0] - offset, center[1] + offset],
+      [center[0] - offset, center[1] - offset],
+      [center[0] + offset, center[1] - offset]
+    ];
+
+    let draftItem;
+    if (type === "subparroquia") {
+      const count = (parish?.subparroquias || []).length + 1;
+      draftItem = {
+        id: `SUBPAR-${Date.now()}`,
+        nombre: `Sub-Parroquia ${count} • Eje Comunal`,
+        alias: `Eje Comunal ${count}`,
+        descripcion: `Eje Comunal de ${parish?.nombre || 'la Parroquia'}`,
+        colorBorde: "#c084fc",
+        anchoBorde: 2.5,
+        colorRelleno: "#a855f7",
+        opacidad: 0.2,
+        areaHa: 45.0,
+        perimetroM: 2800,
+        visible: true,
+        vertices: defaultVertices,
+        isNew: true
+      };
+    } else if (type === "poligono") {
+      const count = (parish?.poligonos || []).length + 1;
+      draftItem = {
+        id: `POLY-${Date.now()}`,
+        nombre: `Sector Comunal ${count}`,
+        subParroquiaId: window.earthApp?.activeSubParroquiaId || (parish?.subparroquias?.[0]?.id || null),
+        descripcion: `Comunidad en ${parish?.nombre || 'la Parroquia'}`,
+        colorBorde: "#38bdf8",
+        anchoBorde: 2,
+        colorRelleno: "#38bdf8",
+        opacidad: 0.35,
+        militantes: 250,
+        casas: 180,
+        familias: 195,
+        habitantes: 720,
+        lider: "",
+        telefono: "",
+        areaHa: 15.0,
+        perimetroM: 1600,
+        visible: true,
+        vertices: defaultVertices,
+        isNew: true
+      };
+    } else if (type === "ruta") {
+      draftItem = {
+        id: `ROUTE-${Date.now()}`,
+        nombre: "Nueva Calle / Ruta",
+        descripcion: `Vía comunal en ${parish?.nombre || 'la Parroquia'}`,
+        color: "#10b981",
+        ancho: 4,
+        puntos: [
+          [center[0] - offset, center[1] - offset],
+          [center[0] + offset, center[1] + offset]
+        ],
+        longitudM: 850,
+        visible: true,
+        isNew: true
+      };
+    } else {
+      draftItem = {
+        id: `MARK-${Date.now()}`,
+        nombre: "Nuevo Punto de Interés",
+        tipo: "punto_interes",
+        descripcion: `Punto de Interés en ${parish?.nombre || 'la Parroquia'}`,
+        lat: center[0],
+        lng: center[1],
+        visible: true,
+        isNew: true
+      };
+    }
+
+    this.open(type, draftItem, munId, parishId);
+  }
+
   open(type, item, currentMunId = null, currentParishId = null) {
     this.currentType = type;
     this.currentItem = item;
     this.currentMunId = currentMunId || item.munId || "maturin";
-    this.currentParishId = currentParishId || item.parishId || "alto-de-los-godos";
+    this.currentParishId = currentParishId || item.parishId || "san-simon";
 
     this.originalState = {
       nombre: item.nombre,
@@ -228,10 +345,40 @@ export class PropertiesDialog {
       ancho: item.ancho
     };
 
-    document.getElementById("prop-dialog-title").textContent = 
-      type === "poligono" ? `Google Earth — Ficha del Sector: ${item.nombre}` :
-      (type === "subparroquia" ? `Google Earth — Sub-Parroquia / Eje Comunal: ${item.nombre}` :
-      (type === "ruta" ? `Google Earth — Propiedades de la Calle: ${item.nombre}` : `Google Earth — Marca de Posición: ${item.nombre}`));
+    const isNew = !!item.isNew;
+    const pStore = window.earthApp?.store?.getParish(this.currentMunId, this.currentParishId);
+    const parishLabel = pStore?.nombre ? ` (${pStore.nombre})` : "";
+
+    const titleEl = document.getElementById("prop-dialog-title");
+    if (titleEl) {
+      if (isNew) {
+        titleEl.textContent = 
+          type === "poligono" ? `Google Earth — Nuevo Sector Comunal${parishLabel}` :
+          (type === "subparroquia" ? `Google Earth — Nueva Sub-Parroquia / Eje Comunal${parishLabel}` :
+          (type === "ruta" ? `Google Earth — Nueva Calle / Ruta${parishLabel}` : `Google Earth — Nueva Marca de Posición${parishLabel}`));
+      } else {
+        titleEl.textContent = 
+          type === "poligono" ? `Google Earth — Ficha del Sector: ${item.nombre}` :
+          (type === "subparroquia" ? `Google Earth — Sub-Parroquia / Eje Comunal: ${item.nombre}` :
+          (type === "ruta" ? `Google Earth — Propiedades de la Calle: ${item.nombre}` : `Google Earth — Marca de Posición: ${item.nombre}`));
+      }
+    }
+
+    const btnEditGeo = document.getElementById("btn-prop-edit-geometry");
+    if (btnEditGeo) {
+      const span = btnEditGeo.querySelector("span");
+      if (span) {
+        span.textContent = isNew ? "✏️ Trazar en el Satélite" : "Ajustar Vértices";
+      }
+    }
+
+    const btnSave = document.getElementById("btn-prop-save");
+    if (btnSave) {
+      const span = btnSave.querySelector("span");
+      if (span) {
+        span.textContent = isNew ? "Guardar y Crear" : "Guardar Datos";
+      }
+    }
 
     const lblName = document.getElementById("prop-name-label");
     if (lblName) {
@@ -365,7 +512,7 @@ export class PropertiesDialog {
       if (boxSocio) boxSocio.classList.add("hidden");
       if (boxMilitancia) boxMilitancia.classList.add("hidden");
       if (boxLiderazgo) boxLiderazgo.classList.add("hidden");
-      if (btnEditGeo) btnEditGeo.classList.add("hidden");
+      if (btnEditGeo) btnEditGeo.classList.toggle("hidden", !isNew);
       if (boxPolyStyle) boxPolyStyle.classList.add("hidden");
       if (rowArea) rowArea.classList.add("hidden");
 
@@ -415,9 +562,11 @@ export class PropertiesDialog {
     // Iniciar siempre en la primera pestaña (Ficha de Militancia)
     this.switchTab("desc");
 
-    // Abrir Modal
+    // Abrir Modal con garantía total de visibilidad
     this.modalEl.classList.remove("hidden");
     this.modalEl.classList.add("flex");
+    this.modalEl.style.display = "flex";
+    this.modalEl.style.zIndex = "99999";
 
     if (window.lucide) {
       try { window.lucide.createIcons(); } catch(e){}
@@ -454,6 +603,7 @@ export class PropertiesDialog {
     const defaultFill = this.currentType === "subparroquia" ? "#a855f7" : "#38bdf8";
     const defaultOpacity = this.currentType === "subparroquia" ? 0.2 : 0.38;
 
+    const isNew = !!this.currentItem.isNew;
     const updated = {
       nombre,
       descripcion,
@@ -471,7 +621,8 @@ export class PropertiesDialog {
       telefono: telefonoVal,
       munId: targetMunId,
       parishId: targetParishId,
-      subParroquiaId: this.currentType === "subparroquia" ? null : subParroquiaId
+      subParroquiaId: this.currentType === "subparroquia" ? null : subParroquiaId,
+      isNew: isNew
     };
 
     if (this.onSaveCallback) {
@@ -492,5 +643,6 @@ export class PropertiesDialog {
     this.currentType = null;
     this.modalEl.classList.add("hidden");
     this.modalEl.classList.remove("flex");
+    this.modalEl.style.display = "none";
   }
 }
