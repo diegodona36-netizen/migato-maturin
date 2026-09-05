@@ -216,6 +216,9 @@ export async function saveParishToFirestore(munId, parishId, parishData) {
 }
 
 async function _executeSaveParish(munId, parishId, parishData) {
+  // Margen de delay seguro para dar respiro a Firestore y absorber concurrencia multiusuario
+  await new Promise(resolve => setTimeout(resolve, 600));
+
   const cfg = getSavedFirebaseConfig();
   const projectId = cfg?.projectId || DEFAULT_CONFIG.projectId;
   const apiKey = cfg?.apiKey || DEFAULT_CONFIG.apiKey;

@@ -2,21 +2,21 @@
  * Controlador Principal — Google Earth Pro Web (Edición Estado Monagas)
  * Robusto, 100% Operativo y Totalmente Individualizado
  */
-import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=74";
-import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=74";
-import { getAllParishesForSelector } from "./usersCatalog.js?v=74";
-import { EarthStore } from "./earthStore.js?v=74";
-import { EarthMapEngine } from "./mapEngine.js?v=74";
-import { PropertiesDialog } from "./propertiesDialog.js?v=74";
-import { ToolsManager } from "./toolsManager.js?v=74";
-import { detectParishFromGeometry } from "./geoMonagas.js?v=74";
-import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=74";
+import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=75";
+import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=75";
+import { getAllParishesForSelector } from "./usersCatalog.js?v=75";
+import { EarthStore } from "./earthStore.js?v=75";
+import { EarthMapEngine } from "./mapEngine.js?v=75";
+import { PropertiesDialog } from "./propertiesDialog.js?v=75";
+import { ToolsManager } from "./toolsManager.js?v=75";
+import { detectParishFromGeometry } from "./geoMonagas.js?v=75";
+import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=75";
 import { 
   getSavedFirebaseConfig, 
   saveFirebaseConfig, 
   isFirebaseConfigured, 
   initFirebase 
-} from "./firebaseConfig.js?v=74";
+} from "./firebaseConfig.js?v=75";
 
 class EarthMonagasApp {
   constructor() {
