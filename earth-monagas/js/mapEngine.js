@@ -2,7 +2,7 @@
  * Motor Cartográfico Acelerado por GPU — Google Earth Pro Web (Monagas)
  * Integrado con Capas Jerárquicas Oficiales (INE 2021) y Edición de Vértices
  */
-import { GEO_ESTADO_OFICIAL, GEO_MUNICIPIOS_OFICIAL, GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=72";
+import { GEO_ESTADO_OFICIAL, GEO_MUNICIPIOS_OFICIAL, GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=73";
 
 export class EarthMapEngine {
   constructor(containerId, onCoordUpdate) {
@@ -458,32 +458,20 @@ export class EarthMapEngine {
     if (this.subParroquiasLayer) this.subParroquiasLayer.clearLayers();
     if (this.sectorLabelsLayer) this.sectorLabelsLayer.clearLayers();
 
-    // Obtener todas las parroquias que contengan datos en el catálogo
-    const allParishesWithData = window.earthApp?.store?.getAllParishesWithData() || [];
-    
-    // Asegurar que la parroquia activa esté presente en la lista de renderizado
-    const parishesToRender = [...allParishesWithData];
-    if (activeParish && !parishesToRender.some(p => String(p.parishId) === String(activeParish.id))) {
-      parishesToRender.push({
-        munId: window.earthApp?.selectedMunId || "maturin",
-        parishId: activeParish.id,
-        parish: activeParish
-      });
-    }
+    if (!activeParish) return;
 
-    if (parishesToRender.length === 0 && activeParish) {
-      parishesToRender.push({
-        munId: window.earthApp?.selectedMunId || "maturin",
-        parishId: activeParish.id,
-        parish: activeParish
-      });
-    }
+    // Renderizar única y exclusivamente los elementos de la parroquia activa seleccionada
+    const parishesToRender = [{
+      munId: window.earthApp?.selectedMunId || "maturin",
+      parishId: activeParish.id,
+      parish: activeParish
+    }];
 
     const isDrawing = !!(window.earthApp?.toolsManager?.activeTool);
 
     parishesToRender.forEach(({ munId, parishId, parish: pData }) => {
       if (!pData) return;
-      const isActiveParish = String(parishId) === String(activeParish?.id);
+      const isActiveParish = true;
 
       // 0. Sub-Parroquias / Ejes Comunales (Nivel 4)
       (pData.subparroquias || []).forEach(sp => {
@@ -494,11 +482,11 @@ export class EarthMapEngine {
 
           const spLayer = L.polygon(sp.vertices, {
             color: sp.colorBorde || "#c084fc",
-            weight: isFocused ? 3.5 : (isActiveParish ? (sp.anchoBorde || 2.5) : 2),
-            opacity: isActiveParish ? 0.95 : 0.75,
+            weight: isFocused ? 3.5 : (sp.anchoBorde || 2.5),
+            opacity: 0.95,
             fillColor: sp.colorRelleno || "#a855f7",
             fill: true,
-            fillOpacity: isFocused ? 0.12 : (isActiveParish ? 0.08 : 0.04),
+            fillOpacity: isFocused ? 0.12 : 0.08,
             dashArray: isFocused ? "8, 6" : "6, 4",
             interactive: !isDrawing,
             renderer: this.canvasRenderer
@@ -530,11 +518,11 @@ export class EarthMapEngine {
               window.earthApp.selectParish(munId, parishId);
             }
 
-            if (window.earthApp) {
+            if (onSelectCallback) {
+              onSelectCallback("subparroquia", sp, e);
+            } else if (window.earthApp) {
               window.earthApp.focusSubParish(sp.id, false);
             }
-
-            if (onSelectCallback) onSelectCallback("subparroquia", sp, e);
           });
 
           if (this.subParroquiasLayer) this.subParroquiasLayer.addLayer(spLayer);
@@ -544,7 +532,7 @@ export class EarthMapEngine {
           if (spCentroid && this.sectorLabelsLayer) {
             const spIcon = L.divIcon({
               className: "custom-subparish-pin",
-              html: `<div class="px-2 py-0.5 rounded-full text-[10px] font-black border shadow-lg cursor-pointer whitespace-nowrap transition transform hover:scale-110 flex items-center gap-1 ${isActiveParish ? 'bg-purple-950/90 text-purple-200 border-purple-400' : 'bg-slate-900/90 text-purple-300 border-purple-800'}" style="backdrop-filter: blur(4px);">
+              html: `<div class="px-2 py-0.5 rounded-full text-[10px] font-black border shadow-lg cursor-pointer whitespace-nowrap transition transform hover:scale-110 flex items-center gap-1 bg-purple-950/90 text-purple-200 border-purple-400" style="backdrop-filter: blur(4px);">
                 <span class="w-1.5 h-1.5 rounded-full bg-purple-400 shrink-0"></span>
                 <span>${sp.nombre}</span>
               </div>`,
@@ -557,8 +545,11 @@ export class EarthMapEngine {
               if (window.earthApp && String(window.earthApp.selectedParishId) !== String(parishId)) {
                 window.earthApp.selectParish(munId, parishId);
               }
-              if (window.earthApp) window.earthApp.focusSubParish(sp.id, false);
-              if (onSelectCallback) onSelectCallback("subparroquia", sp, e);
+              if (onSelectCallback) {
+                onSelectCallback("subparroquia", sp, e);
+              } else if (window.earthApp) {
+                window.earthApp.focusSubParish(sp.id, false);
+              }
             });
             this.sectorLabelsLayer.addLayer(spMarker);
           }

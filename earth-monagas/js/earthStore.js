@@ -1,13 +1,13 @@
 /**
  * Gestor de Estado y Árbol de Lugares (Places) — Google Earth Pro Web (Monagas)
  */
-import { SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=72";
+import { SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=73";
 import { 
   saveParishToFirestore, 
   subscribeToTerritories, 
   isFirebaseConfigured, 
   fetchAllTerritoriesFromFirestore 
-} from "./firebaseConfig.js?v=72";
+} from "./firebaseConfig.js?v=73";
 
 const STORAGE_KEY = "earth_monagas_places_v3";
 
@@ -485,8 +485,12 @@ export class EarthStore {
         }
         ["subparroquias", "poligonos", "rutas", "marcas"].forEach(type => {
           if (Array.isArray(remoteP[type])) {
-            localP[type] = [...remoteP[type]];
-            changesApplied = true;
+            const remoteStr = JSON.stringify(remoteP[type]);
+            const localStr = JSON.stringify(localP[type] || []);
+            if (remoteStr !== localStr) {
+              localP[type] = [...remoteP[type]];
+              changesApplied = true;
+            }
           }
         });
       }
@@ -496,9 +500,9 @@ export class EarthStore {
 
     if (changesApplied) {
       this.saveToStorage();
-    }
-    if (typeof window !== "undefined" && window.earthApp && window.earthApp.mapEngine && typeof window.earthApp.onCloudDataMerged === "function") {
-      window.earthApp.onCloudDataMerged();
+      if (typeof window !== "undefined" && window.earthApp && window.earthApp.mapEngine && typeof window.earthApp.onCloudDataMerged === "function") {
+        window.earthApp.onCloudDataMerged();
+      }
     }
     this.updateCloudStatus("online");
   }
@@ -589,8 +593,12 @@ export class EarthStore {
           }
           ["subparroquias", "poligonos", "rutas", "marcas"].forEach(type => {
             if (Array.isArray(remoteP[type])) {
-              localP[type] = [...remoteP[type]];
-              changesApplied = true;
+              const remoteStr = JSON.stringify(remoteP[type]);
+              const localStr = JSON.stringify(localP[type] || []);
+              if (remoteStr !== localStr) {
+                localP[type] = [...remoteP[type]];
+                changesApplied = true;
+              }
             }
           });
         }
@@ -600,9 +608,9 @@ export class EarthStore {
 
       if (changesApplied) {
         this.saveToStorage();
-      }
-      if (typeof window !== "undefined" && window.earthApp && window.earthApp.mapEngine && typeof window.earthApp.onCloudDataMerged === "function") {
-        window.earthApp.onCloudDataMerged();
+        if (typeof window !== "undefined" && window.earthApp && window.earthApp.mapEngine && typeof window.earthApp.onCloudDataMerged === "function") {
+          window.earthApp.onCloudDataMerged();
+        }
       }
 
       this.updateCloudStatus("online");
