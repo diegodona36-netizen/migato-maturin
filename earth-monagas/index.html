@@ -188,6 +188,27 @@
         </div>
       </div>
 
+      <!-- Acceso Rápido con 1 Toque (Sin escribir usuario ni clave) -->
+      <div class="space-y-1.5 pt-1">
+        <span class="text-[10px] font-black text-slate-400 uppercase tracking-wider block">Acceso Rápido con 1 Toque:</span>
+        <div class="grid grid-cols-2 gap-2">
+          <button type="button" onclick="window.quickLoginImmediate('admin', 'admin')" class="p-2.5 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/40 text-left transition active:scale-95 cursor-pointer">
+            <span class="text-xs font-black text-amber-300 block">👑 Dirección General</span>
+            <span class="text-[10px] text-slate-400 block mt-0.5">Acceso Total 13 Mun</span>
+          </button>
+          <button type="button" onclick="window.quickLoginImmediate('alto-de-los-godos', 'admin')" class="p-2.5 rounded-xl bg-emerald-500/15 hover:bg-emerald-500/25 border border-emerald-500/40 text-left transition active:scale-95 cursor-pointer">
+            <span class="text-xs font-black text-emerald-300 block">👤 Militancia Los Godos</span>
+            <span class="text-[10px] text-slate-400 block mt-0.5">Carga de Datos</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="relative flex py-1 items-center">
+        <div class="flex-grow border-t border-slate-800"></div>
+        <span class="flex-shrink mx-2 text-[10px] text-slate-500 font-bold uppercase">o elija su parroquia</span>
+        <div class="flex-grow border-t border-slate-800"></div>
+      </div>
+
       <!-- Formulario de Autenticación Unificado (100% Producción) -->
       <form id="form-auth-login" class="space-y-4 pt-1">
         

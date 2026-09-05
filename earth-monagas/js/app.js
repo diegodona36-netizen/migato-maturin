@@ -1793,9 +1793,11 @@ class EarthMonagasApp {
       });
     }
 
-    // Comprobar si hay parámetro URL para auto-login (?u=admin o ?general=1 o ?p=jusepin)
+    // Comprobar si hay parámetro URL para auto-login (?u=admin o ?general=1 o ?p=alto-de-los-godos)
     const urlParams = new URLSearchParams(window.location.search);
-    const autoUser = urlParams.get("u") || urlParams.get("user") || urlParams.get("login");
+    const autoParish = urlParams.get("p") || urlParams.get("parroquia") || urlParams.get("parish");
+    const autoMilitancia = urlParams.get("militancia") || urlParams.get("rol");
+    const autoUser = urlParams.get("u") || urlParams.get("user") || urlParams.get("login") || autoParish || (autoMilitancia ? "alto-de-los-godos" : null);
     const autoGeneral = urlParams.get("general");
 
     if (autoGeneral === "1" || autoGeneral === "true" || autoUser) {
@@ -1946,7 +1948,6 @@ class EarthMonagasApp {
       if (mobilePath) mobilePath.classList.remove("hidden");
       if (mobilePlacemark) mobilePlacemark.classList.remove("hidden");
       if (tabLayers) tabLayers.classList.remove("hidden");
-    } else {
       // 🔒 MODO OPERADOR / MILITANCIA: Ocultar barra de dibujo y herramientas técnicas
       if (toolbarToolsRow) toolbarToolsRow.classList.add("hidden");
       if (adminModuleLinks) adminModuleLinks.classList.add("hidden");
@@ -1955,6 +1956,13 @@ class EarthMonagasApp {
       if (mobilePath) mobilePath.classList.add("hidden");
       if (mobilePlacemark) mobilePlacemark.classList.add("hidden");
       if (tabLayers) tabLayers.classList.add("hidden");
+
+      // Abrir automáticamente el panel de Lugares para ver los sectores de la parroquia
+      const sidebar = document.getElementById("earth-sidebar");
+      if (sidebar && sidebar.classList.contains("hidden")) {
+        sidebar.classList.remove("hidden");
+        sidebar.classList.add("flex");
+      }
     }
 
     this.selectParish(this.selectedMunId, this.selectedParishId);
