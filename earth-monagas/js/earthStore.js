@@ -1,7 +1,7 @@
 /**
  * Gestor de Estado y Árbol de Lugares (Places) — Google Earth Pro Web (Monagas)
  */
-import { SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=78";
+import { SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=79";
 import { 
   saveParishToFirestore, 
   subscribeToTerritories, 
@@ -9,7 +9,7 @@ import {
   fetchAllTerritoriesFromFirestore,
   mergeItemCollections,
   cleanItem
-} from "./firebaseConfig.js?v=78";
+} from "./firebaseConfig.js?v=79";
 
 const STORAGE_KEY = "earth_monagas_places_v8";
 
@@ -661,6 +661,32 @@ export class EarthStore {
     return item;
   }
 
+  async addBatchItemsToParish(munId, parishId, type, items) {
+    const parish = this.getParish(munId, parishId);
+    if (!parish) {
+      console.warn(`[EarthStore] No se encontró la parroquia destino ${munId}/${parishId}`);
+      return 0;
+    }
+    if (!Array.isArray(items) || items.length === 0) return 0;
+
+    if (!parish[type]) parish[type] = [];
+    let count = 0;
+    items.forEach(item => {
+      const existingIdx = parish[type].findIndex(i => String(i.id) === String(item.id));
+      if (existingIdx >= 0) {
+        parish[type][existingIdx] = item;
+      } else {
+        parish[type].push(item);
+      }
+      count++;
+    });
+
+    parish.updatedAt = Date.now();
+    this.saveToStorage();
+    await this.syncToCloud(munId, parishId);
+    return count;
+  }
+
   async updateItem(munId, parishId, type, itemId, updatedFields) {
     let parish = this.getParish(munId, parishId);
     let idx = parish && parish[type] ? parish[type].findIndex(i => String(i.id) === String(itemId)) : -1;
@@ -822,7 +848,37 @@ export class EarthStore {
 `;
         }
 
-        // Polígonos de Sectores
+        // Sub-Parroquias / Ejes Comunales (Capa 1)
+        (p.subparroquias || []).forEach(sp => {
+          if (!sp.vertices || sp.vertices.length < 3) return;
+          const coords = sp.vertices.map(([lat, lng]) => `${lng},${lat},0`).join(" ");
+          const hexColor = (sp.colorRelleno || "#a855f7").replace("#", "");
+          const opacityHex = Math.round((sp.opacidad !== undefined ? sp.opacidad : 0.15) * 255).toString(16).padStart(2, "0");
+          const bColorHex = (sp.colorBorde || "#c084fc").replace("#", "");
+          content += `
+        <Placemark>
+          <name>${sp.nombre || "Eje Comunal Sin Nombre"}</name>
+          <description><![CDATA[
+            <h3>${sp.nombre}</h3>
+            <p><strong>Capa 1:</strong> Eje Comunal / Sub-Parroquia</p>
+            <p><strong>Área:</strong> ${sp.areaHa || 0} Ha</p>
+            <p><strong>Perímetro:</strong> ${sp.perimetroM || 0} m</p>
+          ]]></description>
+          <ExtendedData>
+            <Data name="capa"><value>capa_1_eje</value></Data>
+            <Data name="tipo"><value>subparroquia</value></Data>
+          </ExtendedData>
+          <visibility>${sp.visible !== false ? 1 : 0}</visibility>
+          <Style>
+            <LineStyle><color>ff${bColorHex.slice(4,6)}${bColorHex.slice(2,4)}${bColorHex.slice(0,2)}</color><width>${sp.anchoBorde || 2.5}</width></LineStyle>
+            <PolyStyle><color>${opacityHex}${hexColor.slice(4,6)}${hexColor.slice(2,4)}${hexColor.slice(0,2)}</color><fill>1</fill></PolyStyle>
+          </Style>
+          <Polygon><outerBoundaryIs><LinearRing><coordinates>${coords}</coordinates></LinearRing></outerBoundaryIs></Polygon>
+        </Placemark>
+`;
+        });
+
+        // Polígonos de Sectores (Capa 2)
         (p.poligonos || []).forEach(poly => {
           const coords = poly.vertices.map(([lat, lng]) => `${lng},${lat},0`).join(" ");
           const hexColor = (poly.colorRelleno || "#38bdf8").replace("#", "");

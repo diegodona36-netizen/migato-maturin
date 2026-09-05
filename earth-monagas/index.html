@@ -26,23 +26,26 @@
     }
   </script>
 
+  <!-- JSZip para soporte de archivos Google Earth comprimidos .kmz -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
   <!-- Anti-Cache Meta Tags -->
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate, max-age=0" />
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
 
   <!-- Custom Styles -->
-  <link rel="stylesheet" href="css/styles.css?v=78">
+  <link rel="stylesheet" href="css/styles.css?v=79">
 
   <!-- Script de Autenticación Rápida, Limpieza Integral de Caché y Activador de Herramientas -->
   <script>
-    // Auto-actualización obligatoria a la versión más reciente v=78 si se ingresó con v=73 u otra versión vieja
+    // Auto-actualización obligatoria a la versión más reciente v=79
     (function() {
       try {
         var p = new URLSearchParams(window.location.search);
         var curV = p.get('v');
-        if (!curV || curV !== '78') {
-          p.set('v', '78');
+        if (!curV || curV !== '79') {
+          p.set('v', '79');
           window.location.replace(window.location.pathname + '?' + p.toString() + window.location.hash);
         }
       } catch(e) {}
@@ -370,10 +373,10 @@
           <span class="whitespace-nowrap">Calcar</span>
         </button>
 
-        <!-- 📁 Abrir KML / KMZ -->
-        <button id="btn-open-kml-trigger" class="px-2.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 text-xs font-medium transition flex items-center gap-1 shrink-0 active:scale-95" title="Abrir archivo KML / KMZ">
-          <i data-lucide="folder-open" class="w-3.5 h-3.5 text-amber-400"></i>
-          <span class="whitespace-nowrap">KML</span>
+        <!-- 🌍 Importar KML / KMZ -->
+        <button id="btn-open-kml-trigger" class="px-2.5 py-1.5 rounded-xl bg-amber-600/20 hover:bg-amber-600/30 text-amber-300 border border-amber-500/40 text-xs font-bold transition flex items-center gap-1.5 shrink-0 active:scale-95" title="Importar polígonos de Google Earth (KML / KMZ)">
+          <i data-lucide="globe" class="w-3.5 h-3.5 text-amber-400"></i>
+          <span class="whitespace-nowrap">Importar KML</span>
         </button>
         <input type="file" id="input-file-kml" accept=".kml,.kmz" class="hidden">
 
@@ -1020,6 +1023,137 @@
   </div>
 
   <!-- ============================================================== -->
+  <!-- 7. MODAL IMPORTADOR UNIVERSAL DE GOOGLE EARTH (KML / KMZ)       -->
+  <!-- ============================================================== -->
+  <div id="modal-kml-import" style="display: none; z-index: 100000;" class="fixed inset-0 bg-slate-950/85 backdrop-blur-md hidden items-center justify-center p-3 sm:p-4 overflow-y-auto">
+    <div class="bg-slate-900 border border-slate-700 w-full max-w-2xl rounded-2xl shadow-[0_25px_60px_rgba(0,0,0,0.9)] p-4 sm:p-6 space-y-4 max-h-[90vh] flex flex-col animate-in fade-in zoom-in-95 duration-200">
+      
+      <!-- Cabecera del Modal -->
+      <div class="flex items-start justify-between border-b border-slate-800 pb-3 gap-3">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-2xl bg-amber-950/70 border border-amber-500/40 flex items-center justify-center text-amber-400 shrink-0 shadow-inner">
+            <i data-lucide="globe-2" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="text-[10px] font-black uppercase tracking-wider text-amber-400 bg-amber-950/80 border border-amber-500/30 px-2 py-0.5 rounded-full">Google Earth Pro / Web</span>
+              <span id="kml-badge-count" class="text-[10px] font-bold text-emerald-400 bg-emerald-950/60 border border-emerald-500/30 px-2 py-0.5 rounded-full">0 polígonos</span>
+            </div>
+            <h3 class="text-base font-black text-white mt-0.5">Importar Polígonos de Google Earth</h3>
+            <p class="text-xs text-slate-400">Archivo: <span id="kml-modal-filename" class="text-slate-200 font-mono font-semibold">archivo.kml</span></p>
+          </div>
+        </div>
+        <button type="button" id="btn-close-kml-import" class="p-1.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <!-- Contenido Scrolleable -->
+      <div class="space-y-4 overflow-y-auto pr-1 flex-1 text-xs">
+
+        <!-- PASO 1: Selección de Capa (Capa 1 vs Capa 2) -->
+        <div>
+          <label class="block text-[11px] font-black text-slate-300 uppercase tracking-wider mb-2">
+            Paso 1: ¿A qué nivel o capa corresponden estos polígonos? *
+          </label>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            
+            <!-- Opción Capa 1: Sub-Parroquia / Eje Comunal -->
+            <div id="card-capa-1" class="kml-layer-card cursor-pointer p-3.5 rounded-xl border-2 transition relative flex flex-col justify-between border-purple-500 bg-purple-950/30 shadow-[0_0_15px_rgba(168,85,247,0.15)]">
+              <div class="flex items-start gap-2.5">
+                <input type="radio" name="kml_target_layer" id="radio-layer-capa1" value="capa1" checked class="mt-0.5 accent-purple-500">
+                <div>
+                  <div class="flex items-center gap-1.5">
+                    <span class="w-2.5 h-2.5 rounded-full bg-purple-400 shrink-0"></span>
+                    <strong class="text-white text-xs font-bold">Capa 1: Eje Comunal</strong>
+                  </div>
+                  <span class="text-[10px] text-purple-300 font-semibold block mt-0.5">Sub-Parroquia (Nivel 4)</span>
+                  <p class="text-[11px] text-slate-300 mt-1 leading-relaxed">
+                    Delimitación de Ejes Comunales. Trazo morado con pin de centroide.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Opción Capa 2: Sector Comunal / Comunidad -->
+            <div id="card-capa-2" class="kml-layer-card cursor-pointer p-3.5 rounded-xl border-2 transition relative flex flex-col justify-between border-slate-700 bg-slate-800/40 hover:border-slate-600">
+              <div class="flex items-start gap-2.5">
+                <input type="radio" name="kml_target_layer" id="radio-layer-capa2" value="capa2" class="mt-0.5 accent-sky-500">
+                <div>
+                  <div class="flex items-center gap-1.5">
+                    <span class="w-2.5 h-2.5 rounded-full bg-sky-400 shrink-0"></span>
+                    <strong class="text-white text-xs font-bold">Capa 2: Sector Comunal</strong>
+                  </div>
+                  <span class="text-[10px] text-sky-300 font-semibold block mt-0.5">Comunidad / Base (Nivel 5)</span>
+                  <p class="text-[11px] text-slate-300 mt-1 leading-relaxed">
+                    Sectores comunitarios y punto y círculo. Trazo celeste con ficha técnica.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- PASO 2: Parroquia Destino y Vinculación -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-[11px] font-black text-slate-300 uppercase tracking-wider mb-1">
+              Paso 2: Parroquia Destino *
+            </label>
+            <select id="kml-select-parish" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-amber-500 font-medium">
+              <!-- Opciones dinámicas -->
+            </select>
+          </div>
+
+          <!-- PASO 3: Vincular a Eje (Solo visible si Capa 2 está seleccionada) -->
+          <div id="kml-box-eje-link" class="hidden">
+            <label class="block text-[11px] font-black text-purple-300 uppercase tracking-wider mb-1">
+              Vincular al Eje Comunal (Opcional):
+            </label>
+            <select id="kml-select-eje" class="w-full bg-slate-800 border border-purple-500/50 rounded-xl px-3 py-2 text-xs text-purple-200 focus:outline-none focus:border-purple-400 font-medium">
+              <option value="">— Sin vincular a un Eje específico —</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- PASO 4: Vista Previa y Selección de Polígonos -->
+        <div>
+          <div class="flex items-center justify-between mb-1.5">
+            <label class="text-[11px] font-black text-slate-300 uppercase tracking-wider">
+              Polígonos Detectados (<span id="kml-selected-count" class="text-emerald-400 font-bold">0</span> seleccionados):
+            </label>
+            <div class="flex items-center gap-2">
+              <button type="button" id="btn-kml-toggle-all" class="text-[10px] text-amber-400 hover:text-amber-300 font-bold transition cursor-pointer">
+                Marcar / Desmarcar Todos
+              </button>
+            </div>
+          </div>
+
+          <!-- Contenedor scrolleable de lista de elementos -->
+          <div id="kml-items-list" class="space-y-1.5 max-h-52 overflow-y-auto border border-slate-800 rounded-xl p-2 bg-slate-950/60 pr-1.5">
+            <!-- Items generados dinámicamente -->
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Pie del Modal -->
+      <div class="pt-3 border-t border-slate-800 flex items-center justify-between gap-2">
+        <button type="button" id="btn-cancel-kml-import" class="px-4 py-2 text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl transition cursor-pointer">
+          Cancelar
+        </button>
+
+        <button type="button" id="btn-confirm-kml-import" class="px-5 py-2.5 text-xs font-black bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white rounded-xl shadow-lg flex items-center gap-2 active:scale-95 transition cursor-pointer">
+          <i data-lucide="cloud-upload" class="w-4 h-4"></i>
+          <span id="btn-confirm-kml-label">Importar Polígonos a Capa 1</span>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ============================================================== -->
   <!-- 5. PANEL FLOTANTE DE TRAZADO EN VIVO (ESTACIÓN GOOGLE EARTH)   -->
   <!-- ============================================================== -->
   <div id="earth-drawing-banner" style="display: none; z-index: 99999;" class="hidden fixed bottom-8 sm:bottom-auto sm:top-24 sm:right-6 inset-x-2 sm:inset-x-auto w-auto sm:w-[410px] bg-slate-900/98 backdrop-blur-2xl border-2 border-sky-500/90 p-2.5 sm:p-3.5 rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.95)] flex flex-col gap-2 pointer-events-auto transition-all max-h-[85vh] overflow-y-auto">
@@ -1125,7 +1259,7 @@
   </div>
 
   <!-- SCRIPT -->
-  <script type="module" src="js/app.js?v=78"></script>
+  <script type="module" src="js/app.js?v=79"></script>
   <script>
     if (window.lucide && typeof window.lucide.createIcons === 'function') {
       window.lucide.createIcons();

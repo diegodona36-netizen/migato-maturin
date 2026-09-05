@@ -2,21 +2,21 @@
  * Controlador Principal — Google Earth Pro Web (Edición Estado Monagas)
  * Robusto, 100% Operativo y Totalmente Individualizado
  */
-import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=78";
-import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=78";
-import { getAllParishesForSelector } from "./usersCatalog.js?v=78";
-import { EarthStore } from "./earthStore.js?v=78";
-import { EarthMapEngine } from "./mapEngine.js?v=78";
-import { PropertiesDialog } from "./propertiesDialog.js?v=78";
-import { ToolsManager } from "./toolsManager.js?v=78";
-import { detectParishFromGeometry } from "./geoMonagas.js?v=78";
-import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=78";
+import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=79";
+import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=79";
+import { getAllParishesForSelector } from "./usersCatalog.js?v=79";
+import { EarthStore } from "./earthStore.js?v=79";
+import { EarthMapEngine } from "./mapEngine.js?v=79";
+import { PropertiesDialog } from "./propertiesDialog.js?v=79";
+import { ToolsManager } from "./toolsManager.js?v=79";
+import { detectParishFromGeometry } from "./geoMonagas.js?v=79";
+import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=79";
 import { 
   getSavedFirebaseConfig, 
   saveFirebaseConfig, 
   isFirebaseConfigured, 
   initFirebase 
-} from "./firebaseConfig.js?v=78";
+} from "./firebaseConfig.js?v=79";
 
 class EarthMonagasApp {
   constructor() {
@@ -97,6 +97,7 @@ class EarthMonagasApp {
     this.setupToolbarEvents();
     this.setupSidebarTabs();
     this.setupDragAndDrop();
+    this.setupKmlImportModal();
     this.setupOverlayModal();
     this.setupParishSelectorModal();
     this.setupAuth();
@@ -1726,8 +1727,6 @@ class EarthMonagasApp {
       e.stopPropagation();
 
       const files = e.dataTransfer.files;
-      if (!files || files.length === 0) return;
-
       for (let i = 0; i < files.length; i++) {
         await this.importKmlFile(files[i]);
       }
@@ -1738,77 +1737,455 @@ class EarthMonagasApp {
       fileInput.addEventListener("change", async (e) => {
         const file = e.target.files[0];
         if (file) await this.importKmlFile(file);
+        e.target.value = "";
       });
+    }
+  }
+
+  setupKmlImportModal() {
+    this.pendingKmlImport = null;
+
+    const modal = document.getElementById("modal-kml-import");
+    const btnClose = document.getElementById("btn-close-kml-import");
+    const btnCancel = document.getElementById("btn-cancel-kml-import");
+    const btnConfirm = document.getElementById("btn-confirm-kml-import");
+    const cardCapa1 = document.getElementById("card-capa-1");
+    const cardCapa2 = document.getElementById("card-capa-2");
+    const radioCapa1 = document.getElementById("radio-layer-capa1");
+    const radioCapa2 = document.getElementById("radio-layer-capa2");
+    const selectParish = document.getElementById("kml-select-parish");
+    const btnToggleAll = document.getElementById("btn-kml-toggle-all");
+
+    if (!modal) return;
+
+    const closeModal = () => {
+      modal.style.display = "none";
+      modal.classList.add("hidden");
+      this.pendingKmlImport = null;
+    };
+
+    if (btnClose) btnClose.addEventListener("click", closeModal);
+    if (btnCancel) btnCancel.addEventListener("click", closeModal);
+
+    const setLayer = (layer) => {
+      if (!this.pendingKmlImport) return;
+      this.pendingKmlImport.selectedLayer = layer;
+      const boxEje = document.getElementById("kml-box-eje-link");
+
+      if (layer === "capa1") {
+        if (radioCapa1) radioCapa1.checked = true;
+        if (radioCapa2) radioCapa2.checked = false;
+        if (cardCapa1) cardCapa1.className = "kml-layer-card cursor-pointer p-3.5 rounded-xl border-2 transition relative flex flex-col justify-between border-purple-500 bg-purple-950/40 shadow-[0_0_15px_rgba(168,85,247,0.25)]";
+        if (cardCapa2) cardCapa2.className = "kml-layer-card cursor-pointer p-3.5 rounded-xl border-2 transition relative flex flex-col justify-between border-slate-700 bg-slate-800/40 hover:border-slate-600 opacity-60 hover:opacity-100";
+        if (boxEje) boxEje.classList.add("hidden");
+      } else {
+        if (radioCapa2) radioCapa2.checked = true;
+        if (radioCapa1) radioCapa1.checked = false;
+        if (cardCapa2) cardCapa2.className = "kml-layer-card cursor-pointer p-3.5 rounded-xl border-2 transition relative flex flex-col justify-between border-sky-500 bg-sky-950/40 shadow-[0_0_15px_rgba(56,189,248,0.25)]";
+        if (cardCapa1) cardCapa1.className = "kml-layer-card cursor-pointer p-3.5 rounded-xl border-2 transition relative flex flex-col justify-between border-slate-700 bg-slate-800/40 hover:border-slate-600 opacity-60 hover:opacity-100";
+        if (boxEje) boxEje.classList.remove("hidden");
+        this.updateKmlEjeOptions();
+      }
+      this.updateKmlImportModalUI();
+    };
+
+    if (cardCapa1) cardCapa1.addEventListener("click", () => setLayer("capa1"));
+    if (cardCapa2) cardCapa2.addEventListener("click", () => setLayer("capa2"));
+    if (radioCapa1) radioCapa1.addEventListener("change", () => setLayer("capa1"));
+    if (radioCapa2) radioCapa2.addEventListener("change", () => setLayer("capa2"));
+
+    if (selectParish) {
+      selectParish.addEventListener("change", (e) => {
+        if (!this.pendingKmlImport) return;
+        const [mId, pId] = e.target.value.split("/");
+        this.pendingKmlImport.targetMunId = mId;
+        this.pendingKmlImport.targetParishId = pId;
+        this.updateKmlEjeOptions();
+        this.updateKmlImportModalUI();
+      });
+    }
+
+    if (btnToggleAll) {
+      btnToggleAll.addEventListener("click", () => {
+        if (!this.pendingKmlImport || !this.pendingKmlImport.polygons) return;
+        const allChecked = this.pendingKmlImport.polygons.every(p => p.checked);
+        this.pendingKmlImport.polygons.forEach(p => p.checked = !allChecked);
+        this.renderKmlItemsList();
+        this.updateKmlImportModalUI();
+      });
+    }
+
+    if (btnConfirm) {
+      btnConfirm.addEventListener("click", async () => {
+        await this.executeKmlImport();
+      });
+    }
+  }
+
+  updateKmlEjeOptions() {
+    const selectEje = document.getElementById("kml-select-eje");
+    if (!selectEje || !this.pendingKmlImport) return;
+
+    const mId = this.pendingKmlImport.targetMunId;
+    const pId = this.pendingKmlImport.targetParishId;
+    const parish = this.store.getParish(mId, pId);
+    const subps = parish?.subparroquias || [];
+
+    selectEje.innerHTML = `<option value="">— Sin vincular a un Eje específico —</option>` +
+      subps.map(sp => `<option value="${sp.id}">🟣 ${sp.nombre}</option>`).join("");
+  }
+
+  renderKmlItemsList() {
+    const container = document.getElementById("kml-items-list");
+    if (!container || !this.pendingKmlImport) return;
+
+    const polys = this.pendingKmlImport.polygons || [];
+    if (polys.length === 0) {
+      container.innerHTML = `<div class="p-4 text-center text-slate-500 italic">No se detectaron polígonos cerrados en este archivo.</div>`;
+      return;
+    }
+
+    container.innerHTML = polys.map((p, idx) => `
+      <div class="flex items-center gap-2 p-2 rounded-lg bg-slate-900/90 border border-slate-800 hover:border-slate-700 transition">
+        <input type="checkbox" data-idx="${idx}" class="kml-item-checkbox accent-emerald-500 w-4 h-4 rounded cursor-pointer shrink-0" ${p.checked ? "checked" : ""}>
+        <div class="flex-1 min-w-0">
+          <input type="text" data-idx="${idx}" value="${p.name.replace(/"/g, '&quot;')}" class="kml-item-name w-full bg-slate-800/80 border border-slate-700 rounded px-2 py-1 text-xs text-white focus:outline-none focus:border-amber-400 font-semibold" placeholder="Nombre del polígono">
+        </div>
+        <div class="flex items-center gap-1.5 shrink-0">
+          <span class="px-1.5 py-0.5 rounded bg-slate-800 border border-slate-700 text-[10px] text-slate-300 font-mono">${p.vertices.length} pts</span>
+          <span class="px-1.5 py-0.5 rounded bg-emerald-950/80 border border-emerald-500/40 text-[10px] text-emerald-300 font-bold font-mono">${p.areaHa || 0} Ha</span>
+        </div>
+      </div>
+    `).join("");
+
+    container.querySelectorAll(".kml-item-checkbox").forEach(cb => {
+      cb.addEventListener("change", (e) => {
+        const idx = parseInt(e.target.getAttribute("data-idx"), 10);
+        if (this.pendingKmlImport && this.pendingKmlImport.polygons[idx]) {
+          this.pendingKmlImport.polygons[idx].checked = e.target.checked;
+          this.updateKmlImportModalUI();
+        }
+      });
+    });
+
+    container.querySelectorAll(".kml-item-name").forEach(inp => {
+      inp.addEventListener("input", (e) => {
+        const idx = parseInt(e.target.getAttribute("data-idx"), 10);
+        if (this.pendingKmlImport && this.pendingKmlImport.polygons[idx]) {
+          this.pendingKmlImport.polygons[idx].name = e.target.value.trim() || `Polígono ${idx + 1}`;
+        }
+      });
+    });
+  }
+
+  updateKmlImportModalUI() {
+    if (!this.pendingKmlImport) return;
+    const polys = this.pendingKmlImport.polygons || [];
+    const selectedCount = polys.filter(p => p.checked).length;
+    const labelCount = document.getElementById("kml-selected-count");
+    if (labelCount) labelCount.textContent = selectedCount;
+
+    const btnConfirm = document.getElementById("btn-confirm-kml-import");
+    const labelConfirm = document.getElementById("btn-confirm-kml-label");
+    const parish = this.store.getParish(this.pendingKmlImport.targetMunId, this.pendingKmlImport.targetParishId);
+    const parishName = parish ? parish.nombre : "Parroquia";
+
+    if (labelConfirm) {
+      if (this.pendingKmlImport.selectedLayer === "capa1") {
+        labelConfirm.textContent = `Importar ${selectedCount} Polígonos a Capa 1 (Ejes Comunales) en ${parishName}`;
+      } else {
+        labelConfirm.textContent = `Importar ${selectedCount} Polígonos a Capa 2 (Sectores Comunales) en ${parishName}`;
+      }
+    }
+
+    if (btnConfirm) {
+      btnConfirm.disabled = selectedCount === 0;
+      if (selectedCount === 0) {
+        btnConfirm.classList.add("opacity-50", "cursor-not-allowed");
+      } else {
+        btnConfirm.classList.remove("opacity-50", "cursor-not-allowed");
+      }
     }
   }
 
   async importKmlFile(file) {
     try {
-      const text = await file.text();
+      let text = "";
+      const isKmz = file.name.toLowerCase().endsWith(".kmz");
+
+      if (isKmz) {
+        if (!window.JSZip) {
+          throw new Error("Librería de descompresión KMZ cargando... Por favor intenta en un momento.");
+        }
+        const zip = await window.JSZip.loadAsync(file);
+        const kmlEntry = Object.values(zip.files).find(f => f.name.toLowerCase().endsWith(".kml"));
+        if (!kmlEntry) {
+          throw new Error("El archivo .kmz comprimido no contiene ningún archivo .kml en su interior.");
+        }
+        text = await kmlEntry.async("string");
+      } else {
+        text = await file.text();
+      }
+
       const parser = new DOMParser();
       const xmlDoc = parser.parseFromString(text, "text/xml");
 
-      const placemarks = xmlDoc.getElementsByTagName("Placemark");
-      let count = 0;
-
-      for (let i = 0; i < placemarks.length; i++) {
-        const pm = placemarks[i];
-        const name = pm.getElementsByTagName("name")[0]?.textContent || `Elemento ${i+1}`;
-        const polygon = pm.getElementsByTagName("Polygon")[0];
-        const line = pm.getElementsByTagName("LineString")[0];
-
-        if (polygon) {
-          const coords = polygon.getElementsByTagName("coordinates")[0]?.textContent || "";
-          const vertices = this.parseCoords(coords);
-          if (vertices.length >= 3) {
-            this.store.addItemToParish(this.selectedMunId, this.selectedParishId, "poligonos", {
-              id: `IMP-POLY-${Date.now()}-${i}`,
-              nombre: name,
-              colorBorde: "#f59e0b",
-              anchoBorde: 2,
-              colorRelleno: "#f59e0b",
-              opacidad: 0.35,
-              vertices,
-              areaHa: this.toolsManager.calculatePolygonAreaHa(vertices),
-              perimetroM: this.toolsManager.calculatePerimeterMeters(vertices),
-              visible: true,
-              fecha: new Date().toISOString()
-            });
-            count++;
-          }
-        } else if (line) {
-          const coords = line.getElementsByTagName("coordinates")[0]?.textContent || "";
-          const puntos = this.parseCoords(coords);
-          if (puntos.length >= 2) {
-            this.store.addItemToParish(this.selectedMunId, this.selectedParishId, "rutas", {
-              id: `IMP-ROUTE-${Date.now()}-${i}`,
-              nombre: name,
-              color: "#10b981",
-              ancho: 4,
-              puntos,
-              longitudM: this.toolsManager.calculatePerimeterMeters(puntos),
-              visible: true,
-              fecha: new Date().toISOString()
-            });
-            count++;
-          }
-        }
+      const parseErrors = xmlDoc.getElementsByTagName("parsererror");
+      if (parseErrors.length > 0) {
+        throw new Error("El archivo no tiene un formato XML/KML válido.");
       }
 
-      const parish = this.store.getParish(this.selectedMunId, this.selectedParishId);
-      this.mapEngine.renderParishItems(parish, (t, it) => this.propDialog.open(t, it, this.selectedMunId, this.selectedParishId));
-      this.renderPlacesTree();
-      alert(`Google Earth Pro: Se importaron ${count} elementos KML en ${parish.nombre}`);
+      const placemarks = Array.from(xmlDoc.getElementsByTagName("Placemark"));
+      const extractedPolygons = [];
+      let detectedCapa = "capa1";
+
+      placemarks.forEach((pm, idx) => {
+        const name = pm.getElementsByTagName("name")[0]?.textContent?.trim() || `Polígono ${idx + 1}`;
+        const desc = pm.getElementsByTagName("description")[0]?.textContent?.trim() || "";
+
+        const extendedData = {};
+        const dataNodes = pm.getElementsByTagName("Data");
+        for (let d = 0; d < dataNodes.length; d++) {
+          const key = dataNodes[d].getAttribute("name");
+          const val = dataNodes[d].getElementsByTagName("value")[0]?.textContent?.trim();
+          if (key && val) extendedData[key.toLowerCase()] = val;
+        }
+        const simpleDataNodes = pm.getElementsByTagName("SimpleData");
+        for (let s = 0; s < simpleDataNodes.length; s++) {
+          const key = simpleDataNodes[s].getAttribute("name");
+          const val = simpleDataNodes[s].textContent?.trim();
+          if (key && val) extendedData[key.toLowerCase()] = val;
+        }
+
+        const parentFolder = pm.closest("Folder");
+        const folderName = parentFolder?.getElementsByTagName("name")[0]?.textContent?.toLowerCase() || "";
+        const lowerName = name.toLowerCase();
+
+        if (lowerName.includes("sector") || lowerName.includes("comunidad") || folderName.includes("sector") || folderName.includes("comunidad") || extendedData.capa === "capa_2" || extendedData.capa === "capa2") {
+          detectedCapa = "capa2";
+        } else if (lowerName.includes("eje") || lowerName.includes("sub-parroquia") || lowerName.includes("subparroquia") || folderName.includes("eje") || extendedData.capa === "capa_1" || extendedData.capa === "capa1") {
+          detectedCapa = "capa1";
+        }
+
+        const polyNodes = Array.from(pm.getElementsByTagName("Polygon"));
+        polyNodes.forEach(polyNode => {
+          const coordsText = polyNode.getElementsByTagName("coordinates")[0]?.textContent || "";
+          const vertices = this.parseCoords(coordsText);
+          if (vertices.length >= 3) {
+            const areaHa = this.toolsManager ? this.toolsManager.calculatePolygonAreaHa(vertices) : 0;
+            const perimetroM = this.toolsManager ? this.toolsManager.calculatePerimeterMeters(vertices) : 0;
+
+            extractedPolygons.push({
+              name,
+              description: desc,
+              vertices,
+              areaHa,
+              perimetroM,
+              checked: true,
+              casas: parseInt(extendedData.casas || extendedData.viviendas || "0", 10) || 0,
+              familias: parseInt(extendedData.familias || "0", 10) || 0,
+              militantes: parseInt(extendedData.militantes || extendedData.habitantes || "0", 10) || 0,
+              lider: extendedData.lider || extendedData.responsable || "",
+              telefono: extendedData.telefono || extendedData.celular || "",
+              eje: extendedData.eje || extendedData.subparroquia || ""
+            });
+          }
+        });
+      });
+
+      if (extractedPolygons.length === 0) {
+        alert("⚠️ No se encontraron polígonos cerrados en el archivo KML. Asegúrate de que los elementos contengan polígonos trazados en Google Earth.");
+        return;
+      }
+
+      this.openKmlImportModal(file.name, extractedPolygons, detectedCapa);
     } catch (err) {
-      alert("Error importando archivo KML: " + err.message);
+      console.error("[KML Import Error]", err);
+      alert("Error leyendo archivo de Google Earth: " + err.message);
+    }
+  }
+
+  openKmlImportModal(fileName, polygons, suggestedLayer = "capa1") {
+    const modal = document.getElementById("modal-kml-import");
+    if (!modal) return;
+
+    this.pendingKmlImport = {
+      fileName,
+      polygons,
+      selectedLayer: suggestedLayer,
+      targetMunId: this.selectedMunId,
+      targetParishId: this.selectedParishId
+    };
+
+    const labelFileName = document.getElementById("kml-modal-filename");
+    const badgeCount = document.getElementById("kml-badge-count");
+    if (labelFileName) labelFileName.textContent = fileName;
+    if (badgeCount) badgeCount.textContent = `${polygons.length} polígonos`;
+
+    const selectParish = document.getElementById("kml-select-parish");
+    if (selectParish) {
+      const allParishes = getAllParishesForSelector();
+      selectParish.innerHTML = allParishes.map(p => {
+        const val = `${p.munId}/${p.id}`;
+        const isSel = (p.munId === this.selectedMunId && p.id === this.selectedParishId);
+        return `<option value="${val}" ${isSel ? "selected" : ""}>${p.nombre} (${p.munNombre})</option>`;
+      }).join("");
+    }
+
+    const cardCapa1 = document.getElementById("card-capa-1");
+    const cardCapa2 = document.getElementById("card-capa-2");
+    const radioCapa1 = document.getElementById("radio-layer-capa1");
+    const radioCapa2 = document.getElementById("radio-layer-capa2");
+    const boxEje = document.getElementById("kml-box-eje-link");
+
+    if (suggestedLayer === "capa1") {
+      if (radioCapa1) radioCapa1.checked = true;
+      if (radioCapa2) radioCapa2.checked = false;
+      if (cardCapa1) cardCapa1.className = "kml-layer-card cursor-pointer p-3.5 rounded-xl border-2 transition relative flex flex-col justify-between border-purple-500 bg-purple-950/40 shadow-[0_0_15px_rgba(168,85,247,0.25)]";
+      if (cardCapa2) cardCapa2.className = "kml-layer-card cursor-pointer p-3.5 rounded-xl border-2 transition relative flex flex-col justify-between border-slate-700 bg-slate-800/40 hover:border-slate-600 opacity-60 hover:opacity-100";
+      if (boxEje) boxEje.classList.add("hidden");
+    } else {
+      if (radioCapa2) radioCapa2.checked = true;
+      if (radioCapa1) radioCapa1.checked = false;
+      if (cardCapa2) cardCapa2.className = "kml-layer-card cursor-pointer p-3.5 rounded-xl border-2 transition relative flex flex-col justify-between border-sky-500 bg-sky-950/40 shadow-[0_0_15px_rgba(56,189,248,0.25)]";
+      if (cardCapa1) cardCapa1.className = "kml-layer-card cursor-pointer p-3.5 rounded-xl border-2 transition relative flex flex-col justify-between border-slate-700 bg-slate-800/40 hover:border-slate-600 opacity-60 hover:opacity-100";
+      if (boxEje) boxEje.classList.remove("hidden");
+      this.updateKmlEjeOptions();
+    }
+
+    this.renderKmlItemsList();
+    this.updateKmlImportModalUI();
+
+    modal.style.display = "flex";
+    modal.classList.remove("hidden");
+    if (window.lucide && typeof window.lucide.createIcons === 'function') {
+      window.lucide.createIcons();
+    }
+  }
+
+  async executeKmlImport() {
+    if (!this.pendingKmlImport) return;
+
+    const { targetMunId, targetParishId, selectedLayer, polygons } = this.pendingKmlImport;
+    const selectedPolys = polygons.filter(p => p.checked);
+
+    if (selectedPolys.length === 0) {
+      alert("⚠️ Selecciona al menos un polígono para importar.");
+      return;
+    }
+
+    const selectEje = document.getElementById("kml-select-eje");
+    const parentEjeId = selectEje ? selectEje.value : "";
+
+    const btnConfirm = document.getElementById("btn-confirm-kml-import");
+    if (btnConfirm) {
+      btnConfirm.disabled = true;
+      btnConfirm.innerHTML = `<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> Guardando en la nube...`;
+    }
+
+    try {
+      const now = Date.now();
+      const itemsToSave = [];
+
+      if (selectedLayer === "capa1") {
+        selectedPolys.forEach((p, idx) => {
+          itemsToSave.push({
+            id: `sub-${targetMunId}-${targetParishId}-${now}-${idx}`,
+            parroquiaId: targetParishId,
+            nombre: p.name,
+            alias: p.name,
+            vertices: p.vertices,
+            colorBorde: "#c084fc",
+            anchoBorde: 2.5,
+            colorRelleno: "#a855f7",
+            opacidad: 0.15,
+            areaHa: p.areaHa || 0,
+            perimetroM: p.perimetroM || 0,
+            visible: true,
+            fecha: new Date().toISOString()
+          });
+        });
+
+        await this.store.addBatchItemsToParish(targetMunId, targetParishId, "subparroquias", itemsToSave);
+      } else {
+        selectedPolys.forEach((p, idx) => {
+          itemsToSave.push({
+            id: `sec-${targetMunId}-${targetParishId}-${now}-${idx}`,
+            subParroquiaId: parentEjeId || p.eje || "",
+            ejeId: parentEjeId || p.eje || "",
+            nombre: p.name,
+            vertices: p.vertices,
+            colorBorde: "#38bdf8",
+            anchoBorde: 2,
+            colorRelleno: "#38bdf8",
+            opacidad: 0.35,
+            areaHa: p.areaHa || 0,
+            perimetroM: p.perimetroM || 0,
+            militantes: p.militantes || 0,
+            casas: p.casas || 0,
+            familias: p.familias || 0,
+            lider: p.lider || "",
+            telefono: p.telefono || "",
+            visible: true,
+            fecha: new Date().toISOString()
+          });
+        });
+
+        await this.store.addBatchItemsToParish(targetMunId, targetParishId, "poligonos", itemsToSave);
+      }
+
+      if (this.selectedMunId !== targetMunId || this.selectedParishId !== targetParishId) {
+        this.selectParish(targetMunId, targetParishId, false);
+      } else {
+        const parish = this.store.getParish(targetMunId, targetParishId);
+        this.mapEngine.renderParishItems(parish, (t, it) => this.propDialog.open(t, it, targetMunId, targetParishId));
+        this.renderPlacesTree();
+      }
+
+      const allVerts = itemsToSave.flatMap(it => it.vertices);
+      if (allVerts.length > 0 && this.mapEngine?.map) {
+        try {
+          this.mapEngine.map.fitBounds(L.latLngBounds(allVerts), { padding: [50, 50], maxZoom: 16 });
+        } catch(e) {}
+      }
+
+      const parish = this.store.getParish(targetMunId, targetParishId);
+      const parishName = parish ? parish.nombre : targetParishId;
+      const layerName = selectedLayer === "capa1" ? "Capa 1 (Ejes Comunales)" : "Capa 2 (Sectores Comunales)";
+
+      const modal = document.getElementById("modal-kml-import");
+      if (modal) {
+        modal.style.display = "none";
+        modal.classList.add("hidden");
+      }
+      this.pendingKmlImport = null;
+
+      alert(`✅ Google Earth: Se importaron ${itemsToSave.length} polígonos exitosamente en ${layerName} de ${parishName} y se sincronizaron con Google Cloud Firestore.`);
+    } catch (err) {
+      console.error("[KML Execution Error]", err);
+      alert("Error al importar polígonos: " + err.message);
+    } finally {
+      if (btnConfirm) {
+        btnConfirm.disabled = false;
+        btnConfirm.innerHTML = `<i data-lucide="cloud-upload" class="w-4 h-4"></i> <span id="btn-confirm-kml-label">Importar Polígonos a la Nube</span>`;
+        if (window.lucide && typeof window.lucide.createIcons === 'function') window.lucide.createIcons();
+      }
     }
   }
 
   parseCoords(str) {
+    if (!str || typeof str !== "string") return [];
     return str.trim().split(/\s+/).map(pt => {
       const parts = pt.split(",");
-      return [parseFloat(parts[1]), parseFloat(parts[0])];
-    }).filter(([lat, lng]) => !isNaN(lat) && !isNaN(lng));
+      if (parts.length >= 2) {
+        const lng = parseFloat(parts[0]);
+        const lat = parseFloat(parts[1]);
+        if (!isNaN(lat) && !isNaN(lng)) {
+          return [lat, lng];
+        }
+      }
+      return null;
+    }).filter(p => p !== null);
   }
 
   setupOverlayModal() {
