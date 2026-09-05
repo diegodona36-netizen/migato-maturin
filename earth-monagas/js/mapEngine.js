@@ -2,7 +2,7 @@
  * Motor Cartográfico Acelerado por GPU — Google Earth Pro Web (Monagas)
  * Integrado con Capas Jerárquicas Oficiales (INE 2021) y Edición de Vértices
  */
-import { GEO_ESTADO_OFICIAL, GEO_MUNICIPIOS_OFICIAL, GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=65";
+import { GEO_ESTADO_OFICIAL, GEO_MUNICIPIOS_OFICIAL, GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=66";
 
 export class EarthMapEngine {
   constructor(containerId, onCoordUpdate) {
@@ -86,6 +86,7 @@ export class EarthMapEngine {
     this.placemarksLayer = L.layerGroup().addTo(this.map);
     this.overlayLayer = L.layerGroup().addTo(this.map);
     this.tempDrawingLayer = L.layerGroup().addTo(this.map);
+    this.sectorLabelsLayer = L.layerGroup().addTo(this.map);
 
     this.spotlightEnabled = false; // Modo Foco desactivado por defecto para ver simultáneamente todos los sectores del estado
     this.currentParishLimite = null;
@@ -197,7 +198,7 @@ export class EarthMapEngine {
       'l1': this.layerL1_Estado,
       'l2': this.layerL2_Municipios,
       'l3': this.layerL3_Parroquias,
-      'l4': this.layerL4_SubParroquias,
+      'l4': this.subParroquiasLayer,
       'l5': this.polygonsLayer
     };
     const target = layerMap[levelKey];
@@ -436,6 +437,16 @@ export class EarthMapEngine {
     } catch(err) {
       console.warn("[setDrawingMode] Error:", err);
     }
+  calculateCentroid(vertices) {
+    if (!vertices || !Array.isArray(vertices) || vertices.length === 0) return null;
+    let latSum = 0, lngSum = 0;
+    vertices.forEach(v => {
+      if (Array.isArray(v) && v.length >= 2) {
+        latSum += v[0];
+        lngSum += v[1];
+      }
+    });
+    return [latSum / vertices.length, lngSum / vertices.length];
   }
 
   renderParishItems(activeParish, onSelectCallback) {
@@ -443,6 +454,7 @@ export class EarthMapEngine {
     this.routesLayer.clearLayers();
     this.placemarksLayer.clearLayers();
     if (this.subParroquiasLayer) this.subParroquiasLayer.clearLayers();
+    if (this.sectorLabelsLayer) this.sectorLabelsLayer.clearLayers();
 
     // Obtener todas las parroquias que contengan datos en el catálogo
     const allParishesWithData = window.earthApp?.store?.getAllParishesWithData() || [];
@@ -524,6 +536,30 @@ export class EarthMapEngine {
           });
 
           if (this.subParroquiasLayer) this.subParroquiasLayer.addLayer(spLayer);
+
+          // Marcador de Centroide visible en todo momento para el Eje
+          const spCentroid = this.calculateCentroid(sp.vertices);
+          if (spCentroid && this.sectorLabelsLayer) {
+            const spIcon = L.divIcon({
+              className: "custom-subparish-pin",
+              html: `<div class="px-2 py-0.5 rounded-full text-[10px] font-black border shadow-lg cursor-pointer whitespace-nowrap transition transform hover:scale-110 flex items-center gap-1 ${isActiveParish ? 'bg-purple-950/90 text-purple-200 border-purple-400' : 'bg-slate-900/90 text-purple-300 border-purple-800'}" style="backdrop-filter: blur(4px);">
+                <span class="w-1.5 h-1.5 rounded-full bg-purple-400 shrink-0"></span>
+                <span>${sp.nombre}</span>
+              </div>`,
+              iconSize: null,
+              iconAnchor: [30, 10]
+            });
+            const spMarker = L.marker(spCentroid, { icon: spIcon, interactive: !isDrawing });
+            spMarker.on("click", (e) => {
+              L.DomEvent.stopPropagation(e);
+              if (window.earthApp && String(window.earthApp.selectedParishId) !== String(parishId)) {
+                window.earthApp.selectParish(munId, parishId);
+              }
+              if (window.earthApp) window.earthApp.focusSubParish(sp.id, false);
+              if (onSelectCallback) onSelectCallback("subparroquia", sp, e);
+            });
+            this.sectorLabelsLayer.addLayer(spMarker);
+          }
         } catch (err) {
           console.warn("[MapEngine] Error renderizando sub-parroquia:", sp, err);
         }
@@ -582,6 +618,30 @@ export class EarthMapEngine {
           });
 
           this.polygonsLayer.addLayer(pLayer);
+
+          // Marcador de Centroide con militantes siempre visible en el mapa
+          const centroid = this.calculateCentroid(poly.vertices);
+          if (centroid && this.sectorLabelsLayer) {
+            const badgeIcon = L.divIcon({
+              className: "custom-sector-pin",
+              html: `<div class="px-2 py-0.5 rounded-full text-[10px] font-black border shadow-lg cursor-pointer whitespace-nowrap transition transform hover:scale-110 flex items-center gap-1 ${isActiveParish ? 'bg-sky-950/90 text-sky-200 border-sky-400' : 'bg-slate-900/90 text-slate-200 border-slate-600'}" style="backdrop-filter: blur(4px);">
+                <span class="w-1.5 h-1.5 rounded-full bg-sky-400 shrink-0 animate-pulse"></span>
+                <span>${poly.nombre}</span>
+                ${milCount > 0 ? `<span class="text-[9px] text-sky-300 ml-0.5 font-mono">(${milCount})</span>` : ''}
+              </div>`,
+              iconSize: null,
+              iconAnchor: [30, 10]
+            });
+            const badgeMarker = L.marker(centroid, { icon: badgeIcon, interactive: !isDrawing });
+            badgeMarker.on("click", (e) => {
+              L.DomEvent.stopPropagation(e);
+              if (window.earthApp && String(window.earthApp.selectedParishId) !== String(parishId)) {
+                window.earthApp.selectParish(munId, parishId);
+              }
+              if (onSelectCallback) onSelectCallback("poligono", poly);
+            });
+            this.sectorLabelsLayer.addLayer(badgeMarker);
+          }
         } catch (err) {
           console.warn("[MapEngine] Error renderizando sector comunal:", poly, err);
         }

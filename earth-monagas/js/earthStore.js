@@ -1,13 +1,13 @@
 /**
  * Gestor de Estado y Árbol de Lugares (Places) — Google Earth Pro Web (Monagas)
  */
-import { SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=65";
+import { SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=66";
 import { 
   saveParishToFirestore, 
   subscribeToTerritories, 
   isFirebaseConfigured, 
   fetchAllTerritoriesFromFirestore 
-} from "./firebaseConfig.js?v=65";
+} from "./firebaseConfig.js?v=66";
 
 const STORAGE_KEY = "earth_monagas_places_v3";
 
@@ -141,15 +141,38 @@ export class EarthStore {
     this.purgeDummySectors(this.state);
     this.cloudDebounceTimer = null;
     this.cloudSyncState = "idle";
+    this.unsubscribeFirestore = null;
+  }
 
-    // Suscripción en tiempo real a Firebase Firestore (si está configurado)
+  startRealtimeSync() {
+    if (this.unsubscribeFirestore) return;
     try {
       this.unsubscribeFirestore = subscribeToTerritories((remoteData) => {
         this.handleFirestoreSnapshot(remoteData);
       });
+      console.log("🔥 [EarthStore] Listener en tiempo real de Firestore activado.");
     } catch (e) {
       console.warn("No se pudo iniciar listener Firestore:", e);
     }
+  }
+
+  getMostRecentlyUpdatedParish() {
+    let latestParish = null;
+    let maxTime = 0;
+    if (!this.state || !this.state.municipios) return null;
+
+    Object.entries(this.state.municipios).forEach(([munId, mun]) => {
+      Object.entries(mun.parroquias || {}).forEach(([parishId, p]) => {
+        const hasSectors = (p.poligonos && p.poligonos.length > 0) || (p.subparroquias && p.subparroquias.length > 0);
+        const time = p.updatedAt || 0;
+        if (hasSectors && time > maxTime) {
+          maxTime = time;
+          latestParish = { munId, parishId, parish: p, updatedAt: time };
+        }
+      });
+    });
+
+    return latestParish;
   }
 
   ensureAllParishes(state) {
@@ -464,9 +487,9 @@ export class EarthStore {
 
     if (changesApplied) {
       this.saveToStorage();
-      if (window.earthApp && window.earthApp.mapEngine && typeof window.earthApp.onCloudDataMerged === "function") {
-        window.earthApp.onCloudDataMerged();
-      }
+    }
+    if (window.earthApp && window.earthApp.mapEngine && typeof window.earthApp.onCloudDataMerged === "function") {
+      window.earthApp.onCloudDataMerged();
     }
     this.updateCloudStatus("online");
   }
@@ -578,9 +601,9 @@ export class EarthStore {
 
       if (changesApplied) {
         this.saveToStorage();
-        if (window.earthApp && typeof window.earthApp.onCloudDataMerged === "function") {
-          window.earthApp.onCloudDataMerged();
-        }
+      }
+      if (window.earthApp && window.earthApp.mapEngine && typeof window.earthApp.onCloudDataMerged === "function") {
+        window.earthApp.onCloudDataMerged();
       }
 
       this.updateCloudStatus("online");

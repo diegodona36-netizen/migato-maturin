@@ -2,21 +2,21 @@
  * Controlador Principal — Google Earth Pro Web (Edición Estado Monagas)
  * Robusto, 100% Operativo y Totalmente Individualizado
  */
-import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=65";
-import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=65";
-import { getAllParishesForSelector } from "./usersCatalog.js?v=65";
-import { EarthStore } from "./earthStore.js?v=65";
-import { EarthMapEngine } from "./mapEngine.js?v=65";
-import { PropertiesDialog } from "./propertiesDialog.js?v=65";
-import { ToolsManager } from "./toolsManager.js?v=65";
-import { detectParishFromGeometry } from "./geoMonagas.js?v=65";
-import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=65";
+import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=66";
+import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=66";
+import { getAllParishesForSelector } from "./usersCatalog.js?v=66";
+import { EarthStore } from "./earthStore.js?v=66";
+import { EarthMapEngine } from "./mapEngine.js?v=66";
+import { PropertiesDialog } from "./propertiesDialog.js?v=66";
+import { ToolsManager } from "./toolsManager.js?v=66";
+import { detectParishFromGeometry } from "./geoMonagas.js?v=66";
+import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=66";
 import { 
   getSavedFirebaseConfig, 
   saveFirebaseConfig, 
   isFirebaseConfigured, 
   initFirebase 
-} from "./firebaseConfig.js?v=65";
+} from "./firebaseConfig.js?v=66";
 
 class EarthMonagasApp {
   constructor() {
@@ -99,15 +99,30 @@ class EarthMonagasApp {
     this.setupOverlayModal();
     this.setupParishSelectorModal();
     this.setupAuth();
-    this.activeSubParroquiaId = null;
+    // Iniciar listener en tiempo real de Firestore ahora que mapEngine está listo
+    this.store.startRealtimeSync();
 
     // Cargar parroquia activa inicial
     this.selectParish(this.selectedMunId, this.selectedParishId);
+    this.renderQuickParishBar();
 
     // Sincronización continua con la base de datos en la nube (compartida entre computadoras y teléfonos)
     // Descarga inicial desde Firestore como Única Fuente de la Verdad (SSOT)
     setTimeout(() => {
       this.store.syncFromCloud().then(() => {
+        this.renderQuickParishBar();
+
+        // Si la parroquia actual está vacía, auto-enfocar la parroquia con datos más recientes
+        const currentParish = this.store.getParish(this.selectedMunId, this.selectedParishId);
+        const hasCurrentData = (currentParish?.poligonos || []).length > 0 || (currentParish?.subparroquias || []).length > 0;
+        if (!hasCurrentData && !paramParish) {
+          const recent = this.store.getMostRecentlyUpdatedParish();
+          if (recent && recent.parishId && recent.parishId !== this.selectedParishId) {
+            console.log(`📍 Auto-enfocando parroquia con datos recientes: ${recent.parishId} (${recent.munId})`);
+            this.selectParish(recent.munId, recent.parishId);
+          }
+        }
+
         const paramSector = urlParams.get("sector");
         if (paramSector) {
           setTimeout(() => {
@@ -122,12 +137,12 @@ class EarthMonagasApp {
           }, 300);
         }
       });
-    }, 300);
+    }, 150);
 
-    // Polling de respaldo cada 25 segundos (Firestore actualiza en tiempo real via web sockets)
+    // Polling de respaldo cada 20 segundos
     setInterval(() => {
       this.store.syncFromCloud();
-    }, 25000);
+    }, 20000);
 
     window.activateEarthTool = (toolName) => {
       // Activar la herramienta de dibujo directamente sin interrumpir ni bloquear con modales
@@ -211,6 +226,7 @@ class EarthMonagasApp {
 
     this.updateMilitanciaTally();
     this.renderPlacesTree();
+    this.renderQuickParishBar();
     this.updateSpotlightButtonUI(this.mapEngine.spotlightEnabled);
 
     // En pantallas móviles, replegar el sidebar para ver el mapa 100%
@@ -533,6 +549,48 @@ class EarthMonagasApp {
         btn.title = "Satélite 100% visible y limpio (sin filtro oscuro). Solo líneas limítrofes. Clic para activar sombra.";
       }
     }
+  }
+
+  renderQuickParishBar() {
+    let bar = document.getElementById("earth-quick-parish-bar");
+    if (!bar) {
+      bar = document.createElement("div");
+      bar.id = "earth-quick-parish-bar";
+      bar.className = "fixed bottom-3 left-1/2 -translate-x-1/2 z-[1500] max-w-[95vw] overflow-x-auto flex items-center gap-1.5 px-3 py-2 bg-slate-950/95 border border-purple-500/60 rounded-2xl shadow-2xl backdrop-blur-md transition-all pointer-events-auto";
+      document.body.appendChild(bar);
+    }
+
+    const allParishes = this.store?.getAllParishesWithData() || [];
+    if (allParishes.length === 0) {
+      bar.classList.add("hidden");
+      return;
+    }
+    bar.classList.remove("hidden");
+
+    bar.innerHTML = `
+      <div class="flex items-center gap-1 text-[10px] font-black uppercase text-purple-300 font-mono shrink-0 mr-1">
+        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+        <span class="hidden sm:inline">En Red:</span>
+      </div>
+      <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5">
+        ${allParishes.map(({ munId, parishId, parish: p }) => {
+          const isActive = String(this.selectedParishId) === String(parishId);
+          const count = (p.poligonos || []).length;
+          const subCount = (p.subparroquias || []).length;
+          const bg = isActive 
+            ? "bg-gradient-to-r from-purple-600 to-indigo-600 text-white border-purple-300 shadow-md shadow-purple-900/50 font-black scale-105" 
+            : "bg-slate-900/90 hover:bg-purple-950/80 text-slate-200 border-slate-700 font-bold hover:text-purple-200";
+          return `
+            <button onclick="window.earthApp.selectParish('${munId}', '${parishId}')" class="px-3 py-1.5 rounded-xl text-xs border flex items-center gap-2 shrink-0 transition-all active:scale-95 cursor-pointer ${bg}">
+              <span>📍 ${p.nombre}</span>
+              <span class="text-[10px] font-mono opacity-90 bg-black/40 px-1.5 py-0.5 rounded-md border border-white/10">
+                ${count > 0 ? `${count} sec` : `${subCount} ejes`}
+              </span>
+            </button>
+          `;
+        }).join("")}
+      </div>
+    `;
   }
 
   /**
@@ -1070,24 +1128,18 @@ class EarthMonagasApp {
 
           // Si el trazado ocurrió en otra parroquia, auto-enfocar esa parroquia en la interfaz
           if (targetParishId !== this.selectedParishId) {
-            this.selectedMunId = targetMunId;
-            this.selectedParishId = targetParishId;
-            try {
-              localStorage.setItem("migato_last_mun", targetMunId);
-              localStorage.setItem("migato_last_parish", targetParishId);
-            } catch(e) {}
-            const parishObj = this.store.getParish(targetMunId, targetParishId);
-            const munObj = CATALOGO_MONAGAS.find(m => m.id === targetMunId);
-            const navLoc = document.getElementById("nav-current-location");
-            if (navLoc && parishObj) {
-              navLoc.textContent = window.innerWidth < 640 ? parishObj.nombre : `${parishObj.nombre} (${munObj ? munObj.nombre : 'Monagas'})`;
-            }
+            this.selectParish(targetMunId, targetParishId);
           }
         }
       } catch(geoErr) {
         console.warn("[AutoDetect] Error detectando parroquia:", geoErr);
       }
     }
+
+    try {
+      localStorage.setItem("migato_last_mun", targetMunId);
+      localStorage.setItem("migato_last_parish", targetParishId);
+    } catch(e) {}
 
     newItem.munId = targetMunId;
     newItem.parishId = targetParishId;
@@ -1109,6 +1161,7 @@ class EarthMonagasApp {
       });
       this.focusSubParish(newItem.id);
       this.renderPlacesTree();
+      this.renderQuickParishBar();
       this.showToast(`🟪 <strong>${newItem.nombre}</strong> guardado en ${parish?.nombre || 'la Parroquia'}. Pulsa <strong>[+ Sector Comunal]</strong> para trazar sectores dentro.`, "purple");
       return;
     }
@@ -1138,6 +1191,7 @@ class EarthMonagasApp {
 
     this.updateMilitanciaTally();
     this.renderPlacesTree();
+    this.renderQuickParishBar();
 
     const toastColor = type === "poligono" ? "sky" : (type === "ruta" ? "emerald" : "rose");
     let msg = `✅ <strong>${newItem.nombre}</strong> guardado con éxito en ${parish?.nombre || 'la Parroquia'}.`;
@@ -1465,18 +1519,24 @@ class EarthMonagasApp {
     const toolbarAdv = document.getElementById("toolbar-advanced-tools");
     const tabLayers = document.getElementById("btn-sidebar-tab-layers");
 
-    // Respetar siempre la última parroquia que el usuario haya seleccionado
+    // Respetar siempre la última parroquia trabajada o la que tenga datos recientes en la red
     const savedMun = localStorage.getItem("migato_last_mun");
     const savedParish = localStorage.getItem("migato_last_parish");
     if (savedMun && savedParish && this.store.getParish(savedMun, savedParish)) {
       this.selectedMunId = savedMun;
       this.selectedParishId = savedParish;
-    } else if (user.municipioId && user.parroquiaId) {
-      this.selectedMunId = user.municipioId;
-      this.selectedParishId = user.parroquiaId;
     } else {
-      this.selectedMunId = this.selectedMunId || "maturin";
-      this.selectedParishId = this.selectedParishId || "san-simon";
+      const recent = this.store.getMostRecentlyUpdatedParish();
+      if (recent && recent.parishId) {
+        this.selectedMunId = recent.munId;
+        this.selectedParishId = recent.parishId;
+      } else if (user.municipioId && user.parroquiaId) {
+        this.selectedMunId = user.municipioId;
+        this.selectedParishId = user.parroquiaId;
+      } else {
+        this.selectedMunId = this.selectedMunId || "maturin";
+        this.selectedParishId = this.selectedParishId || "san-simon";
+      }
     }
 
     this.isGeneralMode = true;
@@ -1901,6 +1961,7 @@ class EarthMonagasApp {
     }
     this.renderPlacesTree();
     this.updateMilitanciaTally();
+    this.renderQuickParishBar();
   }
 }
 
