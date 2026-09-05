@@ -2,7 +2,7 @@
  * Motor Cartográfico Acelerado por GPU — Google Earth Pro Web (Monagas)
  * Integrado con Capas Jerárquicas Oficiales (INE 2021) y Edición de Vértices
  */
-import { GEO_ESTADO_OFICIAL, GEO_MUNICIPIOS_OFICIAL, GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=64";
+import { GEO_ESTADO_OFICIAL, GEO_MUNICIPIOS_OFICIAL, GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=65";
 
 export class EarthMapEngine {
   constructor(containerId, onCoordUpdate) {
@@ -87,7 +87,7 @@ export class EarthMapEngine {
     this.overlayLayer = L.layerGroup().addTo(this.map);
     this.tempDrawingLayer = L.layerGroup().addTo(this.map);
 
-    this.spotlightEnabled = true; // Modo Foco activo por defecto: alrededores en negro para concentrarse 100% en la parroquia
+    this.spotlightEnabled = false; // Modo Foco desactivado por defecto para ver simultáneamente todos los sectores del estado
     this.currentParishLimite = null;
     this.currentParishId = null;
 
@@ -438,365 +438,229 @@ export class EarthMapEngine {
     }
   }
 
-  renderParishItems(parish, onSelectCallback) {
+  renderParishItems(activeParish, onSelectCallback) {
     this.polygonsLayer.clearLayers();
     this.routesLayer.clearLayers();
     this.placemarksLayer.clearLayers();
     if (this.subParroquiasLayer) this.subParroquiasLayer.clearLayers();
 
-    if (!parish) return;
+    // Obtener todas las parroquias que contengan datos en el catálogo
+    const allParishesWithData = window.earthApp?.store?.getAllParishesWithData() || [];
+    
+    // Asegurar que la parroquia activa esté presente en la lista de renderizado
+    const parishesToRender = [...allParishesWithData];
+    if (activeParish && !parishesToRender.some(p => String(p.parishId) === String(activeParish.id))) {
+      parishesToRender.push({
+        munId: window.earthApp?.selectedMunId || "maturin",
+        parishId: activeParish.id,
+        parish: activeParish
+      });
+    }
 
-    // 0. Sub-Parroquias / Ejes Comunales (Nivel 4)
-    // Cargar únicamente las sub-parroquias de la parroquia activa para evitar polígonos fuera de su territorio
-    const subParishesToRender = parish.subparroquias || [];
+    if (parishesToRender.length === 0 && activeParish) {
+      parishesToRender.push({
+        munId: window.earthApp?.selectedMunId || "maturin",
+        parishId: activeParish.id,
+        parish: activeParish
+      });
+    }
 
-    subParishesToRender.forEach(sp => {
-      try {
-        if (sp.visible === false || !sp.vertices || sp.vertices.length < 3) return;
+    const isDrawing = !!(window.earthApp?.toolsManager?.activeTool);
 
-        const isDrawing = !!(window.earthApp?.toolsManager?.activeTool);
-        const isFocused = String(window.earthApp?.activeSubParroquiaId || "") === String(sp.id || "");
+    parishesToRender.forEach(({ munId, parishId, parish: pData }) => {
+      if (!pData) return;
+      const isActiveParish = String(parishId) === String(activeParish?.id);
 
-        const spLayer = L.polygon(sp.vertices, {
-          color: sp.colorBorde || "#c084fc",
-          weight: isFocused ? 3.5 : (sp.anchoBorde || 2.5),
-          opacity: 0.95,
-          fillColor: sp.colorRelleno || "#a855f7",
-          fill: true,
-          fillOpacity: isFocused ? 0.12 : 0.07,
-          dashArray: isFocused ? "8, 6" : "6, 4",
-          interactive: !isDrawing,
+      // 0. Sub-Parroquias / Ejes Comunales (Nivel 4)
+      (pData.subparroquias || []).forEach(sp => {
+        try {
+          if (sp.visible === false || !sp.vertices || sp.vertices.length < 3) return;
+
+          const isFocused = String(window.earthApp?.activeSubParroquiaId || "") === String(sp.id || "");
+
+          const spLayer = L.polygon(sp.vertices, {
+            color: sp.colorBorde || "#c084fc",
+            weight: isFocused ? 3.5 : (isActiveParish ? (sp.anchoBorde || 2.5) : 2),
+            opacity: isActiveParish ? 0.95 : 0.75,
+            fillColor: sp.colorRelleno || "#a855f7",
+            fill: true,
+            fillOpacity: isFocused ? 0.12 : (isActiveParish ? 0.08 : 0.04),
+            dashArray: isFocused ? "8, 6" : "6, 4",
+            interactive: !isDrawing,
+            renderer: this.canvasRenderer
+          });
+
+          spLayer._spData = sp;
+          sp._leafletLayer = spLayer;
+
+          if (!isDrawing) {
+            spLayer.bindTooltip(`
+              <div class="p-1 font-mono text-xs">
+                <span class="text-[9px] uppercase tracking-wider text-purple-400 font-black block">Nivel 4 • Eje Comunal</span>
+                <strong class="text-white block font-bold text-sm">${sp.nombre}</strong>
+                <span class="text-[10px] text-purple-200">Parroquia: ${pData.nombre || parishId}</span>
+                <span class="text-[10px] text-purple-300 block">Área: ${sp.areaHa || 0} Ha • Per: ${sp.perimetroM || 0} m</span>
+              </div>
+            `, { sticky: true, className: "earth-tooltip" });
+          }
+
+          spLayer.on("click", (e) => {
+            if (window.earthApp?.toolsManager?.activeTool) {
+              L.DomEvent.stopPropagation(e);
+              window.earthApp.toolsManager.handleMapClick(e);
+              return;
+            }
+            L.DomEvent.stopPropagation(e);
+
+            if (window.earthApp && String(window.earthApp.selectedParishId) !== String(parishId)) {
+              window.earthApp.selectParish(munId, parishId);
+            }
+
+            if (window.earthApp) {
+              window.earthApp.focusSubParish(sp.id, false);
+            }
+
+            if (onSelectCallback) onSelectCallback("subparroquia", sp, e);
+          });
+
+          if (this.subParroquiasLayer) this.subParroquiasLayer.addLayer(spLayer);
+        } catch (err) {
+          console.warn("[MapEngine] Error renderizando sub-parroquia:", sp, err);
+        }
+      });
+
+      // 1. Polígonos de Sectores Comunales (Nivel 5)
+      (pData.poligonos || []).forEach(poly => {
+        try {
+          if (poly.visible === false || !poly.vertices || poly.vertices.length < 3) return;
+
+          const pLayer = L.polygon(poly.vertices, {
+            color: poly.colorBorde || "#38bdf8",
+            weight: poly.anchoBorde || (isActiveParish ? 2.5 : 2),
+            opacity: isActiveParish ? 0.95 : 0.85,
+            fillColor: poly.colorRelleno || "#38bdf8",
+            fillOpacity: poly.opacidad !== undefined ? poly.opacidad : (isActiveParish ? 0.35 : 0.25),
+            interactive: !isDrawing,
+            renderer: this.canvasRenderer
+          });
+
+          pLayer._polyData = poly;
+          poly._leafletLayer = pLayer;
+
+          const milCount = poly.militantes !== undefined ? poly.militantes : (poly.habitantes || 0);
+          if (!isDrawing) {
+            pLayer.bindTooltip(`
+              <div class="p-1.5 font-mono text-xs max-w-[220px]">
+                <span class="text-[9px] uppercase text-sky-400 font-black block tracking-wider">Sector Comunal</span>
+                <strong class="text-white block font-bold text-sm truncate">${poly.nombre}</strong>
+                <span class="text-[10px] text-sky-200 block truncate">📍 ${pData.nombre || parishId}</span>
+                <div class="flex items-center gap-1.5 mt-1 text-[10px] text-slate-200">
+                  <span class="text-sky-300 font-bold">👥 ${milCount} mil</span>
+                  ${poly.casas ? `<span class="text-amber-300 font-bold">• 🏠 ${poly.casas} casas</span>` : ''}
+                </div>
+                ${poly.lider ? `<div class="text-[10px] text-slate-300 mt-0.5 truncate">👤 ${poly.lider}</div>` : ''}
+                ${poly.telefono ? `<div class="text-[10px] text-emerald-400 mt-0.5 font-bold">📱 ${poly.telefono}</div>` : ''}
+                <span class="text-[9px] text-slate-400 block mt-1">Área: ${poly.areaHa || 0} Ha • Per: ${poly.perimetroM || 0} m</span>
+                <span class="text-[9px] text-sky-400 font-bold block mt-1">👉 Clic para ver / editar Ficha</span>
+              </div>
+            `, { sticky: true, className: "earth-tooltip" });
+          }
+
+          pLayer.on("click", (e) => {
+            if (window.earthApp?.toolsManager?.activeTool) {
+              L.DomEvent.stopPropagation(e);
+              window.earthApp.toolsManager.handleMapClick(e);
+              return;
+            }
+            L.DomEvent.stopPropagation(e);
+
+            if (window.earthApp && String(window.earthApp.selectedParishId) !== String(parishId)) {
+              window.earthApp.selectParish(munId, parishId);
+            }
+
+            if (onSelectCallback) onSelectCallback("poligono", poly);
+          });
+
+          this.polygonsLayer.addLayer(pLayer);
+        } catch (err) {
+          console.warn("[MapEngine] Error renderizando sector comunal:", poly, err);
+        }
+      });
+
+      // 2. Rutas / Calles
+      (pData.rutas || []).forEach(r => {
+        if (r.visible === false || !r.puntos || r.puntos.length < 2) return;
+
+        const line = L.polyline(r.puntos, {
+          color: r.color || "#10b981",
+          weight: r.ancho || 4,
+          opacity: isActiveParish ? 1 : 0.75,
           renderer: this.canvasRenderer
         });
 
-        spLayer._spData = sp;
-        sp._leafletLayer = spLayer;
+        line.bindTooltip(`
+          <div class="p-1 font-mono text-xs">
+            <strong class="text-white block font-bold">${r.nombre}</strong>
+            <span class="text-[10px] text-emerald-300">Longitud: ${r.longitudM || 0} m</span>
+          </div>
+        `, { sticky: true, className: "earth-tooltip" });
 
-        if (!isDrawing) {
-          spLayer.bindTooltip(`
-            <div class="p-1 font-mono text-xs">
-              <span class="text-[9px] uppercase tracking-wider text-purple-400 font-black block">Nivel 4 • Eje Comunal</span>
-              <strong class="text-white block font-bold text-sm">${sp.nombre}</strong>
-              <span class="text-[10px] text-purple-200">Área: ${sp.areaHa || 0} Ha • Per: ${sp.perimetroM || 0} m</span>
-              <span class="text-[9px] text-sky-400 block mt-1 font-bold">${isFocused ? '🎯 Eje Activo (Línea Limítrofe)' : '👉 Clic para opciones y trazar sector'}</span>
-            </div>
-          `, { sticky: true, className: "earth-tooltip" });
-        }
-
-        spLayer.on("click", (e) => {
+        line.on("click", (e) => {
           if (window.earthApp?.toolsManager?.activeTool) {
-            L.DomEvent.stopPropagation(e);
             window.earthApp.toolsManager.handleMapClick(e);
             return;
           }
           L.DomEvent.stopPropagation(e);
+          if (onSelectCallback) onSelectCallback("ruta", r);
+        });
 
+        this.routesLayer.addLayer(line);
+      });
 
-          // Enfocar eje en la app
-          if (window.earthApp) {
-            window.earthApp.focusSubParish(sp.id, false);
+      // 3. Marcas de Posición
+      (pData.marcas || []).forEach(m => {
+        if (m.visible === false || m.lat === undefined || m.lng === undefined) return;
+
+        const pinColor = m.color || "#ef4444";
+        const pinIcon = L.divIcon({
+          className: "earth-placemark-pin-wrapper",
+          html: `
+            <div style="transform: translate(-50%, -100%); cursor: pointer; filter: drop-shadow(0 3px 6px rgba(0,0,0,0.8));">
+              <svg width="26" height="34" viewBox="0 0 24 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 0C5.37 0 0 5.37 0 12C0 20.25 12 32 12 32C12 32 24 20.25 24 12C24 5.37 18.63 0 12 0Z" fill="${pinColor}" stroke="#ffffff" stroke-width="1.8"/>
+                <circle cx="12" cy="11" r="4.5" fill="#ffffff"/>
+              </svg>
+            </div>
+          `,
+          iconSize: [26, 34],
+          iconAnchor: [13, 34]
+        });
+
+        const marker = L.marker([m.lat, m.lng], { icon: pinIcon });
+        marker.bindTooltip(`<strong>${m.nombre}</strong>`, { sticky: true });
+        marker.on("click", (e) => {
+          if (window.earthApp?.toolsManager?.activeTool) {
+            window.earthApp.toolsManager.handleMapClick(e);
+            return;
           }
-
-          // Métricas de sectores hijos dentro de esta sub-parroquia
-          const pStore = window.earthApp?.store?.getParish(window.earthApp?.selectedMunId, window.earthApp?.selectedParishId);
-          const childSectors = (pStore?.poligonos || []).filter(p => String(p.subParroquiaId) === String(sp.id));
-          const totalMil = childSectors.reduce((acc, c) => acc + (parseInt(c.militantes !== undefined ? c.militantes : (c.habitantes || 0)) || 0), 0);
-          const clickLatLng = e.latlng || L.polygon(sp.vertices).getBounds().getCenter();
-
-          const popupContent = `
-            <div class="p-2.5 font-mono text-slate-100 min-w-[240px] max-w-[280px]">
-              <div class="flex items-center justify-between gap-2 border-b border-purple-800/60 pb-1.5 mb-2">
-                <span class="text-[9px] uppercase tracking-wider text-purple-400 font-black flex items-center gap-1">
-                  <span>🟪 Nivel 4 • Eje Comunal</span>
-                </span>
-                <span class="text-[10px] px-2 py-0.5 rounded-md bg-purple-950 text-purple-300 font-bold border border-purple-700/60">
-                  ${childSectors.length} Sectores
-                </span>
-              </div>
-
-              <strong class="text-white block font-bold text-sm leading-snug mb-1.5">${sp.nombre}</strong>
-
-              <div class="text-[11px] text-slate-300 space-y-1 bg-slate-950/80 p-2 rounded-xl border border-slate-800 mb-2.5">
-                <div class="flex items-center justify-between">
-                  <span class="text-slate-400">Área:</span>
-                  <span class="text-purple-300 font-bold">${sp.areaHa || 0} Ha</span>
-                </div>
-                <div class="flex items-center justify-between">
-                  <span class="text-slate-400">Militancia:</span>
-                  <span class="text-sky-300 font-bold">👥 ${totalMil.toLocaleString()}</span>
-                </div>
-              </div>
-
-              <div class="space-y-1.5">
-                <button type="button" onclick="window.earthApp?.startSectorInSubParish('${sp.id}');" class="w-full py-2 px-3 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-black text-xs flex items-center justify-center gap-1.5 shadow-lg active:scale-95 transition cursor-pointer">
-                  <span>➕ Trazar Sector Comunal aquí</span>
-                </button>
-                <div class="grid grid-cols-2 gap-1.5">
-                  <button type="button" onclick="window.earthApp?.openSubParishFicha('${sp.id}');" class="py-1.5 px-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-[11px] border border-slate-700 text-center transition cursor-pointer">
-                    📋 Ficha
-                  </button>
-                  <button type="button" onclick="window.earthApp?.clearSubParishFocus();" class="py-1.5 px-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-[11px] border border-slate-700 text-center transition cursor-pointer">
-                    👁️ Ver Todo
-                  </button>
-                </div>
-              </div>
-            </div>
-          `;
-
-          L.popup({
-            className: "earth-popup-subparish",
-            autoPan: true,
-            closeButton: true,
-            offset: [0, -10]
-          })
-          .setLatLng(clickLatLng)
-          .setContent(popupContent)
-          .openOn(this.map);
-
-          if (onSelectCallback) onSelectCallback("subparroquia", sp, e);
-        });
-
-        if (this.subParroquiasLayer) this.subParroquiasLayer.addLayer(spLayer);
-      } catch (err) {
-        console.warn("[MapEngine] Error renderizando sub-parroquia:", sp, err);
-      }
-    });
-
-    // 1. Polígonos de Sectores Comunales (Nivel 5)
-    (parish.poligonos || []).forEach(poly => {
-      try {
-        if (poly.visible === false || !poly.vertices || poly.vertices.length < 3) return;
-
-        const isDrawing = !!(window.earthApp?.toolsManager?.activeTool);
-
-        const pLayer = L.polygon(poly.vertices, {
-          color: poly.colorBorde || "#38bdf8",
-          weight: poly.anchoBorde || 2,
-          opacity: 0.95,
-          fillColor: poly.colorRelleno || "#38bdf8",
-          fillOpacity: poly.opacidad !== undefined ? poly.opacidad : 0.35,
-          interactive: !isDrawing,
-          renderer: this.canvasRenderer
-        });
-
-        pLayer._polyData = poly;
-        poly._leafletLayer = pLayer;
-
-        const milCount = poly.militantes !== undefined ? poly.militantes : (poly.habitantes || 0);
-        if (!isDrawing) {
-          pLayer.bindTooltip(`
-            <div class="p-1.5 font-mono text-xs max-w-[210px]">
-              <span class="text-[9px] uppercase text-sky-400 font-black block tracking-wider">Sector Comunal</span>
-              <strong class="text-white block font-bold text-sm truncate">${poly.nombre}</strong>
-              <div class="flex items-center gap-1.5 mt-1 text-[10px] text-slate-200">
-              <span class="text-sky-300 font-bold">👥 ${milCount} mil</span>
-              ${poly.casas ? `<span class="text-amber-300 font-bold">• 🏠 ${poly.casas} casas</span>` : ''}
-            </div>
-            ${poly.lider ? `<div class="text-[10px] text-slate-300 mt-0.5 truncate">👤 ${poly.lider}</div>` : ''}
-            ${poly.telefono ? `<div class="text-[10px] text-emerald-400 mt-0.5 font-bold">📱 ${poly.telefono}</div>` : ''}
-            <span class="text-[9px] text-slate-400 block mt-1">Área: ${poly.areaHa || 0} Ha • Per: ${poly.perimetroM || 0} m</span>
-            <span class="text-[9px] text-sky-400 font-bold block mt-1">👉 Clic para ver / editar Ficha</span>
-          </div>
-        `, { sticky: true, className: "earth-tooltip" });
-      }
-
-      pLayer.on("click", (e) => {
-        if (window.earthApp?.toolsManager?.activeTool) {
           L.DomEvent.stopPropagation(e);
-          window.earthApp.toolsManager.handleMapClick(e);
-          return;
-        }
-        L.DomEvent.stopPropagation(e);
-        if (onSelectCallback) onSelectCallback("poligono", poly);
+          if (onSelectCallback) onSelectCallback("marca", m);
+        });
+        this.placemarksLayer.addLayer(marker);
       });
-
-        this.polygonsLayer.addLayer(pLayer);
-      } catch (err) {
-        console.warn("[MapEngine] Error renderizando sector comunal:", poly, err);
-      }
     });
-
-    // 2. Rutas / Calles
-    (parish.rutas || []).forEach(r => {
-      if (r.visible === false) return;
-
-      const casing = L.polyline(r.puntos, {
-        color: "#0f172a",
-        weight: (r.ancho || 4) + 3,
-        opacity: 0.8,
-        lineCap: "round",
-        lineJoin: "round",
-        renderer: this.canvasRenderer
-      });
-
-      const line = L.polyline(r.puntos, {
-        color: r.color || "#10b981",
-        weight: r.ancho || 4,
-        opacity: 1,
-        lineCap: "round",
-        lineJoin: "round",
-        renderer: this.canvasRenderer
-      });
-
-      line.bindTooltip(`
-        <div class="p-1 font-mono text-xs">
-          <strong class="text-white block font-bold">${r.nombre}</strong>
-          <span class="text-[10px] text-emerald-300">Longitud: ${r.longitudM || 0} m</span>
-          ${r.descripcion ? `<p class="text-[10px] text-slate-300 mt-0.5">${r.descripcion}</p>` : ''}
-        </div>
-      `, { sticky: true, className: "earth-tooltip" });
-
-      const handleClick = (e) => {
-        if (window.earthApp?.toolsManager?.activeTool) {
-          window.earthApp.toolsManager.handleMapClick(e);
-          return;
-        }
-        L.DomEvent.stopPropagation(e);
-        if (onSelectCallback) onSelectCallback("ruta", r);
-      };
-
-      casing.on("click", handleClick);
-      line.on("click", handleClick);
-
-      const group = L.featureGroup([casing, line]);
-      this.routesLayer.addLayer(group);
-    });
-
-    // 3. Marcas de Posición / Placemarks (Pushpins de Alta Visibilidad estilo Google Earth)
-    (parish.marcas || []).forEach(m => {
-      if (m.visible === false || m.lat === undefined || m.lng === undefined) return;
-
-      const isDrawing = !!(window.earthApp?.toolsManager?.activeTool);
-      const pinColor = m.color || "#ef4444";
-      const pinIcon = L.divIcon({
-        className: "earth-placemark-pin-wrapper",
-        html: `
-          <div style="transform: translate(-50%, -100%); cursor: pointer; filter: drop-shadow(0 3px 6px rgba(0,0,0,0.8));">
-            <svg width="26" height="34" viewBox="0 0 24 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M12 0C5.37 0 0 5.37 0 12C0 20.25 12 32 12 32C12 32 24 20.25 24 12C24 5.37 18.63 0 12 0Z" fill="${pinColor}" stroke="#ffffff" stroke-width="1.8"/>
-              <circle cx="12" cy="11" r="4.5" fill="#ffffff"/>
-            </svg>
-          </div>
-        `,
-        iconSize: [26, 34],
-        iconAnchor: [13, 34]
-      });
-
-      const marker = L.marker([m.lat, m.lng], {
-        icon: pinIcon,
-        interactive: !isDrawing,
-        zIndexOffset: 600
-      });
-
-      if (!isDrawing) {
-        marker.bindTooltip(`
-          <div class="p-1 font-mono text-xs max-w-[200px]">
-            <span class="text-[9px] uppercase text-rose-400 font-bold block">Marca de Posición</span>
-            <strong class="text-white block font-bold truncate">${m.nombre}</strong>
-            <span class="text-[10px] text-slate-300 block">Lat: ${Number(m.lat).toFixed(5)}, Lng: ${Number(m.lng).toFixed(5)}</span>
-            ${m.descripcion ? `<p class="text-[10px] text-slate-300 mt-0.5 truncate">${m.descripcion}</p>` : ''}
-            <span class="text-[9px] text-sky-400 font-bold block mt-1">👉 Clic para ver / editar</span>
-          </div>
-        `, { sticky: true, className: "earth-tooltip" });
-      }
-
-      marker.on("click", (e) => {
-        if (window.earthApp?.toolsManager?.activeTool) {
-          window.earthApp.toolsManager.handleMapClick(e);
-          return;
-        }
-        L.DomEvent.stopPropagation(e);
-        if (onSelectCallback) onSelectCallback("marca", m);
-      });
-
-      this.placemarksLayer.addLayer(marker);
-    });
-
-    // Actualizar LOD y fragmentación según zoom y selección
-    this.updateHierarchicalLOD();
   }
 
   /**
-   * Controla la visualización por niveles de detalle (LOD) y fragmentación:
-   * - Zoom < 14 (Vista general del Municipio): SOLAMENTE se ven las SUB-PARROQUIAS. Los sectores comunales permanecen totalmente cerrados/ocultos.
-   * - Zoom >= 14 (Vista de detalle): SE CIERRAN LAS SUB-PARROQUIAS por completo y SOLAMENTE se ven los SECTORES COMUNALES.
+   * Asegura la visibilidad permanente de todos los sectores y ejes en cualquier nivel de zoom
    */
   updateHierarchicalLOD() {
     if (!this.map) return;
-    const zoom = this.map.getZoom();
-    const activeTool = window.earthApp?.toolsManager?.activeTool;
-    const isDrawing = !!activeTool;
-
-    // Umbral de transición (Zoom 14 es el punto de fragmentación)
-    const isCloseZoom = zoom >= 14;
-
-    if (isCloseZoom) {
-      // 1. Zoom cercano (>= 14): Las sub-parroquias SE CIERRAN por completo
-      if (this.subParroquiasLayer) {
-        if (!isDrawing || activeTool !== "subparroquia") {
-          if (this.map.hasLayer(this.subParroquiasLayer)) {
-            this.map.removeLayer(this.subParroquiasLayer);
-          }
-        } else {
-          if (!this.map.hasLayer(this.subParroquiasLayer)) {
-            this.map.addLayer(this.subParroquiasLayer);
-          }
-        }
-      }
-
-      // 2. Zoom cercano (>= 14): SOLAMENTE se ven los sectores comunales
-      if (this.polygonsLayer) {
-        if (!this.map.hasLayer(this.polygonsLayer)) {
-          this.map.addLayer(this.polygonsLayer);
-        }
-        this.polygonsLayer.eachLayer(layer => {
-          const poly = layer._polyData;
-          if (poly) {
-            layer.setStyle({
-              opacity: 0.95,
-              fill: true,
-              fillOpacity: poly.opacidad !== undefined ? poly.opacidad : 0.35,
-              weight: poly.anchoBorde || 2,
-              color: poly.colorBorde || "#38bdf8",
-              fillColor: poly.colorRelleno || "#38bdf8"
-            });
-          }
-        });
-      }
-    } else {
-      // 1. Zoom lejano (< 14, al entrar al municipio): SOLAMENTE se ven las sub-parroquias
-      if (this.subParroquiasLayer) {
-        if (!this.map.hasLayer(this.subParroquiasLayer)) {
-          this.map.addLayer(this.subParroquiasLayer);
-        }
-        this.subParroquiasLayer.eachLayer(layer => {
-          const sp = layer._spData;
-          if (sp) {
-            layer.setStyle({
-              color: sp.colorBorde || "#c084fc",
-              weight: sp.anchoBorde || 2.5,
-              opacity: 0.95,
-              fill: true,
-              fillColor: sp.colorRelleno || "#a855f7",
-              fillOpacity: sp.opacidad !== undefined ? sp.opacidad : 0.22,
-              dashArray: null
-            });
-          }
-        });
-      }
-
-      // 2. Zoom lejano (< 14): Los sectores comunales SE CIERRAN por completo (no se ven)
-      if (this.polygonsLayer) {
-        if (!isDrawing || activeTool !== "poligono") {
-          if (this.map.hasLayer(this.polygonsLayer)) {
-            this.map.removeLayer(this.polygonsLayer);
-          }
-        } else {
-          if (!this.map.hasLayer(this.polygonsLayer)) {
-            this.map.addLayer(this.polygonsLayer);
-          }
-        }
-      }
+    if (this.subParroquiasLayer && !this.map.hasLayer(this.subParroquiasLayer)) {
+      this.map.addLayer(this.subParroquiasLayer);
+    }
+    if (this.polygonsLayer && !this.map.hasLayer(this.polygonsLayer)) {
+      this.map.addLayer(this.polygonsLayer);
     }
   }
 

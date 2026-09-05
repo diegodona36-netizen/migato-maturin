@@ -51,8 +51,8 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
-  // Ignorar completamente Google Earth Monagas para garantizar que siempre cargue en vivo sin caché obsoleto
-  if (event.request.url.includes('/earth-monagas')) {
+  // Ignorar completamente Google Earth Monagas y todas las APIs para garantizar que siempre cargue en vivo sin caché obsoleto
+  if (event.request.url.includes('/earth-monagas') || event.request.url.includes('/api/')) {
     return;
   }
 

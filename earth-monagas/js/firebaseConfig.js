@@ -4,15 +4,14 @@
  * Google Earth Pro Web • Edición Estado Monagas
  */
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+import { initializeApp, getApps, getApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 import { 
   getFirestore, 
   doc, 
   setDoc, 
   getDocs,
   collection, 
-  onSnapshot,
-  enableIndexedDbPersistence
+  onSnapshot
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
 // Clave en LocalStorage para guardar las credenciales del proyecto
@@ -67,7 +66,6 @@ export function initFirebase(customConfig = null) {
   try {
     const config = customConfig || getSavedFirebaseConfig();
     if (!config || !config.projectId || !config.apiKey) {
-      console.info("ℹ️ Firebase no configurado aún. Se usará sincronización vía API hasta configurar credenciales.");
       return false;
     }
 
@@ -75,22 +73,17 @@ export function initFirebase(customConfig = null) {
       return true;
     }
 
-    app = initializeApp(config, "MIGATO_MONAGAS_APP");
+    const existingApps = getApps();
+    const match = existingApps.find(a => a.name === "MIGATO_MONAGAS_APP");
+    if (match) {
+      app = match;
+    } else {
+      app = initializeApp(config, "MIGATO_MONAGAS_APP");
+    }
+
     db = getFirestore(app);
-
-    // Intentar persistencia offline en el navegador
-    try {
-      enableIndexedDbPersistence(db).catch((err) => {
-        if (err.code === 'failed-precondition') {
-          console.warn("Persistencia offline no activada: múltiples pestañas abiertas");
-        } else if (err.code === 'unimplemented') {
-          console.warn("Persistencia offline no soportada en este navegador");
-        }
-      });
-    } catch (e) {}
-
     isInitialized = true;
-    console.log("🔥 Firebase Firestore inicializado con éxito. Proyecto:", config.projectId);
+    console.log("🔥 [Firebase] Conexión en tiempo real activa con Firestore:", config.projectId);
     return true;
   } catch (err) {
     console.error("❌ Error inicializando Firebase Firestore:", err);

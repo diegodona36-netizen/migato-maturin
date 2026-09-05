@@ -83,94 +83,10 @@ export default async function handler(req, res) {
         return res.status(400).json({ ok: false, error: "Cuerpo de solicitud vacío" });
       }
 
-      // Obtener SHA y datos existentes
-      let currentData = {};
-      let fileSha = null;
-
-      try {
-        const getMeta = await fetch(GITHUB_API_URL, {
-          method: "GET",
-          headers: {
-            "Accept": "application/json",
-            "Authorization": `token ${GITHUB_TOKEN}`,
-            "User-Agent": userAgent
-          }
-        });
-
-        if (getMeta.ok) {
-          const metaJson = await getMeta.json();
-          fileSha = metaJson.sha;
-          if (metaJson.content) {
-            const decoded = Buffer.from(metaJson.content, "base64").toString("utf-8");
-            currentData = JSON.parse(decoded);
-          }
-        }
-      } catch (e) {
-        console.warn("No se pudo obtener SHA previo:", e);
-      }
-
-      // Fusionar datos
-      if (body.parishId) {
-        const pKey = (body.munId || "mun") + "_" + body.parishId;
-        const parishPayload = {
-          munId: body.munId,
-          parishId: body.parishId,
-          subparroquias: body.subparroquias || [],
-          poligonos: body.poligonos || [],
-          rutas: body.rutas || [],
-          marcas: body.marcas || [],
-          updatedAt: Date.now()
-        };
-        currentData[pKey] = parishPayload;
-        // También indexar por parishId para compatibilidad
-        if (body.parishId !== pKey) {
-          currentData[body.parishId] = parishPayload;
-        }
-      } else if (body.fullState && typeof body.fullState === "object") {
-        currentData = Object.assign({}, currentData, body.fullState);
-      } else if (typeof body === "object") {
-        Object.keys(body).forEach(k => {
-          if (k !== "ok") currentData[k] = body[k];
-        });
-      }
-
-      // Guardar en GitHub con [skip ci] para que Vercel no arme un nuevo build innecesario
-      const updatedJsonString = JSON.stringify(currentData, null, 2);
-      const base64Content = Buffer.from(updatedJsonString).toString("base64");
-
-      const putBody = {
-        message: "sync places territory [skip ci]",
-        content: base64Content
-      };
-      if (fileSha) {
-        putBody.sha = fileSha;
-      }
-
-      const putResp = await fetch(GITHUB_API_URL, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          "Accept": "application/json",
-          "Authorization": `token ${GITHUB_TOKEN}`,
-          "User-Agent": userAgent
-        },
-        body: JSON.stringify(putBody)
-      });
-
-      if (!putResp.ok) {
-        const errTxt = await putResp.text();
-        return res.status(putResp.status).json({
-          ok: false,
-          error: "Fallo al escribir en la nube",
-          detail: errTxt
-        });
-      }
-
-      const savedJson = await putResp.json();
+      // La persistencia oficial y en vivo en tiempo real es gestionada directamente por Google Cloud Firestore
       return res.status(200).json({
         ok: true,
-        message: "Datos guardados en GitHub Cloud con éxito",
-        data: currentData,
+        message: "Operación recibida (Persistencia primaria activa en Firestore)",
         updatedAt: Date.now()
       });
     }

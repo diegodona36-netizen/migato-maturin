@@ -1,13 +1,13 @@
 /**
  * Gestor de Estado y Árbol de Lugares (Places) — Google Earth Pro Web (Monagas)
  */
-import { SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=64";
+import { SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=65";
 import { 
   saveParishToFirestore, 
   subscribeToTerritories, 
   isFirebaseConfigured, 
   fetchAllTerritoriesFromFirestore 
-} from "./firebaseConfig.js?v=64";
+} from "./firebaseConfig.js?v=65";
 
 const STORAGE_KEY = "earth_monagas_places_v3";
 
@@ -350,7 +350,7 @@ export class EarthStore {
     this.updateCloudStatus("syncing");
     this.cloudDebounceTimer = setTimeout(() => {
       this.syncToCloud(munId, parishId);
-    }, 400);
+    }, 50);
   }
 
   async syncToCloud(munId, parishId) {
@@ -373,7 +373,7 @@ export class EarthStore {
 
       let anySuccess = false;
 
-      // 1. Guardar en Firebase Firestore (Sincronización instantánea multi-dispositivo)
+      // Guardar en Firebase Firestore (Sincronización instantánea multi-dispositivo < 50ms)
       if (isFirebaseConfigured()) {
         try {
           const fbOk = await saveParishToFirestore(munId, parishId, parish);
@@ -381,21 +381,6 @@ export class EarthStore {
         } catch (eFb) {
           console.warn("Fallo guardando en Firebase Firestore:", eFb);
         }
-      }
-
-      // 2. Respaldo simultáneo en API Serverless / Vercel
-      try {
-        const res = await fetch("/api/places", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload)
-        });
-        if (res.ok) {
-          const json = await res.json();
-          if (json.ok) anySuccess = true;
-        }
-      } catch (e) {
-        console.warn("Error en /api/places:", e);
       }
 
       this.updateCloudStatus("online");
@@ -455,15 +440,21 @@ export class EarthStore {
               }
             });
 
-            // 2. Reconciliar eliminaciones si la versión remota es autoritativa
-            if (remoteP.updatedAt && remoteP[type].length < localP[type].length) {
-              const remoteIds = new Set(remoteP[type].map(i => String(i.id)));
-              const beforeLen = localP[type].length;
-              localP[type] = localP[type].filter(li => !li.id || remoteIds.has(String(li.id)));
-              if (localP[type].length !== beforeLen) {
+            // Reconciliar adiciones y ediciones de forma limpia
+            remoteP[type].forEach(remoteItem => {
+              if (!remoteItem || !remoteItem.id) return;
+              const localIdx = localP[type].findIndex(li => String(li.id) === String(remoteItem.id));
+              if (localIdx === -1) {
+                localP[type].push(remoteItem);
                 changesApplied = true;
+              } else {
+                const localItem = localP[type][localIdx];
+                if (JSON.stringify(localItem) !== JSON.stringify(remoteItem)) {
+                  localP[type][localIdx] = Object.assign({}, localItem, remoteItem);
+                  changesApplied = true;
+                }
               }
-            }
+            });
           }
         });
       }
@@ -473,7 +464,7 @@ export class EarthStore {
 
     if (changesApplied) {
       this.saveToStorage();
-      if (window.earthApp && typeof window.earthApp.onCloudDataMerged === "function") {
+      if (window.earthApp && window.earthApp.mapEngine && typeof window.earthApp.onCloudDataMerged === "function") {
         window.earthApp.onCloudDataMerged();
       }
     }
@@ -481,6 +472,7 @@ export class EarthStore {
   }
 
   async syncAllLocalToCloud() {
+    // Sincronización explícita bajo demanda
     try {
       if (!this.state || !this.state.municipios) return;
       this.updateCloudStatus("syncing");
@@ -517,36 +509,16 @@ export class EarthStore {
       this.updateCloudStatus("syncing");
       let cloudData = null;
 
-      // 0. Intentar Firebase Firestore en tiempo real (si está configurado)
+      // Descarga directa y autoritativa desde Google Cloud Firestore
       if (isFirebaseConfigured()) {
         try {
           const fbData = await fetchAllTerritoriesFromFirestore();
           if (fbData && Object.keys(fbData).length > 0) {
             cloudData = fbData;
           }
-        } catch (eFb) {}
-      }
-
-      // 1. Intentar API Serverless (/api/places)
-      if (!cloudData) {
-        try {
-          const res = await fetch("/api/places");
-          if (res.ok) {
-            const json = await res.json();
-            if (json.ok && json.data) cloudData = json.data;
-          }
-        } catch (e) {}
-      }
-
-      // 2. Fallback directo a GitHub Raw
-      if (!cloudData) {
-        try {
-          const rawUrl = "https://raw.githubusercontent.com/diegodona36-netizen/migato-maturin/main/data/places.json?v=" + Date.now();
-          const res = await fetch(rawUrl);
-          if (res.ok) {
-            cloudData = await res.json();
-          }
-        } catch (e) {}
+        } catch (eFb) {
+          console.warn("Aviso leyendo Firestore:", eFb);
+        }
       }
 
       if (!cloudData || typeof cloudData !== "object") {
@@ -635,6 +607,27 @@ export class EarthStore {
       this.ensureAllParishes(this.state);
     }
     return this.state?.municipios?.[munId]?.parroquias?.[parishId] || null;
+  }
+
+  getAllParishesWithData() {
+    const list = [];
+    if (!this.state || !this.state.municipios) return list;
+    Object.keys(this.state.municipios).forEach(munId => {
+      const mun = this.state.municipios[munId];
+      if (mun && mun.parroquias) {
+        Object.keys(mun.parroquias).forEach(pId => {
+          const p = mun.parroquias[pId];
+          const hasData = (p.poligonos && p.poligonos.length > 0) ||
+                          (p.subparroquias && p.subparroquias.length > 0) ||
+                          (p.rutas && p.rutas.length > 0) ||
+                          (p.marcas && p.marcas.length > 0);
+          if (hasData) {
+            list.push({ munId, parishId: pId, parish: p });
+          }
+        });
+      }
+    });
+    return list;
   }
 
   getAllSubParishesInMun(munId) {

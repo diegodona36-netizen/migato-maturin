@@ -603,7 +603,9 @@ export class ToolsManager {
           this.generateQuickQuadrant();
           return;
         }
-        alert("Una sub-parroquia necesita al menos 3 esquinas para delimitar su perímetro.");
+        if (window.earthApp?.showToast) {
+          window.earthApp.showToast("⚠️ Un eje comunal necesita al menos 3 esquinas para delimitar su perímetro.", "amber");
+        }
         return;
       }
       const areaHa = this.calculatePolygonAreaHa(sanitizedPoints);
@@ -637,7 +639,9 @@ export class ToolsManager {
           this.generateQuickQuadrant();
           return;
         }
-        alert("Un polígono necesita al menos 3 esquinas para formar un sector.");
+        if (window.earthApp?.showToast) {
+          window.earthApp.showToast("⚠️ Un sector comunal necesita al menos 3 esquinas.", "amber");
+        }
         return;
       }
       const areaHa = this.calculatePolygonAreaHa(sanitizedPoints);
@@ -666,7 +670,9 @@ export class ToolsManager {
 
     } else if (this.activeTool === "ruta") {
       if (sanitizedPoints.length < 2) {
-        alert("Una ruta necesita al menos 2 puntos para trazar la vía.");
+        if (window.earthApp?.showToast) {
+          window.earthApp.showToast("⚠️ Una ruta necesita al menos 2 puntos.", "amber");
+        }
         return;
       }
       const longitudM = this.calculatePerimeterMeters(sanitizedPoints);
