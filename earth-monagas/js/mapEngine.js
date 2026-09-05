@@ -2,7 +2,7 @@
  * Motor Cartográfico Acelerado por GPU — Google Earth Pro Web (Monagas)
  * Integrado con Capas Jerárquicas Oficiales (INE 2021) y Edición de Vértices
  */
-import { GEO_ESTADO_OFICIAL, GEO_MUNICIPIOS_OFICIAL, GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=86";
+import { GEO_ESTADO_OFICIAL, GEO_MUNICIPIOS_OFICIAL, GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=87";
 
 export class EarthMapEngine {
   constructor(containerId, onCoordUpdate) {
@@ -757,8 +757,6 @@ export class EarthMapEngine {
                   <span class="text-sky-300 font-bold">👥 ${milCount} mil</span>
                   ${poly.casas ? `<span class="text-amber-300 font-bold">• 🏠 ${poly.casas} casas</span>` : ''}
                 </div>
-                ${poly.lider ? `<div class="text-[10px] text-slate-300 mt-0.5 truncate">👤 ${poly.lider}</div>` : ''}
-                ${poly.telefono ? `<div class="text-[10px] text-emerald-400 mt-0.5 font-bold">📱 ${poly.telefono}</div>` : ''}
                 <span class="text-[9px] text-slate-400 block mt-1">Área: ${poly.areaHa || 0} Ha • Per: ${poly.perimetroM || 0} m</span>
                 <span class="text-[9px] text-sky-400 font-bold block mt-1">👉 Clic para ver / editar Ficha</span>
               </div>

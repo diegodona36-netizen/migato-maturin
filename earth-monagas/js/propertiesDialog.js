@@ -2,9 +2,9 @@
  * Diálogo Flotante de Propiedades y Carga de Militantes — Estilo Google Earth Pro
  * Pestañas: Ficha Territorial, Militantes por Sector, Estilo y Color, Medidas
  */
-import { detectParishFromGeometry } from "./geoMonagas.js?v=86";
-import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=86";
-import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=86";
+import { detectParishFromGeometry } from "./geoMonagas.js?v=87";
+import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=87";
+import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=87";
 
 export class PropertiesDialog {
   constructor(onSaveCallback, onLiveChangeCallback, onStartEditGeometry) {
@@ -113,7 +113,7 @@ export class PropertiesDialog {
         if (isNew) {
           window.earthApp?.toolsManager?.setActiveTool(type);
         } else if (this.onStartEditGeometry) {
-          this.onStartEditGeometry(item);
+          this.onStartEditGeometry(item, type);
         }
       });
     }
@@ -427,6 +427,8 @@ export class PropertiesDialog {
           selSubParish.value = item.subParroquiaId;
         } else if (window.earthApp?.activeSubParroquiaId) {
           selSubParish.value = window.earthApp.activeSubParroquiaId;
+        } else if (list.length === 1) {
+          selSubParish.value = list[0].id;
         }
         selSubParish.parentElement?.classList.remove("hidden");
       } else {
@@ -473,6 +475,7 @@ export class PropertiesDialog {
 
     if (type === "poligono" || type === "subparroquia") {
       const isSub = type === "subparroquia";
+      const isPoly = type === "poligono";
       if (boxSocio) boxSocio.classList.toggle("hidden", isSub);
       if (boxMilitancia) boxMilitancia.classList.toggle("hidden", isSub);
       if (boxLiderazgo) boxLiderazgo.classList.toggle("hidden", isSub);
@@ -538,8 +541,8 @@ export class PropertiesDialog {
 
         if (inMilitantes) inMilitantes.value = numMilitantes;
         if (inCasas) inCasas.value = numCasas;
-        if (inLider) inLider.value = item.lider || "";
-        if (inTelefono) inTelefono.value = item.telefono || "";
+        if (inLider) inLider.value = item.liderComunidad || item.lider || "";
+        if (inTelefono) inTelefono.value = item.telefonoLider || item.telefono || "";
         if (inFamilias) inFamilias.value = item.familias || numCasas;
         if (inHab) inHab.value = item.habitantes !== undefined ? item.habitantes : numMilitantes;
         if (inCentroVot) inCentroVot.value = item.centroVotacion || "";

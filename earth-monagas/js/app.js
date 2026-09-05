@@ -2,21 +2,21 @@
  * Controlador Principal — Google Earth Pro Web (Edición Estado Monagas)
  * Robusto, 100% Operativo y Totalmente Individualizado
  */
-import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=86";
-import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=86";
-import { getAllParishesForSelector } from "./usersCatalog.js?v=86";
-import { EarthStore } from "./earthStore.js?v=86";
-import { EarthMapEngine } from "./mapEngine.js?v=86";
-import { PropertiesDialog } from "./propertiesDialog.js?v=86";
-import { ToolsManager } from "./toolsManager.js?v=86";
-import { detectParishFromGeometry } from "./geoMonagas.js?v=86";
-import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=86";
+import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=87";
+import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=87";
+import { getAllParishesForSelector } from "./usersCatalog.js?v=87";
+import { EarthStore } from "./earthStore.js?v=87";
+import { EarthMapEngine } from "./mapEngine.js?v=87";
+import { PropertiesDialog } from "./propertiesDialog.js?v=87";
+import { ToolsManager } from "./toolsManager.js?v=87";
+import { detectParishFromGeometry } from "./geoMonagas.js?v=87";
+import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=87";
 import { 
   getSavedFirebaseConfig, 
   saveFirebaseConfig, 
   isFirebaseConfigured, 
   initFirebase 
-} from "./firebaseConfig.js?v=86";
+} from "./firebaseConfig.js?v=87";
 
 class EarthMonagasApp {
   constructor() {
@@ -82,8 +82,8 @@ class EarthMonagasApp {
       (type, itemId, liveDraft) => {
         this.handleLiveStylePreview(type, itemId, liveDraft);
       },
-      (poly) => {
-        this.handleStartGeometryEdit(poly);
+      (poly, type) => {
+        this.handleStartGeometryEdit(poly, type);
       },
       (polyId) => {
         this.renderPlacesTree();
@@ -919,8 +919,6 @@ class EarthMonagasApp {
                   </div>
                 ` : displaySecs.map(poly => {
                   const milCount = poly.militantes !== undefined ? poly.militantes : (poly.habitantes || 0);
-                  const cleanPhone = (poly.telefono || "").replace(/\D/g, "");
-                  const waLink = cleanPhone ? (cleanPhone.startsWith("58") ? `https://wa.me/${cleanPhone}` : `https://wa.me/58${cleanPhone.replace(/^0/, '')}`) : null;
 
                   return `
                     <div class="flex items-center justify-between py-1.5 px-2 bg-slate-900/70 hover:bg-slate-800/90 rounded-xl group text-xs border border-slate-800 transition shadow-sm">
@@ -936,9 +934,7 @@ class EarthMonagasApp {
                             ${poly.familias ? `<span class="text-sky-300">👨‍👩‍👧 ${poly.familias}</span>` : ''}
                             <span class="text-emerald-400 font-bold">👥 ${poly.habitantes || milCount}</span>
                             ${poly.militantes !== undefined ? `<span class="text-purple-300 font-bold">🗳️ ${poly.militantes}</span>` : ''}
-                            ${poly.centroVotacion ? `<span class="text-slate-300 truncate max-w-[90px]" title="${poly.centroVotacion}">🏫 ${poly.centroVotacion}</span>` : ''}
-                            ${poly.lider ? `<span class="text-slate-400 truncate max-w-[80px]">👤 ${poly.lider}</span>` : ''}
-                            ${waLink ? `<a href="${waLink}" target="_blank" onclick="event.stopPropagation()" class="text-emerald-400 hover:text-emerald-300 font-bold bg-emerald-950/80 px-1 py-0.2 rounded border border-emerald-700/50 flex items-center gap-0.5 text-[9px]">📱 WA</a>` : ''}
+                            ${poly.centroVotacion ? `<span class="text-slate-300 truncate max-w-[120px]" title="${poly.centroVotacion}">🏫 ${poly.centroVotacion}</span>` : ''}
                           </div>
                         </div>
                       </div>
@@ -1247,9 +1243,7 @@ class EarthMonagasApp {
     const elHabitantes = document.getElementById("quick-stats-habitantes");
     const elVotantes = document.getElementById("quick-stats-votantes");
     const elCentro = document.getElementById("quick-stats-centro");
-    const elLider = document.getElementById("quick-stats-lider");
     const btnEdit = document.getElementById("btn-quick-stats-edit");
-    const btnWa = document.getElementById("btn-quick-stats-whatsapp");
 
     const parish = this.store.getParish(this.selectedMunId, this.selectedParishId);
 
@@ -1273,20 +1267,6 @@ class EarthMonagasApp {
       if (elVotantes) elVotantes.textContent = totVot.toLocaleString();
 
       if (elCentro) elCentro.textContent = `${childSecs.length} Sectores Integrados`;
-      if (elLider) elLider.textContent = item.responsable || item.lider || "Comisión de Eje";
-
-      const rawPhone = item.telefono || item.telefonoResponsable;
-      if (btnWa) {
-        if (rawPhone) {
-          let clean = String(rawPhone).replace(/\D/g, "");
-          if (clean.startsWith("0")) clean = clean.substring(1);
-          if (!clean.startsWith("58")) clean = "58" + clean;
-          btnWa.href = `https://wa.me/${clean}`;
-          btnWa.classList.remove("hidden");
-        } else {
-          btnWa.classList.add("hidden");
-        }
-      }
     } else {
       // Sector Comunal (poligono)
       if (badge) badge.style.backgroundColor = item.colorRelleno || item.colorBorde || "#facc15";
@@ -1306,20 +1286,6 @@ class EarthMonagasApp {
       if (elVotantes) elVotantes.textContent = (parseInt(votantes) || 0).toLocaleString();
 
       if (elCentro) elCentro.textContent = item.centroVotacion || "No asignado";
-      if (elLider) elLider.textContent = item.liderComunidad || item.lider || item.responsable || "No asignado";
-
-      const rawPhone = item.telefonoLider || item.telefono;
-      if (btnWa) {
-        if (rawPhone) {
-          let clean = String(rawPhone).replace(/\D/g, "");
-          if (clean.startsWith("0")) clean = clean.substring(1);
-          if (!clean.startsWith("58")) clean = "58" + clean;
-          btnWa.href = `https://wa.me/${clean}`;
-          btnWa.classList.remove("hidden");
-        } else {
-          btnWa.classList.add("hidden");
-        }
-      }
     }
 
     if (btnEdit) {
@@ -1480,14 +1446,16 @@ class EarthMonagasApp {
     if (type === "poligono") {
       const parishStore = this.store.getParish(targetMunId, targetParishId);
       const subps = parishStore?.subparroquias || [];
-      const detectedSp = this.detectSubParishFromGeometry(newItem.vertices, subps);
 
-      if (detectedSp) {
-        newItem.subParroquiaId = String(detectedSp.id);
-      } else if (this.activeSubParroquiaId) {
-        newItem.subParroquiaId = this.activeSubParroquiaId;
-      } else if (subps.length === 1) {
-        newItem.subParroquiaId = String(subps[0].id);
+      if (this.activeSubParroquiaId && subps.some(s => String(s.id) === String(this.activeSubParroquiaId))) {
+        newItem.subParroquiaId = String(this.activeSubParroquiaId);
+      } else {
+        const detectedSp = this.detectSubParishFromGeometry(newItem.vertices, subps);
+        if (detectedSp) {
+          newItem.subParroquiaId = String(detectedSp.id);
+        } else if (subps.length === 1) {
+          newItem.subParroquiaId = String(subps[0].id);
+        }
       }
     }
 
@@ -1546,13 +1514,15 @@ class EarthMonagasApp {
       if (type === "poligono" && !draft.subParroquiaId) {
         const parishStore = this.store.getParish(destMunId, destParishId);
         const subps = parishStore?.subparroquias || [];
-        const detectedSp = this.detectSubParishFromGeometry(draft.vertices, subps);
-        if (detectedSp) {
-          draft.subParroquiaId = String(detectedSp.id);
-        } else if (this.activeSubParroquiaId) {
-          draft.subParroquiaId = this.activeSubParroquiaId;
-        } else if (subps.length === 1) {
-          draft.subParroquiaId = String(subps[0].id);
+        if (this.activeSubParroquiaId && subps.some(s => String(s.id) === String(this.activeSubParroquiaId))) {
+          draft.subParroquiaId = String(this.activeSubParroquiaId);
+        } else {
+          const detectedSp = this.detectSubParishFromGeometry(draft.vertices, subps);
+          if (detectedSp) {
+            draft.subParroquiaId = String(detectedSp.id);
+          } else if (subps.length === 1) {
+            draft.subParroquiaId = String(subps[0].id);
+          }
         }
       }
 
@@ -1634,10 +1604,9 @@ class EarthMonagasApp {
     });
   }
 
-  handleStartGeometryEdit(poly) {
+  handleStartGeometryEdit(poly, explicitType = null) {
     this.toolsManager.cancelActiveTool();
-    const isSub = this.propDialog?.currentType === "subparroquia";
-    const type = isSub ? "subparroquia" : "poligono";
+    const type = explicitType || (poly.subParroquiaId !== undefined ? "poligono" : "subparroquia");
     this.mapEngine.startEditingPolygonGeometry(poly, (updatedPoly) => {
       const areaHa = this.toolsManager.calculatePolygonAreaHa(updatedPoly.vertices);
       const perimetroM = this.toolsManager.calculatePerimeterMeters(updatedPoly.vertices);

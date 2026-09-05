@@ -35,17 +35,17 @@
   <meta http-equiv="Expires" content="0" />
 
   <!-- Custom Styles -->
-  <link rel="stylesheet" href="css/styles.css?v=86">
+  <link rel="stylesheet" href="css/styles.css?v=87">
 
   <!-- Script de Autenticación Rápida, Limpieza Integral de Caché y Activador de Herramientas -->
   <script>
-    // Auto-actualización obligatoria a la versión más reciente v=86
+    // Auto-actualización obligatoria a la versión más reciente v=87
     (function() {
       try {
         var p = new URLSearchParams(window.location.search);
         var curV = p.get('v');
-        if (!curV || curV !== '86') {
-          p.set('v', '86');
+        if (!curV || curV !== '87') {
+          p.set('v', '87');
           window.location.replace(window.location.pathname + '?' + p.toString() + window.location.hash);
         }
       } catch(e) {}
@@ -651,19 +651,13 @@
         </div>
       </div>
 
-      <!-- Información Adicional: Centro de Votación y Líder -->
+      <!-- Información Adicional: Centro de Votación / Eje -->
       <div id="quick-stats-details-box" class="bg-slate-900/80 sm:bg-slate-950/60 p-2.5 rounded-xl border border-slate-800 space-y-1 text-xs">
         <div id="quick-stats-voting-row" class="flex items-center justify-between text-[11px]">
           <span class="text-purple-300 font-bold flex items-center gap-1">
             <span>🗳️</span> Centro:
           </span>
-          <span id="quick-stats-centro" class="text-white font-bold truncate max-w-[200px]">No asignado</span>
-        </div>
-        <div id="quick-stats-leader-row" class="flex items-center justify-between text-[11px] pt-1 border-t border-slate-800/60">
-          <span class="text-slate-400 font-medium flex items-center gap-1">
-            <span>👤</span> Líder:
-          </span>
-          <span id="quick-stats-lider" class="text-slate-200 font-bold truncate max-w-[180px]">No asignado</span>
+          <span id="quick-stats-centro" class="text-white font-bold truncate max-w-[240px]">No asignado</span>
         </div>
       </div>
 
@@ -673,10 +667,7 @@
           <i data-lucide="edit-2" class="w-3.5 h-3.5"></i>
           <span>✏️ Modificar Datos</span>
         </button>
-        <a id="btn-quick-stats-whatsapp" href="#" target="_blank" class="hidden py-2 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center justify-center gap-1 shadow-lg active:scale-95 transition cursor-pointer">
-          <span>📱 WA</span>
-        </a>
-        <button type="button" onclick="window.earthApp?.closeQuickStats()" class="py-2 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-medium text-xs transition cursor-pointer">
+        <button type="button" onclick="window.earthApp?.closeQuickStats()" class="py-2 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-medium text-xs transition cursor-pointer" title="Cerrar">
           ✕
         </button>
       </div>
@@ -1406,7 +1397,7 @@
   </div>
 
   <!-- SCRIPT -->
-  <script type="module" src="js/app.js?v=86"></script>
+  <script type="module" src="js/app.js?v=87"></script>
   <script>
     if (window.lucide && typeof window.lucide.createIcons === 'function') {
       window.lucide.createIcons();
