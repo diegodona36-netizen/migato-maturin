@@ -2,21 +2,21 @@
  * Controlador Principal — Google Earth Pro Web (Edición Estado Monagas)
  * Robusto, 100% Operativo y Totalmente Individualizado
  */
-import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=69";
-import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=69";
-import { getAllParishesForSelector } from "./usersCatalog.js?v=69";
-import { EarthStore } from "./earthStore.js?v=69";
-import { EarthMapEngine } from "./mapEngine.js?v=69";
-import { PropertiesDialog } from "./propertiesDialog.js?v=69";
-import { ToolsManager } from "./toolsManager.js?v=69";
-import { detectParishFromGeometry } from "./geoMonagas.js?v=69";
-import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=69";
+import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=70";
+import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=70";
+import { getAllParishesForSelector } from "./usersCatalog.js?v=70";
+import { EarthStore } from "./earthStore.js?v=70";
+import { EarthMapEngine } from "./mapEngine.js?v=70";
+import { PropertiesDialog } from "./propertiesDialog.js?v=70";
+import { ToolsManager } from "./toolsManager.js?v=70";
+import { detectParishFromGeometry } from "./geoMonagas.js?v=70";
+import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=70";
 import { 
   getSavedFirebaseConfig, 
   saveFirebaseConfig, 
   isFirebaseConfigured, 
   initFirebase 
-} from "./firebaseConfig.js?v=69";
+} from "./firebaseConfig.js?v=70";
 
 class EarthMonagasApp {
   constructor() {
@@ -714,15 +714,15 @@ class EarthMonagasApp {
         </div>
         <h4 class="text-sm font-black text-white truncate">${pData.nombre}</h4>
 
-        <!-- Tally de Militancia Parroquial en Vivo -->
+        <!-- Resumen Territorial Limpio (Capa 5 y Capa 4) -->
         <div class="grid grid-cols-2 gap-2 mt-2 font-mono">
           <div class="bg-sky-950/70 border border-sky-600/40 p-1.5 rounded-xl text-center shadow-sm">
-            <span class="text-[9px] text-sky-400 font-bold uppercase block mb-0.5">Total Militantes</span>
-            <span class="text-xs font-black text-sky-300">👥 ${totalMilitantes.toLocaleString()}</span>
+            <span class="text-[9px] text-sky-400 font-bold uppercase block mb-0.5">Sectores (Capa 5)</span>
+            <span class="text-xs font-black text-sky-300">🔷 ${allPolys.length} Sectores</span>
           </div>
-          <div class="bg-amber-950/70 border border-amber-600/40 p-1.5 rounded-xl text-center shadow-sm">
-            <span class="text-[9px] text-amber-400 font-bold uppercase block mb-0.5">Total Casas / Fam.</span>
-            <span class="text-xs font-black text-amber-300">🏠 ${totalCasas.toLocaleString()}</span>
+          <div class="bg-purple-950/70 border border-purple-600/40 p-1.5 rounded-xl text-center shadow-sm">
+            <span class="text-[9px] text-purple-400 font-bold uppercase block mb-0.5">Ejes (Capa 4)</span>
+            <span class="text-xs font-black text-purple-300">🟪 ${allSubparroquias.length} Ejes</span>
           </div>
         </div>
 
