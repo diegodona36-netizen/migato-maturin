@@ -1,13 +1,13 @@
 /**
  * Gestor de Estado y Árbol de Lugares (Places) — Google Earth Pro Web (Monagas)
  */
-import { SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=61";
+import { SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=62";
 import { 
   saveParishToFirestore, 
   subscribeToTerritories, 
   isFirebaseConfigured, 
   fetchAllTerritoriesFromFirestore 
-} from "./firebaseConfig.js?v=61";
+} from "./firebaseConfig.js?v=62";
 
 const STORAGE_KEY = "earth_monagas_places_v3";
 
@@ -80,133 +80,8 @@ export const DEFAULT_SAN_SIMON_SUBPARROQUIAS = [
   }
 ];
 
-export const DEFAULT_SAN_SIMON_POLIGONOS = [
-  {
-    id: "sec-ss-1",
-    subParroquiaId: "sub-ss-casco",
-    nombre: "Sector Casco Central Comercial",
-    colorBorde: "#38bdf8",
-    anchoBorde: 2,
-    colorRelleno: "#38bdf8",
-    opacidad: 0.35,
-    militantes: 840,
-    casas: 520,
-    familias: 610,
-    habitantes: 2100,
-    lider: "Carmen Rondón",
-    telefono: "0414-7654321",
-    areaHa: 54.2,
-    perimetroM: 2980,
-    visible: true,
-    vertices: [
-      [9.7530, -63.1860],
-      [9.7540, -63.1780],
-      [9.7460, -63.1770],
-      [9.7450, -63.1850],
-      [9.7530, -63.1860]
-    ]
-  },
-  {
-    id: "sec-ss-2",
-    subParroquiaId: "sub-ss-casco",
-    nombre: "Sector Plaza Bolívar - Ayacucho",
-    colorBorde: "#38bdf8",
-    anchoBorde: 2,
-    colorRelleno: "#38bdf8",
-    opacidad: 0.35,
-    militantes: 620,
-    casas: 390,
-    familias: 450,
-    habitantes: 1650,
-    lider: "José Gregorio Salazar",
-    telefono: "0424-9123456",
-    areaHa: 42.1,
-    perimetroM: 2650,
-    visible: true,
-    vertices: [
-      [9.7550, -63.1830],
-      [9.7560, -63.1750],
-      [9.7500, -63.1740],
-      [9.7490, -63.1820],
-      [9.7550, -63.1830]
-    ]
-  },
-  {
-    id: "sec-ss-3",
-    subParroquiaId: "sub-ss-palonegro",
-    nombre: "Sector Brisas del Orinoco",
-    colorBorde: "#38bdf8",
-    anchoBorde: 2,
-    colorRelleno: "#38bdf8",
-    opacidad: 0.35,
-    militantes: 1250,
-    casas: 890,
-    familias: 1020,
-    habitantes: 3600,
-    lider: "Maritza Figuera",
-    telefono: "0416-8349201",
-    areaHa: 78.6,
-    perimetroM: 3560,
-    visible: true,
-    vertices: [
-      [9.7490, -63.1720],
-      [9.7480, -63.1620],
-      [9.7400, -63.1630],
-      [9.7410, -63.1730],
-      [9.7490, -63.1720]
-    ]
-  },
-  {
-    id: "sec-ss-4",
-    subParroquiaId: "sub-ss-palonegro",
-    nombre: "Sector Palo Negro",
-    colorBorde: "#38bdf8",
-    anchoBorde: 2,
-    colorRelleno: "#38bdf8",
-    opacidad: 0.35,
-    militantes: 980,
-    casas: 680,
-    familias: 790,
-    habitantes: 2800,
-    lider: "Héctor Maestre",
-    telefono: "0412-5551234",
-    areaHa: 61.4,
-    perimetroM: 3120,
-    visible: true,
-    vertices: [
-      [9.7530, -63.1730],
-      [9.7520, -63.1620],
-      [9.7470, -63.1630],
-      [9.7480, -63.1740],
-      [9.7530, -63.1730]
-    ]
-  },
-  {
-    id: "sec-ss-5",
-    subParroquiaId: "sub-ss-muralla",
-    nombre: "Sector La Muralla",
-    colorBorde: "#38bdf8",
-    anchoBorde: 2,
-    colorRelleno: "#38bdf8",
-    opacidad: 0.35,
-    militantes: 1120,
-    casas: 750,
-    familias: 860,
-    habitantes: 3100,
-    lider: "Yulimar Velásquez",
-    telefono: "0414-9988776",
-    areaHa: 72.0,
-    perimetroM: 3410,
-    visible: true,
-    vertices: [
-      [9.7410, -63.1970],
-      [9.7420, -63.1880],
-      [9.7340, -63.1870],
-      [9.7330, -63.1960],
-      [9.7410, -63.1970]
-    ]
-  }
-];
+// Polígonos de sectores inician limpios para ser trazados por los operadores
+export const DEFAULT_SAN_SIMON_POLIGONOS = [];
 
 export const DEFAULT_COROZO_SUBPARROQUIAS = [
   {
@@ -255,56 +130,7 @@ export const DEFAULT_COROZO_SUBPARROQUIAS = [
   }
 ];
 
-export const DEFAULT_COROZO_POLIGONOS = [
-  {
-    id: "poly-corozo-centro",
-    subParroquiaId: "sub-corozo-1",
-    nombre: "Sector El Corozo Centro",
-    descripcion: "Comunidad Central de El Corozo",
-    militantes: 620,
-    casas: 310,
-    habitantes: 620,
-    familias: 310,
-    colorBorde: "#38bdf8",
-    anchoBorde: 2,
-    colorRelleno: "#38bdf8",
-    opacidad: 0.35,
-    areaHa: 45.2,
-    perimetroM: 2700,
-    visible: true,
-    vertices: [
-      [9.6860, -63.2320],
-      [9.6870, -63.2180],
-      [9.6730, -63.2160],
-      [9.6720, -63.2300],
-      [9.6860, -63.2320]
-    ]
-  },
-  {
-    id: "poly-amana-centro",
-    subParroquiaId: "sub-corozo-2",
-    nombre: "Sector Amana del Tamarindo",
-    descripcion: "Comunidad Amana",
-    militantes: 480,
-    casas: 240,
-    habitantes: 480,
-    familias: 240,
-    colorBorde: "#38bdf8",
-    anchoBorde: 2,
-    colorRelleno: "#38bdf8",
-    opacidad: 0.35,
-    areaHa: 38.6,
-    perimetroM: 2500,
-    visible: true,
-    vertices: [
-      [9.6880, -63.2100],
-      [9.6900, -63.1980],
-      [9.6770, -63.1960],
-      [9.6750, -63.2080],
-      [9.6880, -63.2100]
-    ]
-  }
-];
+export const DEFAULT_COROZO_POLIGONOS = [];
 
 export class EarthStore {
   constructor(catalogo) {
@@ -408,22 +234,28 @@ export class EarthStore {
 
   purgeDummySectors(state) {
     // Purgar polígonos ficticios o de referencia en el centro de Maturín
+    let anyPurged = false;
     try {
-      if (!state || !state.municipios) return;
+      if (!state || !state.municipios) return false;
       const dummyIds = new Set([
         "sec-ss-1", "sec-ss-2", "sec-ss-3", "sec-ss-4", "sec-ss-5",
-        "sec-cor-1", "sec-cor-2"
+        "sec-cor-1", "sec-cor-2", "poly-corozo-centro", "poly-amana-centro"
       ]);
-      Object.values(state.municipios).forEach(mun => {
+      Object.entries(state.municipios).forEach(([munId, mun]) => {
         if (mun.parroquias) {
-          Object.values(mun.parroquias).forEach(p => {
+          Object.entries(mun.parroquias).forEach(([parishId, p]) => {
             if (p.poligonos && Array.isArray(p.poligonos)) {
+              const beforeCount = p.poligonos.length;
               p.poligonos = p.poligonos.filter(sec => {
                 if (!sec || !sec.id) return false;
                 if (dummyIds.has(String(sec.id))) return false;
                 if (String(sec.id).startsWith("sec-ss-") || String(sec.id).startsWith("sec-cor-")) return false;
                 return true;
               });
+              if (p.poligonos.length !== beforeCount) {
+                anyPurged = true;
+                this.syncToCloud(munId, parishId);
+              }
             }
           });
         }
@@ -431,6 +263,7 @@ export class EarthStore {
     } catch (e) {
       console.warn("Error purgando poligonos dummy:", e);
     }
+    return anyPurged;
   }
 
   buildInitialState() {
@@ -614,6 +447,8 @@ export class EarthStore {
       }
     });
 
+    this.purgeDummySectors(this.state);
+
     if (changesApplied) {
       this.saveToStorage();
       if (window.earthApp && typeof window.earthApp.onCloudDataMerged === "function") {
@@ -734,6 +569,8 @@ export class EarthStore {
           });
         }
       });
+
+      this.purgeDummySectors(this.state);
 
       if (changesApplied) {
         this.saveToStorage();

@@ -3,7 +3,7 @@
  * Control de Acceso Basado en Roles (RBAC) para el Estado Monagas
  */
 
-import { findUserByCredentials, USERS_CATALOG } from "./usersCatalog.js?v=61";
+import { findUserByCredentials, USERS_CATALOG } from "./usersCatalog.js?v=62";
 
 const AUTH_STORAGE_KEY = "migato_earth_session_v4";
 
@@ -14,6 +14,9 @@ export function forceCleanCacheAndReload() {
     localStorage.removeItem("migato_earth_session_v3");
     localStorage.removeItem("migato_earth_session_v2");
     localStorage.removeItem("migato_earth_session_v1");
+    localStorage.removeItem("earth_monagas_places_v3");
+    localStorage.removeItem("earth_monagas_places_v2");
+    localStorage.removeItem("earth_monagas_places_v1");
   } catch (e) {}
 
   if ("serviceWorker" in navigator) {
