@@ -2,21 +2,21 @@
  * Controlador Principal — Google Earth Pro Web (Edición Estado Monagas)
  * Robusto, 100% Operativo y Totalmente Individualizado
  */
-import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=88";
-import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=88";
-import { getAllParishesForSelector } from "./usersCatalog.js?v=88";
-import { EarthStore } from "./earthStore.js?v=88";
-import { EarthMapEngine } from "./mapEngine.js?v=88";
-import { PropertiesDialog } from "./propertiesDialog.js?v=88";
-import { ToolsManager } from "./toolsManager.js?v=88";
-import { detectParishFromGeometry } from "./geoMonagas.js?v=88";
-import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=88";
+import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=89";
+import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=89";
+import { getAllParishesForSelector } from "./usersCatalog.js?v=89";
+import { EarthStore } from "./earthStore.js?v=89";
+import { EarthMapEngine } from "./mapEngine.js?v=89";
+import { PropertiesDialog } from "./propertiesDialog.js?v=89";
+import { ToolsManager } from "./toolsManager.js?v=89";
+import { detectParishFromGeometry } from "./geoMonagas.js?v=89";
+import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=89";
 import { 
   getSavedFirebaseConfig, 
   saveFirebaseConfig, 
   isFirebaseConfigured, 
   initFirebase 
-} from "./firebaseConfig.js?v=88";
+} from "./firebaseConfig.js?v=89";
 
 class EarthMonagasApp {
   constructor() {
@@ -995,9 +995,6 @@ class EarthMonagasApp {
     `;
 
     // Solo mostrar rutas y marcas si existen o si no es operador de campo
-    const currentUser = this.authManager.getCurrentUser();
-    const isFieldOperator = currentUser && currentUser.rol === "operador";
-
     if (!isFieldOperator || filteredRoutes.length > 0) {
       html += `
         <!-- SECCIÓN: RUTAS Y CALLES -->
