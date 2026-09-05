@@ -1873,15 +1873,18 @@ class EarthMonagasApp {
     if (dot) dot.className = "w-2 h-2 rounded-full bg-amber-400 animate-spin shrink-0";
     if (text) text.textContent = "Sincronizando...";
 
-    // 1. Descargar primero para recibir datos creados en otras computadoras o teléfonos
-    const changes = await this.store.syncFromCloud();
-    // 2. Subir datos locales guardados
-    await this.store.syncAllLocalToCloud();
+    // 1. Descargar primero para recibir datos frescos de la nube
+    await this.store.syncFromCloud();
+    // 2. Re-renderizar mapa inmediatamente con los datos frescos
+    this.selectParish(this.selectedMunId, this.selectedParishId, false);
+    this.renderQuickParishBar();
+    this.renderPlacesTree();
+    this.updateMilitanciaTally();
 
     if (dot) dot.className = "w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0";
     if (text) text.textContent = "En Red";
 
-    this.showToast("☁️ Red Sincronizada: Base de datos online al día con todas las computadoras y teléfonos", "sky");
+    this.showToast("☁️ Datos frescos sincronizados al 100% desde Google Cloud.", "sky");
   }
 
   openFirebaseConfigModal() {
