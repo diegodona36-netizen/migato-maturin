@@ -231,11 +231,19 @@ export async function fetchAllTerritoriesFromFirestore() {
   const result = {};
   let fetched = false;
 
-  // 1. Lectura Primaria de Alta Velocidad: Google Cloud REST API
+  // 1. Lectura Primaria de Alta Velocidad: Google Cloud REST API (100% Fresco sin Caché)
   if (projectId) {
     try {
-      const restUrl = `https://firestore.googleapis.com/v1/projects/${projectId}/databases/(default)/documents/territorios_monagas${keyParam}`;
-      const resp = await fetch(restUrl);
+      const cacheBust = `_t=${Date.now()}`;
+      const sep = keyParam ? "&" : "?";
+      const restUrl = `https://firestore.googleapis.com/v1/projects/${projectId}/databases/(default)/documents/territorios_monagas${keyParam}${sep}${cacheBust}`;
+      const resp = await fetch(restUrl, {
+        cache: "no-store",
+        headers: {
+          "Cache-Control": "no-cache, no-store, must-revalidate",
+          "Pragma": "no-cache"
+        }
+      });
       if (resp.ok) {
         const json = await resp.json();
         const docs = json.documents || [];

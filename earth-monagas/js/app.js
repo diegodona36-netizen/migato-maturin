@@ -2,21 +2,21 @@
  * Controlador Principal — Google Earth Pro Web (Edición Estado Monagas)
  * Robusto, 100% Operativo y Totalmente Individualizado
  */
-import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=71";
-import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=71";
-import { getAllParishesForSelector } from "./usersCatalog.js?v=71";
-import { EarthStore } from "./earthStore.js?v=71";
-import { EarthMapEngine } from "./mapEngine.js?v=71";
-import { PropertiesDialog } from "./propertiesDialog.js?v=71";
-import { ToolsManager } from "./toolsManager.js?v=71";
-import { detectParishFromGeometry } from "./geoMonagas.js?v=71";
-import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=71";
+import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=72";
+import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=72";
+import { getAllParishesForSelector } from "./usersCatalog.js?v=72";
+import { EarthStore } from "./earthStore.js?v=72";
+import { EarthMapEngine } from "./mapEngine.js?v=72";
+import { PropertiesDialog } from "./propertiesDialog.js?v=72";
+import { ToolsManager } from "./toolsManager.js?v=72";
+import { detectParishFromGeometry } from "./geoMonagas.js?v=72";
+import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=72";
 import { 
   getSavedFirebaseConfig, 
   saveFirebaseConfig, 
   isFirebaseConfigured, 
   initFirebase 
-} from "./firebaseConfig.js?v=71";
+} from "./firebaseConfig.js?v=72";
 
 class EarthMonagasApp {
   constructor() {
@@ -106,39 +106,31 @@ class EarthMonagasApp {
     this.selectParish(this.selectedMunId, this.selectedParishId);
     this.renderQuickParishBar();
 
-    // Sincronización continua con la base de datos en la nube (compartida entre computadoras y teléfonos)
-    // Descarga inicial desde Firestore como Única Fuente de la Verdad (SSOT)
-    setTimeout(() => {
-      this.store.syncFromCloud().then(() => {
-        this.renderQuickParishBar();
+    // Sincronización autoritativa desde Google Cloud Firestore
+    this.store.syncFromCloud().then(() => {
+      // Asegurar que la parroquia con más datos y sectores activos quede seleccionada y visible
+      const recent = this.store.getMostRecentlyUpdatedParish();
+      const targetMun = paramMun || (recent && recent.munId ? recent.munId : this.selectedMunId);
+      const targetParish = paramParish || (recent && recent.parishId ? recent.parishId : this.selectedParishId);
+      this.selectParish(targetMun, targetParish);
+      this.renderQuickParishBar();
+      this.renderPlacesTree();
+      this.updateMilitanciaTally();
 
-        // Asegurar que la parroquia con más datos y sectores activos quede seleccionada y visible
-        if (!paramParish) {
-          const recent = this.store.getMostRecentlyUpdatedParish();
-          if (recent && recent.parishId) {
-            this.selectParish(recent.munId, recent.parishId);
-          } else {
-            this.selectParish(this.selectedMunId, this.selectedParishId);
-          }
-        } else {
-          this.selectParish(this.selectedMunId, this.selectedParishId);
-        }
-
-        const paramSector = urlParams.get("sector");
-        if (paramSector) {
-          setTimeout(() => {
-            const parish = this.store.getParish(this.selectedMunId, this.selectedParishId);
-            const poly = (parish?.poligonos || []).find(p => String(p.id) === String(paramSector));
-            if (poly) {
-              this.handleItemClick("poligono", poly.id);
-              if (poly.vertices && poly.vertices.length > 0) {
-                this.mapEngine?.map?.fitBounds(poly.vertices, { maxZoom: 16 });
-              }
+      const paramSector = urlParams.get("sector");
+      if (paramSector) {
+        setTimeout(() => {
+          const parish = this.store.getParish(this.selectedMunId, this.selectedParishId);
+          const poly = (parish?.poligonos || []).find(p => String(p.id) === String(paramSector));
+          if (poly) {
+            this.handleItemClick("poligono", poly.id);
+            if (poly.vertices && poly.vertices.length > 0) {
+              this.mapEngine?.map?.fitBounds(poly.vertices, { maxZoom: 16 });
             }
-          }, 300);
-        }
-      });
-    }, 150);
+          }
+        }, 300);
+      }
+    });
 
     // Polling de respaldo cada 20 segundos
     setInterval(() => {
@@ -1135,7 +1127,7 @@ class EarthMonagasApp {
     }, 5000);
   }
 
-  handleFinishedDrawing(type, newItem) {
+  async handleFinishedDrawing(type, newItem) {
     let targetMunId = this.selectedMunId || "maturin";
     let targetParishId = this.selectedParishId || "alto-de-los-godos";
 
@@ -1171,7 +1163,8 @@ class EarthMonagasApp {
         newItem.nombre = `Eje Comunal ${existingCount + 1}`;
       }
 
-      this.store.addItemToParish(targetMunId, targetParishId, "subparroquias", newItem);
+      this.showToast(`☁️ Guardando <strong>${newItem.nombre}</strong> en la nube...`, "purple");
+      await this.store.addItemToParish(targetMunId, targetParishId, "subparroquias", newItem);
       this.activeSubParroquiaId = String(newItem.id);
 
       const parish = this.store.getParish(targetMunId, targetParishId);
@@ -1182,7 +1175,7 @@ class EarthMonagasApp {
       this.focusSubParish(newItem.id);
       this.renderPlacesTree();
       this.renderQuickParishBar();
-      this.showToast(`🟪 <strong>${newItem.nombre}</strong> guardado en ${parish?.nombre || 'la Parroquia'}. Pulsa <strong>[+ Sector Comunal]</strong> para trazar sectores dentro.`, "purple");
+      this.showToast(`✅ <strong>${newItem.nombre}</strong> asegurado en la nube. Pulsa <strong>[+ Sector Comunal]</strong> para trazar sectores dentro.`, "purple");
       return;
     }
 
@@ -1201,7 +1194,8 @@ class EarthMonagasApp {
     }
 
     const key = type === "poligono" ? "poligonos" : (type === "ruta" ? "rutas" : (type === "subparroquia" ? "subparroquias" : "marcas"));
-    this.store.addItemToParish(targetMunId, targetParishId, key, newItem);
+    this.showToast(`☁️ Guardando <strong>${newItem.nombre}</strong> en la nube...`, "sky");
+    await this.store.addItemToParish(targetMunId, targetParishId, key, newItem);
 
     const parish = this.store.getParish(targetMunId, targetParishId);
     this.mapEngine.renderParishItems(parish, (t, it) => {
@@ -1214,11 +1208,11 @@ class EarthMonagasApp {
     this.renderQuickParishBar();
 
     const toastColor = type === "poligono" ? "sky" : (type === "ruta" ? "emerald" : "rose");
-    let msg = `✅ <strong>${newItem.nombre}</strong> guardado con éxito en ${parish?.nombre || 'la Parroquia'}.`;
+    let msg = `✅ <strong>${newItem.nombre}</strong> asegurado en la nube con éxito en ${parish?.nombre || 'la Parroquia'}.`;
     if (type === "poligono" && newItem.subParroquiaId) {
       const spObj = (parish?.subparroquias || []).find(s => String(s.id) === String(newItem.subParroquiaId));
       if (spObj) {
-        msg = `✅ Sector <strong>${newItem.nombre}</strong> guardado y vinculado a: <strong class="text-purple-300">${spObj.nombre}</strong>.`;
+        msg = `✅ Sector <strong>${newItem.nombre}</strong> asegurado en la nube y vinculado a: <strong class="text-purple-300">${spObj.nombre}</strong>.`;
       }
     }
     this.showToast(msg, toastColor);

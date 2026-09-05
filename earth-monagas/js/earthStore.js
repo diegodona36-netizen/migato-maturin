@@ -1,13 +1,13 @@
 /**
  * Gestor de Estado y Árbol de Lugares (Places) — Google Earth Pro Web (Monagas)
  */
-import { SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=71";
+import { SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=72";
 import { 
   saveParishToFirestore, 
   subscribeToTerritories, 
   isFirebaseConfigured, 
   fetchAllTerritoriesFromFirestore 
-} from "./firebaseConfig.js?v=71";
+} from "./firebaseConfig.js?v=72";
 
 const STORAGE_KEY = "earth_monagas_places_v3";
 
@@ -480,35 +480,13 @@ export class EarthStore {
       }
 
       if (localP) {
-        const isRemoteNewer = remoteP.updatedAt && (!localP.updatedAt || Number(remoteP.updatedAt) >= Number(localP.updatedAt));
         if (remoteP.updatedAt) {
           localP.updatedAt = Number(remoteP.updatedAt);
         }
         ["subparroquias", "poligonos", "rutas", "marcas"].forEach(type => {
           if (Array.isArray(remoteP[type])) {
-            if (!Array.isArray(localP[type])) localP[type] = [];
-
-            if (isRemoteNewer) {
-              if (JSON.stringify(localP[type]) !== JSON.stringify(remoteP[type])) {
-                localP[type] = [...remoteP[type]];
-                changesApplied = true;
-              }
-            } else {
-              remoteP[type].forEach(remoteItem => {
-                if (!remoteItem || !remoteItem.id) return;
-                const localIdx = localP[type].findIndex(li => String(li.id) === String(remoteItem.id));
-                if (localIdx === -1) {
-                  localP[type].push(remoteItem);
-                  changesApplied = true;
-                } else {
-                  const localItem = localP[type][localIdx];
-                  if (JSON.stringify(localItem) !== JSON.stringify(remoteItem)) {
-                    localP[type][localIdx] = Object.assign({}, localItem, remoteItem);
-                    changesApplied = true;
-                  }
-                }
-              });
-            }
+            localP[type] = [...remoteP[type]];
+            changesApplied = true;
           }
         });
       }
@@ -606,35 +584,13 @@ export class EarthStore {
         }
 
         if (localP) {
-          const isRemoteNewer = remoteP.updatedAt && (!localP.updatedAt || Number(remoteP.updatedAt) >= Number(localP.updatedAt));
           if (remoteP.updatedAt) {
             localP.updatedAt = Number(remoteP.updatedAt);
           }
           ["subparroquias", "poligonos", "rutas", "marcas"].forEach(type => {
             if (Array.isArray(remoteP[type])) {
-              if (!Array.isArray(localP[type])) localP[type] = [];
-
-              if (isRemoteNewer) {
-                if (JSON.stringify(localP[type]) !== JSON.stringify(remoteP[type])) {
-                  localP[type] = [...remoteP[type]];
-                  changesApplied = true;
-                }
-              } else {
-                remoteP[type].forEach(remoteItem => {
-                  if (!remoteItem || !remoteItem.id) return;
-                  const localIdx = localP[type].findIndex(li => String(li.id) === String(remoteItem.id));
-                  if (localIdx === -1) {
-                    localP[type].push(remoteItem);
-                    changesApplied = true;
-                  } else {
-                    const localItem = localP[type][localIdx];
-                    if (JSON.stringify(localItem) !== JSON.stringify(remoteItem)) {
-                      localP[type][localIdx] = Object.assign({}, localItem, remoteItem);
-                      changesApplied = true;
-                    }
-                  }
-                });
-              }
+              localP[type] = [...remoteP[type]];
+              changesApplied = true;
             }
           });
         }
