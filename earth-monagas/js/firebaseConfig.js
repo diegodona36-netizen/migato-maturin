@@ -116,19 +116,26 @@ try {
 /**
  * Limpia y normaliza objetos antes de serializar (evita propiedades undefined o circulares de Leaflet)
  */
-function cleanItem(item) {
+export function cleanItem(item, seen = new WeakSet()) {
   if (!item || typeof item !== "object") return item;
-  try {
-    return JSON.parse(JSON.stringify(item));
-  } catch (e) {
-    const clean = {};
-    Object.keys(item).forEach(k => {
-      if (typeof item[k] !== "function" && !k.startsWith("_") && item[k] !== undefined) {
-        clean[k] = item[k];
-      }
-    });
-    return clean;
+  if (seen.has(item)) return null;
+  seen.add(item);
+  if (Array.isArray(item)) {
+    return item.map(x => (typeof x === "object" && x !== null) ? cleanItem(x, seen) : x).filter(x => x !== null);
   }
+  const clean = {};
+  for (const [k, v] of Object.entries(item)) {
+    if (k.startsWith("_") || typeof v === "function" || v === undefined) continue;
+    if (Array.isArray(v)) {
+      clean[k] = v.map(x => (typeof x === "object" && x !== null) ? cleanItem(x, seen) : x).filter(x => x !== null);
+    } else if (typeof v === "object" && v !== null) {
+      const cleaned = cleanItem(v, seen);
+      if (cleaned !== null) clean[k] = cleaned;
+    } else {
+      clean[k] = v;
+    }
+  }
+  return clean;
 }
 
 /**

@@ -2,7 +2,7 @@
  * Motor Cartográfico Acelerado por GPU — Google Earth Pro Web (Monagas)
  * Integrado con Capas Jerárquicas Oficiales (INE 2021) y Edición de Vértices
  */
-import { GEO_ESTADO_OFICIAL, GEO_MUNICIPIOS_OFICIAL, GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=76";
+import { GEO_ESTADO_OFICIAL, GEO_MUNICIPIOS_OFICIAL, GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=77";
 
 export class EarthMapEngine {
   constructor(containerId, onCoordUpdate) {
@@ -31,6 +31,7 @@ export class EarthMapEngine {
     this.editingPoly = null;
     this.editingVertexMarkers = [];
     this.onFinishGeometryEdit = null;
+    this.leafletLayersMap = new Map();
 
     this.init();
   }
@@ -457,6 +458,7 @@ export class EarthMapEngine {
     this.placemarksLayer.clearLayers();
     if (this.subParroquiasLayer) this.subParroquiasLayer.clearLayers();
     if (this.sectorLabelsLayer) this.sectorLabelsLayer.clearLayers();
+    if (this.leafletLayersMap) this.leafletLayersMap.clear();
 
     if (!activeParish) return;
 
@@ -492,8 +494,9 @@ export class EarthMapEngine {
             renderer: this.canvasRenderer
           });
 
-          spLayer._spData = sp;
-          sp._leafletLayer = spLayer;
+          if (sp && sp.id) {
+            this.leafletLayersMap.set(String(sp.id), spLayer);
+          }
 
           if (!isDrawing) {
             spLayer.bindTooltip(`
@@ -573,8 +576,9 @@ export class EarthMapEngine {
             renderer: this.canvasRenderer
           });
 
-          pLayer._polyData = poly;
-          poly._leafletLayer = pLayer;
+          if (poly && poly.id) {
+            this.leafletLayersMap.set(String(poly.id), pLayer);
+          }
 
           const milCount = poly.militantes !== undefined ? poly.militantes : (poly.habitantes || 0);
           if (!isDrawing) {
@@ -755,8 +759,9 @@ export class EarthMapEngine {
       m.on("drag", (e) => {
         const newPos = [e.latlng.lat, e.latlng.lng];
         poly.vertices[idx] = newPos;
-        if (poly._leafletLayer) {
-          poly._leafletLayer.setLatLngs(poly.vertices);
+        const lLayer = this.leafletLayersMap ? this.leafletLayersMap.get(String(poly.id)) : null;
+        if (lLayer) {
+          lLayer.setLatLngs(poly.vertices);
         }
       });
 

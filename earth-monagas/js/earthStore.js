@@ -1,16 +1,17 @@
 /**
  * Gestor de Estado y Árbol de Lugares (Places) — Google Earth Pro Web (Monagas)
  */
-import { SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=76";
+import { SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=77";
 import { 
   saveParishToFirestore, 
   subscribeToTerritories, 
   isFirebaseConfigured, 
   fetchAllTerritoriesFromFirestore,
-  mergeItemCollections
-} from "./firebaseConfig.js?v=76";
+  mergeItemCollections,
+  cleanItem
+} from "./firebaseConfig.js?v=77";
 
-const STORAGE_KEY = "earth_monagas_places_v6";
+const STORAGE_KEY = "earth_monagas_places_v7";
 
 export const DEFAULT_SAN_SIMON_SUBPARROQUIAS = [
   {
@@ -331,9 +332,12 @@ export class EarthStore {
   saveToStorage() {
     try {
       if (typeof localStorage !== "undefined") {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(this.state));
+        const cleanState = cleanItem(this.state);
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(cleanState));
       }
-    } catch (e) {}
+    } catch (e) {
+      console.warn("[EarthStore] Error guardando en localStorage:", e);
+    }
   }
 
   // ==========================================
@@ -435,9 +439,15 @@ export class EarthStore {
         ["subparroquias", "poligonos", "rutas", "marcas"].forEach(type => {
           if (Array.isArray(remoteP[type])) {
             const merged = mergeItemCollections(localP[type] || [], remoteP[type], localP.deletedIds || []);
-            const localStr = JSON.stringify(localP[type] || []);
-            const mergedStr = JSON.stringify(merged);
-            if (localStr !== mergedStr) {
+            const localCount = (localP[type] || []).length;
+            const mergedCount = merged.length;
+            let changed = localCount !== mergedCount;
+            if (!changed) {
+              const localIds = (localP[type] || []).map(i => `${i.id}_${i.updatedAt || 0}`).sort().join("|");
+              const mergedIds = merged.map(i => `${i.id}_${i.updatedAt || 0}`).sort().join("|");
+              if (localIds !== mergedIds) changed = true;
+            }
+            if (changed) {
               localP[type] = merged;
               changesApplied = true;
             }
@@ -544,9 +554,15 @@ export class EarthStore {
           ["subparroquias", "poligonos", "rutas", "marcas"].forEach(type => {
             if (Array.isArray(remoteP[type])) {
               const merged = mergeItemCollections(localP[type] || [], remoteP[type], localP.deletedIds || []);
-              const localStr = JSON.stringify(localP[type] || []);
-              const mergedStr = JSON.stringify(merged);
-              if (localStr !== mergedStr) {
+              const localCount = (localP[type] || []).length;
+              const mergedCount = merged.length;
+              let changed = localCount !== mergedCount;
+              if (!changed) {
+                const localIds = (localP[type] || []).map(i => `${i.id}_${i.updatedAt || 0}`).sort().join("|");
+                const mergedIds = merged.map(i => `${i.id}_${i.updatedAt || 0}`).sort().join("|");
+                if (localIds !== mergedIds) changed = true;
+              }
+              if (changed) {
                 localP[type] = merged;
                 changesApplied = true;
               }

@@ -32,17 +32,17 @@
   <meta http-equiv="Expires" content="0" />
 
   <!-- Custom Styles -->
-  <link rel="stylesheet" href="css/styles.css?v=76">
+  <link rel="stylesheet" href="css/styles.css?v=77">
 
   <!-- Script de Autenticación Rápida, Limpieza Integral de Caché y Activador de Herramientas -->
   <script>
-    // Auto-actualización obligatoria a la versión más reciente v=76 si se ingresó con v=73 u otra versión vieja
+    // Auto-actualización obligatoria a la versión más reciente v=77 si se ingresó con v=73 u otra versión vieja
     (function() {
       try {
         var p = new URLSearchParams(window.location.search);
         var curV = p.get('v');
-        if (!curV || curV !== '76') {
-          p.set('v', '76');
+        if (!curV || curV !== '77') {
+          p.set('v', '77');
           window.location.replace(window.location.pathname + '?' + p.toString() + window.location.hash);
         }
       } catch(e) {}
@@ -1109,7 +1109,7 @@
   </div>
 
   <!-- SCRIPT -->
-  <script type="module" src="js/app.js?v=76"></script>
+  <script type="module" src="js/app.js?v=77"></script>
   <script>
     if (window.lucide && typeof window.lucide.createIcons === 'function') {
       window.lucide.createIcons();

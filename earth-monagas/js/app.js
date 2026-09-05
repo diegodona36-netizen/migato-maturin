@@ -2,21 +2,21 @@
  * Controlador Principal — Google Earth Pro Web (Edición Estado Monagas)
  * Robusto, 100% Operativo y Totalmente Individualizado
  */
-import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=76";
-import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=76";
-import { getAllParishesForSelector } from "./usersCatalog.js?v=76";
-import { EarthStore } from "./earthStore.js?v=76";
-import { EarthMapEngine } from "./mapEngine.js?v=76";
-import { PropertiesDialog } from "./propertiesDialog.js?v=76";
-import { ToolsManager } from "./toolsManager.js?v=76";
-import { detectParishFromGeometry } from "./geoMonagas.js?v=76";
-import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=76";
+import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=77";
+import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=77";
+import { getAllParishesForSelector } from "./usersCatalog.js?v=77";
+import { EarthStore } from "./earthStore.js?v=77";
+import { EarthMapEngine } from "./mapEngine.js?v=77";
+import { PropertiesDialog } from "./propertiesDialog.js?v=77";
+import { ToolsManager } from "./toolsManager.js?v=77";
+import { detectParishFromGeometry } from "./geoMonagas.js?v=77";
+import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=77";
 import { 
   getSavedFirebaseConfig, 
   saveFirebaseConfig, 
   isFirebaseConfigured, 
   initFirebase 
-} from "./firebaseConfig.js?v=76";
+} from "./firebaseConfig.js?v=77";
 
 class EarthMonagasApp {
   constructor() {
@@ -29,6 +29,7 @@ class EarthMonagasApp {
 
     this.selectedMunId = "maturin";
     this.selectedParishId = "alto-de-los-godos";
+    window.earthApp = this;
 
     this.init();
   }
@@ -113,13 +114,11 @@ class EarthMonagasApp {
       const targetMun = paramMun || (recent && recent.munId ? recent.munId : this.selectedMunId);
       const targetParish = paramParish || (recent && recent.parishId ? recent.parishId : this.selectedParishId);
 
-      if (targetMun !== this.selectedMunId || targetParish !== this.selectedParishId) {
-        this.selectParish(targetMun, targetParish, true);
-      } else {
-        this.renderQuickParishBar();
-        this.renderPlacesTree();
-        this.updateMilitanciaTally();
-      }
+      const shouldFly = (targetMun !== this.selectedMunId || targetParish !== this.selectedParishId);
+      this.selectParish(targetMun, targetParish, shouldFly);
+      this.renderQuickParishBar();
+      this.renderPlacesTree();
+      this.updateMilitanciaTally();
 
       const paramSector = urlParams.get("sector");
       if (paramSector) {
