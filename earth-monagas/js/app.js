@@ -2,21 +2,21 @@
  * Controlador Principal — Google Earth Pro Web (Edición Estado Monagas)
  * Robusto, 100% Operativo y Totalmente Individualizado
  */
-import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=80";
-import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=80";
-import { getAllParishesForSelector } from "./usersCatalog.js?v=80";
-import { EarthStore } from "./earthStore.js?v=80";
-import { EarthMapEngine } from "./mapEngine.js?v=80";
-import { PropertiesDialog } from "./propertiesDialog.js?v=80";
-import { ToolsManager } from "./toolsManager.js?v=80";
-import { detectParishFromGeometry } from "./geoMonagas.js?v=80";
-import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=80";
+import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=81";
+import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=81";
+import { getAllParishesForSelector } from "./usersCatalog.js?v=81";
+import { EarthStore } from "./earthStore.js?v=81";
+import { EarthMapEngine } from "./mapEngine.js?v=81";
+import { PropertiesDialog } from "./propertiesDialog.js?v=81";
+import { ToolsManager } from "./toolsManager.js?v=81";
+import { detectParishFromGeometry } from "./geoMonagas.js?v=81";
+import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=81";
 import { 
   getSavedFirebaseConfig, 
   saveFirebaseConfig, 
   isFirebaseConfigured, 
   initFirebase 
-} from "./firebaseConfig.js?v=80";
+} from "./firebaseConfig.js?v=81";
 
 class EarthMonagasApp {
   constructor() {
@@ -1032,11 +1032,30 @@ class EarthMonagasApp {
   openSessionModal() {
     const modalLogin = document.getElementById("modal-auth-login");
     const errorMsg = document.getElementById("auth-error-msg");
+    const selectJurisdiction = document.getElementById("auth-select-jurisdiction");
+    const inputUser = document.getElementById("auth-input-user");
+    const inputPass = document.getElementById("auth-input-pass");
+
     if (errorMsg) errorMsg.classList.add("hidden");
+    if (inputUser && !inputUser.value) inputUser.value = "admin";
+    if (inputPass && !inputPass.value) inputPass.value = "admin";
+
+    if (selectJurisdiction) {
+      if (this.isGeneralMode) {
+        selectJurisdiction.value = "general";
+      } else if (this.selectedMunId && this.selectedParishId) {
+        selectJurisdiction.value = `${this.selectedMunId}/${this.selectedParishId}`;
+      }
+    }
+
     if (modalLogin) {
       modalLogin.classList.remove("hidden");
       modalLogin.classList.add("flex");
       modalLogin.style.display = "flex";
+    }
+
+    if (window.lucide && typeof window.lucide.createIcons === "function") {
+      try { window.lucide.createIcons(); } catch(e){}
     }
   }
 
@@ -1439,11 +1458,12 @@ class EarthMonagasApp {
     const btnLogout = document.getElementById("btn-user-logout");
     const btnSessionBadge = document.getElementById("btn-session-badge");
     const btnCloseAuth = document.getElementById("btn-close-auth-modal");
-    const btnLoginGeneral = document.getElementById("btn-login-general");
-    const btnLoginParish = document.getElementById("btn-login-parish-selected");
-    const selectParishModal = document.getElementById("auth-select-parroquia");
+    const selectJurisdiction = document.getElementById("auth-select-jurisdiction");
+    const btnTogglePass = document.getElementById("btn-toggle-pass-visibility");
+    const inputPass = document.getElementById("auth-input-pass");
+    const inputUser = document.getElementById("auth-input-user");
 
-    // Registro en el objeto global para acceso rápido desde HTML
+    // Registro en el objeto global para llamadas directas
     window.earthQuickLogin = (role, pass) => this.quickLogin(role, pass);
     window.quickLoginImmediate = (role, pass) => this.quickLogin(role, pass);
 
@@ -1463,33 +1483,11 @@ class EarthMonagasApp {
       });
     }
 
-    // Botón 1: Acceso Dirección General (1 clic)
-    if (btnLoginGeneral) {
-      btnLoginGeneral.addEventListener("click", () => {
-        this.quickLogin("admin", "admin");
-      });
-    }
-
-    // Botón 2: Acceso a la Parroquia Seleccionada
-    if (btnLoginParish) {
-      btnLoginParish.addEventListener("click", () => {
-        const val = selectParishModal?.value;
-        if (val) {
-          this.quickLogin(val, "admin");
-        } else {
-          if (errorMsg) {
-            errorMsg.textContent = "Por favor selecciona una parroquia de la lista.";
-            errorMsg.classList.remove("hidden");
-          }
-        }
-      });
-    }
-
-    // Poblar selector de las 44 parroquias en el modal de inicio
-    if (selectParishModal) {
+    // Poblar selector formal de las 44 parroquias agrupadas por municipio
+    if (selectJurisdiction) {
       try {
         const allP = getAllParishesForSelector();
-        selectParishModal.innerHTML = '<option value="">-- Selecciona una Parroquia para entrar --</option>';
+        selectJurisdiction.innerHTML = '<option value="general">👑 Dirección General (Acceso Central a Todo Monagas)</option>';
         let curMun = "";
         let optGroup = null;
         allP.forEach(p => {
@@ -1497,41 +1495,57 @@ class EarthMonagasApp {
             curMun = p.munNombre;
             optGroup = document.createElement("optgroup");
             optGroup.label = `Municipio ${curMun}`;
-            selectParishModal.appendChild(optGroup);
+            selectJurisdiction.appendChild(optGroup);
           }
           const opt = document.createElement("option");
           opt.value = `${p.munId}/${p.parishId}`;
           opt.textContent = `📍 Parroquia ${p.parishNombre}`;
           if (optGroup) optGroup.appendChild(opt);
         });
-
-        selectParishModal.addEventListener("change", (e) => {
-          const val = e.target.value;
-          const parishLabelSpan = document.getElementById("btn-login-parish-label");
-          if (val) {
-            const selectedText = e.target.options[e.target.selectedIndex]?.textContent || "Parroquia";
-            if (parishLabelSpan) {
-              parishLabelSpan.textContent = `Entrar a ${selectedText.replace('📍 ', '')} ➔`;
-            }
-            if (errorMsg) errorMsg.classList.add("hidden");
-          }
-        });
       } catch (err) {
-        console.warn("Error poblando selector modal:", err);
+        console.warn("Error poblando selector de jurisdicción:", err);
       }
     }
 
-    // Formulario de inicio de sesión manual
+    // Alternar visibilidad de contraseña (ojo)
+    if (btnTogglePass && inputPass) {
+      btnTogglePass.addEventListener("click", () => {
+        const isPass = inputPass.type === "password";
+        inputPass.type = isPass ? "text" : "password";
+        const icon = document.getElementById("icon-pass-visibility");
+        if (icon) {
+          icon.setAttribute("data-lucide", isPass ? "eye-off" : "eye");
+          if (window.lucide && typeof window.lucide.createIcons === "function") {
+            try { window.lucide.createIcons(); } catch(e){}
+          }
+        }
+      });
+    }
+
+    // Formulario de inicio de sesión institucional
     if (formLogin) {
       formLogin.addEventListener("submit", (e) => {
         e.preventDefault();
-        const userInput = (document.getElementById("auth-input-user")?.value || "").trim() || "admin";
-        const passInput = (document.getElementById("auth-input-pass")?.value || "").trim() || "admin";
+        const jurisVal = selectJurisdiction?.value || "general";
+        const userInput = (inputUser?.value || "").trim() || "admin";
+        const passInput = (inputPass?.value || "").trim() || "admin";
+        const rememberChk = document.getElementById("auth-chk-remember");
+        const remember = rememberChk ? rememberChk.checked : true;
 
-        const res = this.authManager.login(userInput, passInput);
+        // Si se eligió una parroquia en el selector de jurisdicción, vincular al ámbito seleccionado
+        let identity = userInput;
+        if (jurisVal && jurisVal !== "general") {
+          if (userInput === "admin" || userInput === "") {
+            identity = jurisVal;
+          }
+        } else {
+          identity = (userInput && userInput !== "admin") ? userInput : "admin";
+        }
+
+        const res = this.authManager.login(identity, passInput, remember);
         if (!res.success) {
           if (errorMsg) {
-            errorMsg.textContent = res.message;
+            errorMsg.textContent = res.message || "Credenciales no válidas. Verifique sus datos.";
             errorMsg.classList.remove("hidden");
           }
           return;
@@ -1545,13 +1559,19 @@ class EarthMonagasApp {
         }
 
         this.applyUserScope();
+        const roleText = res.user.rol === "admin" 
+          ? "👑 Dirección General (Monagas)" 
+          : `🔒 Parroquia ${res.user.parroquiaNombre || res.user.nombre}`;
+        this.showToast(`Bienvenido: ${roleText}`, "success");
       });
     }
 
-    // Botón de cierre de sesión / cambio de territorio
+    // Botón de cierre de sesión institucional
     if (btnLogout) {
       btnLogout.addEventListener("click", () => {
+        this.authManager.logout();
         this.openSessionModal();
+        this.showToast("Sesión cerrada. Ingrese sus credenciales para continuar.", "info");
       });
     }
 
@@ -1565,7 +1585,7 @@ class EarthMonagasApp {
       return;
     }
 
-    // Cargar sesión guardada o iniciar como General predeterminado
+    // Cargar sesión activa guardada o abrir el portal de acceso institucional
     if (this.authManager.isAuthenticated()) {
       if (modalLogin) {
         modalLogin.classList.add("hidden");
@@ -1574,7 +1594,7 @@ class EarthMonagasApp {
       }
       this.applyUserScope();
     } else {
-      this.quickLogin("admin", "admin");
+      this.openSessionModal();
     }
   }
 
@@ -1592,9 +1612,9 @@ class EarthMonagasApp {
       }
       this.applyUserScope();
       const roleText = res.user.rol === "admin" 
-        ? "👑 Dirección General" 
+        ? "👑 Dirección General (Monagas)" 
         : `🔒 Parroquia ${res.user.parroquiaNombre || res.user.nombre}`;
-      this.showToast(`Sesión: ${roleText}`, "success");
+      this.showToast(`Bienvenido: ${roleText}`, "success");
     } else {
       if (errorMsg) {
         errorMsg.textContent = res.message;

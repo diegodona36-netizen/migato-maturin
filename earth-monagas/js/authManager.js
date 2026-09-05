@@ -3,7 +3,7 @@
  * Control de Acceso Basado en Roles (RBAC) para el Estado Monagas
  */
 
-import { findUserByCredentials, USERS_CATALOG } from "./usersCatalog.js?v=80";
+import { findUserByCredentials, USERS_CATALOG } from "./usersCatalog.js?v=81";
 
 const AUTH_STORAGE_KEY = "migato_earth_session_v4";
 
@@ -55,21 +55,7 @@ export class AuthManager {
       const raw = localStorage.getItem(AUTH_STORAGE_KEY) || sessionStorage.getItem(AUTH_STORAGE_KEY);
       if (raw) return JSON.parse(raw);
     } catch (e) {}
-    // Sesión predeterminada como Administrador de Sala Central (Acceso Total a Monagas)
-    const defaultAdmin = {
-      username: "admin",
-      nombre: "Sala Central MIGATO",
-      rol: "admin",
-      municipioId: "maturin",
-      parroquiaId: "san-simon",
-      parroquiaNombre: "San Simón (Centro)",
-      municipioNombre: "Maturín",
-      loginAt: new Date().toISOString()
-    };
-    try {
-      localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(defaultAdmin));
-    } catch (e) {}
-    return defaultAdmin;
+    return null;
   }
 
   login(identity, password, remember = true) {
@@ -77,7 +63,7 @@ export class AuthManager {
     if (!user) {
       return {
         success: false,
-        message: "Credenciales no válidas. Puedes usar la clave universal: admin"
+        message: "Credenciales no válidas. Verifique el usuario y contraseña del sistema (admin)."
       };
     }
 
