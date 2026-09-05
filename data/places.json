@@ -1984,10 +1984,89 @@
         ]
       }
     ],
-    "poligonos": [],
+    "poligonos": [
+      {
+        "id": "poly-corozo-centro",
+        "subParroquiaId": "sub-corozo-1",
+        "nombre": "Sector El Corozo Centro",
+        "descripcion": "Comunidad Central de El Corozo",
+        "militantes": 620,
+        "casas": 310,
+        "habitantes": 620,
+        "familias": 310,
+        "colorBorde": "#38bdf8",
+        "anchoBorde": 2,
+        "colorRelleno": "#38bdf8",
+        "opacidad": 0.35,
+        "areaHa": 45.2,
+        "perimetroM": 2700,
+        "visible": true,
+        "vertices": [
+          [
+            9.686,
+            -63.232
+          ],
+          [
+            9.687,
+            -63.218
+          ],
+          [
+            9.673,
+            -63.216
+          ],
+          [
+            9.672,
+            -63.23
+          ],
+          [
+            9.686,
+            -63.232
+          ]
+        ]
+      },
+      {
+        "id": "poly-amana-centro",
+        "subParroquiaId": "sub-corozo-2",
+        "nombre": "Sector Amana del Tamarindo",
+        "descripcion": "Comunidad Amana",
+        "militantes": 480,
+        "casas": 240,
+        "habitantes": 480,
+        "familias": 240,
+        "colorBorde": "#38bdf8",
+        "anchoBorde": 2,
+        "colorRelleno": "#38bdf8",
+        "opacidad": 0.35,
+        "areaHa": 38.6,
+        "perimetroM": 2500,
+        "visible": true,
+        "vertices": [
+          [
+            9.688,
+            -63.21
+          ],
+          [
+            9.69,
+            -63.198
+          ],
+          [
+            9.677,
+            -63.196
+          ],
+          [
+            9.675,
+            -63.208
+          ],
+          [
+            9.688,
+            -63.21
+          ]
+        ]
+      }
+    ],
     "rutas": [],
     "marcas": [],
-    "updatedAt": 1788579602988
+    "updatedAt": 1788579627025
   },
   "el-corozo": {
     "munId": "maturin",
@@ -2068,9 +2147,88 @@
         ]
       }
     ],
-    "poligonos": [],
+    "poligonos": [
+      {
+        "id": "poly-corozo-centro",
+        "subParroquiaId": "sub-corozo-1",
+        "nombre": "Sector El Corozo Centro",
+        "descripcion": "Comunidad Central de El Corozo",
+        "militantes": 620,
+        "casas": 310,
+        "habitantes": 620,
+        "familias": 310,
+        "colorBorde": "#38bdf8",
+        "anchoBorde": 2,
+        "colorRelleno": "#38bdf8",
+        "opacidad": 0.35,
+        "areaHa": 45.2,
+        "perimetroM": 2700,
+        "visible": true,
+        "vertices": [
+          [
+            9.686,
+            -63.232
+          ],
+          [
+            9.687,
+            -63.218
+          ],
+          [
+            9.673,
+            -63.216
+          ],
+          [
+            9.672,
+            -63.23
+          ],
+          [
+            9.686,
+            -63.232
+          ]
+        ]
+      },
+      {
+        "id": "poly-amana-centro",
+        "subParroquiaId": "sub-corozo-2",
+        "nombre": "Sector Amana del Tamarindo",
+        "descripcion": "Comunidad Amana",
+        "militantes": 480,
+        "casas": 240,
+        "habitantes": 480,
+        "familias": 240,
+        "colorBorde": "#38bdf8",
+        "anchoBorde": 2,
+        "colorRelleno": "#38bdf8",
+        "opacidad": 0.35,
+        "areaHa": 38.6,
+        "perimetroM": 2500,
+        "visible": true,
+        "vertices": [
+          [
+            9.688,
+            -63.21
+          ],
+          [
+            9.69,
+            -63.198
+          ],
+          [
+            9.677,
+            -63.196
+          ],
+          [
+            9.675,
+            -63.208
+          ],
+          [
+            9.688,
+            -63.21
+          ]
+        ]
+      }
+    ],
     "rutas": [],
     "marcas": [],
-    "updatedAt": 1788579602988
+    "updatedAt": 1788579627025
   }
 }
