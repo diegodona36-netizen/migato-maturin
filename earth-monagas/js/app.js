@@ -2,21 +2,21 @@
  * Controlador Principal — Google Earth Pro Web (Edición Estado Monagas)
  * Robusto, 100% Operativo y Totalmente Individualizado
  */
-import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=70";
-import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=70";
-import { getAllParishesForSelector } from "./usersCatalog.js?v=70";
-import { EarthStore } from "./earthStore.js?v=70";
-import { EarthMapEngine } from "./mapEngine.js?v=70";
-import { PropertiesDialog } from "./propertiesDialog.js?v=70";
-import { ToolsManager } from "./toolsManager.js?v=70";
-import { detectParishFromGeometry } from "./geoMonagas.js?v=70";
-import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=70";
+import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=71";
+import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=71";
+import { getAllParishesForSelector } from "./usersCatalog.js?v=71";
+import { EarthStore } from "./earthStore.js?v=71";
+import { EarthMapEngine } from "./mapEngine.js?v=71";
+import { PropertiesDialog } from "./propertiesDialog.js?v=71";
+import { ToolsManager } from "./toolsManager.js?v=71";
+import { detectParishFromGeometry } from "./geoMonagas.js?v=71";
+import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=71";
 import { 
   getSavedFirebaseConfig, 
   saveFirebaseConfig, 
   isFirebaseConfigured, 
   initFirebase 
-} from "./firebaseConfig.js?v=70";
+} from "./firebaseConfig.js?v=71";
 
 class EarthMonagasApp {
   constructor() {
@@ -28,7 +28,7 @@ class EarthMonagasApp {
     this.authManager = new AuthManager();
 
     this.selectedMunId = "maturin";
-    this.selectedParishId = "san-simon";
+    this.selectedParishId = "alto-de-los-godos";
 
     this.init();
   }
@@ -112,15 +112,16 @@ class EarthMonagasApp {
       this.store.syncFromCloud().then(() => {
         this.renderQuickParishBar();
 
-        // Si la parroquia actual no tiene sectores, auto-enfocar la parroquia con polígonos
-        const currentParish = this.store.getParish(this.selectedMunId, this.selectedParishId);
-        const polyCount = (currentParish?.poligonos || []).length;
-        if (polyCount === 0 && !paramParish) {
+        // Asegurar que la parroquia con más datos y sectores activos quede seleccionada y visible
+        if (!paramParish) {
           const recent = this.store.getMostRecentlyUpdatedParish();
-          if (recent && recent.parishId && recent.parishId !== this.selectedParishId) {
-            console.log(`📍 Auto-enfocando parroquia con sectores activos: ${recent.parishId} (${recent.munId})`);
+          if (recent && recent.parishId) {
             this.selectParish(recent.munId, recent.parishId);
+          } else {
+            this.selectParish(this.selectedMunId, this.selectedParishId);
           }
+        } else {
+          this.selectParish(this.selectedMunId, this.selectedParishId);
         }
 
         const paramSector = urlParams.get("sector");

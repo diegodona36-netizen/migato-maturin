@@ -1,13 +1,13 @@
 /**
  * Gestor de Estado y Árbol de Lugares (Places) — Google Earth Pro Web (Monagas)
  */
-import { SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=70";
+import { SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=71";
 import { 
   saveParishToFirestore, 
   subscribeToTerritories, 
   isFirebaseConfigured, 
   fetchAllTerritoriesFromFirestore 
-} from "./firebaseConfig.js?v=70";
+} from "./firebaseConfig.js?v=71";
 
 const STORAGE_KEY = "earth_monagas_places_v3";
 
@@ -243,6 +243,28 @@ export class EarthStore {
                 opacidad: 0.18,
                 visible: true,
                 vertices: sp.poligono ? [...sp.poligono] : []
+              })).filter(s => s.vertices && s.vertices.length >= 3);
+            }
+            if (storedP.poligonos.length === 0 && Array.isArray(SECTORES_LAPUENTE)) {
+              storedP.poligonos = SECTORES_LAPUENTE.map(s => ({
+                id: s.id,
+                subParroquiaId: s.subParroquiaId || "sub-godos-6",
+                nombre: s.nombre,
+                descripcion: "Sector Comunal • La Puente",
+                militantes: s.habitantes || 0,
+                casas: s.casas || 0,
+                habitantes: s.habitantes || 0,
+                familias: s.familias || 0,
+                colorBorde: s.colorBorde || s.color || "#38bdf8",
+                anchoBorde: 2,
+                colorRelleno: s.colorRelleno || s.color || "#38bdf8",
+                opacidad: 0.35,
+                vertices: s.poligono || s.vertices,
+                areaHa: 25.0,
+                perimetroM: 1800,
+                visible: true,
+                munId: "maturin",
+                parishId: "alto-de-los-godos"
               })).filter(s => s.vertices && s.vertices.length >= 3);
             }
           }
@@ -696,9 +718,15 @@ export class EarthStore {
     }
 
     if (!parish[type]) parish[type] = [];
-    parish[type].push(item);
+    const existingIdx = parish[type].findIndex(i => String(i.id) === String(item.id));
+    if (existingIdx >= 0) {
+      parish[type][existingIdx] = item;
+    } else {
+      parish[type].push(item);
+    }
+    parish.updatedAt = Date.now();
     this.saveToStorage();
-    this.scheduleCloudSync(munId, parishId);
+    this.syncToCloud(munId, parishId);
     return item;
   }
 
@@ -716,8 +744,9 @@ export class EarthStore {
 
     if (parish && idx !== -1) {
       parish[type][idx] = { ...parish[type][idx], ...updatedFields };
+      parish.updatedAt = Date.now();
       this.saveToStorage();
-      this.scheduleCloudSync(munId, parishId);
+      this.syncToCloud(munId, parishId);
       return parish[type][idx];
     }
     return null;
@@ -761,9 +790,12 @@ export class EarthStore {
 
     const merged = { ...itemToMove, ...updatedFields, munId: toMunId, parishId: toParishId };
     destParish[type].push(merged);
+    const now = Date.now();
+    if (srcParish) srcParish.updatedAt = now;
+    destParish.updatedAt = now;
     this.saveToStorage();
-    this.scheduleCloudSync(fromMunId, fromParishId);
-    this.scheduleCloudSync(toMunId, toParishId);
+    this.syncToCloud(fromMunId, fromParishId);
+    this.syncToCloud(toMunId, toParishId);
     return merged;
   }
 
@@ -796,7 +828,7 @@ export class EarthStore {
       parish[type].splice(idx, 1);
       parish.updatedAt = Date.now();
       this.saveToStorage();
-      this.scheduleCloudSync(munId, parishId);
+      this.syncToCloud(munId, parishId);
       return true;
     }
     return false;
