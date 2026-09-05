@@ -2,7 +2,7 @@
  * Motor Cartográfico Acelerado por GPU — Google Earth Pro Web (Monagas)
  * Integrado con Capas Jerárquicas Oficiales (INE 2021) y Edición de Vértices
  */
-import { GEO_ESTADO_OFICIAL, GEO_MUNICIPIOS_OFICIAL, GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=66";
+import { GEO_ESTADO_OFICIAL, GEO_MUNICIPIOS_OFICIAL, GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=67";
 
 export class EarthMapEngine {
   constructor(containerId, onCoordUpdate) {
@@ -437,6 +437,8 @@ export class EarthMapEngine {
     } catch(err) {
       console.warn("[setDrawingMode] Error:", err);
     }
+  }
+
   calculateCentroid(vertices) {
     if (!vertices || !Array.isArray(vertices) || vertices.length === 0) return null;
     let latSum = 0, lngSum = 0;
