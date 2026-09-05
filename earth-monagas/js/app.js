@@ -2,21 +2,21 @@
  * Controlador Principal — Google Earth Pro Web (Edición Estado Monagas)
  * Robusto, 100% Operativo y Totalmente Individualizado
  */
-import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=60";
-import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=60";
-import { getAllParishesForSelector } from "./usersCatalog.js?v=60";
-import { EarthStore } from "./earthStore.js?v=60";
-import { EarthMapEngine } from "./mapEngine.js?v=60";
-import { PropertiesDialog } from "./propertiesDialog.js?v=60";
-import { ToolsManager } from "./toolsManager.js?v=60";
-import { detectParishFromGeometry } from "./geoMonagas.js?v=60";
-import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=60";
+import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=61";
+import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=61";
+import { getAllParishesForSelector } from "./usersCatalog.js?v=61";
+import { EarthStore } from "./earthStore.js?v=61";
+import { EarthMapEngine } from "./mapEngine.js?v=61";
+import { PropertiesDialog } from "./propertiesDialog.js?v=61";
+import { ToolsManager } from "./toolsManager.js?v=61";
+import { detectParishFromGeometry } from "./geoMonagas.js?v=61";
+import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=61";
 import { 
   getSavedFirebaseConfig, 
   saveFirebaseConfig, 
   isFirebaseConfigured, 
   initFirebase 
-} from "./firebaseConfig.js?v=60";
+} from "./firebaseConfig.js?v=61";
 
 class EarthMonagasApp {
   constructor() {
@@ -48,7 +48,12 @@ class EarthMonagasApp {
 
     // Leer parámetro URL para individualización (?p=caicara o ?p=san-simon)
     const urlParams = new URLSearchParams(window.location.search);
-    const paramParish = urlParams.get("p") || urlParams.get("parroquia");
+    const paramParish = urlParams.get("p") || urlParams.get("parroquia") || urlParams.get("parish");
+    const paramMun = urlParams.get("mun") || urlParams.get("municipio");
+    if (paramMun) {
+      const matchMun = CATALOGO_MONAGAS.find(m => m.id === paramMun.toLowerCase().trim());
+      if (matchMun) this.selectedMunId = matchMun.id;
+    }
     if (paramParish) {
       const pNorm = paramParish.toLowerCase().trim();
       for (const mun of CATALOGO_MONAGAS) {
@@ -104,6 +109,19 @@ class EarthMonagasApp {
     setTimeout(() => {
       this.store.syncFromCloud().then(() => {
         this.store.syncAllLocalToCloud();
+        const paramSector = urlParams.get("sector");
+        if (paramSector) {
+          setTimeout(() => {
+            const parish = this.store.getParish(this.selectedMunId, this.selectedParishId);
+            const poly = (parish?.poligonos || []).find(p => String(p.id) === String(paramSector));
+            if (poly) {
+              this.handleItemClick("poligono", poly.id);
+              if (poly.vertices && poly.vertices.length > 0) {
+                this.mapEngine?.map?.fitBounds(poly.vertices, { maxZoom: 16 });
+              }
+            }
+          }, 500);
+        }
       });
     }, 800);
 
