@@ -2,21 +2,21 @@
  * Controlador Principal — Google Earth Pro Web (Edición Estado Monagas)
  * Robusto, 100% Operativo y Totalmente Individualizado
  */
-import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=85";
-import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=85";
-import { getAllParishesForSelector } from "./usersCatalog.js?v=85";
-import { EarthStore } from "./earthStore.js?v=85";
-import { EarthMapEngine } from "./mapEngine.js?v=85";
-import { PropertiesDialog } from "./propertiesDialog.js?v=85";
-import { ToolsManager } from "./toolsManager.js?v=85";
-import { detectParishFromGeometry } from "./geoMonagas.js?v=85";
-import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=85";
+import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=86";
+import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=86";
+import { getAllParishesForSelector } from "./usersCatalog.js?v=86";
+import { EarthStore } from "./earthStore.js?v=86";
+import { EarthMapEngine } from "./mapEngine.js?v=86";
+import { PropertiesDialog } from "./propertiesDialog.js?v=86";
+import { ToolsManager } from "./toolsManager.js?v=86";
+import { detectParishFromGeometry } from "./geoMonagas.js?v=86";
+import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=86";
 import { 
   getSavedFirebaseConfig, 
   saveFirebaseConfig, 
   isFirebaseConfigured, 
   initFirebase 
-} from "./firebaseConfig.js?v=85";
+} from "./firebaseConfig.js?v=86";
 
 class EarthMonagasApp {
   constructor() {
@@ -255,11 +255,7 @@ class EarthMonagasApp {
       if (this.mapEngine) {
         this.mapEngine.showParishBoundary(parish.limite, parish.id, flyCamera);
         this.mapEngine.renderParishItems(parish, (type, item) => {
-          if (type === "subparroquia") {
-            this.focusSubParish(item.id);
-          } else {
-            this.propDialog?.open(type, item, this.selectedMunId, this.selectedParishId);
-          }
+          this.handleMapItemSelection(type, item);
         });
       }
 
@@ -346,11 +342,7 @@ class EarthMonagasApp {
 
     // Re-renderizar elementos para que la sub-parroquia quede en modo "solo línea limítrofe" sin relleno que tape el satélite
     this.mapEngine.renderParishItems(parish, (type, item) => {
-      if (type === "subparroquia") {
-        this.focusSubParish(item.id, false);
-      } else {
-        this.propDialog.open(type, item, this.selectedMunId, this.selectedParishId);
-      }
+      this.handleMapItemSelection(type, item);
     });
 
     if (typeof this.mapEngine.updateHierarchicalLOD === "function") {
@@ -365,11 +357,7 @@ class EarthMonagasApp {
     if (parish) {
       this.mapEngine.showParishBoundary(parish.limite, parish.id, true);
       this.mapEngine.renderParishItems(parish, (type, item) => {
-        if (type === "subparroquia") {
-          this.focusSubParish(item.id);
-        } else {
-          this.propDialog.open(type, item, this.selectedMunId, this.selectedParishId);
-        }
+        this.handleMapItemSelection(type, item);
       });
     }
     if (typeof this.mapEngine.updateHierarchicalLOD === "function") {
@@ -398,6 +386,7 @@ class EarthMonagasApp {
   }
 
   openSubParishFicha(subParishId) {
+    this.closeQuickStats();
     if (this.mapEngine?.map) {
       try { this.mapEngine.map.closePopup(); } catch(e) {}
     }
@@ -546,8 +535,7 @@ class EarthMonagasApp {
       }
       const parish = this.store.getParish(this.selectedMunId, this.selectedParishId);
       this.mapEngine.renderParishItems(parish, (t, it) => {
-        if (t === "subparroquia") this.focusSubParish(it.id);
-        else this.propDialog.open(t, it, this.selectedMunId, this.selectedParishId);
+        this.handleMapItemSelection(t, it);
       });
       this.renderPlacesTree();
     }
@@ -577,8 +565,7 @@ class EarthMonagasApp {
       this.store.saveToStorage();
       this.renderPlacesTree();
       this.mapEngine.renderParishItems(parish, (t, it) => {
-        if (t === "subparroquia") this.focusSubParish(it.id);
-        else this.propDialog.open(t, it, this.selectedMunId, this.selectedParishId);
+        this.handleMapItemSelection(t, it);
       });
     });
   }
@@ -601,8 +588,7 @@ class EarthMonagasApp {
 
     this.store.saveParish(this.selectedMunId, this.selectedParishId, parish);
     this.mapEngine.renderParishItems(parish, (t, it) => {
-      if (t === "subparroquia") this.focusSubParish(it.id, false);
-      else this.propDialog.open(t, it, this.selectedMunId, this.selectedParishId);
+      this.handleMapItemSelection(t, it);
     });
     this.renderPlacesTree();
   }
@@ -895,7 +881,7 @@ class EarthMonagasApp {
                   onchange="window.earthApp.toggleSubParishWithChildrenVisibility('${sp.id}')"
                   class="w-4 h-4 rounded bg-slate-900 border-purple-800 text-purple-600 focus:ring-0 cursor-pointer shrink-0" title="Mostrar u ocultar todo este eje con sus sectores">
                 <span class="text-base shrink-0 select-none">${isExpanded ? '📂' : '📁'}</span>
-                <div class="truncate min-w-0" onclick="event.stopPropagation(); window.earthApp.focusSubParish('${sp.id}', false)">
+                <div class="truncate min-w-0" onclick="event.stopPropagation(); window.earthApp.focusAndEdit('subparroquia', '${sp.id}', false)">
                   <span class="text-slate-100 font-black block truncate text-xs ${isSelected ? 'text-purple-300' : ''}">${sp.nombre}</span>
                   <div class="flex items-center gap-1.5 text-[10px] font-mono text-purple-300 flex-wrap">
                     <span>🏠 ${totCasas}</span>
@@ -943,7 +929,7 @@ class EarthMonagasApp {
                           onchange="window.earthApp.toggleItemVisibility('${this.selectedMunId}', '${this.selectedParishId}', 'poligono', '${poly.id}')"
                           class="w-3.5 h-3.5 rounded bg-slate-950 border-slate-700 text-sky-500 focus:ring-0 cursor-pointer shrink-0">
                         <span class="w-3 h-3 rounded-sm border shrink-0" style="background-color: ${poly.colorRelleno || '#38bdf8'}; border-color: ${poly.colorBorde || '#ffffff'};"></span>
-                        <div class="truncate cursor-pointer min-w-0" onclick="window.earthApp.focusAndEdit('poligono', '${poly.id}')">
+                        <div class="truncate cursor-pointer min-w-0" onclick="window.earthApp.focusAndEdit('poligono', '${poly.id}', false)">
                           <span class="text-slate-200 font-bold block truncate group-hover:text-sky-300 text-xs">${poly.nombre}</span>
                           <div class="flex items-center gap-1.5 text-[10px] font-mono text-slate-400 flex-wrap">
                             ${poly.casas ? `<span class="text-amber-400 font-bold">🏠 ${poly.casas}</span>` : ''}
@@ -957,7 +943,7 @@ class EarthMonagasApp {
                         </div>
                       </div>
                       <div class="flex items-center gap-1 shrink-0 ml-1">
-                        <button onclick="window.earthApp.focusAndEdit('poligono', '${poly.id}')" class="text-slate-400 hover:text-sky-300 p-1 transition" title="Editar caracterización socio-política">
+                        <button onclick="window.earthApp.focusAndEdit('poligono', '${poly.id}', true)" class="text-slate-400 hover:text-sky-300 p-1 transition" title="Editar caracterización socio-política">
                           <i data-lucide="edit-2" class="w-3.5 h-3.5"></i>
                         </button>
                         <button onclick="window.earthApp.deleteItem('${this.selectedMunId}', '${this.selectedParishId}', 'poligono', '${poly.id}')" class="text-slate-500 hover:text-red-400 p-1 transition" title="Eliminar sector">
@@ -992,7 +978,7 @@ class EarthMonagasApp {
               ${orphanSectors.map(poly => `
                 <div class="flex items-center justify-between py-1.5 px-2 bg-slate-900/90 rounded-xl border border-amber-500/30 text-xs">
                   <span class="text-white font-bold truncate">${poly.nombre}</span>
-                  <button onclick="window.earthApp.focusAndEdit('poligono', '${poly.id}')" class="text-[10px] text-sky-400 hover:text-sky-300 font-bold underline">
+                  <button onclick="window.earthApp.focusAndEdit('poligono', '${poly.id}', true)" class="text-[10px] text-sky-400 hover:text-sky-300 font-bold underline">
                     Asignar Eje ➔
                   </button>
                 </div>
@@ -1225,9 +1211,155 @@ class EarthMonagasApp {
     this.selectParish(munId, parishId);
   }
 
-  focusAndEdit(type, itemId) {
+  handleMapItemSelection(type, item) {
+    if (!item) return;
+
     if (type === "subparroquia") {
-      this.focusSubParish(itemId);
+      this.activeSubParroquiaId = String(item.id);
+      if (this.mapEngine) {
+        this.mapEngine.highlightPolygon(item.id);
+      }
+      this.showQuickStats("subparroquia", item);
+      this.renderPlacesTree();
+    } else if (type === "poligono") {
+      if (this.mapEngine) {
+        this.mapEngine.highlightPolygon(item.id);
+      }
+      this.showQuickStats("poligono", item);
+    } else {
+      this.closeQuickStats();
+      this.propDialog?.open(type, item, this.selectedMunId, this.selectedParishId);
+    }
+  }
+
+  showQuickStats(type, item) {
+    if (!item) return;
+    this.currentQuickStatsItem = { type, item };
+
+    const card = document.getElementById("card-quick-stats");
+    if (!card) return;
+
+    const badge = document.getElementById("quick-stats-type-badge");
+    const subTitle = document.getElementById("quick-stats-subtitle");
+    const title = document.getElementById("quick-stats-title");
+    const elCasas = document.getElementById("quick-stats-casas");
+    const elFamilias = document.getElementById("quick-stats-familias");
+    const elHabitantes = document.getElementById("quick-stats-habitantes");
+    const elVotantes = document.getElementById("quick-stats-votantes");
+    const elCentro = document.getElementById("quick-stats-centro");
+    const elLider = document.getElementById("quick-stats-lider");
+    const btnEdit = document.getElementById("btn-quick-stats-edit");
+    const btnWa = document.getElementById("btn-quick-stats-whatsapp");
+
+    const parish = this.store.getParish(this.selectedMunId, this.selectedParishId);
+
+    if (type === "subparroquia") {
+      if (badge) badge.style.backgroundColor = item.colorRelleno || item.colorBorde || "#c084fc";
+      if (subTitle) subTitle.textContent = "Sub-Parroquia / Eje Comunal";
+      if (title) title.textContent = item.nombre || "Sub-Parroquia";
+
+      const childSecs = (parish?.poligonos || []).filter(p => String(p.subParroquiaId) === String(item.id));
+      let totCasas = 0, totFam = 0, totHab = 0, totVot = 0;
+      childSecs.forEach(c => {
+        totCasas += parseInt(c.casas || 0) || 0;
+        totFam += parseInt(c.familias || 0) || 0;
+        totHab += parseInt(c.habitantes || 0) || 0;
+        totVot += parseInt(c.militantes !== undefined ? c.militantes : (c.habitantes || 0)) || 0;
+      });
+
+      if (elCasas) elCasas.textContent = totCasas.toLocaleString();
+      if (elFamilias) elFamilias.textContent = totFam.toLocaleString();
+      if (elHabitantes) elHabitantes.textContent = totHab.toLocaleString();
+      if (elVotantes) elVotantes.textContent = totVot.toLocaleString();
+
+      if (elCentro) elCentro.textContent = `${childSecs.length} Sectores Integrados`;
+      if (elLider) elLider.textContent = item.responsable || item.lider || "Comisión de Eje";
+
+      const rawPhone = item.telefono || item.telefonoResponsable;
+      if (btnWa) {
+        if (rawPhone) {
+          let clean = String(rawPhone).replace(/\D/g, "");
+          if (clean.startsWith("0")) clean = clean.substring(1);
+          if (!clean.startsWith("58")) clean = "58" + clean;
+          btnWa.href = `https://wa.me/${clean}`;
+          btnWa.classList.remove("hidden");
+        } else {
+          btnWa.classList.add("hidden");
+        }
+      }
+    } else {
+      // Sector Comunal (poligono)
+      if (badge) badge.style.backgroundColor = item.colorRelleno || item.colorBorde || "#facc15";
+
+      let spName = "";
+      if (item.subParroquiaId && parish?.subparroquias) {
+        const sp = parish.subparroquias.find(s => String(s.id) === String(item.subParroquiaId));
+        if (sp) spName = ` • ${sp.nombre}`;
+      }
+      if (subTitle) subTitle.textContent = `Sector Comunal${spName}`;
+      if (title) title.textContent = item.nombre || "Sector";
+
+      if (elCasas) elCasas.textContent = (parseInt(item.casas || 0) || 0).toLocaleString();
+      if (elFamilias) elFamilias.textContent = (parseInt(item.familias || 0) || 0).toLocaleString();
+      if (elHabitantes) elHabitantes.textContent = (parseInt(item.habitantes || 0) || 0).toLocaleString();
+      const votantes = item.militantes !== undefined ? item.militantes : (item.habitantes || 0);
+      if (elVotantes) elVotantes.textContent = (parseInt(votantes) || 0).toLocaleString();
+
+      if (elCentro) elCentro.textContent = item.centroVotacion || "No asignado";
+      if (elLider) elLider.textContent = item.liderComunidad || item.lider || item.responsable || "No asignado";
+
+      const rawPhone = item.telefonoLider || item.telefono;
+      if (btnWa) {
+        if (rawPhone) {
+          let clean = String(rawPhone).replace(/\D/g, "");
+          if (clean.startsWith("0")) clean = clean.substring(1);
+          if (!clean.startsWith("58")) clean = "58" + clean;
+          btnWa.href = `https://wa.me/${clean}`;
+          btnWa.classList.remove("hidden");
+        } else {
+          btnWa.classList.add("hidden");
+        }
+      }
+    }
+
+    if (btnEdit) {
+      btnEdit.onclick = () => {
+        this.closeQuickStats();
+        this.propDialog?.open(type, item, this.selectedMunId, this.selectedParishId);
+      };
+    }
+
+    card.style.display = "block";
+    if (window.lucide) {
+      try { window.lucide.createIcons(); } catch(e) {}
+    }
+  }
+
+  closeQuickStats() {
+    const card = document.getElementById("card-quick-stats");
+    if (card) {
+      card.style.display = "none";
+    }
+    if (this.mapEngine) {
+      this.mapEngine.clearPolygonHighlight();
+    }
+    this.currentQuickStatsItem = null;
+  }
+
+  focusAndEdit(type, itemId, openDialogDirectly = false) {
+    if (type === "subparroquia") {
+      this.focusSubParish(itemId, true);
+      const parish = this.store.getParish(this.selectedMunId, this.selectedParishId);
+      const sp = (parish?.subparroquias || []).find(s => String(s.id) === String(itemId));
+      if (sp) {
+        if (this.mapEngine) this.mapEngine.highlightPolygon(sp.id);
+        if (openDialogDirectly) {
+          this.closeQuickStats();
+          this.propDialog?.open("subparroquia", sp, this.selectedMunId, this.selectedParishId);
+        } else {
+          this.showQuickStats("subparroquia", sp);
+        }
+      }
       return;
     }
 
@@ -1251,13 +1383,22 @@ class EarthMonagasApp {
 
     if (type === "poligono" && item.vertices && item.vertices.length > 0) {
       this.mapEngine.map.flyToBounds(L.polygon(item.vertices).getBounds(), { padding: [50, 50], maxZoom: 17, duration: 1.0 });
+      if (this.mapEngine) this.mapEngine.highlightPolygon(item.id);
+      if (openDialogDirectly) {
+        this.closeQuickStats();
+        this.propDialog.open(type, item, munId, parishId);
+      } else {
+        this.showQuickStats(type, item);
+      }
     } else if (type === "ruta" && item.puntos && item.puntos.length > 0) {
+      this.closeQuickStats();
       this.mapEngine.map.flyToBounds(L.polyline(item.puntos).getBounds(), { padding: [50, 50], duration: 1.0 });
+      this.propDialog.open(type, item, munId, parishId);
     } else if (type === "marca" && item.lat !== undefined && item.lng !== undefined) {
+      this.closeQuickStats();
       this.mapEngine.flyTo(item.lat, item.lng, 16);
+      this.propDialog.open(type, item, munId, parishId);
     }
-
-    this.propDialog.open(type, item, munId, parishId);
   }
 
   showToast(message, type = "success") {
@@ -1327,8 +1468,7 @@ class EarthMonagasApp {
 
       const parish = this.store.getParish(targetMunId, targetParishId);
       this.mapEngine.renderParishItems(parish, (t, it) => {
-        if (t === "subparroquia") this.focusSubParish(it.id);
-        else this.propDialog.open(t, it, targetMunId, targetParishId);
+        this.handleMapItemSelection(t, it);
       });
       this.focusSubParish(newItem.id);
       this.renderPlacesTree();
@@ -1363,8 +1503,7 @@ class EarthMonagasApp {
 
     const parish = this.store.getParish(targetMunId, targetParishId);
     this.mapEngine.renderParishItems(parish, (t, it) => {
-      if (t === "subparroquia") this.focusSubParish(it.id);
-      else this.propDialog.open(t, it, targetMunId, targetParishId);
+      this.handleMapItemSelection(t, it);
     });
 
     this.updateMilitanciaTally();
@@ -1396,8 +1535,7 @@ class EarthMonagasApp {
         this.activeSubParroquiaId = String(draft.id);
         const parish = this.store.getParish(destMunId, destParishId);
         this.mapEngine.renderParishItems(parish, (t, it) => {
-          if (t === "subparroquia") this.focusSubParish(it.id);
-          else this.propDialog.open(t, it, destMunId, destParishId);
+          this.handleMapItemSelection(t, it);
         });
         this.focusSubParish(draft.id);
         this.renderPlacesTree();
@@ -1421,8 +1559,7 @@ class EarthMonagasApp {
       await this.store.addItemToParish(destMunId, destParishId, key, draft);
       const parish = this.store.getParish(destMunId, destParishId);
       this.mapEngine.renderParishItems(parish, (t, it) => {
-        if (t === "subparroquia") this.focusSubParish(it.id);
-        else this.propDialog.open(t, it, destMunId, destParishId);
+        this.handleMapItemSelection(t, it);
       });
       this.updateMilitanciaTally();
       this.renderPlacesTree();
@@ -1451,8 +1588,7 @@ class EarthMonagasApp {
       await this.store.updateItem(this.selectedMunId, this.selectedParishId, key, itemId, updatedFields);
       const parish = this.store.getParish(this.selectedMunId, this.selectedParishId);
       this.mapEngine.renderParishItems(parish, (t, it) => {
-        if (t === "subparroquia") this.focusSubParish(it.id);
-        else this.propDialog.open(t, it, this.selectedMunId, this.selectedParishId);
+        this.handleMapItemSelection(t, it);
       });
       this.updateMilitanciaTally();
       this.renderPlacesTree();
@@ -1468,8 +1604,7 @@ class EarthMonagasApp {
     if (item) {
       Object.assign(item, liveDraft);
       this.mapEngine.renderParishItems(parish, (t, it) => {
-        if (t === "subparroquia") this.focusSubParish(it.id);
-        else this.propDialog.open(t, it, this.selectedMunId, this.selectedParishId);
+        this.handleMapItemSelection(t, it);
       });
     }
   }
@@ -1481,8 +1616,7 @@ class EarthMonagasApp {
 
       const parish = this.store.getParish(munId, parishId);
       this.mapEngine.renderParishItems(parish, (t, it) => {
-        if (t === "subparroquia") this.focusSubParish(it.id);
-        else this.propDialog.open(t, it, munId, parishId);
+        this.handleMapItemSelection(t, it);
       });
       this.updateMilitanciaTally();
       this.renderPlacesTree();
@@ -1496,8 +1630,7 @@ class EarthMonagasApp {
 
     const parish = this.store.getParish(munId, parishId);
     this.mapEngine.renderParishItems(parish, (t, it) => {
-      if (t === "subparroquia") this.focusSubParish(it.id);
-      else this.propDialog.open(t, it, munId, parishId);
+      this.handleMapItemSelection(t, it);
     });
   }
 
@@ -2401,7 +2534,7 @@ class EarthMonagasApp {
         this.selectParish(targetMunId, targetParishId, false);
       } else {
         const parish = this.store.getParish(targetMunId, targetParishId);
-        this.mapEngine.renderParishItems(parish, (t, it) => this.propDialog.open(t, it, targetMunId, targetParishId));
+        this.mapEngine.renderParishItems(parish, (t, it) => this.handleMapItemSelection(t, it));
         this.renderPlacesTree();
       }
 
@@ -2613,11 +2746,7 @@ class EarthMonagasApp {
     if (this.mapEngine && typeof this.mapEngine.renderParishItems === "function") {
       const parish = (this.selectedMunId && this.selectedParishId) ? this.store?.getParish(this.selectedMunId, this.selectedParishId) : null;
       this.mapEngine.renderParishItems(parish, (type, item) => {
-        if (type === "subparroquia") {
-          this.focusSubParish(item.id);
-        } else {
-          this.propDialog.open(type, item, item.munId || this.selectedMunId, item.parishId || this.selectedParishId);
-        }
+        this.handleMapItemSelection(type, item);
       });
     }
     this.renderPlacesTree();

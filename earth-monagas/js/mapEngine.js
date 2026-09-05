@@ -2,7 +2,7 @@
  * Motor Cartográfico Acelerado por GPU — Google Earth Pro Web (Monagas)
  * Integrado con Capas Jerárquicas Oficiales (INE 2021) y Edición de Vértices
  */
-import { GEO_ESTADO_OFICIAL, GEO_MUNICIPIOS_OFICIAL, GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=85";
+import { GEO_ESTADO_OFICIAL, GEO_MUNICIPIOS_OFICIAL, GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=86";
 
 export class EarthMapEngine {
   constructor(containerId, onCoordUpdate) {
@@ -122,6 +122,15 @@ export class EarthMapEngine {
         this.onCoordUpdate(center.lat, center.lng, this.getEyeAltitude());
       }
       this.updateHierarchicalLOD();
+    });
+
+    this.map.on("click", (e) => {
+      if (!window.earthApp?.toolsManager?.activeTool) {
+        this.clearPolygonHighlight();
+        if (window.earthApp) {
+          window.earthApp.closeQuickStats();
+        }
+      }
     });
   }
 
@@ -993,5 +1002,40 @@ export class EarthMapEngine {
     const overlay = L.imageOverlay(url, bounds, { opacity: opacity }).addTo(this.overlayLayer);
     this.map.fitBounds(bounds);
     return overlay;
+  }
+
+  // Resaltado de selección activa en Amarillo Neón al tocar polígono
+  highlightPolygon(id) {
+    this.clearPolygonHighlight();
+    const layer = this.leafletLayersMap ? this.leafletLayersMap.get(String(id)) : null;
+    if (!layer || typeof layer.setStyle !== "function") return;
+
+    this.activeHighlightedLayer = layer;
+    this.activeHighlightedOriginalStyle = {
+      color: layer.options.color,
+      weight: layer.options.weight,
+      fillColor: layer.options.fillColor,
+      fillOpacity: layer.options.fillOpacity,
+      dashArray: layer.options.dashArray
+    };
+
+    layer.setStyle({
+      color: "#facc15", // Amarillo Neón vibrante
+      weight: 4.5,
+      fillOpacity: Math.min((layer.options.fillOpacity !== undefined ? layer.options.fillOpacity : 0.3) + 0.25, 0.75),
+      dashArray: null
+    });
+
+    try { layer.bringToFront(); } catch(e) {}
+  }
+
+  clearPolygonHighlight() {
+    if (this.activeHighlightedLayer && this.activeHighlightedOriginalStyle) {
+      try {
+        this.activeHighlightedLayer.setStyle(this.activeHighlightedOriginalStyle);
+      } catch(e) {}
+    }
+    this.activeHighlightedLayer = null;
+    this.activeHighlightedOriginalStyle = null;
   }
 }
