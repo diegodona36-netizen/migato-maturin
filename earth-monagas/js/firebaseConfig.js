@@ -18,14 +18,15 @@ import {
 // Clave en LocalStorage para guardar las credenciales del proyecto
 const STORAGE_KEY = "migato_monagas_firebase_config";
 
-// Configuración por defecto (puede ser reemplazada desde la UI o cargada desde localStorage)
+// Configuración oficial del proyecto Firebase de Diego (gato-3e238)
 const DEFAULT_CONFIG = {
-  apiKey: "",
-  authDomain: "",
-  projectId: "",
-  storageBucket: "",
-  messagingSenderId: "",
-  appId: ""
+  apiKey: "AIzaSyCK8DBZWsVflfMoA_z-9XupX0BvLE4iJjc",
+  authDomain: "gato-3e238.firebaseapp.com",
+  projectId: "gato-3e238",
+  storageBucket: "gato-3e238.firebasestorage.app",
+  messagingSenderId: "630890915824",
+  appId: "1:630890915824:web:bc0deb7f80c4494b78df35",
+  measurementId: "G-G1617P2MM0"
 };
 
 let app = null;
