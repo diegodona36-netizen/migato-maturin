@@ -217,6 +217,9 @@ export class ToolsManager {
       this.mapEngine.tempDrawingLayer.clearLayers();
     }
     this.previewShape = null;
+    if (document.activeElement && typeof document.activeElement.blur === "function") {
+      try { document.activeElement.blur(); } catch(e) {}
+    }
 
     if (this.map && this.map.doubleClickZoom) {
       try { this.map.doubleClickZoom.enable(); } catch(e) {}
@@ -592,6 +595,9 @@ export class ToolsManager {
   }
 
   finishCurrentDrawing() {
+    if (document.activeElement && typeof document.activeElement.blur === "function") {
+      try { document.activeElement.blur(); } catch(e) {}
+    }
     const sanitizedPoints = this.cleanPoints(this.points);
     const customName = document.getElementById("earth-draw-name-input")?.value?.trim();
     const customMilitantes = parseInt(document.getElementById("earth-draw-militantes")?.value) || 0;

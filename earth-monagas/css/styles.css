@@ -229,3 +229,32 @@ body {
   pointer-events: none !important;
 }
 
+/* Quitar de forma definitiva el cuadro de foco/selección (bounding box) que Chrome dibuja en polígonos SVG */
+.leaflet-container :focus,
+.leaflet-container :focus-visible,
+.leaflet-container path,
+.leaflet-container path:focus,
+.leaflet-container path:focus-visible,
+.leaflet-container path:active,
+.leaflet-interactive,
+.leaflet-interactive:focus,
+.leaflet-interactive:focus-visible,
+.leaflet-interactive:active,
+path.leaflet-interactive,
+path.leaflet-interactive:focus,
+path.leaflet-interactive:focus-visible,
+path.leaflet-interactive:active,
+svg.leaflet-zoom-animated,
+svg.leaflet-zoom-animated:focus,
+svg.leaflet-zoom-animated:focus-visible,
+.leaflet-overlay-pane svg,
+.leaflet-overlay-pane svg *,
+.leaflet-overlay-pane svg path,
+.leaflet-overlay-pane svg path:focus,
+.leaflet-overlay-pane svg path:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+  -webkit-tap-highlight-color: transparent !important;
+  -webkit-focus-ring-color: transparent !important;
+}
+

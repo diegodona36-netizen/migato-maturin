@@ -2,7 +2,7 @@
  * Motor Cartográfico Acelerado por GPU — Google Earth Pro Web (Monagas)
  * Integrado con Capas Jerárquicas Oficiales (INE 2021) y Edición de Vértices
  */
-import { GEO_ESTADO_OFICIAL, GEO_MUNICIPIOS_OFICIAL, GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=81";
+import { GEO_ESTADO_OFICIAL, GEO_MUNICIPIOS_OFICIAL, GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=82";
 
 export class EarthMapEngine {
   constructor(containerId, onCoordUpdate) {
@@ -178,6 +178,8 @@ export class EarthMapEngine {
         `, { sticky: true, className: "earth-tooltip" });
 
         layer.on("click", (e) => {
+          if (e.originalEvent?.target?.blur) e.originalEvent.target.blur();
+          if (document.activeElement?.blur) document.activeElement.blur();
           if (this.isDrawingMode || window.earthApp?.toolsManager?.activeTool) {
             window.earthApp?.toolsManager?.handleMapClick(e);
             return;
@@ -514,6 +516,8 @@ export class EarthMapEngine {
           }
 
           spLayer.on("click", (e) => {
+            if (e.originalEvent?.target?.blur) e.originalEvent.target.blur();
+            if (document.activeElement?.blur) document.activeElement.blur();
             if (window.earthApp?.toolsManager?.activeTool) {
               L.DomEvent.stopPropagation(e);
               window.earthApp.toolsManager.handleMapClick(e);
@@ -604,6 +608,8 @@ export class EarthMapEngine {
           }
 
           pLayer.on("click", (e) => {
+            if (e.originalEvent?.target?.blur) e.originalEvent.target.blur();
+            if (document.activeElement?.blur) document.activeElement.blur();
             if (window.earthApp?.toolsManager?.activeTool) {
               L.DomEvent.stopPropagation(e);
               window.earthApp.toolsManager.handleMapClick(e);
@@ -667,6 +673,8 @@ export class EarthMapEngine {
         `, { sticky: true, className: "earth-tooltip" });
 
         line.on("click", (e) => {
+          if (e.originalEvent?.target?.blur) e.originalEvent.target.blur();
+          if (document.activeElement?.blur) document.activeElement.blur();
           if (window.earthApp?.toolsManager?.activeTool) {
             window.earthApp.toolsManager.handleMapClick(e);
             return;
