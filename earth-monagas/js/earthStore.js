@@ -1,13 +1,14 @@
 /**
  * Gestor de Estado y Árbol de Lugares (Places) — Google Earth Pro Web (Monagas)
  */
-import { SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=73";
+import { SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=74";
 import { 
   saveParishToFirestore, 
   subscribeToTerritories, 
   isFirebaseConfigured, 
-  fetchAllTerritoriesFromFirestore 
-} from "./firebaseConfig.js?v=73";
+  fetchAllTerritoriesFromFirestore,
+  mergeItemCollections
+} from "./firebaseConfig.js?v=74";
 
 const STORAGE_KEY = "earth_monagas_places_v3";
 
@@ -485,10 +486,11 @@ export class EarthStore {
         }
         ["subparroquias", "poligonos", "rutas", "marcas"].forEach(type => {
           if (Array.isArray(remoteP[type])) {
-            const remoteStr = JSON.stringify(remoteP[type]);
+            const merged = mergeItemCollections(localP[type] || [], remoteP[type], localP.deletedIds || []);
             const localStr = JSON.stringify(localP[type] || []);
-            if (remoteStr !== localStr) {
-              localP[type] = [...remoteP[type]];
+            const mergedStr = JSON.stringify(merged);
+            if (localStr !== mergedStr) {
+              localP[type] = merged;
               changesApplied = true;
             }
           }
@@ -593,10 +595,11 @@ export class EarthStore {
           }
           ["subparroquias", "poligonos", "rutas", "marcas"].forEach(type => {
             if (Array.isArray(remoteP[type])) {
-              const remoteStr = JSON.stringify(remoteP[type]);
+              const merged = mergeItemCollections(localP[type] || [], remoteP[type], localP.deletedIds || []);
               const localStr = JSON.stringify(localP[type] || []);
-              if (remoteStr !== localStr) {
-                localP[type] = [...remoteP[type]];
+              const mergedStr = JSON.stringify(merged);
+              if (localStr !== mergedStr) {
+                localP[type] = merged;
                 changesApplied = true;
               }
             }
@@ -674,7 +677,7 @@ export class EarthStore {
     return list;
   }
 
-  addItemToParish(munId, parishId, type, item) {
+  async addItemToParish(munId, parishId, type, item) {
     const parish = this.getParish(munId, parishId);
     if (!parish) {
       console.warn(`[EarthStore] No se encontró la parroquia destino ${munId}/${parishId}`);
@@ -690,11 +693,11 @@ export class EarthStore {
     }
     parish.updatedAt = Date.now();
     this.saveToStorage();
-    this.syncToCloud(munId, parishId);
+    await this.syncToCloud(munId, parishId);
     return item;
   }
 
-  updateItem(munId, parishId, type, itemId, updatedFields) {
+  async updateItem(munId, parishId, type, itemId, updatedFields) {
     let parish = this.getParish(munId, parishId);
     let idx = parish && parish[type] ? parish[type].findIndex(i => String(i.id) === String(itemId)) : -1;
 
@@ -710,7 +713,7 @@ export class EarthStore {
       parish[type][idx] = { ...parish[type][idx], ...updatedFields };
       parish.updatedAt = Date.now();
       this.saveToStorage();
-      this.syncToCloud(munId, parishId);
+      await this.syncToCloud(munId, parishId);
       return parish[type][idx];
     }
     return null;
@@ -776,7 +779,7 @@ export class EarthStore {
     return null;
   }
 
-  deleteItem(munId, parishId, type, itemId) {
+  async deleteItem(munId, parishId, type, itemId) {
     let parish = this.getParish(munId, parishId);
     let idx = parish && parish[type] ? parish[type].findIndex(i => String(i.id) === String(itemId)) : -1;
 
@@ -790,9 +793,11 @@ export class EarthStore {
 
     if (parish && parish[type] && idx !== -1) {
       parish[type].splice(idx, 1);
+      if (!parish.deletedIds) parish.deletedIds = [];
+      parish.deletedIds.push(String(itemId));
       parish.updatedAt = Date.now();
       this.saveToStorage();
-      this.syncToCloud(munId, parishId);
+      await this.syncToCloud(munId, parishId);
       return true;
     }
     return false;

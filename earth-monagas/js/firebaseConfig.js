@@ -148,62 +148,172 @@ export function unpackDocumentData(data) {
   return result;
 }
 
+export function parseFirestoreDocumentFields(fields) {
+  if (!fields || typeof fields !== "object") return {};
+  let raw = {};
+  if (fields.dataJson && fields.dataJson.stringValue) {
+    try {
+      raw = JSON.parse(fields.dataJson.stringValue);
+    } catch (e) {}
+  }
+  if (fields.munId?.stringValue) raw.munId = fields.munId.stringValue;
+  if (fields.parishId?.stringValue) raw.parishId = fields.parishId.stringValue;
+  if (fields.updatedAt?.integerValue) raw.updatedAt = Number(fields.updatedAt.integerValue);
+  return raw;
+}
+
 /**
- * Guarda o actualiza una parroquia en Firestore de forma atómica y ultra-rápida.
- * Utiliza REST PATCH directo como canal de alta velocidad (<100ms) y replica en SDK si está disponible.
+ * Combina dos colecciones de elementos (locales y remotos) por su ID único sin perder datos.
+ * Preserva elementos creados concurrentemente por otros usuarios y elementos locales nuevos.
+ */
+export function mergeItemCollections(localArr = [], remoteArr = [], deletedIds = []) {
+  const map = new Map();
+  const delSet = new Set((deletedIds || []).map(String));
+
+  // 1. Remotos primero (si no han sido borrados)
+  (remoteArr || []).forEach(item => {
+    if (item && item.id && !delSet.has(String(item.id))) {
+      map.set(String(item.id), cleanItem(item));
+    }
+  });
+
+  // 2. Locales después: conservar y/o actualizar con la versión más reciente
+  (localArr || []).forEach(item => {
+    if (!item || !item.id || delSet.has(String(item.id))) return;
+    const key = String(item.id);
+    if (!map.has(key)) {
+      map.set(key, cleanItem(item));
+    } else {
+      const remoteItem = map.get(key);
+      const localUpdated = item.updatedAt || 0;
+      const remoteUpdated = remoteItem.updatedAt || 0;
+      if (localUpdated >= remoteUpdated) {
+        map.set(key, { ...remoteItem, ...cleanItem(item) });
+      }
+    }
+  });
+
+  return Array.from(map.values());
+}
+
+const parishSaveQueues = new Map();
+
+/**
+ * Guarda o actualiza una parroquia en Firestore con Fusión Multiusuario,
+ * Cola Secuencial (anti-colisiones) y Reintentos Automáticos.
  */
 export async function saveParishToFirestore(munId, parishId, parishData) {
+  const docId = `${munId}_${parishId}`;
+  const prevPromise = parishSaveQueues.get(docId) || Promise.resolve();
+
+  const currentPromise = prevPromise.then(() => _executeSaveParish(munId, parishId, parishData)).catch(err => {
+    console.warn(`[Firestore Queue] Error guardando ${docId}:`, err);
+    return false;
+  });
+
+  parishSaveQueues.set(docId, currentPromise);
+  return currentPromise;
+}
+
+async function _executeSaveParish(munId, parishId, parishData) {
   const cfg = getSavedFirebaseConfig();
   const projectId = cfg?.projectId || DEFAULT_CONFIG.projectId;
   const apiKey = cfg?.apiKey || DEFAULT_CONFIG.apiKey;
   const docId = `${munId}_${parishId}`;
+  const keyParam = apiKey ? `?key=${apiKey}` : "";
+
+  // 1. Pre-fetch multiusuario: leer estado fresco de la nube para no sobreescribir trazos de otro usuario
+  let currentRemote = null;
+  if (projectId) {
+    try {
+      const cacheBust = `_t=${Date.now()}`;
+      const sep = keyParam ? "&" : "?";
+      const getUrl = `https://firestore.googleapis.com/v1/projects/${projectId}/databases/(default)/documents/territorios_monagas/${docId}${keyParam}${sep}${cacheBust}`;
+      const getResp = await fetch(getUrl, {
+        cache: "no-store",
+        headers: { "Cache-Control": "no-cache, no-store, must-revalidate", "Pragma": "no-cache" }
+      });
+      if (getResp.ok) {
+        const getJson = await getResp.json();
+        if (getJson.fields) {
+          currentRemote = parseFirestoreDocumentFields(getJson.fields);
+        }
+      }
+    } catch (e) {
+      console.warn("[Multiusuario] Aviso en pre-fetch:", e);
+    }
+  }
+
+  const deletedIds = parishData.deletedIds || [];
+  const mergedSub = mergeItemCollections(parishData.subparroquias || [], currentRemote?.subparroquias || [], deletedIds);
+  const mergedPoly = mergeItemCollections(parishData.poligonos || [], currentRemote?.poligonos || [], deletedIds);
+  const mergedRutas = mergeItemCollections(parishData.rutas || [], currentRemote?.rutas || [], deletedIds);
+  const mergedMarcas = mergeItemCollections(parishData.marcas || [], currentRemote?.marcas || [], deletedIds);
+
+  // Actualizar también la instancia local con los elementos fusionados
+  parishData.subparroquias = mergedSub;
+  parishData.poligonos = mergedPoly;
+  parishData.rutas = mergedRutas;
+  parishData.marcas = mergedMarcas;
 
   const cleanPayload = {
     munId,
     parishId,
-    subparroquias: (parishData.subparroquias || []).map(cleanItem),
-    poligonos: (parishData.poligonos || []).map(cleanItem),
-    rutas: (parishData.rutas || []).map(cleanItem),
-    marcas: (parishData.marcas || []).map(cleanItem),
+    subparroquias: mergedSub,
+    poligonos: mergedPoly,
+    rutas: mergedRutas,
+    marcas: mergedMarcas,
+    deletedIds: deletedIds,
     updatedAt: Date.now()
   };
 
   const jsonStr = JSON.stringify(cleanPayload);
   let savedSuccess = false;
 
-  // 1. Canal Primario Ultrarrápido: Google Cloud Firestore REST API nativo
+  // 2. Canal Primario: Google Cloud Firestore REST API con Reintentos y Delay
   if (projectId) {
-    try {
-      const keyParam = apiKey ? `?key=${apiKey}` : "";
-      const restUrl = `https://firestore.googleapis.com/v1/projects/${projectId}/databases/(default)/documents/territorios_monagas/${docId}${keyParam}`;
-      const restBody = {
-        fields: {
-          munId: { stringValue: munId },
-          parishId: { stringValue: parishId },
-          updatedAt: { integerValue: String(cleanPayload.updatedAt) },
-          dataJson: { stringValue: jsonStr }
-        }
-      };
-
-      const resp = await fetch(restUrl, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(restBody)
-      });
-
-      if (resp.ok) {
-        savedSuccess = true;
-        console.log(`☁️ [Firestore REST] Guardado exitoso de ${docId} (${cleanPayload.poligonos.length} sec, ${cleanPayload.subparroquias.length} sub)`);
-      } else {
-        const errText = await resp.text();
-        console.warn(`⚠️ [Firestore REST] Advertencia HTTP ${resp.status}:`, errText);
+    const restUrl = `https://firestore.googleapis.com/v1/projects/${projectId}/databases/(default)/documents/territorios_monagas/${docId}${keyParam}`;
+    const restBody = {
+      fields: {
+        munId: { stringValue: munId },
+        parishId: { stringValue: parishId },
+        updatedAt: { integerValue: String(cleanPayload.updatedAt) },
+        dataJson: { stringValue: jsonStr }
       }
-    } catch (restErr) {
-      console.warn("⚠️ [Firestore REST] Conexión lenta o temporalmente offline:", restErr.message);
+    };
+
+    let attempts = 0;
+    const maxAttempts = 4;
+    while (attempts < maxAttempts && !savedSuccess) {
+      attempts++;
+      try {
+        const resp = await fetch(restUrl, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(restBody)
+        });
+
+        if (resp.ok) {
+          savedSuccess = true;
+          console.log(`☁️ [Firestore REST] Guardado exitoso multiusuario de ${docId} (${cleanPayload.poligonos.length} sec, ${cleanPayload.subparroquias.length} sub)`);
+          break;
+        } else {
+          const errText = await resp.text();
+          console.warn(`⚠️ [Firestore REST] Intento ${attempts}/${maxAttempts} falló con HTTP ${resp.status}:`, errText);
+          if (attempts < maxAttempts) {
+            await new Promise(res => setTimeout(res, 350 * attempts));
+          }
+        }
+      } catch (restErr) {
+        console.warn(`⚠️ [Firestore REST] Intento ${attempts}/${maxAttempts} error de red:`, restErr.message);
+        if (attempts < maxAttempts) {
+          await new Promise(res => setTimeout(res, 350 * attempts));
+        }
+      }
     }
   }
 
-  // 2. Réplica opcional en segundo plano vía SDK Web si está activo
+  // 3. Réplica opcional en segundo plano vía SDK Web si está activo
   if (dbInstance && fbFsModule) {
     try {
       const docRef = fbFsModule.doc(dbInstance, "territorios_monagas", docId);

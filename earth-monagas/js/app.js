@@ -2,21 +2,21 @@
  * Controlador Principal — Google Earth Pro Web (Edición Estado Monagas)
  * Robusto, 100% Operativo y Totalmente Individualizado
  */
-import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=73";
-import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=73";
-import { getAllParishesForSelector } from "./usersCatalog.js?v=73";
-import { EarthStore } from "./earthStore.js?v=73";
-import { EarthMapEngine } from "./mapEngine.js?v=73";
-import { PropertiesDialog } from "./propertiesDialog.js?v=73";
-import { ToolsManager } from "./toolsManager.js?v=73";
-import { detectParishFromGeometry } from "./geoMonagas.js?v=73";
-import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=73";
+import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=74";
+import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=74";
+import { getAllParishesForSelector } from "./usersCatalog.js?v=74";
+import { EarthStore } from "./earthStore.js?v=74";
+import { EarthMapEngine } from "./mapEngine.js?v=74";
+import { PropertiesDialog } from "./propertiesDialog.js?v=74";
+import { ToolsManager } from "./toolsManager.js?v=74";
+import { detectParishFromGeometry } from "./geoMonagas.js?v=74";
+import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=74";
 import { 
   getSavedFirebaseConfig, 
   saveFirebaseConfig, 
   isFirebaseConfigured, 
   initFirebase 
-} from "./firebaseConfig.js?v=73";
+} from "./firebaseConfig.js?v=74";
 
 class EarthMonagasApp {
   constructor() {
@@ -1222,7 +1222,7 @@ class EarthMonagasApp {
     this.showToast(msg, toastColor);
   }
 
-  handleSaveProperties(type, itemId, updatedFields, targetMunId = null, targetParishId = null) {
+  async handleSaveProperties(type, itemId, updatedFields, targetMunId = null, targetParishId = null) {
     if (updatedFields?.isNew || this.propDialog?.currentItem?.isNew) {
       const draft = Object.assign({}, this.propDialog?.currentItem || {}, updatedFields);
       delete draft.isNew;
@@ -1232,7 +1232,7 @@ class EarthMonagasApp {
       const key = type === "poligono" ? "poligonos" : (type === "ruta" ? "rutas" : (type === "subparroquia" ? "subparroquias" : "marcas"));
 
       if (type === "subparroquia") {
-        this.store.addItemToParish(destMunId, destParishId, "subparroquias", draft);
+        await this.store.addItemToParish(destMunId, destParishId, "subparroquias", draft);
         this.activeSubParroquiaId = String(draft.id);
         const parish = this.store.getParish(destMunId, destParishId);
         this.mapEngine.renderParishItems(parish, (t, it) => {
@@ -1258,7 +1258,7 @@ class EarthMonagasApp {
         }
       }
 
-      this.store.addItemToParish(destMunId, destParishId, key, draft);
+      await this.store.addItemToParish(destMunId, destParishId, key, draft);
       const parish = this.store.getParish(destMunId, destParishId);
       this.mapEngine.renderParishItems(parish, (t, it) => {
         if (t === "subparroquia") this.focusSubParish(it.id);
@@ -1288,7 +1288,7 @@ class EarthMonagasApp {
       // Cambiar de parroquia activa para enfocar y mostrar el elemento transferido
       this.selectParish(destMunId, destParishId);
     } else {
-      this.store.updateItem(this.selectedMunId, this.selectedParishId, key, itemId, updatedFields);
+      await this.store.updateItem(this.selectedMunId, this.selectedParishId, key, itemId, updatedFields);
       const parish = this.store.getParish(this.selectedMunId, this.selectedParishId);
       this.mapEngine.renderParishItems(parish, (t, it) => {
         if (t === "subparroquia") this.focusSubParish(it.id);
@@ -1314,10 +1314,10 @@ class EarthMonagasApp {
     }
   }
 
-  deleteItem(munId, parishId, type, itemId) {
+  async deleteItem(munId, parishId, type, itemId) {
     if (confirm("¿Deseas eliminar este elemento de Google Earth?")) {
       const key = type === "poligono" ? "poligonos" : (type === "ruta" ? "rutas" : (type === "subparroquia" ? "subparroquias" : "marcas"));
-      this.store.deleteItem(munId, parishId, key, itemId);
+      await this.store.deleteItem(munId, parishId, key, itemId);
 
       const parish = this.store.getParish(munId, parishId);
       this.mapEngine.renderParishItems(parish, (t, it) => {
