@@ -1967,6 +1967,17 @@ class EarthMonagasApp {
           detectedCapa = "capa1";
         }
 
+        // Fallback: extraer datos de description si viene en texto o tabla HTML
+        const extractDesc = (regex) => {
+          const m = desc.match(regex);
+          return m ? m[1].trim() : null;
+        };
+        const descCasas = extractDesc(/(?:casas?|viviendas?)\s*[:=]\s*(\d+)/i) || extractDesc(/<td>\s*(?:casas?|viviendas?)\s*<\/td>\s*<td>\s*(\d+)\s*<\/td>/i);
+        const descFamilias = extractDesc(/(?:familias?)\s*[:=]\s*(\d+)/i) || extractDesc(/<td>\s*(?:familias?)\s*<\/td>\s*<td>\s*(\d+)\s*<\/td>/i);
+        const descMilitantes = extractDesc(/(?:militantes?|habitantes?|personas?|electores?)\s*[:=]\s*(\d+)/i) || extractDesc(/<td>\s*(?:militantes?|habitantes?)\s*<\/td>\s*<td>\s*(\d+)\s*<\/td>/i);
+        const descLider = extractDesc(/(?:l[ií]der|responsable|contacto)\s*[:=]\s*([^,\n<]+)/i) || extractDesc(/<td>\s*(?:l[ií]der|responsable)\s*<\/td>\s*<td>\s*([^<]+)\s*<\/td>/i);
+        const descTelefono = extractDesc(/(?:tel[eé]fono|celular|tlf|m[oó]vil)\s*[:=]\s*([\d\-\s\+]+)/i) || extractDesc(/<td>\s*(?:tel[eé]fono|celular)\s*<\/td>\s*<td>\s*([^<]+)\s*<\/td>/i);
+
         const polyNodes = Array.from(pm.getElementsByTagName("Polygon"));
         polyNodes.forEach(polyNode => {
           const coordsText = polyNode.getElementsByTagName("coordinates")[0]?.textContent || "";
@@ -1982,11 +1993,11 @@ class EarthMonagasApp {
               areaHa,
               perimetroM,
               checked: true,
-              casas: parseInt(extendedData.casas || extendedData.viviendas || "0", 10) || 0,
-              familias: parseInt(extendedData.familias || "0", 10) || 0,
-              militantes: parseInt(extendedData.militantes || extendedData.habitantes || "0", 10) || 0,
-              lider: extendedData.lider || extendedData.responsable || "",
-              telefono: extendedData.telefono || extendedData.celular || "",
+              casas: parseInt(extendedData.casas || extendedData.viviendas || descCasas || "0", 10) || 0,
+              familias: parseInt(extendedData.familias || descFamilias || "0", 10) || 0,
+              militantes: parseInt(extendedData.militantes || extendedData.habitantes || descMilitantes || "0", 10) || 0,
+              lider: extendedData.lider || extendedData.responsable || descLider || "",
+              telefono: extendedData.telefono || extendedData.celular || descTelefono || "",
               eje: extendedData.eje || extendedData.subparroquia || ""
             });
           }
