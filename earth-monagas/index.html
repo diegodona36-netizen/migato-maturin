@@ -188,66 +188,33 @@
         </div>
       </div>
 
-      <!-- Acceso Rápido con 1 Toque (Sin escribir usuario ni clave) -->
-      <div class="space-y-1.5 pt-1">
-        <span class="text-[10px] font-black text-slate-400 uppercase tracking-wider block">Acceso Rápido con 1 Toque:</span>
-        <div class="grid grid-cols-2 gap-2">
-          <button type="button" onclick="window.quickLoginImmediate('admin', 'admin')" class="p-2.5 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/40 text-left transition active:scale-95 cursor-pointer">
-            <span class="text-xs font-black text-amber-300 block">👑 Dirección General</span>
-            <span class="text-[10px] text-slate-400 block mt-0.5">Acceso Total 13 Mun</span>
-          </button>
-          <button type="button" onclick="window.quickLoginImmediate('alto-de-los-godos', 'admin')" class="p-2.5 rounded-xl bg-emerald-500/15 hover:bg-emerald-500/25 border border-emerald-500/40 text-left transition active:scale-95 cursor-pointer">
-            <span class="text-xs font-black text-emerald-300 block">👤 Militancia Los Godos</span>
-            <span class="text-[10px] text-slate-400 block mt-0.5">Carga de Datos</span>
-          </button>
-        </div>
-      </div>
-
-      <div class="relative flex py-1 items-center">
-        <div class="flex-grow border-t border-slate-800"></div>
-        <span class="flex-shrink mx-2 text-[10px] text-slate-500 font-bold uppercase">o elija su parroquia</span>
-        <div class="flex-grow border-t border-slate-800"></div>
-      </div>
-
-      <!-- Formulario de Autenticación Unificado (100% Producción) -->
+      <!-- Formulario de Autenticación Institucional Sobrio (Sin listas públicas de parroquias) -->
       <form id="form-auth-login" class="space-y-4 pt-1">
         
-        <!-- Campo 1: Jurisdicción Territorial -->
-        <div class="space-y-1.5">
-          <label class="block text-[10px] font-black text-slate-300 uppercase tracking-wider flex items-center justify-between">
-            <span>Jurisdicción / Ámbito Territorial</span>
-            <span class="text-sky-400 font-semibold lowercase text-[10px]">asignación oficial</span>
-          </label>
-          <div class="relative">
-            <select id="auth-select-jurisdiction" class="w-full bg-slate-950 border border-slate-700 rounded-xl pl-3 pr-8 py-2.5 text-xs text-white font-semibold focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500/50 cursor-pointer appearance-none transition shadow-inner">
-              <option value="general">👑 Dirección General (Acceso Central a Todo Monagas)</option>
-            </select>
-            <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none"></i>
-          </div>
-        </div>
+        <!-- Elemento oculto para compatibilidad con scripts existentes -->
+        <select id="auth-select-jurisdiction" class="hidden">
+          <option value="general">General</option>
+        </select>
 
-        <!-- Campo 2: Usuario Institucional -->
+        <!-- Campo 1: Usuario Institucional -->
         <div class="space-y-1.5">
           <label class="block text-[10px] font-black text-slate-300 uppercase tracking-wider">
-            Usuario del Sistema
+            Usuario Asignado
           </label>
           <div class="relative">
             <i data-lucide="user" class="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2"></i>
-            <input type="text" id="auth-input-user" value="admin" class="w-full pl-9 pr-3 py-2.5 bg-slate-950 border border-slate-700 rounded-xl text-white font-mono text-xs focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500/50 transition" placeholder="admin" required autocomplete="username">
+            <input type="text" id="auth-input-user" value="" class="w-full pl-9 pr-3 py-2.5 bg-slate-950 border border-slate-700 rounded-xl text-white font-mono text-xs focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500/50 transition" placeholder="Ingrese su usuario asignado" required autocomplete="username">
           </div>
         </div>
 
-        <!-- Campo 3: Contraseña con Toggle de Visibilidad -->
+        <!-- Campo 2: Contraseña con Toggle de Visibilidad -->
         <div class="space-y-1.5">
-          <div class="flex items-center justify-between">
-            <label class="block text-[10px] font-black text-slate-300 uppercase tracking-wider">
-              Contraseña de Acceso
-            </label>
-            <span class="text-[10px] text-slate-500 font-mono">admin</span>
-          </div>
+          <label class="block text-[10px] font-black text-slate-300 uppercase tracking-wider">
+            Contraseña de Acceso
+          </label>
           <div class="relative">
             <i data-lucide="lock" class="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2"></i>
-            <input type="password" id="auth-input-pass" value="admin" class="w-full pl-9 pr-10 py-2.5 bg-slate-950 border border-slate-700 rounded-xl text-white font-mono text-xs focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500/50 transition" placeholder="••••••••" required autocomplete="current-password">
+            <input type="password" id="auth-input-pass" value="" class="w-full pl-9 pr-10 py-2.5 bg-slate-950 border border-slate-700 rounded-xl text-white font-mono text-xs focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500/50 transition" placeholder="••••••••" required autocomplete="current-password">
             <button type="button" id="btn-toggle-pass-visibility" class="absolute right-2.5 top-1/2 -translate-y-1/2 p-1 text-slate-400 hover:text-slate-200 transition cursor-pointer" title="Mostrar/Ocultar Contraseña">
               <i data-lucide="eye" id="icon-pass-visibility" class="w-4 h-4"></i>
             </button>

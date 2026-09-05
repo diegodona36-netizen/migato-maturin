@@ -1120,16 +1120,8 @@ class EarthMonagasApp {
     const inputPass = document.getElementById("auth-input-pass");
 
     if (errorMsg) errorMsg.classList.add("hidden");
-    if (inputUser && !inputUser.value) inputUser.value = "admin";
-    if (inputPass && !inputPass.value) inputPass.value = "admin";
-
-    if (selectJurisdiction) {
-      if (this.isGeneralMode) {
-        selectJurisdiction.value = "general";
-      } else if (this.selectedMunId && this.selectedParishId) {
-        selectJurisdiction.value = `${this.selectedMunId}/${this.selectedParishId}`;
-      }
-    }
+    if (inputUser) inputUser.value = "";
+    if (inputPass) inputPass.value = "";
 
     if (modalLogin) {
       modalLogin.classList.remove("hidden");
@@ -1744,23 +1736,20 @@ class EarthMonagasApp {
     if (formLogin) {
       formLogin.addEventListener("submit", (e) => {
         e.preventDefault();
-        const jurisVal = selectJurisdiction?.value || "general";
-        const userInput = (inputUser?.value || "").trim() || "admin";
-        const passInput = (inputPass?.value || "").trim() || "admin";
+        const userInput = (inputUser?.value || "").trim();
+        const passInput = (inputPass?.value || "").trim();
         const rememberChk = document.getElementById("auth-chk-remember");
         const remember = rememberChk ? rememberChk.checked : true;
 
-        // Si se eligió una parroquia en el selector de jurisdicción, vincular al ámbito seleccionado
-        let identity = userInput;
-        if (jurisVal && jurisVal !== "general") {
-          if (userInput === "admin" || userInput === "") {
-            identity = jurisVal;
+        if (!userInput || !passInput) {
+          if (errorMsg) {
+            errorMsg.textContent = "Ingrese su usuario y contraseña asignados.";
+            errorMsg.classList.remove("hidden");
           }
-        } else {
-          identity = (userInput && userInput !== "admin") ? userInput : "admin";
+          return;
         }
 
-        const res = this.authManager.login(identity, passInput, remember);
+        const res = this.authManager.login(userInput, passInput, remember);
         if (!res.success) {
           if (errorMsg) {
             errorMsg.textContent = res.message || "Credenciales no válidas. Verifique sus datos.";
@@ -1948,6 +1937,7 @@ class EarthMonagasApp {
       if (mobilePath) mobilePath.classList.remove("hidden");
       if (mobilePlacemark) mobilePlacemark.classList.remove("hidden");
       if (tabLayers) tabLayers.classList.remove("hidden");
+    } else {
       // 🔒 MODO OPERADOR / MILITANCIA: Ocultar barra de dibujo y herramientas técnicas
       if (toolbarToolsRow) toolbarToolsRow.classList.add("hidden");
       if (adminModuleLinks) adminModuleLinks.classList.add("hidden");

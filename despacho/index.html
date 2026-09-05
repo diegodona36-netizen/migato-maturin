@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="es" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Despacho de Enlaces Parroquiales • Dirección General Monagas</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            venBlue: "#1e3a8a",
+            venGold: "#f59e0b",
+            venSky: "#0284c7"
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Google Fonts: Inter + JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;800&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      font-family: "Inter", sans-serif;
+      background-color: #060913;
+    }
+    .font-mono {
+      font-family: "JetBrains Mono", monospace;
+    }
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #060913;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #1e293b;
+      border-radius: 9999px;
+    }
+  </style>
+</head>
+<body class="text-slate-100 min-h-screen flex flex-col selection:bg-emerald-500 selection:text-white">
+
+  <!-- ============================================================== -->
+  <!-- 1. CABECERA INSTITUCIONAL PRIVADA                              -->
+  <!-- ============================================================== -->
+  <header class="border-b border-slate-800 bg-slate-950/90 backdrop-blur-md sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-3">
+      <div class="flex items-center gap-3 min-w-0">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-600 via-indigo-700 to-blue-800 flex items-center justify-center text-white shadow-lg shadow-purple-500/20 font-black text-sm shrink-0">
+          <i data-lucide="send" class="w-5 h-5"></i>
+        </div>
+        <div class="truncate">
+          <div class="flex items-center gap-2">
+            <h1 class="font-black text-white text-sm sm:text-base tracking-tight leading-tight truncate">
+              DESPACHO DE ENLACES PARROQUIALES
+            </h1>
+            <span class="text-[10px] font-mono font-bold bg-amber-950/80 text-amber-400 px-2 py-0.5 rounded-md border border-amber-800/60 hidden sm:inline-block">
+              🔒 Comando Privado
+            </span>
+          </div>
+          <p class="text-[11px] text-slate-400 truncate">Dirección General de Campaña • Estado Monagas</p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2 shrink-0">
+        <a href="../earth-monagas/?v=90&u=admin" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-sky-400 text-xs font-bold flex items-center gap-1.5 transition active:scale-95" title="Entrar como Administrador Master">
+          <i data-lucide="globe" class="w-4 h-4"></i>
+          <span class="hidden sm:inline">Mapa Master</span>
+        </a>
+        <a href="../" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 text-xs font-bold flex items-center gap-1.5 transition active:scale-95" title="Volver al Portal">
+          <i data-lucide="home" class="w-4 h-4"></i>
+          <span class="hidden sm:inline">Portal</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ============================================================== -->
+  <!-- 2. CONTENEDOR PRINCIPAL                                         -->
+  <!-- ============================================================== -->
+  <main class="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+
+    <!-- Tarjeta de Instrucción Operativa / Compartimentación -->
+    <div class="bg-gradient-to-r from-slate-900 via-slate-900 to-indigo-950/40 border border-indigo-500/30 rounded-3xl p-5 sm:p-6 space-y-3 shadow-xl">
+      <div class="flex items-start justify-between gap-3">
+        <div class="space-y-1">
+          <div class="flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span class="text-xs font-black uppercase tracking-wider text-emerald-400 font-mono">Protocolo de Compartimentación Estricta</span>
+          </div>
+          <h2 class="text-lg sm:text-xl font-black text-white">Panel de Distribución de Accesos Seguros</h2>
+        </div>
+        <button id="btn-copy-all" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 text-xs font-bold rounded-xl flex items-center gap-1.5 transition active:scale-95 shrink-0" title="Copiar reporte de todos los enlaces">
+          <i data-lucide="copy" class="w-3.5 h-3.5 text-sky-400"></i>
+          <span class="hidden sm:inline">Copiar Lista Completa</span>
+        </button>
+      </div>
+
+      <p class="text-xs sm:text-sm text-slate-300 leading-relaxed max-w-4xl">
+        Cada enlace es <strong>individual y aislado</strong>. Cuando el responsable de una parroquia abre su enlace en el teléfono, entra <strong>directamente a su parroquia</strong>: no ve selectores de otras parroquias, no ve herramientas técnicas de dibujo ni sabe qué otros municipios existen. Esto garantiza máxima seguridad, discreción y facilidad de uso.
+      </p>
+
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-2 text-xs font-mono">
+        <div class="bg-slate-950/80 p-2.5 rounded-xl border border-slate-800">
+          <span class="text-slate-400 text-[10px] block uppercase">Parroquias Maturín</span>
+          <strong class="text-white text-sm font-black">10 Oficiales</strong>
+        </div>
+        <div class="bg-slate-950/80 p-2.5 rounded-xl border border-slate-800">
+          <span class="text-slate-400 text-[10px] block uppercase">Padrón Maturín</span>
+          <strong class="text-purple-300 text-sm font-black">318.601 Electores</strong>
+        </div>
+        <div class="bg-slate-950/80 p-2.5 rounded-xl border border-slate-800">
+          <span class="text-slate-400 text-[10px] block uppercase">Centros Electorales</span>
+          <strong class="text-amber-300 text-sm font-black">175 Escuelas CNE</strong>
+        </div>
+        <div class="bg-slate-950/80 p-2.5 rounded-xl border border-slate-800">
+          <span class="text-slate-400 text-[10px] block uppercase">Protección de Datos</span>
+          <strong class="text-emerald-400 text-sm font-black">🛡️ 100% Blindado</strong>
+        </div>
+      </div>
+    </div>
+
+    <!-- Barra de Filtros y Búsqueda -->
+    <div class="flex flex-col sm:flex-row items-center justify-between gap-3 bg-slate-900/90 border border-slate-800 p-3 sm:p-4 rounded-2xl">
+      <div class="relative w-full sm:w-80">
+        <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2"></i>
+        <input type="text" id="input-search" placeholder="Filtrar por parroquia..." class="w-full bg-slate-950 border border-slate-700 rounded-xl pl-9 pr-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-sky-500 font-medium">
+      </div>
+
+      <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
+        <button id="btn-filter-maturin" class="px-3 py-1.5 rounded-xl bg-sky-600 text-white font-black text-xs transition active:scale-95 shadow-sm">
+          Maturín (10 Parroquias)
+        </button>
+        <button id="btn-filter-all" class="px-3 py-1.5 rounded-xl bg-slate-800 text-slate-300 hover:text-white font-bold text-xs border border-slate-700 transition active:scale-95">
+          Todo Monagas (44 Parroquias)
+        </button>
+      </div>
+    </div>
+
+    <!-- Contenedor de Tarjetas de Parroquias -->
+    <div id="parishes-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <!-- Generado dinámicamente con JavaScript -->
+    </div>
+
+  </main>
+
+  <!-- Toast de Notificación -->
+  <div id="toast" class="fixed bottom-6 right-6 z-50 transform transition-all duration-300 translate-y-20 opacity-0 pointer-events-none bg-slate-900 text-white px-4 py-3 rounded-2xl border border-emerald-500/40 shadow-2xl flex items-center gap-2 text-xs font-bold">
+    <i data-lucide="check-circle" class="w-4 h-4 text-emerald-400 shrink-0"></i>
+    <span id="toast-text">Copiado al portapapeles</span>
+  </div>
+
+  <script>
+    const PARROQUIAS_MATURIN = [
+      { id: "alto-de-los-godos", nombre: "Alto de Los Godos", munId: "maturin", munNombre: "Maturín", electores: 81085, centros: 40, mesas: 88 },
+      { id: "san-simon", nombre: "San Simón", munId: "maturin", munNombre: "Maturín", electores: 64502, centros: 52, mesas: 80 },
+      { id: "las-cocuizas", nombre: "Las Cocuizas", munId: "maturin", munNombre: "Maturín", electores: 58986, centros: 31, mesas: 67 },
+      { id: "boqueron", nombre: "Boquerón", munId: "maturin", munNombre: "Maturín", electores: 42274, centros: 21, mesas: 48 },
+      { id: "santa-cruz", nombre: "Santa Cruz", munId: "maturin", munNombre: "Maturín", electores: 29747, centros: 13, mesas: 34 },
+      { id: "la-pica", nombre: "La Pica", munId: "maturin", munNombre: "Maturín", electores: 14076, centros: 7, mesas: 16 },
+      { id: "jusepin", nombre: "Jusepín", munId: "maturin", munNombre: "Maturín", electores: 9056, centros: 3, mesas: 10 },
+      { id: "el-furrial", nombre: "El Furrial", munId: "maturin", munNombre: "Maturín", electores: 8966, centros: 4, mesas: 10 },
+      { id: "san-vicente", nombre: "San Vicente", munId: "maturin", munNombre: "Maturín", electores: 7425, centros: 3, mesas: 8 },
+      { id: "el-corozo", nombre: "El Corozo", munId: "maturin", munNombre: "Maturín", electores: 2484, centros: 1, mesas: 3 }
+    ];
+
+    const OTRAS_PARROQUIAS_MONAGAS = [
+      { id: "san-antonio", nombre: "San Antonio", munId: "acosta", munNombre: "Acosta", electores: 14000, centros: 12, mesas: 20 },
+      { id: "san-francisco", nombre: "San Francisco", munId: "acosta", munNombre: "Acosta", electores: 4500, centros: 5, mesas: 8 },
+      { id: "aguasay", nombre: "Aguasay", munId: "aguasay", munNombre: "Aguasay", electores: 10500, centros: 8, mesas: 15 },
+      { id: "caripito", nombre: "Caripito", munId: "bolivar", munNombre: "Bolívar", electores: 31000, centros: 22, mesas: 45 },
+      { id: "caripe", nombre: "Caripe", munId: "caripe", munNombre: "Caripe", electores: 26000, centros: 18, mesas: 38 },
+      { id: "caicara", nombre: "Caicara", munId: "cedeno", munNombre: "Cedeño", electores: 25000, centros: 19, mesas: 35 },
+      { id: "punceres", nombre: "Quiriquire", munId: "punceres", munNombre: "Punceres", electores: 21000, centros: 16, mesas: 30 },
+      { id: "santa-barbara", nombre: "Santa Bárbara", munId: "santa-barbara", munNombre: "Santa Bárbara", electores: 9500, centros: 7, mesas: 14 },
+      { id: "sotillo", nombre: "Barrancas del Orinoco", munId: "sotillo", munNombre: "Sotillo", electores: 22000, centros: 17, mesas: 32 },
+      { id: "uracoa", nombre: "Uracoa", munId: "uracoa", munNombre: "Uracoa", electores: 8500, centros: 6, mesas: 12 },
+      { id: "libertador", nombre: "Temblador", munId: "libertador", munNombre: "Libertador", electores: 35000, centros: 25, mesas: 50 },
+      { id: "pao-de-barcelona", nombre: "Aragua de Maturín", munId: "piar", munNombre: "Piar", electores: 34000, centros: 24, mesas: 48 }
+    ];
+
+    let currentCatalog = PARROQUIAS_MATURIN;
+    let searchQuery = "";
+
+    function getBaseUrl() {
+      const loc = window.location;
+      // Reemplazar /despacho/ por /earth-monagas/
+      const path = loc.pathname.replace(/\/despacho\/?.*$/, "/earth-monagas/");
+      return `${loc.origin}${path}`;
+    }
+
+    function buildParishLink(parishId) {
+      return `${getBaseUrl()}?v=90&p=${parishId}`;
+    }
+
+    function showToast(message) {
+      const toast = document.getElementById("toast");
+      const text = document.getElementById("toast-text");
+      if (!toast || !text) return;
+      text.textContent = message;
+      toast.classList.remove("translate-y-20", "opacity-0", "pointer-events-none");
+      setTimeout(() => {
+        toast.classList.add("translate-y-20", "opacity-0", "pointer-events-none");
+      }, 3000);
+    }
+
+    function copyLink(parishId, parishNombre) {
+      const link = buildParishLink(parishId);
+      navigator.clipboard.writeText(link).then(() => {
+        showToast(`✓ Enlace copiado para ${parishNombre}`);
+      }).catch(() => {
+        prompt("Copie este enlace:", link);
+      });
+    }
+
+    function sendWhatsApp(parishId, parishNombre) {
+      const link = buildParishLink(parishId);
+      const text = `Saludos estimado(a) Responsable Parroquial de ${parishNombre}.
+
+Le compartimos su enlace oficial para la carga de datos comunales y centros electorales:
+🔗 ${link}
+
+Este acceso es exclusivo para su jurisdicción. Mantenga la confidencialidad del enlace.`;
+      const url = `https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`;
+      window.open(url, "_blank");
+    }
+
+    function renderGrid() {
+      const container = document.getElementById("parishes-grid");
+      if (!container) return;
+
+      const q = searchQuery.toLowerCase().trim();
+      const filtered = currentCatalog.filter(p => 
+        !q || 
+        p.nombre.toLowerCase().includes(q) || 
+        p.id.toLowerCase().includes(q) || 
+        p.munNombre.toLowerCase().includes(q)
+      );
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div class="col-span-full py-12 text-center text-slate-500 bg-slate-950/60 rounded-3xl border border-slate-800">
+            <i data-lucide="map-pin-off" class="w-8 h-8 mx-auto mb-2 text-slate-600"></i>
+            <p class="font-bold text-sm">No se encontraron parroquias con el término "${searchQuery}"</p>
+          </div>
+        `;
+        if (window.lucide) window.lucide.createIcons();
+        return;
+      }
+
+      container.innerHTML = filtered.map(p => {
+        const link = buildParishLink(p.id);
+        const userEmail = `${p.id}@monagas.gob.ve`;
+
+        return `
+          <div class="bg-slate-900/95 border border-slate-800 hover:border-slate-700 rounded-3xl p-5 space-y-4 shadow-lg transition flex flex-col justify-between">
+            
+            <div class="space-y-3">
+              <!-- Cabecera de la Parroquia -->
+              <div class="flex items-start justify-between gap-2">
+                <div>
+                  <div class="flex items-center gap-2">
+                    <span class="text-xs text-sky-400 font-black uppercase font-mono tracking-wider">Municipio ${p.munNombre}</span>
+                    <span class="text-[9px] font-mono bg-emerald-950 text-emerald-400 border border-emerald-800/50 px-1.5 py-0.5 rounded">Activa</span>
+                  </div>
+                  <h3 class="text-base sm:text-lg font-black text-white mt-0.5">${p.nombre}</h3>
+                </div>
+                <span class="text-[11px] font-mono text-purple-300 font-bold bg-purple-950/80 border border-purple-800/50 px-2 py-0.5 rounded-lg shrink-0">
+                  ${p.electores.toLocaleString()} electores
+                </span>
+              </div>
+
+              <!-- Métricas Oficiales CNE -->
+              <div class="grid grid-cols-2 gap-2 text-[11px] font-mono">
+                <div class="bg-slate-950/80 p-2 rounded-xl border border-slate-800/80 flex items-center justify-between">
+                  <span class="text-slate-400">Centros CNE:</span>
+                  <strong class="text-amber-300 font-bold">${p.centros} escuelas</strong>
+                </div>
+                <div class="bg-slate-950/80 p-2 rounded-xl border border-slate-800/80 flex items-center justify-between">
+                  <span class="text-slate-400">Mesas:</span>
+                  <strong class="text-sky-300 font-bold">${p.mesas} mesas</strong>
+                </div>
+              </div>
+
+              <!-- Enlace Seguro de Carga -->
+              <div class="space-y-1">
+                <span class="text-[10px] font-black uppercase text-slate-400 tracking-wider block">Enlace de Carga Asignado:</span>
+                <div class="p-2 bg-slate-950 border border-slate-800 rounded-xl font-mono text-[11px] text-slate-300 truncate select-all flex items-center justify-between gap-2">
+                  <span class="truncate">${link}</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Botones de Acción Operativa -->
+            <div class="grid grid-cols-3 gap-2 pt-2 border-t border-slate-800/80 font-mono text-xs">
+              <button type="button" onclick="copyLink('${p.id}', '${p.nombre}')" class="py-2.5 px-2 bg-slate-800 hover:bg-slate-700 text-sky-300 border border-slate-700 rounded-xl font-bold flex items-center justify-center gap-1.5 transition active:scale-95 cursor-pointer" title="Copiar enlace directo">
+                <i data-lucide="copy" class="w-3.5 h-3.5 text-sky-400"></i>
+                <span class="truncate">Copiar</span>
+              </button>
+
+              <button type="button" onclick="sendWhatsApp('${p.id}', '${p.nombre}')" class="py-2.5 px-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl font-bold flex items-center justify-center gap-1.5 transition active:scale-95 cursor-pointer shadow-md shadow-emerald-600/20" title="Enviar enlace pre-redactado por WhatsApp">
+                <i data-lucide="message-circle" class="w-3.5 h-3.5"></i>
+                <span class="truncate">WhatsApp</span>
+              </button>
+
+              <a href="${link}" target="_blank" class="py-2.5 px-2 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 rounded-xl font-bold flex items-center justify-center gap-1.5 transition active:scale-95 text-center" title="Probar vista de la militancia en nueva pestaña">
+                <i data-lucide="external-link" class="w-3.5 h-3.5 text-purple-400"></i>
+                <span class="truncate">Probar</span>
+              </a>
+            </div>
+
+          </div>
+        `;
+      }).join("");
+
+      if (window.lucide) window.lucide.createIcons();
+    }
+
+    // Inicialización de Eventos
+    document.addEventListener("DOMContentLoaded", () => {
+      renderGrid();
+
+      const inputSearch = document.getElementById("input-search");
+      if (inputSearch) {
+        inputSearch.addEventListener("input", (e) => {
+          searchQuery = e.target.value;
+          renderGrid();
+        });
+      }
+
+      const btnMaturin = document.getElementById("btn-filter-maturin");
+      const btnAll = document.getElementById("btn-filter-all");
+
+      if (btnMaturin && btnAll) {
+        btnMaturin.addEventListener("click", () => {
+          currentCatalog = PARROQUIAS_MATURIN;
+          btnMaturin.className = "px-3 py-1.5 rounded-xl bg-sky-600 text-white font-black text-xs transition active:scale-95 shadow-sm";
+          btnAll.className = "px-3 py-1.5 rounded-xl bg-slate-800 text-slate-300 hover:text-white font-bold text-xs border border-slate-700 transition active:scale-95";
+          renderGrid();
+        });
+
+        btnAll.addEventListener("click", () => {
+          currentCatalog = [...PARROQUIAS_MATURIN, ...OTRAS_PARROQUIAS_MONAGAS];
+          btnAll.className = "px-3 py-1.5 rounded-xl bg-sky-600 text-white font-black text-xs transition active:scale-95 shadow-sm";
+          btnMaturin.className = "px-3 py-1.5 rounded-xl bg-slate-800 text-slate-300 hover:text-white font-bold text-xs border border-slate-700 transition active:scale-95";
+          renderGrid();
+        });
+      }
+
+      const btnCopyAll = document.getElementById("btn-copy-all");
+      if (btnCopyAll) {
+        btnCopyAll.addEventListener("click", () => {
+          let text = "📋 REPORTE DE ENLACES OFICIALES PARROQUIALES (MONAGAS 2026)\n\n";
+          currentCatalog.forEach(p => {
+            text += `📍 ${p.nombre} (${p.munNombre}) - ${p.electores.toLocaleString()} electores\n`;
+            text += `🔗 ${buildParishLink(p.id)}\n\n`;
+          });
+          navigator.clipboard.writeText(text).then(() => {
+            showToast("✓ Lista completa copiada al portapapeles");
+          });
+        });
+      }
+    });
+  </script>
+</body>
+</html>
