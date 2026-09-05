@@ -2606,6 +2606,39 @@
         "areaHa": 180.5,
         "perimetroM": 5200,
         "visible": true
+      },
+      {
+        "id": "SUBPAR-1788581339563",
+        "nombre": "Eje Comunal 2",
+        "descripcion": "Eje o Circuito Comunal",
+        "militantes": 0,
+        "casas": 0,
+        "habitantes": 0,
+        "familias": 0,
+        "colorBorde": "#c084fc",
+        "anchoBorde": 2.5,
+        "colorRelleno": "#a855f7",
+        "opacidad": 0.2,
+        "vertices": [
+          [
+            9.850957950597241,
+            -63.246574401855476
+          ],
+          [
+            9.820145981578996,
+            -63.3028793334961
+          ],
+          [
+            9.80186059938108,
+            -63.21121215820313
+          ]
+        ],
+        "areaHa": 2336.7,
+        "perimetroM": 17304,
+        "visible": true,
+        "fecha": "2026-09-05T04:08:59.563Z",
+        "munId": "maturin",
+        "parishId": "boqueron"
       }
     ],
     "poligonos": [
@@ -2647,11 +2680,45 @@
             -63.19
           ]
         ]
+      },
+      {
+        "id": "POLY-1788581345030",
+        "nombre": "Sector Comunal 2",
+        "descripcion": "Comunidad / Consejo Comunal",
+        "militantes": 0,
+        "casas": 0,
+        "habitantes": 0,
+        "familias": 0,
+        "colorBorde": "#38bdf8",
+        "anchoBorde": 2,
+        "colorRelleno": "#38bdf8",
+        "opacidad": 0.35,
+        "vertices": [
+          [
+            9.84181623759488,
+            -63.26271057128907
+          ],
+          [
+            9.810664798258914,
+            -63.23799133300782
+          ],
+          [
+            9.820823198570613,
+            -63.30081939697266
+          ]
+        ],
+        "areaHa": 1034.4,
+        "perimetroM": 11373,
+        "visible": true,
+        "fecha": "2026-09-05T04:09:05.030Z",
+        "munId": "maturin",
+        "parishId": "boqueron",
+        "subParroquiaId": "SUBPAR-1788581339563"
       }
     ],
     "rutas": [],
     "marcas": [],
-    "updatedAt": 1788580000000
+    "updatedAt": 1788581393965
   },
   "boqueron": {
     "munId": "maturin",
@@ -2690,6 +2757,39 @@
         "areaHa": 180.5,
         "perimetroM": 5200,
         "visible": true
+      },
+      {
+        "id": "SUBPAR-1788581339563",
+        "nombre": "Eje Comunal 2",
+        "descripcion": "Eje o Circuito Comunal",
+        "militantes": 0,
+        "casas": 0,
+        "habitantes": 0,
+        "familias": 0,
+        "colorBorde": "#c084fc",
+        "anchoBorde": 2.5,
+        "colorRelleno": "#a855f7",
+        "opacidad": 0.2,
+        "vertices": [
+          [
+            9.850957950597241,
+            -63.246574401855476
+          ],
+          [
+            9.820145981578996,
+            -63.3028793334961
+          ],
+          [
+            9.80186059938108,
+            -63.21121215820313
+          ]
+        ],
+        "areaHa": 2336.7,
+        "perimetroM": 17304,
+        "visible": true,
+        "fecha": "2026-09-05T04:08:59.563Z",
+        "munId": "maturin",
+        "parishId": "boqueron"
       }
     ],
     "poligonos": [
@@ -2731,10 +2831,44 @@
             -63.19
           ]
         ]
+      },
+      {
+        "id": "POLY-1788581345030",
+        "nombre": "Sector Comunal 2",
+        "descripcion": "Comunidad / Consejo Comunal",
+        "militantes": 0,
+        "casas": 0,
+        "habitantes": 0,
+        "familias": 0,
+        "colorBorde": "#38bdf8",
+        "anchoBorde": 2,
+        "colorRelleno": "#38bdf8",
+        "opacidad": 0.35,
+        "vertices": [
+          [
+            9.84181623759488,
+            -63.26271057128907
+          ],
+          [
+            9.810664798258914,
+            -63.23799133300782
+          ],
+          [
+            9.820823198570613,
+            -63.30081939697266
+          ]
+        ],
+        "areaHa": 1034.4,
+        "perimetroM": 11373,
+        "visible": true,
+        "fecha": "2026-09-05T04:09:05.030Z",
+        "munId": "maturin",
+        "parishId": "boqueron",
+        "subParroquiaId": "SUBPAR-1788581339563"
       }
     ],
     "rutas": [],
     "marcas": [],
-    "updatedAt": 1788580000000
+    "updatedAt": 1788581393965
   }
 }
