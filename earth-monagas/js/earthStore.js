@@ -1,16 +1,16 @@
 /**
  * Gestor de Estado y Árbol de Lugares (Places) — Google Earth Pro Web (Monagas)
  */
-import { SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=75";
+import { SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=76";
 import { 
   saveParishToFirestore, 
   subscribeToTerritories, 
   isFirebaseConfigured, 
   fetchAllTerritoriesFromFirestore,
   mergeItemCollections
-} from "./firebaseConfig.js?v=75";
+} from "./firebaseConfig.js?v=76";
 
-const STORAGE_KEY = "earth_monagas_places_v3";
+const STORAGE_KEY = "earth_monagas_places_v6";
 
 export const DEFAULT_SAN_SIMON_SUBPARROQUIAS = [
   {
@@ -223,59 +223,7 @@ export class EarthStore {
           if (!storedP.limite && p.limite) storedP.limite = p.limite;
           if (!storedP.centro && p.centro) storedP.centro = p.centro;
 
-          // Precarga oficial de Sub-Parroquias (Ejes) para San Simón si está vacía
-          if (mun.id === "maturin" && p.id === "san-simon") {
-            if (storedP.subparroquias.length === 0) {
-              storedP.subparroquias = JSON.parse(JSON.stringify(DEFAULT_SAN_SIMON_SUBPARROQUIAS));
-            }
-          }
-
-          // Precarga oficial para Alto de Los Godos si está vacía
-          if (mun.id === "maturin" && p.id === "alto-de-los-godos") {
-            if (storedP.subparroquias.length === 0 && Array.isArray(SUBPARROQUIAS_GODOS)) {
-              storedP.subparroquias = SUBPARROQUIAS_GODOS.map(sp => ({
-                id: sp.id,
-                parroquiaId: "alto-de-los-godos",
-                nombre: sp.nombre,
-                alias: sp.alias || sp.nombre,
-                colorBorde: sp.color || "#c084fc",
-                anchoBorde: 2.5,
-                colorRelleno: sp.color || "#a855f7",
-                opacidad: 0.18,
-                visible: true,
-                vertices: sp.poligono ? [...sp.poligono] : []
-              })).filter(s => s.vertices && s.vertices.length >= 3);
-            }
-            if (storedP.poligonos.length === 0 && Array.isArray(SECTORES_LAPUENTE)) {
-              storedP.poligonos = SECTORES_LAPUENTE.map(s => ({
-                id: s.id,
-                subParroquiaId: s.subParroquiaId || "sub-godos-6",
-                nombre: s.nombre,
-                descripcion: "Sector Comunal • La Puente",
-                militantes: s.habitantes || 0,
-                casas: s.casas || 0,
-                habitantes: s.habitantes || 0,
-                familias: s.familias || 0,
-                colorBorde: s.colorBorde || s.color || "#38bdf8",
-                anchoBorde: 2,
-                colorRelleno: s.colorRelleno || s.color || "#38bdf8",
-                opacidad: 0.35,
-                vertices: s.poligono || s.vertices,
-                areaHa: 25.0,
-                perimetroM: 1800,
-                visible: true,
-                munId: "maturin",
-                parishId: "alto-de-los-godos"
-              })).filter(s => s.vertices && s.vertices.length >= 3);
-            }
-          }
-
-          // Precarga oficial para El Corozo si está vacía
-          if (mun.id === "maturin" && p.id === "el-corozo") {
-            if (storedP.subparroquias.length === 0) {
-              storedP.subparroquias = JSON.parse(JSON.stringify(DEFAULT_COROZO_SUBPARROQUIAS));
-            }
-          }
+          // Estructura limpia e inicial sin polígonos ficticios precargados
         });
       });
     } catch (e) {
