@@ -2,21 +2,21 @@
  * Controlador Principal — Google Earth Pro Web (Edición Estado Monagas)
  * Robusto, 100% Operativo y Totalmente Individualizado
  */
-import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=63";
-import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=63";
-import { getAllParishesForSelector } from "./usersCatalog.js?v=63";
-import { EarthStore } from "./earthStore.js?v=63";
-import { EarthMapEngine } from "./mapEngine.js?v=63";
-import { PropertiesDialog } from "./propertiesDialog.js?v=63";
-import { ToolsManager } from "./toolsManager.js?v=63";
-import { detectParishFromGeometry } from "./geoMonagas.js?v=63";
-import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=63";
+import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=64";
+import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=64";
+import { getAllParishesForSelector } from "./usersCatalog.js?v=64";
+import { EarthStore } from "./earthStore.js?v=64";
+import { EarthMapEngine } from "./mapEngine.js?v=64";
+import { PropertiesDialog } from "./propertiesDialog.js?v=64";
+import { ToolsManager } from "./toolsManager.js?v=64";
+import { detectParishFromGeometry } from "./geoMonagas.js?v=64";
+import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=64";
 import { 
   getSavedFirebaseConfig, 
   saveFirebaseConfig, 
   isFirebaseConfigured, 
   initFirebase 
-} from "./firebaseConfig.js?v=63";
+} from "./firebaseConfig.js?v=64";
 
 class EarthMonagasApp {
   constructor() {
@@ -131,30 +131,7 @@ class EarthMonagasApp {
     }, 25000);
 
     window.activateEarthTool = (toolName) => {
-      if (toolName === "poligono") {
-        const parish = this.store.getParish(this.selectedMunId, this.selectedParishId);
-        const subps = parish?.subparroquias || [];
-
-        // Caso 1: Cero sub-parroquias delimitadas en esta parroquia
-        if (subps.length === 0) {
-          this.showSubParishRequiredModal(parish);
-          return;
-        }
-
-        // Caso 2: Solo existe 1 sub-parroquia y ninguna seleccionada -> auto-vincular
-        if (subps.length === 1 && !this.activeSubParroquiaId) {
-          this.activeSubParroquiaId = String(subps[0].id);
-          this.focusSubParish(subps[0].id, false);
-          this.showToast(`📌 Sector asignado a la Sub-Parroquia: <strong>${subps[0].nombre}</strong>`, "purple");
-        }
-
-        // Caso 3: Múltiples sub-parroquias y ninguna activa seleccionada -> preguntar al usuario
-        if (subps.length > 1 && !this.activeSubParroquiaId) {
-          this.showSelectSubParishModal(subps, parish);
-          return;
-        }
-      }
-
+      // Activar la herramienta de dibujo directamente sin interrumpir ni bloquear con modales
       if (this.toolsManager) {
         this.toolsManager.setActiveTool(toolName);
       }
@@ -259,6 +236,10 @@ class EarthMonagasApp {
     (parish.poligonos || []).forEach(p => {
       totalMilitantes += parseInt(p.militantes !== undefined ? p.militantes : (p.habitantes || 0)) || 0;
       totalCasas += parseInt(p.casas || 0) || 0;
+    });
+    (parish.subparroquias || []).forEach(sp => {
+      totalMilitantes += parseInt(sp.militantes !== undefined ? sp.militantes : (sp.habitantes || 0)) || 0;
+      totalCasas += parseInt(sp.casas || 0) || 0;
     });
 
     const elMil = document.getElementById("tally-militantes-val");
@@ -575,12 +556,16 @@ class EarthMonagasApp {
     let allPolys = pData.poligonos || [];
     const activeSubParish = allSubparroquias.find(sp => String(sp.id) === String(this.activeSubParroquiaId));
 
-    // Calcular totales de militancia y casas en la parroquia
+    // Calcular totales de militancia y casas en la parroquia (sumando sectores y ejes)
     let totalMilitantes = 0;
     let totalCasas = 0;
     allPolys.forEach(p => {
       totalMilitantes += parseInt(p.militantes !== undefined ? p.militantes : (p.habitantes || 0)) || 0;
       totalCasas += parseInt(p.casas || 0) || 0;
+    });
+    allSubparroquias.forEach(sp => {
+      totalMilitantes += parseInt(sp.militantes !== undefined ? sp.militantes : (sp.habitantes || 0)) || 0;
+      totalCasas += parseInt(sp.casas || 0) || 0;
     });
 
     // Si hay un eje comunal seleccionado y no hay filtro de texto, filtrar polígonos por ese eje
@@ -1452,84 +1437,42 @@ class EarthMonagasApp {
     const toolbarAdv = document.getElementById("toolbar-advanced-tools");
     const tabLayers = document.getElementById("btn-sidebar-tab-layers");
 
-    if (user.rol === "operador") {
-      this.isGeneralMode = false;
-      // Bloqueo estricto al territorio asignado
+    // Respetar siempre la última parroquia que el usuario haya seleccionado
+    const savedMun = localStorage.getItem("migato_last_mun");
+    const savedParish = localStorage.getItem("migato_last_parish");
+    if (savedMun && savedParish && this.store.getParish(savedMun, savedParish)) {
+      this.selectedMunId = savedMun;
+      this.selectedParishId = savedParish;
+    } else if (user.municipioId && user.parroquiaId) {
       this.selectedMunId = user.municipioId;
       this.selectedParishId = user.parroquiaId;
-
-      if (lockWrapper) {
-        lockWrapper.innerHTML = '<i data-lucide="lock" class="w-3.5 h-3.5 text-emerald-400 shrink-0"></i>';
-      }
-      if (arrowIcon) arrowIcon.classList.add("hidden");
-      if (navBtn) {
-        navBtn.classList.add("cursor-default");
-        navBtn.title = `Jurisdicción Asignada Exclusiva: ${user.parroquiaNombre}`;
-      }
-      if (statusRole) {
-        statusRole.textContent = `🔒 ${user.nombre}`;
-      }
-      // Herramientas de dibujo (Ruta, Marca) siempre visibles en modo campo
-      if (btnAdvToggle) btnAdvToggle.classList.add("hidden");
-      if (toolbarAdv) {
-        toolbarAdv.classList.remove("hidden");
-        toolbarAdv.classList.add("flex");
-      }
-      if (tabLayers) tabLayers.classList.add("hidden");
-    } else if (user.rol === "coordinador") {
-      this.isGeneralMode = false;
-      this.selectedMunId = user.municipioId;
-      const mun = CATALOGO_MONAGAS.find(m => m.id === this.selectedMunId);
-      if (mun && mun.parroquias.length > 0) {
-        this.selectedParishId = mun.parroquias[0].id;
-      }
-      if (lockWrapper) {
-        lockWrapper.innerHTML = '<i data-lucide="shield" class="w-3.5 h-3.5 text-sky-400 shrink-0"></i>';
-      }
-      if (arrowIcon) arrowIcon.classList.remove("hidden");
-      if (navBtn) {
-        navBtn.classList.remove("cursor-default");
-        navBtn.title = `Coordinación Municipal ${user.municipioNombre}`;
-      }
-      if (statusRole) {
-        statusRole.textContent = `🏛️ ${user.nombre}`;
-      }
-      if (btnAdvToggle) {
-        btnAdvToggle.classList.remove("hidden");
-        btnAdvToggle.classList.add("flex");
-      }
-      if (toolbarAdv) {
-        toolbarAdv.classList.remove("hidden");
-        toolbarAdv.classList.add("flex");
-      }
-      if (tabLayers) tabLayers.classList.remove("hidden");
     } else {
-      // Super Admin / Usuario General (Acceso Total a Monagas)
-      this.isGeneralMode = true;
       this.selectedMunId = this.selectedMunId || "maturin";
       this.selectedParishId = this.selectedParishId || "san-simon";
-
-      if (lockWrapper) {
-        lockWrapper.innerHTML = '<i data-lucide="shield-check" class="w-3.5 h-3.5 text-amber-400 shrink-0"></i>';
-      }
-      if (arrowIcon) arrowIcon.classList.remove("hidden");
-      if (navBtn) {
-        navBtn.classList.remove("cursor-default");
-        navBtn.title = `Territorio General de Monagas (Acceso Completo)`;
-      }
-      if (statusRole) {
-        statusRole.textContent = `👑 Sala Central MIGATO (General)`;
-      }
-      if (btnAdvToggle) {
-        btnAdvToggle.classList.remove("hidden");
-        btnAdvToggle.classList.add("flex");
-      }
-      if (toolbarAdv) {
-        toolbarAdv.classList.remove("hidden");
-        toolbarAdv.classList.add("flex");
-      }
-      if (tabLayers) tabLayers.classList.remove("hidden");
     }
+
+    this.isGeneralMode = true;
+
+    if (lockWrapper) {
+      lockWrapper.innerHTML = '<i data-lucide="shield-check" class="w-3.5 h-3.5 text-amber-400 shrink-0"></i>';
+    }
+    if (arrowIcon) arrowIcon.classList.remove("hidden");
+    if (navBtn) {
+      navBtn.classList.remove("cursor-default");
+      navBtn.title = `Territorio General de Monagas (Acceso Completo)`;
+    }
+    if (statusRole) {
+      statusRole.textContent = `👑 Sala Central MIGATO (General)`;
+    }
+    if (btnAdvToggle) {
+      btnAdvToggle.classList.remove("hidden");
+      btnAdvToggle.classList.add("flex");
+    }
+    if (toolbarAdv) {
+      toolbarAdv.classList.remove("hidden");
+      toolbarAdv.classList.add("flex");
+    }
+    if (tabLayers) tabLayers.classList.remove("hidden");
 
     this.selectParish(this.selectedMunId, this.selectedParishId);
     this.renderPlacesTree();

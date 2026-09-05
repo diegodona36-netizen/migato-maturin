@@ -116,7 +116,9 @@ export class ToolsManager {
             if (bannerText) bannerText.textContent = "Trazando Sub-Parroquia / Eje Comunal";
             const count = (parishStore?.subparroquias || []).length + 1;
             if (nameInput) nameInput.value = `Eje Comunal ${count}`;
-            if (sectorExtra) sectorExtra.classList.add("hidden");
+            if (sectorExtra) sectorExtra.classList.remove("hidden");
+            if (militantesInput) militantesInput.value = "0";
+            if (casasInput) casasInput.value = "0";
             if (liveMeasureSubLabel) liveMeasureSubLabel.textContent = "Superficie / Área";
           } else if (toolName === "poligono") {
             banner.classList.add("border-sky-500/90");
@@ -610,6 +612,10 @@ export class ToolsManager {
         id: `SUBPAR-${Date.now()}`,
         nombre: customName || "Nuevo Eje / Sub-Parroquia",
         descripcion: "Eje o Circuito Comunal",
+        militantes: customMilitantes,
+        casas: customCasas,
+        habitantes: customMilitantes,
+        familias: customCasas,
         colorBorde: "#c084fc",
         anchoBorde: 2.5,
         colorRelleno: "#a855f7",

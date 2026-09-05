@@ -219,7 +219,9 @@ export async function saveParishToFirestore(munId, parishId, parishData) {
   // 2. Intento secundario / Fallback REST directo (Google Cloud Firestore API)
   if (!savedSuccess && projectId) {
     try {
-      const restUrl = `https://firestore.googleapis.com/v1/projects/${projectId}/databases/(default)/documents/territorios_monagas/${docId}`;
+      const apiKey = cfg?.apiKey || DEFAULT_CONFIG.apiKey;
+      const keyParam = apiKey ? `?key=${apiKey}` : "";
+      const restUrl = `https://firestore.googleapis.com/v1/projects/${projectId}/databases/(default)/documents/territorios_monagas/${docId}${keyParam}`;
       const restBody = {
         fields: {
           munId: { stringValue: munId },
@@ -257,6 +259,8 @@ export async function saveParishToFirestore(munId, parishId, parishData) {
 export async function fetchAllTerritoriesFromFirestore() {
   const cfg = getSavedFirebaseConfig();
   const projectId = cfg?.projectId || DEFAULT_CONFIG.projectId;
+  const apiKey = cfg?.apiKey || DEFAULT_CONFIG.apiKey;
+  const keyParam = apiKey ? `?key=${apiKey}` : "";
   const result = {};
   let fetched = false;
 
@@ -283,7 +287,7 @@ export async function fetchAllTerritoriesFromFirestore() {
   // 2. Intento secundario / Fallback REST directo
   if (!fetched && projectId) {
     try {
-      const restUrl = `https://firestore.googleapis.com/v1/projects/${projectId}/databases/(default)/documents/territorios_monagas`;
+      const restUrl = `https://firestore.googleapis.com/v1/projects/${projectId}/databases/(default)/documents/territorios_monagas${keyParam}`;
       const resp = await fetch(restUrl);
       if (resp.ok) {
         const json = await resp.json();

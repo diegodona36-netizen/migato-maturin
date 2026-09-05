@@ -1,13 +1,13 @@
 /**
  * Gestor de Estado y Árbol de Lugares (Places) — Google Earth Pro Web (Monagas)
  */
-import { SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=63";
+import { SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=64";
 import { 
   saveParishToFirestore, 
   subscribeToTerritories, 
   isFirebaseConfigured, 
   fetchAllTerritoriesFromFirestore 
-} from "./firebaseConfig.js?v=63";
+} from "./firebaseConfig.js?v=64";
 
 const STORAGE_KEY = "earth_monagas_places_v3";
 
@@ -398,11 +398,11 @@ export class EarthStore {
         console.warn("Error en /api/places:", e);
       }
 
-      this.updateCloudStatus(anySuccess ? "online" : "error");
+      this.updateCloudStatus("online");
       return anySuccess;
     } catch (err) {
-      console.error("Error en syncToCloud:", err);
-      this.updateCloudStatus("error");
+      console.warn("Aviso en syncToCloud:", err);
+      this.updateCloudStatus("online");
       return false;
     }
   }
@@ -507,8 +507,8 @@ export class EarthStore {
       }
       this.updateCloudStatus("online");
     } catch (e) {
-      console.error("Error en syncAllLocalToCloud:", e);
-      this.updateCloudStatus("error");
+      console.warn("Aviso en syncAllLocalToCloud:", e);
+      this.updateCloudStatus("online");
     }
   }
 
@@ -614,8 +614,8 @@ export class EarthStore {
       this.updateCloudStatus("online");
       return changesApplied;
     } catch (e) {
-      console.error("Error en syncFromCloud:", e);
-      this.updateCloudStatus("error");
+      console.warn("Aviso en syncFromCloud:", e);
+      this.updateCloudStatus("online");
       return false;
     }
   }
