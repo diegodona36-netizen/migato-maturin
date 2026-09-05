@@ -2,9 +2,9 @@
  * Diálogo Flotante de Propiedades y Carga de Militantes — Estilo Google Earth Pro
  * Pestañas: Ficha Territorial, Militantes por Sector, Estilo y Color, Medidas
  */
-import { detectParishFromGeometry } from "./geoMonagas.js?v=84";
-import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=84";
-import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=84";
+import { detectParishFromGeometry } from "./geoMonagas.js?v=85";
+import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=85";
+import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=85";
 
 export class PropertiesDialog {
   constructor(onSaveCallback, onLiveChangeCallback, onStartEditGeometry) {
@@ -481,13 +481,34 @@ export class PropertiesDialog {
       if (rowArea) rowArea.classList.remove("hidden");
       if (rowLength) rowLength.classList.add("hidden");
 
+      const boxFieldMetrics = document.getElementById("box-prop-field-metrics");
+
       if (boxSubparishInfo) {
         boxSubparishInfo.classList.toggle("hidden", !isSub);
         if (isSub) {
           if (wrapSubParish) wrapSubParish.classList.add("hidden");
+          if (boxFieldMetrics) boxFieldMetrics.classList.add("hidden");
+
           const childSecs = (pStore?.poligonos || []).filter(p => String(p.subParroquiaId) === String(item.id));
           const countEl = document.getElementById("prop-subparish-sectors-count");
           if (countEl) countEl.textContent = `${childSecs.length} Sectores`;
+
+          let totCasas = 0, totFam = 0, totHab = 0, totVot = 0;
+          childSecs.forEach(c => {
+            totCasas += parseInt(c.casas || 0) || 0;
+            totFam += parseInt(c.familias || 0) || 0;
+            totHab += parseInt(c.habitantes || 0) || 0;
+            totVot += parseInt(c.militantes !== undefined ? c.militantes : (c.habitantes || 0)) || 0;
+          });
+
+          const elTCasas = document.getElementById("prop-subparish-total-casas");
+          const elTFamil = document.getElementById("prop-subparish-total-familias");
+          const elTHab = document.getElementById("prop-subparish-total-habitantes");
+          const elTVot = document.getElementById("prop-subparish-total-votantes");
+          if (elTCasas) elTCasas.textContent = totCasas.toLocaleString();
+          if (elTFamil) elTFamil.textContent = totFam.toLocaleString();
+          if (elTHab) elTHab.textContent = totHab.toLocaleString();
+          if (elTVot) elTVot.textContent = totVot.toLocaleString();
 
           const btnAddSector = document.getElementById("btn-prop-add-sector-to-subparish");
           if (btnAddSector) {
@@ -498,17 +519,19 @@ export class PropertiesDialog {
           }
         } else {
           if (wrapSubParish) wrapSubParish.classList.remove("hidden");
+          if (boxFieldMetrics) boxFieldMetrics.classList.remove("hidden");
         }
       }
 
-      if (isPoly || isSub) {
-        // Valores de militancia y censo comunitario
+      if (isPoly) {
+        // Valores de caracterización socio-política del sector
         const inMilitantes = document.getElementById("prop-militantes");
         const inCasas = document.getElementById("prop-casas");
         const inLider = document.getElementById("prop-lider");
         const inTelefono = document.getElementById("prop-telefono");
         const inFamilias = document.getElementById("prop-familias");
         const inHab = document.getElementById("prop-habitantes");
+        const inCentroVot = document.getElementById("prop-centro-votacion");
 
         const numMilitantes = item.militantes !== undefined ? item.militantes : (item.habitantes || 0);
         const numCasas = item.casas || 0;
@@ -518,7 +541,8 @@ export class PropertiesDialog {
         if (inLider) inLider.value = item.lider || "";
         if (inTelefono) inTelefono.value = item.telefono || "";
         if (inFamilias) inFamilias.value = item.familias || numCasas;
-        if (inHab) inHab.value = numMilitantes;
+        if (inHab) inHab.value = item.habitantes !== undefined ? item.habitantes : numMilitantes;
+        if (inCentroVot) inCentroVot.value = item.centroVotacion || "";
       }
 
       // Medidas
@@ -609,15 +633,29 @@ export class PropertiesDialog {
     const inMun = document.getElementById("prop-select-mun");
     const inParish = document.getElementById("prop-select-parish");
     const inSubParish = document.getElementById("prop-select-subparish");
+    const inCentroVot = document.getElementById("prop-centro-votacion");
 
     const targetMunId = inMun && inMun.value ? inMun.value : (this.currentMunId || "maturin");
     const targetParishId = inParish && inParish.value ? inParish.value : (this.currentParishId || "alto-de-los-godos");
     const subParroquiaId = (inSubParish && inSubParish.value) ? inSubParish.value : (this.currentItem.subParroquiaId || null);
 
+    // Validación de Oro Territorial: Ningún sector comunal puede existir huérfano sin su Sub-Parroquia
+    if (this.currentType === "poligono") {
+      if (!subParroquiaId) {
+        alert("⚠️ Es OBLIGATORIO asignar una Sub-Parroquia / Eje Comunal (Pote Contenedor) para guardar el sector comunal.");
+        if (inSubParish) {
+          inSubParish.focus();
+          inSubParish.classList.add("ring-2", "ring-red-500");
+        }
+        return;
+      }
+    }
+
     const militantesVal = inMilitantes ? (parseInt(inMilitantes.value) || 0) : (this.currentItem.militantes || this.currentItem.habitantes || 0);
     const casasVal = inCasas ? (parseInt(inCasas.value) || 0) : (this.currentItem.casas || 0);
     const liderVal = inLider ? inLider.value.trim() : (this.currentItem.lider || "");
     const telefonoVal = inTelefono ? inTelefono.value.trim() : (this.currentItem.telefono || "");
+    const centroVotacionVal = inCentroVot ? inCentroVot.value.trim() : (this.currentItem.centroVotacion || "");
 
     const defaultBorder = this.currentType === "subparroquia" ? "#c084fc" : (this.currentType === "ruta" ? "#10b981" : (this.currentType === "marca" ? "#ef4444" : "#38bdf8"));
     const defaultFill = this.currentType === "subparroquia" ? "#a855f7" : "#38bdf8";
@@ -637,6 +675,7 @@ export class PropertiesDialog {
       casas: casasVal,
       familias: inFamilias ? (parseInt(inFamilias.value) || casasVal) : casasVal,
       habitantes: inHab ? (parseInt(inHab.value) || militantesVal) : militantesVal,
+      centroVotacion: centroVotacionVal,
       lider: liderVal,
       telefono: telefonoVal,
       munId: targetMunId,

@@ -1,7 +1,7 @@
 /**
  * Gestor de Estado y Árbol de Lugares (Places) — Google Earth Pro Web (Monagas)
  */
-import { SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=84";
+import { SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=85";
 import { 
   saveParishToFirestore, 
   subscribeToTerritories, 
@@ -9,7 +9,7 @@ import {
   fetchAllTerritoriesFromFirestore,
   mergeItemCollections,
   cleanItem
-} from "./firebaseConfig.js?v=84";
+} from "./firebaseConfig.js?v=85";
 
 const STORAGE_KEY = "earth_monagas_places_v8";
 
@@ -848,60 +848,121 @@ export class EarthStore {
 `;
         }
 
-        // Sub-Parroquias / Ejes Comunales (Capa 1)
+        // Sub-Parroquias / Ejes Comunales con sus Sectores Hijos anidados (Jerarquía Google Earth Pro)
+        const exportedPolyIds = new Set();
+
         (p.subparroquias || []).forEach(sp => {
           if (!sp.vertices || sp.vertices.length < 3) return;
-          const coords = sp.vertices.map(([lat, lng]) => `${lng},${lat},0`).join(" ");
+          const spCoords = sp.vertices.map(([lat, lng]) => `${lng},${lat},0`).join(" ");
           const hexColor = (sp.colorRelleno || "#a855f7").replace("#", "");
           const opacityHex = Math.round((sp.opacidad !== undefined ? sp.opacidad : 0.15) * 255).toString(16).padStart(2, "0");
           const bColorHex = (sp.colorBorde || "#c084fc").replace("#", "");
+
+          // Sectores hijos de este eje
+          const childSectors = (p.poligonos || []).filter(poly => String(poly.subParroquiaId) === String(sp.id));
+
+          // Calcular totales del eje
+          let totCasas = 0, totFam = 0, totHab = 0, totVot = 0;
+          childSectors.forEach(c => {
+            totCasas += parseInt(c.casas || 0) || 0;
+            totFam += parseInt(c.familias || 0) || 0;
+            totHab += parseInt(c.habitantes || 0) || 0;
+            totVot += parseInt(c.militantes !== undefined ? c.militantes : (c.habitantes || 0)) || 0;
+          });
+
           content += `
-        <Placemark>
-          <name>${sp.nombre || "Eje Comunal Sin Nombre"}</name>
+        <Folder>
+          <name>Eje: ${sp.nombre || "Eje Comunal"}</name>
+          <visibility>${sp.visible !== false ? 1 : 0}</visibility>
           <description><![CDATA[
             <h3>${sp.nombre}</h3>
-            <p><strong>Capa 1:</strong> Eje Comunal / Sub-Parroquia</p>
+            <p><strong>Nivel 4:</strong> Sub-Parroquia / Eje Comunal</p>
+            <p><strong>Sectores Totales:</strong> ${childSectors.length}</p>
+            <p><strong>Total Casas:</strong> ${totCasas}</p>
+            <p><strong>Total Familias:</strong> ${totFam}</p>
+            <p><strong>Total Habitantes:</strong> ${totHab}</p>
+            <p><strong>Total Votantes:</strong> ${totVot}</p>
             <p><strong>Área:</strong> ${sp.areaHa || 0} Ha</p>
-            <p><strong>Perímetro:</strong> ${sp.perimetroM || 0} m</p>
           ]]></description>
-          <ExtendedData>
-            <Data name="capa"><value>capa_1_eje</value></Data>
-            <Data name="tipo"><value>subparroquia</value></Data>
-          </ExtendedData>
-          <visibility>${sp.visible !== false ? 1 : 0}</visibility>
-          <Style>
-            <LineStyle><color>ff${bColorHex.slice(4,6)}${bColorHex.slice(2,4)}${bColorHex.slice(0,2)}</color><width>${sp.anchoBorde || 2.5}</width></LineStyle>
-            <PolyStyle><color>${opacityHex}${hexColor.slice(4,6)}${hexColor.slice(2,4)}${hexColor.slice(0,2)}</color><fill>1</fill></PolyStyle>
-          </Style>
-          <Polygon><outerBoundaryIs><LinearRing><coordinates>${coords}</coordinates></LinearRing></outerBoundaryIs></Polygon>
-        </Placemark>
+
+          <!-- Perímetro del Eje Comunal -->
+          <Placemark>
+            <name>Límite Eje: ${sp.nombre || "Eje Comunal"}</name>
+            <ExtendedData>
+              <Data name="capa"><value>capa_1_eje</value></Data>
+              <Data name="tipo"><value>subparroquia</value></Data>
+            </ExtendedData>
+            <visibility>${sp.visible !== false ? 1 : 0}</visibility>
+            <Style>
+              <LineStyle><color>ff${bColorHex.slice(4,6)}${bColorHex.slice(2,4)}${bColorHex.slice(0,2)}</color><width>${sp.anchoBorde || 2.5}</width></LineStyle>
+              <PolyStyle><color>${opacityHex}${hexColor.slice(4,6)}${hexColor.slice(2,4)}${hexColor.slice(0,2)}</color><fill>1</fill></PolyStyle>
+            </Style>
+            <Polygon><outerBoundaryIs><LinearRing><coordinates>${spCoords}</coordinates></LinearRing></outerBoundaryIs></Polygon>
+          </Placemark>
 `;
+
+          // Sectores hijos dentro de la carpeta del Eje
+          childSectors.forEach(poly => {
+            exportedPolyIds.add(String(poly.id));
+            if (!poly.vertices || poly.vertices.length < 3) return;
+            const sCoords = poly.vertices.map(([lat, lng]) => `${lng},${lat},0`).join(" ");
+            const sHex = (poly.colorRelleno || "#38bdf8").replace("#", "");
+            const sOpHex = Math.round((poly.opacidad !== undefined ? poly.opacidad : 0.4) * 255).toString(16).padStart(2, "0");
+            const sBHex = (poly.colorBorde || "#ffffff").replace("#", "");
+
+            content += `
+          <Placemark>
+            <name>${poly.nombre || "Sector Comunal"}</name>
+            <description><![CDATA[
+              <h3>${poly.nombre}</h3>
+              <p><strong>Eje:</strong> ${sp.nombre}</p>
+              <p><strong>Casas:</strong> ${poly.casas || 0}</p>
+              <p><strong>Familias:</strong> ${poly.familias || 0}</p>
+              <p><strong>Habitantes:</strong> ${poly.habitantes || poly.militantes || 0}</p>
+              <p><strong>Votantes:</strong> ${poly.militantes !== undefined ? poly.militantes : (poly.habitantes || 0)}</p>
+              ${poly.centroVotacion ? `<p><strong>Centro de Votación:</strong> ${poly.centroVotacion}</p>` : ''}
+              ${poly.lider ? `<p><strong>Líder de Comunidad:</strong> ${poly.lider}</p>` : ''}
+              ${poly.telefono ? `<p><strong>Teléfono:</strong> ${poly.telefono}</p>` : ''}
+              <p><strong>Área:</strong> ${poly.areaHa || 0} Ha</p>
+            ]]></description>
+            <visibility>${poly.visible !== false ? 1 : 0}</visibility>
+            <Style>
+              <LineStyle><color>ff${sBHex.slice(4,6)}${sBHex.slice(2,4)}${sBHex.slice(0,2)}</color><width>${poly.anchoBorde || 2}</width></LineStyle>
+              <PolyStyle><color>${sOpHex}${sHex.slice(4,6)}${sHex.slice(2,4)}${sHex.slice(0,2)}</color><fill>1</fill></PolyStyle>
+            </Style>
+            <Polygon><outerBoundaryIs><LinearRing><coordinates>${sCoords}</coordinates></LinearRing></outerBoundaryIs></Polygon>
+          </Placemark>
+`;
+          });
+
+          content += `        </Folder>\n`;
         });
 
-        // Polígonos de Sectores (Capa 2)
-        (p.poligonos || []).forEach(poly => {
-          const coords = poly.vertices.map(([lat, lng]) => `${lng},${lat},0`).join(" ");
-          const hexColor = (poly.colorRelleno || "#38bdf8").replace("#", "");
-          const opacityHex = Math.round((poly.opacidad !== undefined ? poly.opacidad : 0.4) * 255).toString(16).padStart(2, "0");
-          const bColorHex = (poly.colorBorde || "#ffffff").replace("#", "");
-          content += `
-        <Placemark>
-          <name>${poly.nombre || "Sector Sin Nombre"}</name>
-          <description><![CDATA[
-            <h3>${poly.nombre}</h3>
-            <p>${poly.descripcion || "Sin descripción"}</p>
-            <p><strong>Área:</strong> ${poly.areaHa || 0} Ha</p>
-            <p><strong>Perímetro:</strong> ${poly.perimetroM || 0} m</p>
-          ]]></description>
-          <visibility>${poly.visible !== false ? 1 : 0}</visibility>
-          <Style>
-            <LineStyle><color>ff${bColorHex.slice(4,6)}${bColorHex.slice(2,4)}${bColorHex.slice(0,2)}</color><width>${poly.anchoBorde || 2}</width></LineStyle>
-            <PolyStyle><color>${opacityHex}${hexColor.slice(4,6)}${hexColor.slice(2,4)}${hexColor.slice(0,2)}</color><fill>1</fill></PolyStyle>
-          </Style>
-          <Polygon><outerBoundaryIs><LinearRing><coordinates>${coords}</coordinates></LinearRing></outerBoundaryIs></Polygon>
-        </Placemark>
+        // Sectores sin Eje asignado (si hubiera alguno)
+        const orphanPolys = (p.poligonos || []).filter(poly => !exportedPolyIds.has(String(poly.id)));
+        if (orphanPolys.length > 0) {
+          content += `        <Folder><name>Sectores Independientes</name>\n`;
+          orphanPolys.forEach(poly => {
+            if (!poly.vertices || poly.vertices.length < 3) return;
+            const sCoords = poly.vertices.map(([lat, lng]) => `${lng},${lat},0`).join(" ");
+            const sHex = (poly.colorRelleno || "#38bdf8").replace("#", "");
+            const sOpHex = Math.round((poly.opacidad !== undefined ? poly.opacidad : 0.4) * 255).toString(16).padStart(2, "0");
+            const sBHex = (poly.colorBorde || "#ffffff").replace("#", "");
+
+            content += `
+          <Placemark>
+            <name>${poly.nombre || "Sector Comunal"}</name>
+            <visibility>${poly.visible !== false ? 1 : 0}</visibility>
+            <Style>
+              <LineStyle><color>ff${sBHex.slice(4,6)}${sBHex.slice(2,4)}${sBHex.slice(0,2)}</color><width>${poly.anchoBorde || 2}</width></LineStyle>
+              <PolyStyle><color>${sOpHex}${sHex.slice(4,6)}${sHex.slice(2,4)}${sHex.slice(0,2)}</color><fill>1</fill></PolyStyle>
+            </Style>
+            <Polygon><outerBoundaryIs><LinearRing><coordinates>${sCoords}</coordinates></LinearRing></outerBoundaryIs></Polygon>
+          </Placemark>
 `;
-        });
+          });
+          content += `        </Folder>\n`;
+        }
 
         // Rutas / Calles
         (p.rutas || []).forEach(r => {
