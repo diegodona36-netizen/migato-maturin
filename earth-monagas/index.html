@@ -34,10 +34,36 @@
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
 
-  <!-- Custom Styles -->
-  <link rel="stylesheet" href="css/styles.css?v=90">
-
   <!-- Script de Autenticación Rápida, Limpieza Integral de Caché y Activador de Herramientas -->
+  <script>
+    // Blindaje instantáneo de aislamiento parroquial previo a cualquier renderizado
+    (function() {
+      try {
+        var sp = new URLSearchParams(window.location.search);
+        var p = sp.get('p') || sp.get('parroquia') || sp.get('parish');
+        var isExplicitAdmin = sp.get('u') === 'admin' || sp.get('general') === '1';
+        if (p && !isExplicitAdmin) {
+          document.documentElement.classList.add('isolated-parish-view');
+        }
+      } catch(e) {}
+    })();
+  </script>
+  <style>
+    /* Aislamiento Parroquial Estricto: jamás renderizar elementos master ni coronas en links parroquiales */
+    html.isolated-parish-view #btn-session-badge,
+    html.isolated-parish-view #admin-module-links,
+    html.isolated-parish-view #toolbar-tools-row,
+    html.isolated-parish-view #btn-sidebar-tab-layers {
+      display: none !important;
+    }
+    html.isolated-parish-view #btn-open-parish-modal {
+      pointer-events: none !important;
+      cursor: default !important;
+    }
+    html.isolated-parish-view #nav-arrow-icon {
+      display: none !important;
+    }
+  </style>
   <script>
     // Auto-actualización obligatoria a la versión más reciente v=90
     (function() {
@@ -283,9 +309,9 @@
       <div class="flex items-center gap-1.5 shrink min-w-0">
         
         <!-- 👤 Sesión Activa / Cambiar Parroquia o General -->
-        <button id="btn-session-badge" class="px-2.5 py-1.5 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/50 text-amber-300 text-xs font-black flex items-center gap-1.5 transition active:scale-95 cursor-pointer shadow-sm shrink-0" title="Clic para cambiar de Parroquia o entrar como Dirección General">
-          <span id="session-badge-icon" class="text-xs">👑</span>
-          <span id="session-badge-label" class="whitespace-nowrap hidden sm:inline">Dirección General</span>
+        <button id="btn-session-badge" class="hidden px-2.5 py-1.5 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/50 text-amber-300 text-xs font-black items-center gap-1.5 transition active:scale-95 cursor-pointer shadow-sm shrink-0" title="Sesión">
+          <span id="session-badge-icon" class="text-xs"></span>
+          <span id="session-badge-label" class="whitespace-nowrap hidden sm:inline"></span>
           <i data-lucide="chevron-down" class="w-3 h-3 text-amber-400"></i>
         </button>
 
@@ -294,7 +320,7 @@
           <span id="nav-lock-icon-wrapper" class="flex items-center shrink-0">
             <i data-lucide="map-pin" class="w-3.5 h-3.5 text-amber-400 shrink-0"></i>
           </span>
-          <span id="nav-current-location" class="truncate text-xs font-black">Monagas</span>
+          <span id="nav-current-location" class="truncate text-xs font-black">Territorio</span>
           <i id="nav-arrow-icon" data-lucide="chevron-down" class="w-3 h-3 text-slate-400 shrink-0"></i>
         </button>
 
@@ -334,8 +360,8 @@
           <span id="cloud-sync-text" class="hidden sm:inline font-bold text-slate-300">En Red</span>
         </button>
 
-        <!-- Botón Salir / Logout -->
-        <button id="btn-user-logout" class="p-1.5 sm:px-2.5 sm:py-1.5 rounded-xl bg-slate-800 hover:bg-red-950/60 text-slate-400 hover:text-red-300 border border-slate-700 hover:border-red-700/50 text-xs font-bold transition flex items-center gap-1 shrink-0 active:scale-95 cursor-pointer" title="Cerrar Sesión">
+        <!-- Botón Salir / Cambiar de Sesión Institucional -->
+        <button type="button" id="btn-user-logout" class="px-2 sm:px-2.5 py-1.5 rounded-xl bg-slate-800/80 hover:bg-rose-950 border border-slate-700/80 hover:border-rose-500/50 text-xs font-bold flex items-center gap-1 text-slate-400 hover:text-rose-300 transition shrink-0 active:scale-95 shadow" title="Cerrar Sesión / Cambiar de Usuario">
           <i data-lucide="log-out" class="w-3.5 h-3.5"></i>
           <span class="hidden md:inline">Salir</span>
         </button>
@@ -345,7 +371,7 @@
     </div>
 
     <!-- Fila 2: Botonera de Herramientas SIG (Para Administrador / Grupo Técnico) -->
-    <div id="toolbar-tools-row" class="px-2 sm:px-3 py-1.5 flex items-center gap-2 overflow-x-auto no-scrollbar w-full">
+    <div id="toolbar-tools-row" class="hidden px-2 sm:px-3 py-1.5 items-center gap-2 overflow-x-auto no-scrollbar w-full">
 
       <!-- 🏘️ BOTÓN PRINCIPAL: Dibujar Sector / Polígono -->
       <button data-tool="poligono" id="btn-tool-polygon" onclick="window.activateEarthTool('poligono')" class="btn-earth-tool px-4 py-1.5 rounded-xl bg-gradient-to-r from-sky-600 to-blue-600 hover:from-sky-500 hover:to-blue-500 text-white border border-sky-400/60 text-xs font-black transition flex items-center gap-1.5 shrink-0 active:scale-95 shadow-md shadow-sky-600/30 cursor-pointer" title="Dibujar Sector Comunal / Polígono con Militancia">
