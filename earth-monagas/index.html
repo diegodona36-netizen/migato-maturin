@@ -36,6 +36,18 @@
 
   <!-- Script de Autenticación Rápida, Limpieza Integral de Caché y Activador de Herramientas -->
   <script>
+    // Auto-actualización obligatoria a la versión más reciente v=75 si se ingresó con v=73 u otra versión vieja
+    (function() {
+      try {
+        var p = new URLSearchParams(window.location.search);
+        var curV = p.get('v');
+        if (curV && curV !== '75') {
+          p.set('v', '75');
+          window.location.replace(window.location.pathname + '?' + p.toString());
+        }
+      } catch(e) {}
+    })();
+
     // Garantizar que ningún Service Worker antiguo retenga copias cacheadas en móviles
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.getRegistrations().then(function(regs) {
