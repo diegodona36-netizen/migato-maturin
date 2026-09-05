@@ -1164,16 +1164,9 @@
       {
         "id": "sec-lp-1",
         "subParroquiaId": "sub-godos-6",
-        "nombre": "Monagzal",
-        "casas": 450,
-        "familias": 455,
-        "habitantes": 1550,
-        "militantes": 1550,
-        "colorBorde": "#38bdf8",
-        "anchoBorde": 2,
-        "colorRelleno": "#38bdf8",
-        "opacidad": 0.38,
-        "visible": true,
+        "numero": 1,
+        "nombre": "1. Monagzal",
+        "rawNombre": "Monagzal",
         "vertices": [
           [
             9.736,
@@ -1195,21 +1188,28 @@
             9.736,
             -63.232
           ]
-        ]
+        ],
+        "colorBorde": "#38bdf8",
+        "anchoBorde": 2,
+        "colorRelleno": "#38bdf8",
+        "opacidad": 0.38,
+        "casas": 450,
+        "familias": 455,
+        "habitantes": 1550,
+        "centroVotacion": "Cruz Hernández Quijada",
+        "comitesVotacion": 3,
+        "descripcion": "Sector 1: Monagzal • 450 casas • 1550 hab. Centro: Cruz Hernández Quijada",
+        "areaHa": 12.5,
+        "perimetroM": 1540,
+        "visible": true,
+        "esOficial": true
       },
       {
         "id": "sec-lp-2",
         "subParroquiaId": "sub-godos-6",
-        "nombre": "Las Vírgenes",
-        "casas": 1040,
-        "familias": 1087,
-        "habitantes": 3053,
-        "militantes": 3053,
-        "colorBorde": "#10b981",
-        "anchoBorde": 2,
-        "colorRelleno": "#10b981",
-        "opacidad": 0.38,
-        "visible": true,
+        "numero": 2,
+        "nombre": "2. Las Vírgenes",
+        "rawNombre": "Las Vírgenes",
         "vertices": [
           [
             9.735,
@@ -1231,21 +1231,28 @@
             9.735,
             -63.223
           ]
-        ]
+        ],
+        "colorBorde": "#10b981",
+        "anchoBorde": 2,
+        "colorRelleno": "#10b981",
+        "opacidad": 0.38,
+        "casas": 1040,
+        "familias": 1087,
+        "habitantes": 3053,
+        "centroVotacion": "Cruz Hernández Quijada",
+        "comitesVotacion": 1,
+        "descripcion": "Sector 2: Las Vírgenes • 1040 casas • 3053 hab. Centro: Cruz Hernández Quijada",
+        "areaHa": 12.5,
+        "perimetroM": 1540,
+        "visible": true,
+        "esOficial": true
       },
       {
         "id": "sec-lp-3",
         "subParroquiaId": "sub-godos-6",
-        "nombre": "Villa de los Ángeles",
-        "casas": 446,
-        "familias": 443,
-        "habitantes": 1254,
-        "militantes": 1254,
-        "colorBorde": "#f59e0b",
-        "anchoBorde": 2,
-        "colorRelleno": "#f59e0b",
-        "opacidad": 0.38,
-        "visible": true,
+        "numero": 3,
+        "nombre": "3. Villa de los Ángeles",
+        "rawNombre": "Villa de los Ángeles",
         "vertices": [
           [
             9.728,
@@ -1267,21 +1274,28 @@
             9.728,
             -63.231
           ]
-        ]
+        ],
+        "colorBorde": "#f59e0b",
+        "anchoBorde": 2,
+        "colorRelleno": "#f59e0b",
+        "opacidad": 0.38,
+        "casas": 446,
+        "familias": 443,
+        "habitantes": 1254,
+        "centroVotacion": "Francisco Verde",
+        "comitesVotacion": 1,
+        "descripcion": "Sector 3: Villa de los Ángeles • 446 casas • 1254 hab. Centro: Francisco Verde",
+        "areaHa": 12.5,
+        "perimetroM": 1540,
+        "visible": true,
+        "esOficial": true
       },
       {
         "id": "sec-lp-4",
         "subParroquiaId": "sub-godos-6",
-        "nombre": "Canadá",
-        "casas": 546,
-        "familias": 580,
-        "habitantes": 1513,
-        "militantes": 1513,
-        "colorBorde": "#ef4444",
-        "anchoBorde": 2,
-        "colorRelleno": "#ef4444",
-        "opacidad": 0.38,
-        "visible": true,
+        "numero": 4,
+        "nombre": "4. Canadá",
+        "rawNombre": "Canadá",
         "vertices": [
           [
             9.727,
@@ -1303,21 +1317,28 @@
             9.727,
             -63.223
           ]
-        ]
+        ],
+        "colorBorde": "#ef4444",
+        "anchoBorde": 2,
+        "colorRelleno": "#ef4444",
+        "opacidad": 0.38,
+        "casas": 546,
+        "familias": 580,
+        "habitantes": 1513,
+        "centroVotacion": "Francisco Verde",
+        "comitesVotacion": 1,
+        "descripcion": "Sector 4: Canadá • 546 casas • 1513 hab. Centro: Francisco Verde",
+        "areaHa": 12.5,
+        "perimetroM": 1540,
+        "visible": true,
+        "esOficial": true
       },
       {
         "id": "sec-lp-5",
         "subParroquiaId": "sub-godos-6",
-        "nombre": "Sector II",
-        "casas": 551,
-        "familias": 701,
-        "habitantes": 1939,
-        "militantes": 1939,
-        "colorBorde": "#a855f7",
-        "anchoBorde": 2,
-        "colorRelleno": "#a855f7",
-        "opacidad": 0.38,
-        "visible": true,
+        "numero": 5,
+        "nombre": "5. Sector II",
+        "rawNombre": "Sector II",
         "vertices": [
           [
             9.726,
@@ -1339,21 +1360,28 @@
             9.726,
             -63.216
           ]
-        ]
+        ],
+        "colorBorde": "#a855f7",
+        "anchoBorde": 2,
+        "colorRelleno": "#a855f7",
+        "opacidad": 0.38,
+        "casas": 551,
+        "familias": 701,
+        "habitantes": 1939,
+        "centroVotacion": "Apolinar Cantor",
+        "comitesVotacion": 2,
+        "descripcion": "Sector 5: Sector II • 551 casas • 1939 hab. Centro: Apolinar Cantor",
+        "areaHa": 12.5,
+        "perimetroM": 1540,
+        "visible": true,
+        "esOficial": true
       },
       {
         "id": "sec-lp-6",
         "subParroquiaId": "sub-godos-6",
-        "nombre": "Sector I",
-        "casas": 312,
-        "familias": 370,
-        "habitantes": 850,
-        "militantes": 850,
-        "colorBorde": "#06b6d4",
-        "anchoBorde": 2,
-        "colorRelleno": "#06b6d4",
-        "opacidad": 0.38,
-        "visible": true,
+        "numero": 6,
+        "nombre": "6. Sector I",
+        "rawNombre": "Sector I",
         "vertices": [
           [
             9.72,
@@ -1375,21 +1403,28 @@
             9.72,
             -63.23
           ]
-        ]
+        ],
+        "colorBorde": "#06b6d4",
+        "anchoBorde": 2,
+        "colorRelleno": "#06b6d4",
+        "opacidad": 0.38,
+        "casas": 312,
+        "familias": 370,
+        "habitantes": 850,
+        "centroVotacion": "Apolinar Cantor",
+        "comitesVotacion": 1,
+        "descripcion": "Sector 6: Sector I • 312 casas • 850 hab. Centro: Apolinar Cantor",
+        "areaHa": 12.5,
+        "perimetroM": 1540,
+        "visible": true,
+        "esOficial": true
       },
       {
         "id": "sec-lp-7",
         "subParroquiaId": "sub-godos-6",
-        "nombre": "Sector IA",
-        "casas": 332,
-        "familias": 357,
-        "habitantes": 996,
-        "militantes": 996,
-        "colorBorde": "#84cc16",
-        "anchoBorde": 2,
-        "colorRelleno": "#84cc16",
-        "opacidad": 0.38,
-        "visible": true,
+        "numero": 7,
+        "nombre": "7. Sector IA",
+        "rawNombre": "Sector IA",
         "vertices": [
           [
             9.724,
@@ -1411,21 +1446,28 @@
             9.724,
             -63.21
           ]
-        ]
+        ],
+        "colorBorde": "#84cc16",
+        "anchoBorde": 2,
+        "colorRelleno": "#84cc16",
+        "opacidad": 0.38,
+        "casas": 332,
+        "familias": 357,
+        "habitantes": 996,
+        "centroVotacion": "Cruz Figuera Rondón",
+        "comitesVotacion": 1,
+        "descripcion": "Sector 7: Sector IA • 332 casas • 996 hab. Centro: Cruz Figuera Rondón",
+        "areaHa": 12.5,
+        "perimetroM": 1540,
+        "visible": true,
+        "esOficial": true
       },
       {
         "id": "sec-lp-8",
         "subParroquiaId": "sub-godos-6",
-        "nombre": "El Caro",
-        "casas": 692,
-        "familias": 1032,
-        "habitantes": 1832,
-        "militantes": 1832,
-        "colorBorde": "#f97316",
-        "anchoBorde": 2,
-        "colorRelleno": "#f97316",
-        "opacidad": 0.38,
-        "visible": true,
+        "numero": 8,
+        "nombre": "8. El Caro",
+        "rawNombre": "El Caro",
         "vertices": [
           [
             9.718,
@@ -1447,21 +1489,28 @@
             9.718,
             -63.216
           ]
-        ]
+        ],
+        "colorBorde": "#f97316",
+        "anchoBorde": 2,
+        "colorRelleno": "#f97316",
+        "opacidad": 0.38,
+        "casas": 692,
+        "familias": 1032,
+        "habitantes": 1832,
+        "centroVotacion": "Cruz Figuera Rondón",
+        "comitesVotacion": 1,
+        "descripcion": "Sector 8: El Caro • 692 casas • 1832 hab. Centro: Cruz Figuera Rondón",
+        "areaHa": 12.5,
+        "perimetroM": 1540,
+        "visible": true,
+        "esOficial": true
       },
       {
         "id": "sec-lp-9",
         "subParroquiaId": "sub-godos-6",
-        "nombre": "La Lucha",
-        "casas": 306,
-        "familias": 470,
-        "habitantes": 1237,
-        "militantes": 1237,
-        "colorBorde": "#ec4899",
-        "anchoBorde": 2,
-        "colorRelleno": "#ec4899",
-        "opacidad": 0.38,
-        "visible": true,
+        "numero": 9,
+        "nombre": "9. La Lucha",
+        "rawNombre": "La Lucha",
         "vertices": [
           [
             9.719,
@@ -1483,21 +1532,28 @@
             9.719,
             -63.223
           ]
-        ]
+        ],
+        "colorBorde": "#ec4899",
+        "anchoBorde": 2,
+        "colorRelleno": "#ec4899",
+        "opacidad": 0.38,
+        "casas": 306,
+        "familias": 470,
+        "habitantes": 1237,
+        "centroVotacion": "República de Venezuela",
+        "comitesVotacion": 1,
+        "descripcion": "Sector 9: La Lucha • 306 casas • 1237 hab. Centro: República de Venezuela",
+        "areaHa": 12.5,
+        "perimetroM": 1540,
+        "visible": true,
+        "esOficial": true
       },
       {
         "id": "sec-lp-10",
         "subParroquiaId": "sub-godos-6",
-        "nombre": "Las Flores",
-        "casas": 337,
-        "familias": 368,
-        "habitantes": 885,
-        "militantes": 885,
-        "colorBorde": "#14b8a6",
-        "anchoBorde": 2,
-        "colorRelleno": "#14b8a6",
-        "opacidad": 0.38,
-        "visible": true,
+        "numero": 10,
+        "nombre": "10. Las Flores",
+        "rawNombre": "Las Flores",
         "vertices": [
           [
             9.733,
@@ -1519,21 +1575,28 @@
             9.733,
             -63.215
           ]
-        ]
+        ],
+        "colorBorde": "#14b8a6",
+        "anchoBorde": 2,
+        "colorRelleno": "#14b8a6",
+        "opacidad": 0.38,
+        "casas": 337,
+        "familias": 368,
+        "habitantes": 885,
+        "centroVotacion": "República de Venezuela",
+        "comitesVotacion": 1,
+        "descripcion": "Sector 10: Las Flores • 337 casas • 885 hab. Centro: República de Venezuela",
+        "areaHa": 12.5,
+        "perimetroM": 1540,
+        "visible": true,
+        "esOficial": true
       },
       {
         "id": "sec-lp-11",
         "subParroquiaId": "sub-godos-6",
-        "nombre": "La Laguna",
-        "casas": 283,
-        "familias": 347,
-        "habitantes": 1050,
-        "militantes": 1050,
-        "colorBorde": "#3b82f6",
-        "anchoBorde": 2,
-        "colorRelleno": "#3b82f6",
-        "opacidad": 0.38,
-        "visible": true,
+        "numero": 11,
+        "nombre": "11. La Laguna",
+        "rawNombre": "La Laguna",
         "vertices": [
           [
             9.712,
@@ -1555,12 +1618,186 @@
             9.712,
             -63.223
           ]
-        ]
+        ],
+        "colorBorde": "#3b82f6",
+        "anchoBorde": 2,
+        "colorRelleno": "#3b82f6",
+        "opacidad": 0.38,
+        "casas": 283,
+        "familias": 347,
+        "habitantes": 1050,
+        "centroVotacion": "República de Venezuela",
+        "comitesVotacion": 1,
+        "descripcion": "Sector 11: La Laguna • 283 casas • 1050 hab. Centro: República de Venezuela",
+        "areaHa": 12.5,
+        "perimetroM": 1540,
+        "visible": true,
+        "esOficial": true
       }
     ],
     "rutas": [],
-    "marcas": [],
-    "updatedAt": 1788566514090
+    "marcas": [
+      {
+        "id": "c1",
+        "nombre": "🗳️ Cruz Hernández Quijada",
+        "descripcion": "Centro Electoral • 1056 electores • 2 mesas",
+        "lat": 9.734,
+        "lng": -63.221,
+        "color": "#f59e0b",
+        "visible": true,
+        "tipo": "centro_electoral",
+        "electores": 1056,
+        "mesas": 2
+      },
+      {
+        "id": "c2",
+        "nombre": "🗳️ Francisco Verde",
+        "descripcion": "Centro Electoral • 3230 electores • 5 mesas",
+        "lat": 9.737,
+        "lng": -63.226,
+        "color": "#f59e0b",
+        "visible": true,
+        "tipo": "centro_electoral",
+        "electores": 3230,
+        "mesas": 5
+      },
+      {
+        "id": "c3",
+        "nombre": "🗳️ Apolinar Cantor",
+        "descripcion": "Centro Electoral • 2481 electores • 4 mesas",
+        "lat": 9.731,
+        "lng": -63.217,
+        "color": "#f59e0b",
+        "visible": true,
+        "tipo": "centro_electoral",
+        "electores": 2481,
+        "mesas": 4
+      },
+      {
+        "id": "c4",
+        "nombre": "🗳️ Cruz Figuera Rondón",
+        "descripcion": "Centro Electoral • 2961 electores • 4 mesas",
+        "lat": 9.725,
+        "lng": -63.216,
+        "color": "#f59e0b",
+        "visible": true,
+        "tipo": "centro_electoral",
+        "electores": 2961,
+        "mesas": 4
+      },
+      {
+        "id": "c5",
+        "nombre": "🗳️ República de Venezuela",
+        "descripcion": "Centro Electoral • 500 electores • 1 mesas",
+        "lat": 9.717,
+        "lng": -63.227,
+        "color": "#f59e0b",
+        "visible": true,
+        "tipo": "centro_electoral",
+        "electores": 500,
+        "mesas": 1
+      },
+      {
+        "id": "ref-sub-godos-1",
+        "nombre": "📍 Sub-Parroquia 1 • Casco Los Godos",
+        "descripcion": "Eje / Sub-Parroquia undefined • Punto de referencia para mapeo comunal",
+        "lat": 9.739,
+        "lng": -63.204,
+        "color": "#a855f7",
+        "visible": true,
+        "tipo": "subparroquia_referencia",
+        "subParroquiaId": "sub-godos-1"
+      },
+      {
+        "id": "ref-sub-godos-2",
+        "nombre": "📍 Sub-Parroquia 2 • Morichal",
+        "descripcion": "Eje / Sub-Parroquia undefined • Punto de referencia para mapeo comunal",
+        "lat": 9.734,
+        "lng": -63.212,
+        "color": "#a855f7",
+        "visible": true,
+        "tipo": "subparroquia_referencia",
+        "subParroquiaId": "sub-godos-2"
+      },
+      {
+        "id": "ref-sub-godos-3",
+        "nombre": "📍 Sub-Parroquia 3 • Fundemos",
+        "descripcion": "Eje / Sub-Parroquia undefined • Punto de referencia para mapeo comunal",
+        "lat": 9.742,
+        "lng": -63.196,
+        "color": "#a855f7",
+        "visible": true,
+        "tipo": "subparroquia_referencia",
+        "subParroquiaId": "sub-godos-3"
+      },
+      {
+        "id": "ref-sub-godos-4",
+        "nombre": "📍 Sub-Parroquia 4 • Los Guaros",
+        "descripcion": "Eje / Sub-Parroquia undefined • Punto de referencia para mapeo comunal",
+        "lat": 9.728,
+        "lng": -63.196,
+        "color": "#a855f7",
+        "visible": true,
+        "tipo": "subparroquia_referencia",
+        "subParroquiaId": "sub-godos-4"
+      },
+      {
+        "id": "ref-sub-godos-5",
+        "nombre": "📍 Sub-Parroquia 5 • El Silencio",
+        "descripcion": "Eje / Sub-Parroquia undefined • Punto de referencia para mapeo comunal",
+        "lat": 9.718,
+        "lng": -63.204,
+        "color": "#a855f7",
+        "visible": true,
+        "tipo": "subparroquia_referencia",
+        "subParroquiaId": "sub-godos-5"
+      },
+      {
+        "id": "ref-sub-godos-7",
+        "nombre": "📍 Sub-Parroquia 7 • 19 de Abril",
+        "descripcion": "Eje / Sub-Parroquia undefined • Punto de referencia para mapeo comunal",
+        "lat": 9.715,
+        "lng": -63.224,
+        "color": "#a855f7",
+        "visible": true,
+        "tipo": "subparroquia_referencia",
+        "subParroquiaId": "sub-godos-7"
+      },
+      {
+        "id": "ref-sub-godos-8",
+        "nombre": "📍 Sub-Parroquia 8 • Las Brisas",
+        "descripcion": "Eje / Sub-Parroquia undefined • Punto de referencia para mapeo comunal",
+        "lat": 9.738,
+        "lng": -63.192,
+        "color": "#a855f7",
+        "visible": true,
+        "tipo": "subparroquia_referencia",
+        "subParroquiaId": "sub-godos-8"
+      },
+      {
+        "id": "ref-sub-godos-9",
+        "nombre": "📍 Sub-Parroquia 9 • San Rafael",
+        "descripcion": "Eje / Sub-Parroquia undefined • Punto de referencia para mapeo comunal",
+        "lat": 9.722,
+        "lng": -63.191,
+        "color": "#a855f7",
+        "visible": true,
+        "tipo": "subparroquia_referencia",
+        "subParroquiaId": "sub-godos-9"
+      },
+      {
+        "id": "ref-sub-godos-10",
+        "nombre": "📍 Sub-Parroquia 10 • Paramaconi",
+        "descripcion": "Eje / Sub-Parroquia undefined • Punto de referencia para mapeo comunal",
+        "lat": 9.732,
+        "lng": -63.232,
+        "color": "#a855f7",
+        "visible": true,
+        "tipo": "subparroquia_referencia",
+        "subParroquiaId": "sub-godos-10"
+      }
+    ],
+    "updatedAt": 1788566516852
   },
   "alto-de-los-godos": {
     "munId": "maturin",
@@ -1909,16 +2146,9 @@
       {
         "id": "sec-lp-1",
         "subParroquiaId": "sub-godos-6",
-        "nombre": "Monagzal",
-        "casas": 450,
-        "familias": 455,
-        "habitantes": 1550,
-        "militantes": 1550,
-        "colorBorde": "#38bdf8",
-        "anchoBorde": 2,
-        "colorRelleno": "#38bdf8",
-        "opacidad": 0.38,
-        "visible": true,
+        "numero": 1,
+        "nombre": "1. Monagzal",
+        "rawNombre": "Monagzal",
         "vertices": [
           [
             9.736,
@@ -1940,21 +2170,28 @@
             9.736,
             -63.232
           ]
-        ]
+        ],
+        "colorBorde": "#38bdf8",
+        "anchoBorde": 2,
+        "colorRelleno": "#38bdf8",
+        "opacidad": 0.38,
+        "casas": 450,
+        "familias": 455,
+        "habitantes": 1550,
+        "centroVotacion": "Cruz Hernández Quijada",
+        "comitesVotacion": 3,
+        "descripcion": "Sector 1: Monagzal • 450 casas • 1550 hab. Centro: Cruz Hernández Quijada",
+        "areaHa": 12.5,
+        "perimetroM": 1540,
+        "visible": true,
+        "esOficial": true
       },
       {
         "id": "sec-lp-2",
         "subParroquiaId": "sub-godos-6",
-        "nombre": "Las Vírgenes",
-        "casas": 1040,
-        "familias": 1087,
-        "habitantes": 3053,
-        "militantes": 3053,
-        "colorBorde": "#10b981",
-        "anchoBorde": 2,
-        "colorRelleno": "#10b981",
-        "opacidad": 0.38,
-        "visible": true,
+        "numero": 2,
+        "nombre": "2. Las Vírgenes",
+        "rawNombre": "Las Vírgenes",
         "vertices": [
           [
             9.735,
@@ -1976,21 +2213,28 @@
             9.735,
             -63.223
           ]
-        ]
+        ],
+        "colorBorde": "#10b981",
+        "anchoBorde": 2,
+        "colorRelleno": "#10b981",
+        "opacidad": 0.38,
+        "casas": 1040,
+        "familias": 1087,
+        "habitantes": 3053,
+        "centroVotacion": "Cruz Hernández Quijada",
+        "comitesVotacion": 1,
+        "descripcion": "Sector 2: Las Vírgenes • 1040 casas • 3053 hab. Centro: Cruz Hernández Quijada",
+        "areaHa": 12.5,
+        "perimetroM": 1540,
+        "visible": true,
+        "esOficial": true
       },
       {
         "id": "sec-lp-3",
         "subParroquiaId": "sub-godos-6",
-        "nombre": "Villa de los Ángeles",
-        "casas": 446,
-        "familias": 443,
-        "habitantes": 1254,
-        "militantes": 1254,
-        "colorBorde": "#f59e0b",
-        "anchoBorde": 2,
-        "colorRelleno": "#f59e0b",
-        "opacidad": 0.38,
-        "visible": true,
+        "numero": 3,
+        "nombre": "3. Villa de los Ángeles",
+        "rawNombre": "Villa de los Ángeles",
         "vertices": [
           [
             9.728,
@@ -2012,21 +2256,28 @@
             9.728,
             -63.231
           ]
-        ]
+        ],
+        "colorBorde": "#f59e0b",
+        "anchoBorde": 2,
+        "colorRelleno": "#f59e0b",
+        "opacidad": 0.38,
+        "casas": 446,
+        "familias": 443,
+        "habitantes": 1254,
+        "centroVotacion": "Francisco Verde",
+        "comitesVotacion": 1,
+        "descripcion": "Sector 3: Villa de los Ángeles • 446 casas • 1254 hab. Centro: Francisco Verde",
+        "areaHa": 12.5,
+        "perimetroM": 1540,
+        "visible": true,
+        "esOficial": true
       },
       {
         "id": "sec-lp-4",
         "subParroquiaId": "sub-godos-6",
-        "nombre": "Canadá",
-        "casas": 546,
-        "familias": 580,
-        "habitantes": 1513,
-        "militantes": 1513,
-        "colorBorde": "#ef4444",
-        "anchoBorde": 2,
-        "colorRelleno": "#ef4444",
-        "opacidad": 0.38,
-        "visible": true,
+        "numero": 4,
+        "nombre": "4. Canadá",
+        "rawNombre": "Canadá",
         "vertices": [
           [
             9.727,
@@ -2048,21 +2299,28 @@
             9.727,
             -63.223
           ]
-        ]
+        ],
+        "colorBorde": "#ef4444",
+        "anchoBorde": 2,
+        "colorRelleno": "#ef4444",
+        "opacidad": 0.38,
+        "casas": 546,
+        "familias": 580,
+        "habitantes": 1513,
+        "centroVotacion": "Francisco Verde",
+        "comitesVotacion": 1,
+        "descripcion": "Sector 4: Canadá • 546 casas • 1513 hab. Centro: Francisco Verde",
+        "areaHa": 12.5,
+        "perimetroM": 1540,
+        "visible": true,
+        "esOficial": true
       },
       {
         "id": "sec-lp-5",
         "subParroquiaId": "sub-godos-6",
-        "nombre": "Sector II",
-        "casas": 551,
-        "familias": 701,
-        "habitantes": 1939,
-        "militantes": 1939,
-        "colorBorde": "#a855f7",
-        "anchoBorde": 2,
-        "colorRelleno": "#a855f7",
-        "opacidad": 0.38,
-        "visible": true,
+        "numero": 5,
+        "nombre": "5. Sector II",
+        "rawNombre": "Sector II",
         "vertices": [
           [
             9.726,
@@ -2084,21 +2342,28 @@
             9.726,
             -63.216
           ]
-        ]
+        ],
+        "colorBorde": "#a855f7",
+        "anchoBorde": 2,
+        "colorRelleno": "#a855f7",
+        "opacidad": 0.38,
+        "casas": 551,
+        "familias": 701,
+        "habitantes": 1939,
+        "centroVotacion": "Apolinar Cantor",
+        "comitesVotacion": 2,
+        "descripcion": "Sector 5: Sector II • 551 casas • 1939 hab. Centro: Apolinar Cantor",
+        "areaHa": 12.5,
+        "perimetroM": 1540,
+        "visible": true,
+        "esOficial": true
       },
       {
         "id": "sec-lp-6",
         "subParroquiaId": "sub-godos-6",
-        "nombre": "Sector I",
-        "casas": 312,
-        "familias": 370,
-        "habitantes": 850,
-        "militantes": 850,
-        "colorBorde": "#06b6d4",
-        "anchoBorde": 2,
-        "colorRelleno": "#06b6d4",
-        "opacidad": 0.38,
-        "visible": true,
+        "numero": 6,
+        "nombre": "6. Sector I",
+        "rawNombre": "Sector I",
         "vertices": [
           [
             9.72,
@@ -2120,21 +2385,28 @@
             9.72,
             -63.23
           ]
-        ]
+        ],
+        "colorBorde": "#06b6d4",
+        "anchoBorde": 2,
+        "colorRelleno": "#06b6d4",
+        "opacidad": 0.38,
+        "casas": 312,
+        "familias": 370,
+        "habitantes": 850,
+        "centroVotacion": "Apolinar Cantor",
+        "comitesVotacion": 1,
+        "descripcion": "Sector 6: Sector I • 312 casas • 850 hab. Centro: Apolinar Cantor",
+        "areaHa": 12.5,
+        "perimetroM": 1540,
+        "visible": true,
+        "esOficial": true
       },
       {
         "id": "sec-lp-7",
         "subParroquiaId": "sub-godos-6",
-        "nombre": "Sector IA",
-        "casas": 332,
-        "familias": 357,
-        "habitantes": 996,
-        "militantes": 996,
-        "colorBorde": "#84cc16",
-        "anchoBorde": 2,
-        "colorRelleno": "#84cc16",
-        "opacidad": 0.38,
-        "visible": true,
+        "numero": 7,
+        "nombre": "7. Sector IA",
+        "rawNombre": "Sector IA",
         "vertices": [
           [
             9.724,
@@ -2156,21 +2428,28 @@
             9.724,
             -63.21
           ]
-        ]
+        ],
+        "colorBorde": "#84cc16",
+        "anchoBorde": 2,
+        "colorRelleno": "#84cc16",
+        "opacidad": 0.38,
+        "casas": 332,
+        "familias": 357,
+        "habitantes": 996,
+        "centroVotacion": "Cruz Figuera Rondón",
+        "comitesVotacion": 1,
+        "descripcion": "Sector 7: Sector IA • 332 casas • 996 hab. Centro: Cruz Figuera Rondón",
+        "areaHa": 12.5,
+        "perimetroM": 1540,
+        "visible": true,
+        "esOficial": true
       },
       {
         "id": "sec-lp-8",
         "subParroquiaId": "sub-godos-6",
-        "nombre": "El Caro",
-        "casas": 692,
-        "familias": 1032,
-        "habitantes": 1832,
-        "militantes": 1832,
-        "colorBorde": "#f97316",
-        "anchoBorde": 2,
-        "colorRelleno": "#f97316",
-        "opacidad": 0.38,
-        "visible": true,
+        "numero": 8,
+        "nombre": "8. El Caro",
+        "rawNombre": "El Caro",
         "vertices": [
           [
             9.718,
@@ -2192,21 +2471,28 @@
             9.718,
             -63.216
           ]
-        ]
+        ],
+        "colorBorde": "#f97316",
+        "anchoBorde": 2,
+        "colorRelleno": "#f97316",
+        "opacidad": 0.38,
+        "casas": 692,
+        "familias": 1032,
+        "habitantes": 1832,
+        "centroVotacion": "Cruz Figuera Rondón",
+        "comitesVotacion": 1,
+        "descripcion": "Sector 8: El Caro • 692 casas • 1832 hab. Centro: Cruz Figuera Rondón",
+        "areaHa": 12.5,
+        "perimetroM": 1540,
+        "visible": true,
+        "esOficial": true
       },
       {
         "id": "sec-lp-9",
         "subParroquiaId": "sub-godos-6",
-        "nombre": "La Lucha",
-        "casas": 306,
-        "familias": 470,
-        "habitantes": 1237,
-        "militantes": 1237,
-        "colorBorde": "#ec4899",
-        "anchoBorde": 2,
-        "colorRelleno": "#ec4899",
-        "opacidad": 0.38,
-        "visible": true,
+        "numero": 9,
+        "nombre": "9. La Lucha",
+        "rawNombre": "La Lucha",
         "vertices": [
           [
             9.719,
@@ -2228,21 +2514,28 @@
             9.719,
             -63.223
           ]
-        ]
+        ],
+        "colorBorde": "#ec4899",
+        "anchoBorde": 2,
+        "colorRelleno": "#ec4899",
+        "opacidad": 0.38,
+        "casas": 306,
+        "familias": 470,
+        "habitantes": 1237,
+        "centroVotacion": "República de Venezuela",
+        "comitesVotacion": 1,
+        "descripcion": "Sector 9: La Lucha • 306 casas • 1237 hab. Centro: República de Venezuela",
+        "areaHa": 12.5,
+        "perimetroM": 1540,
+        "visible": true,
+        "esOficial": true
       },
       {
         "id": "sec-lp-10",
         "subParroquiaId": "sub-godos-6",
-        "nombre": "Las Flores",
-        "casas": 337,
-        "familias": 368,
-        "habitantes": 885,
-        "militantes": 885,
-        "colorBorde": "#14b8a6",
-        "anchoBorde": 2,
-        "colorRelleno": "#14b8a6",
-        "opacidad": 0.38,
-        "visible": true,
+        "numero": 10,
+        "nombre": "10. Las Flores",
+        "rawNombre": "Las Flores",
         "vertices": [
           [
             9.733,
@@ -2264,21 +2557,28 @@
             9.733,
             -63.215
           ]
-        ]
+        ],
+        "colorBorde": "#14b8a6",
+        "anchoBorde": 2,
+        "colorRelleno": "#14b8a6",
+        "opacidad": 0.38,
+        "casas": 337,
+        "familias": 368,
+        "habitantes": 885,
+        "centroVotacion": "República de Venezuela",
+        "comitesVotacion": 1,
+        "descripcion": "Sector 10: Las Flores • 337 casas • 885 hab. Centro: República de Venezuela",
+        "areaHa": 12.5,
+        "perimetroM": 1540,
+        "visible": true,
+        "esOficial": true
       },
       {
         "id": "sec-lp-11",
         "subParroquiaId": "sub-godos-6",
-        "nombre": "La Laguna",
-        "casas": 283,
-        "familias": 347,
-        "habitantes": 1050,
-        "militantes": 1050,
-        "colorBorde": "#3b82f6",
-        "anchoBorde": 2,
-        "colorRelleno": "#3b82f6",
-        "opacidad": 0.38,
-        "visible": true,
+        "numero": 11,
+        "nombre": "11. La Laguna",
+        "rawNombre": "La Laguna",
         "vertices": [
           [
             9.712,
@@ -2300,12 +2600,186 @@
             9.712,
             -63.223
           ]
-        ]
+        ],
+        "colorBorde": "#3b82f6",
+        "anchoBorde": 2,
+        "colorRelleno": "#3b82f6",
+        "opacidad": 0.38,
+        "casas": 283,
+        "familias": 347,
+        "habitantes": 1050,
+        "centroVotacion": "República de Venezuela",
+        "comitesVotacion": 1,
+        "descripcion": "Sector 11: La Laguna • 283 casas • 1050 hab. Centro: República de Venezuela",
+        "areaHa": 12.5,
+        "perimetroM": 1540,
+        "visible": true,
+        "esOficial": true
       }
     ],
     "rutas": [],
-    "marcas": [],
-    "updatedAt": 1788566514090
+    "marcas": [
+      {
+        "id": "c1",
+        "nombre": "🗳️ Cruz Hernández Quijada",
+        "descripcion": "Centro Electoral • 1056 electores • 2 mesas",
+        "lat": 9.734,
+        "lng": -63.221,
+        "color": "#f59e0b",
+        "visible": true,
+        "tipo": "centro_electoral",
+        "electores": 1056,
+        "mesas": 2
+      },
+      {
+        "id": "c2",
+        "nombre": "🗳️ Francisco Verde",
+        "descripcion": "Centro Electoral • 3230 electores • 5 mesas",
+        "lat": 9.737,
+        "lng": -63.226,
+        "color": "#f59e0b",
+        "visible": true,
+        "tipo": "centro_electoral",
+        "electores": 3230,
+        "mesas": 5
+      },
+      {
+        "id": "c3",
+        "nombre": "🗳️ Apolinar Cantor",
+        "descripcion": "Centro Electoral • 2481 electores • 4 mesas",
+        "lat": 9.731,
+        "lng": -63.217,
+        "color": "#f59e0b",
+        "visible": true,
+        "tipo": "centro_electoral",
+        "electores": 2481,
+        "mesas": 4
+      },
+      {
+        "id": "c4",
+        "nombre": "🗳️ Cruz Figuera Rondón",
+        "descripcion": "Centro Electoral • 2961 electores • 4 mesas",
+        "lat": 9.725,
+        "lng": -63.216,
+        "color": "#f59e0b",
+        "visible": true,
+        "tipo": "centro_electoral",
+        "electores": 2961,
+        "mesas": 4
+      },
+      {
+        "id": "c5",
+        "nombre": "🗳️ República de Venezuela",
+        "descripcion": "Centro Electoral • 500 electores • 1 mesas",
+        "lat": 9.717,
+        "lng": -63.227,
+        "color": "#f59e0b",
+        "visible": true,
+        "tipo": "centro_electoral",
+        "electores": 500,
+        "mesas": 1
+      },
+      {
+        "id": "ref-sub-godos-1",
+        "nombre": "📍 Sub-Parroquia 1 • Casco Los Godos",
+        "descripcion": "Eje / Sub-Parroquia undefined • Punto de referencia para mapeo comunal",
+        "lat": 9.739,
+        "lng": -63.204,
+        "color": "#a855f7",
+        "visible": true,
+        "tipo": "subparroquia_referencia",
+        "subParroquiaId": "sub-godos-1"
+      },
+      {
+        "id": "ref-sub-godos-2",
+        "nombre": "📍 Sub-Parroquia 2 • Morichal",
+        "descripcion": "Eje / Sub-Parroquia undefined • Punto de referencia para mapeo comunal",
+        "lat": 9.734,
+        "lng": -63.212,
+        "color": "#a855f7",
+        "visible": true,
+        "tipo": "subparroquia_referencia",
+        "subParroquiaId": "sub-godos-2"
+      },
+      {
+        "id": "ref-sub-godos-3",
+        "nombre": "📍 Sub-Parroquia 3 • Fundemos",
+        "descripcion": "Eje / Sub-Parroquia undefined • Punto de referencia para mapeo comunal",
+        "lat": 9.742,
+        "lng": -63.196,
+        "color": "#a855f7",
+        "visible": true,
+        "tipo": "subparroquia_referencia",
+        "subParroquiaId": "sub-godos-3"
+      },
+      {
+        "id": "ref-sub-godos-4",
+        "nombre": "📍 Sub-Parroquia 4 • Los Guaros",
+        "descripcion": "Eje / Sub-Parroquia undefined • Punto de referencia para mapeo comunal",
+        "lat": 9.728,
+        "lng": -63.196,
+        "color": "#a855f7",
+        "visible": true,
+        "tipo": "subparroquia_referencia",
+        "subParroquiaId": "sub-godos-4"
+      },
+      {
+        "id": "ref-sub-godos-5",
+        "nombre": "📍 Sub-Parroquia 5 • El Silencio",
+        "descripcion": "Eje / Sub-Parroquia undefined • Punto de referencia para mapeo comunal",
+        "lat": 9.718,
+        "lng": -63.204,
+        "color": "#a855f7",
+        "visible": true,
+        "tipo": "subparroquia_referencia",
+        "subParroquiaId": "sub-godos-5"
+      },
+      {
+        "id": "ref-sub-godos-7",
+        "nombre": "📍 Sub-Parroquia 7 • 19 de Abril",
+        "descripcion": "Eje / Sub-Parroquia undefined • Punto de referencia para mapeo comunal",
+        "lat": 9.715,
+        "lng": -63.224,
+        "color": "#a855f7",
+        "visible": true,
+        "tipo": "subparroquia_referencia",
+        "subParroquiaId": "sub-godos-7"
+      },
+      {
+        "id": "ref-sub-godos-8",
+        "nombre": "📍 Sub-Parroquia 8 • Las Brisas",
+        "descripcion": "Eje / Sub-Parroquia undefined • Punto de referencia para mapeo comunal",
+        "lat": 9.738,
+        "lng": -63.192,
+        "color": "#a855f7",
+        "visible": true,
+        "tipo": "subparroquia_referencia",
+        "subParroquiaId": "sub-godos-8"
+      },
+      {
+        "id": "ref-sub-godos-9",
+        "nombre": "📍 Sub-Parroquia 9 • San Rafael",
+        "descripcion": "Eje / Sub-Parroquia undefined • Punto de referencia para mapeo comunal",
+        "lat": 9.722,
+        "lng": -63.191,
+        "color": "#a855f7",
+        "visible": true,
+        "tipo": "subparroquia_referencia",
+        "subParroquiaId": "sub-godos-9"
+      },
+      {
+        "id": "ref-sub-godos-10",
+        "nombre": "📍 Sub-Parroquia 10 • Paramaconi",
+        "descripcion": "Eje / Sub-Parroquia undefined • Punto de referencia para mapeo comunal",
+        "lat": 9.732,
+        "lng": -63.232,
+        "color": "#a855f7",
+        "visible": true,
+        "tipo": "subparroquia_referencia",
+        "subParroquiaId": "sub-godos-10"
+      }
+    ],
+    "updatedAt": 1788566516852
   },
   "maturin_el-corozo": {
     "munId": "maturin",
