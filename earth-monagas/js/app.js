@@ -2,15 +2,21 @@
  * Controlador Principal — Google Earth Pro Web (Edición Estado Monagas)
  * Robusto, 100% Operativo y Totalmente Individualizado
  */
-import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=58";
-import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=58";
-import { getAllParishesForSelector } from "./usersCatalog.js?v=58";
-import { EarthStore } from "./earthStore.js?v=58";
-import { EarthMapEngine } from "./mapEngine.js?v=58";
-import { PropertiesDialog } from "./propertiesDialog.js?v=58";
-import { ToolsManager } from "./toolsManager.js?v=58";
-import { detectParishFromGeometry } from "./geoMonagas.js?v=58";
-import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=58";
+import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=59";
+import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=59";
+import { getAllParishesForSelector } from "./usersCatalog.js?v=59";
+import { EarthStore } from "./earthStore.js?v=59";
+import { EarthMapEngine } from "./mapEngine.js?v=59";
+import { PropertiesDialog } from "./propertiesDialog.js?v=59";
+import { ToolsManager } from "./toolsManager.js?v=59";
+import { detectParishFromGeometry } from "./geoMonagas.js?v=59";
+import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=59";
+import { 
+  getSavedFirebaseConfig, 
+  saveFirebaseConfig, 
+  isFirebaseConfigured, 
+  initFirebase 
+} from "./firebaseConfig.js?v=59";
 
 class EarthMonagasApp {
   constructor() {
@@ -93,14 +99,15 @@ class EarthMonagasApp {
     // Cargar parroquia activa inicial
     this.selectParish(this.selectedMunId, this.selectedParishId);
 
-    // Sincronización continua con la base de datos en la nube (compartida entre computadoras)
+    // Sincronización continua con la base de datos en la nube (compartida entre computadoras y teléfonos)
+    // 1. Descargar primero para no sobreescribir datos existentes en la nube
     setTimeout(() => {
-      this.store.syncAllLocalToCloud().then(() => {
-        this.store.syncFromCloud();
+      this.store.syncFromCloud().then(() => {
+        this.store.syncAllLocalToCloud();
       });
-    }, 1500);
+    }, 800);
 
-    // Polling en segundo plano cada 25 segundos para recibir cambios en vivo de otras computadoras
+    // Polling de respaldo cada 25 segundos (Firestore actualiza en tiempo real via web sockets)
     setInterval(() => {
       this.store.syncFromCloud();
     }, 25000);
@@ -421,10 +428,10 @@ class EarthMonagasApp {
 
       <div class="pt-2 border-t border-slate-800 flex items-center justify-between gap-2">
         <button type="button" onclick="window.earthApp?.closeSubParishModal(); window.activateEarthTool('subparroquia');" class="text-xs text-purple-400 hover:text-purple-300 underline font-bold flex items-center gap-1 cursor-pointer">
-          <span>+ Nueva Sub-Parroquia</span>
+          <span>+ Delimitar Nueva Sub-Parroquia</span>
         </button>
-        <button type="button" onclick="window.earthApp?.closeSubParishModal(); window.earthApp?.toolsManager?.setActiveTool('poligono');" class="text-[11px] text-slate-400 hover:text-slate-200 bg-slate-800/80 px-2.5 py-1.5 rounded-lg border border-slate-700 transition cursor-pointer" title="Detectar automáticamente según las coordenadas del sector">
-          🎯 Auto-detectar en mapa
+        <button type="button" onclick="window.earthApp?.closeSubParishModal();" class="text-[11px] text-slate-400 hover:text-slate-200 bg-slate-800/80 px-2.5 py-1.5 rounded-lg border border-slate-700 transition cursor-pointer">
+          Cancelar
         </button>
       </div>
     `;
@@ -1799,15 +1806,99 @@ class EarthMonagasApp {
     if (dot) dot.className = "w-2 h-2 rounded-full bg-amber-400 animate-spin shrink-0";
     if (text) text.textContent = "Sincronizando...";
 
-    // 1. Subir cualquier dato local (incluyendo Aparicio creado aquí)
-    await this.store.syncAllLocalToCloud();
-    // 2. Descargar datos de la nube creados en otras computadoras
+    // 1. Descargar primero para recibir datos creados en otras computadoras o teléfonos
     const changes = await this.store.syncFromCloud();
+    // 2. Subir datos locales guardados
+    await this.store.syncAllLocalToCloud();
 
     if (dot) dot.className = "w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0";
     if (text) text.textContent = "En Red";
 
-    this.showToast("☁️ Red Sincronizada: Base de datos online al día con todas las computadoras", "sky");
+    this.showToast("☁️ Red Sincronizada: Base de datos online al día con todas las computadoras y teléfonos", "sky");
+  }
+
+  openFirebaseConfigModal() {
+    const modal = document.getElementById("modal-firebase-config");
+    if (!modal) return;
+
+    const statusTitle = document.getElementById("firebase-modal-status-title");
+    const statusDesc = document.getElementById("firebase-modal-status-desc");
+    const dot = document.getElementById("firebase-modal-dot");
+    const inputProj = document.getElementById("firebase-input-projectid");
+    const inputKey = document.getElementById("firebase-input-apikey");
+
+    const cfg = getSavedFirebaseConfig();
+    const isConfigured = isFirebaseConfigured();
+
+    if (isConfigured) {
+      if (statusTitle) statusTitle.textContent = "🔥 Conectado a Firebase Firestore";
+      if (statusDesc) statusDesc.textContent = `Proyecto: ${cfg.projectId} • Sincronización en vivo activa`;
+      if (dot) dot.className = "w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse";
+      if (inputProj) inputProj.value = cfg.projectId || "";
+      if (inputKey) inputKey.value = cfg.apiKey ? `${cfg.apiKey.substring(0, 8)}...` : "";
+    } else {
+      if (statusTitle) statusTitle.textContent = "⚙️ Firebase pendiente por conectar";
+      if (statusDesc) statusDesc.textContent = "Pega tus credenciales abajo para activar la sincronización instantánea";
+      if (dot) dot.className = "w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse";
+    }
+
+    modal.classList.remove("hidden");
+    modal.classList.add("flex");
+    if (window.lucide) { try { window.lucide.createIcons(); } catch(e){} }
+  }
+
+  closeFirebaseConfigModal() {
+    const modal = document.getElementById("modal-firebase-config");
+    if (modal) {
+      modal.classList.add("hidden");
+      modal.classList.remove("flex");
+    }
+  }
+
+  saveFirebaseConfigFromUI() {
+    const inputJson = document.getElementById("firebase-input-json");
+    const inputProj = document.getElementById("firebase-input-projectid");
+    const inputKey = document.getElementById("firebase-input-apikey");
+
+    let config = null;
+
+    // 1. Intentar leer JSON completo si se pegó
+    if (inputJson && inputJson.value.trim()) {
+      try {
+        const raw = inputJson.value.trim();
+        const jsonMatch = raw.match(/\{[\s\S]*\}/);
+        if (jsonMatch) {
+          config = new Function(`return ${jsonMatch[0]};`)();
+        }
+      } catch (e) {
+        alert("El texto pegado en JSON no es válido. Verifica el formato.");
+        return;
+      }
+    }
+
+    // 2. Fallback a campos individuales
+    if (!config && inputProj && inputProj.value.trim() && inputKey && inputKey.value.trim()) {
+      config = {
+        projectId: inputProj.value.trim(),
+        apiKey: inputKey.value.trim()
+      };
+    }
+
+    if (!config || !config.projectId || !config.apiKey) {
+      alert("Por favor ingresa al menos el Project ID y el API Key de tu proyecto Firebase.");
+      return;
+    }
+
+    const ok = saveFirebaseConfig(config);
+    if (ok) {
+      this.closeFirebaseConfigModal();
+      this.showToast(`🔥 Conectado a Firebase: <strong>${config.projectId}</strong> en tiempo real`, "emerald");
+      this.store.syncFromCloud().then(() => {
+        this.store.syncAllLocalToCloud();
+      });
+    } else {
+      alert("No se pudo conectar a Firebase. Revisa que las claves sean correctas.");
+    }
   }
 
   onCloudDataMerged() {

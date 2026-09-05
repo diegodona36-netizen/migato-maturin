@@ -1,7 +1,13 @@
 /**
  * Gestor de Estado y Árbol de Lugares (Places) — Google Earth Pro Web (Monagas)
  */
-import { SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=55";
+import { SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=59";
+import { 
+  saveParishToFirestore, 
+  subscribeToTerritories, 
+  isFirebaseConfigured, 
+  fetchAllTerritoriesFromFirestore 
+} from "./firebaseConfig.js?v=59";
 
 const STORAGE_KEY = "earth_monagas_places_v3";
 
@@ -309,6 +315,15 @@ export class EarthStore {
     this.purgeDummySectors(this.state);
     this.cloudDebounceTimer = null;
     this.cloudSyncState = "idle";
+
+    // Suscripción en tiempo real a Firebase Firestore (si está configurado)
+    try {
+      this.unsubscribeFirestore = subscribeToTerritories((remoteData) => {
+        this.handleFirestoreSnapshot(remoteData);
+      });
+    } catch (e) {
+      console.warn("No se pudo iniciar listener Firestore:", e);
+    }
   }
 
   ensureAllParishes(state) {
@@ -353,13 +368,10 @@ export class EarthStore {
           if (!storedP.limite && p.limite) storedP.limite = p.limite;
           if (!storedP.centro && p.centro) storedP.centro = p.centro;
 
-          // Precarga oficial para San Simón si está vacía
+          // Precarga oficial de Sub-Parroquias (Ejes) para San Simón si está vacía
           if (mun.id === "maturin" && p.id === "san-simon") {
             if (storedP.subparroquias.length === 0) {
               storedP.subparroquias = JSON.parse(JSON.stringify(DEFAULT_SAN_SIMON_SUBPARROQUIAS));
-            }
-            if (storedP.poligonos.length === 0) {
-              storedP.poligonos = JSON.parse(JSON.stringify(DEFAULT_SAN_SIMON_POLIGONOS));
             }
           }
 
@@ -379,32 +391,12 @@ export class EarthStore {
                 vertices: sp.poligono ? [...sp.poligono] : []
               })).filter(s => s.vertices && s.vertices.length >= 3);
             }
-            if (storedP.poligonos.length === 0 && Array.isArray(SECTORES_LAPUENTE)) {
-              storedP.poligonos = SECTORES_LAPUENTE.map(sec => ({
-                id: sec.id,
-                subParroquiaId: sec.subParroquiaId || "sub-godos-6",
-                nombre: sec.nombre,
-                casas: sec.casas || 0,
-                familias: sec.familias || 0,
-                habitantes: sec.habitantes || 0,
-                militantes: sec.habitantes || 0,
-                colorBorde: sec.colorBorde || "#38bdf8",
-                anchoBorde: 2,
-                colorRelleno: sec.colorRelleno || "#38bdf8",
-                opacidad: sec.opacidad !== undefined ? sec.opacidad : 0.35,
-                visible: true,
-                vertices: sec.poligono ? [...sec.poligono] : []
-              })).filter(s => s.vertices && s.vertices.length >= 3);
-            }
           }
 
           // Precarga oficial para El Corozo si está vacía
           if (mun.id === "maturin" && p.id === "el-corozo") {
             if (storedP.subparroquias.length === 0) {
               storedP.subparroquias = JSON.parse(JSON.stringify(DEFAULT_COROZO_SUBPARROQUIAS));
-            }
-            if (storedP.poligonos.length === 0) {
-              storedP.poligonos = JSON.parse(JSON.stringify(DEFAULT_COROZO_POLIGONOS));
             }
           }
         });
@@ -415,8 +407,30 @@ export class EarthStore {
   }
 
   purgeDummySectors(state) {
-    // Mantener la integridad de los datos territoriales oficiales
-    return;
+    // Purgar polígonos ficticios o de referencia en el centro de Maturín
+    try {
+      if (!state || !state.municipios) return;
+      const dummyIds = new Set([
+        "sec-ss-1", "sec-ss-2", "sec-ss-3", "sec-ss-4", "sec-ss-5",
+        "sec-cor-1", "sec-cor-2"
+      ]);
+      Object.values(state.municipios).forEach(mun => {
+        if (mun.parroquias) {
+          Object.values(mun.parroquias).forEach(p => {
+            if (p.poligonos && Array.isArray(p.poligonos)) {
+              p.poligonos = p.poligonos.filter(sec => {
+                if (!sec || !sec.id) return false;
+                if (dummyIds.has(String(sec.id))) return false;
+                if (String(sec.id).startsWith("sec-ss-") || String(sec.id).startsWith("sec-cor-")) return false;
+                return true;
+              });
+            }
+          });
+        }
+      });
+    } catch (e) {
+      console.warn("Error purgando poligonos dummy:", e);
+    }
   }
 
   buildInitialState() {
@@ -524,9 +538,19 @@ export class EarthStore {
         updatedAt: Date.now()
       };
 
-      let success = false;
+      let anySuccess = false;
 
-      // 1. Enviar a /api/places (GitHub Cloud Storage)
+      // 1. Guardar en Firebase Firestore (Sincronización instantánea multi-dispositivo)
+      if (isFirebaseConfigured()) {
+        try {
+          const fbOk = await saveParishToFirestore(munId, parishId, parish);
+          if (fbOk) anySuccess = true;
+        } catch (eFb) {
+          console.warn("Fallo guardando en Firebase Firestore:", eFb);
+        }
+      }
+
+      // 2. Respaldo simultáneo en API Serverless / Vercel
       try {
         const res = await fetch("/api/places", {
           method: "POST",
@@ -535,19 +559,68 @@ export class EarthStore {
         });
         if (res.ok) {
           const json = await res.json();
-          if (json.ok) success = true;
+          if (json.ok) anySuccess = true;
         }
       } catch (e) {
         console.warn("Error en /api/places:", e);
       }
 
-      this.updateCloudStatus(success ? "online" : "error");
-      return success;
+      this.updateCloudStatus(anySuccess ? "online" : "error");
+      return anySuccess;
     } catch (err) {
       console.error("Error en syncToCloud:", err);
       this.updateCloudStatus("error");
       return false;
     }
+  }
+
+  handleFirestoreSnapshot(remoteData) {
+    if (!remoteData || typeof remoteData !== "object") return;
+    let changesApplied = false;
+
+    Object.keys(remoteData).forEach(key => {
+      const remoteP = remoteData[key];
+      if (!remoteP || typeof remoteP !== "object") return;
+
+      const parishId = remoteP.parishId || (key.includes("_") ? key.split("_")[1] : key);
+      const munId = remoteP.munId || (key.includes("_") ? key.split("_")[0] : null);
+
+      let localP = munId ? this.getParish(munId, parishId) : null;
+      if (!localP) {
+        const anyParish = this.findParishById(parishId);
+        if (anyParish) localP = anyParish.parish;
+      }
+
+      if (localP) {
+        ["subparroquias", "poligonos", "rutas", "marcas"].forEach(type => {
+          if (Array.isArray(remoteP[type])) {
+            if (!Array.isArray(localP[type])) localP[type] = [];
+            remoteP[type].forEach(remoteItem => {
+              if (!remoteItem || !remoteItem.id) return;
+              const localIdx = localP[type].findIndex(li => String(li.id) === String(remoteItem.id));
+              if (localIdx === -1) {
+                localP[type].push(remoteItem);
+                changesApplied = true;
+              } else {
+                const localItem = localP[type][localIdx];
+                if (JSON.stringify(localItem) !== JSON.stringify(remoteItem)) {
+                  localP[type][localIdx] = Object.assign({}, localItem, remoteItem);
+                  changesApplied = true;
+                }
+              }
+            });
+          }
+        });
+      }
+    });
+
+    if (changesApplied) {
+      this.saveToStorage();
+      if (window.earthApp && typeof window.earthApp.onCloudDataMerged === "function") {
+        window.earthApp.onCloudDataMerged();
+      }
+    }
+    this.updateCloudStatus("online");
   }
 
   async syncAllLocalToCloud() {
@@ -587,14 +660,26 @@ export class EarthStore {
       this.updateCloudStatus("syncing");
       let cloudData = null;
 
+      // 0. Intentar Firebase Firestore en tiempo real (si está configurado)
+      if (isFirebaseConfigured()) {
+        try {
+          const fbData = await fetchAllTerritoriesFromFirestore();
+          if (fbData && Object.keys(fbData).length > 0) {
+            cloudData = fbData;
+          }
+        } catch (eFb) {}
+      }
+
       // 1. Intentar API Serverless (/api/places)
-      try {
-        const res = await fetch("/api/places");
-        if (res.ok) {
-          const json = await res.json();
-          if (json.ok && json.data) cloudData = json.data;
-        }
-      } catch (e) {}
+      if (!cloudData) {
+        try {
+          const res = await fetch("/api/places");
+          if (res.ok) {
+            const json = await res.json();
+            if (json.ok && json.data) cloudData = json.data;
+          }
+        } catch (e) {}
+      }
 
       // 2. Fallback directo a GitHub Raw
       if (!cloudData) {
