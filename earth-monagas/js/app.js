@@ -2,21 +2,21 @@
  * Controlador Principal — Google Earth Pro Web (Edición Estado Monagas)
  * Robusto, 100% Operativo y Totalmente Individualizado
  */
-import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=67";
-import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=67";
-import { getAllParishesForSelector } from "./usersCatalog.js?v=67";
-import { EarthStore } from "./earthStore.js?v=67";
-import { EarthMapEngine } from "./mapEngine.js?v=67";
-import { PropertiesDialog } from "./propertiesDialog.js?v=67";
-import { ToolsManager } from "./toolsManager.js?v=67";
-import { detectParishFromGeometry } from "./geoMonagas.js?v=67";
-import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=67";
+import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=68";
+import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=68";
+import { getAllParishesForSelector } from "./usersCatalog.js?v=68";
+import { EarthStore } from "./earthStore.js?v=68";
+import { EarthMapEngine } from "./mapEngine.js?v=68";
+import { PropertiesDialog } from "./propertiesDialog.js?v=68";
+import { ToolsManager } from "./toolsManager.js?v=68";
+import { detectParishFromGeometry } from "./geoMonagas.js?v=68";
+import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=68";
 import { 
   getSavedFirebaseConfig, 
   saveFirebaseConfig, 
   isFirebaseConfigured, 
   initFirebase 
-} from "./firebaseConfig.js?v=67";
+} from "./firebaseConfig.js?v=68";
 
 class EarthMonagasApp {
   constructor() {
@@ -185,59 +185,80 @@ class EarthMonagasApp {
   }
 
   selectParish(munId, parishId) {
-    this.selectedMunId = munId;
-    this.selectedParishId = parishId;
-    this.activeSubParroquiaId = null;
-
     try {
-      localStorage.setItem("migato_last_mun", munId);
-      localStorage.setItem("migato_last_parish", parishId);
-    } catch(e) {}
+      this.activeSubParroquiaId = null;
 
-    const parish = this.store.getParish(munId, parishId);
-    if (!parish) return;
-
-    const munObj = CATALOGO_MONAGAS.find(m => m.id === munId);
-    const navLoc = document.getElementById("nav-current-location");
-    if (navLoc) {
-      if (window.innerWidth < 640) {
-        navLoc.textContent = parish.nombre;
-      } else {
-        navLoc.textContent = `${parish.nombre} (${munObj ? munObj.nombre : 'Monagas'})`;
+      let parish = this.store ? this.store.getParish(munId, parishId) : null;
+      if (!parish && this.store) {
+        const found = this.store.findParishById(parishId);
+        if (found) {
+          munId = found.munId;
+          parishId = found.parishId;
+          parish = found.parish;
+        } else {
+          munId = "maturin";
+          parishId = "san-simon";
+          parish = this.store.getParish("maturin", "san-simon");
+        }
       }
-      navLoc.parentElement.title = `${parish.nombre} - Municipio ${munObj ? munObj.nombre : 'Monagas'}`;
-    }
+      if (!parish) return;
 
-    // Actualizar título de pestaña
-    document.title = `${parish.nombre} (${munObj ? munObj.nombre : 'Monagas'}) • Google Earth Pro`;
+      this.selectedMunId = munId;
+      this.selectedParishId = parishId;
 
-    // Actualizar indicador de parroquia en banner de dibujo si está activo
-    this.updateDrawingBannerParishText();
+      try {
+        localStorage.setItem("migato_last_mun", munId);
+        localStorage.setItem("migato_last_parish", parishId);
+      } catch(e) {}
 
-    // Mostrar perímetro con máscara foco y elementos de esta parroquia
-    this.mapEngine.showParishBoundary(parish.limite, parish.id, true);
-    this.mapEngine.renderParishItems(parish, (type, item) => {
-      if (type === "subparroquia") {
-        this.focusSubParish(item.id);
-      } else {
-        this.propDialog.open(type, item, this.selectedMunId, this.selectedParishId);
+      const munObj = CATALOGO_MONAGAS.find(m => m.id === munId);
+      const navLoc = document.getElementById("nav-current-location");
+      if (navLoc) {
+        if (window.innerWidth < 640) {
+          navLoc.textContent = parish.nombre;
+        } else {
+          navLoc.textContent = `${parish.nombre} (${munObj ? munObj.nombre : 'Monagas'})`;
+        }
+        navLoc.parentElement.title = `${parish.nombre} - Municipio ${munObj ? munObj.nombre : 'Monagas'}`;
       }
-    });
 
-    this.updateMilitanciaTally();
-    this.renderPlacesTree();
-    this.renderQuickParishBar();
-    this.updateSpotlightButtonUI(this.mapEngine.spotlightEnabled);
+      // Actualizar título de pestaña
+      document.title = `${parish.nombre} (${munObj ? munObj.nombre : 'Monagas'}) • Google Earth Pro`;
 
-    // En pantallas móviles, replegar el sidebar para ver el mapa 100%
-    if (window.innerWidth < 768) {
-      const sidebar = document.getElementById("earth-sidebar");
-      const backdrop = document.getElementById("sidebar-backdrop");
-      if (sidebar) {
-        sidebar.classList.add("hidden");
-        sidebar.classList.remove("flex");
+      // Actualizar indicador de parroquia en banner de dibujo si está activo
+      this.updateDrawingBannerParishText();
+
+      // Mostrar perímetro con máscara foco y elementos de esta parroquia
+      if (this.mapEngine) {
+        this.mapEngine.showParishBoundary(parish.limite, parish.id, true);
+        this.mapEngine.renderParishItems(parish, (type, item) => {
+          if (type === "subparroquia") {
+            this.focusSubParish(item.id);
+          } else {
+            this.propDialog?.open(type, item, this.selectedMunId, this.selectedParishId);
+          }
+        });
       }
-      if (backdrop) backdrop.classList.add("hidden");
+
+      this.updateMilitanciaTally();
+      this.renderPlacesTree();
+      this.renderQuickParishBar();
+      if (this.mapEngine) {
+        this.updateSpotlightButtonUI(this.mapEngine.spotlightEnabled);
+      }
+
+      // En pantallas móviles, replegar el sidebar para ver el mapa 100%
+      if (window.innerWidth < 768) {
+        const sidebar = document.getElementById("earth-sidebar");
+        const backdrop = document.getElementById("sidebar-backdrop");
+        if (sidebar) {
+          sidebar.classList.add("hidden");
+          sidebar.classList.remove("flex");
+        }
+        if (backdrop) backdrop.classList.add("hidden");
+      }
+    } catch (err) {
+      console.warn("[selectParish] Error controlado:", err);
     }
   }
 

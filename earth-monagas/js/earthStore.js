@@ -1,13 +1,13 @@
 /**
  * Gestor de Estado y Árbol de Lugares (Places) — Google Earth Pro Web (Monagas)
  */
-import { SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=67";
+import { SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=68";
 import { 
   saveParishToFirestore, 
   subscribeToTerritories, 
   isFirebaseConfigured, 
   fetchAllTerritoriesFromFirestore 
-} from "./firebaseConfig.js?v=67";
+} from "./firebaseConfig.js?v=68";
 
 const STORAGE_KEY = "earth_monagas_places_v3";
 
@@ -163,9 +163,14 @@ export class EarthStore {
 
     Object.entries(this.state.municipios).forEach(([munId, mun]) => {
       Object.entries(mun.parroquias || {}).forEach(([parishId, p]) => {
-        const hasSectors = (p.poligonos && p.poligonos.length > 0) || (p.subparroquias && p.subparroquias.length > 0);
-        const time = p.updatedAt || 0;
-        if (hasSectors && time > maxTime) {
+        const polyCount = (p.poligonos || []).length;
+        const subCount = (p.subparroquias || []).length;
+        const hasSectors = polyCount > 0 || subCount > 0;
+        if (!hasSectors) return;
+
+        // Si no tiene updatedAt en la nube, ponderar por presencia de polígonos
+        const time = p.updatedAt || (polyCount * 1000 + subCount);
+        if (time > maxTime) {
           maxTime = time;
           latestParish = { munId, parishId, parish: p, updatedAt: time };
         }
@@ -331,6 +336,7 @@ export class EarthStore {
 
   loadFromStorage() {
     try {
+      if (typeof localStorage === "undefined") return null;
       let data = localStorage.getItem(STORAGE_KEY);
       if (!data) {
         data = localStorage.getItem("earth_monagas_places_v2") ||
@@ -353,7 +359,9 @@ export class EarthStore {
 
   saveToStorage() {
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(this.state));
+      if (typeof localStorage !== "undefined") {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(this.state));
+      }
     } catch (e) {}
   }
 
@@ -369,11 +377,18 @@ export class EarthStore {
   }
 
   scheduleCloudSync(munId, parishId) {
+    if (!this.pendingSyncParishes) this.pendingSyncParishes = new Map();
+    this.pendingSyncParishes.set(`${munId}|${parishId}`, { munId, parishId });
+
     if (this.cloudDebounceTimer) clearTimeout(this.cloudDebounceTimer);
     this.updateCloudStatus("syncing");
-    this.cloudDebounceTimer = setTimeout(() => {
-      this.syncToCloud(munId, parishId);
-    }, 50);
+    this.cloudDebounceTimer = setTimeout(async () => {
+      const queue = Array.from(this.pendingSyncParishes.values());
+      this.pendingSyncParishes.clear();
+      for (const item of queue) {
+        await this.syncToCloud(item.munId, item.parishId);
+      }
+    }, 300);
   }
 
   async syncToCloud(munId, parishId) {
@@ -443,6 +458,9 @@ export class EarthStore {
       }
 
       if (localP) {
+        if (remoteP.updatedAt) {
+          localP.updatedAt = remoteP.updatedAt;
+        }
         ["subparroquias", "poligonos", "rutas", "marcas"].forEach(type => {
           if (Array.isArray(remoteP[type])) {
             if (!Array.isArray(localP[type])) localP[type] = [];
@@ -488,7 +506,7 @@ export class EarthStore {
     if (changesApplied) {
       this.saveToStorage();
     }
-    if (window.earthApp && window.earthApp.mapEngine && typeof window.earthApp.onCloudDataMerged === "function") {
+    if (typeof window !== "undefined" && window.earthApp && window.earthApp.mapEngine && typeof window.earthApp.onCloudDataMerged === "function") {
       window.earthApp.onCloudDataMerged();
     }
     this.updateCloudStatus("online");
@@ -602,7 +620,7 @@ export class EarthStore {
       if (changesApplied) {
         this.saveToStorage();
       }
-      if (window.earthApp && window.earthApp.mapEngine && typeof window.earthApp.onCloudDataMerged === "function") {
+      if (typeof window !== "undefined" && window.earthApp && window.earthApp.mapEngine && typeof window.earthApp.onCloudDataMerged === "function") {
         window.earthApp.onCloudDataMerged();
       }
 
