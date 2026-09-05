@@ -34,6 +34,9 @@
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
 
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="css/styles.css?v=90">
+
   <!-- Script de Autenticación Rápida, Limpieza Integral de Caché y Activador de Herramientas -->
   <script>
     // Blindaje instantáneo de aislamiento parroquial previo a cualquier renderizado
@@ -88,12 +91,12 @@
         for (var i = 0; i < regs.length; i++) regs[i].unregister();
       }).catch(function(){});
     }
-    // Purgar claves viejas de localStorage para que la memoria esté 100% limpia
+    // Purgar claves viejas de localStorage para que la memoria esté 100% limpia sin borrar v8
     try {
       var toRemove = [];
       for (var i = 0; i < localStorage.length; i++) {
         var k = localStorage.key(i);
-        if (k && k.startsWith('earth_monagas_places_') && k !== 'earth_monagas_places_v7') {
+        if (k && k.startsWith('earth_monagas_places_') && k !== 'earth_monagas_places_v8') {
           toRemove.push(k);
         }
       }

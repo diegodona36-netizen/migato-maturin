@@ -224,7 +224,19 @@ export class EarthStore {
           if (!storedP.limite && p.limite) storedP.limite = p.limite;
           if (!storedP.centro && p.centro) storedP.centro = p.centro;
 
-          // Estructura limpia e inicial sin polígonos ficticios precargados
+          // Precarga segura de ejes y subparroquias base si la base está vacía
+          if (mun.id === "maturin" && p.id === "alto-de-los-godos" && storedP.subparroquias.length === 0) {
+            storedP.subparroquias = JSON.parse(JSON.stringify(SUBPARROQUIAS_GODOS || []));
+            if (storedP.poligonos.length === 0) {
+              storedP.poligonos = JSON.parse(JSON.stringify(SECTORES_LAPUENTE || []));
+            }
+          }
+          if (mun.id === "maturin" && p.id === "san-simon" && storedP.subparroquias.length === 0) {
+            storedP.subparroquias = JSON.parse(JSON.stringify(DEFAULT_SAN_SIMON_SUBPARROQUIAS || []));
+          }
+          if (mun.id === "maturin" && p.id === "el-corozo" && storedP.subparroquias.length === 0) {
+            storedP.subparroquias = JSON.parse(JSON.stringify(DEFAULT_COROZO_SUBPARROQUIAS || []));
+          }
         });
       });
     } catch (e) {
