@@ -3,7 +3,7 @@
  * Control de Acceso Basado en Roles (RBAC) para el Estado Monagas
  */
 
-import { findUserByCredentials, USERS_CATALOG } from "./usersCatalog.js?v=82";
+import { findUserByCredentials, USERS_CATALOG } from "./usersCatalog.js?v=83";
 
 const AUTH_STORAGE_KEY = "migato_earth_session_v4";
 

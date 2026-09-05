@@ -35,17 +35,17 @@
   <meta http-equiv="Expires" content="0" />
 
   <!-- Custom Styles -->
-  <link rel="stylesheet" href="css/styles.css?v=82">
+  <link rel="stylesheet" href="css/styles.css?v=83">
 
   <!-- Script de Autenticación Rápida, Limpieza Integral de Caché y Activador de Herramientas -->
   <script>
-    // Auto-actualización obligatoria a la versión más reciente v=82
+    // Auto-actualización obligatoria a la versión más reciente v=83
     (function() {
       try {
         var p = new URLSearchParams(window.location.search);
         var curV = p.get('v');
-        if (!curV || curV !== '82') {
-          p.set('v', '82');
+        if (!curV || curV !== '83') {
+          p.set('v', '83');
           window.location.replace(window.location.pathname + '?' + p.toString() + window.location.hash);
         }
       } catch(e) {}
@@ -497,32 +497,32 @@
             </button>
           </div>
 
-          <!-- Nivel 4: Sub-Parroquias / Ejes (Godos) -->
-          <div class="bg-slate-950/80 p-2.5 rounded-xl border border-slate-800 flex items-center justify-between hover:border-purple-500/50 transition">
+          <!-- Nivel 4: Sub-Parroquias / Ejes Comunales -->
+          <div class="bg-slate-950/80 p-2.5 rounded-xl border border-purple-500/40 flex items-center justify-between shadow-sm hover:border-purple-500/60 transition">
             <label class="flex items-center gap-2 cursor-pointer truncate">
-              <input type="checkbox" id="chk-layer-l4" class="w-4 h-4 rounded bg-slate-900 border-slate-700 text-purple-500 focus:ring-0 cursor-pointer">
+              <input type="checkbox" id="chk-layer-l4" checked class="w-4 h-4 rounded bg-slate-900 border-slate-700 text-purple-500 focus:ring-0 cursor-pointer">
               <span class="w-2.5 h-2.5 rounded-full bg-purple-400 shrink-0"></span>
               <div class="truncate">
-                <span class="text-xs font-bold text-white block truncate">Nivel 4: Sub-Parroquias (Ejes)</span>
-                <span class="text-[10px] text-slate-400">10 Ejes de Alto de Los Godos</span>
+                <span class="text-xs font-black text-purple-300 block truncate">Nivel 4: Sub-Parroquias (Ejes)</span>
+                <span class="text-[10px] text-slate-400">Ejes y circuitos comunales</span>
               </div>
             </label>
-            <button onclick="window.earthApp.mapEngine.focusHierarchicalLayer('l4')" class="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-purple-400 rounded-lg text-[10px] font-bold shrink-0 active:scale-95 transition" title="Volar a Sub-Parroquias">
+            <button onclick="window.earthApp.mapEngine.focusHierarchicalLayer('l4')" class="px-2 py-1 bg-purple-900/80 hover:bg-purple-800 text-purple-200 rounded-lg text-[10px] font-bold shrink-0 active:scale-95 transition cursor-pointer" title="Volar a Ejes Comunales">
               🎯
             </button>
           </div>
 
           <!-- Nivel 5: Sectores Comunales (Parroquia Activa) -->
-          <div class="bg-slate-950/80 p-2.5 rounded-xl border border-sky-500/40 flex items-center justify-between shadow-sm">
+          <div class="bg-slate-950/80 p-2.5 rounded-xl border border-sky-500/40 flex items-center justify-between shadow-sm hover:border-sky-500/60 transition">
             <label class="flex items-center gap-2 cursor-pointer truncate">
               <input type="checkbox" id="chk-layer-l5" checked class="w-4 h-4 rounded bg-slate-900 border-slate-700 text-sky-500 focus:ring-0 cursor-pointer">
               <span class="w-2.5 h-2.5 rounded-full bg-sky-400 shrink-0"></span>
               <div class="truncate">
                 <span class="text-xs font-black text-sky-300 block truncate">Nivel 5: Sectores Comunales</span>
-                <span class="text-[10px] text-slate-400">Sectores mapeados por el usuario</span>
+                <span class="text-[10px] text-slate-400">Sectores y comunidades mapeadas</span>
               </div>
             </label>
-            <button onclick="window.earthApp.mapEngine.focusHierarchicalLayer('l5')" class="px-2 py-1 bg-sky-600 hover:bg-sky-500 text-white rounded-lg text-[10px] font-bold shrink-0 active:scale-95 transition" title="Volar a Sectores">
+            <button onclick="window.earthApp.mapEngine.focusHierarchicalLayer('l5')" class="px-2 py-1 bg-sky-600 hover:bg-sky-500 text-white rounded-lg text-[10px] font-bold shrink-0 active:scale-95 transition cursor-pointer" title="Volar a Sectores Comunales">
               🎯
             </button>
           </div>
@@ -1263,7 +1263,7 @@
   </div>
 
   <!-- SCRIPT -->
-  <script type="module" src="js/app.js?v=82"></script>
+  <script type="module" src="js/app.js?v=83"></script>
   <script>
     if (window.lucide && typeof window.lucide.createIcons === 'function') {
       window.lucide.createIcons();

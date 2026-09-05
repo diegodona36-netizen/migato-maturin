@@ -2,7 +2,7 @@
  * Motor Cartográfico Acelerado por GPU — Google Earth Pro Web (Monagas)
  * Integrado con Capas Jerárquicas Oficiales (INE 2021) y Edición de Vértices
  */
-import { GEO_ESTADO_OFICIAL, GEO_MUNICIPIOS_OFICIAL, GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=82";
+import { GEO_ESTADO_OFICIAL, GEO_MUNICIPIOS_OFICIAL, GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=83";
 
 export class EarthMapEngine {
   constructor(containerId, onCoordUpdate) {
@@ -14,7 +14,10 @@ export class EarthMapEngine {
 
     // Capas Base
     this.boundaryLayer = null;
+    this.subParroquiasLayer = null;
+    this.subParroquiaLabelsLayer = null;
     this.polygonsLayer = null;
+    this.sectorLabelsLayer = null;
     this.routesLayer = null;
     this.placemarksLayer = null;
     this.overlayLayer = null;
@@ -26,6 +29,15 @@ export class EarthMapEngine {
     this.layerL3_Parroquias = null;
     this.layerL4_SubParroquias = null;
     this.layerCentros = null;
+
+    // Estado explícito de visibilidad para filtros de capas (LOD 1 a 5)
+    this.hierarchicalVisibility = {
+      l1: false,
+      l2: false,
+      l3: false,
+      l4: true,
+      l5: true
+    };
 
     // Estado de Edición de Vértices
     this.editingPoly = null;
@@ -82,12 +94,13 @@ export class EarthMapEngine {
     // Inicializar Grupos de Capas de Usuario
     this.boundaryLayer = L.layerGroup().addTo(this.map);
     this.subParroquiasLayer = L.layerGroup().addTo(this.map);
+    this.subParroquiaLabelsLayer = L.layerGroup().addTo(this.map);
     this.polygonsLayer = L.layerGroup().addTo(this.map);
+    this.sectorLabelsLayer = L.layerGroup().addTo(this.map);
     this.routesLayer = L.layerGroup().addTo(this.map);
     this.placemarksLayer = L.layerGroup().addTo(this.map);
     this.overlayLayer = L.layerGroup().addTo(this.map);
     this.tempDrawingLayer = L.layerGroup().addTo(this.map);
-    this.sectorLabelsLayer = L.layerGroup().addTo(this.map);
 
     this.spotlightEnabled = false; // Modo Foco desactivado por defecto para ver simultáneamente todos los sectores del estado
     this.currentParishLimite = null;
@@ -197,33 +210,166 @@ export class EarthMapEngine {
   }
 
   toggleHierarchicalLayer(levelKey, visible) {
-    const layerMap = {
-      'l1': this.layerL1_Estado,
-      'l2': this.layerL2_Municipios,
-      'l3': this.layerL3_Parroquias,
-      'l4': this.subParroquiasLayer,
-      'l5': this.polygonsLayer
-    };
-    const target = layerMap[levelKey];
-    if (!target) return;
-    if (visible) {
-      if (!this.map.hasLayer(target)) this.map.addLayer(target);
-    } else {
-      if (this.map.hasLayer(target)) this.map.removeLayer(target);
+    if (this.hierarchicalVisibility.hasOwnProperty(levelKey)) {
+      this.hierarchicalVisibility[levelKey] = !!visible;
+    }
+
+    if (levelKey === 'l1' && this.layerL1_Estado) {
+      if (visible) {
+        if (!this.map.hasLayer(this.layerL1_Estado)) this.map.addLayer(this.layerL1_Estado);
+      } else {
+        if (this.map.hasLayer(this.layerL1_Estado)) this.map.removeLayer(this.layerL1_Estado);
+      }
+    } else if (levelKey === 'l2' && this.layerL2_Municipios) {
+      if (visible) {
+        if (!this.map.hasLayer(this.layerL2_Municipios)) this.map.addLayer(this.layerL2_Municipios);
+      } else {
+        if (this.map.hasLayer(this.layerL2_Municipios)) this.map.removeLayer(this.layerL2_Municipios);
+      }
+    } else if (levelKey === 'l3' && this.layerL3_Parroquias) {
+      if (visible) {
+        if (!this.map.hasLayer(this.layerL3_Parroquias)) this.map.addLayer(this.layerL3_Parroquias);
+      } else {
+        if (this.map.hasLayer(this.layerL3_Parroquias)) this.map.removeLayer(this.layerL3_Parroquias);
+      }
+    } else if (levelKey === 'l4') {
+      if (visible) {
+        if (this.subParroquiasLayer && !this.map.hasLayer(this.subParroquiasLayer)) this.map.addLayer(this.subParroquiasLayer);
+        if (this.subParroquiaLabelsLayer && !this.map.hasLayer(this.subParroquiaLabelsLayer)) this.map.addLayer(this.subParroquiaLabelsLayer);
+      } else {
+        if (this.subParroquiasLayer && this.map.hasLayer(this.subParroquiasLayer)) this.map.removeLayer(this.subParroquiasLayer);
+        if (this.subParroquiaLabelsLayer && this.map.hasLayer(this.subParroquiaLabelsLayer)) this.map.removeLayer(this.subParroquiaLabelsLayer);
+      }
+    } else if (levelKey === 'l5') {
+      if (visible) {
+        if (this.polygonsLayer && !this.map.hasLayer(this.polygonsLayer)) this.map.addLayer(this.polygonsLayer);
+        if (this.sectorLabelsLayer && !this.map.hasLayer(this.sectorLabelsLayer)) this.map.addLayer(this.sectorLabelsLayer);
+      } else {
+        if (this.polygonsLayer && this.map.hasLayer(this.polygonsLayer)) this.map.removeLayer(this.polygonsLayer);
+        if (this.sectorLabelsLayer && this.map.hasLayer(this.sectorLabelsLayer)) this.map.removeLayer(this.sectorLabelsLayer);
+      }
     }
   }
 
   focusHierarchicalLayer(levelKey) {
-    const centerZoomMap = {
-      'l1': { center: [9.55, -63.15], zoom: 8 },
-      'l2': { center: [9.7469, -63.1812], zoom: 9 },
-      'l3': { center: [9.7469, -63.1812], zoom: 11 },
-      'l4': { center: [9.7280, -63.2060], zoom: 13 },
-      'l5': { center: [9.7260, -63.2180], zoom: 14 }
-    };
-    const target = centerZoomMap[levelKey];
-    if (target) {
-      this.map.flyTo(target.center, target.zoom, { duration: 1.2 });
+    if (!this.map) return;
+
+    // Si la capa está apagada, encenderla automáticamente para que el usuario vea a dónde vuela
+    if (this.hierarchicalVisibility.hasOwnProperty(levelKey) && !this.hierarchicalVisibility[levelKey]) {
+      this.toggleHierarchicalLayer(levelKey, true);
+      const chk = document.getElementById(`chk-layer-${levelKey}`);
+      if (chk) chk.checked = true;
+    }
+
+    if (levelKey === 'l1') {
+      if (this.layerL1_Estado) {
+        try {
+          const b = this.layerL1_Estado.getBounds();
+          if (b.isValid()) {
+            this.map.flyToBounds(b, { padding: [30, 30], duration: 1.2 });
+            return;
+          }
+        } catch(e) {}
+      }
+      this.map.flyTo([9.55, -63.15], 8, { duration: 1.2 });
+      return;
+    }
+
+    if (levelKey === 'l2') {
+      const currentMunId = window.earthApp?.selectedMunId || "maturin";
+      let munFound = false;
+      if (this.layerL2_Municipios) {
+        this.layerL2_Municipios.eachLayer(ly => {
+          if (munFound) return;
+          const p = ly.feature?.properties;
+          if (p && (String(p.id) === String(currentMunId) || String(p.municipioId) === String(currentMunId) || (p.nombre && p.nombre.toLowerCase().includes(currentMunId.toLowerCase())))) {
+            try {
+              const b = ly.getBounds();
+              if (b.isValid()) {
+                this.map.flyToBounds(b, { padding: [40, 40], duration: 1.2 });
+                munFound = true;
+              }
+            } catch(e) {}
+          }
+        });
+      }
+      if (!munFound) {
+        this.map.flyTo([9.7469, -63.1812], 10, { duration: 1.2 });
+      }
+      return;
+    }
+
+    if (levelKey === 'l3') {
+      if (this.boundaryLayer) {
+        try {
+          const b = this.boundaryLayer.getBounds();
+          if (b.isValid()) {
+            this.map.flyToBounds(b, { padding: [40, 40], duration: 1.2 });
+            return;
+          }
+        } catch(e) {}
+      }
+      if (this.currentParishLimite && this.currentParishLimite.length > 0) {
+        try {
+          const b = L.latLngBounds(this.currentParishLimite);
+          if (b.isValid()) {
+            this.map.flyToBounds(b, { padding: [40, 40], duration: 1.2 });
+            return;
+          }
+        } catch(e) {}
+      }
+      this.map.flyTo([9.7469, -63.1812], 12, { duration: 1.2 });
+      return;
+    }
+
+    if (levelKey === 'l4') {
+      // Enfocar las sub-parroquias / ejes de la parroquia activa
+      if (this.subParroquiasLayer) {
+        try {
+          const b = this.subParroquiasLayer.getBounds();
+          if (b.isValid()) {
+            this.map.flyToBounds(b, { padding: [40, 40], maxZoom: 15, duration: 1.2 });
+            return;
+          }
+        } catch(e) {}
+      }
+      // Si aún no hay ejes en esta parroquia, volar al perímetro de la parroquia activa
+      if (this.boundaryLayer) {
+        try {
+          const b = this.boundaryLayer.getBounds();
+          if (b.isValid()) {
+            this.map.flyToBounds(b, { padding: [40, 40], duration: 1.2 });
+            return;
+          }
+        } catch(e) {}
+      }
+      this.map.flyTo([9.7469, -63.1812], 13, { duration: 1.2 });
+      return;
+    }
+
+    if (levelKey === 'l5') {
+      // Enfocar los sectores comunales de la parroquia activa
+      if (this.polygonsLayer) {
+        try {
+          const b = this.polygonsLayer.getBounds();
+          if (b.isValid()) {
+            this.map.flyToBounds(b, { padding: [40, 40], maxZoom: 16, duration: 1.2 });
+            return;
+          }
+        } catch(e) {}
+      }
+      // Si aún no hay sectores dibujados en esta parroquia, volar al perímetro de la parroquia activa
+      if (this.boundaryLayer) {
+        try {
+          const b = this.boundaryLayer.getBounds();
+          if (b.isValid()) {
+            this.map.flyToBounds(b, { padding: [40, 40], duration: 1.2 });
+            return;
+          }
+        } catch(e) {}
+      }
+      this.map.flyTo([9.7469, -63.1812], 14, { duration: 1.2 });
+      return;
     }
   }
 
@@ -405,7 +551,9 @@ export class EarthMapEngine {
 
       const groups = [
         this.subParroquiasLayer,
+        this.subParroquiaLabelsLayer,
         this.polygonsLayer,
+        this.sectorLabelsLayer,
         this.routesLayer,
         this.placemarksLayer,
         this.boundaryLayer,
@@ -463,6 +611,7 @@ export class EarthMapEngine {
     this.routesLayer.clearLayers();
     this.placemarksLayer.clearLayers();
     if (this.subParroquiasLayer) this.subParroquiasLayer.clearLayers();
+    if (this.subParroquiaLabelsLayer) this.subParroquiaLabelsLayer.clearLayers();
     if (this.sectorLabelsLayer) this.sectorLabelsLayer.clearLayers();
     if (this.leafletLayersMap) this.leafletLayersMap.clear();
 
@@ -540,7 +689,7 @@ export class EarthMapEngine {
 
           // Marcador de Centroide visible en todo momento para el Eje
           const spCentroid = this.calculateCentroid(sp.vertices);
-          if (spCentroid && this.sectorLabelsLayer) {
+          if (spCentroid && this.subParroquiaLabelsLayer) {
             const spIcon = L.divIcon({
               className: "custom-subparish-pin",
               html: `<div class="px-2 py-0.5 rounded-full text-[10px] font-black border shadow-lg cursor-pointer whitespace-nowrap transition transform hover:scale-110 flex items-center gap-1 bg-purple-950/90 text-purple-200 border-purple-400" style="backdrop-filter: blur(4px);">
@@ -562,7 +711,7 @@ export class EarthMapEngine {
                 window.earthApp.focusSubParish(sp.id, false);
               }
             });
-            this.sectorLabelsLayer.addLayer(spMarker);
+            this.subParroquiaLabelsLayer.addLayer(spMarker);
           }
         } catch (err) {
           console.warn("[MapEngine] Error renderizando sub-parroquia:", sp, err);
@@ -718,18 +867,44 @@ export class EarthMapEngine {
         this.placemarksLayer.addLayer(marker);
       });
     });
+
+    // Aplicar estado de visibilidad jerárquica respetando los filtros activos del usuario
+    if (!this.hierarchicalVisibility.l4) {
+      if (this.subParroquiasLayer && this.map.hasLayer(this.subParroquiasLayer)) this.map.removeLayer(this.subParroquiasLayer);
+      if (this.subParroquiaLabelsLayer && this.map.hasLayer(this.subParroquiaLabelsLayer)) this.map.removeLayer(this.subParroquiaLabelsLayer);
+    } else {
+      if (this.subParroquiasLayer && !this.map.hasLayer(this.subParroquiasLayer)) this.map.addLayer(this.subParroquiasLayer);
+      if (this.subParroquiaLabelsLayer && !this.map.hasLayer(this.subParroquiaLabelsLayer)) this.map.addLayer(this.subParroquiaLabelsLayer);
+    }
+
+    if (!this.hierarchicalVisibility.l5) {
+      if (this.polygonsLayer && this.map.hasLayer(this.polygonsLayer)) this.map.removeLayer(this.polygonsLayer);
+      if (this.sectorLabelsLayer && this.map.hasLayer(this.sectorLabelsLayer)) this.map.removeLayer(this.sectorLabelsLayer);
+    } else {
+      if (this.polygonsLayer && !this.map.hasLayer(this.polygonsLayer)) this.map.addLayer(this.polygonsLayer);
+      if (this.sectorLabelsLayer && !this.map.hasLayer(this.sectorLabelsLayer)) this.map.addLayer(this.sectorLabelsLayer);
+    }
   }
 
   /**
-   * Asegura la visibilidad permanente de todos los sectores y ejes en cualquier nivel de zoom
+   * Sincroniza la visibilidad de sectores y ejes respetando los filtros activos del usuario
    */
   updateHierarchicalLOD() {
     if (!this.map) return;
-    if (this.subParroquiasLayer && !this.map.hasLayer(this.subParroquiasLayer)) {
-      this.map.addLayer(this.subParroquiasLayer);
+    if (this.hierarchicalVisibility.l4) {
+      if (this.subParroquiasLayer && !this.map.hasLayer(this.subParroquiasLayer)) this.map.addLayer(this.subParroquiasLayer);
+      if (this.subParroquiaLabelsLayer && !this.map.hasLayer(this.subParroquiaLabelsLayer)) this.map.addLayer(this.subParroquiaLabelsLayer);
+    } else {
+      if (this.subParroquiasLayer && this.map.hasLayer(this.subParroquiasLayer)) this.map.removeLayer(this.subParroquiasLayer);
+      if (this.subParroquiaLabelsLayer && this.map.hasLayer(this.subParroquiaLabelsLayer)) this.map.removeLayer(this.subParroquiaLabelsLayer);
     }
-    if (this.polygonsLayer && !this.map.hasLayer(this.polygonsLayer)) {
-      this.map.addLayer(this.polygonsLayer);
+
+    if (this.hierarchicalVisibility.l5) {
+      if (this.polygonsLayer && !this.map.hasLayer(this.polygonsLayer)) this.map.addLayer(this.polygonsLayer);
+      if (this.sectorLabelsLayer && !this.map.hasLayer(this.sectorLabelsLayer)) this.map.addLayer(this.sectorLabelsLayer);
+    } else {
+      if (this.polygonsLayer && this.map.hasLayer(this.polygonsLayer)) this.map.removeLayer(this.polygonsLayer);
+      if (this.sectorLabelsLayer && this.map.hasLayer(this.sectorLabelsLayer)) this.map.removeLayer(this.sectorLabelsLayer);
     }
   }
 

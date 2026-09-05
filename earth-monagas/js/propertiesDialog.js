@@ -2,9 +2,9 @@
  * Diálogo Flotante de Propiedades y Carga de Militantes — Estilo Google Earth Pro
  * Pestañas: Ficha Territorial, Militantes por Sector, Estilo y Color, Medidas
  */
-import { detectParishFromGeometry } from "./geoMonagas.js?v=82";
-import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=82";
-import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=82";
+import { detectParishFromGeometry } from "./geoMonagas.js?v=83";
+import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=83";
+import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=83";
 
 export class PropertiesDialog {
   constructor(onSaveCallback, onLiveChangeCallback, onStartEditGeometry) {
