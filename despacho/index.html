@@ -228,12 +228,7 @@
 
     function sendWhatsApp(parishId, parishNombre) {
       const link = buildParishLink(parishId);
-      const text = `Saludos, camarada. Responsable de ${parishNombre}.
-
-Aquí tienes tu enlace privado para el registro y control territorial de nuestra militancia (casas, familias y votantes):
-🔗 ${link}
-
-Enlace exclusivo y confidencial para tu parroquia. Vamos al despliegue.`;
+      const text = `Saludos. Te comparto el enlace de ${parishNombre}:\n${link}`;
       const url = `https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`;
       window.open(url, "_blank");
     }
