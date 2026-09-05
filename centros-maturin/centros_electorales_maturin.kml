@@ -1,0 +1,1451 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+  <Document>
+    <name>Centros Electorales Maturín • CNE 2024</name>
+    <description>Catálogo Oficial de 175 Centros de Votación y 361 Mesas Electorales de las 10 Parroquias de Maturín, Estado Monagas.</description>
+    <Style id="schoolIcon">
+      <IconStyle>
+        <scale>1.1</scale>
+        <Icon>
+          <href>http://maps.google.com/mapfiles/kml/paddle/red-circle.png</href>
+        </Icon>
+      </IconStyle>
+      <LabelStyle>
+        <scale>0.8</scale>
+      </LabelStyle>
+    </Style>
+    <Folder>
+      <name>Parroquia Alto de Los Godos (40 centros)</name>
+      <Placemark>
+        <name>Centro De Educación Inicial Alto De Los Godos I</name>
+        <description><![CDATA[<b>Código CNE:</b> 140706022<br/><b>Parroquia:</b> Alto de Los Godos<br/><b>Mesas:</b> 2 (01, 02)<br/><b>Electores:</b> 1,043<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.20885,9.732,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Centro De Formación Integral Para El Trabajo</name>
+        <description><![CDATA[<b>Código CNE:</b> 140706012<br/><b>Parroquia:</b> Alto de Los Godos<br/><b>Mesas:</b> 2 (01, 02)<br/><b>Electores:</b> 1,749<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.216026,9.735513,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Centro De Votacion El Soberano</name>
+        <description><![CDATA[<b>Código CNE:</b> 140706057<br/><b>Parroquia:</b> Alto de Los Godos<br/><b>Mesas:</b> 1 (01)<br/><b>Electores:</b> 434<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.211439,9.725912,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Centro De Votacion San Rafael</name>
+        <description><![CDATA[<b>Código CNE:</b> 140706064<br/><b>Parroquia:</b> Alto de Los Godos<br/><b>Mesas:</b> 2 (01, 02)<br/><b>Electores:</b> 1,266<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.207649,9.737405,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Centro De Votación Brisas De Venezuela</name>
+        <description><![CDATA[<b>Código CNE:</b> 140706062<br/><b>Parroquia:</b> Alto de Los Godos<br/><b>Mesas:</b> 1 (01)<br/><b>Electores:</b> 644<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.219651,9.730711,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Centro De Votación La Pastora</name>
+        <description><![CDATA[<b>Código CNE:</b> 140706061<br/><b>Parroquia:</b> Alto de Los Godos<br/><b>Mesas:</b> 1 (01)<br/><b>Electores:</b> 492<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.204984,9.727749,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Centro De Votación Sagrado Corazon De Jesus Ii</name>
+        <description><![CDATA[<b>Código CNE:</b> 140706059<br/><b>Parroquia:</b> Alto de Los Godos<br/><b>Mesas:</b> 1 (01)<br/><b>Electores:</b> 813<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.214287,9.740101,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Centro Del Niño Y La Familia Bolivariano Nuevo Horizonte</name>
+        <description><![CDATA[<b>Código CNE:</b> 140706029<br/><b>Parroquia:</b> Alto de Los Godos<br/><b>Mesas:</b> 1 (02)<br/><b>Electores:</b> 1,985<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.216269,9.724172,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Centro Del Niño Y La Familia Bolivariano Prado Del Sur</name>
+        <description><![CDATA[<b>Código CNE:</b> 140706028<br/><b>Parroquia:</b> Alto de Los Godos<br/><b>Mesas:</b> 2 (01, 02)<br/><b>Electores:</b> 1,754<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.202904,9.735163,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Centro Del Niño Y La Familia Simoncito Moscu</name>
+        <description><![CDATA[<b>Código CNE:</b> 140706045<br/><b>Parroquia:</b> Alto de Los Godos<br/><b>Mesas:</b> 2 (01, 02)<br/><b>Electores:</b> 1,229<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.221317,9.735663,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Centro Nacional Educativo Cruz Figuera Rondon</name>
+        <description><![CDATA[<b>Código CNE:</b> 140706026<br/><b>Parroquia:</b> Alto de Los Godos<br/><b>Mesas:</b> 3 (01, 02, 03)<br/><b>Electores:</b> 2,202<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.207569,9.722981,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Colegio Bolivariano Doctor Arturo Uslar Pietri</name>
+        <description><![CDATA[<b>Código CNE:</b> 140706035<br/><b>Parroquia:</b> Alto de Los Godos<br/><b>Mesas:</b> 3 (01, 02, 03)<br/><b>Electores:</b> 2,250<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.208764,9.741825,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Complejo Educativo Nacional Francisco Verde</name>
+        <description><![CDATA[<b>Código CNE:</b> 140706027<br/><b>Parroquia:</b> Alto de Los Godos<br/><b>Mesas:</b> 3 (01, 03, 04)<br/><b>Electores:</b> 3,554<br/><b>Estatus:</b> prioritario]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.221649,9.726675,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Complejo Educativo Nacional Jose Angel Meza Verde</name>
+        <description><![CDATA[<b>Código CNE:</b> 140706019<br/><b>Parroquia:</b> Alto de Los Godos<br/><b>Mesas:</b> 3 (01, 02, 03)<br/><b>Electores:</b> 4,115<br/><b>Estatus:</b> prioritario]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.200789,9.729652,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Complejo Educativo Nacional La Negra Matea</name>
+        <description><![CDATA[<b>Código CNE:</b> 140706047<br/><b>Parroquia:</b> Alto de Los Godos<br/><b>Mesas:</b> 4 (01, 02, 03, 04)<br/><b>Electores:</b> 3,199<br/><b>Estatus:</b> prioritario]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.218782,9.741188,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Complejo Educativo Nacional Manola Luna Silva</name>
+        <description><![CDATA[<b>Código CNE:</b> 140706016<br/><b>Parroquia:</b> Alto de Los Godos<br/><b>Mesas:</b> 3 (01, 02, 03)<br/><b>Electores:</b> 2,490<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.213555,9.720575,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Escuela Basica Bolivar</name>
+        <description><![CDATA[<b>Código CNE:</b> 140706031<br/><b>Parroquia:</b> Alto de Los Godos<br/><b>Mesas:</b> 1 (02)<br/><b>Electores:</b> 1,685<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.202526,9.739604,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Escuela Basica Colinas Del Paramaconi</name>
+        <description><![CDATA[<b>Código CNE:</b> 140706037<br/><b>Parroquia:</b> Alto de Los Godos<br/><b>Mesas:</b> 1 (01)<br/><b>Electores:</b> 909<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.224664,9.732499,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Escuela Basica Mario Briceño Iragorri</name>
+        <description><![CDATA[<b>Código CNE:</b> 140706018<br/><b>Parroquia:</b> Alto de Los Godos<br/><b>Mesas:</b> 3 (01, 02, 03)<br/><b>Electores:</b> 2,745<br/><b>Estatus:</b> prioritario]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.202821,9.723299,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Escuela Basica Primaria Arturo Uslar Pietri</name>
+        <description><![CDATA[<b>Código CNE:</b> 140706043<br/><b>Parroquia:</b> Alto de Los Godos<br/><b>Mesas:</b> 1 (01)<br/><b>Electores:</b> 390<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.21261,9.744576,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Escuela Basica San Simon</name>
+        <description><![CDATA[<b>Código CNE:</b> 140706004<br/><b>Parroquia:</b> Alto de Los Godos<br/><b>Mesas:</b> 3 (01, 02, 03)<br/><b>Electores:</b> 2,092<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.220638,9.722143,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Escuela Basica Victoria Ramirez Molinos</name>
+        <description><![CDATA[<b>Código CNE:</b> 140706024<br/><b>Parroquia:</b> Alto de Los Godos<br/><b>Mesas:</b> 5 (01, 02, 03, 04, 05)<br/><b>Electores:</b> 4,325<br/><b>Estatus:</b> prioritario]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.198387,9.733744,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Escuela Básica Antonio Jose De Sucre</name>
+        <description><![CDATA[<b>Código CNE:</b> 140706006<br/><b>Parroquia:</b> Alto de Los Godos<br/><b>Mesas:</b> 2 (01, 03)<br/><b>Electores:</b> 2,899<br/><b>Estatus:</b> prioritario]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.223479,9.739608,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Escuela Básica Cacique Paramaconi</name>
+        <description><![CDATA[<b>Código CNE:</b> 140706001<br/><b>Parroquia:</b> Alto de Los Godos<br/><b>Mesas:</b> 2 (01, 03)<br/><b>Electores:</b> 2,957<br/><b>Estatus:</b> prioritario]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.208878,9.718779,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Escuela Inicial Nacional Republica De Venezuela</name>
+        <description><![CDATA[<b>Código CNE:</b> 140706052<br/><b>Parroquia:</b> Alto de Los Godos<br/><b>Mesas:</b> 1 (01)<br/><b>Electores:</b> 922<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.204806,9.743954,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Escuela Primaria  Juana Ramirez</name>
+        <description><![CDATA[<b>Código CNE:</b> 140706032<br/><b>Parroquia:</b> Alto de Los Godos<br/><b>Mesas:</b> 3 (01, 02, 03)<br/><b>Electores:</b> 2,204<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.226005,9.727746,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Escuela Primaria Nacional  Ali Primera</name>
+        <description><![CDATA[<b>Código CNE:</b> 140706042<br/><b>Parroquia:</b> Alto de Los Godos<br/><b>Mesas:</b> 1 (01)<br/><b>Electores:</b> 442<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.198448,9.726036,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Escuela Primaria Nacional Adriana Rengel De Sequera</name>
+        <description><![CDATA[<b>Código CNE:</b> 140706015<br/><b>Parroquia:</b> Alto de Los Godos<br/><b>Mesas:</b> 2 (02, 03)<br/><b>Electores:</b> 2,842<br/><b>Estatus:</b> prioritario]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.217849,9.745313,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Escuela Primaria Nacional Bolivariana Pinto Salinas</name>
+        <description><![CDATA[<b>Código CNE:</b> 140706008<br/><b>Parroquia:</b> Alto de Los Godos<br/><b>Mesas:</b> 2 (01, 03)<br/><b>Electores:</b> 2,989<br/><b>Estatus:</b> prioritario]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.217204,9.718223,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Escuela Primaria Nacional Cacique Guanaguanai</name>
+        <description><![CDATA[<b>Código CNE:</b> 140706051<br/><b>Parroquia:</b> Alto de Los Godos<br/><b>Mesas:</b> 2 (01, 02)<br/><b>Electores:</b> 2,005<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.198199,9.738906,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Escuela Primaria Nacional Cruz Hernandez Quijada</name>
+        <description><![CDATA[<b>Código CNE:</b> 140706046<br/><b>Parroquia:</b> Alto de Los Godos<br/><b>Mesas:</b> 1 (02)<br/><b>Electores:</b> 2,000<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.22728,9.735837,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Jardin De Infancia Carmen Veronica Cuello</name>
+        <description><![CDATA[<b>Código CNE:</b> 140706014<br/><b>Parroquia:</b> Alto de Los Godos<br/><b>Mesas:</b> 2 (01, 02)<br/><b>Electores:</b> 1,273<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.203342,9.719173,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Jardin De Infancia Nacional Adriana Rengel De Sequera</name>
+        <description><![CDATA[<b>Código CNE:</b> 140706011<br/><b>Parroquia:</b> Alto de Los Godos<br/><b>Mesas:</b> 2 (01, 02)<br/><b>Electores:</b> 1,535<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.209252,9.747222,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Liceo Bolivariano Gilda Ramirez</name>
+        <description><![CDATA[<b>Código CNE:</b> 140706036<br/><b>Parroquia:</b> Alto de Los Godos<br/><b>Mesas:</b> 2 (01, 03)<br/><b>Electores:</b> 2,965<br/><b>Estatus:</b> prioritario]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.224983,9.722426,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Liceo Nacional Batalla De La Victoria</name>
+        <description><![CDATA[<b>Código CNE:</b> 140706048<br/><b>Parroquia:</b> Alto de Los Godos<br/><b>Mesas:</b> 1 (03)<br/><b>Electores:</b> 3,434<br/><b>Estatus:</b> prioritario]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.195437,9.730691,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Liceo Nacional Felix Armando Nuñez Beaperthuy</name>
+        <description><![CDATA[<b>Código CNE:</b> 140706017<br/><b>Parroquia:</b> Alto de Los Godos<br/><b>Mesas:</b> 3 (01, 02, 03)<br/><b>Electores:</b> 2,517<br/><b>Estatus:</b> prioritario]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.223418,9.743758,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Liceo Nacional Los Guaritos</name>
+        <description><![CDATA[<b>Código CNE:</b> 140706021<br/><b>Parroquia:</b> Alto de Los Godos<br/><b>Mesas:</b> 4 (01, 02, 03, 04)<br/><b>Electores:</b> 3,682<br/><b>Estatus:</b> prioritario]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.211919,9.7158,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Modulo Comunal La Muralla</name>
+        <description><![CDATA[<b>Código CNE:</b> 140706010<br/><b>Parroquia:</b> Alto de Los Godos<br/><b>Mesas:</b> 2 (01, 02)<br/><b>Electores:</b> 1,296<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.200441,9.744132,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Preescolar Dora Teotiste De Gallegos</name>
+        <description><![CDATA[<b>Código CNE:</b> 140706005<br/><b>Parroquia:</b> Alto de Los Godos<br/><b>Mesas:</b> 1 (01)<br/><b>Electores:</b> 878<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.229316,9.730474,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Unidad Educativa Padre Luis Ormieres Fe Y Alegria</name>
+        <description><![CDATA[<b>Código CNE:</b> 140706007<br/><b>Parroquia:</b> Alto de Los Godos<br/><b>Mesas:</b> 3 (01, 02, 03)<br/><b>Electores:</b> 2,425<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.198001,9.721879,0</coordinates>
+        </Point>
+      </Placemark>
+    </Folder>
+    <Folder>
+      <name>Parroquia Boquerón (17 centros)</name>
+      <Placemark>
+        <name>Centro De Educacion Inicial Bolivariano Simon Bolivar</name>
+        <description><![CDATA[<b>Código CNE:</b> 140707024<br/><b>Parroquia:</b> Boquerón<br/><b>Mesas:</b> 1 (01)<br/><b>Electores:</b> 405<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.19185,9.789,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Centro De Votacion Brisas De Oriente</name>
+        <description><![CDATA[<b>Código CNE:</b> 140707027<br/><b>Parroquia:</b> Boquerón<br/><b>Mesas:</b> 1 (01)<br/><b>Electores:</b> 831<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.199026,9.792513,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Centro De Votación Brisas De Sarrapial Renacer 2</name>
+        <description><![CDATA[<b>Código CNE:</b> 140707026<br/><b>Parroquia:</b> Boquerón<br/><b>Mesas:</b> 2 (01, 02)<br/><b>Electores:</b> 1,534<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.194439,9.782912,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Centro Educativo Inicial Simoncito Aquiles Nazoa</name>
+        <description><![CDATA[<b>Código CNE:</b> 140707030<br/><b>Parroquia:</b> Boquerón<br/><b>Mesas:</b> 1 (01)<br/><b>Electores:</b> 446<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.190649,9.794405,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Escuela Basica Andres Bello</name>
+        <description><![CDATA[<b>Código CNE:</b> 140707003<br/><b>Parroquia:</b> Boquerón<br/><b>Mesas:</b> 3 (01, 02, 03)<br/><b>Electores:</b> 2,416<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.202651,9.787711,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Escuela Basica Bolivariana Del Zamuro</name>
+        <description><![CDATA[<b>Código CNE:</b> 140707004<br/><b>Parroquia:</b> Boquerón<br/><b>Mesas:</b> 1 (01)<br/><b>Electores:</b> 749<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.187984,9.784749,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Escuela Basica Carmen Hernandez De Milano</name>
+        <description><![CDATA[<b>Código CNE:</b> 140707005<br/><b>Parroquia:</b> Boquerón<br/><b>Mesas:</b> 2 (01, 02)<br/><b>Electores:</b> 1,070<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.197287,9.797101,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Escuela Basica Menca De Leoni</name>
+        <description><![CDATA[<b>Código CNE:</b> 140707010<br/><b>Parroquia:</b> Boquerón<br/><b>Mesas:</b> 3 (01, 02, 03)<br/><b>Electores:</b> 2,928<br/><b>Estatus:</b> prioritario]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.199269,9.781172,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Escuela Básica Bolivariana Guayabal</name>
+        <description><![CDATA[<b>Código CNE:</b> 140707002<br/><b>Parroquia:</b> Boquerón<br/><b>Mesas:</b> 1 (01)<br/><b>Electores:</b> 1,259<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.185904,9.792163,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Escuela Básica Doctor Luis Beltran Prieto Figueroa</name>
+        <description><![CDATA[<b>Código CNE:</b> 140707017<br/><b>Parroquia:</b> Boquerón<br/><b>Mesas:</b> 2 (01, 02)<br/><b>Electores:</b> 1,103<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.204317,9.792663,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Escuela Básica El Rincón Del Costo</name>
+        <description><![CDATA[<b>Código CNE:</b> 140707023<br/><b>Parroquia:</b> Boquerón<br/><b>Mesas:</b> 1 (01)<br/><b>Electores:</b> 764<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.190569,9.779981,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Escuela Básica Luisa Teresa Sosa</name>
+        <description><![CDATA[<b>Código CNE:</b> 140707007<br/><b>Parroquia:</b> Boquerón<br/><b>Mesas:</b> 5 (01, 02, 03, 04, 05)<br/><b>Electores:</b> 4,567<br/><b>Estatus:</b> prioritario]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.191764,9.798825,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Escuela Básica Rural Santa Elena De Viboral</name>
+        <description><![CDATA[<b>Código CNE:</b> 140707015<br/><b>Parroquia:</b> Boquerón<br/><b>Mesas:</b> 3 (02, 03, 04)<br/><b>Electores:</b> 3,672<br/><b>Estatus:</b> prioritario]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.204649,9.783675,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Escuela Primaria Nacional Bolivariana La Sabana Del Zorro</name>
+        <description><![CDATA[<b>Código CNE:</b> 140707021<br/><b>Parroquia:</b> Boquerón<br/><b>Mesas:</b> 1 (02)<br/><b>Electores:</b> 1,069<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.183789,9.786652,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Liceo Nacional Salvador Allende</name>
+        <description><![CDATA[<b>Código CNE:</b> 140707016<br/><b>Parroquia:</b> Boquerón<br/><b>Mesas:</b> 2 (01, 02)<br/><b>Electores:</b> 1,967<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.201782,9.798188,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Liceo Simón Bolívar</name>
+        <description><![CDATA[<b>Código CNE:</b> 140707008<br/><b>Parroquia:</b> Boquerón<br/><b>Mesas:</b> 5 (01, 02, 04, 05, 06)<br/><b>Electores:</b> 5,186<br/><b>Estatus:</b> prioritario]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.196555,9.777575,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Unidad Educativa Luisa Jimenez De Canelon</name>
+        <description><![CDATA[<b>Código CNE:</b> 140707011<br/><b>Parroquia:</b> Boquerón<br/><b>Mesas:</b> 3 (01, 02, 03)<br/><b>Electores:</b> 2,199<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.185526,9.796604,0</coordinates>
+        </Point>
+      </Placemark>
+    </Folder>
+    <Folder>
+      <name>Parroquia El Corozo (1 centros)</name>
+      <Placemark>
+        <name>Unidad Educativa José Gregorio Monagas</name>
+        <description><![CDATA[<b>Código CNE:</b> 140703001<br/><b>Parroquia:</b> El Corozo<br/><b>Mesas:</b> 3 (01, 02, 03)<br/><b>Electores:</b> 2,606<br/><b>Estatus:</b> prioritario]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.216,9.676,0</coordinates>
+        </Point>
+      </Placemark>
+    </Folder>
+    <Folder>
+      <name>Parroquia El Furrial (3 centros)</name>
+      <Placemark>
+        <name>Grupo Escolar Felicia Rondón De Cabello</name>
+        <description><![CDATA[<b>Código CNE:</b> 140708001<br/><b>Parroquia:</b> El Furrial<br/><b>Mesas:</b> 5 (01, 02, 03, 04, 05)<br/><b>Electores:</b> 3,910<br/><b>Estatus:</b> prioritario]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.366,9.726,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Liceo Nacional El Furrial</name>
+        <description><![CDATA[<b>Código CNE:</b> 140708002<br/><b>Parroquia:</b> El Furrial<br/><b>Mesas:</b> 3 (01, 02, 03)<br/><b>Electores:</b> 2,480<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.372,9.731,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Escuela Básica Corocito De El Furrial</name>
+        <description><![CDATA[<b>Código CNE:</b> 140708003<br/><b>Parroquia:</b> El Furrial<br/><b>Mesas:</b> 2 (01, 02)<br/><b>Electores:</b> 1,390<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.354,9.715,0</coordinates>
+        </Point>
+      </Placemark>
+    </Folder>
+    <Folder>
+      <name>Parroquia Jusepín (7 centros)</name>
+      <Placemark>
+        <name>Centro De Educaciòn Inicial Anexo Doctor José María Vargas</name>
+        <description><![CDATA[<b>Código CNE:</b> 140702006<br/><b>Parroquia:</b> Jusepín<br/><b>Mesas:</b> 1 (01)<br/><b>Electores:</b> 776<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.50085,9.749,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Escuela Básica Bolivariana Barrancas</name>
+        <description><![CDATA[<b>Código CNE:</b> 140702004<br/><b>Parroquia:</b> Jusepín<br/><b>Mesas:</b> 1 (01)<br/><b>Electores:</b> 841<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.508026,9.752513,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Escuela Básica Bolivariana Doctor José María Vargas</name>
+        <description><![CDATA[<b>Código CNE:</b> 140702001<br/><b>Parroquia:</b> Jusepín<br/><b>Mesas:</b> 3 (01, 02, 03)<br/><b>Electores:</b> 2,732<br/><b>Estatus:</b> prioritario]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.504,9.749,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Escuela Básica Bolivariana Santiago Mariño</name>
+        <description><![CDATA[<b>Código CNE:</b> 140702002<br/><b>Parroquia:</b> Jusepín<br/><b>Mesas:</b> 1 (01)<br/><b>Electores:</b> 684<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.503439,9.742912,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Escuela Básica Plácido Maneiro</name>
+        <description><![CDATA[<b>Código CNE:</b> 140702003<br/><b>Parroquia:</b> Jusepín<br/><b>Mesas:</b> 3 (01, 02, 03)<br/><b>Electores:</b> 3,086<br/><b>Estatus:</b> prioritario]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.499649,9.754405,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Preescolar Jose Enrique Rodríguez  Antiguo El Cairo</name>
+        <description><![CDATA[<b>Código CNE:</b> 140702008<br/><b>Parroquia:</b> Jusepín<br/><b>Mesas:</b> 1 (01)<br/><b>Electores:</b> 437<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.511651,9.747711,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Unidad Educativa Anatilde Salcedo Fe Y Alegría</name>
+        <description><![CDATA[<b>Código CNE:</b> 140702005<br/><b>Parroquia:</b> Jusepín<br/><b>Mesas:</b> 1 (01)<br/><b>Electores:</b> 756<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.496984,9.744749,0</coordinates>
+        </Point>
+      </Placemark>
+    </Folder>
+    <Folder>
+      <name>Parroquia La Pica (8 centros)</name>
+      <Placemark>
+        <name>Centro Educación Inicial Bolivariano Nuestra Señora De Lourdes</name>
+        <description><![CDATA[<b>Código CNE:</b> 140705012<br/><b>Parroquia:</b> La Pica<br/><b>Mesas:</b> 1 (01)<br/><b>Electores:</b> 993<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.07585,9.776,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Complejo Educativo Fanny Centeno</name>
+        <description><![CDATA[<b>Código CNE:</b> 140705004<br/><b>Parroquia:</b> La Pica<br/><b>Mesas:</b> 1 (01)<br/><b>Electores:</b> 1,731<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.083026,9.779513,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Complejo Educativo Nacional El Barril</name>
+        <description><![CDATA[<b>Código CNE:</b> 140705009<br/><b>Parroquia:</b> La Pica<br/><b>Mesas:</b> 1 (01)<br/><b>Electores:</b> 521<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.078439,9.769912,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Escuela Básica Bolivariana La Esperanza</name>
+        <description><![CDATA[<b>Código CNE:</b> 140705005<br/><b>Parroquia:</b> La Pica<br/><b>Mesas:</b> 1 (01)<br/><b>Electores:</b> 580<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.074649,9.781405,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Escuela Básica Bolivariana La Locación</name>
+        <description><![CDATA[<b>Código CNE:</b> 140705007<br/><b>Parroquia:</b> La Pica<br/><b>Mesas:</b> 1 (01)<br/><b>Electores:</b> 327<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.086651,9.774711,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Internado Judicial De Monagas</name>
+        <description><![CDATA[<b>Código CNE:</b> 140705003<br/><b>Parroquia:</b> La Pica<br/><b>Mesas:</b> 1 (01)<br/><b>Electores:</b> 665<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.092,9.761,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Liceo Nacional José Félix Ribas</name>
+        <description><![CDATA[<b>Código CNE:</b> 140705002<br/><b>Parroquia:</b> La Pica<br/><b>Mesas:</b> 2 (01, 02)<br/><b>Electores:</b> 1,278<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.068,9.782,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Unidad Educativa Bolivariana Vuelta Larga</name>
+        <description><![CDATA[<b>Código CNE:</b> 140705006<br/><b>Parroquia:</b> La Pica<br/><b>Mesas:</b> 1 (01)<br/><b>Electores:</b> 801<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.071984,9.771749,0</coordinates>
+        </Point>
+      </Placemark>
+    </Folder>
+    <Folder>
+      <name>Parroquia Las Cocuizas (31 centros)</name>
+      <Placemark>
+        <name>Casa De Abrigo Jose Mercedes Santeliz</name>
+        <description><![CDATA[<b>Código CNE:</b> 140708035<br/><b>Parroquia:</b> Las Cocuizas<br/><b>Mesas:</b> 1 (01)<br/><b>Electores:</b> 797<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.14585,9.758,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Centro De Educación Inicial Doña Faustina Saez De Alfaro</name>
+        <description><![CDATA[<b>Código CNE:</b> 140708015<br/><b>Parroquia:</b> Las Cocuizas<br/><b>Mesas:</b> 2 (01, 02)<br/><b>Electores:</b> 1,452<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.153026,9.761513,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Centro De Niño Y Familia Agustin Salazar</name>
+        <description><![CDATA[<b>Código CNE:</b> 140708030<br/><b>Parroquia:</b> Las Cocuizas<br/><b>Mesas:</b> 2 (01, 02)<br/><b>Electores:</b> 1,327<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.148439,9.751912,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Centro De Servicio Social Residencial Y Ambulatorio Doctor Marcos Serres Padilla</name>
+        <description><![CDATA[<b>Código CNE:</b> 140708032<br/><b>Parroquia:</b> Las Cocuizas<br/><b>Mesas:</b> 1 (01)<br/><b>Electores:</b> 364<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.144649,9.763405,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Centro De Votacion Juventud</name>
+        <description><![CDATA[<b>Código CNE:</b> 140708044<br/><b>Parroquia:</b> Las Cocuizas<br/><b>Mesas:</b> 1 (01)<br/><b>Electores:</b> 365<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.156651,9.756711,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Centro De Votacion Los Capachos</name>
+        <description><![CDATA[<b>Código CNE:</b> 140708041<br/><b>Parroquia:</b> Las Cocuizas<br/><b>Mesas:</b> 1 (01)<br/><b>Electores:</b> 330<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.141984,9.753749,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Centro De Votacion Socialista Terrazas De Campo Alegre</name>
+        <description><![CDATA[<b>Código CNE:</b> 140708046<br/><b>Parroquia:</b> Las Cocuizas<br/><b>Mesas:</b> 1 (01)<br/><b>Electores:</b> 227<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.151287,9.766101,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Centro De Votacion Virgen Del Carmen</name>
+        <description><![CDATA[<b>Código CNE:</b> 140708045<br/><b>Parroquia:</b> Las Cocuizas<br/><b>Mesas:</b> 1 (01)<br/><b>Electores:</b> 674<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.153269,9.750172,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Complejo Educativo  Angel De La Guarda Fe Y Alegría</name>
+        <description><![CDATA[<b>Código CNE:</b> 140708018<br/><b>Parroquia:</b> Las Cocuizas<br/><b>Mesas:</b> 4 (01, 02, 03, 04)<br/><b>Electores:</b> 4,212<br/><b>Estatus:</b> prioritario]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.139904,9.761163,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Complejo Educativo General Ezequiel Zamora</name>
+        <description><![CDATA[<b>Código CNE:</b> 140708037<br/><b>Parroquia:</b> Las Cocuizas<br/><b>Mesas:</b> 1 (02)<br/><b>Electores:</b> 1,407<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.158317,9.761663,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Complejo Educativo Nacional Andres Bello</name>
+        <description><![CDATA[<b>Código CNE:</b> 140708017<br/><b>Parroquia:</b> Las Cocuizas<br/><b>Mesas:</b> 4 (01, 02, 03, 04)<br/><b>Electores:</b> 3,593<br/><b>Estatus:</b> prioritario]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.144569,9.748981,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Complejo Educativo Nacional Leonardo Infante</name>
+        <description><![CDATA[<b>Código CNE:</b> 140708008<br/><b>Parroquia:</b> Las Cocuizas<br/><b>Mesas:</b> 5 (01, 02, 04, 05, 06)<br/><b>Electores:</b> 5,526<br/><b>Estatus:</b> prioritario]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.145764,9.767825,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Escuela Basica Bolivariana Pedro Maximo Campos</name>
+        <description><![CDATA[<b>Código CNE:</b> 140708010<br/><b>Parroquia:</b> Las Cocuizas<br/><b>Mesas:</b> 2 (01, 02)<br/><b>Electores:</b> 1,506<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.158649,9.752675,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Escuela Basica Cecilio Acosta</name>
+        <description><![CDATA[<b>Código CNE:</b> 140708016<br/><b>Parroquia:</b> Las Cocuizas<br/><b>Mesas:</b> 1 (01)<br/><b>Electores:</b> 3,188<br/><b>Estatus:</b> prioritario]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.137789,9.755652,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Escuela Basica Doctor Ernesto Che Guevara</name>
+        <description><![CDATA[<b>Código CNE:</b> 140708027<br/><b>Parroquia:</b> Las Cocuizas<br/><b>Mesas:</b> 1 (01)<br/><b>Electores:</b> 814<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.155782,9.767188,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Escuela Basica Federico Hands</name>
+        <description><![CDATA[<b>Código CNE:</b> 140708001<br/><b>Parroquia:</b> Las Cocuizas<br/><b>Mesas:</b> 3 (01, 02, 03)<br/><b>Electores:</b> 2,580<br/><b>Estatus:</b> prioritario]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.150555,9.746575,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Escuela Basica Francisco De Miranda</name>
+        <description><![CDATA[<b>Código CNE:</b> 140708006<br/><b>Parroquia:</b> Las Cocuizas<br/><b>Mesas:</b> 2 (01, 02)<br/><b>Electores:</b> 1,860<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.139526,9.765604,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Escuela Basica Nacional Mereyal</name>
+        <description><![CDATA[<b>Código CNE:</b> 140708020<br/><b>Parroquia:</b> Las Cocuizas<br/><b>Mesas:</b> 2 (01, 02)<br/><b>Electores:</b> 1,536<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.161664,9.758499,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Escuela Basica Pablo Emilio Castillo</name>
+        <description><![CDATA[<b>Código CNE:</b> 140708014<br/><b>Parroquia:</b> Las Cocuizas<br/><b>Mesas:</b> 3 (01, 03, 04)<br/><b>Electores:</b> 3,137<br/><b>Estatus:</b> prioritario]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.139821,9.749299,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Escuela Basica Primero De Mayo</name>
+        <description><![CDATA[<b>Código CNE:</b> 140708019<br/><b>Parroquia:</b> Las Cocuizas<br/><b>Mesas:</b> 4 (02, 03, 04, 05)<br/><b>Electores:</b> 4,082<br/><b>Estatus:</b> prioritario]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.14961,9.770576,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Escuela Basica Simon Rodriguez</name>
+        <description><![CDATA[<b>Código CNE:</b> 140708005<br/><b>Parroquia:</b> Las Cocuizas<br/><b>Mesas:</b> 2 (01, 02)<br/><b>Electores:</b> 1,816<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.157638,9.748143,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Escuela Básica Gregorio Rondón</name>
+        <description><![CDATA[<b>Código CNE:</b> 140708002<br/><b>Parroquia:</b> Las Cocuizas<br/><b>Mesas:</b> 4 (01, 02, 03, 04)<br/><b>Electores:</b> 3,114<br/><b>Estatus:</b> prioritario]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.135387,9.759744,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Escuela Nacional Inicial Simoncito La Florecita</name>
+        <description><![CDATA[<b>Código CNE:</b> 140708029<br/><b>Parroquia:</b> Las Cocuizas<br/><b>Mesas:</b> 1 (01)<br/><b>Electores:</b> 745<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.160479,9.765608,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Escuela Tecnica Industrial Maturin Eti</name>
+        <description><![CDATA[<b>Código CNE:</b> 140708003<br/><b>Parroquia:</b> Las Cocuizas<br/><b>Mesas:</b> 3 (01, 02, 03)<br/><b>Electores:</b> 2,369<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.145878,9.744779,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Instituto Nacional De Cooperación Educativa Inces</name>
+        <description><![CDATA[<b>Código CNE:</b> 140708011<br/><b>Parroquia:</b> Las Cocuizas<br/><b>Mesas:</b> 3 (01, 02, 03)<br/><b>Electores:</b> 2,172<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.141806,9.769954,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Instituto Nacional De Cooperación Educativa Socialista Militar</name>
+        <description><![CDATA[<b>Código CNE:</b> 140708038<br/><b>Parroquia:</b> Las Cocuizas<br/><b>Mesas:</b> 1 (01)<br/><b>Electores:</b> 291<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.163005,9.753746,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Jardin De Infancia Soledad Clavier</name>
+        <description><![CDATA[<b>Código CNE:</b> 140708004<br/><b>Parroquia:</b> Las Cocuizas<br/><b>Mesas:</b> 3 (01, 02, 03)<br/><b>Electores:</b> 2,043<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.135448,9.752036,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Liceo Nacional Pablo Neruda</name>
+        <description><![CDATA[<b>Código CNE:</b> 140708023<br/><b>Parroquia:</b> Las Cocuizas<br/><b>Mesas:</b> 2 (01, 02)<br/><b>Electores:</b> 1,660<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.154849,9.771313,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Liceo Rafael Maria Peña Saavedra</name>
+        <description><![CDATA[<b>Código CNE:</b> 140708007<br/><b>Parroquia:</b> Las Cocuizas<br/><b>Mesas:</b> 2 (01, 02)<br/><b>Electores:</b> 1,619<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.154204,9.744223,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Taller De Educacion Laboral Bolivariano Ayacucho</name>
+        <description><![CDATA[<b>Código CNE:</b> 140708034<br/><b>Parroquia:</b> Las Cocuizas<br/><b>Mesas:</b> 1 (01)<br/><b>Electores:</b> 310<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.135199,9.764906,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Unidad Educativa Jesus De Nazareth</name>
+        <description><![CDATA[<b>Código CNE:</b> 140708021<br/><b>Parroquia:</b> Las Cocuizas<br/><b>Mesas:</b> 2 (01, 03)<br/><b>Electores:</b> 2,891<br/><b>Estatus:</b> prioritario]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.16428,9.761837,0</coordinates>
+        </Point>
+      </Placemark>
+    </Folder>
+    <Folder>
+      <name>Parroquia San Simón (42 centros)</name>
+      <Placemark>
+        <name>Casa De Misiones Santa Ines Ii</name>
+        <description><![CDATA[<b>Código CNE:</b> 140710079<br/><b>Parroquia:</b> San Simón<br/><b>Mesas:</b> 2 (01, 02)<br/><b>Electores:</b> 1,503<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.176569,9.737981,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Casa De Niños Maria Eva De Liscano</name>
+        <description><![CDATA[<b>Código CNE:</b> 140710013<br/><b>Parroquia:</b> San Simón<br/><b>Mesas:</b> 1 (01)<br/><b>Electores:</b> 989<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.177764,9.756825,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Centro De Educacion Inicial Irma Saez Merida De Grisanti</name>
+        <description><![CDATA[<b>Código CNE:</b> 140710028<br/><b>Parroquia:</b> San Simón<br/><b>Mesas:</b> 1 (01)<br/><b>Electores:</b> 784<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.190649,9.741675,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Centro De Votacion La Orquidea Del Sur</name>
+        <description><![CDATA[<b>Código CNE:</b> 140710080<br/><b>Parroquia:</b> San Simón<br/><b>Mesas:</b> 1 (01)<br/><b>Electores:</b> 858<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.169789,9.744652,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Centro De Votacion Rosa Ines</name>
+        <description><![CDATA[<b>Código CNE:</b> 140710078<br/><b>Parroquia:</b> San Simón<br/><b>Mesas:</b> 2 (01, 02)<br/><b>Electores:</b> 1,553<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.187782,9.756188,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Centro De Votacion Santa Ines V</name>
+        <description><![CDATA[<b>Código CNE:</b> 140710077<br/><b>Parroquia:</b> San Simón<br/><b>Mesas:</b> 1 (01)<br/><b>Electores:</b> 458<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.182555,9.735575,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Colegio Privado Heroes De Monagas</name>
+        <description><![CDATA[<b>Código CNE:</b> 140710055<br/><b>Parroquia:</b> San Simón<br/><b>Mesas:</b> 2 (01, 02)<br/><b>Electores:</b> 1,161<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.171526,9.754604,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Complejo Educativo Estadal Rosa Adela De Hernández</name>
+        <description><![CDATA[<b>Código CNE:</b> 140710001<br/><b>Parroquia:</b> San Simón<br/><b>Mesas:</b> 1 (01)<br/><b>Electores:</b> 1,003<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.193664,9.747499,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Educacion Inicial Nacional El Libertador</name>
+        <description><![CDATA[<b>Código CNE:</b> 140710027<br/><b>Parroquia:</b> San Simón<br/><b>Mesas:</b> 2 (01, 02)<br/><b>Electores:</b> 1,093<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.171821,9.738299,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Escuela Basica Isabel Padrino De Campos</name>
+        <description><![CDATA[<b>Código CNE:</b> 140710005<br/><b>Parroquia:</b> San Simón<br/><b>Mesas:</b> 3 (01, 02, 03)<br/><b>Electores:</b> 2,939<br/><b>Estatus:</b> prioritario]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.18161,9.759576,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Escuela Basica Jorge Rodriguez</name>
+        <description><![CDATA[<b>Código CNE:</b> 140710074<br/><b>Parroquia:</b> San Simón<br/><b>Mesas:</b> 2 (01, 02)<br/><b>Electores:</b> 1,068<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.189638,9.737143,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Escuela Basica Jose Damian Ramirez Labrador</name>
+        <description><![CDATA[<b>Código CNE:</b> 140710006<br/><b>Parroquia:</b> San Simón<br/><b>Mesas:</b> 3 (01, 02, 03)<br/><b>Electores:</b> 2,004<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.167387,9.748744,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Escuela Basica Manuel Piar</name>
+        <description><![CDATA[<b>Código CNE:</b> 140710002<br/><b>Parroquia:</b> San Simón<br/><b>Mesas:</b> 3 (01, 02, 03)<br/><b>Electores:</b> 2,035<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.192479,9.754608,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Escuela Basica Parare</name>
+        <description><![CDATA[<b>Código CNE:</b> 140710059<br/><b>Parroquia:</b> San Simón<br/><b>Mesas:</b> 2 (01, 02)<br/><b>Electores:</b> 1,468<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.177878,9.733779,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Escuela Basica San Miguel</name>
+        <description><![CDATA[<b>Código CNE:</b> 140710057<br/><b>Parroquia:</b> San Simón<br/><b>Mesas:</b> 1 (01)<br/><b>Electores:</b> 561<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.173806,9.758954,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Escuela Básica Bolivariana Altamira</name>
+        <description><![CDATA[<b>Código CNE:</b> 140710070<br/><b>Parroquia:</b> San Simón<br/><b>Mesas:</b> 1 (01)<br/><b>Electores:</b> 328<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.195005,9.742746,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Escuela Básica Vicente Salias</name>
+        <description><![CDATA[<b>Código CNE:</b> 140710007<br/><b>Parroquia:</b> San Simón<br/><b>Mesas:</b> 4 (01, 02, 03, 04)<br/><b>Electores:</b> 3,105<br/><b>Estatus:</b> prioritario]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.167448,9.741036,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Escuela De Artes Plasticas Eloy Palacios</name>
+        <description><![CDATA[<b>Código CNE:</b> 140710021<br/><b>Parroquia:</b> San Simón<br/><b>Mesas:</b> 2 (01, 03)<br/><b>Electores:</b> 2,346<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.186849,9.760313,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Escuela Inicial Nacional Año Internacional Del Niño</name>
+        <description><![CDATA[<b>Código CNE:</b> 140710015<br/><b>Parroquia:</b> San Simón<br/><b>Mesas:</b> 1 (01)<br/><b>Electores:</b> 1,695<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.186204,9.733223,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Escuela Nacional Primaria Valenzuela</name>
+        <description><![CDATA[<b>Código CNE:</b> 140710075<br/><b>Parroquia:</b> San Simón<br/><b>Mesas:</b> 1 (01)<br/><b>Electores:</b> 683<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.167199,9.753906,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Escuela Primaria Estadal Boyaca</name>
+        <description><![CDATA[<b>Código CNE:</b> 140710029<br/><b>Parroquia:</b> San Simón<br/><b>Mesas:</b> 3 (01, 02, 03)<br/><b>Electores:</b> 2,112<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.19628,9.750837,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Escuela Primaria Estadal Marcos Serres Padilla</name>
+        <description><![CDATA[<b>Código CNE:</b> 140710056<br/><b>Parroquia:</b> San Simón<br/><b>Mesas:</b> 3 (01, 02, 03)<br/><b>Electores:</b> 2,065<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.172342,9.734173,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Escuela Primaria Nacional   Bolivariana Paula Bastardo</name>
+        <description><![CDATA[<b>Código CNE:</b> 140710017<br/><b>Parroquia:</b> San Simón<br/><b>Mesas:</b> 1 (01)<br/><b>Electores:</b> 2,486<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.178252,9.762222,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Escuela Primaria Nacional  Felix Antonio Calderon</name>
+        <description><![CDATA[<b>Código CNE:</b> 140710014<br/><b>Parroquia:</b> San Simón<br/><b>Mesas:</b> 4 (01, 02, 03, 04)<br/><b>Electores:</b> 3,497<br/><b>Estatus:</b> prioritario]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.193983,9.737426,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Escuela Primaria Nacional Alejandro De Humbolt</name>
+        <description><![CDATA[<b>Código CNE:</b> 140710003<br/><b>Parroquia:</b> San Simón<br/><b>Mesas:</b> 3 (01, 02, 03)<br/><b>Electores:</b> 2,621<br/><b>Estatus:</b> prioritario]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.164437,9.745691,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Escuela Primaria Nacional Juan Francisco Mila De La Roca</name>
+        <description><![CDATA[<b>Código CNE:</b> 140710010<br/><b>Parroquia:</b> San Simón<br/><b>Mesas:</b> 1 (01)<br/><b>Electores:</b> 1,840<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.192418,9.758758,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Escuela Primaria Nacional Ventura Vargas</name>
+        <description><![CDATA[<b>Código CNE:</b> 140710009<br/><b>Parroquia:</b> San Simón<br/><b>Mesas:</b> 3 (01, 02, 03)<br/><b>Electores:</b> 2,550<br/><b>Estatus:</b> prioritario]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.180919,9.7308,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Escuela Tecnica Robinsoniana Comercial Felix Angel Lozada</name>
+        <description><![CDATA[<b>Código CNE:</b> 140710023<br/><b>Parroquia:</b> San Simón<br/><b>Mesas:</b> 2 (01, 02)<br/><b>Electores:</b> 1,208<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.169441,9.759132,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Jardin De Infancia Monagas</name>
+        <description><![CDATA[<b>Código CNE:</b> 140710018<br/><b>Parroquia:</b> San Simón<br/><b>Mesas:</b> 3 (01, 02, 03)<br/><b>Electores:</b> 2,557<br/><b>Estatus:</b> prioritario]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.198316,9.745474,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Jardin De Infancia San Simon</name>
+        <description><![CDATA[<b>Código CNE:</b> 140710081<br/><b>Parroquia:</b> San Simón<br/><b>Mesas:</b> 2 (01, 02)<br/><b>Electores:</b> 1,188<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.167001,9.736879,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Liceo Bolivariano Doctor Jesus Rafael Zambrano</name>
+        <description><![CDATA[<b>Código CNE:</b> 140710076<br/><b>Parroquia:</b> San Simón<br/><b>Mesas:</b> 2 (01, 02)<br/><b>Electores:</b> 1,158<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.184176,9.763641,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Liceo Nacional  Doctor Manuel Nuñez Tovar</name>
+        <description><![CDATA[<b>Código CNE:</b> 140710012<br/><b>Parroquia:</b> San Simón<br/><b>Mesas:</b> 3 (01, 02, 03)<br/><b>Electores:</b> 2,398<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.190558,9.732539,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Liceo Nacional Francisco Isnardi</name>
+        <description><![CDATA[<b>Código CNE:</b> 140710030<br/><b>Parroquia:</b> San Simón<br/><b>Mesas:</b> 3 (01, 02, 03)<br/><b>Electores:</b> 2,806<br/><b>Estatus:</b> prioritario]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.163523,9.751559,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Liceo Nacional Idelfonso Nuñez Mares</name>
+        <description><![CDATA[<b>Código CNE:</b> 140710026<br/><b>Parroquia:</b> San Simón<br/><b>Mesas:</b> 3 (01, 02, 03)<br/><b>Electores:</b> 2,038<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.197278,9.754959,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Liceo Nacional Marco Antonio Saluzzo</name>
+        <description><![CDATA[<b>Código CNE:</b> 140710011<br/><b>Parroquia:</b> San Simón<br/><b>Mesas:</b> 2 (01, 02)<br/><b>Electores:</b> 2,487<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.174581,9.730503,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Liceo Nacional Miguel Jose Sanz</name>
+        <description><![CDATA[<b>Código CNE:</b> 140710022<br/><b>Parroquia:</b> San Simón<br/><b>Mesas:</b> 3 (01, 02, 03)<br/><b>Electores:</b> 2,817<br/><b>Estatus:</b> prioritario]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.173967,9.763446,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Unidad Educativa Colegio Privado Maturín</name>
+        <description><![CDATA[<b>Código CNE:</b> 140710008<br/><b>Parroquia:</b> San Simón<br/><b>Mesas:</b> 2 (01, 02)<br/><b>Electores:</b> 1,632<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.198005,9.739328,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Unidad Educativa Doctora Lia Imber De Coronil Albergue</name>
+        <description><![CDATA[<b>Código CNE:</b> 140710020<br/><b>Parroquia:</b> San Simón<br/><b>Mesas:</b> 3 (01, 02, 03)<br/><b>Electores:</b> 2,903<br/><b>Estatus:</b> prioritario]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.162857,9.74167,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Unidad Educativa El Rincon De Monagas</name>
+        <description><![CDATA[<b>Código CNE:</b> 140710033<br/><b>Parroquia:</b> San Simón<br/><b>Mesas:</b> 1 (01)<br/><b>Electores:</b> 932<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.190682,9.76274,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Unidad Educativa Luis Padrino</name>
+        <description><![CDATA[<b>Código CNE:</b> 140710019<br/><b>Parroquia:</b> San Simón<br/><b>Mesas:</b> 4 (01, 02, 03, 04)<br/><b>Electores:</b> 3,685<br/><b>Estatus:</b> prioritario]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.185059,9.729011,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Unidad Educativa Privada Cecilio Acosta</name>
+        <description><![CDATA[<b>Código CNE:</b> 140710025<br/><b>Parroquia:</b> San Simón<br/><b>Mesas:</b> 2 (01, 02)<br/><b>Electores:</b> 1,555<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.165114,9.757744,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Universidad Bolivariana De Venezuela</name>
+        <description><![CDATA[<b>Código CNE:</b> 140710064<br/><b>Parroquia:</b> San Simón<br/><b>Mesas:</b> 3 (01, 02, 03)<br/><b>Electores:</b> 2,405<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.200495,9.749317,0</coordinates>
+        </Point>
+      </Placemark>
+    </Folder>
+    <Folder>
+      <name>Parroquia San Simón (Casco Central) (10 centros)</name>
+      <Placemark>
+        <name>Centro De Votacion Los Arenales</name>
+        <description><![CDATA[<b>Código CNE:</b> 140711032<br/><b>Parroquia:</b> San Simón (Casco Central)<br/><b>Mesas:</b> 1 (01)<br/><b>Electores:</b> 167<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.17485,9.749,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Centro Educativo Gran Cacique Alberto Tovar</name>
+        <description><![CDATA[<b>Código CNE:</b> 140711035<br/><b>Parroquia:</b> San Simón (Casco Central)<br/><b>Mesas:</b> 1 (01)<br/><b>Electores:</b> 573<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.182026,9.752513,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Complejo Educativo Manuela Sáenz</name>
+        <description><![CDATA[<b>Código CNE:</b> 140711013<br/><b>Parroquia:</b> San Simón (Casco Central)<br/><b>Mesas:</b> 1 (01)<br/><b>Electores:</b> 549<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.177439,9.742912,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Escuela Basica Bolivariana El Respiro</name>
+        <description><![CDATA[<b>Código CNE:</b> 140711017<br/><b>Parroquia:</b> San Simón (Casco Central)<br/><b>Mesas:</b> 1 (01)<br/><b>Electores:</b> 606<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.173649,9.754405,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Escuela Basica Nicolas Lopez</name>
+        <description><![CDATA[<b>Código CNE:</b> 140711016<br/><b>Parroquia:</b> San Simón (Casco Central)<br/><b>Mesas:</b> 1 (01)<br/><b>Electores:</b> 1,674<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.185651,9.747711,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Escuela Básica Bolivariana Curiepe</name>
+        <description><![CDATA[<b>Código CNE:</b> 140711003<br/><b>Parroquia:</b> San Simón (Casco Central)<br/><b>Mesas:</b> 1 (01)<br/><b>Electores:</b> 409<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.170984,9.744749,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Escuela Básica José Tadeo Monagas</name>
+        <description><![CDATA[<b>Código CNE:</b> 140711001<br/><b>Parroquia:</b> San Simón (Casco Central)<br/><b>Mesas:</b> 2 (01, 02)<br/><b>Electores:</b> 1,625<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.180287,9.757101,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Escuela Primaria Nacional Los Araguaneyes</name>
+        <description><![CDATA[<b>Código CNE:</b> 140711014<br/><b>Parroquia:</b> San Simón (Casco Central)<br/><b>Mesas:</b> 1 (01)<br/><b>Electores:</b> 117<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.182269,9.741172,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Unidad Educativa Estadal  Los Pozos De Guanipa</name>
+        <description><![CDATA[<b>Código CNE:</b> 140711029<br/><b>Parroquia:</b> San Simón (Casco Central)<br/><b>Mesas:</b> 1 (01)<br/><b>Electores:</b> 250<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.168904,9.752163,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Unidad Educativa Maria Teresa Rodríguez Del Toro</name>
+        <description><![CDATA[<b>Código CNE:</b> 140711028<br/><b>Parroquia:</b> San Simón (Casco Central)<br/><b>Mesas:</b> 1 (01)<br/><b>Electores:</b> 940<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.187317,9.752663,0</coordinates>
+        </Point>
+      </Placemark>
+    </Folder>
+    <Folder>
+      <name>Parroquia San Vicente (4 centros)</name>
+      <Placemark>
+        <name>Casa De La Cultura Simón Bolívar</name>
+        <description><![CDATA[<b>Código CNE:</b> 140704005<br/><b>Parroquia:</b> San Vicente<br/><b>Mesas:</b> 1 (01)<br/><b>Electores:</b> 1,263<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.28085,9.729,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Centro De Votación Juana Ramìrez</name>
+        <description><![CDATA[<b>Código CNE:</b> 140704006<br/><b>Parroquia:</b> San Vicente<br/><b>Mesas:</b> 1 (01)<br/><b>Electores:</b> 337<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.288026,9.732513,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Escuela Básica Bolivariana Ismael Salazar</name>
+        <description><![CDATA[<b>Código CNE:</b> 140704002<br/><b>Parroquia:</b> San Vicente<br/><b>Mesas:</b> 4 (01, 02, 03, 04)<br/><b>Electores:</b> 3,094<br/><b>Estatus:</b> prioritario]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.284,9.729,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Escuela Inicial Nacional Ismael Salazar</name>
+        <description><![CDATA[<b>Código CNE:</b> 140704003<br/><b>Parroquia:</b> San Vicente<br/><b>Mesas:</b> 1 (02)<br/><b>Electores:</b> 1,108<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.283439,9.722912,0</coordinates>
+        </Point>
+      </Placemark>
+    </Folder>
+    <Folder>
+      <name>Parroquia Santa Cruz (12 centros)</name>
+      <Placemark>
+        <name>Base De Misiones Arismendi</name>
+        <description><![CDATA[<b>Código CNE:</b> 140709017<br/><b>Parroquia:</b> Santa Cruz<br/><b>Mesas:</b> 1 (01)<br/><b>Electores:</b> 350<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.23485,9.715,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Centro De Educacion Inicial Martha Lamas De Rengel</name>
+        <description><![CDATA[<b>Código CNE:</b> 140709006<br/><b>Parroquia:</b> Santa Cruz<br/><b>Mesas:</b> 1 (01)<br/><b>Electores:</b> 580<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.242026,9.718513,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Centro De Educacion Inicial Samuel Robinson</name>
+        <description><![CDATA[<b>Código CNE:</b> 140709016<br/><b>Parroquia:</b> Santa Cruz<br/><b>Mesas:</b> 4 (01, 02, 03, 04)<br/><b>Electores:</b> 3,535<br/><b>Estatus:</b> prioritario]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.237439,9.708912,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Complejo Educativo Nacional Padre Juan Vives Suria</name>
+        <description><![CDATA[<b>Código CNE:</b> 140709009<br/><b>Parroquia:</b> Santa Cruz<br/><b>Mesas:</b> 3 (01, 02, 04)<br/><b>Electores:</b> 3,436<br/><b>Estatus:</b> prioritario]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.233649,9.720405,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Escuela Basica Carmen Ebelia Douglas</name>
+        <description><![CDATA[<b>Código CNE:</b> 140709008<br/><b>Parroquia:</b> Santa Cruz<br/><b>Mesas:</b> 4 (01, 02, 04, 05)<br/><b>Electores:</b> 5,428<br/><b>Estatus:</b> prioritario]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.245651,9.713711,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Escuela Basica Castor Guevara</name>
+        <description><![CDATA[<b>Código CNE:</b> 140709002<br/><b>Parroquia:</b> Santa Cruz<br/><b>Mesas:</b> 4 (01, 02, 03, 04)<br/><b>Electores:</b> 3,214<br/><b>Estatus:</b> prioritario]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.230984,9.710749,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Escuela Basica San Jaime</name>
+        <description><![CDATA[<b>Código CNE:</b> 140709005<br/><b>Parroquia:</b> Santa Cruz<br/><b>Mesas:</b> 2 (01, 02)<br/><b>Electores:</b> 1,788<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.240287,9.723101,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Escuela Básica Alberto Lovera</name>
+        <description><![CDATA[<b>Código CNE:</b> 140709010<br/><b>Parroquia:</b> Santa Cruz<br/><b>Mesas:</b> 1 (01)<br/><b>Electores:</b> 750<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.242269,9.707172,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Escuela Básica Caripe</name>
+        <description><![CDATA[<b>Código CNE:</b> 140709001<br/><b>Parroquia:</b> Santa Cruz<br/><b>Mesas:</b> 3 (01, 02, 03)<br/><b>Electores:</b> 3,553<br/><b>Estatus:</b> prioritario]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.228904,9.718163,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Jardin De Infancia Caripe</name>
+        <description><![CDATA[<b>Código CNE:</b> 140709015<br/><b>Parroquia:</b> Santa Cruz<br/><b>Mesas:</b> 2 (01, 02)<br/><b>Electores:</b> 1,240<br/><b>Estatus:</b> cubierto]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.247317,9.718663,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Unidad Educativa  Diego Sifonte Sosa</name>
+        <description><![CDATA[<b>Código CNE:</b> 140709004<br/><b>Parroquia:</b> Santa Cruz<br/><b>Mesas:</b> 3 (01, 02, 03)<br/><b>Electores:</b> 2,774<br/><b>Estatus:</b> prioritario]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.233569,9.705981,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Unidad Educativa Complejo Educativo Las Carolinas</name>
+        <description><![CDATA[<b>Código CNE:</b> 140709011<br/><b>Parroquia:</b> Santa Cruz<br/><b>Mesas:</b> 3 (01, 03, 06)<br/><b>Electores:</b> 5,271<br/><b>Estatus:</b> prioritario]]></description>
+        <styleUrl>#schoolIcon</styleUrl>
+        <Point>
+          <coordinates>-63.234764,9.724825,0</coordinates>
+        </Point>
+      </Placemark>
+    </Folder>
+  </Document>
+</kml>

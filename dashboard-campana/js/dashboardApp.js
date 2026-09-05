@@ -27,17 +27,17 @@ const FIREBASE_CONFIG = {
 
 // Padrón Oficial y Metas Electorales por Parroquia (Base INE / CNE)
 export const PADRON_PARROQUIAS_MONAGAS = {
-  // MATURÍN (10 Parroquias)
-  "san-simon": { nombre: "San Simón", munId: "maturin", electores: 78500, metaVotos: 51000, centros: 38, mesas: 84 },
-  "alto-de-los-godos": { nombre: "Alto de Los Godos", munId: "maturin", electores: 69200, metaVotos: 45000, centros: 32, mesas: 72 },
-  "boqueron": { nombre: "Boquerón", munId: "maturin", electores: 58400, metaVotos: 38000, centros: 26, mesas: 60 },
-  "las-cocuizas": { nombre: "Las Cocuizas", munId: "maturin", electores: 49800, metaVotos: 32400, centros: 24, mesas: 52 },
-  "santa-cruz": { nombre: "Santa Cruz", munId: "maturin", electores: 36500, metaVotos: 23700, centros: 18, mesas: 38 },
-  "san-vicente": { nombre: "San Vicente", munId: "maturin", electores: 24100, metaVotos: 15600, centros: 12, mesas: 26 },
-  "la-pica": { nombre: "La Pica", munId: "maturin", electores: 21300, metaVotos: 13800, centros: 11, mesas: 24 },
-  "el-furrial": { nombre: "El Furrial", munId: "maturin", electores: 18900, metaVotos: 12300, centros: 10, mesas: 20 },
-  "jusepin": { nombre: "Jusepín", munId: "maturin", electores: 15200, metaVotos: 9900, centros: 8, mesas: 16 },
-  "el-corozo": { nombre: "El Corozo", munId: "maturin", electores: 12600, metaVotos: 8200, centros: 7, mesas: 14 },
+  // MATURÍN (10 Parroquias Oficiales CNE 2024 / Actas)
+  "san-simon": { nombre: "San Simón", munId: "maturin", electores: 83484, metaVotos: 54000, centros: 52, mesas: 103 },
+  "alto-de-los-godos": { nombre: "Alto de Los Godos", munId: "maturin", electores: 80630, metaVotos: 52000, centros: 40, mesas: 84 },
+  "las-cocuizas": { nombre: "Las Cocuizas", munId: "maturin", electores: 58007, metaVotos: 37500, centros: 31, mesas: 66 },
+  "boqueron": { nombre: "Boquerón", munId: "maturin", electores: 32165, metaVotos: 21000, centros: 17, mesas: 37 },
+  "santa-cruz": { nombre: "Santa Cruz", munId: "maturin", electores: 31919, metaVotos: 20500, centros: 12, mesas: 31 },
+  "jusepin": { nombre: "Jusepín", munId: "maturin", electores: 9312, metaVotos: 6000, centros: 7, mesas: 11 },
+  "el-furrial": { nombre: "El Furrial", munId: "maturin", electores: 7780, metaVotos: 5000, centros: 3, mesas: 10 },
+  "la-pica": { nombre: "La Pica", munId: "maturin", electores: 6896, metaVotos: 4500, centros: 8, mesas: 9 },
+  "san-vicente": { nombre: "San Vicente", munId: "maturin", electores: 5802, metaVotos: 3800, centros: 4, mesas: 7 },
+  "el-corozo": { nombre: "El Corozo", munId: "maturin", electores: 2606, metaVotos: 1700, centros: 1, mesas: 3 },
 
   // OTROS MUNICIPIOS
   "aragua-de-maturin": { nombre: "Aragua de Maturín", munId: "piar", electores: 18400, metaVotos: 12000, centros: 16, mesas: 24 },

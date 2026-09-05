@@ -29,6 +29,9 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
+  <!-- Base de Datos Oficial 175 Centros y 361 Mesas -->
+  <script src="js/centrosData.js"></script>
+
   <!-- Google Fonts: Inter + JetBrains Mono -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -113,6 +116,11 @@
           <i data-lucide="download" class="w-4 h-4"></i>
           <span class="hidden sm:inline">Exportar CSV</span>
         </button>
+
+        <a href="centros_electorales_maturin.kml" download="centros_electorales_maturin.kml" class="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-black transition flex items-center gap-1.5 shadow-md shadow-emerald-600/30 active:scale-95" title="Descargar archivo KML oficial para Google Earth">
+          <i data-lucide="globe" class="w-4 h-4"></i>
+          <span class="hidden sm:inline">KML Google Earth</span>
+        </a>
       </div>
 
     </div>
@@ -389,73 +397,8 @@
       { id: "el-corozo", nombre: "El Corozo" }
     ];
 
-    // Base de Datos Integral de Centros Electorales de Maturín
-    const CENTROS_MATURIN = [
-      // SAN SIMÓN
-      { id: "090101001", nombre: "U.E. República de Venezuela", parroquia: "san-simon", sector: "Casco Central", direccion: "Av. Bolívar c/c Calle Azcúe", electores: 4120, mesas: 5, lat: 9.7485, lng: -63.1815, estatus: "prioritario" },
-      { id: "090101002", nombre: "Liceo Nacional Miguel José Sanz", parroquia: "san-simon", sector: "Casco Central", direccion: "Av. Bicentenario frente a Plaza El Estudiante", electores: 3850, mesas: 5, lat: 9.7510, lng: -63.1770, estatus: "prioritario" },
-      { id: "090101003", nombre: "Grupo Escolar Vicente Salias", parroquia: "san-simon", sector: "Centro Histórico", direccion: "Calle Monagas cruce con Calle Chimborazo", electores: 2980, mesas: 4, lat: 9.7460, lng: -63.1830, estatus: "cubierto" },
-      { id: "090101004", nombre: "Colegio Nuestra Señora del Carmen", parroquia: "san-simon", sector: "Centro", direccion: "Calle Sucre cerca de la Catedral", electores: 2310, mesas: 3, lat: 9.7490, lng: -63.1790, estatus: "cubierto" },
-      { id: "090101005", nombre: "U.E. Pedro Máximo Campos", parroquia: "san-simon", sector: "Barrio Obrero", direccion: "Calle 4 Barrio Obrero", electores: 3100, mesas: 4, lat: 9.7420, lng: -63.1890, estatus: "cubierto" },
-      { id: "090101006", nombre: "Escuela Básica Paula Bastardo", parroquia: "san-simon", sector: "Palo Negro", direccion: "Calle Principal Palo Negro", electores: 2750, mesas: 3, lat: 9.7560, lng: -63.1840, estatus: "cubierto" },
-      { id: "090101007", nombre: "U.E. Manuel Núñez Tovar", parroquia: "san-simon", sector: "Brisas del Orinoco", direccion: "Av. Principal Brisas del Orinoco", electores: 3450, mesas: 4, lat: 9.7390, lng: -63.1860, estatus: "prioritario" },
-      { id: "090101008", nombre: "Liceo Francisco Isnardi", parroquia: "san-simon", sector: "Casco Central", direccion: "Calle Piar c/c Av. Bicentenario", electores: 2890, mesas: 4, lat: 9.7470, lng: -63.1760, estatus: "cubierto" },
-
-      // ALTO DE LOS GODOS
-      { id: "090102001", nombre: "Liceo Nacional Francisco Verde", parroquia: "alto-de-los-godos", sector: "La Puente", direccion: "Eje 6 La Puente Calle 3", electores: 3230, mesas: 5, lat: 9.7370, lng: -63.2260, estatus: "prioritario" },
-      { id: "090102002", nombre: "U.E. Apolinar Cantor", parroquia: "alto-de-los-godos", sector: "Los Godos I", direccion: "Av. Principal Los Godos", electores: 2481, mesas: 4, lat: 9.7310, lng: -63.2170, estatus: "cubierto" },
-      { id: "090102003", nombre: "Escuela Básica Cruz Hernández Quijada", parroquia: "alto-de-los-godos", sector: "El Silencio", direccion: "Sector El Silencio calle 1", electores: 1056, mesas: 2, lat: 9.7340, lng: -63.2210, estatus: "cubierto" },
-      { id: "090102004", nombre: "Escuela Cruz Figuera Rondón", parroquia: "alto-de-los-godos", sector: "La Puente", direccion: "Sector 2 de La Puente", electores: 2961, mesas: 4, lat: 9.7250, lng: -63.2160, estatus: "cubierto" },
-      { id: "090102005", nombre: "U.E. Cacique Guanaguanay", parroquia: "alto-de-los-godos", sector: "Guanaguanay", direccion: "Urb. Guanaguanay sector B", electores: 3120, mesas: 4, lat: 9.7190, lng: -63.2240, estatus: "prioritario" },
-      { id: "090102006", nombre: "Liceo Jesús Rafael Zambrano", parroquia: "alto-de-los-godos", sector: "Los Guaros", direccion: "Sector Los Guaros calle 8", electores: 2840, mesas: 4, lat: 9.7330, lng: -63.2090, estatus: "cubierto" },
-      { id: "090102007", nombre: "Escuela Básica Félix Antonio Calderón", parroquia: "alto-de-los-godos", sector: "Morichal", direccion: "Av. Morichal calle 5", electores: 1980, mesas: 3, lat: 9.7280, lng: -63.2020, estatus: "cubierto" },
-
-      // BOQUERÓN
-      { id: "090103001", nombre: "U.E. Félix Armando Núñez Beauperthuy", parroquia: "boqueron", sector: "Boquerón Centro", direccion: "Av. Principal de Boquerón", electores: 4680, mesas: 6, lat: 9.7890, lng: -63.1910, estatus: "prioritario" },
-      { id: "090103002", nombre: "Liceo Nacional Los Guaritos", parroquia: "boqueron", sector: "Los Guaritos II", direccion: "Sector Los Guaritos calle 3", electores: 3950, mesas: 5, lat: 9.7710, lng: -63.1980, estatus: "prioritario" },
-      { id: "090103003", nombre: "U.E. Gregorio Rondón", parroquia: "boqueron", sector: "Los Guaritos IV", direccion: "Final calle principal Los Guaritos", electores: 2750, mesas: 4, lat: 9.7680, lng: -63.2040, estatus: "cubierto" },
-      { id: "090103004", nombre: "Escuela Básica Tipuro", parroquia: "boqueron", sector: "Tipuro", direccion: "Urb. Tipuro sector Palma Real", electores: 3410, mesas: 5, lat: 9.8050, lng: -63.2010, estatus: "cubierto" },
-      { id: "090103005", nombre: "Escuela Básica Doña Menca de Leoni", parroquia: "boqueron", sector: "Las Piñas", direccion: "Sector Las Piñas carretera vieja", electores: 2120, mesas: 3, lat: 9.7960, lng: -63.1820, estatus: "cubierto" },
-      { id: "090103006", nombre: "U.E. Santa Elena de Las Piñas", parroquia: "boqueron", sector: "Santa Elena", direccion: "Entrada principal Santa Elena", electores: 1890, mesas: 2, lat: 9.8120, lng: -63.1780, estatus: "parcial" },
-
-      // LAS COCUIZAS
-      { id: "090104001", nombre: "Escuela Básica Las Cocuizas", parroquia: "las-cocuizas", sector: "Las Cocuizas Centro", direccion: "Calle 1 c/c Carrera 5", electores: 3780, mesas: 5, lat: 9.7580, lng: -63.1490, estatus: "prioritario" },
-      { id: "090104002", nombre: "Liceo Nacional Juan Vicente Bolívar", parroquia: "las-cocuizas", sector: "La Manga", direccion: "Av. La Manga sector 1", electores: 3290, mesas: 4, lat: 9.7640, lng: -63.1550, estatus: "cubierto" },
-      { id: "090104003", nombre: "U.E. Dr. Diego Carbonell", parroquia: "las-cocuizas", sector: "Sabana Grande", direccion: "Sector Sabana Grande calle 4", electores: 2840, mesas: 4, lat: 9.7510, lng: -63.1380, estatus: "cubierto" },
-      { id: "090104004", nombre: "U.E. Alberto Ravell", parroquia: "las-cocuizas", sector: "Alberto Ravell", direccion: "Calle Principal Alberto Ravell", electores: 2450, mesas: 3, lat: 9.7530, lng: -63.1620, estatus: "cubierto" },
-      { id: "090104005", nombre: "Escuela Básica El Nazareno", parroquia: "las-cocuizas", sector: "El Nazareno", direccion: "Sector El Nazareno calle 2", electores: 1720, mesas: 2, lat: 9.7460, lng: -63.1420, estatus: "parcial" },
-
-      // SANTA CRUZ
-      { id: "090105001", nombre: "U.E. La Gran Victoria", parroquia: "santa-cruz", sector: "La Gran Victoria", direccion: "Complejo Habitacional La Gran Victoria", electores: 5120, mesas: 7, lat: 9.7080, lng: -63.2420, estatus: "prioritario" },
-      { id: "090105002", nombre: "Escuela Básica Santa Cruz", parroquia: "santa-cruz", sector: "Santa Cruz Centro", direccion: "Av. Principal de Santa Cruz", electores: 3640, mesas: 5, lat: 9.7150, lng: -63.2350, estatus: "prioritario" },
-      { id: "090105003", nombre: "Liceo Nacional Eloy Palacios", parroquia: "santa-cruz", sector: "Zona Industrial", direccion: "Sector Zona Industrial calle B", electores: 2910, mesas: 4, lat: 9.7210, lng: -63.2480, estatus: "cubierto" },
-      { id: "090105004", nombre: "Escuela Básica José Félix Ribas", parroquia: "santa-cruz", sector: "José Félix Ribas", direccion: "Calle 1 José Félix Ribas", electores: 1980, mesas: 3, lat: 9.7020, lng: -63.2310, estatus: "cubierto" },
-
-      // SAN VICENTE
-      { id: "090106001", nombre: "Escuela Básica San Vicente", parroquia: "san-vicente", sector: "San Vicente Centro", direccion: "Frente a Plaza Bolívar de San Vicente", electores: 3820, mesas: 5, lat: 9.7290, lng: -63.2840, estatus: "prioritario" },
-      { id: "090106002", nombre: "Liceo Bolivariano San Vicente", parroquia: "san-vicente", sector: "Pueblo Nuevo", direccion: "Av. Principal Pueblo Nuevo", electores: 2710, mesas: 4, lat: 9.7340, lng: -63.2910, estatus: "cubierto" },
-      { id: "090106003", nombre: "Escuela Rural Corocito", parroquia: "san-vicente", sector: "Corocito", direccion: "Carretera nacional vía San Vicente", electores: 1450, mesas: 2, lat: 9.7180, lng: -63.2750, estatus: "cubierto" },
-
-      // LA PICA
-      { id: "090107001", nombre: "Escuela Básica La Pica", parroquia: "la-pica", sector: "La Pica Centro", direccion: "Calle Real de La Pica", electores: 3410, mesas: 5, lat: 9.7760, lng: -63.0790, estatus: "prioritario" },
-      { id: "090107002", nombre: "Liceo Nacional La Pica", parroquia: "la-pica", sector: "Vuelta Larga", direccion: "Sector Vuelta Larga", electores: 2650, mesas: 4, lat: 9.7820, lng: -63.0680, estatus: "cubierto" },
-      { id: "090107003", nombre: "Escuela Concentrada El Rincón", parroquia: "la-pica", sector: "El Rincón", direccion: "Vía fluvial río Guarapiche", electores: 1120, mesas: 2, lat: 9.7610, lng: -63.0920, estatus: "parcial" },
-
-      // EL FURRIAL
-      { id: "090108001", nombre: "Grupo Escolar Felicia Rondón de Cabello", parroquia: "el-furrial", sector: "El Furrial Centro", direccion: "Calle Bolívar cruce con Calle Sucre", electores: 3910, mesas: 5, lat: 9.7260, lng: -63.3660, estatus: "prioritario" },
-      { id: "090108002", nombre: "Liceo Nacional El Furrial", parroquia: "el-furrial", sector: "Barrio Obrero", direccion: "Av. Principal de El Furrial", electores: 2480, mesas: 3, lat: 9.7310, lng: -63.3720, estatus: "cubierto" },
-      { id: "090108003", nombre: "Escuela Básica Corocito de El Furrial", parroquia: "el-furrial", sector: "Corocito", direccion: "Carretera vía Orocual", electores: 1390, mesas: 2, lat: 9.7150, lng: -63.3540, estatus: "cubierto" },
-
-      // JUSEPÍN
-      { id: "090109001", nombre: "Escuela Básica Jusepín", parroquia: "jusepin", sector: "Jusepín Centro", direccion: "Calle Principal Campo Rojo", electores: 3210, mesas: 4, lat: 9.7490, lng: -63.5040, estatus: "prioritario" },
-      { id: "090109002", nombre: "Liceo Nacional Jusepín", parroquia: "jusepin", sector: "Campo UDO", direccion: "Campus Universitario Jusepín", electores: 2540, mesas: 3, lat: 9.7540, lng: -63.5120, estatus: "cubierto" },
-      { id: "090109003", nombre: "Escuela Básica La Horqueta", parroquia: "jusepin", sector: "La Horqueta", direccion: "Sector La Horqueta vía Aragua", electores: 1220, mesas: 2, lat: 9.7380, lng: -63.4880, estatus: "cubierto" },
-
-      // EL COROZO
-      { id: "090110001", nombre: "Escuela Básica El Corozo", parroquia: "el-corozo", sector: "El Corozo Centro", direccion: "Calle Real frente a la Iglesia", electores: 2980, mesas: 4, lat: 9.6760, lng: -63.2160, estatus: "prioritario" },
-      { id: "090110002", nombre: "Escuela Primaria Amana del Tamarindo", parroquia: "el-corozo", sector: "Amana", direccion: "Sector Amana del Tamarindo", electores: 1840, mesas: 3, lat: 9.6540, lng: -63.2320, estatus: "cubierto" },
-      { id: "090110003", nombre: "U.E. San Antonio del Corozo", parroquia: "el-corozo", sector: "Morichalito", direccion: "Carretera hacia el Sur", electores: 1410, mesas: 2, lat: 9.6890, lng: -63.2040, estatus: "parcial" }
-    ];
+    // Base de Datos Integral de Centros Electorales de Maturín (175 Centros y 361 Mesas Oficiales)
+    const CENTROS_MATURIN = window.CENTROS_MATURIN || [];
 
     let currentParishFilter = "todas";
     let map = null;
@@ -773,10 +716,10 @@
 
     // Exportar Listado a CSV
     function exportToCSV() {
-      let csv = "Código CNE,Nombre del Centro,Parroquia,Sector,Dirección,Mesas,Electores,Estatus\n";
+      let csv = "Código CNE,Nombre del Centro,Parroquia,Mesas,Electores,Latitud,Longitud,Estatus\n";
       CENTROS_MATURIN.forEach(c => {
-        const pName = PARROQUIAS_MATURIN.find(p => p.id === c.parroquia)?.nombre || c.parroquia;
-        csv += `"${c.id}","${c.nombre}","${pName}","${c.sector}","${c.direccion}",${c.mesas},${c.electores},"${c.estatus}"\n`;
+        const pName = c.parroquiaNombre || PARROQUIAS_MATURIN.find(p => p.id === c.parroquia)?.nombre || c.parroquia;
+        csv += `"${c.id}","${c.nombre}","${pName}",${c.mesas},${c.electores},${c.lat},${c.lng},"${c.estatus}"\n`;
       });
 
       const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });

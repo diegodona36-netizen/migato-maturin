@@ -5,6 +5,7 @@
 import { detectParishFromGeometry } from "./geoMonagas.js?v=89";
 import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=89";
 import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=89";
+import { CENTROS_MATURIN } from "./centrosData.js?v=89";
 
 export class PropertiesDialog {
   constructor(onSaveCallback, onLiveChangeCallback, onStartEditGeometry) {
@@ -546,6 +547,17 @@ export class PropertiesDialog {
         if (inFamilias) inFamilias.value = item.familias || numCasas;
         if (inHab) inHab.value = item.habitantes !== undefined ? item.habitantes : numMilitantes;
         if (inCentroVot) inCentroVot.value = item.centroVotacion || "";
+
+        // Poblar datalist con centros electorales oficiales de la parroquia activa
+        const dl = document.getElementById("centros-votacion-datalist");
+        if (dl) {
+          const parishCentros = (CENTROS_MATURIN || []).filter(c => c.parroquia === this.currentParishId);
+          if (parishCentros.length > 0) {
+            dl.innerHTML = parishCentros.map(c => `<option value="${c.nombre} (${c.mesas} mesas)">${c.id} • ${c.nombre} [${c.electores} electores]</option>`).join("");
+          } else {
+            dl.innerHTML = (CENTROS_MATURIN || []).slice(0, 40).map(c => `<option value="${c.nombre}">${c.nombre} (${c.parroquiaNombre})</option>`).join("");
+          }
+        }
       }
 
       // Medidas
