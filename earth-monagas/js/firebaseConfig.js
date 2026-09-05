@@ -102,6 +102,41 @@ export function initFirebase(customConfig = null) {
 initFirebase();
 
 /**
+ * Limpia y normaliza objetos antes de serializar (evita propiedades undefined o circulares de Leaflet)
+ */
+function cleanItem(item) {
+  if (!item || typeof item !== "object") return item;
+  try {
+    return JSON.parse(JSON.stringify(item));
+  } catch (e) {
+    const clean = {};
+    Object.keys(item).forEach(k => {
+      if (typeof item[k] !== "function" && !k.startsWith("_") && item[k] !== undefined) {
+        clean[k] = item[k];
+      }
+    });
+    return clean;
+  }
+}
+
+/**
+ * Desempaqueta un documento de Firestore que contenga dataJson
+ */
+export function unpackDocumentData(data) {
+  if (!data || typeof data !== "object") return null;
+  let result = { ...data };
+  if (data.dataJson && typeof data.dataJson === "string") {
+    try {
+      const parsed = JSON.parse(data.dataJson);
+      result = { ...result, ...parsed };
+    } catch (e) {
+      console.warn("Error parseando dataJson de Firestore:", e);
+    }
+  }
+  return result;
+}
+
+/**
  * Escucha cambios en tiempo real en la colección de territorios
  * Cada vez que una PC o teléfono guarde un cambio, esta función llamará a callback(datos)
  */
@@ -121,9 +156,9 @@ export function subscribeToTerritories(onDataCallback) {
     activeUnsubscribe = onSnapshot(colRef, (snapshot) => {
       const mergedData = {};
       snapshot.forEach((docSnap) => {
-        const data = docSnap.data();
-        if (data) {
-          mergedData[docSnap.id] = data;
+        const raw = docSnap.data();
+        if (raw) {
+          mergedData[docSnap.id] = unpackDocumentData(raw);
         }
       });
       if (typeof onDataCallback === "function") {
@@ -142,56 +177,141 @@ export function subscribeToTerritories(onDataCallback) {
 
 /**
  * Guarda o actualiza una parroquia en Firestore
+ * Utiliza serialización JSON para evitar el error 'Nested arrays are not allowed' en Leaflet
+ * Incluye respaldo automático vía API REST directa de Google Firestore
  */
 export async function saveParishToFirestore(munId, parishId, parishData) {
-  if (!db) {
-    const ok = initFirebase();
-    if (!ok || !db) return false;
+  const cfg = getSavedFirebaseConfig();
+  const projectId = cfg?.projectId || DEFAULT_CONFIG.projectId;
+  const docId = `${munId}_${parishId}`;
+
+  const cleanPayload = {
+    munId,
+    parishId,
+    subparroquias: (parishData.subparroquias || []).map(cleanItem),
+    poligonos: (parishData.poligonos || []).map(cleanItem),
+    rutas: (parishData.rutas || []).map(cleanItem),
+    marcas: (parishData.marcas || []).map(cleanItem),
+    updatedAt: Date.now()
+  };
+
+  const jsonStr = JSON.stringify(cleanPayload);
+  let savedSuccess = false;
+
+  // 1. Intento primario: SDK Web de Firestore
+  if (db) {
+    try {
+      const docRef = doc(db, "territorios_monagas", docId);
+      const docData = {
+        munId,
+        parishId,
+        updatedAt: cleanPayload.updatedAt,
+        dataJson: jsonStr
+      };
+      await setDoc(docRef, docData, { merge: true });
+      savedSuccess = true;
+      console.log(`🔥 [Firestore SDK] Guardado exitoso de ${docId} (${cleanPayload.poligonos.length} sectores)`);
+    } catch (err) {
+      console.warn(`⚠️ [Firestore SDK] Falló guardado para ${docId}, activando canal REST directo:`, err);
+    }
   }
 
-  try {
-    const docId = `${munId}_${parishId}`;
-    const docRef = doc(db, "territorios_monagas", docId);
+  // 2. Intento secundario / Fallback REST directo (Google Cloud Firestore API)
+  if (!savedSuccess && projectId) {
+    try {
+      const restUrl = `https://firestore.googleapis.com/v1/projects/${projectId}/databases/(default)/documents/territorios_monagas/${docId}`;
+      const restBody = {
+        fields: {
+          munId: { stringValue: munId },
+          parishId: { stringValue: parishId },
+          updatedAt: { integerValue: String(cleanPayload.updatedAt) },
+          dataJson: { stringValue: jsonStr }
+        }
+      };
 
-    const payload = {
-      munId,
-      parishId,
-      subparroquias: parishData.subparroquias || [],
-      poligonos: parishData.poligonos || [],
-      rutas: parishData.rutas || [],
-      marcas: parishData.marcas || [],
-      updatedAt: Date.now()
-    };
+      const resp = await fetch(restUrl, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(restBody)
+      });
 
-    await setDoc(docRef, payload, { merge: true });
-    return true;
-  } catch (err) {
-    console.error("Error guardando parroquia en Firestore:", err);
-    return false;
+      if (resp.ok) {
+        savedSuccess = true;
+        console.log(`☁️ [Firestore REST] Guardado exitoso directo de ${docId}`);
+      } else {
+        const errText = await resp.text();
+        console.warn(`❌ [Firestore REST] Error HTTP ${resp.status}:`, errText);
+      }
+    } catch (restErr) {
+      console.warn("❌ [Firestore REST] Error de red:", restErr);
+    }
   }
+
+  return savedSuccess;
 }
 
 /**
  * Obtiene todos los territorios guardados en Firestore
+ * Desempaqueta automáticamente la estructura completa
  */
 export async function fetchAllTerritoriesFromFirestore() {
-  if (!db) {
-    const ok = initFirebase();
-    if (!ok || !db) return null;
+  const cfg = getSavedFirebaseConfig();
+  const projectId = cfg?.projectId || DEFAULT_CONFIG.projectId;
+  const result = {};
+  let fetched = false;
+
+  // 1. Intento primario: SDK Web de Firestore
+  if (db) {
+    try {
+      const colRef = collection(db, "territorios_monagas");
+      const snapshot = await getDocs(colRef);
+      snapshot.forEach((docSnap) => {
+        const raw = docSnap.data();
+        if (raw) {
+          result[docSnap.id] = unpackDocumentData(raw);
+          fetched = true;
+        }
+      });
+      if (fetched) {
+        console.log(`🔥 [Firestore SDK] ${Object.keys(result).length} territorios cargados`);
+      }
+    } catch (err) {
+      console.warn("⚠️ [Firestore SDK] Fallo getDocs, intentando REST GET:", err);
+    }
   }
 
-  try {
-    const colRef = collection(db, "territorios_monagas");
-    const snapshot = await getDocs(colRef);
-    const data = {};
-    snapshot.forEach((docSnap) => {
-      data[docSnap.id] = docSnap.data();
-    });
-    return data;
-  } catch (err) {
-    console.error("Error obteniendo territorios de Firestore:", err);
-    return null;
+  // 2. Intento secundario / Fallback REST directo
+  if (!fetched && projectId) {
+    try {
+      const restUrl = `https://firestore.googleapis.com/v1/projects/${projectId}/databases/(default)/documents/territorios_monagas`;
+      const resp = await fetch(restUrl);
+      if (resp.ok) {
+        const json = await resp.json();
+        const docs = json.documents || [];
+        docs.forEach(docObj => {
+          const docId = docObj.name.split("/").pop();
+          const fields = docObj.fields || {};
+          let raw = {};
+          if (fields.dataJson && fields.dataJson.stringValue) {
+            try {
+              raw = JSON.parse(fields.dataJson.stringValue);
+            } catch (e) {}
+          }
+          if (fields.munId?.stringValue) raw.munId = fields.munId.stringValue;
+          if (fields.parishId?.stringValue) raw.parishId = fields.parishId.stringValue;
+          result[docId] = raw;
+          fetched = true;
+        });
+        if (fetched) {
+          console.log(`☁️ [Firestore REST] ${Object.keys(result).length} territorios recuperados`);
+        }
+      }
+    } catch (restErr) {
+      console.warn("❌ [Firestore REST] Fallo en fetchAllTerritories:", restErr);
+    }
   }
+
+  return fetched ? result : null;
 }
 
 export { db, app };

@@ -116,19 +116,60 @@ export class CampaignDashboardApp {
       this.unsubscribeFirestore = onSnapshot(colRef, (snapshot) => {
         const cloudData = {};
         snapshot.forEach(docSnap => {
-          cloudData[docSnap.id] = docSnap.data();
+          let data = docSnap.data();
+          if (data && data.dataJson && typeof data.dataJson === "string") {
+            try {
+              const parsed = JSON.parse(data.dataJson);
+              data = { ...data, ...parsed };
+            } catch(e) {}
+          }
+          cloudData[docSnap.id] = data;
         });
         this.territorios = cloudData;
         this.render();
         this.updateCloudStatus(true, "Firebase En Vivo");
       }, (err) => {
         console.warn("Aviso Firestore:", err);
-        this.fallbackToLocalStorage();
+        this.fetchViaRestOrFallback();
       });
     } catch(e) {
       console.warn("Error inicializando Firebase:", e);
-      this.fallbackToLocalStorage();
+      this.fetchViaRestOrFallback();
     }
+  }
+
+  async fetchViaRestOrFallback() {
+    try {
+      const url = `https://firestore.googleapis.com/v1/projects/${FIREBASE_CONFIG.projectId}/databases/(default)/documents/territorios_monagas`;
+      const res = await fetch(url);
+      if (res.ok) {
+        const json = await res.json();
+        const docs = json.documents || [];
+        const cloudData = {};
+        docs.forEach(d => {
+          const docId = d.name.split("/").pop();
+          const fields = d.fields || {};
+          let item = {};
+          if (fields.dataJson && fields.dataJson.stringValue) {
+            try {
+              item = JSON.parse(fields.dataJson.stringValue);
+            } catch (e) {}
+          }
+          if (fields.munId?.stringValue) item.munId = fields.munId.stringValue;
+          if (fields.parishId?.stringValue) item.parishId = fields.parishId.stringValue;
+          cloudData[docId] = item;
+        });
+        if (Object.keys(cloudData).length > 0) {
+          this.territorios = cloudData;
+          this.render();
+          this.updateCloudStatus(true, "Firebase (REST)");
+          return;
+        }
+      }
+    } catch (e) {
+      console.warn("Fallo REST en dashboard:", e);
+    }
+    this.fallbackToLocalStorage();
   }
 
   fallbackToLocalStorage() {

@@ -1,13 +1,13 @@
 /**
  * Gestor de Estado y Árbol de Lugares (Places) — Google Earth Pro Web (Monagas)
  */
-import { SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=62";
+import { SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=63";
 import { 
   saveParishToFirestore, 
   subscribeToTerritories, 
   isFirebaseConfigured, 
   fetchAllTerritoriesFromFirestore 
-} from "./firebaseConfig.js?v=62";
+} from "./firebaseConfig.js?v=63";
 
 const STORAGE_KEY = "earth_monagas_places_v3";
 
@@ -412,8 +412,18 @@ export class EarthStore {
     let changesApplied = false;
 
     Object.keys(remoteData).forEach(key => {
-      const remoteP = remoteData[key];
+      let remoteP = remoteData[key];
       if (!remoteP || typeof remoteP !== "object") return;
+
+      // Desempaquetar si viene serializado en dataJson
+      if (remoteP.dataJson && typeof remoteP.dataJson === "string") {
+        try {
+          const parsed = JSON.parse(remoteP.dataJson);
+          remoteP = { ...remoteP, ...parsed };
+        } catch (e) {
+          console.warn("[EarthStore] Error parseando dataJson:", e);
+        }
+      }
 
       const parishId = remoteP.parishId || (key.includes("_") ? key.split("_")[1] : key);
       const munId = remoteP.munId || (key.includes("_") ? key.split("_")[0] : null);
@@ -428,6 +438,8 @@ export class EarthStore {
         ["subparroquias", "poligonos", "rutas", "marcas"].forEach(type => {
           if (Array.isArray(remoteP[type])) {
             if (!Array.isArray(localP[type])) localP[type] = [];
+
+            // 1. Reconciliar adiciones y ediciones
             remoteP[type].forEach(remoteItem => {
               if (!remoteItem || !remoteItem.id) return;
               const localIdx = localP[type].findIndex(li => String(li.id) === String(remoteItem.id));
@@ -442,6 +454,16 @@ export class EarthStore {
                 }
               }
             });
+
+            // 2. Reconciliar eliminaciones si la versión remota es autoritativa
+            if (remoteP.updatedAt && remoteP[type].length < localP[type].length) {
+              const remoteIds = new Set(remoteP[type].map(i => String(i.id)));
+              const beforeLen = localP[type].length;
+              localP[type] = localP[type].filter(li => !li.id || remoteIds.has(String(li.id)));
+              if (localP[type].length !== beforeLen) {
+                changesApplied = true;
+              }
+            }
           }
         });
       }
@@ -535,8 +557,18 @@ export class EarthStore {
       let changesApplied = false;
 
       Object.keys(cloudData).forEach(key => {
-        const remoteP = cloudData[key];
+        let remoteP = cloudData[key];
         if (!remoteP || typeof remoteP !== "object") return;
+
+        // Desempaquetar si viene serializado en dataJson
+        if (remoteP.dataJson && typeof remoteP.dataJson === "string") {
+          try {
+            const parsed = JSON.parse(remoteP.dataJson);
+            remoteP = { ...remoteP, ...parsed };
+          } catch (e) {
+            console.warn("[EarthStore] Error parseando dataJson en syncFromCloud:", e);
+          }
+        }
 
         const parishId = remoteP.parishId || (key.includes("_") ? key.split("_")[1] : key);
         const munId = remoteP.munId || (key.includes("_") ? key.split("_")[0] : null);
