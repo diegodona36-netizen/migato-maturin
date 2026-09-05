@@ -2,10 +2,10 @@
  * Diálogo Flotante de Propiedades y Carga de Militantes — Estilo Google Earth Pro
  * Pestañas: Ficha Territorial, Militantes por Sector, Estilo y Color, Medidas
  */
-import { detectParishFromGeometry } from "./geoMonagas.js?v=89";
-import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=89";
-import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=89";
-import { CENTROS_MATURIN } from "./centrosData.js?v=89";
+import { detectParishFromGeometry } from "./geoMonagas.js?v=90";
+import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=90";
+import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=90";
+import { CENTROS_MATURIN } from "./centrosData.js?v=90";
 
 export class PropertiesDialog {
   constructor(onSaveCallback, onLiveChangeCallback, onStartEditGeometry) {
@@ -467,20 +467,21 @@ export class PropertiesDialog {
     }
 
     const boxSocio = document.getElementById("box-prop-socio");
-    const boxMilitancia = document.getElementById("box-prop-militancia");
-    const boxLiderazgo = document.getElementById("box-prop-liderazgo");
-    const boxPolyStyle = document.getElementById("box-poly-fill-style");
-    const boxSubparishInfo = document.getElementById("box-prop-subparish-info");
-    const rowArea = document.getElementById("row-measure-area");
-    const rowLength = document.getElementById("row-measure-length");
+    const currentUser = window.earthApp?.authManager?.getCurrentUser();
+    const isFieldOperator = currentUser && currentUser.rol === "operador";
 
     if (type === "poligono" || type === "subparroquia") {
       const isSub = type === "subparroquia";
       const isPoly = type === "poligono";
       if (boxSocio) boxSocio.classList.toggle("hidden", isSub);
       if (boxMilitancia) boxMilitancia.classList.toggle("hidden", isSub);
-      if (boxLiderazgo) boxLiderazgo.classList.toggle("hidden", isSub);
-      if (btnEditGeo) btnEditGeo.classList.remove("hidden");
+      if (btnEditGeo) {
+        if (isFieldOperator) {
+          btnEditGeo.classList.add("hidden");
+        } else {
+          btnEditGeo.classList.remove("hidden");
+        }
+      }
       if (boxPolyStyle) boxPolyStyle.classList.remove("hidden");
       if (rowArea) rowArea.classList.remove("hidden");
       if (rowLength) rowLength.classList.add("hidden");
@@ -531,8 +532,6 @@ export class PropertiesDialog {
         // Valores de caracterización socio-política del sector
         const inMilitantes = document.getElementById("prop-militantes");
         const inCasas = document.getElementById("prop-casas");
-        const inLider = document.getElementById("prop-lider");
-        const inTelefono = document.getElementById("prop-telefono");
         const inFamilias = document.getElementById("prop-familias");
         const inHab = document.getElementById("prop-habitantes");
         const inCentroVot = document.getElementById("prop-centro-votacion");
@@ -542,8 +541,6 @@ export class PropertiesDialog {
 
         if (inMilitantes) inMilitantes.value = numMilitantes;
         if (inCasas) inCasas.value = numCasas;
-        if (inLider) inLider.value = item.liderComunidad || item.lider || "";
-        if (inTelefono) inTelefono.value = item.telefonoLider || item.telefono || "";
         if (inFamilias) inFamilias.value = item.familias || numCasas;
         if (inHab) inHab.value = item.habitantes !== undefined ? item.habitantes : numMilitantes;
         if (inCentroVot) inCentroVot.value = item.centroVotacion || "";
@@ -560,7 +557,7 @@ export class PropertiesDialog {
         }
       }
 
-      // Medidas
+      // Medidas Geométricas
       const valHa = document.getElementById("val-measure-area-ha");
       const valM2 = document.getElementById("val-measure-area-m2");
       const valPer = document.getElementById("val-measure-perimeter");
@@ -570,8 +567,13 @@ export class PropertiesDialog {
     } else {
       if (boxSocio) boxSocio.classList.add("hidden");
       if (boxMilitancia) boxMilitancia.classList.add("hidden");
-      if (boxLiderazgo) boxLiderazgo.classList.add("hidden");
-      if (btnEditGeo) btnEditGeo.classList.toggle("hidden", !isNew);
+      if (btnEditGeo) {
+        if (isFieldOperator) {
+          btnEditGeo.classList.add("hidden");
+        } else {
+          btnEditGeo.classList.toggle("hidden", !isNew);
+        }
+      }
       if (boxPolyStyle) boxPolyStyle.classList.add("hidden");
       if (rowArea) rowArea.classList.add("hidden");
 
@@ -640,8 +642,6 @@ export class PropertiesDialog {
 
     const inMilitantes = document.getElementById("prop-militantes");
     const inCasas = document.getElementById("prop-casas");
-    const inLider = document.getElementById("prop-lider");
-    const inTelefono = document.getElementById("prop-telefono");
     const inFamilias = document.getElementById("prop-familias");
     const inHab = document.getElementById("prop-habitantes");
 
@@ -668,8 +668,6 @@ export class PropertiesDialog {
 
     const militantesVal = inMilitantes ? (parseInt(inMilitantes.value) || 0) : (this.currentItem.militantes || this.currentItem.habitantes || 0);
     const casasVal = inCasas ? (parseInt(inCasas.value) || 0) : (this.currentItem.casas || 0);
-    const liderVal = inLider ? inLider.value.trim() : (this.currentItem.lider || "");
-    const telefonoVal = inTelefono ? inTelefono.value.trim() : (this.currentItem.telefono || "");
     const centroVotacionVal = inCentroVot ? inCentroVot.value.trim() : (this.currentItem.centroVotacion || "");
 
     const defaultBorder = this.currentType === "subparroquia" ? "#c084fc" : (this.currentType === "ruta" ? "#10b981" : (this.currentType === "marca" ? "#ef4444" : "#38bdf8"));
@@ -691,8 +689,6 @@ export class PropertiesDialog {
       familias: inFamilias ? (parseInt(inFamilias.value) || casasVal) : casasVal,
       habitantes: inHab ? (parseInt(inHab.value) || militantesVal) : militantesVal,
       centroVotacion: centroVotacionVal,
-      lider: liderVal,
-      telefono: telefonoVal,
       munId: targetMunId,
       parishId: targetParishId,
       subParroquiaId: this.currentType === "subparroquia" ? null : subParroquiaId,

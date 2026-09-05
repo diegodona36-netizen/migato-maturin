@@ -1,7 +1,7 @@
 /**
  * Gestor de Estado y Árbol de Lugares (Places) — Google Earth Pro Web (Monagas)
  */
-import { SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=89";
+import { SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=90";
 import { 
   saveParishToFirestore, 
   subscribeToTerritories, 
@@ -9,7 +9,7 @@ import {
   fetchAllTerritoriesFromFirestore,
   mergeItemCollections,
   cleanItem
-} from "./firebaseConfig.js?v=89";
+} from "./firebaseConfig.js?v=90";
 
 const STORAGE_KEY = "earth_monagas_places_v8";
 
@@ -921,8 +921,6 @@ export class EarthStore {
               <p><strong>Habitantes:</strong> ${poly.habitantes || poly.militantes || 0}</p>
               <p><strong>Votantes:</strong> ${poly.militantes !== undefined ? poly.militantes : (poly.habitantes || 0)}</p>
               ${poly.centroVotacion ? `<p><strong>Centro de Votación:</strong> ${poly.centroVotacion}</p>` : ''}
-              ${poly.lider ? `<p><strong>Líder de Comunidad:</strong> ${poly.lider}</p>` : ''}
-              ${poly.telefono ? `<p><strong>Teléfono:</strong> ${poly.telefono}</p>` : ''}
               <p><strong>Área:</strong> ${poly.areaHa || 0} Ha</p>
             ]]></description>
             <visibility>${poly.visible !== false ? 1 : 0}</visibility>
