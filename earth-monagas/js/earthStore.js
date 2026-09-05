@@ -1,13 +1,13 @@
 /**
  * Gestor de Estado y Árbol de Lugares (Places) — Google Earth Pro Web (Monagas)
  */
-import { SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=68";
+import { SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=69";
 import { 
   saveParishToFirestore, 
   subscribeToTerritories, 
   isFirebaseConfigured, 
   fetchAllTerritoriesFromFirestore 
-} from "./firebaseConfig.js?v=68";
+} from "./firebaseConfig.js?v=69";
 
 const STORAGE_KEY = "earth_monagas_places_v3";
 
@@ -158,21 +158,21 @@ export class EarthStore {
 
   getMostRecentlyUpdatedParish() {
     let latestParish = null;
-    let maxTime = 0;
+    let maxScore = -1;
     if (!this.state || !this.state.municipios) return null;
 
     Object.entries(this.state.municipios).forEach(([munId, mun]) => {
       Object.entries(mun.parroquias || {}).forEach(([parishId, p]) => {
         const polyCount = (p.poligonos || []).length;
         const subCount = (p.subparroquias || []).length;
-        const hasSectors = polyCount > 0 || subCount > 0;
-        if (!hasSectors) return;
+        if (polyCount === 0 && subCount === 0) return;
 
-        // Si no tiene updatedAt en la nube, ponderar por presencia de polígonos
-        const time = p.updatedAt || (polyCount * 1000 + subCount);
-        if (time > maxTime) {
-          maxTime = time;
-          latestParish = { munId, parishId, parish: p, updatedAt: time };
+        // Priorizar fuertemente las parroquias que tienen sectores/polígonos trazados
+        // 1 sector = 1.000.000 puntos
+        const score = (polyCount * 1000000) + (subCount * 1000) + (p.updatedAt ? (p.updatedAt % 1000000) : 0);
+        if (score > maxScore) {
+          maxScore = score;
+          latestParish = { munId, parishId, parish: p, score, updatedAt: p.updatedAt || 0 };
         }
       });
     });
@@ -458,44 +458,35 @@ export class EarthStore {
       }
 
       if (localP) {
+        const isRemoteNewer = remoteP.updatedAt && (!localP.updatedAt || Number(remoteP.updatedAt) >= Number(localP.updatedAt));
         if (remoteP.updatedAt) {
-          localP.updatedAt = remoteP.updatedAt;
+          localP.updatedAt = Number(remoteP.updatedAt);
         }
         ["subparroquias", "poligonos", "rutas", "marcas"].forEach(type => {
           if (Array.isArray(remoteP[type])) {
             if (!Array.isArray(localP[type])) localP[type] = [];
 
-            // 1. Reconciliar adiciones y ediciones
-            remoteP[type].forEach(remoteItem => {
-              if (!remoteItem || !remoteItem.id) return;
-              const localIdx = localP[type].findIndex(li => String(li.id) === String(remoteItem.id));
-              if (localIdx === -1) {
-                localP[type].push(remoteItem);
+            if (isRemoteNewer) {
+              if (JSON.stringify(localP[type]) !== JSON.stringify(remoteP[type])) {
+                localP[type] = [...remoteP[type]];
                 changesApplied = true;
-              } else {
-                const localItem = localP[type][localIdx];
-                if (JSON.stringify(localItem) !== JSON.stringify(remoteItem)) {
-                  localP[type][localIdx] = Object.assign({}, localItem, remoteItem);
-                  changesApplied = true;
-                }
               }
-            });
-
-            // Reconciliar adiciones y ediciones de forma limpia
-            remoteP[type].forEach(remoteItem => {
-              if (!remoteItem || !remoteItem.id) return;
-              const localIdx = localP[type].findIndex(li => String(li.id) === String(remoteItem.id));
-              if (localIdx === -1) {
-                localP[type].push(remoteItem);
-                changesApplied = true;
-              } else {
-                const localItem = localP[type][localIdx];
-                if (JSON.stringify(localItem) !== JSON.stringify(remoteItem)) {
-                  localP[type][localIdx] = Object.assign({}, localItem, remoteItem);
+            } else {
+              remoteP[type].forEach(remoteItem => {
+                if (!remoteItem || !remoteItem.id) return;
+                const localIdx = localP[type].findIndex(li => String(li.id) === String(remoteItem.id));
+                if (localIdx === -1) {
+                  localP[type].push(remoteItem);
                   changesApplied = true;
+                } else {
+                  const localItem = localP[type][localIdx];
+                  if (JSON.stringify(localItem) !== JSON.stringify(remoteItem)) {
+                    localP[type][localIdx] = Object.assign({}, localItem, remoteItem);
+                    changesApplied = true;
+                  }
                 }
-              }
-            });
+              });
+            }
           }
         });
       }
@@ -593,23 +584,35 @@ export class EarthStore {
         }
 
         if (localP) {
+          const isRemoteNewer = remoteP.updatedAt && (!localP.updatedAt || Number(remoteP.updatedAt) >= Number(localP.updatedAt));
+          if (remoteP.updatedAt) {
+            localP.updatedAt = Number(remoteP.updatedAt);
+          }
           ["subparroquias", "poligonos", "rutas", "marcas"].forEach(type => {
-            if (Array.isArray(remoteP[type]) && remoteP[type].length > 0) {
+            if (Array.isArray(remoteP[type])) {
               if (!Array.isArray(localP[type])) localP[type] = [];
-              remoteP[type].forEach(remoteItem => {
-                if (!remoteItem || !remoteItem.id) return;
-                const localIdx = localP[type].findIndex(li => String(li.id) === String(remoteItem.id));
-                if (localIdx === -1) {
-                  localP[type].push(remoteItem);
+
+              if (isRemoteNewer) {
+                if (JSON.stringify(localP[type]) !== JSON.stringify(remoteP[type])) {
+                  localP[type] = [...remoteP[type]];
                   changesApplied = true;
-                } else {
-                  const localItem = localP[type][localIdx];
-                  if (JSON.stringify(localItem) !== JSON.stringify(remoteItem)) {
-                    localP[type][localIdx] = Object.assign({}, localItem, remoteItem);
-                    changesApplied = true;
-                  }
                 }
-              });
+              } else {
+                remoteP[type].forEach(remoteItem => {
+                  if (!remoteItem || !remoteItem.id) return;
+                  const localIdx = localP[type].findIndex(li => String(li.id) === String(remoteItem.id));
+                  if (localIdx === -1) {
+                    localP[type].push(remoteItem);
+                    changesApplied = true;
+                  } else {
+                    const localItem = localP[type][localIdx];
+                    if (JSON.stringify(localItem) !== JSON.stringify(remoteItem)) {
+                      localP[type][localIdx] = Object.assign({}, localItem, remoteItem);
+                      changesApplied = true;
+                    }
+                  }
+                });
+              }
             }
           });
         }
@@ -791,6 +794,7 @@ export class EarthStore {
 
     if (parish && parish[type] && idx !== -1) {
       parish[type].splice(idx, 1);
+      parish.updatedAt = Date.now();
       this.saveToStorage();
       this.scheduleCloudSync(munId, parishId);
       return true;

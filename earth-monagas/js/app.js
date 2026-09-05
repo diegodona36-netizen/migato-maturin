@@ -2,21 +2,21 @@
  * Controlador Principal — Google Earth Pro Web (Edición Estado Monagas)
  * Robusto, 100% Operativo y Totalmente Individualizado
  */
-import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=68";
-import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=68";
-import { getAllParishesForSelector } from "./usersCatalog.js?v=68";
-import { EarthStore } from "./earthStore.js?v=68";
-import { EarthMapEngine } from "./mapEngine.js?v=68";
-import { PropertiesDialog } from "./propertiesDialog.js?v=68";
-import { ToolsManager } from "./toolsManager.js?v=68";
-import { detectParishFromGeometry } from "./geoMonagas.js?v=68";
-import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=68";
+import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=69";
+import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=69";
+import { getAllParishesForSelector } from "./usersCatalog.js?v=69";
+import { EarthStore } from "./earthStore.js?v=69";
+import { EarthMapEngine } from "./mapEngine.js?v=69";
+import { PropertiesDialog } from "./propertiesDialog.js?v=69";
+import { ToolsManager } from "./toolsManager.js?v=69";
+import { detectParishFromGeometry } from "./geoMonagas.js?v=69";
+import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=69";
 import { 
   getSavedFirebaseConfig, 
   saveFirebaseConfig, 
   isFirebaseConfigured, 
   initFirebase 
-} from "./firebaseConfig.js?v=68";
+} from "./firebaseConfig.js?v=69";
 
 class EarthMonagasApp {
   constructor() {
@@ -112,13 +112,13 @@ class EarthMonagasApp {
       this.store.syncFromCloud().then(() => {
         this.renderQuickParishBar();
 
-        // Si la parroquia actual está vacía, auto-enfocar la parroquia con datos más recientes
+        // Si la parroquia actual no tiene sectores, auto-enfocar la parroquia con polígonos
         const currentParish = this.store.getParish(this.selectedMunId, this.selectedParishId);
-        const hasCurrentData = (currentParish?.poligonos || []).length > 0 || (currentParish?.subparroquias || []).length > 0;
-        if (!hasCurrentData && !paramParish) {
+        const polyCount = (currentParish?.poligonos || []).length;
+        if (polyCount === 0 && !paramParish) {
           const recent = this.store.getMostRecentlyUpdatedParish();
           if (recent && recent.parishId && recent.parishId !== this.selectedParishId) {
-            console.log(`📍 Auto-enfocando parroquia con datos recientes: ${recent.parishId} (${recent.munId})`);
+            console.log(`📍 Auto-enfocando parroquia con sectores activos: ${recent.parishId} (${recent.munId})`);
             this.selectParish(recent.munId, recent.parishId);
           }
         }
@@ -1135,25 +1135,23 @@ class EarthMonagasApp {
   }
 
   handleFinishedDrawing(type, newItem) {
-    let targetMunId = this.selectedMunId;
-    let targetParishId = this.selectedParishId;
+    let targetMunId = this.selectedMunId || "maturin";
+    let targetParishId = this.selectedParishId || "alto-de-los-godos";
 
-    // Auto-detectar la parroquia geográfica real por las coordenadas del dibujo
-    const geoPoints = newItem.vertices || (newItem.puntos ? newItem.puntos : (newItem.lat !== undefined ? [newItem.lat, newItem.lng] : null));
-    if (geoPoints) {
-      try {
-        const detected = detectParishFromGeometry(geoPoints, GEO_PARROQUIAS_OFICIAL);
-        if (detected && detected.parishId) {
-          targetMunId = detected.munId || targetMunId;
-          targetParishId = detected.parishId;
-
-          // Si el trazado ocurrió en otra parroquia, auto-enfocar esa parroquia en la interfaz
-          if (targetParishId !== this.selectedParishId) {
+    // Si el usuario no tiene parroquia activa asignada, auto-detectar
+    if (!this.selectedParishId || this.selectedParishId === "monagas") {
+      const geoPoints = newItem.vertices || (newItem.puntos ? newItem.puntos : (newItem.lat !== undefined ? [newItem.lat, newItem.lng] : null));
+      if (geoPoints) {
+        try {
+          const detected = detectParishFromGeometry(geoPoints, GEO_PARROQUIAS_OFICIAL);
+          if (detected && detected.parishId) {
+            targetMunId = detected.munId || targetMunId;
+            targetParishId = detected.parishId;
             this.selectParish(targetMunId, targetParishId);
           }
+        } catch(geoErr) {
+          console.warn("[AutoDetect] Error detectando parroquia:", geoErr);
         }
-      } catch(geoErr) {
-        console.warn("[AutoDetect] Error detectando parroquia:", geoErr);
       }
     }
 
@@ -1329,6 +1327,7 @@ class EarthMonagasApp {
       });
       this.updateMilitanciaTally();
       this.renderPlacesTree();
+      this.renderQuickParishBar();
     }
   }
 

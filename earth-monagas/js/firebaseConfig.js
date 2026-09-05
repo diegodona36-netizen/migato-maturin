@@ -250,6 +250,7 @@ export async function fetchAllTerritoriesFromFirestore() {
           }
           if (fields.munId?.stringValue) raw.munId = fields.munId.stringValue;
           if (fields.parishId?.stringValue) raw.parishId = fields.parishId.stringValue;
+          if (fields.updatedAt?.integerValue) raw.updatedAt = Number(fields.updatedAt.integerValue);
           result[docId] = raw;
           fetched = true;
         });
