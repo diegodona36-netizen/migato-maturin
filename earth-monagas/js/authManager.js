@@ -3,7 +3,7 @@
  * Control de Acceso Basado en Roles (RBAC) para el Estado Monagas
  */
 
-import { findUserByCredentials, USERS_CATALOG } from "./usersCatalog.js?v=79";
+import { findUserByCredentials, USERS_CATALOG } from "./usersCatalog.js?v=80";
 
 const AUTH_STORAGE_KEY = "migato_earth_session_v4";
 
@@ -115,13 +115,16 @@ export class AuthManager {
     return this.currentUser;
   }
 
-  // Verifica si el usuario puede ver y editar una parroquia específica (Acceso 100% libre)
+  // Verifica si el usuario puede ver y editar una parroquia específica
   canAccessParish(munId, parishId) {
-    return true;
+    if (!this.currentUser) return true;
+    if (this.currentUser.rol === "admin") return true;
+    return this.currentUser.parroquiaId === parishId;
   }
 
-  // Verifica si el usuario tiene permiso de cambiar de parroquia (Acceso 100% libre)
+  // Verifica si el usuario tiene permiso de cambiar de parroquia
   canSwitchParish() {
-    return true;
+    if (!this.currentUser) return true;
+    return this.currentUser.rol === "admin";
   }
 }

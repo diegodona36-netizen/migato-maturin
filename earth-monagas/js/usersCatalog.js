@@ -3,7 +3,7 @@
  * Gobernación del Estado Monagas • Plataforma Cartográfica MIGATO
  */
 
-import { CATALOGO_MONAGAS } from "./catalogoMonagas.js?v=79";
+import { CATALOGO_MONAGAS } from "./catalogoMonagas.js?v=80";
 
 // Generar usuarios predeterminados para las 44 parroquias + coordinadores + superadmin
 function buildInitialUsers() {
@@ -80,6 +80,11 @@ export function findUserByCredentials(identity, password) {
   const cleanId = identity.trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
   const cleanPass = (password || "").trim();
 
+  // Si se ingresó una contraseña y no es admin, rechazar
+  if (cleanPass && cleanPass !== "admin") {
+    return null;
+  }
+
   // Alias conocidos para el Super Administrador / Usuario General
   const adminAliases = [
     "admin",
@@ -102,6 +107,15 @@ export function findUserByCredentials(identity, password) {
     if (adminUser) {
       return adminUser;
     }
+  }
+
+  // Soporte directo para formato de selector "munId/parishId" o "parishId"
+  if (cleanId.includes("/")) {
+    const parts = cleanId.split("/");
+    const mId = parts[0];
+    const pId = parts[1] || parts[0];
+    const u = USERS_CATALOG.find(usr => usr.municipioId === mId && usr.parroquiaId === pId) || USERS_CATALOG.find(usr => usr.parroquiaId === pId);
+    if (u) return u;
   }
 
   // 1. Coincidencia exacta o directa con parroquia o municipio

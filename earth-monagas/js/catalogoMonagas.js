@@ -2,7 +2,7 @@
  * Catálogo Oficial Completo del Estado Monagas
  * 13 Municipios y sus 44 Parroquias Oficiales (Gaceta Oficial / INE 2021)
  */
-import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=79";
+import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=80";
 
 export const CATALOGO_MONAGAS = [
   // 1. MATURÍN (10 Parroquias)

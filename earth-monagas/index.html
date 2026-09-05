@@ -35,17 +35,17 @@
   <meta http-equiv="Expires" content="0" />
 
   <!-- Custom Styles -->
-  <link rel="stylesheet" href="css/styles.css?v=79">
+  <link rel="stylesheet" href="css/styles.css?v=80">
 
   <!-- Script de Autenticación Rápida, Limpieza Integral de Caché y Activador de Herramientas -->
   <script>
-    // Auto-actualización obligatoria a la versión más reciente v=79
+    // Auto-actualización obligatoria a la versión más reciente v=80
     (function() {
       try {
         var p = new URLSearchParams(window.location.search);
         var curV = p.get('v');
-        if (!curV || curV !== '79') {
-          p.set('v', '79');
+        if (!curV || curV !== '80') {
+          p.set('v', '80');
           window.location.replace(window.location.pathname + '?' + p.toString() + window.location.hash);
         }
       } catch(e) {}
@@ -160,110 +160,89 @@
 <body class="bg-slate-950 text-slate-100 h-screen flex flex-col antialiased select-none overflow-hidden max-w-full">
 
   <!-- ============================================================== -->
-  <!-- 0. PANTALLA DE INICIO DE SESIÓN / CONTROL DE ACCESO TERRITORIAL -->
+  <!-- 0. PANTALLA DE ACCESO Y SEGMENTACIÓN TERRITORIAL               -->
   <!-- ============================================================== -->
-  <div id="modal-auth-login" style="display: none; z-index: 100000;" class="hidden fixed inset-0 bg-slate-950/95 backdrop-blur-md items-center justify-center p-3 sm:p-4 overflow-y-auto">
-    <div class="relative bg-slate-900 border border-slate-700/80 w-full max-w-md rounded-3xl shadow-2xl overflow-hidden flex flex-col p-5 sm:p-7 space-y-4 my-auto">
+  <div id="modal-auth-login" style="display: none; z-index: 100000;" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md hidden items-center justify-center p-3 sm:p-4 overflow-y-auto">
+    <div class="relative bg-slate-900 border border-slate-700/80 w-full max-w-lg rounded-3xl shadow-[0_25px_60px_rgba(0,0,0,0.9)] overflow-hidden flex flex-col p-5 sm:p-7 space-y-4 my-auto animate-in fade-in zoom-in-95 duration-200">
       
-      <!-- Botón de Cierre Rápido -->
-      <div class="absolute top-4 right-4 flex items-center gap-2">
-        <button type="button" onclick="quickLoginImmediate('admin')" class="p-1.5 text-slate-400 hover:text-white rounded-full bg-slate-800 hover:bg-slate-700 transition cursor-pointer" title="Cerrar y entrar directamente">
-          <i data-lucide="x" class="w-4 h-4"></i>
-        </button>
-      </div>
+      <!-- Botón de Cerrar (para volver al mapa) -->
+      <button type="button" id="btn-close-auth-modal" class="absolute top-4 right-4 p-1.5 text-slate-400 hover:text-white rounded-xl bg-slate-800 hover:bg-slate-700 transition cursor-pointer" title="Cerrar y volver al mapa">
+        <i data-lucide="x" class="w-4 h-4"></i>
+      </button>
 
-      <!-- Identidad y Escudo -->
+      <!-- Encabezado / Identidad -->
       <div class="text-center space-y-1 pt-1">
-        <div class="inline-flex p-2.5 rounded-2xl bg-gradient-to-tr from-sky-600 to-blue-500 text-white shadow-xl shadow-sky-500/20 mb-1">
+        <div class="inline-flex p-3 rounded-2xl bg-gradient-to-tr from-sky-600 via-blue-600 to-indigo-600 text-white shadow-xl shadow-sky-500/20 mb-1">
           <i data-lucide="shield-check" class="w-7 h-7"></i>
         </div>
         <span class="text-[10px] font-black text-amber-400 uppercase tracking-widest block">Gobernación del Estado Monagas</span>
-        <h2 class="text-xl font-black text-white">Google Earth Pro • MIGATO</h2>
+        <h2 class="text-xl font-black text-white">Segmentación Territorial • MIGATO</h2>
         <p class="text-xs text-slate-400">
-          Segmentación Territorial de Monagas • Clave universal: <code class="text-emerald-400 font-bold bg-emerald-950/60 px-1.5 py-0.5 rounded">admin</code>
+          Entrar a Dirección General o a cada Parroquia • Clave universal: <code class="text-emerald-400 font-bold bg-emerald-950/60 px-1.5 py-0.5 rounded font-mono">admin</code>
         </p>
       </div>
 
-      <!-- BOTONES DESTACADOS 1-CLIC -->
-      <div class="space-y-2 pt-1">
-        <!-- 👑 Panel General -->
-        <button type="button" id="btn-quick-login-admin" onclick="quickLoginImmediate('admin')" class="w-full py-3 px-4 bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 hover:from-amber-400 hover:to-yellow-300 text-slate-950 font-black text-xs sm:text-sm rounded-xl shadow-xl shadow-amber-500/20 active:scale-95 transition flex items-center justify-between group cursor-pointer border border-amber-300/60">
-          <div class="flex items-center gap-2">
-            <span class="text-base">👑</span>
-            <span class="tracking-wide uppercase">Ingresar a Panel General (Todo Monagas)</span>
-          </div>
-          <span class="text-[11px] font-bold bg-slate-950/10 px-2 py-0.5 rounded">1 Clic ➔</span>
-        </button>
-
-        <!-- 📍 MATURÍN CENTRO (SAN SIMÓN - CAPITAL) -->
-        <button type="button" onclick="quickLoginImmediate('san-simon')" class="w-full py-3 px-4 bg-gradient-to-r from-sky-600 to-blue-600 hover:from-sky-500 hover:to-blue-500 text-white font-black text-xs sm:text-sm rounded-xl shadow-xl shadow-sky-500/25 active:scale-95 transition flex items-center justify-between group cursor-pointer border border-sky-400/60">
-          <div class="flex items-center gap-2">
-            <span class="text-base">📍</span>
+      <!-- SECCIÓN 1: DIRECCIÓN GENERAL -->
+      <div class="space-y-1.5">
+        <span class="text-[10px] font-black text-amber-400 uppercase tracking-wider block">1. Nivel Central (Todo el Estado)</span>
+        <button type="button" id="btn-login-general" class="w-full p-3.5 bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 hover:from-amber-400 hover:to-yellow-300 text-slate-950 font-black text-xs sm:text-sm rounded-2xl shadow-lg shadow-amber-500/20 active:scale-95 transition flex items-center justify-between group cursor-pointer border border-amber-300/80">
+          <div class="flex items-center gap-2.5">
+            <span class="text-xl">👑</span>
             <div class="text-left">
-              <span class="tracking-wide uppercase block font-black">Entrar a Maturín Centro (San Simón)</span>
-              <span class="text-[10px] text-sky-200 font-normal">Capital del Estado Monagas • Mapa Central</span>
+              <span class="tracking-wide uppercase block font-black text-xs sm:text-sm">Dirección General (Todo Monagas)</span>
+              <span class="text-[10px] text-slate-900 font-semibold block">Acceso libre a los 13 Municipios y 44 Parroquias</span>
             </div>
           </div>
-          <span class="text-[11px] font-bold bg-white/20 px-2 py-0.5 rounded group-hover:translate-x-1 transition">Entrar ➔</span>
+          <span class="text-[11px] font-black bg-slate-950/15 px-2.5 py-1 rounded-lg shrink-0">Entrar ➔</span>
         </button>
       </div>
 
-      <!-- SELECTOR DIRECTO DE TODAS LAS 44 PARROQUIAS -->
-      <div class="bg-slate-950/60 p-2.5 rounded-xl border border-slate-800">
-        <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">
-          O ingresar directo a cualquier otra parroquia de Monagas:
-        </label>
-        <div class="relative">
-          <select id="auth-select-parroquia" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-slate-200 font-semibold focus:outline-none focus:border-sky-500 cursor-pointer">
-            <option value="">Cargando catálogo de parroquias...</option>
+      <!-- SECCIÓN 2: PARROQUIA SEGMENTADA (UNA POR UNA) -->
+      <div class="space-y-2 pt-1 border-t border-slate-800">
+        <span class="text-[10px] font-black text-sky-400 uppercase tracking-wider block">2. Nivel Parroquial Segmentado (Entrar Una por Una)</span>
+        <div class="bg-slate-950/70 p-3 rounded-2xl border border-slate-800 space-y-2.5">
+          <label class="block text-[11px] font-bold text-slate-300">
+            Elige la parroquia a la que deseas entrar:
+          </label>
+          <select id="auth-select-parroquia" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-xs text-white font-semibold focus:outline-none focus:border-sky-500 cursor-pointer">
+            <option value="">-- Selecciona una Parroquia --</option>
           </select>
-        </div>
-      </div>
+          <button type="button" id="btn-login-parish-selected" class="w-full py-2.5 px-3 bg-gradient-to-r from-sky-600 to-blue-600 hover:from-sky-500 hover:to-blue-500 text-white font-black text-xs rounded-xl shadow-md active:scale-95 transition flex items-center justify-center gap-2 cursor-pointer border border-sky-400/50">
+            <i data-lucide="lock" class="w-4 h-4"></i>
+            <span id="btn-login-parish-label">Entrar en Modo Segmentado ➔</span>
+          </button>
 
-      <div class="flex items-center gap-3">
-        <div class="h-px bg-slate-800 flex-1"></div>
-        <span class="text-[10px] text-slate-500 uppercase font-bold tracking-wider">o escribir usuario</span>
-        <div class="h-px bg-slate-800 flex-1"></div>
-      </div>
-
-      <!-- Formulario de Autenticación por Texto -->
-      <form id="form-auth-login" class="space-y-3">
-        <div>
-          <div class="relative">
-            <i data-lucide="user" class="w-4 h-4 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2"></i>
-            <input type="text" id="auth-input-user" placeholder="Escribe parroquia (ej: San Simón, Los Godos) o admin" class="w-full pl-9 pr-3 py-2 bg-slate-950 border border-slate-700 rounded-xl text-white font-medium text-xs sm:text-sm focus:outline-none focus:border-sky-500 transition">
+          <!-- Chips de 1 Clic Directo -->
+          <div class="pt-1 flex items-center flex-wrap gap-1.5 text-[10px]">
+            <span class="text-slate-500 font-bold uppercase">Rápidos:</span>
+            <button type="button" onclick="window.earthApp?.quickLogin('alto de los godos')" class="px-2 py-0.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-purple-300 border border-purple-500/40 font-bold transition">Los Godos</button>
+            <button type="button" onclick="window.earthApp?.quickLogin('san simon')" class="px-2 py-0.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-sky-300 border border-sky-500/40 font-bold transition">San Simón</button>
+            <button type="button" onclick="window.earthApp?.quickLogin('boqueron')" class="px-2 py-0.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-emerald-300 border border-emerald-500/40 font-bold transition">Boquerón</button>
+            <button type="button" onclick="window.earthApp?.quickLogin('las cocuizas')" class="px-2 py-0.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-amber-300 border border-amber-500/40 font-bold transition">Las Cocuizas</button>
+            <button type="button" onclick="window.earthApp?.quickLogin('caripe')" class="px-2 py-0.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-teal-300 border border-teal-500/40 font-bold transition">Caripe</button>
           </div>
         </div>
-
-        <div>
-          <div class="relative">
-            <i data-lucide="lock" class="w-4 h-4 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2"></i>
-            <input type="password" id="auth-input-pass" value="admin" placeholder="admin" class="w-full pl-9 pr-3 py-2 bg-slate-950 border border-slate-700 rounded-xl text-white font-medium text-xs sm:text-sm focus:outline-none focus:border-sky-500 transition">
-          </div>
-        </div>
-
-        <!-- Mensaje de Error -->
-        <div id="auth-error-msg" class="hidden text-xs text-red-400 bg-red-950/40 border border-red-800/60 p-2.5 rounded-xl font-medium"></div>
-
-        <!-- Botón Entrar -->
-        <button type="submit" class="w-full py-2.5 bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs sm:text-sm rounded-xl border border-slate-600 transition flex items-center justify-center gap-2 cursor-pointer">
-          <i data-lucide="log-in" class="w-4 h-4 text-sky-400"></i>
-          <span>Ingresar con estas credenciales</span>
-        </button>
-      </form>
-
-      <!-- Accesos Rápidos Extras (El Corozo, Godos, San Simón) -->
-      <div class="pt-2 border-t border-slate-800/80 flex items-center justify-between text-[11px] text-slate-400">
-        <span class="text-[10px] text-slate-500">Otros directos:</span>
-        <div class="flex items-center gap-1.5 font-medium">
-          <button type="button" onclick="quickLoginImmediate('el corozo')" class="hover:text-purple-300 bg-slate-800/60 hover:bg-slate-800 px-2 py-0.5 rounded border border-slate-700 cursor-pointer">El Corozo</button>
-          <button type="button" onclick="quickLoginImmediate('alto de los godos')" class="hover:text-emerald-300 bg-slate-800/60 hover:bg-slate-800 px-2 py-0.5 rounded border border-slate-700 cursor-pointer">Los Godos</button>
-          <button type="button" onclick="quickLoginImmediate('san simon')" class="hover:text-amber-300 bg-slate-800/60 hover:bg-slate-800 px-2 py-0.5 rounded border border-slate-700 cursor-pointer">San Simón</button>
-        </div>
       </div>
 
-    </div>
-  </div>
+      <!-- SECCIÓN 3: ACCESO MANUAL (USUARIO Y CLAVE) -->
+      <div class="pt-1 border-t border-slate-800">
+        <form id="form-auth-login" class="space-y-2">
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="block text-[10px] text-slate-400 font-bold uppercase mb-0.5">Usuario / Parroquia</label>
+              <input type="text" id="auth-input-user" value="admin" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-2.5 py-1.5 text-xs text-white font-mono focus:outline-none focus:border-sky-500" placeholder="admin o parroquia">
+            </div>
+            <div>
+              <label class="block text-[10px] text-slate-400 font-bold uppercase mb-0.5">Contraseña</label>
+              <input type="password" id="auth-input-pass" value="admin" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-2.5 py-1.5 text-xs text-white font-mono focus:outline-none focus:border-sky-500" placeholder="admin">
+            </div>
+          </div>
+          <button type="submit" class="w-full py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs rounded-xl transition border border-slate-700 active:scale-95 cursor-pointer">
+            Iniciar Sesión Manual
+          </button>
+          <div id="auth-error-msg" class="hidden text-[11px] text-red-400 text-center font-bold bg-red-950/50 border border-red-800/60 p-2 rounded-xl"></div>
+        </form>
+      </div>
 
     </div>
   </div>
@@ -297,6 +276,13 @@
       <!-- Zona de Usuario, Militancia y Parroquia Asignada -->
       <div class="flex items-center gap-1.5 shrink min-w-0">
         
+        <!-- 👤 Sesión Activa / Cambiar Parroquia o General -->
+        <button id="btn-session-badge" class="px-2.5 py-1.5 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/50 text-amber-300 text-xs font-black flex items-center gap-1.5 transition active:scale-95 cursor-pointer shadow-sm shrink-0" title="Clic para cambiar de Parroquia o entrar como Dirección General">
+          <span id="session-badge-icon" class="text-xs">👑</span>
+          <span id="session-badge-label" class="whitespace-nowrap hidden sm:inline">Dirección General</span>
+          <i data-lucide="chevron-down" class="w-3 h-3 text-amber-400"></i>
+        </button>
+
         <!-- Selector o Indicador Territorial Bloqueado -->
         <button id="btn-open-parish-modal" class="px-2.5 py-1.5 rounded-xl bg-slate-950/90 hover:bg-slate-800 border border-sky-500/40 text-sky-300 text-xs font-bold flex items-center gap-1.5 active:scale-95 transition shadow-sm shrink min-w-0 max-w-[170px] sm:max-w-xs" title="Territorio">
           <span id="nav-lock-icon-wrapper" class="flex items-center shrink-0">
@@ -1259,7 +1245,7 @@
   </div>
 
   <!-- SCRIPT -->
-  <script type="module" src="js/app.js?v=79"></script>
+  <script type="module" src="js/app.js?v=80"></script>
   <script>
     if (window.lucide && typeof window.lucide.createIcons === 'function') {
       window.lucide.createIcons();
