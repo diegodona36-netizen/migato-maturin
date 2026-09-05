@@ -2,7 +2,7 @@
  * Motor Cartográfico Acelerado por GPU — Google Earth Pro Web (Monagas)
  * Integrado con Capas Jerárquicas Oficiales (INE 2021) y Edición de Vértices
  */
-import { GEO_ESTADO_OFICIAL, GEO_MUNICIPIOS_OFICIAL, GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=77";
+import { GEO_ESTADO_OFICIAL, GEO_MUNICIPIOS_OFICIAL, GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=78";
 
 export class EarthMapEngine {
   constructor(containerId, onCoordUpdate) {
@@ -58,8 +58,8 @@ export class EarthMapEngine {
     this.map = L.map(this.containerId, {
       center: [9.7469, -63.1812], // Maturín
       zoom: 13,
-      preferCanvas: true,
-      renderer: this.canvasRenderer,
+      preferCanvas: false,
+      renderer: this.svgRenderer,
       zoomSnap: 1,
       zoomDelta: 1,
       zoomAnimation: true,
@@ -305,13 +305,15 @@ export class EarthMapEngine {
       fill: false,
       dashArray: "6, 4",
       interactive: false,
-      renderer: this.canvasRenderer
+      renderer: this.svgRenderer
     });
 
     this.boundaryLayer.addLayer(bPoly);
 
     if (flyCamera) {
       this.map.flyToBounds(bPoly.getBounds(), { padding: [40, 40], duration: 1.2 });
+    } else {
+      this.map.fitBounds(bPoly.getBounds(), { padding: [40, 40], animate: false });
     }
   }
 
@@ -348,12 +350,14 @@ export class EarthMapEngine {
       fill: false,
       dashArray: "6, 4",
       interactive: false,
-      renderer: this.canvasRenderer
+      renderer: this.svgRenderer
     });
     this.boundaryLayer.addLayer(bPoly);
 
     if (flyCamera) {
       this.map.flyToBounds(bPoly.getBounds(), { padding: [50, 50], duration: 1.2 });
+    } else {
+      this.map.fitBounds(bPoly.getBounds(), { padding: [50, 50], animate: false });
     }
   }
 
@@ -491,7 +495,7 @@ export class EarthMapEngine {
             fillOpacity: isFocused ? 0.12 : 0.08,
             dashArray: isFocused ? "8, 6" : "6, 4",
             interactive: !isDrawing,
-            renderer: this.canvasRenderer
+            renderer: this.svgRenderer
           });
 
           if (sp && sp.id) {
@@ -573,7 +577,7 @@ export class EarthMapEngine {
             fillColor: poly.colorRelleno || "#38bdf8",
             fillOpacity: poly.opacidad !== undefined ? poly.opacidad : (isActiveParish ? 0.35 : 0.25),
             interactive: !isDrawing,
-            renderer: this.canvasRenderer
+            renderer: this.svgRenderer
           });
 
           if (poly && poly.id) {

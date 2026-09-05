@@ -2,21 +2,21 @@
  * Controlador Principal — Google Earth Pro Web (Edición Estado Monagas)
  * Robusto, 100% Operativo y Totalmente Individualizado
  */
-import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=77";
-import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=77";
-import { getAllParishesForSelector } from "./usersCatalog.js?v=77";
-import { EarthStore } from "./earthStore.js?v=77";
-import { EarthMapEngine } from "./mapEngine.js?v=77";
-import { PropertiesDialog } from "./propertiesDialog.js?v=77";
-import { ToolsManager } from "./toolsManager.js?v=77";
-import { detectParishFromGeometry } from "./geoMonagas.js?v=77";
-import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=77";
+import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=78";
+import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=78";
+import { getAllParishesForSelector } from "./usersCatalog.js?v=78";
+import { EarthStore } from "./earthStore.js?v=78";
+import { EarthMapEngine } from "./mapEngine.js?v=78";
+import { PropertiesDialog } from "./propertiesDialog.js?v=78";
+import { ToolsManager } from "./toolsManager.js?v=78";
+import { detectParishFromGeometry } from "./geoMonagas.js?v=78";
+import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=78";
 import { 
   getSavedFirebaseConfig, 
   saveFirebaseConfig, 
   isFirebaseConfigured, 
   initFirebase 
-} from "./firebaseConfig.js?v=77";
+} from "./firebaseConfig.js?v=78";
 
 class EarthMonagasApp {
   constructor() {
@@ -103,8 +103,8 @@ class EarthMonagasApp {
     // Iniciar listener en tiempo real de Firestore ahora que mapEngine está listo
     this.store.startRealtimeSync();
 
-    // Cargar parroquia activa inicial
-    this.selectParish(this.selectedMunId, this.selectedParishId);
+    // Cargar parroquia activa inicial de inmediato sin animaciones bruscas
+    this.selectParish(this.selectedMunId, this.selectedParishId, false);
     this.renderQuickParishBar();
 
     // Sincronización autoritativa desde Google Cloud Firestore

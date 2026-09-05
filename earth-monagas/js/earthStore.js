@@ -1,7 +1,7 @@
 /**
  * Gestor de Estado y Árbol de Lugares (Places) — Google Earth Pro Web (Monagas)
  */
-import { SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=77";
+import { SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=78";
 import { 
   saveParishToFirestore, 
   subscribeToTerritories, 
@@ -9,9 +9,9 @@ import {
   fetchAllTerritoriesFromFirestore,
   mergeItemCollections,
   cleanItem
-} from "./firebaseConfig.js?v=77";
+} from "./firebaseConfig.js?v=78";
 
-const STORAGE_KEY = "earth_monagas_places_v7";
+const STORAGE_KEY = "earth_monagas_places_v8";
 
 export const DEFAULT_SAN_SIMON_SUBPARROQUIAS = [
   {
