@@ -2,7 +2,7 @@
  * Motor Cartográfico Acelerado por GPU — Google Earth Pro Web (Monagas)
  * Integrado con Capas Jerárquicas Oficiales (INE 2021) y Edición de Vértices
  */
-import { GEO_ESTADO_OFICIAL, GEO_MUNICIPIOS_OFICIAL, GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=83";
+import { GEO_ESTADO_OFICIAL, GEO_MUNICIPIOS_OFICIAL, GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=84";
 
 export class EarthMapEngine {
   constructor(containerId, onCoordUpdate) {
@@ -839,19 +839,27 @@ export class EarthMapEngine {
       (pData.marcas || []).forEach(m => {
         if (m.visible === false || m.lat === undefined || m.lng === undefined) return;
 
-        const pinColor = m.color || "#ef4444";
+        const pinColor = m.color || "#f43f5e";
         const pinIcon = L.divIcon({
           className: "earth-placemark-pin-wrapper",
           html: `
-            <div style="transform: translate(-50%, -100%); cursor: pointer; filter: drop-shadow(0 3px 6px rgba(0,0,0,0.8));">
-              <svg width="26" height="34" viewBox="0 0 24 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 0C5.37 0 0 5.37 0 12C0 20.25 12 32 12 32C12 32 24 20.25 24 12C24 5.37 18.63 0 12 0Z" fill="${pinColor}" stroke="#ffffff" stroke-width="1.8"/>
-                <circle cx="12" cy="11" r="4.5" fill="#ffffff"/>
+            <div class="earth-placemark-pin transition transform hover:scale-125 active:scale-95" style="width: 28px; height: 36px; cursor: pointer; filter: drop-shadow(0 3px 6px rgba(0,0,0,0.75)); pointer-events: auto;">
+              <svg width="28" height="36" viewBox="0 0 28 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <!-- Sombra en la base de contacto -->
+                <ellipse cx="14" cy="35" rx="4.5" ry="1.5" fill="rgba(0,0,0,0.4)"/>
+                <!-- Aguja de contacto exacto (14, 36) -->
+                <path d="M14 36 L11.5 22 L16.5 22 Z" fill="#334155"/>
+                <!-- Cabeza del pin -->
+                <path d="M14 2 C7.9 2 3 6.9 3 13 C3 21 14 34 14 34 C14 34 25 21 25 13 C25 6.9 20.1 2 14 2 Z" fill="${pinColor}" stroke="#ffffff" stroke-width="2" stroke-linejoin="round"/>
+                <!-- Reflejo interior blanco -->
+                <circle cx="14" cy="13" r="4" fill="#ffffff"/>
               </svg>
             </div>
           `,
-          iconSize: [26, 34],
-          iconAnchor: [13, 34]
+          iconSize: [28, 36],
+          iconAnchor: [14, 36],
+          popupAnchor: [0, -36],
+          tooltipAnchor: [0, -36]
         });
 
         const marker = L.marker([m.lat, m.lng], { icon: pinIcon });

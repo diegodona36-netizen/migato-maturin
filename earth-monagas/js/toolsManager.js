@@ -323,14 +323,60 @@ export class ToolsManager {
       if (this.activeTool === "marca") {
         this.points = [latlng];
         this.mapEngine.tempDrawingLayer.clearLayers();
-        const marker = L.marker(latlng, {
-          icon: L.divIcon({
-            className: "earth-placemark-icon",
-            html: `<div class="w-8 h-8 rounded-full bg-rose-600 text-white flex items-center justify-center shadow-[0_0_15px_rgba(244,63,94,0.9)] border-2 border-white"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg></div>`,
-            iconSize: [32, 32],
-            iconAnchor: [16, 32]
-          })
+
+        const pinIcon = L.divIcon({
+          className: "earth-placemark-pin-wrapper",
+          html: `
+            <div class="earth-placemark-pin relative" style="width: 28px; height: 36px; cursor: grab; filter: drop-shadow(0 4px 10px rgba(244,63,94,0.9));">
+              <svg width="28" height="36" viewBox="0 0 28 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <!-- Sombra en la base de contacto -->
+                <ellipse cx="14" cy="35" rx="4.5" ry="1.5" fill="rgba(0,0,0,0.5)"/>
+                <!-- Aguja de contacto exacto (14, 36) -->
+                <path d="M14 36 L11.5 22 L16.5 22 Z" fill="#334155"/>
+                <!-- Cabeza del pin rojo rosa Google Earth -->
+                <path d="M14 2 C7.9 2 3 6.9 3 13 C3 21 14 34 14 34 C14 34 25 21 25 13 C25 6.9 20.1 2 14 2 Z" fill="#f43f5e" stroke="#ffffff" stroke-width="2" stroke-linejoin="round"/>
+                <!-- Reflejo interior blanco -->
+                <circle cx="14" cy="13" r="4" fill="#ffffff"/>
+              </svg>
+              <!-- Diana / Anillo de precisión animado en el punto exacto de la aguja -->
+              <span class="absolute -bottom-1 left-1/2 -translate-x-1/2 w-3 h-3 rounded-full border-2 border-rose-400 bg-rose-500/40 animate-ping pointer-events-none"></span>
+            </div>
+          `,
+          iconSize: [28, 36],
+          iconAnchor: [14, 36],
+          popupAnchor: [0, -36],
+          tooltipAnchor: [0, -36]
         });
+
+        const marker = L.marker(latlng, {
+          draggable: true,
+          icon: pinIcon,
+          zIndexOffset: 2000
+        });
+
+        marker.bindTooltip("📍 Arrastra para precisión milimétrica", {
+          permanent: false,
+          direction: "top",
+          offset: [0, -36]
+        });
+
+        const updateCoordinates = (pos) => {
+          this.points = [[pos.lat, pos.lng]];
+          this.updateLiveMeasurements();
+          this.updateDrawingHint();
+        };
+
+        marker.on("drag", (ev) => {
+          updateCoordinates(ev.target.getLatLng());
+        });
+
+        marker.on("dragend", (ev) => {
+          updateCoordinates(ev.target.getLatLng());
+          if (window.earthApp?.showToast) {
+            window.earthApp.showToast("🎯 Posición milimétrica fijada", "rose");
+          }
+        });
+
         this.mapEngine.tempDrawingLayer.addLayer(marker);
         this.updateLiveMeasurements();
         this.updateDrawingHint();
@@ -442,7 +488,7 @@ export class ToolsManager {
         hint.textContent = `✅ ${count} puntos. Pulsa [Guardar en Parroquia] o haz doble clic`;
       }
     } else if (this.activeTool === "marca") {
-      hint.textContent = count > 0 ? "✅ Marca colocada. Pulsa [Guardar en Parroquia]" : "👉 Haz clic en el lugar exacto del satélite donde colocar la marca";
+      hint.textContent = count > 0 ? "🎯 Marca fijada. Arrástrala para calibrar su posición milimétrica o pulsa [Guardar]" : "👉 Haz clic en el satélite para colocar la marca de posición (luego podrás arrastrarla)";
     }
   }
 
@@ -566,9 +612,9 @@ export class ToolsManager {
     } else if (this.activeTool === "marca") {
       if (meterLabel) meterLabel.textContent = `${this.points.length} marca`;
       if (subLabel && this.points.length > 0) {
-        subLabel.textContent = `${this.points[0][0].toFixed(5)}, ${this.points[0][1].toFixed(5)}`;
+        subLabel.textContent = `${this.points[0][0].toFixed(6)}°, ${this.points[0][1].toFixed(6)}°`;
       }
-      if (compactLabel) compactLabel.textContent = this.points.length > 0 ? "1 marca" : "0 marcas";
+      if (compactLabel) compactLabel.textContent = this.points.length > 0 ? "1 marca fijada" : "0 marcas";
       if (btnFinish) {
         if (this.points.length >= 1) {
           btnFinish.classList.remove("opacity-50", "pointer-events-none");
@@ -699,7 +745,9 @@ export class ToolsManager {
 
     } else if (this.activeTool === "marca") {
       if (this.points.length < 1) {
-        alert("Haz clic en el satélite para fijar la ubicación del punto.");
+        if (window.earthApp?.showToast) {
+          window.earthApp.showToast("⚠️ Haz clic en el satélite para fijar la ubicación del punto.", "amber");
+        }
         return;
       }
       const newMark = {
@@ -708,7 +756,7 @@ export class ToolsManager {
         descripcion: "Punto de Interés",
         lat: this.points[0][0],
         lng: this.points[0][1],
-        color: "#ef4444",
+        color: "#f43f5e",
         visible: true,
         fecha: new Date().toISOString()
       };
