@@ -35,17 +35,17 @@
   <meta http-equiv="Expires" content="0" />
 
   <!-- Custom Styles -->
-  <link rel="stylesheet" href="css/styles.css?v=87">
+  <link rel="stylesheet" href="css/styles.css?v=88">
 
   <!-- Script de Autenticación Rápida, Limpieza Integral de Caché y Activador de Herramientas -->
   <script>
-    // Auto-actualización obligatoria a la versión más reciente v=87
+    // Auto-actualización obligatoria a la versión más reciente v=88
     (function() {
       try {
         var p = new URLSearchParams(window.location.search);
         var curV = p.get('v');
-        if (!curV || curV !== '87') {
-          p.set('v', '87');
+        if (!curV || curV !== '88') {
+          p.set('v', '88');
           window.location.replace(window.location.pathname + '?' + p.toString() + window.location.hash);
         }
       } catch(e) {}
@@ -323,8 +323,20 @@
           </span>
         </div>
 
-        <!-- Estado y Botón de Sincronización en la Nube -->
-        <button type="button" id="btn-cloud-sync" onclick="window.earthApp?.forceSyncCloud()" class="px-2 sm:px-2.5 py-1.5 rounded-xl bg-slate-800/80 hover:bg-sky-950 border border-slate-700/80 hover:border-sky-500/50 text-xs font-bold flex items-center gap-1.5 shrink-0 shadow select-none cursor-pointer active:scale-95 transition" title="Clic para Forzar Sincronización Limpia desde la Nube">
+        <!-- Enlaces a Módulos del Comando (Exclusivo para Administrador / Sala Central) -->
+        <div id="admin-module-links" class="hidden items-center gap-1.5 shrink-0">
+          <a href="../centros-maturin/" class="px-2.5 py-1.5 rounded-xl bg-purple-950/80 hover:bg-purple-900 border border-purple-600/50 text-purple-200 text-xs font-bold flex items-center gap-1.5 transition active:scale-95 shadow-sm" title="Ver Tablero de Centros Electorales CNE">
+            <i data-lucide="school" class="w-3.5 h-3.5 text-purple-400"></i>
+            <span class="hidden xl:inline font-bold">Centros Electorales</span>
+          </a>
+          <a href="../dashboard-campana/" class="px-2.5 py-1.5 rounded-xl bg-amber-950/80 hover:bg-amber-900 border border-amber-600/50 text-amber-200 text-xs font-bold flex items-center gap-1.5 transition active:scale-95 shadow-sm" title="Ver Dashboard de Campaña">
+            <i data-lucide="bar-chart-3" class="w-3.5 h-3.5 text-amber-400"></i>
+            <span class="hidden xl:inline font-bold">Dashboard</span>
+          </a>
+        </div>
+
+        <!-- Estado y Botón de Sincronización en la Nube (Oculto por defecto para no saturar) -->
+        <button type="button" id="btn-cloud-sync" onclick="window.earthApp?.forceSyncCloud()" class="hidden px-2 sm:px-2.5 py-1.5 rounded-xl bg-slate-800/80 hover:bg-sky-950 border border-slate-700/80 hover:border-sky-500/50 text-xs font-bold items-center gap-1.5 shrink-0 shadow select-none cursor-pointer active:scale-95 transition" title="Clic para Forzar Sincronización Limpia desde la Nube">
           <span id="cloud-sync-dot" class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0"></span>
           <i data-lucide="cloud" class="w-3.5 h-3.5 text-sky-400 shrink-0"></i>
           <span id="cloud-sync-text" class="hidden sm:inline font-bold text-slate-300">En Red</span>
@@ -340,8 +352,8 @@
 
     </div>
 
-    <!-- Fila 2: Botonera de Herramientas SIG (Ultra Limpia para Operadores) -->
-    <div class="px-2 sm:px-3 py-1.5 flex items-center gap-2 overflow-x-auto no-scrollbar w-full">
+    <!-- Fila 2: Botonera de Herramientas SIG (Para Administrador / Grupo Técnico) -->
+    <div id="toolbar-tools-row" class="px-2 sm:px-3 py-1.5 flex items-center gap-2 overflow-x-auto no-scrollbar w-full">
 
       <!-- 🏘️ BOTÓN PRINCIPAL: Dibujar Sector / Polígono -->
       <button data-tool="poligono" id="btn-tool-polygon" onclick="window.activateEarthTool('poligono')" class="btn-earth-tool px-4 py-1.5 rounded-xl bg-gradient-to-r from-sky-600 to-blue-600 hover:from-sky-500 hover:to-blue-500 text-white border border-sky-400/60 text-xs font-black transition flex items-center gap-1.5 shrink-0 active:scale-95 shadow-md shadow-sky-600/30 cursor-pointer" title="Dibujar Sector Comunal / Polígono con Militancia">
@@ -1397,7 +1409,7 @@
   </div>
 
   <!-- SCRIPT -->
-  <script type="module" src="js/app.js?v=87"></script>
+  <script type="module" src="js/app.js?v=88"></script>
   <script>
     if (window.lucide && typeof window.lucide.createIcons === 'function') {
       window.lucide.createIcons();

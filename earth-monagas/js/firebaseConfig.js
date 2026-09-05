@@ -425,15 +425,12 @@ export function subscribeToTerritories(onDataCallback) {
     restPollingTimer = null;
   }
 
-  // 1. Polling REST Infalible cada 8 segundos (sincroniza PC ↔ Teléfono en cualquier red)
-  restPollingTimer = setInterval(async () => {
-    try {
-      const remote = await fetchAllTerritoriesFromFirestore();
-      if (remote && Object.keys(remote).length > 0) {
-        onDataCallback(remote);
-      }
-    } catch(e) {}
-  }, 8000);
+  // 1. Carga inicial única bajo demanda (protege la cuota diaria de 50.000 lecturas y el saldo móvil)
+  fetchAllTerritoriesFromFirestore().then(remote => {
+    if (remote && Object.keys(remote).length > 0) {
+      onDataCallback(remote);
+    }
+  }).catch(() => {});
 
   // 2. Intentar activar listener push de WebSockets con el SDK en segundo plano
   const config = getSavedFirebaseConfig();

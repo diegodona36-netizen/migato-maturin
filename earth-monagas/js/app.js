@@ -2,21 +2,21 @@
  * Controlador Principal — Google Earth Pro Web (Edición Estado Monagas)
  * Robusto, 100% Operativo y Totalmente Individualizado
  */
-import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=87";
-import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=87";
-import { getAllParishesForSelector } from "./usersCatalog.js?v=87";
-import { EarthStore } from "./earthStore.js?v=87";
-import { EarthMapEngine } from "./mapEngine.js?v=87";
-import { PropertiesDialog } from "./propertiesDialog.js?v=87";
-import { ToolsManager } from "./toolsManager.js?v=87";
-import { detectParishFromGeometry } from "./geoMonagas.js?v=87";
-import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=87";
+import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=88";
+import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=88";
+import { getAllParishesForSelector } from "./usersCatalog.js?v=88";
+import { EarthStore } from "./earthStore.js?v=88";
+import { EarthMapEngine } from "./mapEngine.js?v=88";
+import { PropertiesDialog } from "./propertiesDialog.js?v=88";
+import { ToolsManager } from "./toolsManager.js?v=88";
+import { detectParishFromGeometry } from "./geoMonagas.js?v=88";
+import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=88";
 import { 
   getSavedFirebaseConfig, 
   saveFirebaseConfig, 
   isFirebaseConfigured, 
   initFirebase 
-} from "./firebaseConfig.js?v=87";
+} from "./firebaseConfig.js?v=88";
 
 class EarthMonagasApp {
   constructor() {
@@ -135,11 +135,6 @@ class EarthMonagasApp {
         }, 300);
       }
     });
-
-    // Polling de respaldo cada 20 segundos
-    setInterval(() => {
-      this.store.syncFromCloud();
-    }, 20000);
 
     window.activateEarthTool = (toolName) => {
       // Regla de Oro Territorial: "Primero el Pote (Sub-Parroquia), luego el Agua (Sector Comunal)"
@@ -727,6 +722,9 @@ class EarthMonagasApp {
       });
     }
 
+    const currentUser = this.authManager.getCurrentUser();
+    const isFieldOperator = currentUser && currentUser.rol === "operador";
+
     let html = "";
 
     // Barra de acceso directo a otras parroquias sincronizadas en la red (solo en Dirección General)
@@ -894,18 +892,22 @@ class EarthMonagasApp {
 
               <!-- Acciones del Eje -->
               <div class="flex items-center gap-1 shrink-0" onclick="event.stopPropagation()">
+                ${!isFieldOperator ? `
                 <button onclick="window.earthApp.startSectorInSubParish('${sp.id}')" class="text-sky-400 hover:text-sky-200 p-1 transition" title="➕ Trazar Sector Comunal dentro de este eje">
                   <i data-lucide="plus-circle" class="w-4 h-4"></i>
                 </button>
+                ` : ''}
                 <button onclick="window.earthApp.openSubParishFicha('${sp.id}')" class="text-slate-400 hover:text-purple-300 p-1 transition" title="Ficha y Propiedades del Eje">
                   <i data-lucide="edit-2" class="w-3.5 h-3.5"></i>
                 </button>
                 <button onclick="window.earthApp.focusSubParish('${sp.id}', true)" class="text-purple-400 hover:text-purple-200 p-1 transition" title="Enfocar en mapa">
                   <i data-lucide="crosshair" class="w-3.5 h-3.5"></i>
                 </button>
+                ${!isFieldOperator ? `
                 <button onclick="window.earthApp.deleteSubParish('${sp.id}')" class="text-slate-500 hover:text-red-400 p-1 transition" title="Eliminar eje">
                   <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
                 </button>
+                ` : ''}
               </div>
             </div>
 
@@ -914,8 +916,8 @@ class EarthMonagasApp {
               <div class="pl-6 pr-2.5 pb-2.5 pt-1 space-y-1.5 border-t border-purple-950 bg-slate-950/40">
                 ${displaySecs.length === 0 ? `
                   <div class="text-[11px] text-slate-400 italic py-2 px-2 bg-slate-900/40 rounded-xl border border-slate-800/40 text-center">
-                    No hay sectores trazados aún dentro de este eje.<br>
-                    <button onclick="window.earthApp.startSectorInSubParish('${sp.id}')" class="text-sky-400 font-bold underline mt-1 inline-block">➕ Trazar el primer sector</button>
+                    No hay sectores trazados aún dentro de este eje.
+                    ${!isFieldOperator ? `<br><button onclick="window.earthApp.startSectorInSubParish('${sp.id}')" class="text-sky-400 font-bold underline mt-1 inline-block">➕ Trazar el primer sector</button>` : ''}
                   </div>
                 ` : displaySecs.map(poly => {
                   const milCount = poly.militantes !== undefined ? poly.militantes : (poly.habitantes || 0);
@@ -942,9 +944,11 @@ class EarthMonagasApp {
                         <button onclick="window.earthApp.focusAndEdit('poligono', '${poly.id}', true)" class="text-slate-400 hover:text-sky-300 p-1 transition" title="Editar caracterización socio-política">
                           <i data-lucide="edit-2" class="w-3.5 h-3.5"></i>
                         </button>
+                        ${!isFieldOperator ? `
                         <button onclick="window.earthApp.deleteItem('${this.selectedMunId}', '${this.selectedParishId}', 'poligono', '${poly.id}')" class="text-slate-500 hover:text-red-400 p-1 transition" title="Eliminar sector">
                           <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
                         </button>
+                        ` : ''}
                       </div>
                     </div>
                   `;
@@ -1916,7 +1920,7 @@ class EarthMonagasApp {
         navBtn.title = `Parroquia Segmentada: ${pName} - Clic para cambiar de parroquia`;
       }
       if (statusRole) {
-        statusRole.textContent = `🔒 ${pName} (${mName})`;
+        statusRole.textContent = `🔒 ${pName}`;
       }
 
       // Fijar OBLIGATORIAMENTE el territorio a la parroquia del usuario
@@ -1924,15 +1928,37 @@ class EarthMonagasApp {
       this.selectedParishId = user.parroquiaId;
     }
 
-    if (btnAdvToggle) {
-      btnAdvToggle.classList.remove("hidden");
-      btnAdvToggle.classList.add("flex");
+    const toolbarToolsRow = document.getElementById("toolbar-tools-row");
+    const adminModuleLinks = document.getElementById("admin-module-links");
+    const mobileSubparish = document.getElementById("btn-mobile-subparish");
+    const mobilePolygon = document.getElementById("btn-mobile-polygon");
+    const mobilePath = document.getElementById("btn-mobile-path");
+    const mobilePlacemark = document.getElementById("btn-mobile-placemark");
+
+    if (isGeneral) {
+      if (toolbarToolsRow) {
+        toolbarToolsRow.classList.remove("hidden");
+        toolbarToolsRow.classList.add("flex");
+      }
+      if (adminModuleLinks) {
+        adminModuleLinks.classList.remove("hidden");
+        adminModuleLinks.classList.add("flex");
+      }
+      if (mobileSubparish) mobileSubparish.classList.remove("hidden");
+      if (mobilePolygon) mobilePolygon.classList.remove("hidden");
+      if (mobilePath) mobilePath.classList.remove("hidden");
+      if (mobilePlacemark) mobilePlacemark.classList.remove("hidden");
+      if (tabLayers) tabLayers.classList.remove("hidden");
+    } else {
+      // 🔒 MODO OPERADOR / MILITANCIA: Ocultar barra de dibujo y herramientas técnicas
+      if (toolbarToolsRow) toolbarToolsRow.classList.add("hidden");
+      if (adminModuleLinks) adminModuleLinks.classList.add("hidden");
+      if (mobileSubparish) mobileSubparish.classList.add("hidden");
+      if (mobilePolygon) mobilePolygon.classList.add("hidden");
+      if (mobilePath) mobilePath.classList.add("hidden");
+      if (mobilePlacemark) mobilePlacemark.classList.add("hidden");
+      if (tabLayers) tabLayers.classList.add("hidden");
     }
-    if (toolbarAdv) {
-      toolbarAdv.classList.remove("hidden");
-      toolbarAdv.classList.add("flex");
-    }
-    if (tabLayers) tabLayers.classList.remove("hidden");
 
     this.selectParish(this.selectedMunId, this.selectedParishId);
     this.renderPlacesTree();
