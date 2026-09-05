@@ -4,35 +4,6 @@
     "parishId": "aparicio",
     "subparroquias": [
       {
-        "id": "SUBPAR-1788564404109",
-        "nombre": "Eje Comunal 1",
-        "descripcion": "Eje o Circuito Comunal",
-        "colorBorde": "#c084fc",
-        "anchoBorde": 2.5,
-        "colorRelleno": "#a855f7",
-        "opacidad": 0.2,
-        "vertices": [
-          [
-            10.032076507077502,
-            -63.56311798095704
-          ],
-          [
-            9.982037773268658,
-            -63.56174468994141
-          ],
-          [
-            10.00435329630218,
-            -63.607406616210945
-          ]
-        ],
-        "areaHa": 1366,
-        "perimetroM": 11148,
-        "visible": true,
-        "fecha": "2026-09-04T23:26:44.109Z",
-        "munId": "piar",
-        "parishId": "aparicio"
-      },
-      {
         "id": "sub-aparicio-1",
         "parroquiaId": "aparicio",
         "nombre": "Sub-Parroquia 1 • Casco Aparicio",
@@ -113,42 +84,13 @@
     ],
     "rutas": [],
     "marcas": [],
-    "updatedAt": 1788580744566
+    "updatedAt": 1788580755028
   },
   "aparicio": {
     "munId": "piar",
     "parishId": "aparicio",
     "subparroquias": [
       {
-        "id": "SUBPAR-1788564404109",
-        "nombre": "Eje Comunal 1",
-        "descripcion": "Eje o Circuito Comunal",
-        "colorBorde": "#c084fc",
-        "anchoBorde": 2.5,
-        "colorRelleno": "#a855f7",
-        "opacidad": 0.2,
-        "vertices": [
-          [
-            10.032076507077502,
-            -63.56311798095704
-          ],
-          [
-            9.982037773268658,
-            -63.56174468994141
-          ],
-          [
-            10.00435329630218,
-            -63.607406616210945
-          ]
-        ],
-        "areaHa": 1366,
-        "perimetroM": 11148,
-        "visible": true,
-        "fecha": "2026-09-04T23:26:44.109Z",
-        "munId": "piar",
-        "parishId": "aparicio"
-      },
-      {
         "id": "sub-aparicio-1",
         "parroquiaId": "aparicio",
         "nombre": "Sub-Parroquia 1 • Casco Aparicio",
@@ -229,7 +171,7 @@
     ],
     "rutas": [],
     "marcas": [],
-    "updatedAt": 1788580744566
+    "updatedAt": 1788580755028
   },
   "maturin_san-simon": {
     "munId": "maturin",
