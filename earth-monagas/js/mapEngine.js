@@ -2,7 +2,7 @@
  * Motor Cartográfico Acelerado por GPU — Google Earth Pro Web (Monagas)
  * Integrado con Capas Jerárquicas Oficiales (INE 2021) y Edición de Vértices
  */
-import { GEO_ESTADO_OFICIAL, GEO_MUNICIPIOS_OFICIAL, GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=91";
+import { GEO_ESTADO_OFICIAL, GEO_MUNICIPIOS_OFICIAL, GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=92";
 
 export class EarthMapEngine {
   constructor(containerId, onCoordUpdate) {
@@ -38,6 +38,7 @@ export class EarthMapEngine {
       l4: false,
       l5: true
     };
+    this.autoZoomLOD = true; // Zoom Inteligente y Dinámico activado por defecto
 
     // Estado de Edición de Vértices
     this.editingPoly = null;
@@ -150,9 +151,14 @@ export class EarthMapEngine {
       },
       onEachFeature: (feature, layer) => {
         layer.bindTooltip(`
-          <div class="p-1 font-mono text-xs">
-            <strong class="text-amber-400 block font-bold text-sm">Estado Monagas</strong>
-            <span class="text-[10px] text-slate-300">13 Municipios • 44 Parroquias • 536 Centros de Votación</span>
+          <div class="p-2 font-mono text-xs max-w-[240px] bg-[#08061a] rounded-xl border border-amber-500/50 shadow-2xl">
+            <div class="flex items-center justify-between border-b border-amber-800/60 pb-1 mb-1">
+              <span class="text-[9px] uppercase tracking-wider text-amber-400 font-black">Nivel 1 • Macro</span>
+              <span class="text-[9px] font-bold text-amber-200 bg-amber-950 px-1.5 py-0.5 rounded border border-amber-700">Estado</span>
+            </div>
+            <strong class="text-white block font-black text-sm mb-0.5">Estado Monagas</strong>
+            <span class="text-[10px] text-slate-300 block mb-1.5">13 Municipios • 44 Parroquias • 536 Centros de Votación</span>
+            <span class="text-[9px] text-amber-300 font-bold block text-center">Acércate con el zoom para ver municipios</span>
           </div>
         `, { sticky: true, className: "earth-tooltip" });
       }
@@ -170,12 +176,31 @@ export class EarthMapEngine {
       onEachFeature: (feature, layer) => {
         const p = feature.properties;
         layer.bindTooltip(`
-          <div class="p-1 font-mono text-xs">
-            <strong class="text-white block font-bold text-sm">Municipio ${p.nombre || p.ADM2_ES}</strong>
-            <span class="text-[10px] text-sky-300">Capital: ${p.capital || 'N/D'} • ${p.parroquias_count || ''} Parroquias</span>
-            ${p.electores ? `<span class="text-[10px] text-slate-400 block font-mono">Electores: ~${p.electores.toLocaleString()}</span>` : ''}
+          <div class="p-2 font-mono text-xs max-w-[250px] bg-[#08061a] rounded-xl border border-sky-500/50 shadow-2xl">
+            <div class="flex items-center justify-between border-b border-sky-800/60 pb-1 mb-1">
+              <span class="text-[9px] uppercase tracking-wider text-sky-400 font-black">Nivel 2 • Municipio</span>
+              <span class="text-[9px] font-bold text-sky-200 bg-sky-950 px-1.5 py-0.5 rounded border border-sky-700">Cantonal</span>
+            </div>
+            <strong class="text-white block font-black text-sm mb-0.5">Municipio ${p.nombre || p.ADM2_ES}</strong>
+            <span class="text-[10px] text-slate-300 block mb-1">Capital: <strong class="text-white">${p.capital || 'N/D'}</strong> • ${p.parroquias_count || ''} Parroquias</span>
+            ${p.electores ? `<div class="text-[10px] text-sky-300 font-mono bg-sky-950/60 px-2 py-0.5 rounded border border-sky-800/40 mb-1">Electores: ~${p.electores.toLocaleString()}</div>` : ''}
+            <span class="text-[9px] text-sky-300 font-bold block text-center">👉 Clic para enfocar municipio</span>
           </div>
         `, { sticky: true, className: "earth-tooltip" });
+
+        layer.on("click", (e) => {
+          if (e.originalEvent?.target?.blur) e.originalEvent.target.blur();
+          if (document.activeElement?.blur) document.activeElement.blur();
+          if (this.isDrawingMode || window.earthApp?.toolsManager?.activeTool) {
+            window.earthApp?.toolsManager?.handleMapClick(e);
+            return;
+          }
+          L.DomEvent.stopPropagation(e);
+          try {
+            const b = layer.getBounds();
+            if (b.isValid()) this.map.flyToBounds(b, { padding: [40, 40], duration: 1.2 });
+          } catch(err) {}
+        });
       }
     });
 
@@ -192,10 +217,14 @@ export class EarthMapEngine {
       onEachFeature: (feature, layer) => {
         const p = feature.properties;
         layer.bindTooltip(`
-          <div class="p-1 font-mono text-xs">
-            <strong class="text-emerald-400 block font-bold">${p.nombre || p.ADM3_ES}</strong>
-            <span class="text-[10px] text-slate-300">Municipio ${p.municipioNombre || p.ADM2_ES || 'Monagas'}</span>
-            <span class="text-[9px] text-amber-400 block mt-0.5">👉 Clic para seleccionar y mapear</span>
+          <div class="p-2 font-mono text-xs max-w-[250px] bg-[#08061a] rounded-xl border border-emerald-500/50 shadow-2xl">
+            <div class="flex items-center justify-between border-b border-emerald-800/60 pb-1 mb-1">
+              <span class="text-[9px] uppercase tracking-wider text-emerald-400 font-black">Nivel 3 • Parroquia</span>
+              <span class="text-[9px] font-bold text-emerald-200 bg-emerald-950 px-1.5 py-0.5 rounded border border-emerald-700">INE 2021</span>
+            </div>
+            <strong class="text-white block font-black text-sm mb-0.5">${p.nombre || p.ADM3_ES}</strong>
+            <span class="text-[10px] text-slate-300 block mb-1.5">Municipio ${p.municipioNombre || p.ADM2_ES || 'Monagas'}</span>
+            <span class="text-[9px] text-amber-300 font-bold block text-center bg-amber-950/60 py-1 rounded border border-amber-800/40">👉 Clic para abrir y mapear sectores</span>
           </div>
         `, { sticky: true, className: "earth-tooltip" });
 
@@ -218,46 +247,20 @@ export class EarthMapEngine {
     this.layerL4_SubParroquias = L.layerGroup();
   }
 
-  toggleHierarchicalLayer(levelKey, visible) {
+  toggleHierarchicalLayer(levelKey, visible, isUserManual = false) {
+    if (isUserManual) {
+      this.autoZoomLOD = false;
+      const chkAuto = document.getElementById("chk-auto-zoom-lod");
+      if (chkAuto) chkAuto.checked = false;
+      const lblLod = document.getElementById("lbl-active-lod-name");
+      if (lblLod) lblLod.textContent = "Control Manual";
+    }
+
     if (this.hierarchicalVisibility.hasOwnProperty(levelKey)) {
       this.hierarchicalVisibility[levelKey] = !!visible;
     }
 
-    if (levelKey === 'l1' && this.layerL1_Estado) {
-      if (visible) {
-        if (!this.map.hasLayer(this.layerL1_Estado)) this.map.addLayer(this.layerL1_Estado);
-      } else {
-        if (this.map.hasLayer(this.layerL1_Estado)) this.map.removeLayer(this.layerL1_Estado);
-      }
-    } else if (levelKey === 'l2' && this.layerL2_Municipios) {
-      if (visible) {
-        if (!this.map.hasLayer(this.layerL2_Municipios)) this.map.addLayer(this.layerL2_Municipios);
-      } else {
-        if (this.map.hasLayer(this.layerL2_Municipios)) this.map.removeLayer(this.layerL2_Municipios);
-      }
-    } else if (levelKey === 'l3' && this.layerL3_Parroquias) {
-      if (visible) {
-        if (!this.map.hasLayer(this.layerL3_Parroquias)) this.map.addLayer(this.layerL3_Parroquias);
-      } else {
-        if (this.map.hasLayer(this.layerL3_Parroquias)) this.map.removeLayer(this.layerL3_Parroquias);
-      }
-    } else if (levelKey === 'l4') {
-      if (visible) {
-        if (this.subParroquiasLayer && !this.map.hasLayer(this.subParroquiasLayer)) this.map.addLayer(this.subParroquiasLayer);
-        if (this.subParroquiaLabelsLayer && !this.map.hasLayer(this.subParroquiaLabelsLayer)) this.map.addLayer(this.subParroquiaLabelsLayer);
-      } else {
-        if (this.subParroquiasLayer && this.map.hasLayer(this.subParroquiasLayer)) this.map.removeLayer(this.subParroquiasLayer);
-        if (this.subParroquiaLabelsLayer && this.map.hasLayer(this.subParroquiaLabelsLayer)) this.map.removeLayer(this.subParroquiaLabelsLayer);
-      }
-    } else if (levelKey === 'l5') {
-      if (visible) {
-        if (this.polygonsLayer && !this.map.hasLayer(this.polygonsLayer)) this.map.addLayer(this.polygonsLayer);
-        if (this.sectorLabelsLayer && !this.map.hasLayer(this.sectorLabelsLayer)) this.map.addLayer(this.sectorLabelsLayer);
-      } else {
-        if (this.polygonsLayer && this.map.hasLayer(this.polygonsLayer)) this.map.removeLayer(this.polygonsLayer);
-        if (this.sectorLabelsLayer && this.map.hasLayer(this.sectorLabelsLayer)) this.map.removeLayer(this.sectorLabelsLayer);
-      }
-    }
+    this.applyVisibilityToLayers();
   }
 
   focusHierarchicalLayer(levelKey) {
@@ -663,12 +666,54 @@ export class EarthMapEngine {
           }
 
           if (!isDrawing) {
+            // Calcular consolidado suma viva de sectores dentro de este Eje Comunal
+            const childSecs = (pData.poligonos || []).filter(p => String(p.subParroquiaId) === String(sp.id));
+            let totCasas = 0, totFam = 0, totHab = 0, totVot = 0;
+            childSecs.forEach(c => {
+              totCasas += parseInt(c.casas || 0) || 0;
+              totFam += parseInt(c.familias || 0) || 0;
+              totHab += parseInt(c.habitantes || 0) || 0;
+              totVot += parseInt(c.militantes !== undefined ? c.militantes : (c.habitantes || 0)) || 0;
+            });
+
             spLayer.bindTooltip(`
-              <div class="p-1 font-mono text-xs">
-                <span class="text-[9px] uppercase tracking-wider text-purple-400 font-black block">Nivel 4 • Eje Comunal</span>
-                <strong class="text-white block font-bold text-sm">${sp.nombre}</strong>
-                <span class="text-[10px] text-purple-200">Parroquia: ${pData.nombre || parishId}</span>
-                <span class="text-[10px] text-purple-300 block">Área: ${sp.areaHa || 0} Ha • Per: ${sp.perimetroM || 0} m</span>
+              <div class="p-2 font-mono text-xs max-w-[260px] bg-[#08061a] rounded-xl border border-purple-500/50 shadow-2xl">
+                <div class="flex items-center justify-between gap-2 border-b border-purple-800/60 pb-1.5 mb-1.5">
+                  <span class="text-[9px] uppercase tracking-wider text-purple-400 font-black flex items-center gap-1">
+                    <span class="w-2 h-2 rounded-full bg-purple-400"></span>
+                    <span>Nivel 4 • Eje Comunal</span>
+                  </span>
+                  <span class="text-[9px] font-bold text-purple-200 bg-purple-900/80 px-1.5 py-0.5 rounded border border-purple-700">
+                    ${childSecs.length} Sectores
+                  </span>
+                </div>
+                <strong class="text-white block font-black text-sm mb-0.5">${sp.nombre}</strong>
+                <span class="text-[10px] text-purple-200 block mb-2">📍 Parroquia ${pData.nombre || parishId}</span>
+                
+                <div class="grid grid-cols-2 gap-1.5 text-center text-[10px] font-mono bg-[#140e40]/90 p-1.5 rounded-lg border border-purple-900/50 mb-1.5">
+                  <div class="bg-[#08061a]/90 p-1 rounded border border-amber-500/30">
+                    <span class="text-[9px] text-amber-400 font-bold block uppercase">Casas</span>
+                    <strong class="text-amber-200 text-xs">${totCasas.toLocaleString()}</strong>
+                  </div>
+                  <div class="bg-[#08061a]/90 p-1 rounded border border-sky-500/30">
+                    <span class="text-[9px] text-sky-400 font-bold block uppercase">Familias</span>
+                    <strong class="text-sky-200 text-xs">${totFam.toLocaleString()}</strong>
+                  </div>
+                  <div class="bg-[#08061a]/90 p-1 rounded border border-emerald-500/30">
+                    <span class="text-[9px] text-emerald-400 font-bold block uppercase">Habitantes</span>
+                    <strong class="text-emerald-200 text-xs">${totHab.toLocaleString()}</strong>
+                  </div>
+                  <div class="bg-[#08061a]/90 p-1 rounded border border-purple-500/30">
+                    <span class="text-[9px] text-purple-400 font-bold block uppercase">Votantes</span>
+                    <strong class="text-purple-200 text-xs">${totVot.toLocaleString()}</strong>
+                  </div>
+                </div>
+
+                <div class="flex items-center justify-between text-[9px] text-slate-400 pt-0.5 border-t border-purple-900/40">
+                  <span>Área: ${sp.areaHa || 0} Ha</span>
+                  <span>Perímetro: ${sp.perimetroM || 0} m</span>
+                </div>
+                <span class="text-[9px] text-purple-300 font-bold block mt-1 text-center">👉 Clic para enfocar y ver ficha</span>
               </div>
             `, { sticky: true, className: "earth-tooltip" });
           }
@@ -747,18 +792,56 @@ export class EarthMapEngine {
           }
 
           const milCount = poly.militantes !== undefined ? poly.militantes : (poly.habitantes || 0);
+          const casasCount = poly.casas || 0;
+          const famCount = poly.familias !== undefined ? poly.familias : casasCount;
+          const habCount = poly.habitantes !== undefined ? poly.habitantes : milCount;
+          const spObj = (pData.subparroquias || []).find(s => String(s.id) === String(poly.subParroquiaId));
+          const spTag = spObj ? ` • ${spObj.nombre}` : "";
+          const centroVot = poly.centroVotacion ? `🏫 ${poly.centroVotacion}` : "🏫 Centro no asignado";
+
           if (!isDrawing) {
             pLayer.bindTooltip(`
-              <div class="p-1.5 font-mono text-xs max-w-[220px]">
-                <span class="text-[9px] uppercase text-sky-400 font-black block tracking-wider">Sector Comunal</span>
-                <strong class="text-white block font-bold text-sm truncate">${poly.nombre}</strong>
-                <span class="text-[10px] text-sky-200 block truncate">📍 ${pData.nombre || parishId}</span>
-                <div class="flex items-center gap-1.5 mt-1 text-[10px] text-slate-200">
-                  <span class="text-sky-300 font-bold">👥 ${milCount} mil</span>
-                  ${poly.casas ? `<span class="text-amber-300 font-bold">• 🏠 ${poly.casas} casas</span>` : ''}
+              <div class="p-2 font-mono text-xs max-w-[260px] bg-[#08061a] rounded-xl border border-sky-500/50 shadow-2xl">
+                <div class="flex items-center justify-between gap-2 border-b border-sky-800/60 pb-1.5 mb-1.5">
+                  <span class="text-[9px] uppercase tracking-wider text-sky-400 font-black flex items-center gap-1 truncate">
+                    <span class="w-2 h-2 rounded-full bg-sky-400"></span>
+                    <span class="truncate">Sector Comunal${spTag}</span>
+                  </span>
+                  <span class="text-[9px] font-bold text-emerald-300 bg-emerald-950/80 px-1.5 py-0.5 rounded border border-emerald-700 shrink-0">
+                    Base
+                  </span>
                 </div>
-                <span class="text-[9px] text-slate-400 block mt-1">Área: ${poly.areaHa || 0} Ha • Per: ${poly.perimetroM || 0} m</span>
-                <span class="text-[9px] text-sky-400 font-bold block mt-1">👉 Clic para ver / editar Ficha</span>
+                <strong class="text-white block font-black text-sm mb-0.5 truncate">${poly.nombre}</strong>
+                <span class="text-[10px] text-slate-300 block mb-2 truncate">📍 Parroquia ${pData.nombre || parishId}</span>
+                
+                <div class="grid grid-cols-2 gap-1.5 text-center text-[10px] font-mono bg-[#140e40]/90 p-1.5 rounded-lg border border-sky-900/50 mb-1.5">
+                  <div class="bg-[#08061a]/90 p-1 rounded border border-amber-500/30">
+                    <span class="text-[9px] text-amber-400 font-bold block uppercase">Casas</span>
+                    <strong class="text-amber-200 text-xs">${casasCount.toLocaleString()}</strong>
+                  </div>
+                  <div class="bg-[#08061a]/90 p-1 rounded border border-sky-500/30">
+                    <span class="text-[9px] text-sky-400 font-bold block uppercase">Familias</span>
+                    <strong class="text-sky-200 text-xs">${famCount.toLocaleString()}</strong>
+                  </div>
+                  <div class="bg-[#08061a]/90 p-1 rounded border border-emerald-500/30">
+                    <span class="text-[9px] text-emerald-400 font-bold block uppercase">Habitantes</span>
+                    <strong class="text-emerald-200 text-xs">${habCount.toLocaleString()}</strong>
+                  </div>
+                  <div class="bg-[#08061a]/90 p-1 rounded border border-purple-500/30">
+                    <span class="text-[9px] text-purple-400 font-bold block uppercase">Votantes</span>
+                    <strong class="text-purple-200 text-xs">${milCount.toLocaleString()}</strong>
+                  </div>
+                </div>
+
+                <div class="text-[10px] text-purple-200 font-medium truncate mb-1 bg-purple-950/60 px-1.5 py-1 rounded border border-purple-800/60">
+                  ${centroVot}
+                </div>
+
+                <div class="flex items-center justify-between text-[9px] text-slate-400 pt-0.5 border-t border-sky-900/40">
+                  <span>Área: ${poly.areaHa || 0} Ha</span>
+                  <span>Perímetro: ${poly.perimetroM || 0} m</span>
+                </div>
+                <span class="text-[9px] text-sky-300 font-bold block mt-1 text-center">👉 Clic para abrir Ficha / Modificar</span>
               </div>
             `, { sticky: true, className: "earth-tooltip" });
           }
@@ -883,54 +966,163 @@ export class EarthMapEngine {
       });
     });
 
-    // Aplicar estado de visibilidad jerárquica respetando los filtros activos del usuario
-    if (!this.hierarchicalVisibility.l4) {
-      if (this.subParroquiasLayer && this.map.hasLayer(this.subParroquiasLayer)) this.map.removeLayer(this.subParroquiasLayer);
-      if (this.subParroquiaLabelsLayer && this.map.hasLayer(this.subParroquiaLabelsLayer)) this.map.removeLayer(this.subParroquiaLabelsLayer);
-    } else {
-      if (this.subParroquiasLayer && !this.map.hasLayer(this.subParroquiasLayer)) this.map.addLayer(this.subParroquiasLayer);
-      if (this.subParroquiaLabelsLayer && !this.map.hasLayer(this.subParroquiaLabelsLayer)) this.map.addLayer(this.subParroquiaLabelsLayer);
-    }
+    // Aplicar estado de visibilidad jerárquica respetando LOD o filtros activos
+    this.updateHierarchicalLOD();
+  }
 
-    if (!this.hierarchicalVisibility.l5) {
-      if (this.polygonsLayer && this.map.hasLayer(this.polygonsLayer)) this.map.removeLayer(this.polygonsLayer);
-      if (this.sectorLabelsLayer && this.map.hasLayer(this.sectorLabelsLayer)) this.map.removeLayer(this.sectorLabelsLayer);
+  /**
+   * Conmuta el modo de Zoom Inteligente Automático (LOD dinámico)
+   */
+  setAutoZoomLOD(enabled) {
+    this.autoZoomLOD = !!enabled;
+    const chk = document.getElementById("chk-auto-zoom-lod");
+    if (chk) chk.checked = this.autoZoomLOD;
+
+    const lblLod = document.getElementById("lbl-active-lod-name");
+    if (!this.autoZoomLOD) {
+      if (lblLod) lblLod.textContent = "Control Manual";
     } else {
-      if (this.polygonsLayer && !this.map.hasLayer(this.polygonsLayer)) this.map.addLayer(this.polygonsLayer);
-      if (this.sectorLabelsLayer && !this.map.hasLayer(this.sectorLabelsLayer)) this.map.addLayer(this.sectorLabelsLayer);
+      this.updateHierarchicalLOD();
     }
   }
 
   /**
-   * Sincroniza la visibilidad de sectores y ejes respetando los filtros activos del usuario
+   * Refleja el estado de visibilidad en los checkboxes del panel lateral
+   */
+  syncCheckboxesUI(activeLodName = null) {
+    ["l1", "l2", "l3", "l4", "l5"].forEach((lvl) => {
+      const chk = document.getElementById(`chk-layer-${lvl}`);
+      if (chk) {
+        chk.checked = !!this.hierarchicalVisibility[lvl];
+      }
+    });
+
+    const lblLod = document.getElementById("lbl-active-lod-name");
+    if (lblLod && activeLodName) {
+      lblLod.textContent = activeLodName;
+    }
+
+    const chkAuto = document.getElementById("chk-auto-zoom-lod");
+    if (chkAuto) {
+      chkAuto.checked = this.autoZoomLOD;
+    }
+  }
+
+  /**
+   * Aplica la visibilidad física a todas las capas del mapa Leaflet
+   */
+  applyVisibilityToLayers(currentZoom) {
+    if (!this.map) return;
+    const z = currentZoom !== undefined ? currentZoom : this.map.getZoom();
+
+    // L1: Estado Monagas
+    if (this.layerL1_Estado) {
+      if (this.hierarchicalVisibility.l1) {
+        if (!this.map.hasLayer(this.layerL1_Estado)) this.map.addLayer(this.layerL1_Estado);
+      } else {
+        if (this.map.hasLayer(this.layerL1_Estado)) this.map.removeLayer(this.layerL1_Estado);
+      }
+    }
+
+    // L2: 13 Municipios
+    if (this.layerL2_Municipios) {
+      if (this.hierarchicalVisibility.l2) {
+        if (!this.map.hasLayer(this.layerL2_Municipios)) this.map.addLayer(this.layerL2_Municipios);
+      } else {
+        if (this.map.hasLayer(this.layerL2_Municipios)) this.map.removeLayer(this.layerL2_Municipios);
+      }
+    }
+
+    // L3: 44 Parroquias
+    if (this.layerL3_Parroquias) {
+      if (this.hierarchicalVisibility.l3) {
+        if (!this.map.hasLayer(this.layerL3_Parroquias)) this.map.addLayer(this.layerL3_Parroquias);
+      } else {
+        if (this.map.hasLayer(this.layerL3_Parroquias)) this.map.removeLayer(this.layerL3_Parroquias);
+      }
+    }
+
+    // L4: Sub-Parroquias (Ejes Comunales)
+    const showSpLabels = z >= 13;
+    if (this.subParroquiasLayer) {
+      if (this.hierarchicalVisibility.l4) {
+        if (!this.map.hasLayer(this.subParroquiasLayer)) this.map.addLayer(this.subParroquiasLayer);
+        if (this.subParroquiaLabelsLayer) {
+          if (showSpLabels && !this.map.hasLayer(this.subParroquiaLabelsLayer)) this.map.addLayer(this.subParroquiaLabelsLayer);
+          else if (!showSpLabels && this.map.hasLayer(this.subParroquiaLabelsLayer)) this.map.removeLayer(this.subParroquiaLabelsLayer);
+        }
+      } else {
+        if (this.map.hasLayer(this.subParroquiasLayer)) this.map.removeLayer(this.subParroquiasLayer);
+        if (this.subParroquiaLabelsLayer && this.map.hasLayer(this.subParroquiaLabelsLayer)) this.map.removeLayer(this.subParroquiaLabelsLayer);
+      }
+    }
+
+    // L5: Sectores Comunales (Base)
+    const showSecLabels = z >= 15;
+    if (this.polygonsLayer) {
+      if (this.hierarchicalVisibility.l5) {
+        if (!this.map.hasLayer(this.polygonsLayer)) this.map.addLayer(this.polygonsLayer);
+        if (this.sectorLabelsLayer) {
+          if (showSecLabels && !this.map.hasLayer(this.sectorLabelsLayer)) this.map.addLayer(this.sectorLabelsLayer);
+          else if (!showSecLabels && this.map.hasLayer(this.sectorLabelsLayer)) this.map.removeLayer(this.sectorLabelsLayer);
+        }
+      } else {
+        if (this.map.hasLayer(this.polygonsLayer)) this.map.removeLayer(this.polygonsLayer);
+        if (this.sectorLabelsLayer && this.map.hasLayer(this.sectorLabelsLayer)) this.map.removeLayer(this.sectorLabelsLayer);
+      }
+    }
+  }
+
+  /**
+   * Sincroniza la visibilidad de capas según el nivel de zoom (Zoom Inteligente)
+   * o según la selección manual del usuario
    */
   updateHierarchicalLOD() {
     if (!this.map) return;
     const currentZoom = this.map.getZoom();
-    // Descongestión visual: solo mostrar chips de texto flotantes con zoom cercano (>= 15) para evitar enjambre de etiquetas
-    const showLabels = currentZoom >= 15;
+    const zoomValEl = document.getElementById("lbl-active-zoom-val");
+    if (zoomValEl) zoomValEl.textContent = `Zoom ${currentZoom}`;
 
-    if (this.hierarchicalVisibility.l4) {
-      if (this.subParroquiasLayer && !this.map.hasLayer(this.subParroquiasLayer)) this.map.addLayer(this.subParroquiasLayer);
-      if (this.subParroquiaLabelsLayer) {
-        if (showLabels && !this.map.hasLayer(this.subParroquiaLabelsLayer)) this.map.addLayer(this.subParroquiaLabelsLayer);
-        else if (!showLabels && this.map.hasLayer(this.subParroquiaLabelsLayer)) this.map.removeLayer(this.subParroquiaLabelsLayer);
+    if (this.autoZoomLOD) {
+      let lodName = "Nivel 5 • Sectores";
+      if (currentZoom < 10) {
+        // Zoom macro: Todo el estado y los 13 municipios
+        this.hierarchicalVisibility.l1 = true;
+        this.hierarchicalVisibility.l2 = true;
+        this.hierarchicalVisibility.l3 = false;
+        this.hierarchicalVisibility.l4 = false;
+        this.hierarchicalVisibility.l5 = false;
+        lodName = "L1/L2 • Estado y Municipios";
+      } else if (currentZoom >= 10 && currentZoom < 13) {
+        // Zoom intermedio: 44 Parroquias oficiales visibles, municipios cerrados
+        this.hierarchicalVisibility.l1 = false;
+        this.hierarchicalVisibility.l2 = false;
+        this.hierarchicalVisibility.l3 = true;
+        this.hierarchicalVisibility.l4 = false;
+        this.hierarchicalVisibility.l5 = false;
+        lodName = "L3 • 44 Parroquias Oficiales";
+      } else if (currentZoom >= 13 && currentZoom < 15) {
+        // Zoom de eje comunal / sub-parroquias: parroquias cerradas, ejes comunales abiertos
+        this.hierarchicalVisibility.l1 = false;
+        this.hierarchicalVisibility.l2 = false;
+        this.hierarchicalVisibility.l3 = false;
+        this.hierarchicalVisibility.l4 = true;
+        this.hierarchicalVisibility.l5 = false;
+        lodName = "L4 • Ejes Comunales";
+      } else {
+        // Zoom comunal y catastral (>= 15): se abren todos los sectores comunales
+        this.hierarchicalVisibility.l1 = false;
+        this.hierarchicalVisibility.l2 = false;
+        this.hierarchicalVisibility.l3 = false;
+        this.hierarchicalVisibility.l4 = false;
+        this.hierarchicalVisibility.l5 = true;
+        lodName = "L5 • Sectores Comunales";
       }
-    } else {
-      if (this.subParroquiasLayer && this.map.hasLayer(this.subParroquiasLayer)) this.map.removeLayer(this.subParroquiasLayer);
-      if (this.subParroquiaLabelsLayer && this.map.hasLayer(this.subParroquiaLabelsLayer)) this.map.removeLayer(this.subParroquiaLabelsLayer);
+
+      this.syncCheckboxesUI(lodName);
     }
 
-    if (this.hierarchicalVisibility.l5) {
-      if (this.polygonsLayer && !this.map.hasLayer(this.polygonsLayer)) this.map.addLayer(this.polygonsLayer);
-      if (this.sectorLabelsLayer) {
-        if (showLabels && !this.map.hasLayer(this.sectorLabelsLayer)) this.map.addLayer(this.sectorLabelsLayer);
-        else if (!showLabels && this.map.hasLayer(this.sectorLabelsLayer)) this.map.removeLayer(this.sectorLabelsLayer);
-      }
-    } else {
-      if (this.polygonsLayer && this.map.hasLayer(this.polygonsLayer)) this.map.removeLayer(this.polygonsLayer);
-      if (this.sectorLabelsLayer && this.map.hasLayer(this.sectorLabelsLayer)) this.map.removeLayer(this.sectorLabelsLayer);
-    }
+    this.applyVisibilityToLayers(currentZoom);
   }
 
   /**

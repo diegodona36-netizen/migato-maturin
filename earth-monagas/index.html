@@ -56,7 +56,7 @@
   <meta http-equiv="Expires" content="0" />
 
   <!-- Custom Styles -->
-  <link rel="stylesheet" href="css/styles.css?v=91">
+  <link rel="stylesheet" href="css/styles.css?v=92">
 
   <!-- Script de Autenticación Rápida, Limpieza Integral de Caché y Activador de Herramientas -->
   <script>
@@ -89,13 +89,13 @@
     }
   </style>
   <script>
-    // Auto-actualización obligatoria a la versión más reciente v=91
+    // Auto-actualización obligatoria a la versión más reciente v=92
     (function() {
       try {
         var p = new URLSearchParams(window.location.search);
         var curV = p.get('v');
-        if (!curV || curV !== '91') {
-          p.set('v', '91');
+        if (!curV || curV !== '92') {
+          p.set('v', '92');
           window.location.replace(window.location.pathname + '?' + p.toString() + window.location.hash);
         }
       } catch(e) {}
@@ -399,10 +399,10 @@
         <button id="btn-tool-overlay" class="hidden"></button>
         <button id="btn-cloud-sync" class="hidden"><span id="cloud-sync-dot"></span><span id="cloud-sync-text"></span></button>
 
-        <!-- 2. BOTÓN "CAPAS" (TOGGLE DEL SIDEBAR) -->
-        <button id="btn-toggle-sidebar" type="button" class="px-2.5 sm:px-3 py-1.5 rounded-xl bg-[#140e40] hover:bg-[#23176d] border border-slate-700 text-slate-200 hover:text-white text-xs font-bold flex items-center gap-1.5 transition active:scale-95 cursor-pointer shadow-sm" title="Mostrar/Ocultar Capas y Lugares">
+        <!-- 2. BOTÓN "TERRITORIO" (TOGGLE DEL SIDEBAR) -->
+        <button id="btn-toggle-sidebar" type="button" class="px-2.5 sm:px-3 py-1.5 rounded-xl bg-[#140e40] hover:bg-[#23176d] border border-slate-700 text-slate-200 hover:text-white text-xs font-bold flex items-center gap-1.5 transition active:scale-95 cursor-pointer shadow-sm" title="Mostrar/Ocultar Estructura Territorial">
           <i data-lucide="layers" class="w-3.5 h-3.5 text-sky-400"></i>
-          <span class="hidden sm:inline">Capas</span>
+          <span class="hidden sm:inline">Territorio</span>
         </button>
 
         <!-- 3. MENÚ DE OPCIONES EXTERNAS (PORTAL, CENTROS, DASHBOARD, SALIR) -->
@@ -451,10 +451,10 @@
     <!-- BACKDROP PARA CERRAR EL SIDEBAR EN MÓVIL -->
     <div id="sidebar-backdrop" class="fixed inset-0 bg-slate-950/75 backdrop-blur-sm hidden md:hidden z-30 transition-opacity"></div>
 
-    <!-- PANEL LATERAL "LUGARES Y CAPAS" -->
+    <!-- PANEL LATERAL "LUGARES Y TERRITORIO" -->
     <aside id="earth-sidebar" style="z-index: 1500;" class="w-80 sm:w-96 max-w-[88vw] sm:max-w-none bg-[#08061a] border-r border-[#23176d]/80 flex flex-col justify-between overflow-hidden shrink-0 shadow-2xl absolute md:relative inset-y-0 left-0 z-40 hidden md:flex transition-all">
       
-      <!-- Pestañas del Panel: Lugares vs Capas (5 LOD) -->
+      <!-- Pestañas del Panel: Lugares vs Estructura Territorial -->
       <div class="flex border-b border-[#23176d]/80 bg-[#0c0926] text-xs font-bold shrink-0">
         <button id="btn-sidebar-tab-places" class="flex-1 py-2.5 text-center text-amber-300 border-b-2 border-amber-400 bg-[#140e40] flex items-center justify-center gap-1.5 transition cursor-pointer">
           <i data-lucide="folder" class="w-3.5 h-3.5 text-amber-400"></i>
@@ -462,7 +462,7 @@
         </button>
         <button id="btn-sidebar-tab-layers" class="flex-1 py-2.5 text-center text-slate-400 hover:text-slate-200 flex items-center justify-center gap-1.5 transition cursor-pointer">
           <i data-lucide="layers" class="w-3.5 h-3.5 text-sky-400"></i>
-          <span>Capas (5 LOD)</span>
+          <span>Estructura Territorial</span>
         </button>
         <button id="btn-close-sidebar" class="p-2 text-slate-400 hover:text-white md:hidden cursor-pointer" title="Cerrar panel">
           <i data-lucide="x" class="w-4 h-4"></i>
@@ -485,12 +485,34 @@
         </div>
       </div>
 
-      <!-- VISTA 2: CAPAS CARTOGRÁFICAS JERÁRQUICAS (5 LOD) -->
+      <!-- VISTA 2: CAPAS CARTOGRÁFICAS JERÁRQUICAS (5 NIVELES) -->
       <div id="sidebar-view-layers" class="flex-1 overflow-y-auto p-3 space-y-3 hidden">
+        
+        <!-- Control de Zoom Inteligente Automático (LOD Dinámico) -->
+        <div class="bg-gradient-to-r from-sky-950/90 to-[#140e40] p-3 rounded-2xl border border-sky-500/40 space-y-2 shadow-lg">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <span class="text-base">⚡</span>
+              <div>
+                <strong class="text-xs font-black text-sky-300 block">Zoom Inteligente</strong>
+                <span class="text-[10px] text-slate-300 block leading-tight">Abre y cierra niveles automáticamente al acercarte</span>
+              </div>
+            </div>
+            <label class="relative inline-flex items-center cursor-pointer">
+              <input type="checkbox" id="chk-auto-zoom-lod" checked class="sr-only peer">
+              <div class="w-9 h-5 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-sky-500"></div>
+            </label>
+          </div>
+          <div id="status-auto-zoom-indicator" class="text-[10px] font-mono text-sky-400 bg-slate-950/70 px-2.5 py-1.5 rounded-xl border border-sky-900/50 flex items-center justify-between">
+            <span>Nivel: <strong id="lbl-active-lod-name" class="text-white">Auto LOD</strong></span>
+            <span id="lbl-active-zoom-val" class="text-sky-300 font-bold">Zoom 13</span>
+          </div>
+        </div>
+
         <div class="border-b border-slate-800 pb-2">
-          <span class="text-[10px] font-black text-amber-400 uppercase tracking-wider block">Jerarquía Cartográfica</span>
-          <h4 class="text-xs font-black text-white">Niveles de Detalle (LOD)</h4>
-          <p class="text-[10px] text-slate-400 mt-0.5">Enciende o apaga las capas oficiales y referenciales:</p>
+          <span class="text-[10px] font-black text-amber-400 uppercase tracking-wider block">Jerarquía Territorial</span>
+          <h4 class="text-xs font-black text-white">5 Niveles Cartográficos</h4>
+          <p class="text-[10px] text-slate-400 mt-0.5">Se abren y cierran según tu acercamiento satelital:</p>
         </div>
 
         <div class="space-y-2">
@@ -1435,7 +1457,7 @@
   </div>
 
   <!-- SCRIPT -->
-  <script type="module" src="js/app.js?v=91"></script>
+  <script type="module" src="js/app.js?v=92"></script>
   <script>
     if (window.lucide && typeof window.lucide.createIcons === 'function') {
       window.lucide.createIcons();

@@ -2,21 +2,21 @@
  * Controlador Principal — Google Earth Pro Web (Edición Estado Monagas)
  * Robusto, 100% Operativo y Totalmente Individualizado
  */
-import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=91";
-import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=91";
-import { getAllParishesForSelector } from "./usersCatalog.js?v=91";
-import { EarthStore } from "./earthStore.js?v=91";
-import { EarthMapEngine } from "./mapEngine.js?v=91";
-import { PropertiesDialog } from "./propertiesDialog.js?v=91";
-import { ToolsManager } from "./toolsManager.js?v=91";
-import { detectParishFromGeometry } from "./geoMonagas.js?v=91";
-import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=91";
+import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=92";
+import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=92";
+import { getAllParishesForSelector } from "./usersCatalog.js?v=92";
+import { EarthStore } from "./earthStore.js?v=92";
+import { EarthMapEngine } from "./mapEngine.js?v=92";
+import { PropertiesDialog } from "./propertiesDialog.js?v=92";
+import { ToolsManager } from "./toolsManager.js?v=92";
+import { detectParishFromGeometry } from "./geoMonagas.js?v=92";
+import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=92";
 import { 
   getSavedFirebaseConfig, 
   saveFirebaseConfig, 
   isFirebaseConfigured, 
   initFirebase 
-} from "./firebaseConfig.js?v=91";
+} from "./firebaseConfig.js?v=92";
 
 class EarthMonagasApp {
   constructor() {
@@ -1616,6 +1616,16 @@ class EarthMonagasApp {
       });
     }
 
+    const chkAutoZoom = document.getElementById("chk-auto-zoom-lod");
+    if (chkAutoZoom) {
+      chkAutoZoom.checked = this.mapEngine ? this.mapEngine.autoZoomLOD : true;
+      chkAutoZoom.addEventListener("change", (e) => {
+        if (this.mapEngine) {
+          this.mapEngine.setAutoZoomLOD(e.target.checked);
+        }
+      });
+    }
+
     const layerCheckboxes = [
       { id: "chk-layer-l1", level: "l1" },
       { id: "chk-layer-l2", level: "l2" },
@@ -1628,13 +1638,19 @@ class EarthMonagasApp {
       const chk = document.getElementById(id);
       if (chk) {
         if (this.mapEngine) {
-          this.mapEngine.toggleHierarchicalLayer(level, chk.checked);
+          this.mapEngine.toggleHierarchicalLayer(level, chk.checked, false);
         }
         chk.addEventListener("change", (e) => {
-          this.mapEngine.toggleHierarchicalLayer(level, e.target.checked);
+          if (this.mapEngine) {
+            this.mapEngine.toggleHierarchicalLayer(level, e.target.checked, true);
+          }
         });
       }
     });
+
+    if (this.mapEngine) {
+      this.mapEngine.syncCheckboxesUI();
+    }
   }
 
 
