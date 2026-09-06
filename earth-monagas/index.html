@@ -56,7 +56,7 @@
   <meta http-equiv="Expires" content="0" />
 
   <!-- Custom Styles -->
-  <link rel="stylesheet" href="css/styles.css?v=95">
+  <link rel="stylesheet" href="css/styles.css?v=96">
 
   <!-- Script de Autenticación Rápida, Limpieza Integral de Caché y Activador de Herramientas -->
   <script>
@@ -89,7 +89,7 @@
     }
   </style>
   <script>
-    // Auto-actualización obligatoria a la versión más reciente v=95
+    // Auto-actualización obligatoria a la versión más reciente v=96
     (function() {
       try {
         var p = new URLSearchParams(window.location.search);
@@ -306,7 +306,7 @@
   <!-- ============================================================== -->
   <!-- 1. CABECERA PRINCIPAL MIGATO                                   -->
   <!-- ============================================================== -->
-  <header style="z-index: 2000;" class="bg-[#08061a] border-b border-[#23176d]/80 shadow-md shrink-0 w-full h-[48px] max-w-full overflow-hidden">
+  <header style="z-index: 2000;" class="bg-[#08061a] border-b border-[#23176d]/80 shadow-md shrink-0 w-full h-[48px] max-w-full relative">
     <div class="h-full px-2 sm:px-4 flex items-center justify-between gap-1.5 sm:gap-2.5 w-full min-w-0">
       
       <!-- LADO IZQUIERDO: Identidad MIGATO + Selector Territorial -->
@@ -343,7 +343,7 @@
         </div>
 
         <!-- Elemento oculto de sesión para compatibilidad con scripts existentes -->
-        <span id="btn-session-badge" class="hidden">
+        <span id="btn-session-badge" class="hidden sm:flex">
           <span id="session-badge-icon"></span>
           <span id="session-badge-label"></span>
         </span>
@@ -442,7 +442,7 @@
     <div class="flex items-center gap-1.5 shrink-0">
       
       <!-- Botón Capas Directo -->
-      <button type="button" id="btn-bar-layers" onclick="document.getElementById('btn-sidebar-tab-layers')?.click(); window.earthApp?.toggleSidebar(true);"
+      <button type="button" id="btn-bar-layers" onclick="window.earthApp?.openLayers ? window.earthApp.openLayers() : (document.getElementById('btn-sidebar-tab-layers')?.click(), window.earthApp?.toggleSidebar?.(true));"
         class="px-2 py-1 rounded-lg bg-[#140e40]/70 hover:bg-[#23176d] text-[11px] text-slate-300 hover:text-white border border-[#23176d] transition flex items-center gap-1 cursor-pointer"
         title="Ver Jerarquía y Capas de Territorio">
         <i data-lucide="layers" class="w-3.5 h-3.5 text-sky-400"></i>
@@ -450,7 +450,7 @@
       </button>
 
       <!-- Restablecer Norte -->
-      <button type="button" onclick="window.earthApp?.toolsManager?.resetNorth()"
+      <button type="button" id="btn-compass-north" onclick="window.earthApp?.resetNorth ? window.earthApp.resetNorth() : window.earthApp?.toolsManager?.resetNorth?.()"
         class="px-2 py-1 rounded-lg bg-[#140e40]/70 hover:bg-[#23176d] text-[11px] text-slate-400 hover:text-sky-300 border border-[#23176d] transition flex items-center gap-1 cursor-pointer"
         title="Restablecer Vista hacia el Norte">
         <i data-lucide="compass" class="w-3.5 h-3.5"></i>
@@ -745,6 +745,10 @@
 
       <!-- Barra de Acciones de la Ficha -->
       <div class="flex items-center gap-2 pt-0.5">
+        <button type="button" id="btn-quick-stats-action-sector" style="display: none;" class="py-2 px-3 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-black text-xs flex items-center justify-center gap-1.5 shadow-lg active:scale-95 transition cursor-pointer">
+          <i data-lucide="plus-circle" class="w-3.5 h-3.5"></i>
+          <span>+ Trazar Sector</span>
+        </button>
         <button type="button" id="btn-quick-stats-edit" class="flex-1 py-2 px-3 rounded-xl bg-gradient-to-r from-sky-600 to-blue-600 hover:from-sky-500 hover:to-blue-500 text-white font-black text-xs flex items-center justify-center gap-1.5 shadow-lg active:scale-95 transition cursor-pointer">
           <i data-lucide="edit-2" class="w-3.5 h-3.5"></i>
           <span>✏️ Modificar Datos</span>
@@ -1474,7 +1478,7 @@
   </div>
 
   <!-- SCRIPT -->
-  <script type="module" src="js/app.js?v=95"></script>
+  <script type="module" src="js/app.js?v=96"></script>
   <script>
     if (window.lucide && typeof window.lucide.createIcons === 'function') {
       window.lucide.createIcons();

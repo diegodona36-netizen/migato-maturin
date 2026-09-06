@@ -2,21 +2,21 @@
  * Controlador Principal — Google Earth Pro Web (Edición Estado Monagas)
  * Robusto, 100% Operativo y Totalmente Individualizado
  */
-import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=95";
-import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=95";
-import { getAllParishesForSelector } from "./usersCatalog.js?v=95";
-import { EarthStore } from "./earthStore.js?v=95";
-import { EarthMapEngine } from "./mapEngine.js?v=95";
-import { PropertiesDialog } from "./propertiesDialog.js?v=95";
-import { ToolsManager } from "./toolsManager.js?v=95";
-import { detectParishFromGeometry } from "./geoMonagas.js?v=95";
-import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=95";
+import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=96";
+import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=96";
+import { getAllParishesForSelector } from "./usersCatalog.js?v=96";
+import { EarthStore } from "./earthStore.js?v=96";
+import { EarthMapEngine } from "./mapEngine.js?v=96";
+import { PropertiesDialog } from "./propertiesDialog.js?v=96";
+import { ToolsManager } from "./toolsManager.js?v=96";
+import { detectParishFromGeometry } from "./geoMonagas.js?v=96";
+import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=96";
 import { 
   getSavedFirebaseConfig, 
   saveFirebaseConfig, 
   isFirebaseConfigured, 
   initFirebase 
-} from "./firebaseConfig.js?v=95";
+} from "./firebaseConfig.js?v=96";
 
 class EarthMonagasApp {
   constructor() {
@@ -137,6 +137,7 @@ class EarthMonagasApp {
     });
 
     window.activateEarthTool = (toolName) => {
+      this.closeQuickStats();
       // Regla de Oro Territorial: "Primero el Pote (Sub-Parroquia), luego el Agua (Sector Comunal)"
       if (toolName === "poligono") {
         const parish = this.store.getParish(this.selectedMunId, this.selectedParishId);
@@ -1113,13 +1114,16 @@ class EarthMonagasApp {
 
   openParishSelector() {
     if (!this.isGeneralMode) {
-      return; // Aislamiento estricto: no abrir modal de cambio si es usuario de parroquia
+      const parish = this.store.getParish(this.selectedMunId, this.selectedParishId);
+      this.showToast(`📍 Estás asignado a la Parroquia ${parish?.nombre || ''}. Tu jurisdicción está fijada.`, "sky");
+      return;
     }
     const modal = document.getElementById("modal-select-parish");
     if (!modal) return;
     this.renderParishesCatalog();
     modal.classList.remove("hidden");
     modal.classList.add("flex");
+    modal.style.display = "flex";
   }
 
   renderParishesCatalog() {
@@ -1257,10 +1261,31 @@ class EarthMonagasApp {
       if (elCentro) elCentro.textContent = item.centroVotacion || "No asignado";
     }
 
+    const btnAddSectorInCard = document.getElementById("btn-quick-stats-action-sector");
+    if (btnAddSectorInCard) {
+      if (type === "subparroquia") {
+        btnAddSectorInCard.style.display = "flex";
+        btnAddSectorInCard.onclick = () => {
+          this.closeQuickStats();
+          this.startSectorInSubParish(item.id);
+        };
+      } else {
+        btnAddSectorInCard.style.display = "none";
+      }
+    }
+
     if (btnEdit) {
-      btnEdit.onclick = () => {
+      btnEdit.onclick = (e) => {
+        e?.preventDefault?.();
+        e?.stopPropagation?.();
+        const curType = type;
+        const curItem = item;
+        const curMun = this.selectedMunId;
+        const curPar = this.selectedParishId;
         this.closeQuickStats();
-        this.propDialog?.open(type, item, this.selectedMunId, this.selectedParishId);
+        setTimeout(() => {
+          this.propDialog?.open(curType, curItem, curMun, curPar);
+        }, 50);
       };
     }
 
@@ -1853,9 +1878,7 @@ class EarthMonagasApp {
     if (isGeneral) {
       // 👑 MODO CENTRAL / DIRECCIÓN GENERAL
       if (badgeBtn) {
-        badgeBtn.classList.remove("hidden");
-        badgeBtn.classList.add("flex");
-        badgeBtn.className = "px-2.5 py-1.5 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/50 text-amber-300 text-xs font-black flex items-center gap-1.5 transition active:scale-95 cursor-pointer shadow-sm shrink-0";
+        badgeBtn.className = "hidden sm:flex px-2.5 py-1.5 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/50 text-amber-300 text-xs font-black items-center gap-1.5 transition active:scale-95 cursor-pointer shadow-sm shrink-0";
         badgeBtn.title = "Sesión: Dirección General (Clic para cambiar a una Parroquia)";
       }
       if (badgeIcon) badgeIcon.textContent = "👑";
@@ -2086,13 +2109,49 @@ class EarthMonagasApp {
       if (willOpen) {
         sidebar.classList.remove("hidden");
         sidebar.classList.add("flex");
-        if (backdrop) backdrop.classList.remove("hidden");
+        sidebar.style.display = "flex";
+        sidebar.style.zIndex = "2500";
+        if (backdrop) {
+          backdrop.classList.remove("hidden");
+          backdrop.style.display = "block";
+          backdrop.style.zIndex = "2400";
+        }
+        this.closeQuickStats();
       } else {
         sidebar.classList.add("hidden");
         sidebar.classList.remove("flex");
-        if (backdrop) backdrop.classList.add("hidden");
+        sidebar.style.display = "none";
+        if (backdrop) {
+          backdrop.classList.add("hidden");
+          backdrop.style.display = "none";
+        }
       }
     };
+
+    this.toggleSidebar = toggleSidebar;
+    window.earthApp.toggleSidebar = toggleSidebar;
+
+    const resetNorth = () => {
+      const p = this.store.getParish(this.selectedMunId, this.selectedParishId);
+      if (p && this.mapEngine) {
+        this.mapEngine.flyTo(p.centro[0], p.centro[1], p.zoom || 14);
+      } else if (this.mapEngine) {
+        this.mapEngine.flyTo(9.7469, -63.1812, 12);
+      }
+    };
+    this.resetNorth = resetNorth;
+    window.earthApp.resetNorth = resetNorth;
+    if (this.toolsManager) {
+      this.toolsManager.resetNorth = resetNorth;
+    }
+
+    const openLayers = () => {
+      const tabLayers = document.getElementById("btn-sidebar-tab-layers");
+      if (tabLayers) tabLayers.click();
+      toggleSidebar(true);
+    };
+    this.openLayers = openLayers;
+    window.earthApp.openLayers = openLayers;
 
     if (btnToggleSidebar) btnToggleSidebar.addEventListener("click", () => toggleSidebar());
     if (btnCloseSidebar) btnCloseSidebar.addEventListener("click", () => toggleSidebar(false));

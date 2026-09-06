@@ -84,6 +84,7 @@ export class ToolsManager {
       const mobileBar = document.getElementById("mobile-field-actions");
 
       if (toolName) {
+        window.earthApp?.closeQuickStats?.();
         // Revelar dock flotante inmediatamente con máxima prioridad
         if (banner) {
           banner.classList.remove("hidden");
@@ -793,3 +794,11 @@ export class ToolsManager {
     return Math.round((area / 10000) * 10) / 10;
   }
 }
+
+  resetNorth() {
+    if (window.earthApp?.resetNorth) {
+      window.earthApp.resetNorth();
+    } else if (this.map) {
+      this.map.setBearing?.(0);
+    }
+  }
