@@ -8,6 +8,13 @@
       "env": {
         "PROJECT_DIR": "/home/diego/Documents/antigravity/zealous-mendel"
       }
+    },
+    "notebooklm": {
+      "command": "/home/diego/.local/bin/notebooklm-mcp",
+      "args": [],
+      "env": {
+        "NOTEBOOKLM_HL": "es"
+      }
     }
   }
 }
