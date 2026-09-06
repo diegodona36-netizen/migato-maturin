@@ -56,7 +56,7 @@
   <meta http-equiv="Expires" content="0" />
 
   <!-- Custom Styles -->
-  <link rel="stylesheet" href="css/styles.css?v=90">
+  <link rel="stylesheet" href="css/styles.css?v=91">
 
   <!-- Script de Autenticación Rápida, Limpieza Integral de Caché y Activador de Herramientas -->
   <script>
@@ -89,13 +89,13 @@
     }
   </style>
   <script>
-    // Auto-actualización obligatoria a la versión más reciente v=90
+    // Auto-actualización obligatoria a la versión más reciente v=91
     (function() {
       try {
         var p = new URLSearchParams(window.location.search);
         var curV = p.get('v');
-        if (!curV || curV !== '90') {
-          p.set('v', '90');
+        if (!curV || curV !== '91') {
+          p.set('v', '91');
           window.location.replace(window.location.pathname + '?' + p.toString() + window.location.hash);
         }
       } catch(e) {}
@@ -761,7 +761,7 @@
           <!-- Nombre del Sector / Comunidad / Eje -->
           <div>
             <label id="prop-name-label" class="block text-[11px] font-bold text-slate-300 uppercase mb-1">Nombre del Sector / Comunidad *</label>
-            <input type="text" id="prop-name" required placeholder="Ej: Sector La Florida, Sector 1, Central..." class="w-full px-3.5 py-2.5 text-xs sm:text-sm bg-slate-800 border border-slate-700 rounded-xl text-white font-black focus:outline-none focus:border-sky-500 shadow-inner">
+            <input type="text" id="prop-name" placeholder="Ej: Sector La Florida, Sector 1, Central..." class="w-full px-3.5 py-2.5 text-xs sm:text-sm bg-slate-800 border border-slate-700 rounded-xl text-white font-black focus:outline-none focus:border-sky-500 shadow-inner">
           </div>
 
           <!-- Eje Comunal / Sub-Parroquia Obligatoria -->
@@ -773,7 +773,7 @@
               </label>
               <span class="text-[9px] text-purple-400 font-mono font-bold">Nivel 4</span>
             </div>
-            <select id="prop-select-subparish" required class="w-full px-3 py-2 bg-slate-900 border border-purple-600/50 rounded-xl text-purple-100 font-bold text-xs focus:outline-none focus:border-purple-400 cursor-pointer">
+            <select id="prop-select-subparish" class="w-full px-3 py-2 bg-slate-900 border border-purple-600/50 rounded-xl text-purple-100 font-bold text-xs focus:outline-none focus:border-purple-400 cursor-pointer">
               <option value="">-- Selecciona el Eje Contenedor * --</option>
             </select>
           </div>
@@ -1019,7 +1019,7 @@
             <button type="button" id="btn-prop-cancel" class="px-4 py-2 text-xs font-semibold text-slate-400 hover:text-white">
               Cancelar
             </button>
-            <button type="submit" id="btn-prop-save" class="px-5 py-2.5 text-xs font-black bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 text-white rounded-xl shadow-lg flex items-center gap-1.5 active:scale-95 transition">
+            <button type="button" id="btn-prop-save" class="px-5 py-2.5 text-xs font-black bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 text-white rounded-xl shadow-lg flex items-center gap-1.5 active:scale-95 transition">
               <i data-lucide="check" class="w-4 h-4"></i>
               <span>Guardar Datos</span>
             </button>
@@ -1435,7 +1435,7 @@
   </div>
 
   <!-- SCRIPT -->
-  <script type="module" src="js/app.js?v=90"></script>
+  <script type="module" src="js/app.js?v=91"></script>
   <script>
     if (window.lucide && typeof window.lucide.createIcons === 'function') {
       window.lucide.createIcons();

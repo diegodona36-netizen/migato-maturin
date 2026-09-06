@@ -2,21 +2,21 @@
  * Controlador Principal — Google Earth Pro Web (Edición Estado Monagas)
  * Robusto, 100% Operativo y Totalmente Individualizado
  */
-import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=90";
-import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=90";
-import { getAllParishesForSelector } from "./usersCatalog.js?v=90";
-import { EarthStore } from "./earthStore.js?v=90";
-import { EarthMapEngine } from "./mapEngine.js?v=90";
-import { PropertiesDialog } from "./propertiesDialog.js?v=90";
-import { ToolsManager } from "./toolsManager.js?v=90";
-import { detectParishFromGeometry } from "./geoMonagas.js?v=90";
-import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=90";
+import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=91";
+import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=91";
+import { getAllParishesForSelector } from "./usersCatalog.js?v=91";
+import { EarthStore } from "./earthStore.js?v=91";
+import { EarthMapEngine } from "./mapEngine.js?v=91";
+import { PropertiesDialog } from "./propertiesDialog.js?v=91";
+import { ToolsManager } from "./toolsManager.js?v=91";
+import { detectParishFromGeometry } from "./geoMonagas.js?v=91";
+import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=91";
 import { 
   getSavedFirebaseConfig, 
   saveFirebaseConfig, 
   isFirebaseConfigured, 
   initFirebase 
-} from "./firebaseConfig.js?v=90";
+} from "./firebaseConfig.js?v=91";
 
 class EarthMonagasApp {
   constructor() {
@@ -1517,14 +1517,21 @@ class EarthMonagasApp {
       this.store.moveItem(this.selectedMunId, this.selectedParishId, destMunId, destParishId, key, itemId, updatedFields);
       // Cambiar de parroquia activa para enfocar y mostrar el elemento transferido
       this.selectParish(destMunId, destParishId);
+      this.showToast(`✅ <strong>${updatedFields.nombre || 'Elemento'}</strong> reubicado y actualizado.`, "emerald");
     } else {
-      await this.store.updateItem(this.selectedMunId, this.selectedParishId, key, itemId, updatedFields);
+      const savedItem = await this.store.updateItem(this.selectedMunId, this.selectedParishId, key, itemId, updatedFields);
       const parish = this.store.getParish(this.selectedMunId, this.selectedParishId);
       this.mapEngine.renderParishItems(parish, (t, it) => {
         this.handleMapItemSelection(t, it);
       });
       this.updateMilitanciaTally();
       this.renderPlacesTree();
+      this.showToast(`✅ Datos de <strong>${updatedFields.nombre || 'sector'}</strong> actualizados exitosamente.`, "emerald");
+
+      // Refrescar ficha de estadísticas rápidas con los datos recién actualizados
+      if (savedItem && (type === "poligono" || type === "subparroquia")) {
+        this.showQuickStats(type, savedItem);
+      }
     }
   }
 
