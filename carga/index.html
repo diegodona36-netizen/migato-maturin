@@ -13,9 +13,16 @@
       theme: {
         extend: {
           colors: {
-            venBlue: "#1e3a8a",
-            venGold: "#f59e0b",
-            venSky: "#0284c7"
+            migato: {
+              DEFAULT: "#23176d",
+              dark: "#0a0722",
+              deep: "#140e40",
+              surface: "#1d1554",
+              hover: "#31228e",
+              light: "#3c2ba6",
+              ice: "#dcdde2",
+              white: "#ffffff"
+            }
           }
         }
       }
@@ -33,7 +40,8 @@
   <style>
     body {
       font-family: "Inter", sans-serif;
-      background-color: #060913;
+      background-color: #08061a;
+      transition: background-color 0.2s ease, color 0.2s ease;
     }
     .font-mono {
       font-family: "JetBrains Mono", monospace;
@@ -46,6 +54,38 @@
     input[type=number] {
       -moz-appearance: textfield;
     }
+
+    /* MODO SOL EXTREMO (Sunlight-Ready para visibilidad en calle) */
+    body.sunlight-mode {
+      background-color: #ffffff !important;
+      color: #000000 !important;
+    }
+    body.sunlight-mode header {
+      background-color: #f1f5f9 !important;
+      border-color: #000000 !important;
+    }
+    body.sunlight-mode .sunlight-card {
+      background-color: #ffffff !important;
+      border-color: #000000 !important;
+      color: #000000 !important;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !important;
+    }
+    body.sunlight-mode .sunlight-input {
+      background-color: #f8fafc !important;
+      border-color: #000000 !important;
+      color: #000000 !important;
+      font-weight: 900 !important;
+    }
+    body.sunlight-mode .sunlight-label {
+      color: #000000 !important;
+      font-weight: 800 !important;
+    }
+    body.sunlight-mode .sunlight-text {
+      color: #000000 !important;
+    }
+    body.sunlight-mode #gate-login {
+      background-color: #ffffff !important;
+    }
   </style>
 </head>
 <body class="text-slate-100 min-h-screen flex flex-col selection:bg-emerald-500 selection:text-white pb-12">
@@ -53,15 +93,15 @@
   <!-- ============================================================== -->
   <!-- 1. MODAL DE ACCESO PRIVADO (BLOQUEO DE SEGURIDAD)              -->
   <!-- ============================================================== -->
-  <div id="gate-login" class="fixed inset-0 z-50 bg-slate-950 flex items-center justify-center p-4">
-    <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 w-full max-w-md shadow-2xl space-y-5">
+  <div id="gate-login" class="fixed inset-0 z-50 bg-[#08061a] flex items-center justify-center p-4">
+    <div class="bg-[#140e40] border-2 border-[#23176d] rounded-3xl p-6 w-full max-w-md shadow-2xl space-y-5 sunlight-card">
       
       <div class="text-center space-y-2">
-        <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-purple-600 to-sky-600 flex items-center justify-center text-white mx-auto shadow-lg shadow-purple-600/30">
-          <i data-lucide="lock" class="w-6 h-6"></i>
+        <div class="w-24 h-24 mx-auto mb-1 p-1 bg-[#23176d] border-2 border-white/20 rounded-2xl shadow-xl flex items-center justify-center">
+          <img src="../assets/logo-migato.png" alt="MIGATO" class="w-full h-full object-contain rounded-xl">
         </div>
-        <h2 class="text-base sm:text-lg font-black text-white uppercase tracking-tight">
-          Acceso Territorial Privado
+        <h2 class="text-base sm:text-lg font-black text-white uppercase tracking-tight sunlight-text">
+          Buzón Territorial • MIGATO
         </h2>
         <p id="gate-parish-subtitle" class="text-xs text-sky-400 font-bold font-mono">
           Cargando parroquia...
@@ -101,15 +141,16 @@
   <!-- ============================================================== -->
   <!-- 2. CABECERA INSTITUCIONAL (VISIBLE TRAS LOGIN)                 -->
   <!-- ============================================================== -->
-  <header id="app-header" class="border-b border-slate-800 bg-slate-950/95 backdrop-blur-md sticky top-0 z-40">
-    <div class="max-w-xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
+  <header id="app-header" class="border-b border-[#23176d] bg-[#0c0926]/95 backdrop-blur-md sticky top-0 z-40">
+    <div class="max-w-xl mx-auto px-4 py-2.5 flex items-center justify-between gap-3">
       <div class="flex items-center gap-2.5 min-w-0">
-        <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-emerald-600 to-teal-700 flex items-center justify-center text-white shadow-lg font-black text-sm shrink-0">
-          <i data-lucide="send" class="w-4 h-4"></i>
+        <div class="w-10 h-10 rounded-xl bg-[#23176d] p-1 border border-white/20 flex items-center justify-center shrink-0 shadow-md">
+          <img src="../assets/logo-migato.png" alt="MIGATO" class="w-full h-full object-contain rounded-lg">
         </div>
         <div class="truncate">
-          <h1 class="text-xs sm:text-sm font-black text-white uppercase tracking-tight truncate">
-            Buzón Territorial
+          <h1 class="text-xs sm:text-sm font-black text-white uppercase tracking-tight truncate sunlight-text flex items-center gap-1.5">
+            <span class="text-sky-300 font-black">MIGATO</span>
+            <span class="text-slate-400 text-[10px] font-bold">Buzón</span>
           </h1>
           <div class="flex items-center gap-1.5 text-[11px] font-bold text-sky-400 truncate">
             <i data-lucide="map-pin" class="w-3 h-3 shrink-0"></i>
@@ -119,11 +160,17 @@
       </div>
 
       <div class="flex items-center gap-2 shrink-0">
-        <span id="cloud-status-badge" class="px-2 py-1 rounded-lg text-[10px] font-mono font-bold bg-slate-900 border border-slate-800 text-slate-400 flex items-center gap-1">
+        <!-- Botón Modo Sol Extremo (Sunlight-Ready para la calle) -->
+        <button type="button" id="btn-toggle-sunlight" class="px-2.5 py-1.5 rounded-xl bg-[#1d1554] hover:bg-[#23176d] text-amber-400 border border-amber-500/40 text-[11px] font-bold flex items-center gap-1.5 shadow transition active:scale-95 cursor-pointer" title="Modo Sol para visibilidad extrema en calle">
+          <span id="sunlight-icon">☀️</span>
+          <span id="sunlight-label" class="hidden sm:inline">Modo Sol</span>
+        </button>
+
+        <span id="cloud-status-badge" class="px-2 py-1 rounded-lg text-[10px] font-mono font-bold bg-[#140e40] border border-[#23176d] text-slate-300 flex items-center gap-1">
           <span id="cloud-dot" class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
           <span id="cloud-text">En Línea</span>
         </span>
-        <button type="button" id="btn-logout" class="p-1.5 rounded-lg bg-slate-800 hover:bg-rose-950 text-slate-400 hover:text-rose-300 border border-slate-700 transition cursor-pointer" title="Cerrar sesión">
+        <button type="button" id="btn-logout" class="p-1.5 rounded-lg bg-[#140e40] hover:bg-rose-950 text-slate-400 hover:text-rose-300 border border-slate-700 transition cursor-pointer" title="Cerrar sesión">
           <i data-lucide="log-out" class="w-4 h-4"></i>
         </button>
       </div>
@@ -136,7 +183,7 @@
   <main id="app-main" class="flex-1 max-w-xl mx-auto w-full px-4 py-5 space-y-4">
 
     <!-- Tarjeta de Protocolo y Seguridad Operacional -->
-    <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 shadow-lg space-y-2">
+    <div class="bg-[#140e40]/90 border border-[#23176d]/50 rounded-2xl p-4 shadow-lg space-y-2 sunlight-card">
       <div class="flex items-center gap-2">
         <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
         <span class="text-[10px] font-black uppercase text-emerald-400 font-mono tracking-wider">Canal Seguro de Recolección</span>
@@ -147,7 +194,7 @@
     </div>
 
     <!-- TARJETA DEL FORMULARIO DE CARGA (SUB-PARROQUIA + SECTOR + 4 CAMPOS) -->
-    <div class="bg-slate-900 border-2 border-emerald-500/40 rounded-3xl p-5 shadow-2xl space-y-4 relative">
+    <div class="bg-[#140e40] border-2 border-[#23176d] rounded-3xl p-5 shadow-2xl space-y-4 relative sunlight-card">
       
       <div class="flex items-center justify-between border-b border-slate-800 pb-3">
         <div class="flex items-center gap-2">
@@ -206,7 +253,7 @@
             <label class="block text-[10px] font-bold uppercase text-amber-400 mb-1">
               🏠 Casas *
             </label>
-            <input type="number" id="input-casas" required min="0" placeholder="0" class="w-full px-3 py-2.5 bg-slate-950 border border-slate-700 rounded-xl text-white text-center font-mono font-black text-base focus:outline-none focus:border-amber-500">
+            <input type="number" id="input-casas" required min="0" placeholder="0" inputmode="numeric" pattern="[0-9]*" class="w-full px-3 py-3 bg-[#0a0722] border border-slate-700 rounded-xl text-white text-center font-mono font-black text-xl focus:outline-none focus:border-amber-500 sunlight-input">
           </div>
 
           <!-- Habitantes -->
@@ -214,7 +261,7 @@
             <label class="block text-[10px] font-bold uppercase text-emerald-400 mb-1">
               👥 Habitantes *
             </label>
-            <input type="number" id="input-habitantes" required min="0" placeholder="0" class="w-full px-3 py-2.5 bg-slate-950 border border-slate-700 rounded-xl text-white text-center font-mono font-black text-base focus:outline-none focus:border-emerald-500">
+            <input type="number" id="input-habitantes" required min="0" placeholder="0" inputmode="numeric" pattern="[0-9]*" class="w-full px-3 py-3 bg-[#0a0722] border border-slate-700 rounded-xl text-white text-center font-mono font-black text-xl focus:outline-none focus:border-emerald-500 sunlight-input">
           </div>
 
           <!-- Votantes -->
@@ -222,7 +269,7 @@
             <label class="block text-[10px] font-bold uppercase text-purple-400 mb-1">
               🗳️ Votantes *
             </label>
-            <input type="number" id="input-votantes" required min="0" placeholder="0" class="w-full px-3 py-2.5 bg-slate-950 border border-slate-700 rounded-xl text-white text-center font-mono font-black text-base focus:outline-none focus:border-purple-500">
+            <input type="number" id="input-votantes" required min="0" placeholder="0" inputmode="numeric" pattern="[0-9]*" class="w-full px-3 py-3 bg-[#0a0722] border border-slate-700 rounded-xl text-white text-center font-mono font-black text-xl focus:outline-none focus:border-purple-500 sunlight-input">
           </div>
 
           <!-- Militantes -->
@@ -230,12 +277,12 @@
             <label class="block text-[10px] font-bold uppercase text-sky-400 mb-1">
               ✊ Militantes *
             </label>
-            <input type="number" id="input-militantes" required min="0" placeholder="0" class="w-full px-3 py-2.5 bg-slate-950 border border-slate-700 rounded-xl text-white text-center font-mono font-black text-base focus:outline-none focus:border-sky-500">
+            <input type="number" id="input-militantes" required min="0" placeholder="0" inputmode="numeric" pattern="[0-9]*" class="w-full px-3 py-3 bg-[#0a0722] border border-slate-700 rounded-xl text-white text-center font-mono font-black text-xl focus:outline-none focus:border-sky-500 sunlight-input">
           </div>
         </div>
 
         <!-- Botón Enviar Reporte -->
-        <button type="submit" id="btn-submit" class="w-full py-3.5 bg-emerald-600 hover:bg-emerald-500 text-white font-black text-xs sm:text-sm uppercase tracking-wider rounded-xl shadow-lg shadow-emerald-600/30 transition flex items-center justify-center gap-2 active:scale-95 cursor-pointer mt-3">
+        <button type="submit" id="btn-submit" class="w-full py-4 bg-[#23176d] hover:bg-[#31228e] text-white font-black text-sm uppercase tracking-wider rounded-2xl shadow-xl shadow-[#23176d]/50 transition flex items-center justify-center gap-2 active:scale-95 cursor-pointer mt-3 border-2 border-white/20">
           <i data-lucide="send" class="w-4 h-4"></i>
           <span id="btn-submit-text">Enviar Reporte</span>
         </button>
@@ -582,6 +629,7 @@
       }
 
       showToast(msg) {
+        navigator.vibrate?.([60, 40, 80]);
         const toast = document.getElementById("toast");
         const text = document.getElementById("toast-text");
         if (!toast || !text) return;
@@ -593,6 +641,28 @@
       }
 
       bindEvents() {
+        // Toggle Modo Sol Extremo (Sunlight-Ready)
+        const btnSunlight = document.getElementById("btn-toggle-sunlight");
+        if (btnSunlight) {
+          const isSun = localStorage.getItem("migato_sunlight") === "true";
+          if (isSun) {
+            document.body.classList.add("sunlight-mode");
+            const icon = document.getElementById("sunlight-icon");
+            const label = document.getElementById("sunlight-label");
+            if (icon) icon.textContent = "🌙";
+            if (label) label.textContent = "Modo Noche";
+          }
+          btnSunlight.addEventListener("click", () => {
+            navigator.vibrate?.(30);
+            const active = document.body.classList.toggle("sunlight-mode");
+            localStorage.setItem("migato_sunlight", active ? "true" : "false");
+            const icon = document.getElementById("sunlight-icon");
+            const label = document.getElementById("sunlight-label");
+            if (icon) icon.textContent = active ? "🌙" : "☀️";
+            if (label) label.textContent = active ? "Modo Noche" : "Modo Sol";
+          });
+        }
+
         // Formulario de Login Privado
         const formLogin = document.getElementById("form-login");
         if (formLogin) {
