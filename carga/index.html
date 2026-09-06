@@ -424,7 +424,8 @@
                   data = { ...data, ...parsed };
                 } catch(e) {}
               }
-              this.poligonos = data.poligonos || [];
+              const remotePolys = data.poligonos || [];
+              this.poligonos = this.mergeWithOfficialSectors(remotePolys);
               this.subparroquias = data.subparroquias || [];
             } else {
               this.loadDefaultFallback();
@@ -441,13 +442,79 @@
         }
       }
 
-      loadDefaultFallback() {
+      getOfficialParishSectors() {
+        // 1. Caso Alto de Los Godos: 11 sectores detallados de La Puente
         if (this.munId === "maturin" && this.parishId === "alto-de-los-godos") {
-          this.poligonos = JSON.parse(JSON.stringify(SECTORES_LAPUENTE || []));
-        } else {
-          // Si no tiene sectores mapeados aún, iniciar vacío
-          this.poligonos = [];
+          return JSON.parse(JSON.stringify(SECTORES_LAPUENTE || []));
         }
+
+        // 2. Buscar en CATALOGO_MONAGAS para la parroquia activa
+        for (const mun of CATALOGO_MONAGAS) {
+          for (const p of mun.parroquias) {
+            if (p.id === this.parishId) {
+              if (Array.isArray(p.sectores) && p.sectores.length > 0) {
+                return p.sectores.map((secName, idx) => ({
+                  id: `sec-${this.parishId}-${idx + 1}`,
+                  subParroquiaId: `sub-${this.parishId}-1`,
+                  parroquiaId: this.parishId,
+                  numero: idx + 1,
+                  nombre: secName,
+                  casas: 0,
+                  familias: 0,
+                  habitantes: 0,
+                  militantes: 0,
+                  tipo: "sector",
+                  visible: true,
+                  color: "#38bdf8",
+                  colorBorde: "#38bdf8",
+                  colorRelleno: "#38bdf8",
+                  opacidad: 0.38
+                }));
+              }
+            }
+          }
+        }
+
+        // 3. Fallback genérico para asegurar que siempre haya al menos el sector central
+        return [
+          {
+            id: `sec-${this.parishId}-1`,
+            subParroquiaId: `sub-${this.parishId}-1`,
+            parroquiaId: this.parishId,
+            numero: 1,
+            nombre: "Casco Central",
+            casas: 0,
+            familias: 0,
+            habitantes: 0,
+            militantes: 0,
+            tipo: "sector",
+            visible: true
+          }
+        ];
+      }
+
+      mergeWithOfficialSectors(existingList = []) {
+        const official = this.getOfficialParishSectors();
+        if (!existingList || existingList.length === 0) {
+          return official;
+        }
+
+        const merged = [...existingList];
+        official.forEach(off => {
+          const offName = (off.nombre || "").toLowerCase().trim();
+          const exists = merged.some(p => 
+            p.id === off.id || 
+            (p.nombre && p.nombre.toLowerCase().trim() === offName)
+          );
+          if (!exists) {
+            merged.push(off);
+          }
+        });
+        return merged;
+      }
+
+      loadDefaultFallback() {
+        this.poligonos = this.getOfficialParishSectors();
       }
 
       fallbackToLocalStorage() {
@@ -456,8 +523,8 @@
           if (raw) {
             const parsed = JSON.parse(raw);
             const p = parsed?.municipios?.[this.munId]?.parroquias?.[this.parishId];
-            if (p && p.poligonos) {
-              this.poligonos = p.poligonos;
+            if (p && p.poligonos && p.poligonos.length > 0) {
+              this.poligonos = this.mergeWithOfficialSectors(p.poligonos);
               this.subparroquias = p.subparroquias || [];
               this.renderAll();
               return;
@@ -640,14 +707,18 @@
 
         this.editingSectorId = sec.id;
         document.getElementById("field-editing-id").value = sec.id;
-        document.getElementById("input-casas").value = sec.casas || 0;
-        document.getElementById("input-familias").value = sec.familias || sec.casas || 0;
-        document.getElementById("input-habitantes").value = sec.habitantes || 0;
-        document.getElementById("input-votantes").value = sec.militantes !== undefined ? sec.militantes : 0;
+        document.getElementById("input-casas").value = (sec.casas !== undefined && sec.casas !== 0) ? sec.casas : (sec.casas === 0 ? "0" : "");
+        document.getElementById("input-familias").value = (sec.familias !== undefined && sec.familias !== 0) ? sec.familias : (sec.familias === 0 ? "0" : "");
+        document.getElementById("input-habitantes").value = (sec.habitantes !== undefined && sec.habitantes !== 0) ? sec.habitantes : (sec.habitantes === 0 ? "0" : "");
+        document.getElementById("input-votantes").value = (sec.militantes !== undefined && sec.militantes !== 0) ? sec.militantes : (sec.militantes === 0 ? "0" : "");
         
-        document.getElementById("form-mode-title").textContent = `Modificar: ${sec.nombre}`;
-        document.getElementById("btn-submit-text").textContent = "Guardar Cambios";
+        const isDone = (sec.casas > 0 || sec.habitantes > 0);
+        document.getElementById("form-mode-title").innerHTML = `${isDone ? '✏️ Modificar' : '📝 Cargar'}: <span class="text-sky-300 font-bold">${sec.nombre}</span>`;
+        document.getElementById("btn-submit-text").textContent = "Guardar Datos del Sector";
         document.getElementById("btn-cancel-edit").classList.remove("hidden");
+
+        const inCasas = document.getElementById("input-casas");
+        if (inCasas) setTimeout(() => { inCasas.focus(); inCasas.select(); }, 120);
       }
 
       resetFormNumbers() {
@@ -762,10 +833,13 @@
         let html = '<option value="">-- Toca aquí para elegir el sector --</option>';
 
         this.poligonos.forEach(s => {
-          html += `<option value="${s.id}">${s.nombre} (${s.casas || 0} casas)</option>`;
+          const isDone = (s.casas > 0 || s.habitantes > 0 || s.familias > 0);
+          const icon = isDone ? '✅' : '⏳';
+          const info = isDone ? `${s.casas || 0} casas (Listo)` : 'Pendiente por cargar';
+          html += `<option value="${s.id}">${icon} ${s.nombre} • ${info}</option>`;
         });
 
-        html += '<option value="__nuevo__">➕ Registrar Nuevo Sector (Escribir nombre)...</option>';
+        html += '<option value="__nuevo__">➕ Registrar Nuevo Sector (Si falta en la lista)...</option>';
         select.innerHTML = html;
 
         if (currentVal && select.querySelector(`option[value="${currentVal}"]`)) {
@@ -791,8 +865,9 @@
         document.getElementById("kpi-habitantes").textContent = totHabitantes.toLocaleString();
         document.getElementById("kpi-votantes").textContent = totVotantes.toLocaleString();
         
-        document.getElementById("badge-total-sectors").textContent = `${this.poligonos.length} Sectores`;
-        document.getElementById("list-counter-badge").textContent = `${this.poligonos.length} sectores`;
+        const cargadosCount = this.poligonos.filter(s => (s.casas > 0 || s.habitantes > 0)).length;
+        document.getElementById("badge-total-sectors").textContent = `${cargadosCount}/${this.poligonos.length} Cargados`;
+        document.getElementById("list-counter-badge").textContent = `${cargadosCount} de ${this.poligonos.length} con datos`;
       }
 
       renderSectorsList() {
@@ -827,18 +902,24 @@
             <div class="p-3.5 bg-slate-950/90 border border-slate-800/90 rounded-2xl space-y-2.5 hover:border-slate-700 transition">
               
               <div class="flex items-start justify-between gap-2">
-                <div class="min-w-0">
+                <div class="min-w-0 space-y-1">
+                  <div class="flex items-center gap-1.5">
+                    ${casas > 0 || habitantes > 0 
+                      ? '<span class="text-[9px] font-mono font-bold bg-emerald-950 text-emerald-400 border border-emerald-800/60 px-1.5 py-0.5 rounded">✓ Registrado</span>' 
+                      : '<span class="text-[9px] font-mono font-bold bg-amber-950 text-amber-400 border border-amber-800/60 px-1.5 py-0.5 rounded">⏳ Pendiente</span>'}
+                  </div>
                   <h4 class="text-xs sm:text-sm font-black text-white leading-tight">
                     ${s.nombre}
                   </h4>
                 </div>
 
                 <div class="flex items-center gap-1.5 shrink-0">
-                  <button type="button" onclick="window.cargaApp.editSectorDirectly('${s.id}')" class="p-2 bg-slate-900 hover:bg-sky-950 border border-slate-700 text-sky-400 rounded-xl transition active:scale-95 cursor-pointer" title="Modificar números">
-                    <i data-lucide="edit-2" class="w-3.5 h-3.5"></i>
+                  <button type="button" onclick="window.cargaApp.editSectorDirectly('${s.id}')" class="py-1 px-2.5 bg-sky-950/80 hover:bg-sky-600 text-sky-300 hover:text-white border border-sky-800/80 rounded-xl transition active:scale-95 cursor-pointer text-[11px] font-bold flex items-center gap-1" title="Cargar o modificar datos">
+                    <i data-lucide="edit-2" class="w-3 h-3"></i>
+                    <span>Cargar</span>
                   </button>
-                  <button type="button" onclick="window.cargaApp.deleteSector('${s.id}')" class="p-2 bg-slate-900 hover:bg-rose-950 border border-slate-700 text-rose-400 rounded-xl transition active:scale-95 cursor-pointer" title="Eliminar">
-                    <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                  <button type="button" onclick="window.cargaApp.deleteSector('${s.id}')" class="p-1.5 bg-slate-900 hover:bg-rose-950 border border-slate-800 text-rose-400/80 hover:text-rose-300 rounded-xl transition active:scale-95 cursor-pointer" title="Eliminar sector">
+                    <i data-lucide="trash-2" class="w-3 h-3"></i>
                   </button>
                 </div>
               </div>
