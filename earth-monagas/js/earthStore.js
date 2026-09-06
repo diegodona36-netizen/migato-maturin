@@ -1,7 +1,8 @@
 /**
  * Gestor de Estado y Árbol de Lugares (Places) — Google Earth Pro Web (Monagas)
  */
-import { SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=100";
+import { SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=108";
+import { getEjesByParish, getSectoresByParish } from "./monagasSectoresCatalog.js?v=108";
 import { 
   saveParishToFirestore, 
   subscribeToTerritories, 
@@ -9,9 +10,9 @@ import {
   fetchAllTerritoriesFromFirestore,
   mergeItemCollections,
   cleanItem
-} from "./firebaseConfig.js?v=100";
+} from "./firebaseConfig.js?v=108";
 
-const STORAGE_KEY = "earth_monagas_places_v8";
+const STORAGE_KEY = "earth_monagas_places_v9";
 
 export const DEFAULT_SAN_SIMON_SUBPARROQUIAS = [
   {
@@ -236,6 +237,24 @@ export class EarthStore {
           }
           if (mun.id === "maturin" && p.id === "el-corozo" && storedP.subparroquias.length === 0) {
             storedP.subparroquias = JSON.parse(JSON.stringify(DEFAULT_COROZO_SUBPARROQUIAS || []));
+          }
+
+          // Carga automática del catálogo oficial para TODAS las parroquias de Monagas (incluyendo La Pica)
+          if (storedP.subparroquias.length === 0) {
+            try {
+              const catEjes = getEjesByParish(mun.id, p.id);
+              if (catEjes && catEjes.length > 0) {
+                storedP.subparroquias = JSON.parse(JSON.stringify(catEjes));
+              }
+            } catch(errEjes) {}
+          }
+          if (storedP.poligonos.length === 0) {
+            try {
+              const catSecs = getSectoresByParish(mun.id, p.id);
+              if (catSecs && catSecs.length > 0) {
+                storedP.poligonos = JSON.parse(JSON.stringify(catSecs));
+              }
+            } catch(errSecs) {}
           }
         });
       });

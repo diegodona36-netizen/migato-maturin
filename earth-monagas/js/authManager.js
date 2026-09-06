@@ -35,7 +35,7 @@ export function forceCleanCacheAndReload() {
   }
 
   setTimeout(() => {
-    window.location.href = window.location.pathname + "?v=107&u=admin";
+    window.location.href = window.location.pathname + "?v=108&u=admin-militancia";
   }, 100);
 }
 
