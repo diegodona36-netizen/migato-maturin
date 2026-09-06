@@ -197,89 +197,33 @@ export class EarthMapEngine {
       }
     });
 
-    // 2. Capa L2: 13 Municipios (Oficial INE)
+    // 2. Capa L2: 13 Municipios (Oficial INE) - Capa puramente visual e informativa
     this.layerL2_Municipios = L.geoJSON(GEO_MUNICIPIOS_OFICIAL, {
       renderer: this.canvasRenderer,
+      interactive: false,
       style: (feature) => ({
         color: feature.properties.color || "#38bdf8",
         weight: 2,
         opacity: 0.9,
         fillColor: feature.properties.color || "#38bdf8",
-        fillOpacity: 0.12
-      }),
-      onEachFeature: (feature, layer) => {
-        const p = feature.properties;
-        if (!this.isTouchDevice) {
-          layer.bindTooltip(`
-            <div class="p-2 font-mono text-xs max-w-[250px] bg-[#08061a] rounded-xl border border-sky-500/50 shadow-2xl">
-              <div class="flex items-center justify-between border-b border-sky-800/60 pb-1 mb-1">
-                <span class="text-[9px] uppercase tracking-wider text-sky-400 font-black">Nivel 2 • Municipio</span>
-                <span class="text-[9px] font-bold text-sky-200 bg-sky-950 px-1.5 py-0.5 rounded border border-sky-700">Cantonal</span>
-              </div>
-              <strong class="text-white block font-black text-sm mb-0.5">Municipio ${p.nombre || p.ADM2_ES}</strong>
-              <span class="text-[10px] text-slate-300 block mb-1">Capital: <strong class="text-white">${p.capital || 'N/D'}</strong> • ${p.parroquias_count || ''} Parroquias</span>
-              ${p.electores ? `<div class="text-[10px] text-sky-300 font-mono bg-sky-950/60 px-2 py-0.5 rounded border border-sky-800/40 mb-1">Electores: ~${p.electores.toLocaleString()}</div>` : ''}
-              <span class="text-[9px] text-sky-300 font-bold block text-center">👉 Clic para enfocar municipio</span>
-            </div>
-          `, { sticky: true, className: "earth-tooltip" });
-        }
-
-        layer.on("click", (e) => {
-          if (e.originalEvent?.target?.blur) e.originalEvent.target.blur();
-          if (document.activeElement?.blur) document.activeElement.blur();
-          if (this.isDrawingMode || window.earthApp?.toolsManager?.activeTool) {
-            window.earthApp?.toolsManager?.handleMapClick(e);
-            return;
-          }
-          L.DomEvent.stopPropagation(e);
-          try {
-            const b = layer.getBounds();
-            if (b.isValid()) this.map.flyToBounds(b, { padding: [40, 40], duration: 1.2 });
-          } catch(err) {}
-        });
-      }
+        fillOpacity: 0.12,
+        interactive: false
+      })
     });
 
-    // 3. Capa L3: 44 Parroquias Oficiales (INE 2021)
+    // 3. Capa L3: 44 Parroquias Oficiales (INE 2021) - Visualización limpia sin interacción táctil invasiva
     this.layerL3_Parroquias = L.geoJSON(GEO_PARROQUIAS_OFICIAL, {
       renderer: this.canvasRenderer,
+      interactive: false,
       style: (feature) => ({
         color: "#ffffff",
         weight: 1.5,
         opacity: 0.85,
         fillColor: feature.properties.color || "#10b981",
         fillOpacity: 0.14,
-        dashArray: "5, 4"
-      }),
-      onEachFeature: (feature, layer) => {
-        const p = feature.properties;
-        if (!this.isTouchDevice) {
-          layer.bindTooltip(`
-            <div class="p-2 font-mono text-xs max-w-[250px] bg-[#08061a] rounded-xl border border-emerald-500/50 shadow-2xl">
-              <div class="flex items-center justify-between border-b border-emerald-800/60 pb-1 mb-1">
-                <span class="text-[9px] uppercase tracking-wider text-emerald-400 font-black">Nivel 3 • Parroquia</span>
-                <span class="text-[9px] font-bold text-emerald-200 bg-emerald-950 px-1.5 py-0.5 rounded border border-emerald-700">INE 2021</span>
-              </div>
-              <strong class="text-white block font-black text-sm mb-0.5">${p.nombre || p.ADM3_ES}</strong>
-              <span class="text-[10px] text-slate-300 block mb-1.5">Municipio ${p.municipioNombre || p.ADM2_ES || 'Monagas'}</span>
-              <span class="text-[9px] text-amber-300 font-bold block text-center bg-amber-950/60 py-1 rounded border border-amber-800/40">👉 Clic para abrir y mapear sectores</span>
-            </div>
-          `, { sticky: true, className: "earth-tooltip" });
-        }
-
-        layer.on("click", (e) => {
-          if (e.originalEvent?.target?.blur) e.originalEvent.target.blur();
-          if (document.activeElement?.blur) document.activeElement.blur();
-          if (this.isDrawingMode || window.earthApp?.toolsManager?.activeTool) {
-            window.earthApp?.toolsManager?.handleMapClick(e);
-            return;
-          }
-          L.DomEvent.stopPropagation(e);
-          if (window.earthApp) {
-            window.earthApp.selectParish(p.municipioId, p.id);
-          }
-        });
-      }
+        dashArray: "5, 4",
+        interactive: false
+      })
     });
 
     // 4. Capa L4: Sub-Parroquias / Ejes (Dinámica, según parroquia activa)
