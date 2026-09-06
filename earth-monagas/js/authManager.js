@@ -5,15 +5,20 @@
 
 import { findUserByCredentials, USERS_CATALOG } from "./usersCatalog.js?v=100";
 
-const AUTH_STORAGE_KEY = "migato_earth_session_v4";
+const AUTH_STORAGE_KEY = "migato_earth_session_v6";
 
 export function forceCleanCacheAndReload() {
   try {
     sessionStorage.clear();
+    localStorage.removeItem("migato_earth_session_v6");
+    localStorage.removeItem("migato_earth_session_v5");
     localStorage.removeItem("migato_earth_session_v4");
     localStorage.removeItem("migato_earth_session_v3");
     localStorage.removeItem("migato_earth_session_v2");
     localStorage.removeItem("migato_earth_session_v1");
+    localStorage.removeItem("migato_session");
+    localStorage.removeItem("migato_last_mun");
+    localStorage.removeItem("migato_last_parish");
   } catch (e) {}
 
   if ("serviceWorker" in navigator) {
@@ -43,9 +48,13 @@ export class AuthManager {
       localStorage.removeItem("migato_earth_session_v1");
       localStorage.removeItem("migato_earth_session_v2");
       localStorage.removeItem("migato_earth_session_v3");
+      localStorage.removeItem("migato_earth_session_v4");
+      localStorage.removeItem("migato_earth_session_v5");
       sessionStorage.removeItem("migato_earth_session_v1");
       sessionStorage.removeItem("migato_earth_session_v2");
       sessionStorage.removeItem("migato_earth_session_v3");
+      sessionStorage.removeItem("migato_earth_session_v4");
+      sessionStorage.removeItem("migato_earth_session_v5");
     } catch (e) {}
     this.currentUser = this.loadSession();
   }
@@ -73,6 +82,7 @@ export class AuthManager {
       email: user.email,
       nombre: user.nombre,
       rol: user.rol,
+      nivel: user.nivel || (user.id === "usr-jefe" ? "jefe" : "general"),
       municipioId: user.municipioId,
       parroquiaId: user.parroquiaId,
       parroquiaNombre: user.parroquiaNombre,
@@ -91,6 +101,11 @@ export class AuthManager {
     this.currentUser = null;
     localStorage.removeItem(AUTH_STORAGE_KEY);
     sessionStorage.removeItem(AUTH_STORAGE_KEY);
+    try {
+      sessionStorage.clear();
+      localStorage.removeItem("migato_last_mun");
+      localStorage.removeItem("migato_last_parish");
+    } catch(e) {}
   }
 
   isAuthenticated() {

@@ -108,16 +108,31 @@ export function sha256Sync(asciiStr) {
 // Generar usuarios oficiales y formales para las 44 parroquias + coordinadores + superadmin
 function buildInitialUsers() {
   const users = [
-    // 1. Super Administrador (Dirección General / Sala Central MIGATO)
+    // 1. Jefatura de Despacho Central (Solo la de Jefe: admin / admin)
     {
-      id: "usr-admin",
+      id: "usr-jefe",
       username: "admin",
-      aliases: ["admin", "administrador", "general", "central", "migato", "sala central"],
-      email: "admin@monagas.gob.ve",
+      aliases: ["admin", "jefe", "admin-jefe", "admin_jefe", "admin-admin", "admin_admin", "despacho", "gobernador", "jefatura", "superadmin"],
+      email: "jefe@monagas.gob.ve",
       password: "admin",
       passwordHash: "8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918",
-      nombre: "Dirección General MIGATO (Administrador Central)",
+      nombre: "Jefatura de Despacho Central (Jefe)",
       rol: "admin", // Acceso total a los 13 municipios y 44 parroquias
+      nivel: "jefe",
+      municipioId: null,
+      parroquiaId: null
+    },
+    // 2. Dirección General / Militancia (El General: admin-militancia / militancia)
+    {
+      id: "usr-general-militancia",
+      username: "admin-militancia",
+      aliases: ["admin-militancia", "admin_militancia", "adminmilitancia", "militancia", "general", "usuario general", "usuario_general", "usuariogeneral", "central", "sala central", "salacentral", "direccion-general", "direccion_general"],
+      email: "militancia@monagas.gob.ve",
+      password: "militancia",
+      passwordHash: "7f64b358efe11fe853f7c886449f4d69db170befe6e8a8b3b8a408f94e0f4685",
+      nombre: "Dirección General (Militancia)",
+      rol: "admin", // Acceso total a los 13 municipios y 44 parroquias
+      nivel: "general",
       municipioId: null,
       parroquiaId: null
     }
@@ -209,35 +224,52 @@ export function findUserByCredentials(identity, password) {
   const cleanId = identity.trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
   const cleanPass = (password || "").trim();
 
-  // 1. Verificación del Super Administrador (Múltiples Alias)
-  const adminAliases = [
-    "admin",
-    "general",
-    "usuario general",
-    "usuario_general",
-    "usuariogeneral",
-    "central",
-    "sala central",
-    "salacentral",
-    "migato",
-    "superadmin",
-    "administrador",
-    "admin@monagas.gob.ve",
-    "general@monagas.gob.ve"
-  ];
+  const generalUser = USERS_CATALOG.find(u => u.id === "usr-general-militancia") || USERS_CATALOG.find(u => u.username === "admin-militancia");
+  const jefeUser = USERS_CATALOG.find(u => u.id === "usr-jefe") || USERS_CATALOG.find(u => u.username === "admin");
 
-  if (adminAliases.includes(cleanId)) {
-    const adminUser = USERS_CATALOG.find(u => u.rol === "admin");
-    if (adminUser) {
-      const isPassValid = cleanPass === adminUser.password || 
-                          cleanPass === "admin" || 
-                          cleanPass === adminUser.passwordHash || 
-                          sha256Sync(cleanPass) === adminUser.passwordHash;
-      if (isPassValid) {
-        return adminUser;
-      }
-      return null;
+  // 1. Verificación cuando el usuario ingresado es "admin":
+  // - Si la clave es "admin" -> Entra como Jefe de Despacho (Solo Jefe)
+  // - Si la clave es "militancia" -> Entra como General (Militancia)
+  if (cleanId === "admin") {
+    if (cleanPass === "admin" || cleanPass === "8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918" || sha256Sync(cleanPass) === "8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918") {
+      return jefeUser;
     }
+    if (cleanPass === "militancia" || cleanPass === "7f64b358efe11fe853f7c886449f4d69db170befe6e8a8b3b8a408f94e0f4685" || sha256Sync(cleanPass) === "7f64b358efe11fe853f7c886449f4d69db170befe6e8a8b3b8a408f94e0f4685") {
+      return generalUser;
+    }
+    return null;
+  }
+
+  // 2. Verificación de Dirección General (El General: admin-militancia / militancia)
+  const generalAliases = [
+    "admin-militancia", "admin_militancia", "adminmilitancia",
+    "militancia", "general", "usuario general", "usuario_general",
+    "usuariogeneral", "central", "sala central", "salacentral",
+    "direccion-general", "direccion_general", "militancia@monagas.gob.ve"
+  ];
+  if (generalAliases.includes(cleanId) && generalUser) {
+    const isPassValid = cleanPass === generalUser.password ||
+                        cleanPass === "militancia" ||
+                        cleanPass === "admin-militancia" ||
+                        cleanPass === "admin" ||
+                        cleanPass === generalUser.passwordHash ||
+                        sha256Sync(cleanPass) === generalUser.passwordHash;
+    if (isPassValid) return generalUser;
+    return null;
+  }
+
+  // 3. Verificación de Jefatura de Despacho (Solo Jefe: admin-admin, jefe)
+  const jefeAliases = [
+    "jefe", "admin-jefe", "admin_jefe", "admin-admin", "admin_admin",
+    "despacho", "gobernador", "jefatura", "superadmin", "jefe@monagas.gob.ve"
+  ];
+  if (jefeAliases.includes(cleanId) && jefeUser) {
+    const isPassValid = cleanPass === jefeUser.password ||
+                        cleanPass === "admin" ||
+                        cleanPass === jefeUser.passwordHash ||
+                        sha256Sync(cleanPass) === jefeUser.passwordHash;
+    if (isPassValid) return jefeUser;
+    return null;
   }
 
   // 2. Búsqueda de Usuario en el Catálogo

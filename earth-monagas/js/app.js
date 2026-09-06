@@ -1957,9 +1957,10 @@ class EarthMonagasApp {
         }
 
         this.applyUserScope();
-        const roleText = res.user.rol === "admin" 
-          ? "👑 Dirección General (Monagas)" 
-          : `🔒 Parroquia ${res.user.parroquiaNombre || res.user.nombre}`;
+        const isJefe = res.user.nivel === "jefe" || res.user.username === "admin";
+        const roleText = isJefe 
+          ? "👑 Jefatura de Despacho (Solo Jefe)" 
+          : (res.user.rol === "admin" ? "🌐 Dirección General (Militancia)" : `🔒 Parroquia ${res.user.parroquiaNombre || res.user.nombre}`);
         this.showToast(`Bienvenido: ${roleText}`, "success");
       });
     }
@@ -1973,7 +1974,7 @@ class EarthMonagasApp {
       });
     }
 
-    // Comprobar si hay parámetro URL para auto-login (?u=admin o ?general=1 o ?p=alto-de-los-godos)
+    // Comprobar si hay parámetro URL para auto-login (?u=admin o ?u=admin-militancia o ?general=1)
     const urlParams = new URLSearchParams(window.location.search);
     const autoParish = urlParams.get("p") || urlParams.get("parroquia") || urlParams.get("parish");
     const autoMilitancia = urlParams.get("militancia") || urlParams.get("rol");
@@ -1981,7 +1982,13 @@ class EarthMonagasApp {
     const autoGeneral = urlParams.get("general");
 
     if (autoGeneral === "1" || autoGeneral === "true" || autoUser) {
-      this.quickLogin(autoUser || "admin", "admin");
+      if (autoUser === "admin") {
+        this.quickLogin("admin", "admin");
+      } else if (autoUser === "admin-militancia" || autoUser === "militancia" || autoGeneral === "1") {
+        this.quickLogin("admin-militancia", "militancia");
+      } else {
+        this.quickLogin(autoUser, "admin");
+      }
       return;
     }
 
@@ -1994,12 +2001,23 @@ class EarthMonagasApp {
       }
       this.applyUserScope();
     } else {
-      this.openSessionModal();
+      // Auto-iniciar en Modo General de Militancia si no hay sesión
+      this.quickLogin("admin-militancia", "militancia");
     }
   }
 
-  quickLogin(identity = "admin", password = "admin") {
-    const res = this.authManager.login(identity, password || "admin");
+  quickLogin(identity = "admin-militancia", password = null) {
+    let finalPass = password;
+    if (!finalPass) {
+      if (identity === "admin" || identity === "jefe") {
+        finalPass = "admin";
+      } else if (identity === "admin-militancia" || identity === "militancia" || identity === "general") {
+        finalPass = "militancia";
+      } else {
+        finalPass = "admin";
+      }
+    }
+    const res = this.authManager.login(identity, finalPass);
     const modalLogin = document.getElementById("modal-auth-login");
     const errorMsg = document.getElementById("auth-error-msg");
 
@@ -2011,9 +2029,10 @@ class EarthMonagasApp {
         modalLogin.style.display = "none";
       }
       this.applyUserScope();
-      const roleText = res.user.rol === "admin" 
-        ? "Dirección General (Monagas)" 
-        : `Parroquia ${res.user.parroquiaNombre || res.user.nombre}`;
+      const isJefe = res.user.nivel === "jefe" || res.user.username === "admin";
+      const roleText = isJefe 
+        ? "👑 Jefatura de Despacho (Solo Jefe)" 
+        : (res.user.rol === "admin" ? "🌐 Dirección General (Militancia)" : `Parroquia ${res.user.parroquiaNombre || res.user.nombre}`);
       this.showToast(`Conectado: ${roleText}`, "info");
     } else {
       if (errorMsg) {
@@ -2029,9 +2048,9 @@ class EarthMonagasApp {
     const isExplicitAdminParam = urlParams.get("u") === "admin" || urlParams.get("general") === "1";
 
     let user = this.authManager.getCurrentUser();
-    // Si estamos en la URL general (sin ?p=) y el usuario actual no es admin, elevar automáticamente a Dirección General
+    // Si estamos en la URL general (sin ?p=) y el usuario actual no es admin, elevar automáticamente a Dirección General (Militancia)
     if (!explicitParishParam && (!user || user.rol !== "admin")) {
-      const loginRes = this.authManager.login("admin", "admin");
+      const loginRes = this.authManager.login("admin-militancia", "militancia");
       if (loginRes && loginRes.success) {
         user = loginRes.user;
       }
@@ -2057,15 +2076,23 @@ class EarthMonagasApp {
     if (isGeneral) {
       // 👑 MODO CENTRAL / DIRECCIÓN GENERAL
       document.documentElement.classList.remove("isolated-parish-view");
+      const isJefe = user.nivel === "jefe" || user.username === "admin";
       if (badgeBtn) {
-        badgeBtn.className = "hidden sm:flex px-2.5 py-1.5 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/50 text-amber-300 text-xs font-black items-center gap-1.5 transition active:scale-95 cursor-pointer shadow-sm shrink-0";
-        badgeBtn.title = "Sesión: Dirección General (Clic para cambiar a una Parroquia)";
+        if (isJefe) {
+          badgeBtn.className = "hidden sm:flex px-2.5 py-1.5 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/50 text-amber-300 text-xs font-black items-center gap-1.5 transition active:scale-95 cursor-pointer shadow-sm shrink-0";
+          badgeBtn.title = "Sesión: Jefatura de Despacho Central (Solo Jefe)";
+        } else {
+          badgeBtn.className = "hidden sm:flex px-2.5 py-1.5 rounded-xl bg-sky-500/15 hover:bg-sky-500/25 border border-sky-500/50 text-sky-300 text-xs font-black items-center gap-1.5 transition active:scale-95 cursor-pointer shadow-sm shrink-0";
+          badgeBtn.title = "Sesión: Dirección General - Militancia (Acceso Central)";
+        }
       }
-      if (badgeIcon) badgeIcon.textContent = "👑";
-      if (badgeLabel) badgeLabel.textContent = "Dirección General";
+      if (badgeIcon) badgeIcon.textContent = isJefe ? "👑" : "🌐";
+      if (badgeLabel) badgeLabel.textContent = isJefe ? "Jefe de Despacho" : "General (Militancia)";
 
       if (lockWrapper) {
-        lockWrapper.innerHTML = '<i data-lucide="shield-check" class="w-3.5 h-3.5 text-amber-400 shrink-0"></i>';
+        lockWrapper.innerHTML = isJefe
+          ? '<i data-lucide="crown" class="w-3.5 h-3.5 text-amber-400 shrink-0"></i>'
+          : '<i data-lucide="shield-check" class="w-3.5 h-3.5 text-sky-400 shrink-0"></i>';
       }
       if (arrowIcon) {
         arrowIcon.classList.remove("hidden");
@@ -2089,7 +2116,7 @@ class EarthMonagasApp {
         navLoc.textContent = curP ? `${curP.nombre} (${curM ? curM.nombre : 'Monagas'})` : "Monagas";
       }
       if (statusRole) {
-        statusRole.textContent = "Sala Central (General)";
+        statusRole.textContent = isJefe ? "Sala Central (Jefe de Despacho)" : "Sala Central (Militancia General)";
       }
 
       // Respetar última parroquia si existe

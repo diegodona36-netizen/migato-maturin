@@ -89,13 +89,36 @@
     }
   </style>
   <script>
-    // Auto-actualización obligatoria a la versión más reciente v=105
+    // Auto-actualización obligatoria a la versión más reciente v=106 y cierre total de sesiones residuales
     (function() {
       try {
         var p = new URLSearchParams(window.location.search);
         var curV = p.get('v');
-        if (!curV || parseInt(curV) < 105) {
-          p.set('v', '105');
+        if (!curV || parseInt(curV) < 106) {
+          // Limpiar todas las sesiones en localStorage y sessionStorage
+          try {
+            localStorage.removeItem("migato_earth_session_v1");
+            localStorage.removeItem("migato_earth_session_v2");
+            localStorage.removeItem("migato_earth_session_v3");
+            localStorage.removeItem("migato_earth_session_v4");
+            localStorage.removeItem("migato_earth_session_v5");
+            localStorage.removeItem("migato_earth_session_v6");
+            localStorage.removeItem("migato_session");
+            localStorage.removeItem("migato_user");
+            localStorage.removeItem("migato_last_mun");
+            localStorage.removeItem("migato_last_parish");
+            var keysToRemove = [];
+            for (var i = 0; i < localStorage.length; i++) {
+              var k = localStorage.key(i);
+              if (k && k.indexOf("auth_parish_") === 0) {
+                keysToRemove.push(k);
+              }
+            }
+            keysToRemove.forEach(function(k) { localStorage.removeItem(k); });
+            sessionStorage.clear();
+          } catch(err) {}
+
+          p.set('v', '106');
           window.location.replace(window.location.pathname + '?' + p.toString() + window.location.hash);
         }
       } catch(e) {}
@@ -170,9 +193,9 @@
       localStorage.removeItem("migato_earth_session_v1");
       localStorage.removeItem("migato_earth_session_v2");
       localStorage.removeItem("migato_earth_session_v3");
-      sessionStorage.removeItem("migato_earth_session_v1");
-      sessionStorage.removeItem("migato_earth_session_v2");
-      sessionStorage.removeItem("migato_earth_session_v3");
+      localStorage.removeItem("migato_earth_session_v4");
+      localStorage.removeItem("migato_earth_session_v5");
+      sessionStorage.clear();
     } catch(e) {}
 
     // Función universal de login rápido para perfiles directos
@@ -1580,7 +1603,7 @@
   </div>
 
   <!-- SCRIPT -->
-  <script type="module" src="js/app.js?v=105"></script>
+  <script type="module" src="js/app.js?v=106"></script>
   <script>
     if (window.lucide && typeof window.lucide.createIcons === 'function') {
       window.lucide.createIcons();

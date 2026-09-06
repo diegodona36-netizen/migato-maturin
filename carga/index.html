@@ -812,17 +812,20 @@
             const cleanMun = this.munId.toLowerCase();
             const isLosGodos = cleanParish === "alto-de-los-godos" || cleanParish === "los-godos" || cleanParish.includes("godos");
 
-            // Valida coincidencia con parroquia, municipio, admin o militante
+            // Valida coincidencia con parroquia, municipio, admin, admin-militancia o militante
             const isUserValid = cleanUser === cleanParish || 
                                 cleanUser.includes(cleanParish) || 
                                 cleanParish.includes(cleanUser) || 
                                 cleanUser === cleanMun || 
                                 cleanMun.includes(cleanUser) || 
                                 cleanUser === "admin" ||
+                                cleanUser === "admin-militancia" ||
+                                cleanUser === "militancia" ||
                                 cleanUser === "militante" ||
                                 (isLosGodos && (cleanUser === "los-godos" || cleanUser === "losgodos" || cleanUser === "godos" || cleanUser === "parroquia-los-godos"));
 
             const isPassValid = p === "admin" || 
+                                p === "militancia" ||
                                 p === "godos2026*" || 
                                 rawPass === "Godos2026*" ||
                                 p.length >= 3;
