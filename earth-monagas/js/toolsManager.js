@@ -793,7 +793,6 @@ export class ToolsManager {
     area = Math.abs(area) / 2.0;
     return Math.round((area / 10000) * 10) / 10;
   }
-}
 
   resetNorth() {
     if (window.earthApp?.resetNorth) {
@@ -802,3 +801,4 @@ export class ToolsManager {
       this.map.setBearing?.(0);
     }
   }
+}
