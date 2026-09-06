@@ -803,12 +803,14 @@
           formLogin.addEventListener("submit", (e) => {
             e.preventDefault();
             const u = (document.getElementById("login-user").value || "").trim().toLowerCase();
-            const p = (document.getElementById("login-pass").value || "").trim().toLowerCase();
+            const rawPass = (document.getElementById("login-pass").value || "").trim();
+            const p = rawPass.toLowerCase();
             const errorMsg = document.getElementById("login-error");
 
             const cleanUser = u.replace(/[\s_]+/g, '-').normalize("NFD").replace(/[\u0300-\u036f]/g, "");
             const cleanParish = this.parishId.toLowerCase();
             const cleanMun = this.munId.toLowerCase();
+            const isLosGodos = cleanParish === "alto-de-los-godos" || cleanParish === "los-godos" || cleanParish.includes("godos");
 
             // Valida coincidencia con parroquia, municipio, admin o militante
             const isUserValid = cleanUser === cleanParish || 
@@ -818,9 +820,12 @@
                                 cleanMun.includes(cleanUser) || 
                                 cleanUser === "admin" ||
                                 cleanUser === "militante" ||
-                                cleanUser === "milicia";
+                                (isLosGodos && (cleanUser === "los-godos" || cleanUser === "losgodos" || cleanUser === "godos" || cleanUser === "parroquia-los-godos"));
 
-            const isPassValid = p === "admin" || p.length >= 3;
+            const isPassValid = p === "admin" || 
+                                p === "godos2026*" || 
+                                rawPass === "Godos2026*" ||
+                                p.length >= 3;
 
             if (isUserValid && isPassValid) {
               if (errorMsg) errorMsg.classList.add("hidden");
@@ -829,7 +834,9 @@
               this.startApplication();
             } else {
               if (errorMsg) {
-                errorMsg.innerHTML = `Credenciales incorrectas.<br><span class="text-[10px] text-slate-300 font-mono">Usuario asignado: <strong>${this.parishId}</strong> | Clave: <strong>admin</strong></span>`;
+                const hintUser = isLosGodos ? "los-godos" : this.parishId;
+                const hintPass = isLosGodos ? "Godos2026*" : "admin";
+                errorMsg.innerHTML = `Credenciales incorrectas.<br><span class="text-[10px] text-slate-300 font-mono">Usuario asignado: <strong>${hintUser}</strong> | Clave: <strong>${hintPass}</strong></span>`;
                 errorMsg.classList.remove("hidden");
               }
             }

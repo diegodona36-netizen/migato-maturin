@@ -63,7 +63,7 @@ export class AuthManager {
     if (!user) {
       return {
         success: false,
-        message: "Credenciales no válidas. Verifique el usuario y contraseña del sistema (admin)."
+        message: "Credenciales no válidas. Verifique su usuario y contraseña asignados."
       };
     }
 

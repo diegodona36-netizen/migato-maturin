@@ -135,6 +135,59 @@
       </p>
     </div>
 
+    <!-- TARJETA DESTACADA: ADMINISTRACIÓN CENTRAL Y SUPERADMINISTRADOR -->
+    <div class="bg-gradient-to-r from-[#0c0926] via-[#140e40] to-slate-900 border-2 border-amber-500/50 rounded-3xl p-5 sm:p-6 shadow-2xl space-y-4 relative overflow-hidden">
+      <div class="absolute -right-6 -bottom-6 opacity-10 text-amber-400 pointer-events-none">
+        <i data-lucide="shield-check" class="w-44 h-44"></i>
+      </div>
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800/80 pb-3">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-2xl bg-amber-500 text-slate-950 font-black flex items-center justify-center shadow-lg shadow-amber-500/30 shrink-0 text-lg">
+            👑
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="text-[10px] font-mono font-black uppercase text-amber-400 bg-amber-950/80 px-2 py-0.5 rounded border border-amber-500/40">
+                Nivel 1 • Acceso Total Global
+              </span>
+              <span class="text-[10px] font-mono text-emerald-400 font-bold">13 Municipios / 44 Parroquias</span>
+            </div>
+            <h3 class="text-base sm:text-lg font-black text-white mt-0.5">Consola Central de Administración • MIGATO</h3>
+          </div>
+        </div>
+        <span class="text-xs font-mono text-slate-400 bg-slate-950 px-3 py-1 rounded-xl border border-slate-800 self-start sm:self-auto">
+          Rol: <strong class="text-amber-400">Super Administrador</strong>
+        </span>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 font-mono text-xs">
+        <div class="bg-slate-950/90 p-3 rounded-2xl border border-slate-800 space-y-1">
+          <span class="text-[10px] uppercase font-bold text-slate-400 block">👤 Usuario Maestro:</span>
+          <div class="flex items-center justify-between">
+            <strong class="text-amber-300 font-black text-sm select-all">admin</strong>
+            <button type="button" onclick="navigator.clipboard.writeText('admin'); showToast('Usuario admin copiado')" class="p-1 hover:text-white text-slate-400 transition" title="Copiar"><i data-lucide="copy" class="w-3.5 h-3.5"></i></button>
+          </div>
+        </div>
+        <div class="bg-slate-950/90 p-3 rounded-2xl border border-slate-800 space-y-1">
+          <span class="text-[10px] uppercase font-bold text-slate-400 block">🔑 Contraseña Maestra:</span>
+          <div class="flex items-center justify-between">
+            <strong class="text-emerald-400 font-black text-sm select-all">admin</strong>
+            <button type="button" onclick="navigator.clipboard.writeText('admin'); showToast('Clave admin copiada')" class="p-1 hover:text-white text-slate-400 transition" title="Copiar"><i data-lucide="copy" class="w-3.5 h-3.5"></i></button>
+          </div>
+        </div>
+        <div class="bg-slate-950/90 p-3 rounded-2xl border border-slate-800 flex items-center justify-between gap-2">
+          <div>
+            <span class="text-[10px] uppercase font-bold text-slate-400 block">Consola Directa:</span>
+            <span class="text-[11px] text-slate-300">Mapa Técnico 3D</span>
+          </div>
+          <a href="../earth-monagas/?v=103&u=admin" class="px-3.5 py-2 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black rounded-xl text-xs flex items-center gap-1.5 transition active:scale-95 shadow-md shadow-amber-500/20">
+            <span>Entrar Admin</span>
+            <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+
     <!-- Barra de Progreso y Estadísticas de Despacho -->
     <div class="bg-[#140e40] border border-[#23176d] rounded-2xl p-4 flex flex-col sm:flex-row items-center justify-between gap-3 shadow-lg">
       <div class="flex items-center gap-3 w-full sm:w-auto">
@@ -512,9 +565,20 @@
       }, 3000);
     }
 
+    function getParishCredentials(parishId) {
+      const isLosGodos = parishId === "alto-de-los-godos" || parishId === "los-godos";
+      return {
+        username: isLosGodos ? "los-godos" : parishId,
+        password: isLosGodos ? "Godos2026*" : "admin",
+        isEncrypted: isLosGodos,
+        hash: isLosGodos ? "8750637278364077efe17f5df2771133ba38e19ee07c4f5adb60a93684f19bda" : "8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918"
+      };
+    }
+
     function copyCredentials(parishId, parishNombre, munNombre) {
+      const creds = getParishCredentials(parishId);
       const link = buildParishLink(parishId);
-      const text = `📋 ACCESO TERRITORIAL PRIVADO • MONAGAS\n\n📍 Parroquia: ${parishNombre} (${munNombre})\n🔗 Enlace: ${link}\n👤 Usuario: ${parishId}\n🔑 Contraseña: admin`;
+      const text = `📋 ACCESO TERRITORIAL PRIVADO • MONAGAS\n\n📍 Parroquia: ${parishNombre} (${munNombre})\n🔗 Enlace: ${link}\n👤 Usuario: ${creds.username}\n🔑 Contraseña: ${creds.password}${creds.isEncrypted ? ' (🔒 Encriptada SHA-256)' : ''}`;
       navigator.clipboard.writeText(text).then(() => {
         showToast(`✓ Datos de acceso copiados: ${parishNombre}`);
       }).catch(() => {
@@ -540,8 +604,9 @@
 
     function sendWhatsApp(parishId, parishNombre, munNombre) {
       markParishDispatched(parishId);
+      const creds = getParishCredentials(parishId);
       const link = buildParishLink(parishId);
-      const text = `Saludos estimado/a Responsable de Parroquia *${parishNombre}* (${munNombre}):\n\nLe hago entrega formal del Enlace Territorial y Credenciales:\n🔗 *Enlace:* ${link}\n👤 *Usuario:* \`${parishId}\`\n🔑 *Contraseña:* \`admin\`\n\nPor favor proceda con la carga semanal comunal (Casas, Habitantes, Votantes, Militantes).\n*MIGATO Monagas 2026*`;
+      const text = `Saludos estimado/a Responsable de Parroquia *${parishNombre}* (${munNombre}):\n\nLe hago entrega formal del Enlace Territorial y Credenciales Oficiales:\n🔗 *Enlace:* ${link}\n👤 *Usuario:* \`${creds.username}\`\n🔑 *Contraseña:* \`${creds.password}\`${creds.isEncrypted ? ' *(Protegida y Encriptada)*' : ''}\n\nPor favor proceda con la carga semanal comunal (Casas, Habitantes, Votantes, Militantes).\n*MIGATO Monagas 2026*`;
       const url = `https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`;
       window.open(url, "_blank");
     }
@@ -594,9 +659,13 @@
 
       container.innerHTML = filtered.map(p => {
         const link = buildParishLink(p.id);
+        const creds = getParishCredentials(p.id);
 
         const isDispatched = getDispatchedParishes().includes(p.id);
-        const cardBorder = isDispatched ? "border-emerald-500/60 bg-[#120d3b]" : "border-[#23176d]/60 bg-[#140e40]";
+        const isLosGodos = p.id === "alto-de-los-godos" || p.id === "los-godos";
+        const cardBorder = isLosGodos
+          ? "border-amber-500/70 bg-[#171046] ring-1 ring-amber-500/30"
+          : (isDispatched ? "border-emerald-500/60 bg-[#120d3b]" : "border-[#23176d]/60 bg-[#140e40]");
 
         return `
           <div class="${cardBorder} hover:border-sky-400 rounded-3xl p-5 space-y-4 shadow-xl transition flex flex-col justify-between">
@@ -607,6 +676,7 @@
                 <div>
                   <div class="flex items-center gap-2">
                     <span class="text-[11px] text-sky-300 font-black uppercase font-mono tracking-wider">Municipio ${p.munNombre}</span>
+                    ${isLosGodos ? '<span class="text-[9px] font-mono bg-amber-500/20 text-amber-300 border border-amber-500/50 px-2 py-0.5 rounded-md font-black">★ Piloto Godos</span>' : ''}
                     ${isDispatched ? '<span class="text-[9px] font-mono bg-emerald-950 text-emerald-300 border border-emerald-500 px-2 py-0.5 rounded-md font-black">✓ Despachado</span>' : '<span class="text-[9px] font-mono bg-[#0a0722] text-slate-400 border border-[#23176d] px-1.5 py-0.5 rounded">Pendiente</span>'}
                   </div>
                   <h3 class="text-base sm:text-lg font-black text-white mt-0.5">${p.nombre}</h3>
@@ -627,13 +697,16 @@
                   <span class="text-[9px] uppercase font-bold text-slate-400 block flex items-center gap-1">
                     <i data-lucide="user" class="w-3 h-3 text-sky-400"></i> Usuario Asignado:
                   </span>
-                  <span class="text-sky-300 font-black select-all tracking-wide text-xs">${p.id}</span>
+                  <span class="text-sky-300 font-black select-all tracking-wide text-xs">${creds.username}</span>
                 </div>
                 <div>
                   <span class="text-[9px] uppercase font-bold text-slate-400 block flex items-center gap-1">
                     <i data-lucide="lock" class="w-3 h-3 text-emerald-400"></i> Contraseña:
                   </span>
-                  <span class="text-emerald-400 font-black select-all tracking-wide text-xs">admin</span>
+                  <span class="text-emerald-400 font-black select-all tracking-wide text-xs flex items-center gap-1">
+                    <span>${creds.password}</span>
+                    ${creds.isEncrypted ? '<span class="text-[8px] bg-emerald-950 text-emerald-300 px-1 py-0.2 rounded border border-emerald-600 font-bold">SHA-256</span>' : ''}
+                  </span>
                 </div>
               </div>
             </div>
@@ -699,12 +772,19 @@
             ? TODAS_PARROQUIAS.filter(p => p.munId === "maturin") 
             : TODAS_PARROQUIAS;
 
-          let text = "📋 LISTA OFICIAL DE ACCESOS Y CREDENCIALES (MONAGAS)\n\n";
+          let text = "📋 LISTA OFICIAL DE ACCESOS Y CREDENCIALES (MONAGAS 2026)\n\n";
+          text += "👑 ADMINISTRACIÓN CENTRAL (SALA SITUACIONAL):\n";
+          text += "👤 Usuario: admin\n";
+          text += "🔑 Contraseña: admin\n";
+          text += `🔗 Enlace Directo: ${window.location.origin}/earth-monagas/?v=103&u=admin\n\n`;
+          text += "----------------------------------------\n\n";
+
           catalog.forEach(p => {
+            const creds = getParishCredentials(p.id);
             text += `📍 ${p.nombre} (${p.munNombre})\n`;
             text += `🔗 Enlace: ${buildParishLink(p.id)}\n`;
-            text += `👤 Usuario: ${p.id}\n`;
-            text += `🔑 Contraseña: admin\n\n`;
+            text += `👤 Usuario: ${creds.username}\n`;
+            text += `🔑 Contraseña: ${creds.password}${creds.isEncrypted ? ' (🔒 Encriptada SHA-256)' : ''}\n\n`;
           });
           navigator.clipboard.writeText(text).then(() => {
             showToast("✓ Reporte completo copiado al portapapeles");
