@@ -146,7 +146,7 @@
       </p>
     </div>
 
-    <!-- TARJETA DEL FORMULARIO DE CARGA (SOLO 4 CAMPOS + SECTOR) -->
+    <!-- TARJETA DEL FORMULARIO DE CARGA (SUB-PARROQUIA + SECTOR + 4 CAMPOS) -->
     <div class="bg-slate-900 border-2 border-emerald-500/40 rounded-3xl p-5 shadow-2xl space-y-4 relative">
       
       <div class="flex items-center justify-between border-b border-slate-800 pb-3">
@@ -166,15 +166,27 @@
       <form id="form-sector" class="space-y-4">
         <input type="hidden" id="field-editing-id" value="">
 
-        <!-- Selector de Sector / Comunidad -->
+        <!-- 1. Filtro / Selector de Sub-Parroquia -->
+        <div>
+          <label class="block text-[11px] font-bold uppercase text-purple-300 mb-1 flex items-center justify-between">
+            <span>1. Sub-Parroquia *</span>
+            <span class="text-[10px] text-purple-400 font-mono font-bold">Segmentación</span>
+          </label>
+          <select id="select-subparroquia" class="w-full px-3.5 py-2.5 bg-slate-950 border border-purple-500/50 rounded-xl text-white text-xs sm:text-sm font-bold focus:outline-none focus:border-purple-400 cursor-pointer">
+            <option value="">-- Ver Todas las Sub-Parroquias --</option>
+            <!-- Inyectado dinámicamente -->
+          </select>
+        </div>
+
+        <!-- 2. Selector de Sector / Comunidad (Filtrado por Sub-Parroquia) -->
         <div>
           <label class="block text-[11px] font-bold uppercase text-slate-300 mb-1 flex items-center justify-between">
-            <span>Sector o Comunidad *</span>
-            <span class="text-[10px] text-sky-400 font-mono">Seleccionar</span>
+            <span>2. Sector o Comunidad *</span>
+            <span id="badge-count-sectores" class="text-[10px] text-sky-400 font-mono font-bold">0 Sectores</span>
           </label>
           <select id="select-sector" required class="w-full px-3.5 py-3 bg-slate-950 border border-slate-700 rounded-xl text-white text-xs sm:text-sm font-bold focus:outline-none focus:border-emerald-500 cursor-pointer">
             <option value="">-- Toca aquí para elegir el sector --</option>
-            <!-- Inyectado dinámicamente con nombres limpios sin números expuestos -->
+            <!-- Inyectado dinámicamente con nombres limpios según la sub-parroquia -->
             <option value="__nuevo__">➕ Registrar Nuevo Sector (Si falta en la lista)...</option>
           </select>
         </div>
@@ -253,7 +265,7 @@
     } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
     import { CATALOGO_MONAGAS } from "../earth-monagas/js/catalogoMonagas.js?v=90";
-    import { SECTORES_LAPUENTE } from "../earth-monagas/js/geoMonagas.js?v=90";
+    import { SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "../earth-monagas/js/geoMonagas.js?v=90";
 
     const FIREBASE_CONFIG = {
       apiKey: "AIzaSyCK8DBZWsVflfMoA_z-9XupX0BvLE4iJjc",
@@ -363,8 +375,29 @@
         return `${this.munId}_${this.parishId}`;
       }
 
+      getOfficialSubparroquias() {
+        // 1. Alto de Los Godos: las 10 sub-parroquias oficiales
+        if (this.munId === "maturin" && this.parishId === "alto-de-los-godos") {
+          return JSON.parse(JSON.stringify(SUBPARROQUIAS_GODOS || []));
+        }
+
+        // 2. San Simón: las 3 sub-parroquias oficiales
+        if (this.munId === "maturin" && this.parishId === "san-simon") {
+          return [
+            { id: "sub-ss-casco", nombre: "Sub-Parroquia 1 • Casco Central" },
+            { id: "sub-ss-palonegro", nombre: "Sub-Parroquia 2 • Palo Negro / Brisas" },
+            { id: "sub-ss-muralla", nombre: "Sub-Parroquia 3 • La Muralla" }
+          ];
+        }
+
+        // 3. Fallback genérico para otras parroquias
+        return [
+          { id: `sub-${this.parishId}-1`, nombre: `Sub-Parroquia 1 • ${this.parishNombre} Centro` }
+        ];
+      }
+
       getOfficialParishSectors() {
-        // 1. Caso Alto de Los Godos: 11 sectores oficiales de La Puente
+        // 1. Caso Alto de Los Godos: 11 sectores oficiales de La Puente (Sub-Parroquia 6)
         if (this.munId === "maturin" && this.parishId === "alto-de-los-godos") {
           return JSON.parse(JSON.stringify(SECTORES_LAPUENTE || []));
         }
@@ -456,7 +489,9 @@
               }
               const remotePolys = data.poligonos || [];
               this.poligonos = this.mergeWithOfficialSectors(remotePolys);
-              this.subparroquias = data.subparroquias || [];
+              this.subparroquias = (data.subparroquias && data.subparroquias.length > 0) 
+                ? data.subparroquias 
+                : this.getOfficialSubparroquias();
             } else {
               this.loadDefaultFallback();
             }
@@ -474,6 +509,7 @@
 
       loadDefaultFallback() {
         this.poligonos = this.getOfficialParishSectors();
+        this.subparroquias = this.getOfficialSubparroquias();
       }
 
       fallbackToLocalStorage() {
@@ -484,7 +520,9 @@
             const p = parsed?.municipios?.[this.munId]?.parroquias?.[this.parishId];
             if (p && p.poligonos && p.poligonos.length > 0) {
               this.poligonos = this.mergeWithOfficialSectors(p.poligonos);
-              this.subparroquias = p.subparroquias || [];
+              this.subparroquias = (p.subparroquias && p.subparroquias.length > 0)
+                ? p.subparroquias 
+                : this.getOfficialSubparroquias();
               this.renderAll();
               return;
             }
@@ -604,6 +642,15 @@
           });
         }
 
+        // Filtro de Sub-Parroquia
+        const selectSub = document.getElementById("select-subparroquia");
+        if (selectSub) {
+          selectSub.addEventListener("change", () => {
+            this.renderSectorDropdown();
+            this.resetFormNumbers();
+          });
+        }
+
         // Formulario Sector
         const formSector = document.getElementById("form-sector");
         if (formSector) {
@@ -648,6 +695,12 @@
         this.editingSectorId = sec.id;
         document.getElementById("field-editing-id").value = sec.id;
         
+        // Sincronizar selector de sub-parroquia si el sector la tiene asignada
+        const selectSub = document.getElementById("select-subparroquia");
+        if (sec.subParroquiaId && selectSub) {
+          selectSub.value = sec.subParroquiaId;
+        }
+
         // Cargar campos si ya tienen datos o dejarlos en blanco para llenado semanal
         document.getElementById("input-casas").value = sec.casas || "";
         document.getElementById("input-habitantes").value = sec.habitantes || "";
@@ -673,6 +726,7 @@
       }
 
       async handleSubmitSector() {
+        const selectSub = document.getElementById("select-subparroquia");
         const selectSec = document.getElementById("select-sector");
         const inputNuevo = document.getElementById("input-nuevo-sector");
         const inputCasas = document.getElementById("input-casas");
@@ -694,6 +748,9 @@
         const fechaCorte = now.toISOString().slice(0, 10);
         const semanaEtiqueta = `Semana ${weekNumber}`;
 
+        const selectedSubId = selectSub ? selectSub.value : "";
+        const defaultSubId = selectedSubId || (this.subparroquias[0] ? this.subparroquias[0].id : `sub-${this.parishId}-1`);
+
         let sectorObj = null;
 
         if (selectSec.value === "__nuevo__") {
@@ -705,6 +762,7 @@
           const newId = `sec-${this.parishId}-${Date.now()}`;
           sectorObj = {
             id: newId,
+            subParroquiaId: defaultSubId,
             parroquiaId: this.parishId,
             nombre: nombreNuevo,
             casas,
@@ -731,6 +789,9 @@
         } else if (selectSec.value) {
           sectorObj = this.poligonos.find(p => p.id === selectSec.value);
           if (sectorObj) {
+            if (selectedSubId) {
+              sectorObj.subParroquiaId = selectedSubId;
+            }
             sectorObj.casas = casas;
             sectorObj.familias = familias;
             sectorObj.habitantes = habitantes;
@@ -773,21 +834,54 @@
       }
 
       renderAll() {
+        this.renderSubparroquiaDropdown();
         this.renderSectorDropdown();
         if (window.lucide && typeof window.lucide.createIcons === "function") {
           window.lucide.createIcons();
         }
       }
 
-      renderSectorDropdown() {
-        const select = document.getElementById("select-sector");
+      renderSubparroquiaDropdown() {
+        const select = document.getElementById("select-subparroquia");
         if (!select) return;
 
         const currentVal = select.value;
+        let html = '<option value="">-- Ver Todas las Sub-Parroquias --</option>';
+
+        this.subparroquias.forEach(sp => {
+          const title = sp.nombre || sp.alias || sp.id;
+          html += `<option value="${sp.id}">${title}</option>`;
+        });
+
+        select.innerHTML = html;
+        if (currentVal && select.querySelector(`option[value="${currentVal}"]`)) {
+          select.value = currentVal;
+        }
+      }
+
+      renderSectorDropdown() {
+        const select = document.getElementById("select-sector");
+        const selectSub = document.getElementById("select-subparroquia");
+        const badgeCount = document.getElementById("badge-count-sectores");
+        if (!select) return;
+
+        const selectedSubId = selectSub ? selectSub.value : "";
+        const currentVal = select.value;
+
+        // Filtrar sectores por la sub-parroquia elegida si seleccionó una
+        let filteredSectors = this.poligonos;
+        if (selectedSubId) {
+          filteredSectors = this.poligonos.filter(s => String(s.subParroquiaId) === String(selectedSubId));
+        }
+
+        if (badgeCount) {
+          badgeCount.textContent = `${filteredSectors.length} Sectores`;
+        }
+
         let html = '<option value="">-- Toca aquí para elegir el sector --</option>';
 
-        // Listar sectores por nombre limpio, sin exponer números sensibles
-        this.poligonos.forEach(s => {
+        // Listar sectores limpios sin exponer números sensibles
+        filteredSectors.forEach(s => {
           html += `<option value="${s.id}">${s.nombre}</option>`;
         });
 
