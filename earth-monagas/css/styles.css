@@ -219,6 +219,7 @@ input, select, textarea {
 }
 
 /* Forzar ocultamiento infalible de modales (sin interferir con clases utilitarias responsivas de Tailwind) */
+#dialog-properties.hidden,
 #modal-select-parish.hidden,
 #modal-select-subparish.hidden,
 #modal-auth-login.hidden,
@@ -228,6 +229,17 @@ input, select, textarea {
   display: none !important;
   visibility: hidden !important;
   pointer-events: none !important;
+}
+
+/* Modal Selector de Parroquia Activo: z-index supremo, clics garantizados e interacción total */
+#modal-select-parish:not(.hidden) {
+  display: flex !important;
+  z-index: 100050 !important;
+  pointer-events: auto !important;
+}
+
+#modal-select-parish:not(.hidden) * {
+  pointer-events: auto;
 }
 
 /* Modo de dibujo activo: silenciar tooltips para que no estorben ni confundan al trazar */

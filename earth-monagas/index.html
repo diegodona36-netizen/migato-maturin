@@ -56,7 +56,7 @@
   <meta http-equiv="Expires" content="0" />
 
   <!-- Custom Styles -->
-  <link rel="stylesheet" href="css/styles.css?v=99">
+  <link rel="stylesheet" href="css/styles.css?v=100">
 
   <!-- Script de Autenticación Rápida, Limpieza Integral de Caché y Activador de Herramientas -->
   <script>
@@ -89,13 +89,13 @@
     }
   </style>
   <script>
-    // Auto-actualización obligatoria a la versión más reciente v=99
+    // Auto-actualización obligatoria a la versión más reciente v=100
     (function() {
       try {
         var p = new URLSearchParams(window.location.search);
         var curV = p.get('v');
-        if (!curV || curV !== '99') {
-          p.set('v', '99');
+        if (!curV || curV !== '100') {
+          p.set('v', '100');
           window.location.replace(window.location.pathname + '?' + p.toString() + window.location.hash);
         }
       } catch(e) {}
@@ -772,7 +772,7 @@
   <!-- ============================================================== -->
   <!-- 4. DIÁLOGO FLOTANTE DE PROPIEDADES Y MILITANTES (ESTILO GE)    -->
   <!-- ============================================================== -->
-  <div id="dialog-properties" style="z-index: 99999;" class="fixed inset-0 bg-slate-950/85 backdrop-blur-sm hidden items-end sm:items-center justify-center p-0 sm:p-4">
+  <div id="dialog-properties" style="z-index: 99999; display: none;" class="fixed inset-0 bg-slate-950/85 backdrop-blur-sm hidden items-end sm:items-center justify-center p-0 sm:p-4">
     <div class="bg-slate-900 border-t sm:border border-slate-700 w-full max-w-full sm:max-w-xl rounded-t-3xl sm:rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[92vh]">
       
       <!-- Cabecera del Diálogo -->
@@ -1085,7 +1085,7 @@
   <!-- ============================================================== -->
   <!-- 4.5. MODAL REQUISITO / SELECCIÓN DE SUB-PARROQUIA (NIVEL 4)    -->
   <!-- ============================================================== -->
-  <div id="modal-select-subparish" style="z-index: 99999;" class="fixed inset-0 bg-slate-950/85 backdrop-blur-sm hidden items-center justify-center p-3 sm:p-4">
+  <div id="modal-select-subparish" style="z-index: 99999; display: none;" class="fixed inset-0 bg-slate-950/85 backdrop-blur-sm hidden items-center justify-center p-3 sm:p-4">
     <div class="bg-slate-900 border border-purple-500/60 w-full max-w-md rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.9)] p-4 sm:p-5 space-y-3.5 max-h-[85vh] flex flex-col animate-in fade-in duration-200">
       <div class="flex items-start justify-between border-b border-slate-800 pb-2.5 gap-2">
         <div class="flex items-center gap-2.5">
@@ -1111,7 +1111,7 @@
   <!-- ============================================================== -->
   <!-- 4.6. MODAL CONFIGURACIÓN FIREBASE FIRESTORE EN TIEMPO REAL      -->
   <!-- ============================================================== -->
-  <div id="modal-firebase-config" style="z-index: 99999;" class="fixed inset-0 bg-slate-950/85 backdrop-blur-sm hidden items-center justify-center p-3 sm:p-4">
+  <div id="modal-firebase-config" style="z-index: 99999; display: none;" class="fixed inset-0 bg-slate-950/85 backdrop-blur-sm hidden items-center justify-center p-3 sm:p-4">
     <div class="bg-slate-900 border border-sky-500/60 w-full max-w-lg rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.9)] p-4 sm:p-5 space-y-3.5 max-h-[90vh] flex flex-col animate-in fade-in duration-200">
       <div class="flex items-start justify-between border-b border-slate-800 pb-2.5 gap-2">
         <div class="flex items-center gap-2.5">
@@ -1186,15 +1186,15 @@
   <!-- ============================================================== -->
   <!-- 5. MODAL SELECTOR RÁPIDO PARA CAMBIAR PARROQUIA                -->
   <!-- ============================================================== -->
-  <div id="modal-select-parish" style="z-index: 99999; display: none;" class="fixed inset-0 bg-slate-950/85 backdrop-blur-sm hidden items-center justify-center p-3 sm:p-4" onclick="if(event.target === this) window.earthApp?.closeParishSelector ? window.earthApp.closeParishSelector() : (this.style.display = 'none')">
+  <div id="modal-select-parish" style="z-index: 100050; display: none;" class="fixed inset-0 bg-slate-950/85 backdrop-blur-sm hidden items-center justify-center p-3 sm:p-4" onclick="if(event.target === this) { if (window.earthApp?.closeParishSelector) window.earthApp.closeParishSelector(); else { this.style.display = 'none'; this.classList.add('hidden'); } }">
     <div class="bg-slate-900 border border-slate-700 w-full max-w-lg rounded-2xl shadow-2xl p-4 sm:p-5 space-y-3 max-h-[85vh] flex flex-col pointer-events-auto">
       <div class="flex items-center justify-between border-b border-slate-800 pb-2.5">
         <div>
           <span class="text-[10px] font-bold text-amber-400 uppercase tracking-wider">Territorio de Monagas</span>
           <h3 class="text-base font-black text-white">Seleccionar Parroquia de Trabajo</h3>
         </div>
-        <button type="button" id="btn-close-parish-modal" onclick="window.earthApp?.closeParishSelector ? window.earthApp.closeParishSelector() : (document.getElementById('modal-select-parish').style.display = 'none')" class="p-1.5 rounded-lg text-slate-400 hover:text-white bg-slate-800/80 hover:bg-slate-700 transition cursor-pointer" title="Cerrar ventana">
-          <i data-lucide="x" class="w-4 h-4"></i>
+        <button type="button" id="btn-close-parish-modal" data-action="close-parish-modal" onclick="if(window.earthApp?.closeParishSelector) window.earthApp.closeParishSelector(); else { const m = document.getElementById('modal-select-parish'); if (m) { m.style.display = 'none'; m.classList.add('hidden'); } }" class="p-1.5 rounded-lg text-slate-400 hover:text-white bg-slate-800/80 hover:bg-slate-700 transition cursor-pointer" title="Cerrar ventana">
+          <i data-lucide="x" class="w-4 h-4 pointer-events-none"></i>
         </button>
       </div>
 
@@ -1207,7 +1207,7 @@
   <!-- ============================================================== -->
   <!-- 6. MODAL SUPERPOSICIÓN DE IMÁGENES (IMAGE OVERLAY)             -->
   <!-- ============================================================== -->
-  <div id="modal-image-overlay" style="z-index: 99999;" class="fixed inset-0 bg-slate-950/85 backdrop-blur-sm hidden items-center justify-center p-4">
+  <div id="modal-image-overlay" style="z-index: 99999; display: none;" class="fixed inset-0 bg-slate-950/85 backdrop-blur-sm hidden items-center justify-center p-4">
     <div class="bg-slate-900 border border-slate-700 w-full max-w-md rounded-2xl shadow-2xl p-5 space-y-4">
       
       <div class="flex items-center justify-between border-b border-slate-800 pb-2.5">
@@ -1486,7 +1486,7 @@
   </div>
 
   <!-- SCRIPT -->
-  <script type="module" src="js/app.js?v=99"></script>
+  <script type="module" src="js/app.js?v=100"></script>
   <script>
     if (window.lucide && typeof window.lucide.createIcons === 'function') {
       window.lucide.createIcons();

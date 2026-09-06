@@ -2,25 +2,44 @@
  * Controlador Principal — Google Earth Pro Web (Edición Estado Monagas)
  * Robusto, 100% Operativo y Totalmente Individualizado
  */
-import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=99";
-import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=99";
-import { getAllParishesForSelector } from "./usersCatalog.js?v=99";
-import { EarthStore } from "./earthStore.js?v=99";
-import { EarthMapEngine } from "./mapEngine.js?v=99";
-import { PropertiesDialog } from "./propertiesDialog.js?v=99";
-import { ToolsManager } from "./toolsManager.js?v=99";
-import { detectParishFromGeometry } from "./geoMonagas.js?v=99";
-import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=99";
+import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=100";
+import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=100";
+import { getAllParishesForSelector } from "./usersCatalog.js?v=100";
+import { EarthStore } from "./earthStore.js?v=100";
+import { EarthMapEngine } from "./mapEngine.js?v=100";
+import { PropertiesDialog } from "./propertiesDialog.js?v=100";
+import { ToolsManager } from "./toolsManager.js?v=100";
+import { detectParishFromGeometry } from "./geoMonagas.js?v=100";
+import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=100";
 import { 
   getSavedFirebaseConfig, 
   saveFirebaseConfig, 
   isFirebaseConfigured, 
   initFirebase 
-} from "./firebaseConfig.js?v=99";
+} from "./firebaseConfig.js?v=100";
+
+// Controladores globales infalibles accesibles en cualquier contexto
+window.closeParishSelectorModal = function() {
+  const modal = document.getElementById("modal-select-parish");
+  if (modal) {
+    modal.classList.add("hidden");
+    modal.classList.remove("flex");
+    modal.style.setProperty("display", "none", "important");
+  }
+};
+
+window.selectParishGlobal = function(munId, parishId) {
+  window.closeParishSelectorModal();
+  if (window.earthApp && typeof window.earthApp.selectParish === "function") {
+    window.earthApp.selectParish(munId, parishId, true);
+  }
+};
 
 class EarthMonagasApp {
   constructor() {
     window.earthApp = this;
+    window.earthApp.closeParishSelector = () => window.closeParishSelectorModal();
+    window.earthApp.selectParishFromModal = (m, p) => window.selectParishGlobal(m, p);
     this.store = null;
     this.mapEngine = null;
     this.propDialog = null;
@@ -1095,25 +1114,54 @@ class EarthMonagasApp {
     const btnClose = document.getElementById("btn-close-parish-modal");
 
     if (btnOpen) {
-      btnOpen.onclick = (e) => {
+      btnOpen.addEventListener("click", (e) => {
         e?.preventDefault?.();
+        e?.stopPropagation?.();
         this.openParishSelector();
-      };
+      });
     }
 
     if (btnClose) {
-      btnClose.onclick = (e) => {
+      btnClose.addEventListener("click", (e) => {
         e?.preventDefault?.();
+        e?.stopPropagation?.();
         this.closeParishSelector();
-      };
+      });
     }
 
     if (modal) {
-      modal.onclick = (e) => {
+      // Delegación de eventos infalible sobre el modal (captura clics en cualquier elemento interno)
+      modal.addEventListener("click", (e) => {
+        // 1. Clic en el backdrop exterior fuera de la tarjeta
         if (e.target === modal) {
+          e.preventDefault();
+          e.stopPropagation();
           this.closeParishSelector();
+          return;
         }
-      };
+
+        // 2. Clic en botón cerrar X
+        if (e.target.closest("#btn-close-parish-modal, [data-action='close-parish-modal']")) {
+          e.preventDefault();
+          e.stopPropagation();
+          this.closeParishSelector();
+          return;
+        }
+
+        // 3. Clic en botón de seleccionar parroquia
+        const parishBtn = e.target.closest("[data-action='select-parish']");
+        if (parishBtn) {
+          e.preventDefault();
+          e.stopPropagation();
+          const munId = parishBtn.dataset.munId;
+          const parishId = parishBtn.dataset.parishId;
+          if (munId && parishId) {
+            this.closeParishSelector();
+            this.selectParish(munId, parishId, true);
+          }
+          return;
+        }
+      });
     }
   }
 
@@ -1131,7 +1179,7 @@ class EarthMonagasApp {
     if (modalLogin) {
       modalLogin.classList.remove("hidden");
       modalLogin.classList.add("flex");
-      modalLogin.style.display = "flex";
+      modalLogin.style.setProperty("display", "flex", "important");
     }
 
     if (window.lucide && typeof window.lucide.createIcons === "function") {
@@ -1150,7 +1198,7 @@ class EarthMonagasApp {
     this.renderParishesCatalog();
     modal.classList.remove("hidden");
     modal.classList.add("flex");
-    modal.style.display = "flex";
+    modal.style.setProperty("display", "flex", "important");
   }
 
   renderParishesCatalog() {
@@ -1167,9 +1215,14 @@ class EarthMonagasApp {
         const hasData = subCount > 0 || polyCount > 0;
 
         return `
-          <button onclick="window.earthApp.selectParishFromModal('${mun.id}', '${p.id}')" class="px-3 py-2 rounded-xl text-left text-xs font-semibold transition flex items-center justify-between cursor-pointer ${isCurrent ? 'bg-[#23176d] text-white font-black shadow-lg border border-sky-400' : (hasData ? 'bg-[#140e40] hover:bg-[#23176d] text-slate-100 border border-[#23176d]' : 'bg-[#0c0926] hover:bg-[#140e40] text-slate-300 border border-[#23176d]/40')}">
-            <span class="truncate">${p.nombre}</span>
-            <div class="flex items-center gap-1.5 shrink-0 ml-1">
+          <button type="button"
+            data-action="select-parish"
+            data-mun-id="${mun.id}"
+            data-parish-id="${p.id}"
+            onclick="window.selectParishGlobal('${mun.id}', '${p.id}')"
+            class="px-3 py-2 rounded-xl text-left text-xs font-semibold transition flex items-center justify-between cursor-pointer ${isCurrent ? 'bg-[#23176d] text-white font-black shadow-lg border border-sky-400' : (hasData ? 'bg-[#140e40] hover:bg-[#23176d] text-slate-100 border border-[#23176d]' : 'bg-[#0c0926] hover:bg-[#140e40] text-slate-300 border border-[#23176d]/40')}">
+            <span class="truncate pointer-events-none">${p.nombre}</span>
+            <div class="flex items-center gap-1.5 shrink-0 ml-1 pointer-events-none">
               ${hasData ? `<span class="text-[9px] font-mono px-1.5 py-0.5 rounded bg-[#08061a] text-sky-300 border border-[#23176d] font-bold">${subCount} ejes • ${polyCount} sec</span>` : ''}
               <i data-lucide="chevron-right" class="w-3.5 h-3.5 opacity-60"></i>
             </div>
@@ -1199,12 +1252,7 @@ class EarthMonagasApp {
   }
 
   closeParishSelector() {
-    const modal = document.getElementById("modal-select-parish");
-    if (modal) {
-      modal.classList.add("hidden");
-      modal.classList.remove("flex");
-      modal.style.display = "none";
-    }
+    window.closeParishSelectorModal();
   }
 
   selectParishFromModal(munId, parishId) {
@@ -2230,8 +2278,8 @@ class EarthMonagasApp {
     };
     this.openLayers = openLayers;
     window.earthApp.openLayers = openLayers;
-    window.earthApp.closeParishSelector = () => this.closeParishSelector();
-    window.earthApp.selectParishFromModal = (m, p) => this.selectParishFromModal(m, p);
+    window.earthApp.closeParishSelector = () => window.closeParishSelectorModal();
+    window.earthApp.selectParishFromModal = (m, p) => window.selectParishGlobal(m, p);
 
     if (btnToggleSidebar) btnToggleSidebar.addEventListener("click", () => toggleSidebar());
     if (btnCloseSidebar) btnCloseSidebar.addEventListener("click", () => toggleSidebar(false));
