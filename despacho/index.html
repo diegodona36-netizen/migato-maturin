@@ -178,13 +178,13 @@
 
     function getBaseUrl() {
       const loc = window.location;
-      // Reemplazar /despacho/ por /earth-monagas/
-      const path = loc.pathname.replace(/\/despacho\/?.*$/, "/earth-monagas/");
+      // Reemplazar /despacho/ por el formulario móvil /carga/
+      const path = loc.pathname.replace(/\/despacho\/?.*$/, "/carga/");
       return `${loc.origin}${path}`;
     }
 
     function buildParishLink(parishId) {
-      return `${getBaseUrl()}?v=90&p=${parishId}`;
+      return `${getBaseUrl()}?p=${parishId}`;
     }
 
     function showToast(message) {
