@@ -241,7 +241,7 @@ class EarthMonagasApp {
       }
 
       // Actualizar título de pestaña
-      document.title = `${parish.nombre} (${munObj ? munObj.nombre : 'Monagas'}) • Google Earth Pro`;
+      document.title = `${parish.nombre} (${munObj ? munObj.nombre : 'Monagas'}) • MIGATO`;
 
       // Actualizar indicador de parroquia en banner de dibujo si está activo
       this.updateDrawingBannerParishText();
@@ -622,7 +622,7 @@ class EarthMonagasApp {
     if (!bar) {
       bar = document.createElement("div");
       bar.id = "earth-quick-parish-bar";
-      bar.className = "fixed bottom-3 left-1/2 -translate-x-1/2 z-[1500] max-w-[95vw] overflow-x-auto flex items-center gap-1.5 px-3 py-2 bg-slate-950/95 border border-purple-500/60 rounded-2xl shadow-2xl backdrop-blur-md transition-all pointer-events-auto";
+      bar.className = "fixed bottom-3 left-1/2 -translate-x-1/2 z-[1500] max-w-[95vw] overflow-x-auto flex items-center gap-1.5 px-3 py-2 bg-[#08061a]/95 border border-[#23176d] rounded-2xl shadow-2xl backdrop-blur-md transition-all pointer-events-auto";
       document.body.appendChild(bar);
     }
 
@@ -639,7 +639,7 @@ class EarthMonagasApp {
     bar.classList.remove("hidden");
 
     bar.innerHTML = `
-      <div class="flex items-center gap-1 text-[10px] font-black uppercase text-purple-300 font-mono shrink-0 mr-1">
+      <div class="flex items-center gap-1.5 text-[10px] font-black uppercase text-sky-400 font-mono shrink-0 mr-1.5 pl-1">
         <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
         <span class="hidden sm:inline">En Red:</span>
       </div>
@@ -649,12 +649,12 @@ class EarthMonagasApp {
           const count = (p.poligonos || []).length;
           const subCount = (p.subparroquias || []).length;
           const bg = isActive 
-            ? "bg-gradient-to-r from-purple-600 to-indigo-600 text-white border-purple-300 shadow-md shadow-purple-900/50 font-black scale-105" 
-            : "bg-slate-900/90 hover:bg-purple-950/80 text-slate-200 border-slate-700 font-bold hover:text-purple-200";
+            ? "bg-[#23176d] text-white border-sky-400 shadow-md shadow-[#23176d]/60 font-black scale-105" 
+            : "bg-[#140e40]/90 hover:bg-[#23176d] text-slate-200 border border-[#23176d]/80 font-bold hover:text-white";
           return `
             <button onclick="window.earthApp.selectParish('${munId}', '${parishId}')" class="px-3 py-1.5 rounded-xl text-xs border flex items-center gap-2 shrink-0 transition-all active:scale-95 cursor-pointer ${bg}">
-              <span>📍 ${p.nombre}</span>
-              <span class="text-[10px] font-mono opacity-90 bg-black/40 px-1.5 py-0.5 rounded-md border border-white/10">
+              <span class="whitespace-nowrap">📍 ${p.nombre}</span>
+              <span class="text-[10px] font-mono font-bold text-sky-300 bg-[#08061a]/80 px-1.5 py-0.5 rounded-md border border-[#23176d]">
                 ${count > 0 ? `${count} sec` : `${subCount} ejes`}
               </span>
             </button>
@@ -730,20 +730,32 @@ class EarthMonagasApp {
     // Barra de acceso directo a otras parroquias sincronizadas en la red (solo en Dirección General)
     if (this.isGeneralMode && otherParishesWithData.length > 0 && !q) {
       html += `
-        <div class="mb-3 p-2.5 bg-slate-950/90 border border-purple-500/50 rounded-2xl shadow-lg space-y-1.5">
-          <div class="flex items-center justify-between">
-            <span class="text-[10px] font-black uppercase text-purple-300 tracking-wider flex items-center gap-1">
-              <span>🌐</span> Territorios con Datos en Red:
+        <div class="mb-3 p-2.5 bg-[#08061a]/95 border border-[#23176d] rounded-2xl shadow-xl space-y-2">
+          <div class="flex items-center justify-between px-1">
+            <span class="text-[10px] font-black uppercase text-sky-400 tracking-wider flex items-center gap-1.5">
+              <span>🌐</span> Territorios con Datos en Red
             </span>
-            <span class="text-[9px] text-emerald-400 font-mono font-bold animate-pulse">● En Vivo</span>
+            <span class="text-[9px] text-emerald-400 font-mono font-bold flex items-center gap-1">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+              En Vivo
+            </span>
           </div>
-          <div class="flex flex-col gap-1">
+          <div class="flex flex-col gap-1.5">
             ${otherParishesWithData.map(op => `
-              <button onclick="window.earthApp.selectParish('${op.mId}', '${op.pId}')" class="w-full px-2.5 py-1.5 rounded-xl bg-purple-950/60 hover:bg-purple-900/80 border border-purple-500/40 text-left text-xs font-bold text-white flex items-center justify-between active:scale-95 transition cursor-pointer group">
-                <span class="truncate group-hover:text-purple-300">📍 ${op.nombre} <span class="text-[10px] text-slate-400">(${op.munNombre})</span></span>
-                <span class="text-[10px] text-purple-300 font-mono shrink-0 ml-1 font-black bg-purple-900/80 px-1.5 py-0.5 rounded border border-purple-700/50">
-                  ${op.subCount} ejes • ${op.polyCount} sec ➔
-                </span>
+              <button onclick="window.earthApp.selectParish('${op.mId}', '${op.pId}')" class="w-full p-2 rounded-xl bg-[#140e40]/90 hover:bg-[#23176d] border border-[#23176d]/80 hover:border-sky-400/60 text-left text-xs text-white flex items-center justify-between gap-2 active:scale-95 transition cursor-pointer group shadow-sm">
+                <div class="min-w-0 flex-1">
+                  <div class="font-bold text-slate-100 group-hover:text-white truncate flex items-center gap-1.5">
+                    <span class="text-sky-400 shrink-0 text-xs">📍</span>
+                    <span class="truncate">${op.nombre}</span>
+                  </div>
+                  <div class="text-[10px] text-slate-400 font-medium pl-4 truncate">${op.munNombre}</div>
+                </div>
+                <div class="shrink-0 flex items-center gap-1.5">
+                  <span class="text-[10px] font-mono font-bold text-sky-300 bg-[#08061a]/80 px-2 py-0.5 rounded-md border border-[#23176d] whitespace-nowrap">
+                    ${op.subCount} ejes • ${op.polyCount} sec
+                  </span>
+                  <span class="text-slate-400 group-hover:text-white text-xs">➔</span>
+                </div>
               </button>
             `).join("")}
           </div>
@@ -753,11 +765,11 @@ class EarthMonagasApp {
 
     html += `
       <!-- Tarjeta de Parroquia Activa con Resumen de Militancia -->
-      <div class="bg-slate-950/90 p-3 rounded-2xl border border-sky-500/40 mb-3 shadow-lg">
+      <div class="bg-[#08061a]/95 p-3 rounded-2xl border border-[#23176d] mb-3 shadow-xl">
         <div class="flex items-center justify-between mb-1.5">
           <span class="text-[10px] font-bold text-sky-400 uppercase tracking-wider">${munObj?.nombre || 'Municipio'}</span>
           ${this.authManager.canSwitchParish() ? `
-          <button onclick="window.earthApp.openParishSelector()" class="text-[10px] text-amber-400 hover:text-amber-300 font-bold bg-amber-500/10 px-2.5 py-0.5 rounded-lg border border-amber-500/30 active:scale-95 transition cursor-pointer">
+          <button onclick="window.earthApp.openParishSelector()" class="text-[10px] text-amber-300 hover:text-white font-bold bg-amber-500/15 hover:bg-amber-500/25 px-2.5 py-0.5 rounded-lg border border-amber-500/40 active:scale-95 transition cursor-pointer">
             Cambiar ▾
           </button>` : `
           <button onclick="window.earthApp.openSessionModal()" class="text-[10px] text-emerald-400 hover:text-emerald-300 font-bold bg-emerald-950/60 hover:bg-emerald-900/80 px-2 py-0.5 rounded-lg border border-emerald-800/40 flex items-center gap-1 active:scale-95 transition cursor-pointer" title="Parroquia Asignada. Clic para cambiar de parroquia">
@@ -769,22 +781,22 @@ class EarthMonagasApp {
 
         <!-- Resumen Territorial Limpio (Capa 5 y Capa 4) -->
         <div class="grid grid-cols-2 gap-2 mt-2 font-mono">
-          <div class="bg-sky-950/70 border border-sky-600/40 p-1.5 rounded-xl text-center shadow-sm">
+          <div class="bg-[#140e40]/90 border border-[#23176d] p-1.5 rounded-xl text-center shadow-sm">
             <span class="text-[9px] text-sky-400 font-bold uppercase block mb-0.5">Sectores (Capa 5)</span>
-            <span class="text-xs font-black text-sky-300">🔷 ${allPolys.length} Sectores</span>
+            <span class="text-xs font-black text-sky-200">🔷 ${allPolys.length} Sectores</span>
           </div>
-          <div class="bg-purple-950/70 border border-purple-600/40 p-1.5 rounded-xl text-center shadow-sm">
-            <span class="text-[9px] text-purple-400 font-bold uppercase block mb-0.5">Ejes (Capa 4)</span>
-            <span class="text-xs font-black text-purple-300">🟪 ${allSubparroquias.length} Ejes</span>
+          <div class="bg-[#23176d]/40 border border-[#23176d] p-1.5 rounded-xl text-center shadow-sm">
+            <span class="text-[9px] text-indigo-300 font-bold uppercase block mb-0.5">Ejes (Capa 4)</span>
+            <span class="text-xs font-black text-indigo-200">🟪 ${allSubparroquias.length} Ejes</span>
           </div>
         </div>
 
         <div class="flex items-center gap-1.5 mt-2 flex-wrap">
-          <span class="inline-flex items-center gap-1 text-[10px] font-bold text-purple-300 bg-purple-950/60 px-2 py-0.5 rounded-lg border border-purple-800/40">
+          <span class="inline-flex items-center gap-1 text-[10px] font-bold text-indigo-300 bg-[#23176d]/30 px-2 py-0.5 rounded-lg border border-[#23176d]">
             <i data-lucide="shield" class="w-2.5 h-2.5"></i>
             <span>${allSubparroquias.length} ejes</span>
           </span>
-          <span class="inline-flex items-center gap-1 text-[10px] font-bold text-sky-300 bg-sky-950/60 px-2 py-0.5 rounded-lg border border-sky-800/40">
+          <span class="inline-flex items-center gap-1 text-[10px] font-bold text-sky-300 bg-[#140e40] px-2 py-0.5 rounded-lg border border-[#23176d]">
             <i data-lucide="layers" class="w-2.5 h-2.5"></i>
             <span>${allPolys.length} sectores</span>
           </span>
@@ -817,24 +829,24 @@ class EarthMonagasApp {
     }
 
     html += `
-      <!-- SECCIÓN JERÁRQUICA: SUB-PARROQUIAS / EJES COMUNALES (NIVEL 4 Y 5 ESTILO GOOGLE EARTH PRO) -->
+      <!-- SECCIÓN JERÁRQUICA: SUB-PARROQUIAS / EJES COMUNALES (NIVEL 4 Y 5) -->
       <div class="mb-3">
-        <div class="flex items-center justify-between px-2 py-1.5 bg-slate-950/60 rounded-xl border border-purple-900/40 mb-1.5">
-          <span class="flex items-center gap-1.5 text-xs font-black text-purple-400 uppercase tracking-wide">
-            <i data-lucide="folder-tree" class="w-4 h-4 text-purple-400"></i>
+        <div class="flex items-center justify-between px-2.5 py-1.5 bg-[#0c0926] rounded-xl border border-[#23176d]/80 mb-1.5">
+          <span class="flex items-center gap-1.5 text-xs font-black text-indigo-300 uppercase tracking-wide">
+            <i data-lucide="folder-tree" class="w-4 h-4 text-indigo-400"></i>
             <span>Carpetas de Ejes Comunales (${allSubparroquias.length})</span>
           </span>
-          <span class="text-[10px] font-mono font-bold text-purple-300/80 bg-purple-950/80 px-2 py-0.5 rounded-md border border-purple-800/50">Nivel 4 ➔ 5</span>
+          <span class="text-[10px] font-mono font-bold text-sky-300 bg-[#140e40] px-2 py-0.5 rounded-md border border-[#23176d]">Nivel 4 ➔ 5</span>
         </div>
         <div class="space-y-2 mt-1">
     `;
 
     if (allSubparroquias.length === 0) {
       html += `
-        <div class="text-[11px] text-slate-400 px-3 py-3 italic bg-slate-950/40 rounded-xl border border-slate-800/40 text-center space-y-2">
+        <div class="text-[11px] text-slate-400 px-3 py-3 italic bg-[#08061a]/90 rounded-xl border border-[#23176d]/60 text-center space-y-2">
           <p>⚠️ No hay sub-parroquias / ejes comunales creados aún en esta parroquia.</p>
-          <p class="text-slate-500 text-[10px]">Crea primero el eje contenedor (el pote) antes de vaciar los sectores comunales.</p>
-          <button onclick="window.activateEarthTool('subparroquia')" class="px-3 py-1.5 bg-purple-600 hover:bg-purple-500 text-white rounded-xl font-black text-xs inline-flex items-center gap-1 shadow-lg transition active:scale-95 cursor-pointer">
+          <p class="text-slate-500 text-[10px]">Crea primero el eje contenedor antes de registrar los sectores comunales.</p>
+          <button onclick="window.activateEarthTool('subparroquia')" class="px-3 py-1.5 bg-[#23176d] hover:bg-[#31228e] text-white rounded-xl font-black text-xs inline-flex items-center gap-1 shadow-lg border border-sky-400/50 transition active:scale-95 cursor-pointer">
             <i data-lucide="shield" class="w-3.5 h-3.5"></i>
             <span>+ Crear Primer Eje Comunal</span>
           </button>
@@ -866,22 +878,22 @@ class EarthMonagasApp {
         });
 
         html += `
-          <div class="bg-slate-950/80 rounded-2xl border transition shadow-sm overflow-hidden ${isSelected ? 'border-purple-500 ring-1 ring-purple-500/40 shadow-purple-500/10' : 'border-slate-800/80'}">
+          <div class="bg-[#08061a]/95 rounded-2xl border transition shadow-sm overflow-hidden ${isSelected ? 'border-sky-400 ring-1 ring-sky-400/40 bg-[#140e40]/90 shadow-lg' : 'border-[#23176d]/70'}">
             
             <!-- Cabecera de la Carpeta (Sub-Parroquia / Eje Comunal) -->
-            <div class="p-2.5 flex items-center justify-between gap-1.5 hover:bg-purple-950/30 transition cursor-pointer" onclick="window.earthApp.toggleSubParishFolder('${sp.id}')">
+            <div class="p-2.5 flex items-center justify-between gap-1.5 hover:bg-[#140e40]/80 transition cursor-pointer" onclick="window.earthApp.toggleSubParishFolder('${sp.id}')">
               <div class="flex items-center gap-2 min-w-0 flex-1">
-                <button type="button" onclick="event.stopPropagation(); window.earthApp.toggleSubParishFolder('${sp.id}')" class="text-purple-400 hover:text-white p-0.5 text-xs font-mono transition">
+                <button type="button" onclick="event.stopPropagation(); window.earthApp.toggleSubParishFolder('${sp.id}')" class="text-sky-400 hover:text-white p-0.5 text-xs font-mono transition cursor-pointer">
                   ${isExpanded ? '▼' : '▶'}
                 </button>
                 <input type="checkbox" ${sp.visible !== false ? 'checked' : ''} 
                   onclick="event.stopPropagation()"
                   onchange="window.earthApp.toggleSubParishWithChildrenVisibility('${sp.id}')"
-                  class="w-4 h-4 rounded bg-slate-900 border-purple-800 text-purple-600 focus:ring-0 cursor-pointer shrink-0" title="Mostrar u ocultar todo este eje con sus sectores">
+                  class="w-4 h-4 rounded bg-[#140e40] border-[#23176d] text-indigo-500 focus:ring-0 cursor-pointer shrink-0" title="Mostrar u ocultar todo este eje con sus sectores">
                 <span class="text-base shrink-0 select-none">${isExpanded ? '📂' : '📁'}</span>
                 <div class="truncate min-w-0" onclick="event.stopPropagation(); window.earthApp.focusAndEdit('subparroquia', '${sp.id}', false)">
-                  <span class="text-slate-100 font-black block truncate text-xs ${isSelected ? 'text-purple-300' : ''}">${sp.nombre}</span>
-                  <div class="flex items-center gap-1.5 text-[10px] font-mono text-purple-300 flex-wrap">
+                  <span class="text-slate-100 font-black block truncate text-xs ${isSelected ? 'text-sky-300' : ''}">${sp.nombre}</span>
+                  <div class="flex items-center gap-1.5 text-[10px] font-mono text-indigo-200 flex-wrap">
                     <span>🏠 ${totCasas}</span>
                     <span>• 👥 ${totHab}</span>
                     <span>• 🗳️ ${totVot}</span>
@@ -893,18 +905,18 @@ class EarthMonagasApp {
               <!-- Acciones del Eje -->
               <div class="flex items-center gap-1 shrink-0" onclick="event.stopPropagation()">
                 ${!isFieldOperator ? `
-                <button onclick="window.earthApp.startSectorInSubParish('${sp.id}')" class="text-sky-400 hover:text-sky-200 p-1 transition" title="➕ Trazar Sector Comunal dentro de este eje">
+                <button onclick="window.earthApp.startSectorInSubParish('${sp.id}')" class="text-sky-400 hover:text-sky-200 p-1 transition cursor-pointer" title="➕ Trazar Sector Comunal dentro de este eje">
                   <i data-lucide="plus-circle" class="w-4 h-4"></i>
                 </button>
                 ` : ''}
-                <button onclick="window.earthApp.openSubParishFicha('${sp.id}')" class="text-slate-400 hover:text-purple-300 p-1 transition" title="Ficha y Propiedades del Eje">
+                <button onclick="window.earthApp.openSubParishFicha('${sp.id}')" class="text-slate-400 hover:text-indigo-300 p-1 transition cursor-pointer" title="Ficha y Propiedades del Eje">
                   <i data-lucide="edit-2" class="w-3.5 h-3.5"></i>
                 </button>
-                <button onclick="window.earthApp.focusSubParish('${sp.id}', true)" class="text-purple-400 hover:text-purple-200 p-1 transition" title="Enfocar en mapa">
+                <button onclick="window.earthApp.focusSubParish('${sp.id}', true)" class="text-indigo-400 hover:text-indigo-200 p-1 transition cursor-pointer" title="Enfocar en mapa">
                   <i data-lucide="crosshair" class="w-3.5 h-3.5"></i>
                 </button>
                 ${!isFieldOperator ? `
-                <button onclick="window.earthApp.deleteSubParish('${sp.id}')" class="text-slate-500 hover:text-red-400 p-1 transition" title="Eliminar eje">
+                <button onclick="window.earthApp.deleteSubParish('${sp.id}')" class="text-slate-500 hover:text-red-400 p-1 transition cursor-pointer" title="Eliminar eje">
                   <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
                 </button>
                 ` : ''}
@@ -913,9 +925,9 @@ class EarthMonagasApp {
 
             <!-- Contenido de la Carpeta: Lista de Sectores Hijos Indentados -->
             ${isExpanded ? `
-              <div class="pl-6 pr-2.5 pb-2.5 pt-1 space-y-1.5 border-t border-purple-950 bg-slate-950/40">
+              <div class="pl-6 pr-2.5 pb-2.5 pt-1 space-y-1.5 border-t border-[#23176d]/50 bg-[#0c0926]/70">
                 ${displaySecs.length === 0 ? `
-                  <div class="text-[11px] text-slate-400 italic py-2 px-2 bg-slate-900/40 rounded-xl border border-slate-800/40 text-center">
+                  <div class="text-[11px] text-slate-400 italic py-2 px-2 bg-[#140e40]/40 rounded-xl border border-[#23176d]/40 text-center">
                     No hay sectores trazados aún dentro de este eje.
                     ${!isFieldOperator ? `<br><button onclick="window.earthApp.startSectorInSubParish('${sp.id}')" class="text-sky-400 font-bold underline mt-1 inline-block">➕ Trazar el primer sector</button>` : ''}
                   </div>
@@ -923,11 +935,11 @@ class EarthMonagasApp {
                   const milCount = poly.militantes !== undefined ? poly.militantes : (poly.habitantes || 0);
 
                   return `
-                    <div class="flex items-center justify-between py-1.5 px-2 bg-slate-900/70 hover:bg-slate-800/90 rounded-xl group text-xs border border-slate-800 transition shadow-sm">
+                    <div class="flex items-center justify-between py-1.5 px-2 bg-[#140e40]/90 hover:bg-[#23176d]/70 rounded-xl group text-xs border border-[#23176d]/60 transition shadow-sm">
                       <div class="flex items-center gap-2 truncate min-w-0">
                         <input type="checkbox" ${poly.visible !== false ? 'checked' : ''} 
                           onchange="window.earthApp.toggleItemVisibility('${this.selectedMunId}', '${this.selectedParishId}', 'poligono', '${poly.id}')"
-                          class="w-3.5 h-3.5 rounded bg-slate-950 border-slate-700 text-sky-500 focus:ring-0 cursor-pointer shrink-0">
+                          class="w-3.5 h-3.5 rounded bg-[#08061a] border-[#23176d] text-sky-500 focus:ring-0 cursor-pointer shrink-0">
                         <span class="w-3 h-3 rounded-sm border shrink-0" style="background-color: ${poly.colorRelleno || '#38bdf8'}; border-color: ${poly.colorBorde || '#ffffff'};"></span>
                         <div class="truncate cursor-pointer min-w-0" onclick="window.earthApp.focusAndEdit('poligono', '${poly.id}', false)">
                           <span class="text-slate-200 font-bold block truncate group-hover:text-sky-300 text-xs">${poly.nombre}</span>
@@ -935,17 +947,17 @@ class EarthMonagasApp {
                             ${poly.casas ? `<span class="text-amber-400 font-bold">🏠 ${poly.casas}</span>` : ''}
                             ${poly.familias ? `<span class="text-sky-300">👨‍👩‍👧 ${poly.familias}</span>` : ''}
                             <span class="text-emerald-400 font-bold">👥 ${poly.habitantes || milCount}</span>
-                            ${poly.militantes !== undefined ? `<span class="text-purple-300 font-bold">🗳️ ${poly.militantes}</span>` : ''}
+                            ${poly.militantes !== undefined ? `<span class="text-indigo-300 font-bold">🗳️ ${poly.militantes}</span>` : ''}
                             ${poly.centroVotacion ? `<span class="text-slate-300 truncate max-w-[120px]" title="${poly.centroVotacion}">🏫 ${poly.centroVotacion}</span>` : ''}
                           </div>
                         </div>
                       </div>
                       <div class="flex items-center gap-1 shrink-0 ml-1">
-                        <button onclick="window.earthApp.focusAndEdit('poligono', '${poly.id}', true)" class="text-slate-400 hover:text-sky-300 p-1 transition" title="Editar caracterización socio-política">
+                        <button onclick="window.earthApp.focusAndEdit('poligono', '${poly.id}', true)" class="text-slate-400 hover:text-sky-300 p-1 transition cursor-pointer" title="Editar caracterización socio-política">
                           <i data-lucide="edit-2" class="w-3.5 h-3.5"></i>
                         </button>
                         ${!isFieldOperator ? `
-                        <button onclick="window.earthApp.deleteItem('${this.selectedMunId}', '${this.selectedParishId}', 'poligono', '${poly.id}')" class="text-slate-500 hover:text-red-400 p-1 transition" title="Eliminar sector">
+                        <button onclick="window.earthApp.deleteItem('${this.selectedMunId}', '${this.selectedParishId}', 'poligono', '${poly.id}')" class="text-slate-500 hover:text-red-400 p-1 transition cursor-pointer" title="Eliminar sector">
                           <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
                         </button>
                         ` : ''}
@@ -1159,10 +1171,10 @@ class EarthMonagasApp {
         const hasData = subCount > 0 || polyCount > 0;
 
         return `
-          <button onclick="window.earthApp.selectParishFromModal('${mun.id}', '${p.id}')" class="px-3 py-2 rounded-xl text-left text-xs font-semibold transition flex items-center justify-between cursor-pointer ${isCurrent ? 'bg-sky-600 text-white font-black shadow-lg' : (hasData ? 'bg-purple-950/70 hover:bg-purple-900/90 text-purple-200 border border-purple-500/50' : 'bg-slate-800 hover:bg-slate-700 text-slate-200')}">
+          <button onclick="window.earthApp.selectParishFromModal('${mun.id}', '${p.id}')" class="px-3 py-2 rounded-xl text-left text-xs font-semibold transition flex items-center justify-between cursor-pointer ${isCurrent ? 'bg-[#23176d] text-white font-black shadow-lg border border-sky-400' : (hasData ? 'bg-[#140e40] hover:bg-[#23176d] text-slate-100 border border-[#23176d]' : 'bg-[#0c0926] hover:bg-[#140e40] text-slate-300 border border-[#23176d]/40')}">
             <span class="truncate">${p.nombre}</span>
             <div class="flex items-center gap-1.5 shrink-0 ml-1">
-              ${hasData ? `<span class="text-[9px] font-mono px-1.5 py-0.5 rounded bg-purple-900/90 text-purple-300 border border-purple-700 font-black">${subCount} ejes • ${polyCount} sec</span>` : ''}
+              ${hasData ? `<span class="text-[9px] font-mono px-1.5 py-0.5 rounded bg-[#08061a] text-sky-300 border border-[#23176d] font-bold">${subCount} ejes • ${polyCount} sec</span>` : ''}
               <i data-lucide="chevron-right" class="w-3.5 h-3.5 opacity-60"></i>
             </div>
           </button>
@@ -1170,13 +1182,13 @@ class EarthMonagasApp {
       }).join("");
 
       return `
-        <div class="bg-slate-950/70 border border-slate-800 rounded-2xl p-3 space-y-2">
+        <div class="bg-[#08061a]/95 border border-[#23176d] rounded-2xl p-3 space-y-2">
           <div class="flex items-center justify-between">
             <strong class="text-xs font-black text-amber-400 uppercase tracking-wide flex items-center gap-1.5">
               <i data-lucide="map-pin" class="w-3.5 h-3.5"></i>
               <span>${mun.nombre}</span>
             </strong>
-            <span class="text-[10px] text-slate-500 font-mono">${mun.parroquias.length} parroquias</span>
+            <span class="text-[10px] text-slate-400 font-mono">${mun.parroquias.length} parroquias</span>
           </div>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
             ${parishesButtons}
@@ -1572,7 +1584,7 @@ class EarthMonagasApp {
   }
 
   async deleteItem(munId, parishId, type, itemId) {
-    if (confirm("¿Deseas eliminar este elemento de Google Earth?")) {
+    if (confirm("¿Deseas eliminar este elemento de la plataforma territorial MIGATO?")) {
       const key = type === "poligono" ? "poligonos" : (type === "ruta" ? "rutas" : (type === "subparroquia" ? "subparroquias" : "marcas"));
       await this.store.deleteItem(munId, parishId, key, itemId);
 
@@ -1618,9 +1630,9 @@ class EarthMonagasApp {
 
     if (tabPlaces && tabLayers) {
       tabPlaces.addEventListener("click", () => {
-        tabPlaces.classList.add("text-amber-400", "border-b-2", "border-amber-500", "bg-slate-900");
-        tabPlaces.classList.remove("text-slate-400");
-        tabLayers.classList.remove("text-sky-400", "border-b-2", "border-sky-500", "bg-slate-900");
+        tabPlaces.classList.add("text-amber-300", "border-b-2", "border-amber-400", "bg-[#140e40]");
+        tabPlaces.classList.remove("text-slate-400", "bg-[#0c0926]");
+        tabLayers.classList.remove("text-sky-300", "border-b-2", "border-sky-400", "bg-[#140e40]");
         tabLayers.classList.add("text-slate-400");
 
         if (viewPlaces) viewPlaces.classList.remove("hidden");
@@ -1628,9 +1640,9 @@ class EarthMonagasApp {
       });
 
       tabLayers.addEventListener("click", () => {
-        tabLayers.classList.add("text-sky-400", "border-b-2", "border-sky-500", "bg-slate-900");
-        tabLayers.classList.remove("text-slate-400");
-        tabPlaces.classList.remove("text-amber-400", "border-b-2", "border-amber-500", "bg-slate-900");
+        tabLayers.classList.add("text-sky-300", "border-b-2", "border-sky-400", "bg-[#140e40]");
+        tabLayers.classList.remove("text-slate-400", "bg-[#0c0926]");
+        tabPlaces.classList.remove("text-amber-300", "border-b-2", "border-amber-400", "bg-[#140e40]");
         tabPlaces.classList.add("text-slate-400");
 
         if (viewPlaces) viewPlaces.classList.add("hidden");

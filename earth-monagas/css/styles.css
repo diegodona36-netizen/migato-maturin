@@ -4,7 +4,7 @@
 body {
   font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   overflow: hidden;
-  background-color: #090d16;
+  background-color: #08061a;
   color: #f8fafc;
   -webkit-tap-highlight-color: transparent;
 }
@@ -16,7 +16,7 @@ body {
 #earth-canvas {
   width: 100%;
   height: 100%;
-  background: #020617;
+  background: #08061a;
 }
 
 .leaflet-container canvas {
@@ -26,17 +26,17 @@ body {
 }
 
 .earth-tooltip {
-  background: rgba(15, 23, 42, 0.95) !important;
+  background: rgba(8, 6, 26, 0.96) !important;
   color: #f8fafc !important;
-  border: 1px solid #334155 !important;
-  border-radius: 8px !important;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.6) !important;
-  padding: 6px 10px !important;
+  border: 1px solid #23176d !important;
+  border-radius: 10px !important;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.8), 0 0 12px rgba(35, 23, 109, 0.4) !important;
+  padding: 6px 12px !important;
 }
 
 /* Popup de Acción Rápida para Sub-Parroquias / Ejes Comunales */
 .earth-popup-subparish .leaflet-popup-content-wrapper {
-  background: rgba(15, 23, 42, 0.96) !important;
+  background: rgba(8, 6, 26, 0.96) !important;
   backdrop-filter: blur(16px) !important;
   color: #f8fafc !important;
   border: 1.5px solid rgba(168, 85, 247, 0.65) !important;
@@ -45,7 +45,7 @@ body {
   padding: 2px !important;
 }
 .earth-popup-subparish .leaflet-popup-tip {
-  background: rgba(15, 23, 42, 0.96) !important;
+  background: rgba(8, 6, 26, 0.96) !important;
   border: 1.5px solid rgba(168, 85, 247, 0.65) !important;
 }
 .earth-popup-subparish .leaflet-popup-close-button {
@@ -60,28 +60,28 @@ body {
   border: none;
 }
 
-/* Google Earth Status Bar */
+/* Status Bar */
 .earth-status-bar {
-  background: #090d16;
-  border-top: 1px solid #1e293b;
+  background: #08061a;
+  border-top: 1px solid #23176d;
   color: #94a3b8;
   font-size: 11px;
 }
 
-/* Custom Scrollbars */
+/* Custom Scrollbars MIGATO */
 ::-webkit-scrollbar {
   width: 5px;
   height: 5px;
 }
 ::-webkit-scrollbar-track {
-  background: #090d16;
+  background: #08061a;
 }
 ::-webkit-scrollbar-thumb {
-  background: #334155;
+  background: #23176d;
   border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #475569;
+  background: #31228e;
 }
 
 /* Leaflet Control Overrides para evitar colisiones */
@@ -91,12 +91,12 @@ body {
 }
 
 .leaflet-control-layers {
-  background: rgba(15, 23, 42, 0.92) !important;
-  backdrop-filter: blur(8px) !important;
-  border: 1px solid #334155 !important;
-  border-radius: 12px !important;
+  background: rgba(8, 6, 26, 0.95) !important;
+  backdrop-filter: blur(12px) !important;
+  border: 1px solid #23176d !important;
+  border-radius: 14px !important;
   color: #f8fafc !important;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5) !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.7) !important;
 }
 
 .leaflet-control-attribution {
@@ -158,25 +158,25 @@ body {
 }
 
 
-/* Botones de Zoom (+ y -) Google Earth Pro */
+/* Botones de Zoom (+ y -) MIGATO */
 .leaflet-bottom.leaflet-right {
   bottom: 15px !important;
   right: 12px !important;
 }
 
 .leaflet-control-zoom {
-  border: 1px solid #334155 !important;
-  border-radius: 12px !important;
+  border: 1px solid #23176d !important;
+  border-radius: 14px !important;
   overflow: hidden !important;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.7) !important;
-  background: rgba(15, 23, 42, 0.94) !important;
-  backdrop-filter: blur(8px) !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.8) !important;
+  background: rgba(8, 6, 26, 0.95) !important;
+  backdrop-filter: blur(10px) !important;
 }
 
 .leaflet-control-zoom-in, .leaflet-control-zoom-out {
-  background: rgba(15, 23, 42, 0.94) !important;
+  background: rgba(8, 6, 26, 0.95) !important;
   color: #f8fafc !important;
-  border-bottom: 1px solid #334155 !important;
+  border-bottom: 1px solid #23176d !important;
   width: 36px !important;
   height: 36px !important;
   line-height: 36px !important;
@@ -194,12 +194,12 @@ body {
 }
 
 .leaflet-control-zoom-in:hover, .leaflet-control-zoom-out:hover {
-  background: #1e293b !important;
+  background: #23176d !important;
   color: #38bdf8 !important;
 }
 
 .leaflet-control-zoom-in:active, .leaflet-control-zoom-out:active {
-  background: #0284c7 !important;
+  background: #31228e !important;
   color: #ffffff !important;
 }
 

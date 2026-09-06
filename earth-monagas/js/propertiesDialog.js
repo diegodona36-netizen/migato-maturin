@@ -354,14 +354,14 @@ export class PropertiesDialog {
     if (titleEl) {
       if (isNew) {
         titleEl.textContent = 
-          type === "poligono" ? `Google Earth — Nuevo Sector Comunal${parishLabel}` :
-          (type === "subparroquia" ? `Google Earth — Nueva Sub-Parroquia / Eje Comunal${parishLabel}` :
-          (type === "ruta" ? `Google Earth — Nueva Calle / Ruta${parishLabel}` : `Google Earth — Nueva Marca de Posición${parishLabel}`));
+          type === "poligono" ? `MIGATO — Nuevo Sector Comunal${parishLabel}` :
+          (type === "subparroquia" ? `MIGATO — Nueva Sub-Parroquia / Eje Comunal${parishLabel}` :
+          (type === "ruta" ? `MIGATO — Nueva Calle / Ruta${parishLabel}` : `MIGATO — Nueva Marca de Posición${parishLabel}`));
       } else {
         titleEl.textContent = 
-          type === "poligono" ? `Google Earth — Ficha del Sector: ${item.nombre}` :
-          (type === "subparroquia" ? `Google Earth — Sub-Parroquia / Eje Comunal: ${item.nombre}` :
-          (type === "ruta" ? `Google Earth — Propiedades de la Calle: ${item.nombre}` : `Google Earth — Marca de Posición: ${item.nombre}`));
+          type === "poligono" ? `MIGATO — Ficha del Sector: ${item.nombre}` :
+          (type === "subparroquia" ? `MIGATO — Sub-Parroquia / Eje Comunal: ${item.nombre}` :
+          (type === "ruta" ? `MIGATO — Propiedades de la Calle: ${item.nombre}` : `MIGATO — Marca de Posición: ${item.nombre}`));
       }
     }
 
