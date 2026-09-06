@@ -2,21 +2,21 @@
  * Controlador Principal — Google Earth Pro Web (Edición Estado Monagas)
  * Robusto, 100% Operativo y Totalmente Individualizado
  */
-import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=98";
-import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=98";
-import { getAllParishesForSelector } from "./usersCatalog.js?v=98";
-import { EarthStore } from "./earthStore.js?v=98";
-import { EarthMapEngine } from "./mapEngine.js?v=98";
-import { PropertiesDialog } from "./propertiesDialog.js?v=98";
-import { ToolsManager } from "./toolsManager.js?v=98";
-import { detectParishFromGeometry } from "./geoMonagas.js?v=98";
-import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=98";
+import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=99";
+import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=99";
+import { getAllParishesForSelector } from "./usersCatalog.js?v=99";
+import { EarthStore } from "./earthStore.js?v=99";
+import { EarthMapEngine } from "./mapEngine.js?v=99";
+import { PropertiesDialog } from "./propertiesDialog.js?v=99";
+import { ToolsManager } from "./toolsManager.js?v=99";
+import { detectParishFromGeometry } from "./geoMonagas.js?v=99";
+import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=99";
 import { 
   getSavedFirebaseConfig, 
   saveFirebaseConfig, 
   isFirebaseConfigured, 
   initFirebase 
-} from "./firebaseConfig.js?v=98";
+} from "./firebaseConfig.js?v=99";
 
 class EarthMonagasApp {
   constructor() {
@@ -262,15 +262,32 @@ class EarthMonagasApp {
         this.updateSpotlightButtonUI(this.mapEngine.spotlightEnabled);
       }
 
-      // En pantallas móviles, replegar el sidebar para ver el mapa 100%
+      // En pantallas móviles (< 768px), replegar el panel para ver el mapa
       if (window.innerWidth < 768) {
         const sidebar = document.getElementById("earth-sidebar");
         const backdrop = document.getElementById("sidebar-backdrop");
         if (sidebar) {
           sidebar.classList.add("hidden");
           sidebar.classList.remove("flex");
+          sidebar.style.display = "none";
         }
-        if (backdrop) backdrop.classList.add("hidden");
+        if (backdrop) {
+          backdrop.classList.add("hidden");
+          backdrop.style.display = "none";
+        }
+      } else {
+        // En escritorio (>= 768px): Mantener la división de pantalla activa (Panel + Mapa)
+        const sidebar = document.getElementById("earth-sidebar");
+        const backdrop = document.getElementById("sidebar-backdrop");
+        if (sidebar && !this.userExplicitlyCollapsedSidebar) {
+          sidebar.classList.remove("hidden");
+          sidebar.classList.add("flex");
+          sidebar.style.display = "flex";
+        }
+        if (backdrop) {
+          backdrop.classList.add("hidden");
+          backdrop.style.display = "none";
+        }
       }
     } catch (err) {
       console.warn("[selectParish] Error controlado:", err);
@@ -2112,35 +2129,81 @@ class EarthMonagasApp {
       });
     }
 
-    // 7. Toggle y cierre ergonómico del sidebar en móvil
+    // 7. Toggle y división ágil de pantalla (Sidebar / Panel vs Mapa Satelital)
     const btnToggleSidebar = document.getElementById("btn-toggle-sidebar");
     const btnCloseSidebar = document.getElementById("btn-close-sidebar");
     const sidebar = document.getElementById("earth-sidebar");
     const backdrop = document.getElementById("sidebar-backdrop");
+    const btnDesktopExpand = document.getElementById("btn-desktop-expand-sidebar");
 
     const toggleSidebar = (open = null) => {
       if (!sidebar) return;
-      const willOpen = open !== null ? open : sidebar.classList.contains("hidden");
+      const isMobile = window.innerWidth < 768;
+      const isCurrentlyHidden = sidebar.classList.contains("hidden") || sidebar.style.display === "none";
+      const willOpen = open !== null ? open : isCurrentlyHidden;
+
       if (willOpen) {
+        this.userExplicitlyCollapsedSidebar = false;
         sidebar.classList.remove("hidden");
         sidebar.classList.add("flex");
         sidebar.style.display = "flex";
-        sidebar.style.zIndex = "2500";
-        if (backdrop) {
-          backdrop.classList.remove("hidden");
-          backdrop.style.display = "block";
-          backdrop.style.zIndex = "2400";
+
+        if (isMobile) {
+          sidebar.style.position = "absolute";
+          sidebar.style.zIndex = "2500";
+          if (backdrop) {
+            backdrop.classList.remove("hidden");
+            backdrop.style.display = "block";
+            backdrop.style.zIndex = "2400";
+          }
+        } else {
+          // MODO ESCRITORIO: División de pantalla limpia sin backdrop que tape el mapa
+          sidebar.style.position = "";
+          sidebar.style.zIndex = "40";
+          if (backdrop) {
+            backdrop.classList.add("hidden");
+            backdrop.style.display = "none";
+          }
+          if (btnDesktopExpand) {
+            btnDesktopExpand.style.display = "none";
+            btnDesktopExpand.classList.add("hidden");
+          }
+          if (btnToggleSidebar) {
+            btnToggleSidebar.classList.add("bg-[#23176d]", "border-sky-400/70", "text-white");
+          }
         }
         this.closeQuickStats();
       } else {
+        if (!isMobile) {
+          this.userExplicitlyCollapsedSidebar = true;
+        }
         sidebar.classList.add("hidden");
         sidebar.classList.remove("flex");
         sidebar.style.display = "none";
+
         if (backdrop) {
           backdrop.classList.add("hidden");
           backdrop.style.display = "none";
         }
+        if (!isMobile && btnDesktopExpand) {
+          btnDesktopExpand.style.display = "flex";
+          btnDesktopExpand.classList.remove("hidden");
+        }
+        if (btnToggleSidebar) {
+          btnToggleSidebar.classList.remove("bg-[#23176d]", "border-sky-400/70", "text-white");
+        }
       }
+
+      if (window.lucide && typeof window.lucide.createIcons === "function") {
+        try { window.lucide.createIcons(); } catch(e){}
+      }
+
+      // Reajuste inmediato del motor de mapas de Leaflet al cambiar el ancho
+      setTimeout(() => {
+        if (this.mapEngine?.map?.invalidateSize) {
+          this.mapEngine.map.invalidateSize();
+        }
+      }, 150);
     };
 
     this.toggleSidebar = toggleSidebar;
@@ -2173,6 +2236,9 @@ class EarthMonagasApp {
     if (btnToggleSidebar) btnToggleSidebar.addEventListener("click", () => toggleSidebar());
     if (btnCloseSidebar) btnCloseSidebar.addEventListener("click", () => toggleSidebar(false));
     if (backdrop) backdrop.addEventListener("click", () => toggleSidebar(false));
+
+    // Estado inicial responsivo: en pantallas de escritorio (>= 768px), arrancar con pantalla dividida (panel visible)
+    toggleSidebar(window.innerWidth >= 768);
   }
 
   setupDragAndDrop() {

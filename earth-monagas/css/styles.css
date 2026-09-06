@@ -218,8 +218,7 @@ input, select, textarea {
   color: #ffffff !important;
 }
 
-/* Forzar ocultamiento infalible de todos los modales y elementos cuando tengan la clase .hidden */
-.hidden,
+/* Forzar ocultamiento infalible de modales (sin interferir con clases utilitarias responsivas de Tailwind) */
 #modal-select-parish.hidden,
 #modal-select-subparish.hidden,
 #modal-auth-login.hidden,

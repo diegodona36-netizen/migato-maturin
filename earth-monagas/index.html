@@ -56,7 +56,7 @@
   <meta http-equiv="Expires" content="0" />
 
   <!-- Custom Styles -->
-  <link rel="stylesheet" href="css/styles.css?v=98">
+  <link rel="stylesheet" href="css/styles.css?v=99">
 
   <!-- Script de Autenticación Rápida, Limpieza Integral de Caché y Activador de Herramientas -->
   <script>
@@ -89,13 +89,13 @@
     }
   </style>
   <script>
-    // Auto-actualización obligatoria a la versión más reciente v=98
+    // Auto-actualización obligatoria a la versión más reciente v=99
     (function() {
       try {
         var p = new URLSearchParams(window.location.search);
         var curV = p.get('v');
-        if (!curV || curV !== '98') {
-          p.set('v', '98');
+        if (!curV || curV !== '99') {
+          p.set('v', '99');
           window.location.replace(window.location.pathname + '?' + p.toString() + window.location.hash);
         }
       } catch(e) {}
@@ -352,10 +352,10 @@
       <!-- LADO DERECHO: Territorio (Sidebar) + Menú Opciones -->
       <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
 
-        <!-- BOTÓN "TERRITORIO" (TOGGLE DEL SIDEBAR) -->
-        <button id="btn-toggle-sidebar" type="button" class="px-2.5 sm:px-3 py-1.5 rounded-xl bg-[#140e40] hover:bg-[#23176d] border border-[#23176d] text-slate-200 hover:text-white text-xs font-bold flex items-center gap-1.5 transition active:scale-95 cursor-pointer shadow-sm shrink-0" title="Mostrar/Ocultar Estructura Territorial y Sectores">
-          <i data-lucide="folder" class="w-3.5 h-3.5 text-amber-400 shrink-0"></i>
-          <span class="hidden sm:inline font-bold">Lugares</span>
+        <!-- BOTÓN "DIVIDIR / PANEL" (TOGGLE DEL SIDEBAR) -->
+        <button id="btn-toggle-sidebar" type="button" class="px-2.5 sm:px-3 py-1.5 rounded-xl bg-[#140e40] hover:bg-[#23176d] border border-[#23176d] text-slate-200 hover:text-white text-xs font-bold flex items-center gap-1.5 transition active:scale-95 cursor-pointer shadow-sm shrink-0" title="Dividir pantalla / Alternar Panel de Lugares y Territorio">
+          <i data-lucide="columns" class="w-3.5 h-3.5 text-amber-400 shrink-0"></i>
+          <span class="hidden sm:inline font-bold">Panel</span>
         </button>
 
         <!-- MENÚ DE OPCIONES EXTERNAS Y HERRAMIENTAS SECUNDARIAS -->
@@ -482,8 +482,10 @@
           <i data-lucide="layers" class="w-3.5 h-3.5 text-sky-400"></i>
           <span>Estructura Territorial</span>
         </button>
-        <button id="btn-close-sidebar" class="p-2 text-slate-400 hover:text-white md:hidden cursor-pointer" title="Cerrar panel">
-          <i data-lucide="x" class="w-4 h-4"></i>
+        <button id="btn-close-sidebar" type="button" class="px-2 py-1 text-slate-400 hover:text-white hover:bg-[#140e40] rounded-lg transition cursor-pointer flex items-center gap-1 shrink-0" title="Ocultar o Colapsar Panel (Ampliar Mapa)">
+          <i data-lucide="chevron-left" class="w-4 h-4 hidden md:inline text-sky-400"></i>
+          <span class="text-[10px] font-bold uppercase hidden md:inline text-slate-400">Ocultar</span>
+          <i data-lucide="x" class="w-4 h-4 md:hidden"></i>
         </button>
       </div>
 
@@ -632,6 +634,12 @@
 
     <!-- LIENZO SATELITAL CENTRAL -->
     <main class="flex-1 h-full relative overflow-hidden">
+      <!-- Botón flotante para dividir pantalla y restaurar panel en escritorio cuando esté colapsado -->
+      <button type="button" id="btn-desktop-expand-sidebar" onclick="window.earthApp?.toggleSidebar(true)" style="display: none;" class="hidden md:flex absolute top-3 left-3 z-[1000] px-3 py-2 rounded-xl bg-[#08061a]/95 hover:bg-[#140e40] text-sky-300 hover:text-white border border-[#23176d] hover:border-sky-400/60 shadow-2xl backdrop-blur-md items-center gap-2 font-bold text-xs active:scale-95 transition cursor-pointer" title="Dividir pantalla: Mostrar Panel Territorial y de Lugares">
+        <i data-lucide="columns" class="w-4 h-4 text-amber-400"></i>
+        <span>Dividir: Ver Panel</span>
+      </button>
+
       <div id="earth-canvas"></div>
 
       <!-- BARRA FLOTANTE MÓVIL OBSOLETA (OCULTA PERMANENTEMENTE PARA NO DUPLICAR BOTONES) -->
@@ -1478,7 +1486,7 @@
   </div>
 
   <!-- SCRIPT -->
-  <script type="module" src="js/app.js?v=98"></script>
+  <script type="module" src="js/app.js?v=99"></script>
   <script>
     if (window.lucide && typeof window.lucide.createIcons === 'function') {
       window.lucide.createIcons();
