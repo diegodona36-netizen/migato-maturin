@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="es" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MIGATO • Tablero de Estadísticas y Censo Territorial (Demo Aislada)</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            amber: {
+              400: '#fbbf24',
+              500: '#f59e0b',
+              600: '#d97706',
+              900: '#78350f',
+              950: '#451a03',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Google Fonts: Inter + JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    html, body {
+      max-width: 100vw;
+      overflow-x: hidden !important;
+      box-sizing: border-box;
+    }
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #060913;
+    }
+    .font-mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #060913;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #1e293b;
+      border-radius: 9999px;
+    }
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    .demo-gradient-border {
+      border: 1px solid rgba(245, 158, 11, 0.35);
+      box-shadow: 0 10px 30px -10px rgba(245, 158, 11, 0.15);
+    }
+  </style>
+</head>
+<body class="bg-[#060913] text-slate-100 min-h-screen flex flex-col antialiased selection:bg-amber-500 selection:text-slate-950 max-w-full overflow-x-hidden">
+
+  <!-- ============================================================== -->
+  <!-- 1. CABECERA PRINCIPAL (TEMA ANARANJADO / ÁMBAR)                 -->
+  <!-- ============================================================== -->
+  <header class="sticky top-0 z-40 bg-[#060913]/95 backdrop-blur-xl border-b border-amber-500/30 shadow-2xl">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-3">
+      
+      <!-- Lado Izquierdo: Branding y Título -->
+      <div class="flex items-center gap-3 min-w-0">
+        <a href="../" class="p-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-800 transition flex items-center gap-1 text-xs font-bold shrink-0" title="Volver al Portal Central">
+          <i data-lucide="home" class="w-4 h-4"></i>
+        </a>
+
+        <div class="truncate">
+          <div class="flex items-center gap-2">
+            <span class="w-6 h-6 rounded-lg bg-amber-500 text-slate-950 font-black flex items-center justify-center text-xs shadow-md shadow-amber-500/20 shrink-0">
+              📊
+            </span>
+            <h1 class="text-sm sm:text-base font-black text-white uppercase tracking-tight truncate">
+              MIGATO • Estadísticas y Censo Territorial
+            </h1>
+            <span class="px-2 py-0.5 rounded-md bg-amber-950 text-amber-300 border border-amber-500/40 text-[10px] font-mono font-bold hidden md:inline-block">
+              🧪 MODO DEMO • AISLADO
+            </span>
+          </div>
+          <p id="demo-territory-subtitle" class="text-[11px] text-slate-400 truncate">
+            Estado Monagas Completo • 13 Municipios • 44 Parroquias • Censo en Cascada
+          </p>
+        </div>
+      </div>
+
+      <!-- Lado Derecho: Acciones y Exportaciones -->
+      <div class="flex items-center gap-2 shrink-0">
+        <!-- Botón Informe Sala Situacional -->
+        <button id="btn-demo-situational-report" type="button" class="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-amber-500/40 text-amber-300 hover:text-white font-bold text-xs transition flex items-center gap-1.5 active:scale-95 cursor-pointer" title="Ver Resumen de Sala Situacional">
+          <i data-lucide="file-text" class="w-3.5 h-3.5 text-amber-400"></i>
+          <span class="hidden lg:inline">Informe Ejecutivo</span>
+        </button>
+
+        <!-- Botón Exportar JSON -->
+        <button id="btn-demo-export-json" type="button" class="px-2.5 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-300 hover:text-white font-bold text-xs transition flex items-center gap-1 active:scale-95 cursor-pointer" title="Descargar Dataset Completo en JSON">
+          <i data-lucide="code" class="w-3.5 h-3.5 text-sky-400"></i>
+          <span class="hidden sm:inline">JSON</span>
+        </button>
+
+        <!-- Botón Exportar CSV / Excel -->
+        <button id="btn-demo-export-csv" type="button" class="px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs transition flex items-center gap-1.5 shadow-lg shadow-amber-500/20 active:scale-95 cursor-pointer" title="Descargar Censo Completo en CSV / Excel">
+          <i data-lucide="download" class="w-3.5 h-3.5"></i>
+          <span class="hidden sm:inline">Excel (CSV)</span>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- ============================================================== -->
+  <!-- 2. CONTENEDOR PRINCIPAL                                         -->
+  <!-- ============================================================== -->
+  <main class="max-w-7xl mx-auto w-full px-4 sm:px-6 py-5 space-y-5 flex-1">
+
+    <!-- BARRA DE FILTROS TERRITORIALES -->
+    <section class="bg-slate-900/80 border border-amber-500/25 p-4 rounded-3xl shadow-xl space-y-3">
+      <div class="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
+        
+        <!-- Selector de Municipio -->
+        <div class="flex items-center gap-2 shrink-0">
+          <label for="demo-filter-municipio" class="text-xs font-black text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
+            <i data-lucide="map-pin" class="w-3.5 h-3.5"></i>
+            <span>Municipio:</span>
+          </label>
+          <select id="demo-filter-municipio" class="px-3 py-2 bg-slate-950 border border-slate-700 rounded-xl text-xs font-black text-white focus:outline-none focus:border-amber-500 cursor-pointer">
+            <option value="todos" selected>🌐 Todo el Estado Monagas (13 Municipios)</option>
+            <option value="maturin">Maturín (Capital)</option>
+            <option value="bolivar">Bolívar (Caripito)</option>
+            <option value="ezequiel-zamora">Ezequiel Zamora (Punta de Mata)</option>
+            <option value="piar">Piar (Aragua de Maturín)</option>
+            <option value="caripe">Caripe (El Jardín de Oriente)</option>
+            <option value="cedeno">Cedeño (Caicara)</option>
+            <option value="libertador">Libertador (Temblador)</option>
+            <option value="punceres">Punceres (Quiriquire)</option>
+            <option value="sotillo">Sotillo (Barrancas del Orinoco)</option>
+            <option value="acosta">Acosta (San Antonio)</option>
+            <option value="aguasay">Aguasay</option>
+            <option value="santa-barbara">Santa Bárbara</option>
+            <option value="uracoa">Uracoa</option>
+          </select>
+        </div>
+
+        <!-- Buscador Reactivo -->
+        <div class="relative flex-1 max-w-md">
+          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-500">
+            <i data-lucide="search" class="w-4 h-4"></i>
+          </div>
+          <input type="text" id="demo-filter-search" placeholder="Buscar sector, eje, escuela CNE o ID..." class="w-full pl-9 pr-3.5 py-2 bg-slate-950 border border-slate-700 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-500 transition">
+        </div>
+
+      </div>
+
+      <!-- Carrusel de Parroquias -->
+      <div id="demo-parish-pills" class="flex items-center gap-1.5 overflow-x-auto no-scrollbar pt-1 pb-0.5">
+        <!-- Inyectado dinámicamente -->
+      </div>
+    </section>
+
+    <!-- TARJETAS MACRO (LOS 4 NÚMEROS MAESTROS DEL CENSO COMUNAL) -->
+    <section class="grid grid-cols-2 md:grid-cols-5 gap-3 font-mono">
+      
+      <!-- 1. Total Casas -->
+      <div class="bg-slate-900/90 border border-amber-500/30 p-4 rounded-2xl shadow-lg flex flex-col justify-between relative overflow-hidden group">
+        <div class="absolute -right-4 -bottom-4 opacity-5 text-amber-400 group-hover:opacity-10 transition">
+          <i data-lucide="home" class="w-24 h-24"></i>
+        </div>
+        <div class="flex items-center justify-between mb-1">
+          <span class="text-[10px] font-black uppercase text-amber-400 flex items-center gap-1">
+            <span>🏠</span> Casas Censadas
+          </span>
+          <span id="demo-kpi-ratio-hab" class="text-[9px] text-slate-400 bg-slate-950 px-1.5 py-0.5 rounded border border-slate-800">3.64 hab/casa</span>
+        </div>
+        <div>
+          <span id="demo-kpi-casas" class="text-2xl sm:text-3xl font-black text-amber-400">0</span>
+          <span class="text-[10px] text-slate-400 block mt-0.5 font-sans">Viviendas unifamiliares</span>
+        </div>
+      </div>
+
+      <!-- 2. Total Familias -->
+      <div class="bg-slate-900/90 border border-sky-500/30 p-4 rounded-2xl shadow-lg flex flex-col justify-between relative overflow-hidden group">
+        <div class="flex items-center justify-between mb-1">
+          <span class="text-[10px] font-black uppercase text-sky-400 flex items-center gap-1">
+            <span>👨‍👩‍👧</span> Familias
+          </span>
+          <span class="text-[9px] text-sky-400 font-bold bg-sky-950/80 px-1.5 py-0.5 rounded border border-sky-800/40">Núcleos</span>
+        </div>
+        <div>
+          <span id="demo-kpi-familias" class="text-2xl sm:text-3xl font-black text-sky-300">0</span>
+          <span class="text-[10px] text-slate-400 block mt-0.5 font-sans">Hogares registrados</span>
+        </div>
+      </div>
+
+      <!-- 3. Total Habitantes -->
+      <div class="bg-slate-900/90 border border-emerald-500/30 p-4 rounded-2xl shadow-lg flex flex-col justify-between relative overflow-hidden group">
+        <div class="flex items-center justify-between mb-1">
+          <span class="text-[10px] font-black uppercase text-emerald-400 flex items-center gap-1">
+            <span>👥</span> Habitantes
+          </span>
+          <span class="text-[9px] text-emerald-400 font-bold bg-emerald-950/80 px-1.5 py-0.5 rounded border border-emerald-800/40">Población</span>
+        </div>
+        <div>
+          <span id="demo-kpi-habitantes" class="text-2xl sm:text-3xl font-black text-emerald-400">0</span>
+          <span class="text-[10px] text-slate-400 block mt-0.5 font-sans">Censo demográfico</span>
+        </div>
+      </div>
+
+      <!-- 4. Total Votantes -->
+      <div class="bg-slate-900/90 border border-purple-500/30 p-4 rounded-2xl shadow-lg flex flex-col justify-between relative overflow-hidden group">
+        <div class="flex items-center justify-between mb-1">
+          <span class="text-[10px] font-black uppercase text-purple-400 flex items-center gap-1">
+            <span>🗳️</span> Padrón Votantes
+          </span>
+          <span id="demo-kpi-padron-pct" class="text-[9px] text-purple-300 font-bold bg-purple-950/80 px-1.5 py-0.5 rounded border border-purple-800/40">63%</span>
+        </div>
+        <div>
+          <span id="demo-kpi-votantes" class="text-2xl sm:text-3xl font-black text-purple-300">0</span>
+          <span class="text-[10px] text-slate-400 block mt-0.5 font-sans">Electores convocados</span>
+        </div>
+      </div>
+
+      <!-- 5. Cobertura de Sectores y Ejes -->
+      <div class="bg-slate-900/90 border border-amber-500/30 p-4 rounded-2xl shadow-lg flex flex-col justify-between col-span-2 md:col-span-1">
+        <div class="flex items-center justify-between mb-1">
+          <span class="text-[10px] font-black uppercase text-amber-400">🔷 Cobertura</span>
+          <span id="demo-kpi-centros" class="text-[9px] text-slate-400">Centros CNE</span>
+        </div>
+        <div>
+          <div class="flex items-baseline gap-1.5">
+            <span id="demo-kpi-sectores" class="text-2xl sm:text-3xl font-black text-white">0</span>
+            <span class="text-xs text-slate-400 font-sans">sectores</span>
+          </div>
+          <span id="demo-kpi-ejes" class="text-[10px] text-purple-300 block mt-0.5 font-bold font-mono">0 Ejes Comunales</span>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- BARRA DE PESTAÑAS ESPECIALIZADAS PARA INGENIERÍA -->
+    <nav class="flex items-center gap-2 overflow-x-auto no-scrollbar border-b border-slate-800 pb-2">
+      <button type="button" data-tab="stats" class="demo-tab-btn px-4 py-2.5 rounded-xl bg-amber-500 text-slate-950 font-black text-xs shadow-lg shadow-amber-500/20 flex items-center gap-2 transition cursor-pointer">
+        <i data-lucide="table-2" class="w-4 h-4"></i>
+        <span>Tablas Estadísticas y Ratios</span>
+      </button>
+
+      <button type="button" data-tab="sectors" class="demo-tab-btn px-4 py-2.5 rounded-xl bg-slate-900/90 hover:bg-slate-800 text-slate-400 hover:text-white font-bold text-xs border border-slate-800 flex items-center gap-2 transition cursor-pointer">
+        <i data-lucide="list" class="w-4 h-4"></i>
+        <span>Explorador de Sectores (Capa 5)</span>
+      </button>
+
+      <button type="button" data-tab="cascade" class="demo-tab-btn px-4 py-2.5 rounded-xl bg-slate-900/90 hover:bg-slate-800 text-slate-400 hover:text-white font-bold text-xs border border-slate-800 flex items-center gap-2 transition cursor-pointer">
+        <i data-lucide="folder-tree" class="w-4 h-4"></i>
+        <span>Árbol Jerárquico en Cascada</span>
+      </button>
+
+      <button type="button" data-tab="architecture" class="demo-tab-btn px-4 py-2.5 rounded-xl bg-slate-900/90 hover:bg-slate-800 text-slate-400 hover:text-white font-bold text-xs border border-slate-800 flex items-center gap-2 transition cursor-pointer">
+        <i data-lucide="cpu" class="w-4 h-4"></i>
+        <span>Ficha Técnica para Ingenieros</span>
+      </button>
+    </nav>
+
+    <!-- ============================================================== -->
+    <!-- PESTAÑA 1: TABLAS ESTADÍSTICAS Y RATIOS                         -->
+    <!-- ============================================================== -->
+    <section id="pane-demo-stats" class="space-y-5">
+      
+      <!-- Tabla 1: Matriz Comparativa Inter-Municipal -->
+      <div class="bg-slate-900/90 border border-slate-800 rounded-3xl p-4 sm:p-5 shadow-xl space-y-3">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 pb-3">
+          <div>
+            <h2 class="text-sm sm:text-base font-black text-white uppercase tracking-wider flex items-center gap-2">
+              <i data-lucide="scale" class="w-4 h-4 text-amber-400"></i>
+              <span>Matriz Comparativa Inter-Municipal del Estado Monagas</span>
+            </h2>
+            <p class="text-xs text-slate-400 mt-0.5">
+              Haz clic en cualquier encabezado para ordenar ascendente o descendentemente. Haz clic en una fila para filtrar.
+            </p>
+          </div>
+          <span class="text-xs font-mono text-amber-400 font-bold bg-amber-500/10 px-2.5 py-1 rounded-xl border border-amber-500/30">
+            13 Municipios Oficiales
+          </span>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="border-b border-slate-800 text-[11px] font-black uppercase text-slate-400 select-none">
+                <th class="px-3 py-2.5 cursor-pointer demo-sort-header hover:text-amber-400 transition" data-sort="nombre">Municipio ↕</th>
+                <th class="px-3 py-2.5 text-center cursor-pointer demo-sort-header hover:text-amber-400 transition" data-sort="parroquiasCount">Parroquias ↕</th>
+                <th class="px-3 py-2.5 text-center cursor-pointer demo-sort-header hover:text-purple-300 transition" data-sort="subCount">Ejes ↕</th>
+                <th class="px-3 py-2.5 text-center cursor-pointer demo-sort-header hover:text-sky-400 transition" data-sort="secCount">Sectores ↕</th>
+                <th class="px-3 py-2.5 text-right cursor-pointer demo-sort-header hover:text-amber-300 transition" data-sort="casas">Casas ↕</th>
+                <th class="px-3 py-2.5 text-right cursor-pointer demo-sort-header hover:text-slate-200 transition" data-sort="familias">Familias ↕</th>
+                <th class="px-3 py-2.5 text-right cursor-pointer demo-sort-header hover:text-emerald-400 transition" data-sort="habitantes">Habitantes ↕</th>
+                <th class="px-3 py-2.5 text-right cursor-pointer demo-sort-header hover:text-amber-400 transition text-amber-400" data-sort="votantes">Votantes ↕</th>
+                <th class="px-3 py-2.5 text-center cursor-pointer demo-sort-header hover:text-slate-200 transition" data-sort="habCasa">Hab/Casa ↕</th>
+                <th class="px-3 py-2.5 text-right cursor-pointer demo-sort-header hover:text-sky-300 transition" data-sort="padronPct">% Padrón ↕</th>
+                <th class="px-3 py-2.5 text-center">Peso Relativo</th>
+              </tr>
+            </thead>
+            <tbody id="demo-matrix-tbody" class="divide-y divide-slate-800/60">
+              <!-- Inyectado por JS -->
+            </tbody>
+            <tfoot id="demo-matrix-tfoot">
+              <!-- Inyectado por JS -->
+            </tfoot>
+          </table>
+        </div>
+      </div>
+
+      <!-- Tabla 2: Top Sectores de Mayor Concentración Electoral -->
+      <div class="bg-slate-900/90 border border-slate-800 rounded-3xl p-4 sm:p-5 shadow-xl space-y-3">
+        <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+          <div>
+            <h3 class="text-sm sm:text-base font-black text-white uppercase tracking-wider flex items-center gap-2">
+              <i data-lucide="flame" class="w-4 h-4 text-orange-400"></i>
+              <span>Top Sectores con Mayor Padrón y Prioridad Operativa</span>
+            </h3>
+            <p class="text-xs text-slate-400 mt-0.5">
+              Polígonos estratégicos ordenados por volumen de votantes para despliegue de brigadas
+            </p>
+          </div>
+          <span class="text-xs font-mono text-purple-300 font-bold bg-purple-950/60 px-2.5 py-1 rounded-xl border border-purple-500/40">
+            Top 12 Monagas
+          </span>
+        </div>
+
+        <div id="demo-top-sectors-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
+          <!-- Inyectado por JS -->
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ============================================================== -->
+    <!-- PESTAÑA 2: EXPLORADOR DE SECTORES (CAPA 5)                      -->
+    <!-- ============================================================== -->
+    <section id="pane-demo-sectors" class="hidden space-y-4">
+      <div class="bg-slate-900/90 border border-slate-800 rounded-3xl p-4 sm:p-5 shadow-xl space-y-3">
+        
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 pb-3">
+          <div>
+            <h2 class="text-sm sm:text-base font-black text-white uppercase tracking-wider flex items-center gap-2">
+              <i data-lucide="layers" class="w-4 h-4 text-sky-400"></i>
+              <span>Catálogo Maestro de Polígonos y Sectores Comunales</span>
+            </h2>
+            <p class="text-xs text-slate-400 mt-0.5">
+              Registro unitario de cada polígono vectorial trazado con sus métricas censales y centro CNE
+            </p>
+          </div>
+          <div class="flex items-center gap-3 font-mono text-xs">
+            <span id="demo-sectors-count-label" class="text-amber-400 font-bold">0 sectores</span>
+            <span id="demo-sectors-page-label" class="text-slate-400">Pág. 1 de 1</span>
+          </div>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="border-b border-slate-800 text-[10px] font-black uppercase text-slate-400">
+                <th class="px-3 py-2">ID Polígono</th>
+                <th class="px-3 py-2">Sector Comunal</th>
+                <th class="px-3 py-2">Eje Comunal (Subparroquia)</th>
+                <th class="px-3 py-2">Parroquia</th>
+                <th class="px-3 py-2">Municipio</th>
+                <th class="px-3 py-2 text-right">Casas</th>
+                <th class="px-3 py-2 text-right">Familias</th>
+                <th class="px-3 py-2 text-right">Habitantes</th>
+                <th class="px-3 py-2 text-right text-amber-400">Votantes</th>
+                <th class="px-3 py-2">Centro Electoral Asignado</th>
+              </tr>
+            </thead>
+            <tbody id="demo-sectors-tbody" class="divide-y divide-slate-800/60 font-mono">
+              <!-- Inyectado por JS -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Paginación -->
+        <div class="flex items-center justify-between pt-2 border-t border-slate-800 text-xs">
+          <button id="btn-demo-sectors-prev" class="px-3 py-1.5 rounded-xl bg-slate-950 hover:bg-slate-800 border border-slate-700 text-slate-300 font-bold disabled:opacity-40 disabled:pointer-events-none transition cursor-pointer">
+            ◀ Anterior
+          </button>
+          <span class="text-slate-500 font-mono text-[11px]">Navegación fluida en memoria</span>
+          <button id="btn-demo-sectors-next" class="px-3 py-1.5 rounded-xl bg-slate-950 hover:bg-slate-800 border border-slate-700 text-slate-300 font-bold disabled:opacity-40 disabled:pointer-events-none transition cursor-pointer">
+            Siguiente ▶
+          </button>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ============================================================== -->
+    <!-- PESTAÑA 3: ÁRBOL JERÁRQUICO EN CASCADA                          -->
+    <!-- ============================================================== -->
+    <section id="pane-demo-cascade" class="hidden space-y-4">
+      <div class="bg-slate-900/90 border border-slate-800 rounded-3xl p-4 sm:p-5 shadow-xl space-y-4">
+        
+        <div class="border-b border-slate-800 pb-3">
+          <h2 class="text-sm sm:text-base font-black text-white uppercase tracking-wider flex items-center gap-2">
+            <i data-lucide="git-merge" class="w-4 h-4 text-amber-400"></i>
+            <span>Visualizador de Jerarquía Territorial en Cascada (5 Niveles)</span>
+          </h2>
+          <p class="text-xs text-slate-400 mt-0.5">
+            Estructura anidada completa: Municipio ➔ Parroquia ➔ Eje Comunal ➔ Sector Comunal (Polígono). Toca para desplegar.
+          </p>
+        </div>
+
+        <div id="demo-cascade-tree" class="space-y-4">
+          <!-- Inyectado dinámicamente -->
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ============================================================== -->
+    <!-- PESTAÑA 4: FICHA TÉCNICA PARA INGENIEROS                        -->
+    <!-- ============================================================== -->
+    <section id="pane-demo-architecture" class="hidden space-y-5">
+      
+      <!-- Diagrama de Capas -->
+      <div class="bg-slate-900/90 border border-slate-800 rounded-3xl p-5 shadow-xl space-y-4">
+        <div class="flex items-center gap-2 border-b border-slate-800 pb-3">
+          <i data-lucide="layers" class="w-5 h-5 text-amber-400"></i>
+          <div>
+            <h3 class="text-base font-black text-white uppercase tracking-wider">Arquitectura Técnica del Modelo de Censo</h3>
+            <p class="text-xs text-slate-400">Explicación del flujo de datos entre capas cartográficas y cómputo distribuido</p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-5 gap-3 font-mono text-xs">
+          
+          <div class="bg-slate-950 p-3.5 rounded-2xl border border-amber-500/30 space-y-2">
+            <span class="px-2 py-0.5 rounded bg-amber-500/20 text-amber-400 font-bold text-[10px]">CAPA 1 • ESTADO</span>
+            <h4 class="font-black text-white text-sm">Monagas</h4>
+            <p class="text-slate-400 text-[11px] font-sans">
+              Entidad federal autoritativa. Consolida los 13 municipios y el padrón electoral global.
+            </p>
+            <div class="text-[10px] text-amber-300 pt-1 border-t border-slate-800">
+              ID: "monagas"
+            </div>
+          </div>
+
+          <div class="bg-slate-950 p-3.5 rounded-2xl border border-sky-500/30 space-y-2">
+            <span class="px-2 py-0.5 rounded bg-sky-500/20 text-sky-400 font-bold text-[10px]">CAPA 2 • MUNICIPIO</span>
+            <h4 class="font-black text-white text-sm">13 Municipios</h4>
+            <p class="text-slate-400 text-[11px] font-sans">
+              División político-administrativa primaria. Maturín agrupa el 60%+ del electorado.
+            </p>
+            <div class="text-[10px] text-sky-300 pt-1 border-t border-slate-800">
+              Campo: <code>munId</code>
+            </div>
+          </div>
+
+          <div class="bg-slate-950 p-3.5 rounded-2xl border border-emerald-500/30 space-y-2">
+            <span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 font-bold text-[10px]">CAPA 3 • PARROQUIA</span>
+            <h4 class="font-black text-white text-sm">44 Parroquias</h4>
+            <p class="text-slate-400 text-[11px] font-sans">
+              Perímetro geográfico oficial delimitado con polígonos GeoJSON y coordenadas oficiales.
+            </p>
+            <div class="text-[10px] text-emerald-300 pt-1 border-t border-slate-800">
+              Campo: <code>parishId</code>
+            </div>
+          </div>
+
+          <div class="bg-slate-950 p-3.5 rounded-2xl border border-purple-500/30 space-y-2">
+            <span class="px-2 py-0.5 rounded bg-purple-500/20 text-purple-400 font-bold text-[10px]">CAPA 4 • EJE COMUNAL</span>
+            <h4 class="font-black text-white text-sm">120+ Ejes</h4>
+            <p class="text-slate-400 text-[11px] font-sans">
+              Sub-parroquia o circuito comunal organizativo. Agrupa entre 3 y 8 sectores adyacentes.
+            </p>
+            <div class="text-[10px] text-purple-300 pt-1 border-t border-slate-800">
+              Campo: <code>subParroquiaId</code>
+            </div>
+          </div>
+
+          <div class="bg-slate-950 p-3.5 rounded-2xl border border-orange-500/30 space-y-2">
+            <span class="px-2 py-0.5 rounded bg-orange-500/20 text-orange-400 font-bold text-[10px]">CAPA 5 • SECTOR</span>
+            <h4 class="font-black text-white text-sm">350+ Polígonos</h4>
+            <p class="text-slate-400 text-[11px] font-sans">
+              Unidad atómica trazada en satélite 3D. Contiene los 4 datos censales y el centro CNE.
+            </p>
+            <div class="text-[10px] text-orange-300 pt-1 border-t border-slate-800">
+              Polígono Leaflet/GE
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Esquema JSON y Modelo de Datos -->
+      <div class="bg-slate-900/90 border border-slate-800 rounded-3xl p-5 shadow-xl space-y-3">
+        <h4 class="text-xs font-black uppercase text-amber-400 tracking-wider flex items-center gap-2">
+          <i data-lucide="database" class="w-4 h-4"></i>
+          <span>Esquema de Datos de un Sector Comunal (JSON Schema)</span>
+        </h4>
+        
+        <pre class="bg-slate-950 border border-slate-800 p-4 rounded-2xl font-mono text-xs text-amber-300/90 overflow-x-auto">
+{
+  "id": "POL-GOD-001",
+  "nombre": "La Puente Sector 1 (Plaza)",
+  "munId": "maturin",
+  "munNombre": "Maturín",
+  "parishId": "alto-de-los-godos",
+  "parishNombre": "Alto de Los Godos",
+  "subParroquiaId": "sub-godos-lapuente",
+  "subParroquiaNombre": "Eje 6 • Circuito Comunal La Puente",
+  "casas": 480,
+  "familias": 580,
+  "habitantes": 1820,
+  "votantes": 1220,
+  "centroVotacion": "U.E. Gregorio Rondón",
+  "cobertura": 100,
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [[[9.732, -63.201], [9.735, -63.198], ...]]
+  }
+}
+        </pre>
+      </div>
+
+      <!-- Explicación de Integración para Ingenieros -->
+      <div class="bg-slate-900/90 border border-slate-800 rounded-3xl p-5 shadow-xl space-y-3 text-xs text-slate-300 leading-relaxed">
+        <h4 class="text-xs font-black uppercase text-sky-400 tracking-wider flex items-center gap-2">
+          <i data-lucide="check-circle-2" class="w-4 h-4"></i>
+          <span>Garantías de Aislamiento y Resiliencia</span>
+        </h4>
+        <ul class="space-y-2 list-disc list-inside">
+          <li><strong>Zero Network Calls:</strong> Esta página demo funciona sin conexión a Internet una vez cargados los recursos estáticos. No efectúa llamadas HTTP a Firebase, Cloud Functions ni servicios externos.</li>
+          <li><strong>Cálculo Determinístico:</strong> Todos los agregados (sumatorias, ratios por casa, porcentajes de padrón electoral) se computan dinámicamente en el hilo principal del cliente mediante funciones reductoras en tiempo constante (&lt; 2ms).</li>
+          <li><strong>Interoperabilidad con Google Earth Pro Web:</strong> La estructura de identificadores y nombres coincide 1:1 con las capas satelitales del módulo <code>/earth-monagas/</code>, facilitando la exportación de polígonos KML/KMZ.</li>
+        </ul>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- ============================================================== -->
+  <!-- MODAL: INFORME DE SALA SITUACIONAL                             -->
+  <!-- ============================================================== -->
+  <div id="modal-situational-report" style="display: none; z-index: 100050;" class="fixed inset-0 bg-slate-950/85 backdrop-blur-md hidden items-center justify-center p-3 sm:p-4">
+    <div class="bg-slate-900 border border-amber-500/50 w-full max-w-xl rounded-3xl shadow-2xl p-5 space-y-4 max-h-[90vh] overflow-y-auto">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-2.5">
+        <div class="flex items-center gap-2">
+          <span class="text-amber-400 text-lg">📑</span>
+          <h3 class="text-sm font-black text-white uppercase tracking-wider">Informe de Sala Situacional</h3>
+        </div>
+        <button type="button" id="btn-close-report-modal" class="p-1 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition cursor-pointer">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <div id="report-modal-content">
+        <!-- Inyectado por JS -->
+      </div>
+
+      <div class="flex items-center justify-end gap-2 pt-2 border-t border-slate-800">
+        <button type="button" onclick="window.print()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl font-bold text-xs transition cursor-pointer">
+          🖨️ Imprimir
+        </button>
+        <button type="button" onclick="document.getElementById('modal-situational-report').style.display='none'" class="px-4 py-2 bg-amber-500 hover:bg-amber-400 text-slate-950 rounded-xl font-black text-xs transition cursor-pointer">
+          Cerrar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================== -->
+  <!-- PIE DE PÁGINA                                                  -->
+  <!-- ============================================================== -->
+  <footer class="bg-[#060913] border-t border-slate-900 py-4 text-center text-xs text-slate-500 font-mono shrink-0">
+    <p>MIGATO • Plataforma de Inteligencia Territorial del Estado Monagas • Modo Demostración de Ingeniería</p>
+  </footer>
+
+  <!-- Script Principal de la Demo -->
+  <script type="module" src="./js/demoApp.js"></script>
+
+</body>
+</html>
