@@ -90,7 +90,7 @@
   <script>
     // Reseteo Total de Fábrica global
     window.resetEarthFullData = function() {
-      if (confirm("¿Desea restaurar de fábrica toda la plataforma MIGATO Earth?\n\nSe limpiarán la memoria local, la caché y se recargarán los datos oficiales actualizados con todos los municipios y sectores (v=108).")) {
+      if (confirm("¿Desea restaurar de fábrica toda la plataforma MIGATO Earth?\n\nSe limpiarán la memoria local, la caché y se recargarán los datos limpios de producción (v=109).")) {
         try {
           localStorage.clear();
           sessionStorage.clear();
@@ -106,19 +106,19 @@
           }).catch(function(){});
         }
         setTimeout(function() {
-          window.location.replace(window.location.pathname + '?v=108&u=admin-militancia');
+          window.location.replace(window.location.pathname + '?v=109&u=admin-militancia');
         }, 150);
       }
     };
 
-    // Auto-actualización obligatoria a la versión más reciente v=108 y recarga de catálogo
+    // Auto-actualización obligatoria a la versión más reciente v=109 y recarga limpia
     (function() {
       try {
         var p = new URLSearchParams(window.location.search);
         var curV = p.get('v');
         var isReset = p.get('reset') === '1';
 
-        if (isReset || !curV || parseInt(curV) < 108) {
+        if (isReset || !curV || parseInt(curV) < 109) {
           try {
             localStorage.removeItem("migato_earth_session_v1");
             localStorage.removeItem("migato_earth_session_v2");
@@ -128,6 +128,11 @@
             localStorage.removeItem("migato_earth_session_v6");
             localStorage.removeItem("migato_session");
             localStorage.removeItem("migato_user");
+            // Purgar cajas sintéticas de prueba si existieran en memoria
+            var rawPlaces = localStorage.getItem("earth_monagas_places_v9");
+            if (rawPlaces && (rawPlaces.indexOf("POL-SIM-") !== -1 || rawPlaces.indexOf("POL-") !== -1 || rawPlaces.indexOf("sub-ss-casco") !== -1)) {
+              localStorage.removeItem("earth_monagas_places_v9");
+            }
             var keysToRemove = [];
             for (var i = 0; i < localStorage.length; i++) {
               var k = localStorage.key(i);
@@ -139,7 +144,7 @@
           } catch(err) {}
 
           if (isReset) p.delete('reset');
-          p.set('v', '108');
+          p.set('v', '109');
           window.location.replace(window.location.pathname + '?' + p.toString() + window.location.hash);
         }
       } catch(e) {}
@@ -367,7 +372,7 @@
         <div class="h-4 w-[1px] bg-[#23176d]/60 shrink-0 hidden sm:block"></div>
 
         <!-- Selector Territorial (Parroquia Activa con buen ancho en móvil) -->
-        <button id="btn-open-parish-modal" onclick="window.earthApp?.toggleNavBanner ? window.earthApp.toggleNavBanner() : (window.earthApp?.openParishSelector ? window.earthApp.openParishSelector() : null)" class="px-2.5 py-1.5 rounded-xl bg-[#140e40] hover:bg-[#23176d] border border-sky-400/50 text-white text-xs font-bold flex items-center gap-1.5 transition active:scale-95 cursor-pointer max-w-[210px] sm:max-w-xs shrink min-w-0 shadow-sm" title="Navegador Territorial: Municipios, Parroquias y Sectores (Clic para alternar)">
+        <button id="btn-open-parish-modal" onclick="window.openParishSelectorGlobal ? window.openParishSelectorGlobal() : (window.earthApp && window.earthApp.openParishSelector ? window.earthApp.openParishSelector() : null)" class="px-2.5 py-1.5 rounded-xl bg-[#140e40] hover:bg-[#23176d] border border-sky-400/50 text-white text-xs font-bold flex items-center gap-1.5 transition active:scale-95 cursor-pointer max-w-[210px] sm:max-w-xs shrink min-w-0 shadow-sm" title="Seleccionar Parroquia de Trabajo (Clic para abrir panel de 44 Parroquias)">
           <i data-lucide="map-pin" class="w-3.5 h-3.5 text-amber-400 shrink-0"></i>
           <span id="nav-current-location" class="truncate font-black text-xs text-sky-200">Territorio</span>
           <i id="nav-arrow-icon" data-lucide="chevron-down" class="w-3 h-3 text-slate-400 shrink-0"></i>
@@ -415,6 +420,10 @@
               <i data-lucide="home" class="w-4 h-4 text-sky-400"></i>
               <span>Portal Central</span>
             </a>
+            <a href="../carga/" id="menu-link-carga" class="px-3 py-2 rounded-xl hover:bg-[#1f1659] text-sky-200 font-bold flex items-center gap-2.5 transition">
+              <i data-lucide="clipboard-edit" class="w-4 h-4 text-sky-400"></i>
+              <span>Formulario Móvil de Carga</span>
+            </a>
             <a href="../centros-maturin/" class="px-3 py-2 rounded-xl hover:bg-[#1f1659] text-indigo-200 font-bold flex items-center gap-2.5 transition">
               <i data-lucide="school" class="w-4 h-4 text-indigo-400"></i>
               <span>Centros Electorales CNE</span>
@@ -459,108 +468,6 @@
   </header>
 
   <!-- ============================================================== -->
-  <!-- 1.0. BANNER NAVEGADOR TERRITORIAL (MUNICIPIOS, PARROQUIAS Y SECTORES) -->
-  <!-- ============================================================== -->
-  <section id="territory-nav-banner" style="z-index: 1995;" class="bg-[#0b0826] border-b border-sky-400/50 shadow-2xl px-2 sm:px-4 py-2 shrink-0 transition-all duration-300">
-    <div class="flex flex-col gap-2 max-w-full">
-      
-      <!-- Fila 1: Título de Navegación + Buscador Instantáneo Global -->
-      <div class="flex items-center justify-between gap-2 flex-wrap">
-        <div class="flex items-center gap-2">
-          <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse shrink-0"></span>
-          <span class="text-xs font-black text-white uppercase tracking-wider flex items-center gap-1.5">
-            <i data-lucide="map" class="w-4 h-4 text-amber-400"></i>
-            <span>Navegador de Monagas</span>
-          </span>
-          <span class="text-[10px] font-bold px-2 py-0.5 rounded-lg bg-[#23176d] border border-sky-400/40 text-sky-200 hidden md:inline">
-            13 Municipios • 44 Parroquias • Sectores Oficiales
-          </span>
-        </div>
-
-        <!-- Buscador Global en tiempo real con Autocompletado Instantáneo -->
-        <div class="relative flex-1 max-w-sm sm:max-w-md min-w-[200px]">
-          <div class="relative flex items-center">
-            <i data-lucide="search" class="w-3.5 h-3.5 text-slate-400 absolute left-3 pointer-events-none"></i>
-            <input type="text" id="banner-search-sector" placeholder="Buscar sector o centro... (ej. Puerta Negra, La Puente, Casco)"
-              autocomplete="off"
-              class="w-full bg-[#060417] border border-sky-500/50 hover:border-sky-400 focus:border-sky-300 text-xs text-white rounded-xl pl-8 pr-7 py-1.5 focus:outline-none focus:ring-1 focus:ring-sky-400 placeholder-slate-400 font-medium transition">
-            <button type="button" id="banner-search-clear" class="hidden absolute right-2 text-slate-400 hover:text-white text-xs font-bold p-1 cursor-pointer" title="Limpiar búsqueda">✕</button>
-          </div>
-          <!-- Dropdown Flotante de Resultados de Búsqueda -->
-          <div id="banner-search-dropdown" class="hidden absolute top-full left-0 right-0 mt-1 bg-[#0c0926]/98 border border-sky-500/60 rounded-xl shadow-2xl z-50 max-h-64 overflow-y-auto p-1.5 space-y-1 backdrop-blur-md"></div>
-        </div>
-
-        <!-- Botones de Control del Banner -->
-        <div class="flex items-center gap-1 shrink-0">
-          <button type="button" id="btn-banner-open-modal" onclick="window.earthApp?.openParishSelector ? window.earthApp.openParishSelector() : null" class="px-2 py-1 rounded-lg bg-[#140e40] hover:bg-[#23176d] border border-[#23176d] text-[11px] font-bold text-slate-300 hover:text-white transition flex items-center gap-1 cursor-pointer" title="Ver catálogo completo de 44 Parroquias en modal">
-            <i data-lucide="grid" class="w-3.5 h-3.5 text-amber-400"></i>
-            <span class="hidden sm:inline">Catálogo</span>
-          </button>
-          <button type="button" id="btn-toggle-nav-banner-collapse" onclick="window.earthApp?.toggleNavBanner ? window.earthApp.toggleNavBanner() : null" class="p-1 text-slate-400 hover:text-white hover:bg-slate-800/60 rounded-lg transition cursor-pointer" title="Minimizar / Expandir Navegador">
-            <i id="icon-banner-collapse" data-lucide="chevron-up" class="w-4 h-4"></i>
-          </button>
-        </div>
-      </div>
-
-      <!-- Fila 2: Selectores en Cascada Directos (Municipio ➔ Parroquia ➔ Eje ➔ Sector) -->
-      <div id="banner-selectors-row" class="flex items-center gap-1.5 sm:gap-2 flex-wrap text-xs pt-0.5">
-        
-        <!-- 1. MUNICIPIO -->
-        <div class="flex items-center gap-1.5 bg-[#060417] px-2.5 py-1.5 rounded-xl border border-[#23176d] shrink-0">
-          <label for="banner-select-mun" class="text-[10px] font-black text-amber-400 uppercase tracking-wider shrink-0 flex items-center gap-1">
-            <i data-lucide="building" class="w-3 h-3 text-amber-400"></i>
-            <span>Mun:</span>
-          </label>
-          <select id="banner-select-mun" class="bg-transparent text-white font-bold text-xs focus:outline-none cursor-pointer pr-1 min-w-[110px]">
-            <!-- 13 Municipios cargados por JS -->
-          </select>
-        </div>
-
-        <!-- 2. PARROQUIA -->
-        <div class="flex items-center gap-1.5 bg-[#060417] px-2.5 py-1.5 rounded-xl border border-[#23176d] shrink-0">
-          <label for="banner-select-parish" class="text-[10px] font-black text-sky-400 uppercase tracking-wider shrink-0 flex items-center gap-1">
-            <i data-lucide="map-pin" class="w-3 h-3 text-sky-400"></i>
-            <span>Pq:</span>
-          </label>
-          <select id="banner-select-parish" class="bg-transparent text-sky-200 font-bold text-xs focus:outline-none cursor-pointer pr-1 min-w-[120px]">
-            <!-- Parroquias cargadas por JS -->
-          </select>
-        </div>
-
-        <!-- 3. EJE COMUNAL -->
-        <div class="flex items-center gap-1.5 bg-[#060417] px-2.5 py-1.5 rounded-xl border border-[#23176d] shrink-0 max-w-[200px] sm:max-w-xs">
-          <label for="banner-select-eje" class="text-[10px] font-black text-purple-400 uppercase tracking-wider shrink-0 flex items-center gap-1">
-            <i data-lucide="shield" class="w-3 h-3 text-purple-400"></i>
-            <span>Eje:</span>
-          </label>
-          <select id="banner-select-eje" class="bg-transparent text-purple-200 font-bold text-xs focus:outline-none cursor-pointer truncate pr-1">
-            <!-- Ejes cargados por JS -->
-          </select>
-        </div>
-
-        <!-- 4. SECTOR COMUNAL -->
-        <div class="flex items-center gap-1.5 bg-[#140e40] px-2.5 py-1.5 rounded-xl border border-sky-400/60 shrink-0 max-w-[220px] sm:max-w-sm">
-          <label for="banner-select-sector" class="text-[10px] font-black text-emerald-400 uppercase tracking-wider shrink-0 flex items-center gap-1">
-            <i data-lucide="home" class="w-3 h-3 text-emerald-400"></i>
-            <span>Sector:</span>
-          </label>
-          <select id="banner-select-sector" class="bg-transparent text-emerald-200 font-black text-xs focus:outline-none cursor-pointer truncate pr-1">
-            <!-- Sectores cargados por JS -->
-          </select>
-        </div>
-
-        <!-- BOTÓN DE ACCIÓN: IR AL SECTOR -->
-        <button type="button" id="btn-banner-fly-sector" class="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 hover:to-blue-500 text-white font-black text-xs flex items-center gap-1.5 shadow-lg active:scale-95 transition cursor-pointer shrink-0" title="Volar al sector seleccionado en el mapa satelital y abrir su ficha">
-          <i data-lucide="crosshair" class="w-3.5 h-3.5"></i>
-          <span>Ir al Sector</span>
-        </button>
-
-      </div>
-
-    </div>
-  </section>
-
-  <!-- ============================================================== -->
   <!-- 1.1. LA BARRA TERRITORIAL (SUB-PARROQUIA Y SECTORES)            -->
   <!-- ============================================================== -->
   <div id="toolbar-tools-row" style="z-index: 1990;" class="bg-[#0c082b] border-b border-[#23176d]/80 shadow-md shrink-0 w-full h-[44px] px-2 sm:px-4 flex items-center justify-between gap-2 overflow-x-auto no-scrollbar">
@@ -585,6 +492,14 @@
         <span class="font-black text-xs whitespace-nowrap">+ Sector</span>
         <span id="bar-tally-sectores" class="px-1.5 py-0.2 rounded-md bg-[#140e40] border border-sky-400/40 text-[10px] font-mono text-sky-300 font-bold ml-0.5" title="Total de Sectores en esta parroquia">0</span>
       </button>
+
+      <!-- 📋 FORMULARIO DE CARGA DIRECTO -->
+      <a href="../carga/" id="btn-quick-form-carga" target="_blank"
+        class="px-2.5 sm:px-3 py-1.5 rounded-xl bg-[#140e40] hover:bg-[#23176d] text-sky-200 hover:text-white border border-sky-400/40 text-xs font-bold transition flex items-center gap-1.5 active:scale-95 shadow-sm cursor-pointer shrink-0 select-none"
+        title="Abrir Formulario Móvil de Carga de Datos en Terreno">
+        <i data-lucide="clipboard-edit" class="w-3.5 h-3.5 text-sky-400 shrink-0"></i>
+        <span class="font-bold text-xs whitespace-nowrap">Formulario Carga</span>
+      </a>
 
     </div>
 
@@ -1430,16 +1345,28 @@
   <!-- ============================================================== -->
   <!-- 5. MODAL SELECTOR RÁPIDO PARA CAMBIAR PARROQUIA                -->
   <!-- ============================================================== -->
-  <div id="modal-select-parish" style="z-index: 100050; display: none;" class="fixed inset-0 bg-slate-950/85 backdrop-blur-sm hidden items-center justify-center p-3 sm:p-4" onclick="if(event.target === this) { if (window.earthApp?.closeParishSelector) window.earthApp.closeParishSelector(); else { this.style.display = 'none'; this.classList.add('hidden'); } }">
-    <div class="bg-slate-900 border border-slate-700 w-full max-w-lg rounded-2xl shadow-2xl p-4 sm:p-5 space-y-3 max-h-[85vh] flex flex-col pointer-events-auto">
+  <div id="modal-select-parish" style="z-index: 100050; display: none;" class="fixed inset-0 bg-slate-950/85 backdrop-blur-md hidden items-center justify-center p-3 sm:p-4" onclick="if(event.target === this) { if (window.earthApp?.closeParishSelector) window.earthApp.closeParishSelector(); else { this.style.display = 'none'; this.classList.add('hidden'); } }">
+    <div class="bg-slate-900 border border-sky-500/40 w-full max-w-2xl sm:max-w-3xl rounded-2xl shadow-2xl p-4 sm:p-5 space-y-3 max-h-[88vh] flex flex-col pointer-events-auto">
       <div class="flex items-center justify-between border-b border-slate-800 pb-2.5">
-        <div>
-          <span class="text-[10px] font-bold text-amber-400 uppercase tracking-wider">Territorio de Monagas</span>
-          <h3 class="text-base font-black text-white">Seleccionar Parroquia de Trabajo</h3>
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-xl bg-[#23176d] border border-sky-400/50 flex items-center justify-center text-amber-400 shrink-0">
+            <i data-lucide="map-pin" class="w-4 h-4"></i>
+          </div>
+          <div>
+            <span class="text-[10px] font-black text-amber-400 uppercase tracking-wider">Territorio de Monagas • 13 Municipios</span>
+            <h3 class="text-sm sm:text-base font-black text-white">Seleccionar Parroquia de Trabajo (44 Parroquias)</h3>
+          </div>
         </div>
         <button type="button" id="btn-close-parish-modal" data-action="close-parish-modal" onclick="if(window.earthApp?.closeParishSelector) window.earthApp.closeParishSelector(); else { const m = document.getElementById('modal-select-parish'); if (m) { m.style.display = 'none'; m.classList.add('hidden'); } }" class="p-1.5 rounded-lg text-slate-400 hover:text-white bg-slate-800/80 hover:bg-slate-700 transition cursor-pointer" title="Cerrar ventana">
           <i data-lucide="x" class="w-4 h-4 pointer-events-none"></i>
         </button>
+      </div>
+
+      <!-- Buscador en tiempo real interno -->
+      <div class="relative">
+        <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none"></i>
+        <input type="text" id="input-filter-parish-modal" placeholder="Filtrar por parroquia o municipio (ej. San Simón, Godos, Caripe, Pica)..." autocomplete="off"
+          class="w-full bg-[#08061a] border border-[#23176d] focus:border-sky-400 text-xs text-white rounded-xl pl-9 pr-3 py-2 focus:outline-none placeholder-slate-400 font-medium transition">
       </div>
 
       <div id="modal-parishes-catalog" class="space-y-2 overflow-y-auto pr-1 flex-1">
@@ -1730,7 +1657,7 @@
   </div>
 
   <!-- SCRIPT -->
-  <script type="module" src="js/app.js?v=108"></script>
+  <script type="module" src="js/app.js?v=109"></script>
   <script>
     if (window.lucide && typeof window.lucide.createIcons === 'function') {
       window.lucide.createIcons();

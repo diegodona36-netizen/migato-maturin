@@ -1,8 +1,8 @@
 /**
  * Gestor de Estado y Árbol de Lugares (Places) — Google Earth Pro Web (Monagas)
  */
-import { SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=108";
-import { getEjesByParish, getSectoresByParish } from "./monagasSectoresCatalog.js?v=108";
+import { SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=109";
+import { getEjesByParish, getSectoresByParish } from "./monagasSectoresCatalog.js?v=109";
 import { 
   saveParishToFirestore, 
   subscribeToTerritories, 
@@ -10,129 +10,14 @@ import {
   fetchAllTerritoriesFromFirestore,
   mergeItemCollections,
   cleanItem
-} from "./firebaseConfig.js?v=108";
+} from "./firebaseConfig.js?v=109";
 
 const STORAGE_KEY = "earth_monagas_places_v9";
 
-export const DEFAULT_SAN_SIMON_SUBPARROQUIAS = [
-  {
-    id: "sub-ss-casco",
-    parroquiaId: "san-simon",
-    nombre: "Sub-Parroquia 1 • Casco Central",
-    alias: "Centro Histórico",
-    colorBorde: "#c084fc",
-    anchoBorde: 2.5,
-    colorRelleno: "#a855f7",
-    opacidad: 0.18,
-    areaHa: 195.4,
-    perimetroM: 5800,
-    militantes: 3420,
-    casas: 2150,
-    visible: true,
-    vertices: [
-      [9.7560, -63.1890],
-      [9.7570, -63.1740],
-      [9.7440, -63.1730],
-      [9.7430, -63.1880],
-      [9.7560, -63.1890]
-    ]
-  },
-  {
-    id: "sub-ss-palonegro",
-    parroquiaId: "san-simon",
-    nombre: "Sub-Parroquia 2 • Palo Negro / Brisas",
-    alias: "Palo Negro - Brisas del Orinoco",
-    colorBorde: "#c084fc",
-    anchoBorde: 2.5,
-    colorRelleno: "#a855f7",
-    opacidad: 0.18,
-    areaHa: 230.8,
-    perimetroM: 6100,
-    militantes: 4180,
-    casas: 2840,
-    visible: true,
-    vertices: [
-      [9.7540, -63.1740],
-      [9.7530, -63.1600],
-      [9.7360, -63.1610],
-      [9.7380, -63.1750],
-      [9.7540, -63.1740]
-    ]
-  },
-  {
-    id: "sub-ss-muralla",
-    parroquiaId: "san-simon",
-    nombre: "Sub-Parroquia 3 • La Muralla",
-    alias: "La Muralla / El Guafal",
-    colorBorde: "#c084fc",
-    anchoBorde: 2.5,
-    colorRelleno: "#a855f7",
-    opacidad: 0.18,
-    areaHa: 182.2,
-    perimetroM: 5200,
-    militantes: 2950,
-    casas: 1980,
-    visible: true,
-    vertices: [
-      [9.7430, -63.1990],
-      [9.7440, -63.1860],
-      [9.7310, -63.1850],
-      [9.7300, -63.1980],
-      [9.7430, -63.1990]
-    ]
-  }
-];
-
-// Polígonos de sectores inician limpios para ser trazados por los operadores
+// En producción real, las parroquias inician limpias para ser levantadas con precisión en campo
+export const DEFAULT_SAN_SIMON_SUBPARROQUIAS = [];
 export const DEFAULT_SAN_SIMON_POLIGONOS = [];
-
-export const DEFAULT_COROZO_SUBPARROQUIAS = [
-  {
-    id: "sub-corozo-1",
-    parroquiaId: "el-corozo",
-    nombre: "Sub-Parroquia 1 • Casco El Corozo",
-    alias: "El Corozo Centro",
-    colorBorde: "#c084fc",
-    anchoBorde: 2.5,
-    colorRelleno: "#a855f7",
-    opacidad: 0.2,
-    areaHa: 310.5,
-    perimetroM: 7200,
-    militantes: 1850,
-    casas: 980,
-    visible: true,
-    vertices: [
-      [9.7000, -63.2450],
-      [9.7030, -63.2150],
-      [9.6650, -63.2100],
-      [9.6550, -63.2400],
-      [9.7000, -63.2450]
-    ]
-  },
-  {
-    id: "sub-corozo-2",
-    parroquiaId: "el-corozo",
-    nombre: "Sub-Parroquia 2 • Amana del Tamarindo",
-    alias: "Amana",
-    colorBorde: "#a855f7",
-    anchoBorde: 2.5,
-    colorRelleno: "#9333ea",
-    opacidad: 0.2,
-    areaHa: 280.2,
-    perimetroM: 6800,
-    militantes: 1420,
-    casas: 740,
-    visible: true,
-    vertices: [
-      [9.7030, -63.2150],
-      [9.7050, -63.1950],
-      [9.6550, -63.1850],
-      [9.6650, -63.2100],
-      [9.7030, -63.2150]
-    ]
-  }
-];
-
+export const DEFAULT_COROZO_SUBPARROQUIAS = [];
 export const DEFAULT_COROZO_POLIGONOS = [];
 
 export class EarthStore {
@@ -225,36 +110,12 @@ export class EarthStore {
           if (!storedP.limite && p.limite) storedP.limite = p.limite;
           if (!storedP.centro && p.centro) storedP.centro = p.centro;
 
-          // Precarga segura de ejes y subparroquias base si la base está vacía
+          // Precarga segura únicamente para Alto de Los Godos (piloto de campo La Puente) si está vacía
           if (mun.id === "maturin" && p.id === "alto-de-los-godos" && storedP.subparroquias.length === 0) {
             storedP.subparroquias = JSON.parse(JSON.stringify(SUBPARROQUIAS_GODOS || []));
             if (storedP.poligonos.length === 0) {
               storedP.poligonos = JSON.parse(JSON.stringify(SECTORES_LAPUENTE || []));
             }
-          }
-          if (mun.id === "maturin" && p.id === "san-simon" && storedP.subparroquias.length === 0) {
-            storedP.subparroquias = JSON.parse(JSON.stringify(DEFAULT_SAN_SIMON_SUBPARROQUIAS || []));
-          }
-          if (mun.id === "maturin" && p.id === "el-corozo" && storedP.subparroquias.length === 0) {
-            storedP.subparroquias = JSON.parse(JSON.stringify(DEFAULT_COROZO_SUBPARROQUIAS || []));
-          }
-
-          // Carga automática del catálogo oficial para TODAS las parroquias de Monagas (incluyendo La Pica)
-          if (storedP.subparroquias.length === 0) {
-            try {
-              const catEjes = getEjesByParish(mun.id, p.id);
-              if (catEjes && catEjes.length > 0) {
-                storedP.subparroquias = JSON.parse(JSON.stringify(catEjes));
-              }
-            } catch(errEjes) {}
-          }
-          if (storedP.poligonos.length === 0) {
-            try {
-              const catSecs = getSectoresByParish(mun.id, p.id);
-              if (catSecs && catSecs.length > 0) {
-                storedP.poligonos = JSON.parse(JSON.stringify(catSecs));
-              }
-            } catch(errSecs) {}
           }
         });
       });
@@ -264,7 +125,7 @@ export class EarthStore {
   }
 
   purgeDummySectors(state) {
-    // Purgar polígonos ficticios o de referencia en el centro de Maturín
+    // Purgar polígonos y cajas de prueba ficticias en toda la entidad
     let anyPurged = false;
     try {
       if (!state || !state.municipios) return false;
@@ -280,10 +141,22 @@ export class EarthStore {
               p.poligonos = p.poligonos.filter(sec => {
                 if (!sec || !sec.id) return false;
                 if (dummyIds.has(String(sec.id))) return false;
-                if (String(sec.id).startsWith("sec-ss-") || String(sec.id).startsWith("sec-cor-")) return false;
+                if (String(sec.id).startsWith("sec-ss-") || String(sec.id).startsWith("sec-cor-") || String(sec.id).startsWith("POL-")) return false;
                 return true;
               });
               if (p.poligonos.length !== beforeCount) {
+                anyPurged = true;
+                this.syncToCloud(munId, parishId);
+              }
+            }
+            if (p.subparroquias && Array.isArray(p.subparroquias)) {
+              const beforeSub = p.subparroquias.length;
+              p.subparroquias = p.subparroquias.filter(sp => {
+                if (!sp || !sp.id) return false;
+                if (String(sp.id).startsWith("sub-ss-") || String(sp.id).startsWith("sub-corozo-") || String(sp.id).startsWith("EJE-") || String(sp.id).startsWith("sub-pic-")) return false;
+                return true;
+              });
+              if (p.subparroquias.length !== beforeSub) {
                 anyPurged = true;
                 this.syncToCloud(munId, parishId);
               }
