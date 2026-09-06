@@ -618,50 +618,9 @@ class EarthMonagasApp {
   }
 
   renderQuickParishBar() {
-    let bar = document.getElementById("earth-quick-parish-bar");
-    if (!bar) {
-      bar = document.createElement("div");
-      bar.id = "earth-quick-parish-bar";
-      bar.className = "fixed bottom-3 left-1/2 -translate-x-1/2 z-[1500] max-w-[95vw] overflow-x-auto flex items-center gap-1.5 px-3 py-2 bg-[#08061a]/95 border border-[#23176d] rounded-2xl shadow-2xl backdrop-blur-md transition-all pointer-events-auto";
-      document.body.appendChild(bar);
-    }
-
-    if (!this.isGeneralMode) {
-      bar.classList.add("hidden");
-      return;
-    }
-
-    const allParishes = this.store?.getAllParishesWithData() || [];
-    if (allParishes.length === 0) {
-      bar.classList.add("hidden");
-      return;
-    }
-    bar.classList.remove("hidden");
-
-    bar.innerHTML = `
-      <div class="flex items-center gap-1.5 text-[10px] font-black uppercase text-sky-400 font-mono shrink-0 mr-1.5 pl-1">
-        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-        <span class="hidden sm:inline">En Red:</span>
-      </div>
-      <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5">
-        ${allParishes.map(({ munId, parishId, parish: p }) => {
-          const isActive = String(this.selectedParishId) === String(parishId);
-          const count = (p.poligonos || []).length;
-          const subCount = (p.subparroquias || []).length;
-          const bg = isActive 
-            ? "bg-[#23176d] text-white border-sky-400 shadow-md shadow-[#23176d]/60 font-black scale-105" 
-            : "bg-[#140e40]/90 hover:bg-[#23176d] text-slate-200 border border-[#23176d]/80 font-bold hover:text-white";
-          return `
-            <button onclick="window.earthApp.selectParish('${munId}', '${parishId}')" class="px-3 py-1.5 rounded-xl text-xs border flex items-center gap-2 shrink-0 transition-all active:scale-95 cursor-pointer ${bg}">
-              <span class="whitespace-nowrap">📍 ${p.nombre}</span>
-              <span class="text-[10px] font-mono font-bold text-sky-300 bg-[#08061a]/80 px-1.5 py-0.5 rounded-md border border-[#23176d]">
-                ${count > 0 ? `${count} sec` : `${subCount} ejes`}
-              </span>
-            </button>
-          `;
-        }).join("")}
-      </div>
-    `;
+    // ELIMINADO DEFINITIVAMENTE: La vista satelital debe estar 100% limpia sin tickers ni carruseles inferiores
+    const old = document.getElementById("earth-quick-parish-bar");
+    if (old) old.remove();
   }
 
   /**

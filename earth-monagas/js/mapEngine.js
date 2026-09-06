@@ -35,7 +35,7 @@ export class EarthMapEngine {
       l1: false,
       l2: false,
       l3: false,
-      l4: true,
+      l4: false,
       l5: true
     };
 
@@ -906,9 +906,16 @@ export class EarthMapEngine {
    */
   updateHierarchicalLOD() {
     if (!this.map) return;
+    const currentZoom = this.map.getZoom();
+    // Descongestión visual: solo mostrar chips de texto flotantes con zoom cercano (>= 15) para evitar enjambre de etiquetas
+    const showLabels = currentZoom >= 15;
+
     if (this.hierarchicalVisibility.l4) {
       if (this.subParroquiasLayer && !this.map.hasLayer(this.subParroquiasLayer)) this.map.addLayer(this.subParroquiasLayer);
-      if (this.subParroquiaLabelsLayer && !this.map.hasLayer(this.subParroquiaLabelsLayer)) this.map.addLayer(this.subParroquiaLabelsLayer);
+      if (this.subParroquiaLabelsLayer) {
+        if (showLabels && !this.map.hasLayer(this.subParroquiaLabelsLayer)) this.map.addLayer(this.subParroquiaLabelsLayer);
+        else if (!showLabels && this.map.hasLayer(this.subParroquiaLabelsLayer)) this.map.removeLayer(this.subParroquiaLabelsLayer);
+      }
     } else {
       if (this.subParroquiasLayer && this.map.hasLayer(this.subParroquiasLayer)) this.map.removeLayer(this.subParroquiasLayer);
       if (this.subParroquiaLabelsLayer && this.map.hasLayer(this.subParroquiaLabelsLayer)) this.map.removeLayer(this.subParroquiaLabelsLayer);
@@ -916,7 +923,10 @@ export class EarthMapEngine {
 
     if (this.hierarchicalVisibility.l5) {
       if (this.polygonsLayer && !this.map.hasLayer(this.polygonsLayer)) this.map.addLayer(this.polygonsLayer);
-      if (this.sectorLabelsLayer && !this.map.hasLayer(this.sectorLabelsLayer)) this.map.addLayer(this.sectorLabelsLayer);
+      if (this.sectorLabelsLayer) {
+        if (showLabels && !this.map.hasLayer(this.sectorLabelsLayer)) this.map.addLayer(this.sectorLabelsLayer);
+        else if (!showLabels && this.map.hasLayer(this.sectorLabelsLayer)) this.map.removeLayer(this.sectorLabelsLayer);
+      }
     } else {
       if (this.polygonsLayer && this.map.hasLayer(this.polygonsLayer)) this.map.removeLayer(this.polygonsLayer);
       if (this.sectorLabelsLayer && this.map.hasLayer(this.sectorLabelsLayer)) this.map.removeLayer(this.sectorLabelsLayer);
