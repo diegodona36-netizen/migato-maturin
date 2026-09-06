@@ -318,6 +318,20 @@ TOOLS_DEFINITIONS = [
                 }
             }
         }
+    },
+    {
+        "name": "consultar_perplexity",
+        "description": "Búsqueda web viva con Perplexity AI para verificar centros de votación, instituciones, noticias y datos de Monagas con fuentes citadas.",
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "query": {
+                    "type": "string",
+                    "description": "Pregunta o consulta de búsqueda en vivo."
+                }
+            },
+            "required": ["query"]
+        }
     }
 ]
 
@@ -523,6 +537,9 @@ def handle_json_rpc(req):
                 txt = tool_obtener_enlace_despacho(args.get("parroquia_id", ""))
             elif tool_name == "generar_resumen_sala_situacional":
                 txt = tool_generar_resumen_sala_situacional(args.get("municipio_id", "maturin"))
+            elif tool_name == "consultar_perplexity":
+                from scripts.perplexity_client import consultar_perplexity
+                txt = consultar_perplexity(args.get("query", ""))
             else:
                 return {
                     "jsonrpc": "2.0",
