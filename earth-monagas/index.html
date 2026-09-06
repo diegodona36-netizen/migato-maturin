@@ -89,13 +89,13 @@
     }
   </style>
   <script>
-    // Auto-actualización obligatoria a la versión más reciente v=100
+    // Auto-actualización obligatoria a la versión más reciente v=104
     (function() {
       try {
         var p = new URLSearchParams(window.location.search);
         var curV = p.get('v');
-        if (!curV || curV !== '100') {
-          p.set('v', '100');
+        if (!curV || parseInt(curV) < 104) {
+          p.set('v', '104');
           window.location.replace(window.location.pathname + '?' + p.toString() + window.location.hash);
         }
       } catch(e) {}
@@ -1580,7 +1580,7 @@
   </div>
 
   <!-- SCRIPT -->
-  <script type="module" src="js/app.js?v=103"></script>
+  <script type="module" src="js/app.js?v=104"></script>
   <script>
     if (window.lucide && typeof window.lucide.createIcons === 'function') {
       window.lucide.createIcons();

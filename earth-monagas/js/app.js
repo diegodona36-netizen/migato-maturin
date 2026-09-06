@@ -295,19 +295,28 @@ class EarthMonagasApp {
           backdrop.style.display = "none";
         }
       } else {
-        // En escritorio (>= 768px): Mantener la división de pantalla activa (Panel + Mapa)
-        const sidebar = document.getElementById("earth-sidebar");
-        const backdrop = document.getElementById("sidebar-backdrop");
-        if (sidebar && !this.userExplicitlyCollapsedSidebar) {
-          sidebar.classList.remove("hidden");
-          sidebar.classList.add("flex");
-          sidebar.style.display = "flex";
-        }
-        if (backdrop) {
-          backdrop.classList.add("hidden");
-          backdrop.style.display = "none";
+        // En escritorio (>= 768px): Desplegar automáticamente el Panel de Lugares y Territorio
+        this.userExplicitlyCollapsedSidebar = false;
+        if (typeof this.toggleSidebar === "function") {
+          this.toggleSidebar(true);
+        } else {
+          const sidebar = document.getElementById("earth-sidebar");
+          const expandBtn = document.getElementById("btn-desktop-expand-sidebar");
+          if (sidebar) {
+            sidebar.classList.remove("hidden");
+            sidebar.classList.add("flex");
+            sidebar.style.display = "flex";
+          }
+          if (expandBtn) {
+            expandBtn.style.display = "none";
+            expandBtn.classList.add("hidden");
+          }
         }
       }
+
+      // Mostrar de inmediato la Ficha Flotante de Variables y Censo de la Parroquia
+      this.showQuickStats("parroquia", parish);
+
     } catch (err) {
       console.warn("[selectParish] Error controlado:", err);
     }
@@ -321,18 +330,29 @@ class EarthMonagasApp {
     let totalCasas = 0;
 
     const polys = parish.poligonos || [];
-    if (polys.length > 0) {
-      // Los sectores son la fuente de verdad primaria (Nivel 5)
-      polys.forEach(p => {
-        totalMilitantes += parseInt(p.militantes !== undefined ? p.militantes : (p.habitantes || 0)) || 0;
-        totalCasas += parseInt(p.casas || 0) || 0;
-      });
-    } else {
-      // Fallback si solo se han trazado sub-parroquias sin sectores aún
-      (parish.subparroquias || []).forEach(sp => {
-        totalMilitantes += parseInt(sp.militantes !== undefined ? sp.militantes : (sp.habitantes || 0)) || 0;
-        totalCasas += parseInt(sp.casas || 0) || 0;
-      });
+    let polyMilitantes = 0;
+    let polyCasas = 0;
+    polys.forEach(p => {
+      polyMilitantes += parseInt(p.militantes !== undefined ? p.militantes : (p.habitantes || 0)) || 0;
+      polyCasas += parseInt(p.casas || 0) || 0;
+    });
+
+    let subMilitantes = 0;
+    let subCasas = 0;
+    (parish.subparroquias || []).forEach(sp => {
+      subMilitantes += parseInt(sp.militantes !== undefined ? sp.militantes : (sp.habitantes || 0)) || 0;
+      subCasas += parseInt(sp.casas || 0) || 0;
+    });
+
+    if (polyMilitantes > 0 || polyCasas > 0) {
+      totalMilitantes = polyMilitantes;
+      totalCasas = polyCasas;
+    } else if (subMilitantes > 0 || subCasas > 0) {
+      totalMilitantes = subMilitantes;
+      totalCasas = subCasas;
+    } else if (parish.electores || parish.poblacion) {
+      totalMilitantes = parseInt(parish.electores || parish.poblacion || 0);
+      totalCasas = Math.round(totalMilitantes / 3.8);
     }
 
     const elMil = document.getElementById("tally-militantes-val");
@@ -1300,7 +1320,46 @@ class EarthMonagasApp {
 
     const parish = this.store.getParish(this.selectedMunId, this.selectedParishId);
 
-    if (type === "subparroquia") {
+    if (type === "parroquia") {
+      const munObj = CATALOGO_MONAGAS.find(m => m.id === this.selectedMunId);
+      if (badge) badge.style.backgroundColor = item.color || "#10b981";
+      if (subTitle) subTitle.textContent = `Territorio Parroquial • Municipio ${munObj ? munObj.nombre : 'Monagas'}`;
+      if (title) title.textContent = `Parroquia ${item.nombre || 'Parroquia'}`;
+
+      const allPolys = item.poligonos || [];
+      const allSub = item.subparroquias || [];
+
+      let totCasas = 0, totFam = 0, totHab = 0, totVot = 0;
+      allPolys.forEach(c => {
+        totCasas += parseInt(c.casas || 0) || 0;
+        totFam += parseInt(c.familias || 0) || 0;
+        totHab += parseInt(c.habitantes || 0) || 0;
+        totVot += parseInt(c.militantes !== undefined ? c.militantes : (c.habitantes || 0)) || 0;
+      });
+
+      if (totCasas === 0 && totHab === 0) {
+        allSub.forEach(s => {
+          totCasas += parseInt(s.casas || 0) || 0;
+          totFam += parseInt(s.familias || 0) || 0;
+          totHab += parseInt(s.habitantes || 0) || 0;
+          totVot += parseInt(s.militantes !== undefined ? s.militantes : (s.habitantes || 0)) || 0;
+        });
+      }
+
+      if (totHab === 0 && item.poblacion) totHab = item.poblacion;
+      if (totVot === 0 && item.electores) totVot = item.electores;
+      if (totCasas === 0 && totHab > 0) totCasas = Math.round(totHab / 3.8);
+      if (totFam === 0 && totCasas > 0) totFam = Math.round(totCasas * 1.15);
+
+      if (elCasas) elCasas.textContent = totCasas.toLocaleString();
+      if (elFamilias) elFamilias.textContent = totFam.toLocaleString();
+      if (elHabitantes) elHabitantes.textContent = totHab.toLocaleString();
+      if (elVotantes) elVotantes.textContent = totVot.toLocaleString();
+
+      if (elCentro) {
+        elCentro.textContent = `${allSub.length} Ejes Comunales • ${allPolys.length} Sectores Mapeados`;
+      }
+    } else if (type === "subparroquia") {
       if (badge) badge.style.backgroundColor = item.colorRelleno || item.colorBorde || "#c084fc";
       if (subTitle) subTitle.textContent = "Sub-Parroquia / Eje Comunal";
       if (title) title.textContent = item.nombre || "Sub-Parroquia";
@@ -1314,12 +1373,21 @@ class EarthMonagasApp {
         totVot += parseInt(c.militantes !== undefined ? c.militantes : (c.habitantes || 0)) || 0;
       });
 
+      if (totCasas === 0 && totHab === 0) {
+        totCasas = parseInt(item.casas || 0) || 0;
+        totFam = parseInt(item.familias || 0) || 0;
+        totHab = parseInt(item.habitantes || 0) || 0;
+        totVot = parseInt(item.militantes !== undefined ? item.militantes : (item.habitantes || 0)) || 0;
+      }
+
       if (elCasas) elCasas.textContent = totCasas.toLocaleString();
       if (elFamilias) elFamilias.textContent = totFam.toLocaleString();
       if (elHabitantes) elHabitantes.textContent = totHab.toLocaleString();
       if (elVotantes) elVotantes.textContent = totVot.toLocaleString();
 
-      if (elCentro) elCentro.textContent = `${childSecs.length} Sectores Integrados`;
+      if (elCentro) {
+        elCentro.textContent = childSecs.length > 0 ? `${childSecs.length} Sectores Integrados` : (item.alias || "Sin sectores mapeados aún");
+      }
     } else {
       // Sector Comunal (poligono)
       if (badge) badge.style.backgroundColor = item.colorRelleno || item.colorBorde || "#facc15";
@@ -1363,6 +1431,10 @@ class EarthMonagasApp {
         const curMun = this.selectedMunId;
         const curPar = this.selectedParishId;
         this.closeQuickStats();
+        if (curType === "parroquia") {
+          window.location.href = `../caracterizacion-voto/?p=${curPar}`;
+          return;
+        }
         setTimeout(() => {
           this.propDialog?.open(curType, curItem, curMun, curPar);
         }, 50);
