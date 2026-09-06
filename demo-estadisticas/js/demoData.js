@@ -980,6 +980,8 @@ export function getAllSectorsFlattened() {
             munNombre: m.nombre,
             parishId: p.id,
             parishNombre: p.nombre,
+            parroquiaId: p.id,
+            parroquiaNombre: p.nombre,
             subParroquiaId: sp.id,
             subParroquiaNombre: sp.nombre,
             ratioHabCasa: (s.habitantes / (s.casas || 1)).toFixed(2),

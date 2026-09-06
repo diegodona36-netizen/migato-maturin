@@ -252,11 +252,9 @@ export class DemoStatsApp {
     // 1. Cockpit de Métricas Clave de Decisión
     this.renderDecisionCockpit(agg, matrix);
 
-    // 2. Gráficos de Torta / Dona (si Chart.js está cargado en el navegador)
-    if (typeof Chart !== "undefined") {
-      this.renderElectoralShareChart(agg, matrix);
-      this.renderCoverageTrafficChart(agg);
-    }
+    // 2. Gráficos de Torta / Dona (Chart.js con fallback SVG si Chart.js no ha cargado)
+    this.renderElectoralShareChart(agg, matrix);
+    this.renderCoverageTrafficChart(agg);
   }
 
   renderDecisionCockpit(agg, matrix) {
@@ -267,7 +265,8 @@ export class DemoStatsApp {
     } else if (this.selectedParishId === "todas") {
       const pMap = {};
       agg.filteredSectors.forEach(s => {
-        pMap[s.parroquiaNombre] = (pMap[s.parroquiaNombre] || 0) + s.votantes;
+        const pName = s.parroquiaNombre || s.parishNombre;
+        pMap[pName] = (pMap[pName] || 0) + s.votantes;
       });
       items = Object.entries(pMap).map(([nombre, votantes]) => ({ nombre, votantes })).sort((a, b) => b.votantes - a.votantes);
     } else {
@@ -320,6 +319,53 @@ export class DemoStatsApp {
     }
   }
 
+  renderSVGDoughnutFallback(canvas, labels, data, colors, centerTitle, centerValue) {
+    canvas.style.display = "none";
+    let container = canvas.parentElement.querySelector(".svg-doughnut-fallback");
+    if (!container) {
+      container = document.createElement("div");
+      container.className = "svg-doughnut-fallback flex flex-col items-center justify-center w-full py-2";
+      canvas.parentElement.appendChild(container);
+    }
+
+    const total = data.reduce((a, b) => a + b, 0) || 1;
+    const circumference = 2 * Math.PI * 40; // r=40
+    let offset = 0;
+
+    const circles = data.map((val, idx) => {
+      const pct = val / total;
+      const dashArray = `${pct * circumference} ${circumference}`;
+      const circleSvg = `<circle cx="50" cy="50" r="40" fill="transparent" stroke="${colors[idx % colors.length]}" stroke-width="15" stroke-dasharray="${dashArray}" stroke-dashoffset="${-offset}" transform="rotate(-90 50 50)"></circle>`;
+      offset += pct * circumference;
+      return circleSvg;
+    }).join("");
+
+    const topLabel = centerTitle || labels[0] || "";
+    const topPct = centerValue || ((data[0] / total) * 100).toFixed(0) + "%";
+
+    container.innerHTML = `
+      <div class="relative w-44 h-44">
+        <svg viewBox="0 0 100 100" class="w-full h-full">
+          <circle cx="50" cy="50" r="40" fill="transparent" stroke="#1e293b" stroke-width="15"></circle>
+          ${circles}
+        </svg>
+        <div class="absolute inset-0 flex flex-col items-center justify-center text-center pointer-events-none">
+          <span class="text-[10px] text-slate-400 font-mono">LÍDER</span>
+          <span class="text-xs font-black text-amber-400 truncate max-w-[90px]">${topLabel}</span>
+          <span class="text-sm font-black text-white">${topPct}</span>
+        </div>
+      </div>
+      <div class="flex flex-wrap items-center justify-center gap-2 mt-2 text-[10px] text-slate-300 font-mono">
+        ${labels.slice(0, 5).map((l, i) => `
+          <span class="flex items-center gap-1">
+            <span class="w-2 h-2 rounded-full" style="background-color:${colors[i % colors.length]}"></span>
+            ${l} (${((data[i]/total)*100).toFixed(0)}%)
+          </span>
+        `).join("")}
+      </div>
+    `;
+  }
+
   renderElectoralShareChart(agg, matrix) {
     const canvas = document.getElementById("chart-electoral-share");
     if (!canvas) return;
@@ -338,7 +384,8 @@ export class DemoStatsApp {
       subtitleText = currentMun ? `Parroquias de ${currentMun.nombre}` : "Parroquias";
       const pMap = {};
       agg.filteredSectors.forEach(s => {
-        pMap[s.parroquiaNombre] = (pMap[s.parroquiaNombre] || 0) + s.votantes;
+        const pName = s.parroquiaNombre || s.parishNombre;
+        pMap[pName] = (pMap[pName] || 0) + s.votantes;
       });
       items = Object.entries(pMap).map(([label, value]) => ({ label, value })).sort((a, b) => b.value - a.value);
     } else {
@@ -362,56 +409,63 @@ export class DemoStatsApp {
     const labels = items.map(it => it.label);
     const data = items.map(it => it.value);
 
-    if (this.electoralChartInstance) {
-      this.electoralChartInstance.destroy();
-      this.electoralChartInstance = null;
-    }
+    if (typeof Chart === "undefined") {
+      this.renderSVGDoughnutFallback(canvas, labels, data, colors, labels[0], null);
+    } else {
+      if (this.electoralChartInstance) {
+        this.electoralChartInstance.destroy();
+        this.electoralChartInstance = null;
+      }
+      canvas.style.display = "block";
+      const svgOld = canvas.parentElement.querySelector(".svg-doughnut-fallback");
+      if (svgOld) svgOld.remove();
 
-    const ctx = canvas.getContext("2d");
-    this.electoralChartInstance = new Chart(ctx, {
-      type: "doughnut",
-      data: {
-        labels,
-        datasets: [{
-          data,
-          backgroundColor: colors.slice(0, labels.length),
-          borderColor: "#060913",
-          borderWidth: 2,
-          hoverOffset: 6
-        }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        cutout: "62%",
-        plugins: {
-          legend: {
-            position: window.innerWidth < 640 ? "bottom" : "right",
-            labels: {
-              color: "#cbd5e1",
-              boxWidth: 10,
-              font: { family: "Inter", size: 10 }
-            }
-          },
-          tooltip: {
-            backgroundColor: "#0f172a",
-            titleColor: "#f59e0b",
-            bodyColor: "#f8fafc",
-            borderColor: "rgba(245, 158, 11, 0.4)",
-            borderWidth: 1,
-            padding: 10,
-            callbacks: {
-              label: (context) => {
-                const val = context.parsed;
-                const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                const pct = total > 0 ? ((val / total) * 100).toFixed(1) : 0;
-                return ` ${context.label}: ${this.nf.format(val)} votantes (${pct}%)`;
+      const ctx = canvas.getContext("2d");
+      this.electoralChartInstance = new Chart(ctx, {
+        type: "doughnut",
+        data: {
+          labels,
+          datasets: [{
+            data,
+            backgroundColor: colors.slice(0, labels.length),
+            borderColor: "#060913",
+            borderWidth: 2,
+            hoverOffset: 6
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          cutout: "62%",
+          plugins: {
+            legend: {
+              position: window.innerWidth < 640 ? "bottom" : "right",
+              labels: {
+                color: "#cbd5e1",
+                boxWidth: 10,
+                font: { family: "Inter", size: 10 }
+              }
+            },
+            tooltip: {
+              backgroundColor: "#0f172a",
+              titleColor: "#f59e0b",
+              bodyColor: "#f8fafc",
+              borderColor: "rgba(245, 158, 11, 0.4)",
+              borderWidth: 1,
+              padding: 10,
+              callbacks: {
+                label: (context) => {
+                  const val = context.parsed;
+                  const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                  const pct = total > 0 ? ((val / total) * 100).toFixed(1) : 0;
+                  return ` ${context.label}: ${this.nf.format(val)} votantes (${pct}%)`;
+                }
               }
             }
           }
         }
-      }
-    });
+      });
+    }
 
     const summaryEl = document.getElementById("chart-electoral-summary");
     if (summaryEl && items.length > 0) {
@@ -437,55 +491,62 @@ export class DemoStatsApp {
     const labels = ["Alta (≥80%)", "Media (50-79%)", "Crítica (<50%)"];
     const colors = ["#10b981", "#f59e0b", "#ef4444"];
 
-    if (this.coverageChartInstance) {
-      this.coverageChartInstance.destroy();
-      this.coverageChartInstance = null;
-    }
+    if (typeof Chart === "undefined") {
+      this.renderSVGDoughnutFallback(canvas, labels, data, colors, "ÓPTIMO", total > 0 ? ((high.length/total)*100).toFixed(0) + "%" : "0%");
+    } else {
+      if (this.coverageChartInstance) {
+        this.coverageChartInstance.destroy();
+        this.coverageChartInstance = null;
+      }
+      canvas.style.display = "block";
+      const svgOld = canvas.parentElement.querySelector(".svg-doughnut-fallback");
+      if (svgOld) svgOld.remove();
 
-    const ctx = canvas.getContext("2d");
-    this.coverageChartInstance = new Chart(ctx, {
-      type: "doughnut",
-      data: {
-        labels,
-        datasets: [{
-          data,
-          backgroundColor: colors,
-          borderColor: "#060913",
-          borderWidth: 2,
-          hoverOffset: 6
-        }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        cutout: "62%",
-        plugins: {
-          legend: {
-            position: "bottom",
-            labels: {
-              color: "#cbd5e1",
-              boxWidth: 12,
-              font: { family: "Inter", size: 11 }
-            }
-          },
-          tooltip: {
-            backgroundColor: "#0f172a",
-            titleColor: "#34d399",
-            bodyColor: "#f8fafc",
-            borderColor: "rgba(52, 211, 153, 0.4)",
-            borderWidth: 1,
-            padding: 10,
-            callbacks: {
-              label: (context) => {
-                const val = context.parsed;
-                const pct = total > 0 ? ((val / total) * 100).toFixed(1) : 0;
-                return ` ${context.label}: ${val} sectores (${pct}%)`;
+      const ctx = canvas.getContext("2d");
+      this.coverageChartInstance = new Chart(ctx, {
+        type: "doughnut",
+        data: {
+          labels,
+          datasets: [{
+            data,
+            backgroundColor: colors,
+            borderColor: "#060913",
+            borderWidth: 2,
+            hoverOffset: 6
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          cutout: "62%",
+          plugins: {
+            legend: {
+              position: "bottom",
+              labels: {
+                color: "#cbd5e1",
+                boxWidth: 12,
+                font: { family: "Inter", size: 11 }
+              }
+            },
+            tooltip: {
+              backgroundColor: "#0f172a",
+              titleColor: "#34d399",
+              bodyColor: "#f8fafc",
+              borderColor: "rgba(52, 211, 153, 0.4)",
+              borderWidth: 1,
+              padding: 10,
+              callbacks: {
+                label: (context) => {
+                  const val = context.parsed;
+                  const pct = total > 0 ? ((val / total) * 100).toFixed(1) : 0;
+                  return ` ${context.label}: ${val} sectores (${pct}%)`;
+                }
               }
             }
           }
         }
-      }
-    });
+      });
+    }
 
     const summaryEl = document.getElementById("chart-coverage-summary");
     if (summaryEl) {
@@ -1051,7 +1112,27 @@ export class DemoStatsApp {
   }
 }
 
-// Inicialización global
-window.addEventListener("DOMContentLoaded", () => {
-  window.demoApp = new DemoStatsApp();
+// Inicialización global indestructible (funciona incluso si DOMContentLoaded ya ocurrió)
+function bootDemoStatsApp() {
+  if (!window.demoApp) {
+    try {
+      window.demoApp = new DemoStatsApp();
+      console.log("MIGATO DemoStatsApp inicializada correctamente.");
+    } catch (err) {
+      console.error("Error inicializando DemoStatsApp:", err);
+    }
+  }
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", bootDemoStatsApp);
+} else {
+  bootDemoStatsApp();
+}
+
+// Respaldo para cuando Chart.js termine de cargar desde CDN
+window.addEventListener("load", () => {
+  if (window.demoApp) {
+    window.demoApp.renderDecisionCenter();
+  }
 });
