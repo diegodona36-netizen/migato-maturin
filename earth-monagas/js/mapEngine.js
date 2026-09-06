@@ -707,13 +707,21 @@ export class EarthMapEngine {
           if (!isDrawing && !this.isTouchDevice) {
             // Calcular consolidado suma viva de sectores dentro de este Eje Comunal
             const childSecs = (pData.poligonos || []).filter(p => String(p.subParroquiaId) === String(sp.id));
-            let totCasas = 0, totFam = 0, totHab = 0, totVot = 0;
+            let totCasas = 0, totFam = 0, totHab = 0, totVot = 0, totDuro = 0, totBlando = 0, totNuevo = 0;
             childSecs.forEach(c => {
               totCasas += parseInt(c.casas || 0) || 0;
               totFam += parseInt(c.familias || 0) || 0;
               totHab += parseInt(c.habitantes || 0) || 0;
-              totVot += parseInt(c.militantes !== undefined ? c.militantes : (c.habitantes || 0)) || 0;
+              const v = parseInt(c.militantes !== undefined ? c.militantes : (c.habitantes || 0)) || 0;
+              totVot += v;
+              totDuro += parseInt(c.votoDuro || 0) || 0;
+              totBlando += parseInt(c.votoBlando || 0) || 0;
+              totNuevo += parseInt(c.votoNuevo || 0) || 0;
             });
+
+            const polDuro = totDuro || Math.round(totVot * 0.60);
+            const polBlando = totBlando || Math.round(totVot * 0.25);
+            const polNuevo = totNuevo || Math.max(0, totVot - polDuro - polBlando);
 
             spLayer.bindTooltip(`
               <div class="p-2 font-mono text-xs max-w-[260px] bg-[#08061a] rounded-xl border border-purple-500/50 shadow-2xl">
@@ -746,6 +754,12 @@ export class EarthMapEngine {
                     <span class="text-[9px] text-purple-400 font-bold block uppercase">Votantes</span>
                     <strong class="text-purple-200 text-xs">${totVot.toLocaleString()}</strong>
                   </div>
+                </div>
+
+                <div class="grid grid-cols-3 gap-1 text-center font-mono text-[9px] mb-1.5 p-1 rounded-lg bg-slate-950/90 border border-purple-800/60">
+                  <span class="text-emerald-300 font-bold" title="Voto Duro">🟢 ${polDuro.toLocaleString()}</span>
+                  <span class="text-amber-300 font-bold" title="Voto Blando">🟡 ${polBlando.toLocaleString()}</span>
+                  <span class="text-sky-300 font-bold" title="Voto Nuevo">🔵 ${polNuevo.toLocaleString()}</span>
                 </div>
 
                 <div class="flex items-center justify-between text-[9px] text-slate-400 pt-0.5 border-t border-purple-900/40">
@@ -838,6 +852,10 @@ export class EarthMapEngine {
           const spTag = spObj ? ` • ${spObj.nombre}` : "";
           const centroVot = poly.centroVotacion ? `🏫 ${poly.centroVotacion}` : "🏫 Centro no asignado";
 
+          const duroCount = poly.votoDuro !== undefined ? poly.votoDuro : Math.round(milCount * 0.60);
+          const blandoCount = poly.votoBlando !== undefined ? poly.votoBlando : Math.round(milCount * 0.25);
+          const nuevoCount = poly.votoNuevo !== undefined ? poly.votoNuevo : Math.max(0, milCount - duroCount - blandoCount);
+
           if (!isDrawing && !this.isTouchDevice) {
             pLayer.bindTooltip(`
               <div class="p-2 font-mono text-xs max-w-[260px] bg-[#08061a] rounded-xl border border-sky-500/50 shadow-2xl">
@@ -870,6 +888,12 @@ export class EarthMapEngine {
                     <span class="text-[9px] text-purple-400 font-bold block uppercase">Votantes</span>
                     <strong class="text-purple-200 text-xs">${milCount.toLocaleString()}</strong>
                   </div>
+                </div>
+
+                <div class="grid grid-cols-3 gap-1 text-center font-mono text-[9px] mb-1.5 p-1 rounded-lg bg-slate-950/90 border border-sky-800/60">
+                  <span class="text-emerald-300 font-bold" title="Voto Duro">🟢 ${duroCount.toLocaleString()}</span>
+                  <span class="text-amber-300 font-bold" title="Voto Blando">🟡 ${blandoCount.toLocaleString()}</span>
+                  <span class="text-sky-300 font-bold" title="Voto Nuevo">🔵 ${nuevoCount.toLocaleString()}</span>
                 </div>
 
                 <div class="text-[10px] text-purple-200 font-medium truncate mb-1 bg-purple-950/60 px-1.5 py-1 rounded border border-purple-800/60">
