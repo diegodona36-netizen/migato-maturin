@@ -2,21 +2,21 @@
  * Controlador Principal — Google Earth Pro Web (Edición Estado Monagas)
  * Robusto, 100% Operativo y Totalmente Individualizado
  */
-import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=94";
-import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=94";
-import { getAllParishesForSelector } from "./usersCatalog.js?v=94";
-import { EarthStore } from "./earthStore.js?v=94";
-import { EarthMapEngine } from "./mapEngine.js?v=94";
-import { PropertiesDialog } from "./propertiesDialog.js?v=94";
-import { ToolsManager } from "./toolsManager.js?v=94";
-import { detectParishFromGeometry } from "./geoMonagas.js?v=94";
-import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=94";
+import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=95";
+import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=95";
+import { getAllParishesForSelector } from "./usersCatalog.js?v=95";
+import { EarthStore } from "./earthStore.js?v=95";
+import { EarthMapEngine } from "./mapEngine.js?v=95";
+import { PropertiesDialog } from "./propertiesDialog.js?v=95";
+import { ToolsManager } from "./toolsManager.js?v=95";
+import { detectParishFromGeometry } from "./geoMonagas.js?v=95";
+import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=95";
 import { 
   getSavedFirebaseConfig, 
   saveFirebaseConfig, 
   isFirebaseConfigured, 
   initFirebase 
-} from "./firebaseConfig.js?v=94";
+} from "./firebaseConfig.js?v=95";
 
 class EarthMonagasApp {
   constructor() {
@@ -302,6 +302,12 @@ class EarthMonagasApp {
     const elCas = document.getElementById("tally-casas-val");
     if (elMil) elMil.textContent = totalMilitantes.toLocaleString();
     if (elCas) elCas.textContent = totalCasas.toLocaleString();
+
+    // Actualizar contadores vivos en la Barra Territorial (Sub-Parroquia y Sectores)
+    const elEjes = document.getElementById("bar-tally-ejes");
+    const elSecs = document.getElementById("bar-tally-sectores");
+    if (elEjes) elEjes.textContent = (parish?.subparroquias || []).length;
+    if (elSecs) elSecs.textContent = (parish?.poligonos || []).length;
   }
 
   updateDrawingBannerParishText() {
@@ -589,12 +595,12 @@ class EarthMonagasApp {
   }
 
   toggleSubParishFolder(subParishId) {
-    this.collapsedFolders = this.collapsedFolders || new Set();
+    this.expandedFolders = this.expandedFolders || new Set();
     const sid = String(subParishId);
-    if (this.collapsedFolders.has(sid)) {
-      this.collapsedFolders.delete(sid);
+    if (this.expandedFolders.has(sid)) {
+      this.expandedFolders.delete(sid);
     } else {
-      this.collapsedFolders.add(sid);
+      this.expandedFolders.add(sid);
     }
     this.renderPlacesTree();
   }
@@ -812,7 +818,10 @@ class EarthMonagasApp {
         </div>
       `;
     } else {
-      this.collapsedFolders = this.collapsedFolders || new Set();
+      this.expandedFolders = this.expandedFolders || new Set();
+      if (this.activeSubParroquiaId) {
+        this.expandedFolders.add(String(this.activeSubParroquiaId));
+      }
 
       allSubparroquias.forEach(sp => {
         const isSelected = String(sp.id) === String(this.activeSubParroquiaId);
@@ -824,8 +833,7 @@ class EarthMonagasApp {
         if (q && !matchSp && filteredSecInSp.length === 0) return;
 
         const displaySecs = q ? filteredSecInSp : secInSp;
-        const isCollapsed = this.collapsedFolders.has(String(sp.id));
-        const isExpanded = !isCollapsed;
+        const isExpanded = q ? true : this.expandedFolders.has(String(sp.id));
 
         // Rollup vivo de estadísticas del eje sumando sus sectores hijos
         let totCasas = 0, totFam = 0, totHab = 0, totVot = 0;
@@ -863,11 +871,9 @@ class EarthMonagasApp {
 
               <!-- Acciones del Eje -->
               <div class="flex items-center gap-1 shrink-0" onclick="event.stopPropagation()">
-                ${!isFieldOperator ? `
                 <button onclick="window.earthApp.startSectorInSubParish('${sp.id}')" class="text-sky-400 hover:text-sky-200 p-1 transition cursor-pointer" title="➕ Trazar Sector Comunal dentro de este eje">
                   <i data-lucide="plus-circle" class="w-4 h-4"></i>
                 </button>
-                ` : ''}
                 <button onclick="window.earthApp.openSubParishFicha('${sp.id}')" class="text-slate-400 hover:text-indigo-300 p-1 transition cursor-pointer" title="Ficha y Propiedades del Eje">
                   <i data-lucide="edit-2" class="w-3.5 h-3.5"></i>
                 </button>
@@ -888,7 +894,7 @@ class EarthMonagasApp {
                 ${displaySecs.length === 0 ? `
                   <div class="text-[11px] text-slate-400 italic py-2 px-2 bg-[#140e40]/40 rounded-xl border border-[#23176d]/40 text-center">
                     No hay sectores trazados aún dentro de este eje.
-                    ${!isFieldOperator ? `<br><button onclick="window.earthApp.startSectorInSubParish('${sp.id}')" class="text-sky-400 font-bold underline mt-1 inline-block">➕ Trazar el primer sector</button>` : ''}
+                    <br><button onclick="window.earthApp.startSectorInSubParish('${sp.id}')" class="text-sky-400 font-bold underline mt-1 inline-block">➕ Trazar el primer sector</button>
                   </div>
                 ` : displaySecs.map(poly => {
                   const milCount = poly.militantes !== undefined ? poly.militantes : (poly.habitantes || 0);
@@ -1926,11 +1932,13 @@ class EarthMonagasApp {
     const mobilePath = document.getElementById("btn-mobile-path");
     const mobilePlacemark = document.getElementById("btn-mobile-placemark");
 
+    // La Barra Territorial (Sub-Parroquia y Sectores) siempre está visible para operar el territorio
+    if (toolbarToolsRow) {
+      toolbarToolsRow.classList.remove("hidden");
+      toolbarToolsRow.classList.add("flex");
+    }
+
     if (isGeneral) {
-      if (toolbarToolsRow) {
-        toolbarToolsRow.classList.remove("hidden");
-        toolbarToolsRow.classList.add("flex");
-      }
       if (adminModuleLinks) {
         adminModuleLinks.classList.remove("hidden");
         adminModuleLinks.classList.add("flex");
@@ -1941,8 +1949,7 @@ class EarthMonagasApp {
       if (mobilePlacemark) mobilePlacemark.classList.remove("hidden");
       if (tabLayers) tabLayers.classList.remove("hidden");
     } else {
-      // 🔒 MODO OPERADOR / MILITANCIA: Ocultar barra de dibujo y herramientas técnicas
-      if (toolbarToolsRow) toolbarToolsRow.classList.add("hidden");
+      // 🔒 MODO OPERADOR / PARROQUIAL
       if (adminModuleLinks) adminModuleLinks.classList.add("hidden");
       if (mobileSubparish) mobileSubparish.classList.add("hidden");
       if (mobilePolygon) mobilePolygon.classList.add("hidden");

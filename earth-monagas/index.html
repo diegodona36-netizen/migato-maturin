@@ -56,7 +56,7 @@
   <meta http-equiv="Expires" content="0" />
 
   <!-- Custom Styles -->
-  <link rel="stylesheet" href="css/styles.css?v=94">
+  <link rel="stylesheet" href="css/styles.css?v=95">
 
   <!-- Script de Autenticación Rápida, Limpieza Integral de Caché y Activador de Herramientas -->
   <script>
@@ -89,7 +89,7 @@
     }
   </style>
   <script>
-    // Auto-actualización obligatoria a la versión más reciente v=94
+    // Auto-actualización obligatoria a la versión más reciente v=95
     (function() {
       try {
         var p = new URLSearchParams(window.location.search);
@@ -304,13 +304,13 @@
   </div>
 
   <!-- ============================================================== -->
-  <!-- 1. BARRA SUPERIOR DE HERRAMIENTAS (SEGMENTADA CON AUTENTICACIÓN) -->
+  <!-- 1. CABECERA PRINCIPAL MIGATO                                   -->
   <!-- ============================================================== -->
-    <header style="z-index: 2000;" class="bg-[#08061a] border-b border-[#23176d]/80 shadow-2xl shrink-0 w-full h-[52px] max-w-full overflow-hidden">
+  <header style="z-index: 2000;" class="bg-[#08061a] border-b border-[#23176d]/80 shadow-md shrink-0 w-full h-[48px] max-w-full overflow-hidden">
     <div class="h-full px-2 sm:px-4 flex items-center justify-between gap-1.5 sm:gap-2.5 w-full min-w-0">
       
       <!-- LADO IZQUIERDO: Identidad MIGATO + Selector Territorial -->
-      <div class="flex items-center gap-2 shrink-0 min-w-0">
+      <div class="flex items-center gap-2 shrink min-w-0">
         <a href="./" class="flex items-center gap-2 shrink-0 group focus:outline-none" title="MIGATO • Sala de Mando">
           <div class="w-8 h-8 rounded-lg bg-[#23176d] p-0.5 border border-white/20 flex items-center justify-center shrink-0 shadow-sm">
             <img src="../assets/logo-migato.png" alt="MIGATO" class="w-full h-full object-contain">
@@ -322,14 +322,14 @@
 
         <div class="h-4 w-[1px] bg-[#23176d]/60 shrink-0 hidden sm:block"></div>
 
-        <!-- Selector Territorial Sobrio (Maturín / Las Cocuizas) -->
-        <button id="btn-open-parish-modal" class="px-2 sm:px-2.5 py-1.5 rounded-xl bg-[#140e40] hover:bg-[#23176d] border border-sky-400/50 text-white text-xs font-bold flex items-center gap-1.5 transition active:scale-95 cursor-pointer max-w-[125px] sm:max-w-[190px] md:max-w-xs shrink min-w-0 shadow-sm" title="Cambiar Parroquia o Territorio">
+        <!-- Selector Territorial (Parroquia Activa con buen ancho en móvil) -->
+        <button id="btn-open-parish-modal" class="px-2.5 py-1.5 rounded-xl bg-[#140e40] hover:bg-[#23176d] border border-sky-400/50 text-white text-xs font-bold flex items-center gap-1.5 transition active:scale-95 cursor-pointer max-w-[210px] sm:max-w-xs shrink min-w-0 shadow-sm" title="Cambiar Parroquia o Territorio">
           <i data-lucide="map-pin" class="w-3.5 h-3.5 text-amber-400 shrink-0"></i>
           <span id="nav-current-location" class="truncate font-black text-xs text-sky-200">Territorio</span>
           <i id="nav-arrow-icon" data-lucide="chevron-down" class="w-3 h-3 text-slate-400 shrink-0"></i>
         </button>
 
-        <!-- Indicador de Censo / Casas sutil -->
+        <!-- Indicador de Censo / Casas sutil en pantallas grandes -->
         <div id="header-militancia-tally" class="hidden xl:flex items-center gap-2 px-2.5 py-1 rounded-lg bg-[#0e1126] border border-slate-800 text-[11px] font-mono shrink-0">
           <span class="text-sky-400 font-bold flex items-center gap-1">
             <i data-lucide="users" class="w-3 h-3"></i>
@@ -349,71 +349,24 @@
         </span>
       </div>
 
-      <!-- LADO DERECHO: Herramientas Agrupadas + Capas + Opciones -->
-      <div class="flex items-center gap-2 shrink-0">
+      <!-- LADO DERECHO: Territorio (Sidebar) + Menú Opciones -->
+      <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
 
-        <!-- 1. BOTÓN UNIFICADO "+ TRAZAR" CON MENÚ DESPLEGABLE -->
-        <div class="relative" id="dropdown-tools-wrapper">
-          <button id="btn-toggle-tools-menu" type="button" class="px-2.5 sm:px-3 py-1.5 rounded-xl bg-gradient-to-r from-[#23176d] to-[#3825a6] hover:from-[#31228e] hover:to-[#4530c8] border border-sky-400/60 text-white text-xs font-black flex items-center gap-1.5 transition active:scale-95 shadow-md cursor-pointer shrink-0">
-            <i data-lucide="pen-tool" class="w-3.5 h-3.5 text-sky-300 shrink-0"></i>
-            <span class="hidden sm:inline">+ Trazar</span>
-            <i data-lucide="chevron-down" class="w-3 h-3 text-sky-300 shrink-0"></i>
-          </button>
-
-          <!-- Menú flotante de herramientas -->
-          <div id="menu-tools-dropdown" class="hidden absolute right-0 mt-2 w-56 bg-[#0c0926]/95 border border-[#23176d] rounded-2xl shadow-2xl p-1.5 z-50 flex flex-col gap-1 text-xs backdrop-blur-md">
-            <button onclick="window.activateEarthTool('poligono'); window.closeToolsDropdown();" class="w-full text-left px-3 py-2 rounded-xl hover:bg-[#1f1659] text-white font-bold flex items-center gap-2.5 transition cursor-pointer">
-              <i data-lucide="home" class="w-4 h-4 text-sky-400"></i>
-              <span>Dibujar Sector Comunal</span>
-            </button>
-            <button onclick="window.activateEarthTool('subparroquia'); window.closeToolsDropdown();" class="w-full text-left px-3 py-2 rounded-xl hover:bg-[#1f1659] text-indigo-200 font-bold flex items-center gap-2.5 transition cursor-pointer">
-              <i data-lucide="shield" class="w-4 h-4 text-indigo-400"></i>
-              <span>Dibujar Eje Comunal</span>
-            </button>
-            <button onclick="window.activateEarthTool('ruta'); window.closeToolsDropdown();" class="w-full text-left px-3 py-2 rounded-xl hover:bg-[#1f1659] text-emerald-300 font-bold flex items-center gap-2.5 transition cursor-pointer">
-              <i data-lucide="git-commit" class="w-4 h-4 text-emerald-400"></i>
-              <span>Trazar Calle / Ruta</span>
-            </button>
-            <button onclick="window.activateEarthTool('marca'); window.closeToolsDropdown();" class="w-full text-left px-3 py-2 rounded-xl hover:bg-[#1f1659] text-rose-300 font-bold flex items-center gap-2.5 transition cursor-pointer">
-              <i data-lucide="map-pin" class="w-4 h-4 text-rose-400"></i>
-              <span>Punto de Interés</span>
-            </button>
-            <div class="h-[1px] bg-slate-800 my-0.5"></div>
-            <button onclick="document.getElementById('input-file-kml').click(); window.closeToolsDropdown();" class="w-full text-left px-3 py-2 rounded-xl hover:bg-[#1f1659] text-amber-300 font-bold flex items-center gap-2.5 transition cursor-pointer">
-              <i data-lucide="globe" class="w-4 h-4 text-amber-400"></i>
-              <span>Importar KML / KMZ</span>
-            </button>
-            <button onclick="document.getElementById('btn-export-kml')?.click(); window.closeToolsDropdown();" class="w-full text-left px-3 py-2 rounded-xl hover:bg-[#1f1659] text-emerald-300 font-bold flex items-center gap-2.5 transition cursor-pointer">
-              <i data-lucide="save" class="w-4 h-4 text-emerald-400"></i>
-              <span>Exportar KML</span>
-            </button>
-            <button onclick="window.earthApp?.toolsManager?.resetNorth(); window.closeToolsDropdown();" class="w-full text-left px-3 py-2 rounded-xl hover:bg-[#1f1659] text-sky-400 font-bold flex items-center gap-2.5 transition cursor-pointer">
-              <i data-lucide="compass" class="w-4 h-4"></i>
-              <span>Restablecer Norte</span>
-            </button>
-          </div>
-        </div>
-
-        <input type="file" id="input-file-kml" accept=".kml,.kmz" class="hidden">
-        <button id="btn-export-kml" class="hidden"></button>
-        <button id="btn-tool-overlay" class="hidden"></button>
-        <button id="btn-cloud-sync" class="hidden"><span id="cloud-sync-dot"></span><span id="cloud-sync-text"></span></button>
-
-        <!-- 2. BOTÓN "TERRITORIO" (TOGGLE DEL SIDEBAR) -->
-        <button id="btn-toggle-sidebar" type="button" class="px-2 sm:px-2.5 sm:px-3 py-1.5 rounded-xl bg-[#140e40] hover:bg-[#23176d] border border-slate-700 text-slate-200 hover:text-white text-xs font-bold flex items-center gap-1.5 transition active:scale-95 cursor-pointer shadow-sm shrink-0" title="Mostrar/Ocultar Estructura Territorial">
-          <i data-lucide="layers" class="w-3.5 h-3.5 text-sky-400"></i>
-          <span class="hidden sm:inline">Territorio</span>
+        <!-- BOTÓN "TERRITORIO" (TOGGLE DEL SIDEBAR) -->
+        <button id="btn-toggle-sidebar" type="button" class="px-2.5 sm:px-3 py-1.5 rounded-xl bg-[#140e40] hover:bg-[#23176d] border border-[#23176d] text-slate-200 hover:text-white text-xs font-bold flex items-center gap-1.5 transition active:scale-95 cursor-pointer shadow-sm shrink-0" title="Mostrar/Ocultar Estructura Territorial y Sectores">
+          <i data-lucide="folder" class="w-3.5 h-3.5 text-amber-400 shrink-0"></i>
+          <span class="hidden sm:inline font-bold">Lugares</span>
         </button>
 
-        <!-- 3. MENÚ DE OPCIONES EXTERNAS (PORTAL, CENTROS, DASHBOARD, SALIR) -->
+        <!-- MENÚ DE OPCIONES EXTERNAS Y HERRAMIENTAS SECUNDARIAS -->
         <div class="relative" id="dropdown-options-wrapper">
-          <button id="btn-toggle-options-menu" type="button" class="px-2 sm:px-2.5 py-1.5 rounded-xl bg-[#140e40] hover:bg-[#23176d] border border-slate-700 text-slate-300 hover:text-white text-xs font-bold flex items-center gap-1.5 transition active:scale-95 cursor-pointer shadow-sm shrink-0" title="Menú de Navegación">
+          <button id="btn-toggle-options-menu" type="button" class="p-1.5 sm:px-2.5 sm:py-1.5 rounded-xl bg-[#140e40] hover:bg-[#23176d] border border-[#23176d] text-slate-300 hover:text-white text-xs font-bold flex items-center gap-1 transition active:scale-95 cursor-pointer shadow-sm shrink-0" title="Menú de Navegación y Opciones">
             <i data-lucide="more-vertical" class="w-4 h-4"></i>
             <span class="hidden md:inline">Opciones</span>
           </button>
 
           <!-- Menú flotante de opciones -->
-          <div id="menu-options-dropdown" class="hidden absolute right-0 mt-2 w-52 bg-[#0c0926]/95 border border-[#23176d] rounded-2xl shadow-2xl p-1.5 z-50 flex flex-col gap-1 text-xs backdrop-blur-md">
+          <div id="menu-options-dropdown" class="hidden absolute right-0 mt-2 w-56 bg-[#0c0926]/95 border border-[#23176d] rounded-2xl shadow-2xl p-1.5 z-50 flex flex-col gap-1 text-xs backdrop-blur-md">
             <a href="../" class="px-3 py-2 rounded-xl hover:bg-[#1f1659] text-slate-200 font-bold flex items-center gap-2.5 transition">
               <i data-lucide="home" class="w-4 h-4 text-sky-400"></i>
               <span>Portal Central</span>
@@ -431,6 +384,15 @@
               <span>Despacho de Enlaces</span>
             </a>
             <div class="h-[1px] bg-slate-800 my-0.5"></div>
+            <button onclick="document.getElementById('input-file-kml').click(); window.closeToolsDropdown?.();" class="w-full text-left px-3 py-2 rounded-xl hover:bg-[#1f1659] text-amber-300 font-bold flex items-center gap-2.5 transition cursor-pointer">
+              <i data-lucide="globe" class="w-4 h-4 text-amber-400"></i>
+              <span>Importar KML / KMZ</span>
+            </button>
+            <button onclick="document.getElementById('btn-export-kml')?.click(); window.closeToolsDropdown?.();" class="w-full text-left px-3 py-2 rounded-xl hover:bg-[#1f1659] text-emerald-300 font-bold flex items-center gap-2.5 transition cursor-pointer">
+              <i data-lucide="save" class="w-4 h-4 text-emerald-400"></i>
+              <span>Exportar KML</span>
+            </button>
+            <div class="h-[1px] bg-slate-800 my-0.5"></div>
             <button type="button" id="btn-user-logout" class="w-full text-left px-3 py-2 rounded-xl hover:bg-rose-950/80 text-rose-300 font-bold flex items-center gap-2.5 transition cursor-pointer">
               <i data-lucide="log-out" class="w-4 h-4 text-rose-400"></i>
               <span>Cerrar Sesión</span>
@@ -438,10 +400,66 @@
           </div>
         </div>
 
+        <input type="file" id="input-file-kml" accept=".kml,.kmz" class="hidden">
+        <button id="btn-export-kml" class="hidden"></button>
+        <button id="btn-tool-overlay" class="hidden"></button>
+        <button id="btn-cloud-sync" class="hidden"><span id="cloud-sync-dot"></span><span id="cloud-sync-text"></span></button>
+
       </div>
 
     </div>
   </header>
+
+  <!-- ============================================================== -->
+  <!-- 1.1. LA BARRA TERRITORIAL (SUB-PARROQUIA Y SECTORES)            -->
+  <!-- ============================================================== -->
+  <div id="toolbar-tools-row" style="z-index: 1990;" class="bg-[#0c082b] border-b border-[#23176d]/80 shadow-md shrink-0 w-full h-[44px] px-2 sm:px-4 flex items-center justify-between gap-2 overflow-x-auto no-scrollbar">
+    
+    <!-- HERRAMIENTAS PRINCIPALES: SUB-PARROQUIA Y SECTORES -->
+    <div class="flex items-center gap-1.5 sm:gap-2.5 shrink-0 min-w-0">
+      
+      <!-- 🟪 SUB-PARROQUIA (EJE COMUNAL - NIVEL 4) -->
+      <button data-tool="subparroquia" id="btn-tool-subparish" onclick="window.activateEarthTool('subparroquia')"
+        class="btn-earth-tool px-2.5 sm:px-3 py-1.5 rounded-xl bg-[#181145] hover:bg-[#251b66] text-purple-200 hover:text-white border border-purple-500/50 text-xs font-bold transition flex items-center gap-1.5 active:scale-95 shadow-sm cursor-pointer shrink-0 select-none"
+        title="Dibujar o Delimitar Sub-Parroquia / Eje Comunal (Nivel 4)">
+        <i data-lucide="shield" class="w-3.5 h-3.5 text-purple-400 shrink-0"></i>
+        <span class="font-black text-xs whitespace-nowrap">+ Sub-Parroquia</span>
+        <span id="bar-tally-ejes" class="px-1.5 py-0.2 rounded-md bg-purple-950/90 border border-purple-400/40 text-[10px] font-mono text-purple-300 font-bold ml-0.5" title="Total de Ejes en esta parroquia">0</span>
+      </button>
+
+      <!-- 🔷 SECTORES (COMUNIDAD - NIVEL 5) -->
+      <button data-tool="poligono" id="btn-tool-polygon" onclick="window.activateEarthTool('poligono')"
+        class="btn-earth-tool px-2.5 sm:px-3 py-1.5 rounded-xl bg-gradient-to-r from-[#23176d] to-[#3825a6] hover:from-[#2e1f8e] hover:to-[#4530c8] text-white border border-sky-400/60 text-xs font-bold transition flex items-center gap-1.5 active:scale-95 shadow-md shadow-[#23176d]/50 cursor-pointer shrink-0 select-none"
+        title="Dibujar Sector Comunal con Caracterización y Votantes (Nivel 5)">
+        <i data-lucide="home" class="w-3.5 h-3.5 text-sky-300 shrink-0"></i>
+        <span class="font-black text-xs whitespace-nowrap">+ Sector</span>
+        <span id="bar-tally-sectores" class="px-1.5 py-0.2 rounded-md bg-[#140e40] border border-sky-400/40 text-[10px] font-mono text-sky-300 font-bold ml-0.5" title="Total de Sectores en esta parroquia">0</span>
+      </button>
+
+    </div>
+
+    <!-- ACCIONES DE ORIENTACIÓN Y VISTA TERRITORIAL -->
+    <div class="flex items-center gap-1.5 shrink-0">
+      
+      <!-- Botón Capas Directo -->
+      <button type="button" id="btn-bar-layers" onclick="document.getElementById('btn-sidebar-tab-layers')?.click(); window.earthApp?.toggleSidebar(true);"
+        class="px-2 py-1 rounded-lg bg-[#140e40]/70 hover:bg-[#23176d] text-[11px] text-slate-300 hover:text-white border border-[#23176d] transition flex items-center gap-1 cursor-pointer"
+        title="Ver Jerarquía y Capas de Territorio">
+        <i data-lucide="layers" class="w-3.5 h-3.5 text-sky-400"></i>
+        <span class="hidden sm:inline font-semibold">Capas</span>
+      </button>
+
+      <!-- Restablecer Norte -->
+      <button type="button" onclick="window.earthApp?.toolsManager?.resetNorth()"
+        class="px-2 py-1 rounded-lg bg-[#140e40]/70 hover:bg-[#23176d] text-[11px] text-slate-400 hover:text-sky-300 border border-[#23176d] transition flex items-center gap-1 cursor-pointer"
+        title="Restablecer Vista hacia el Norte">
+        <i data-lucide="compass" class="w-3.5 h-3.5"></i>
+        <span class="hidden md:inline font-semibold">Norte</span>
+      </button>
+
+    </div>
+
+  </div>
 
   <!-- ============================================================== -->
   <!-- 2. ESPACIO DE TRABAJO: PANEL DE LUGARES Y LIENZO CENTRAL       -->
@@ -1456,7 +1474,7 @@
   </div>
 
   <!-- SCRIPT -->
-  <script type="module" src="js/app.js?v=94"></script>
+  <script type="module" src="js/app.js?v=95"></script>
   <script>
     if (window.lucide && typeof window.lucide.createIcons === 'function') {
       window.lucide.createIcons();
@@ -1470,25 +1488,13 @@
   <!-- Controlador ergonómico de menús desplegables del Header -->
   <script>
     (function() {
-      const toolsBtn = document.getElementById("btn-toggle-tools-menu");
-      const toolsDropdown = document.getElementById("menu-tools-dropdown");
       const optsBtn = document.getElementById("btn-toggle-options-menu");
       const optsDropdown = document.getElementById("menu-options-dropdown");
 
       function closeAll() {
-        if (toolsDropdown) toolsDropdown.classList.add("hidden");
         if (optsDropdown) optsDropdown.classList.add("hidden");
       }
       window.closeToolsDropdown = closeAll;
-
-      if (toolsBtn && toolsDropdown) {
-        toolsBtn.addEventListener("click", (e) => {
-          e.stopPropagation();
-          const isHidden = toolsDropdown.classList.contains("hidden");
-          closeAll();
-          if (isHidden) toolsDropdown.classList.remove("hidden");
-        });
-      }
 
       if (optsBtn && optsDropdown) {
         optsBtn.addEventListener("click", (e) => {
@@ -1500,7 +1506,7 @@
       }
 
       document.addEventListener("click", (e) => {
-        if (!e.target.closest("#dropdown-tools-wrapper") && !e.target.closest("#dropdown-options-wrapper")) {
+        if (!e.target.closest("#dropdown-options-wrapper")) {
           closeAll();
         }
       });
