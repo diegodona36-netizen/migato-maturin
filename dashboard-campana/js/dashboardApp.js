@@ -41,11 +41,22 @@ export class TerritorialDashboardApp {
     this.demoTerritorios = this.buildDemoTerritoriosMap();
     this.nf = new Intl.NumberFormat("es-VE");
     this.electoralChartInstance = null;
+    this.politicalChartInstance = null;
     this.coverageChartInstance = null;
 
     this.initFirebase();
     this.bindEvents();
     this.render();
+  }
+
+  loadNominalElectores() {
+    try {
+      const raw = localStorage.getItem("migato_caracterizacion_voto_v1");
+      if (raw) return JSON.parse(raw) || [];
+    } catch(e) {
+      console.warn("Error leyendo electores de localStorage:", e);
+    }
+    return [];
   }
 
   initFirebase() {
@@ -167,11 +178,19 @@ export class TerritorialDashboardApp {
           id: sp.id,
           nombre: sp.nombre,
           casas: sp.sectores.reduce((sum, s) => sum + s.casas, 0),
-          militantes: sp.sectores.reduce((sum, s) => sum + s.votantes, 0)
+          militantes: sp.sectores.reduce((sum, s) => sum + s.votantes, 0),
+          votoDuro: sp.sectores.reduce((sum, s) => sum + (s.votoDuro !== undefined ? s.votoDuro : Math.round((s.votantes || 0) * 0.60)), 0),
+          votoBlando: sp.sectores.reduce((sum, s) => sum + (s.votoBlando !== undefined ? s.votoBlando : Math.round((s.votantes || 0) * 0.25)), 0),
+          votoNuevo: sp.sectores.reduce((sum, s) => sum + (s.votoNuevo !== undefined ? s.votoNuevo : Math.max(0, (s.votantes || 0) - Math.round((s.votantes || 0) * 0.60) - Math.round((s.votantes || 0) * 0.25))), 0)
         }));
         const poligonos = [];
         p.subparroquias.forEach(sp => {
           sp.sectores.forEach(s => {
+            const vTotal = s.votantes || 0;
+            const vDuro = s.votoDuro !== undefined ? s.votoDuro : Math.round(vTotal * 0.60);
+            const vBlando = s.votoBlando !== undefined ? s.votoBlando : Math.round(vTotal * 0.25);
+            const vNuevo = s.votoNuevo !== undefined ? s.votoNuevo : Math.max(0, vTotal - vDuro - vBlando);
+
             poligonos.push({
               id: s.id,
               nombre: s.nombre,
@@ -181,6 +200,9 @@ export class TerritorialDashboardApp {
               habitantes: s.habitantes,
               militantes: s.votantes,
               votantes: s.votantes,
+              votoDuro: vDuro,
+              votoBlando: vBlando,
+              votoNuevo: vNuevo,
               centroVotacion: s.centroVotacion,
               cobertura: s.cobertura,
               colorRelleno: s.colorRelleno || "#f59e0b"
@@ -236,9 +258,9 @@ export class TerritorialDashboardApp {
     });
   }
 
-  // Calcula la suma en cascada para todo el catálogo
   buildCascadeModel() {
     const q = this.searchQuery;
+    const nominalElectores = this.loadNominalElectores();
     const model = [];
 
     CATALOGO_MONAGAS.forEach(mun => {
@@ -252,6 +274,10 @@ export class TerritorialDashboardApp {
         totFam: 0,
         totHab: 0,
         totVot: 0,
+        totDuro: 0,
+        totBlando: 0,
+        totNuevo: 0,
+        totNominales: 0,
         totSectores: 0,
         totEjes: 0
       };
@@ -292,6 +318,10 @@ export class TerritorialDashboardApp {
           totFam: 0,
           totHab: 0,
           totVot: 0,
+          totDuro: 0,
+          totBlando: 0,
+          totNuevo: 0,
+          totNominales: 0,
           totSectores: 0
         };
 
@@ -304,12 +334,42 @@ export class TerritorialDashboardApp {
           const secInSp = poligonos.filter(sec => String(sec.subParroquiaId) === String(sp.id));
           
           let ejeCasas = 0, ejeFam = 0, ejeHab = 0, ejeVot = 0;
+          let ejeDuro = 0, ejeBlando = 0, ejeNuevo = 0, ejeNominales = 0;
           
           secInSp.forEach(s => {
+            const secNameLower = (s.nombre || "").toLowerCase().trim();
+            const secInLocal = nominalElectores.filter(e => {
+              const sec = (e.sector || "").toLowerCase().trim();
+              return sec && (sec === secNameLower || sec.includes(secNameLower) || secNameLower.includes(sec));
+            });
+
+            const dCount = secInLocal.filter(e => (e.clasificacionVoto || e.clasificacion) === "duro").length;
+            const bCount = secInLocal.filter(e => (e.clasificacionVoto || e.clasificacion) === "blando").length;
+            const nCount = secInLocal.filter(e => (e.clasificacionVoto || e.clasificacion) === "nuevo").length;
+
+            const sVot = parseInt(s.militantes !== undefined ? s.militantes : (s.habitantes || 0)) || 0;
+
+            let sDuro = s.votoDuro !== undefined ? parseInt(s.votoDuro) || 0 : (dCount > 0 ? dCount : Math.round(sVot * 0.60));
+            let sBlando = s.votoBlando !== undefined ? parseInt(s.votoBlando) || 0 : (bCount > 0 ? bCount : Math.round(sVot * 0.25));
+            let sNuevo = s.votoNuevo !== undefined ? parseInt(s.votoNuevo) || 0 : (nCount > 0 ? nCount : Math.max(0, sVot - sDuro - sBlando));
+
+            if (dCount > sDuro) sDuro = dCount;
+            if (bCount > sBlando) sBlando = bCount;
+            if (nCount > sNuevo) sNuevo = nCount;
+
+            s.votoDuro = sDuro;
+            s.votoBlando = sBlando;
+            s.votoNuevo = sNuevo;
+            s.electoresNominales = secInLocal.length;
+
             ejeCasas += parseInt(s.casas || 0) || 0;
             ejeFam += parseInt(s.familias || s.casas || 0) || 0;
             ejeHab += parseInt(s.habitantes || s.militantes || 0) || 0;
-            ejeVot += parseInt(s.militantes !== undefined ? s.militantes : (s.habitantes || 0)) || 0;
+            ejeVot += sVot;
+            ejeDuro += sDuro;
+            ejeBlando += sBlando;
+            ejeNuevo += sNuevo;
+            ejeNominales += secInLocal.length;
           });
 
           // Fallback a los datos del propio eje si no tiene sectores desglosados
@@ -317,7 +377,10 @@ export class TerritorialDashboardApp {
             ejeCasas = parseInt(sp.casas || 0) || 0;
             ejeFam = parseInt(sp.familias || sp.casas || 0) || 0;
             ejeHab = parseInt(sp.habitantes || sp.militantes || 0) || 0;
-            ejeVot += parseInt(sp.militantes !== undefined ? sp.militantes : (sp.habitantes || 0)) || 0;
+            ejeVot = parseInt(sp.militantes !== undefined ? sp.militantes : (sp.habitantes || 0)) || 0;
+            ejeDuro = sp.votoDuro !== undefined ? parseInt(sp.votoDuro) || 0 : Math.round(ejeVot * 0.60);
+            ejeBlando = sp.votoBlando !== undefined ? parseInt(sp.votoBlando) || 0 : Math.round(ejeVot * 0.25);
+            ejeNuevo = sp.votoNuevo !== undefined ? parseInt(sp.votoNuevo) || 0 : Math.max(0, ejeVot - ejeDuro - ejeBlando);
           }
 
           // Filtro de búsqueda por texto
@@ -334,6 +397,10 @@ export class TerritorialDashboardApp {
               familias: ejeFam,
               habitantes: ejeHab,
               votantes: ejeVot,
+              votoDuro: ejeDuro,
+              votoBlando: ejeBlando,
+              votoNuevo: ejeNuevo,
+              electoresNominales: ejeNominales,
               sectores: secInSp
             });
 
@@ -341,6 +408,10 @@ export class TerritorialDashboardApp {
             parishNode.totFam += ejeFam;
             parishNode.totHab += ejeHab;
             parishNode.totVot += ejeVot;
+            parishNode.totDuro += ejeDuro;
+            parishNode.totBlando += ejeBlando;
+            parishNode.totNuevo += ejeNuevo;
+            parishNode.totNominales += ejeNominales;
             parishNode.totSectores += secInSp.length;
           }
         });
@@ -349,11 +420,40 @@ export class TerritorialDashboardApp {
         const orphanSecs = poligonos.filter(sec => !sec.subParroquiaId || !subparroquias.some(sp => String(sp.id) === String(sec.subParroquiaId)));
         if (orphanSecs.length > 0) {
           let orphCasas = 0, orphFam = 0, orphHab = 0, orphVot = 0;
+          let orphDuro = 0, orphBlando = 0, orphNuevo = 0, orphNominales = 0;
           orphanSecs.forEach(s => {
+            const secNameLower = (s.nombre || "").toLowerCase().trim();
+            const secInLocal = nominalElectores.filter(e => {
+              const sec = (e.sector || "").toLowerCase().trim();
+              return sec && (sec === secNameLower || sec.includes(secNameLower) || secNameLower.includes(sec));
+            });
+
+            const dCount = secInLocal.filter(e => (e.clasificacionVoto || e.clasificacion) === "duro").length;
+            const bCount = secInLocal.filter(e => (e.clasificacionVoto || e.clasificacion) === "blando").length;
+            const nCount = secInLocal.filter(e => (e.clasificacionVoto || e.clasificacion) === "nuevo").length;
+
+            const sVot = parseInt(s.militantes !== undefined ? s.militantes : (s.habitantes || 0)) || 0;
+            let sDuro = s.votoDuro !== undefined ? parseInt(s.votoDuro) || 0 : (dCount > 0 ? dCount : Math.round(sVot * 0.60));
+            let sBlando = s.votoBlando !== undefined ? parseInt(s.votoBlando) || 0 : (bCount > 0 ? bCount : Math.round(sVot * 0.25));
+            let sNuevo = s.votoNuevo !== undefined ? parseInt(s.votoNuevo) || 0 : (nCount > 0 ? nCount : Math.max(0, sVot - sDuro - sBlando));
+
+            if (dCount > sDuro) sDuro = dCount;
+            if (bCount > sBlando) sBlando = bCount;
+            if (nCount > sNuevo) sNuevo = nCount;
+
+            s.votoDuro = sDuro;
+            s.votoBlando = sBlando;
+            s.votoNuevo = sNuevo;
+            s.electoresNominales = secInLocal.length;
+
             orphCasas += parseInt(s.casas || 0) || 0;
             orphFam += parseInt(s.familias || s.casas || 0) || 0;
             orphHab += parseInt(s.habitantes || s.militantes || 0) || 0;
-            orphVot += parseInt(s.militantes !== undefined ? s.militantes : (s.habitantes || 0)) || 0;
+            orphVot += sVot;
+            orphDuro += sDuro;
+            orphBlando += sBlando;
+            orphNuevo += sNuevo;
+            orphNominales += secInLocal.length;
           });
           parishNode.ejes.push({
             id: `eje-otros-${p.id}`,
@@ -362,12 +462,20 @@ export class TerritorialDashboardApp {
             familias: orphFam,
             habitantes: orphHab,
             votantes: orphVot,
+            votoDuro: orphDuro,
+            votoBlando: orphBlando,
+            votoNuevo: orphNuevo,
+            electoresNominales: orphNominales,
             sectores: orphanSecs
           });
           parishNode.totCasas += orphCasas;
           parishNode.totFam += orphFam;
           parishNode.totHab += orphHab;
           parishNode.totVot += orphVot;
+          parishNode.totDuro += orphDuro;
+          parishNode.totBlando += orphBlando;
+          parishNode.totNuevo += orphNuevo;
+          parishNode.totNominales += orphNominales;
           parishNode.totSectores += orphanSecs.length;
         }
 
@@ -377,6 +485,10 @@ export class TerritorialDashboardApp {
           munNode.totFam += parishNode.totFam;
           munNode.totHab += parishNode.totHab;
           munNode.totVot += parishNode.totVot;
+          munNode.totDuro += parishNode.totDuro;
+          munNode.totBlando += parishNode.totBlando;
+          munNode.totNuevo += parishNode.totNuevo;
+          munNode.totNominales += parishNode.totNominales;
           munNode.totSectores += parishNode.totSectores;
           munNode.totEjes += parishNode.ejes.length;
         }
@@ -396,12 +508,17 @@ export class TerritorialDashboardApp {
 
     // 1. Totales Macro
     let grandCasas = 0, grandFam = 0, grandHab = 0, grandVot = 0, grandSectores = 0, grandEjes = 0, grandParroquias = 0;
+    let grandDuro = 0, grandBlando = 0, grandNuevo = 0, grandNominales = 0;
 
     cascadeModel.forEach(mun => {
       grandCasas += mun.totCasas;
       grandFam += mun.totFam;
       grandHab += mun.totHab;
       grandVot += mun.totVot;
+      grandDuro += mun.totDuro;
+      grandBlando += mun.totBlando;
+      grandNuevo += mun.totNuevo;
+      grandNominales += mun.totNominales;
       grandSectores += mun.totSectores;
       grandEjes += mun.totEjes;
       grandParroquias += mun.parroquias.length;
@@ -415,6 +532,16 @@ export class TerritorialDashboardApp {
     const elEjes = document.getElementById("kpi-total-ejes");
     const elBadge = document.getElementById("cascade-summary-badge");
 
+    const elDuro = document.getElementById("kpi-voto-duro");
+    const elDuroPct = document.getElementById("kpi-voto-duro-pct");
+    const elBlando = document.getElementById("kpi-voto-blando");
+    const elBlandoPct = document.getElementById("kpi-voto-blando-pct");
+    const elNuevo = document.getElementById("kpi-voto-nuevo");
+    const elNuevoPct = document.getElementById("kpi-voto-nuevo-pct");
+    const elNominales = document.getElementById("kpi-electores-nominales");
+
+    const grandPolTot = (grandDuro + grandBlando + grandNuevo) || 1;
+
     if (elCasas) elCasas.textContent = this.nf.format(grandCasas);
     if (elFam) elFam.textContent = this.nf.format(grandFam);
     if (elHab) elHab.textContent = this.nf.format(grandHab);
@@ -422,6 +549,14 @@ export class TerritorialDashboardApp {
     if (elSec) elSec.textContent = this.nf.format(grandSectores);
     if (elEjes) elEjes.textContent = `${grandEjes} Ejes Comunales`;
     if (elBadge) elBadge.textContent = `${grandParroquias} Parroquias en Vista`;
+
+    if (elDuro) elDuro.textContent = this.nf.format(grandDuro);
+    if (elDuroPct) elDuroPct.textContent = `${((grandDuro / grandPolTot) * 100).toFixed(1)}%`;
+    if (elBlando) elBlando.textContent = this.nf.format(grandBlando);
+    if (elBlandoPct) elBlandoPct.textContent = `${((grandBlando / grandPolTot) * 100).toFixed(1)}%`;
+    if (elNuevo) elNuevo.textContent = this.nf.format(grandNuevo);
+    if (elNuevoPct) elNuevoPct.textContent = `${((grandNuevo / grandPolTot) * 100).toFixed(1)}%`;
+    if (elNominales) elNominales.textContent = this.nf.format(grandNominales);
 
     // 2. Renderizar Centro de Decisión (Gráficos de Torta y Cockpit)
     this.renderDecisionCenter(cascadeModel);
@@ -456,13 +591,17 @@ export class TerritorialDashboardApp {
     const totCasas = cascadeModel.reduce((sum, m) => sum + m.totCasas, 0);
     const totFam = cascadeModel.reduce((sum, m) => sum + m.totFam, 0);
     const totSectores = cascadeModel.reduce((sum, m) => sum + m.totSectores, 0);
+    const totDuro = cascadeModel.reduce((sum, m) => sum + m.totDuro, 0);
+    const totBlando = cascadeModel.reduce((sum, m) => sum + m.totBlando, 0);
+    const totNuevo = cascadeModel.reduce((sum, m) => sum + m.totNuevo, 0);
     const uniqueCentros = new Set(allSectors.map(s => s.centroVotacion).filter(Boolean)).size || 1;
 
     // 1. Métricas de Decisión
     this.renderDecisionCockpit(cascadeModel, allSectors, totVotantes, totCasas, totFam, totSectores, uniqueCentros);
 
-    // 2. Gráficos de Torta
+    // 2. Gráficos de Torta (3 Gráficos: Distribución, Composición Voto Duro/Blando/Nuevo, y Riesgo)
     this.renderElectoralShareChart(cascadeModel, allSectors, totVotantes);
+    this.renderPoliticalVoteChart(totDuro, totBlando, totNuevo);
     this.renderCoverageTrafficChart(allSectors, totSectores);
   }
 
@@ -670,6 +809,94 @@ export class TerritorialDashboardApp {
     }
   }
 
+  renderPoliticalVoteChart(duro, blando, nuevo) {
+    const canvas = document.getElementById("chart-political-vote");
+    if (!canvas) return;
+
+    const total = (duro + blando + nuevo) || 1;
+    const labels = ["🟢 Voto Duro", "🟡 Voto Blando", "🔵 Voto Nuevo"];
+    const data = [duro, blando, nuevo];
+    const colors = ["#10b981", "#f59e0b", "#38bdf8"];
+
+    if (typeof Chart === "undefined") {
+      this.renderSVGDoughnutFallback(canvas, labels, data, colors, "VOTO DURO", `${((duro / total) * 100).toFixed(0)}%`);
+    } else {
+      if (this.politicalChartInstance) {
+        this.politicalChartInstance.destroy();
+        this.politicalChartInstance = null;
+      }
+      canvas.style.display = "block";
+      const svgOld = canvas.parentElement.querySelector(".svg-doughnut-fallback");
+      if (svgOld) svgOld.remove();
+
+      const ctx = canvas.getContext("2d");
+      this.politicalChartInstance = new Chart(ctx, {
+        type: "doughnut",
+        data: {
+          labels,
+          datasets: [{
+            data,
+            backgroundColor: colors,
+            borderColor: "#060913",
+            borderWidth: 2,
+            hoverOffset: 6
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          cutout: "62%",
+          plugins: {
+            legend: {
+              position: "bottom",
+              labels: {
+                color: "#cbd5e1",
+                boxWidth: 10,
+                font: { family: "Inter", size: 10 }
+              }
+            },
+            tooltip: {
+              backgroundColor: "#0f172a",
+              titleColor: "#10b981",
+              bodyColor: "#f8fafc",
+              borderColor: "rgba(16, 185, 129, 0.4)",
+              borderWidth: 1,
+              padding: 10,
+              callbacks: {
+                label: (context) => {
+                  const val = context.parsed;
+                  const pct = ((val / total) * 100).toFixed(1);
+                  return ` ${context.label}: ${this.nf.format(val)} (${pct}%)`;
+                }
+              }
+            }
+          }
+        }
+      });
+    }
+
+    const summaryEl = document.getElementById("chart-political-summary");
+    if (summaryEl) {
+      summaryEl.innerHTML = `
+        <div class="p-1.5 rounded-xl bg-emerald-950/40 border border-emerald-500/30 text-emerald-300">
+          <span class="block text-[9px] text-slate-400">🟢 Duro</span>
+          <strong class="text-xs font-black">${this.nf.format(duro)}</strong>
+          <span class="text-[9px] text-slate-400 block">${((duro / total) * 100).toFixed(0)}%</span>
+        </div>
+        <div class="p-1.5 rounded-xl bg-amber-950/40 border border-amber-500/30 text-amber-300">
+          <span class="block text-[9px] text-slate-400">🟡 Blando</span>
+          <strong class="text-xs font-black">${this.nf.format(blando)}</strong>
+          <span class="text-[9px] text-slate-400 block">${((blando / total) * 100).toFixed(0)}%</span>
+        </div>
+        <div class="p-1.5 rounded-xl bg-sky-950/40 border border-sky-500/30 text-sky-300">
+          <span class="block text-[9px] text-slate-400">🔵 Nuevo</span>
+          <strong class="text-xs font-black">${this.nf.format(nuevo)}</strong>
+          <span class="text-[9px] text-slate-400 block">${((nuevo / total) * 100).toFixed(0)}%</span>
+        </div>
+      `;
+    }
+  }
+
   renderCoverageTrafficChart(allSectors, totSec) {
     const canvas = document.getElementById("chart-coverage-traffic");
     if (!canvas) return;
@@ -801,14 +1028,10 @@ export class TerritorialDashboardApp {
               </div>
 
               <!-- Cifras Sumadas de la Parroquia -->
-              <div class="grid grid-cols-4 gap-2 text-xs font-mono shrink-0">
+              <div class="flex flex-wrap items-center gap-2 text-xs font-mono shrink-0">
                 <div class="bg-slate-900/80 px-2.5 py-1.5 rounded-xl border border-slate-800 text-center">
                   <span class="text-[9px] text-slate-400 block uppercase">Casas</span>
                   <strong class="text-amber-400 font-black">${p.totCasas.toLocaleString()}</strong>
-                </div>
-                <div class="bg-slate-900/80 px-2.5 py-1.5 rounded-xl border border-slate-800 text-center">
-                  <span class="text-[9px] text-slate-400 block uppercase">Familias</span>
-                  <strong class="text-sky-300 font-black">${p.totFam.toLocaleString()}</strong>
                 </div>
                 <div class="bg-slate-900/80 px-2.5 py-1.5 rounded-xl border border-slate-800 text-center">
                   <span class="text-[9px] text-slate-400 block uppercase">Habitantes</span>
@@ -817,6 +1040,18 @@ export class TerritorialDashboardApp {
                 <div class="bg-slate-900/80 px-2.5 py-1.5 rounded-xl border border-purple-900/50 text-center">
                   <span class="text-[9px] text-purple-300 block uppercase font-bold">Votantes</span>
                   <strong class="text-purple-300 font-black">${p.totVot.toLocaleString()}</strong>
+                </div>
+                <div class="bg-emerald-950/60 px-2 py-1.5 rounded-xl border border-emerald-500/30 text-center">
+                  <span class="text-[9px] text-emerald-400 block uppercase font-bold">🟢 Duro</span>
+                  <strong class="text-emerald-300 font-black">${(p.totDuro || 0).toLocaleString()}</strong>
+                </div>
+                <div class="bg-amber-950/60 px-2 py-1.5 rounded-xl border border-amber-500/30 text-center">
+                  <span class="text-[9px] text-amber-400 block uppercase font-bold">🟡 Blando</span>
+                  <strong class="text-amber-300 font-black">${(p.totBlando || 0).toLocaleString()}</strong>
+                </div>
+                <div class="bg-sky-950/60 px-2 py-1.5 rounded-xl border border-sky-500/30 text-center">
+                  <span class="text-[9px] text-sky-400 block uppercase font-bold">🔵 Nuevo</span>
+                  <strong class="text-sky-300 font-black">${(p.totNuevo || 0).toLocaleString()}</strong>
                 </div>
               </div>
             </div>
@@ -847,14 +1082,16 @@ export class TerritorialDashboardApp {
                         </div>
 
                         <!-- Cifras Sumadas del Eje -->
-                        <div class="flex items-center gap-2 text-xs font-mono shrink-0">
+                        <div class="flex flex-wrap items-center gap-2 text-xs font-mono shrink-0">
                           <span class="text-amber-400 font-bold text-[11px]">🏠 ${eje.casas}</span>
-                          <span class="text-slate-500">•</span>
-                          <span class="text-sky-300 text-[11px]">👨‍👩‍👧 ${eje.familias}</span>
                           <span class="text-slate-500">•</span>
                           <span class="text-emerald-400 font-bold text-[11px]">👥 ${eje.habitantes}</span>
                           <span class="text-slate-500">•</span>
-                          <span class="text-purple-300 font-black text-[11px] bg-purple-950/60 px-2 py-0.5 rounded border border-purple-800/40">🗳️ ${eje.votantes}</span>
+                          <span class="text-purple-300 font-black text-[11px] bg-purple-950/60 px-1.5 py-0.5 rounded border border-purple-800/40">🗳️ ${eje.votantes}</span>
+                          <span class="text-slate-500">•</span>
+                          <span class="text-emerald-400 font-bold text-[11px] bg-emerald-950/60 px-1.5 py-0.5 rounded border border-emerald-800/40">🟢 ${eje.votoDuro || 0}</span>
+                          <span class="text-amber-400 font-bold text-[11px] bg-amber-950/60 px-1.5 py-0.5 rounded border border-amber-800/40">🟡 ${eje.votoBlando || 0}</span>
+                          <span class="text-sky-300 font-bold text-[11px] bg-sky-950/60 px-1.5 py-0.5 rounded border border-sky-800/40">🔵 ${eje.votoNuevo || 0}</span>
                         </div>
                       </div>
 
@@ -871,9 +1108,12 @@ export class TerritorialDashboardApp {
                                 <tr class="text-[10px] uppercase text-slate-400 border-b border-slate-800/80">
                                   <th class="py-2 px-2">Sector Comunal (Capa 5)</th>
                                   <th class="py-2 px-2 text-right">Casas</th>
-                                  <th class="py-2 px-2 text-right">Familias</th>
                                   <th class="py-2 px-2 text-right">Habitantes</th>
-                                  <th class="py-2 px-2 text-right">Votantes</th>
+                                  <th class="py-2 px-2 text-right text-purple-300">Votantes</th>
+                                  <th class="py-2 px-2 text-right text-emerald-400">🟢 Duro</th>
+                                  <th class="py-2 px-2 text-right text-amber-400">🟡 Blando</th>
+                                  <th class="py-2 px-2 text-right text-sky-400">🔵 Nuevo</th>
+                                  <th class="py-2 px-2 text-center text-purple-300">📋 Nom.</th>
                                   <th class="py-2 px-2">Centro de Votación CNE</th>
                                 </tr>
                               </thead>
@@ -885,9 +1125,12 @@ export class TerritorialDashboardApp {
                                       <span class="truncate">${sec.nombre}</span>
                                     </td>
                                     <td class="py-2 px-2 text-right text-amber-400 font-bold">${sec.casas || 0}</td>
-                                    <td class="py-2 px-2 text-right text-sky-300">${sec.familias || sec.casas || 0}</td>
                                     <td class="py-2 px-2 text-right text-emerald-400 font-bold">${sec.habitantes || sec.militantes || 0}</td>
                                     <td class="py-2 px-2 text-right text-purple-300 font-black">${sec.militantes !== undefined ? sec.militantes : (sec.habitantes || 0)}</td>
+                                    <td class="py-2 px-2 text-right text-emerald-400 font-bold">${sec.votoDuro || 0}</td>
+                                    <td class="py-2 px-2 text-right text-amber-400 font-bold">${sec.votoBlando || 0}</td>
+                                    <td class="py-2 px-2 text-right text-sky-300 font-bold">${sec.votoNuevo || 0}</td>
+                                    <td class="py-2 px-2 text-center text-purple-300 font-bold">${sec.electoresNominales ? `✅ ${sec.electoresNominales}` : '<span class="text-slate-600">-</span>'}</td>
                                     <td class="py-2 px-2 text-slate-400 truncate max-w-[200px]" title="${sec.centroVotacion || ''}">
                                       ${sec.centroVotacion ? `🏫 ${sec.centroVotacion}` : '<span class="text-slate-600">Sin asignar</span>'}
                                     </td>
@@ -934,17 +1177,17 @@ export class TerritorialDashboardApp {
   exportCSV() {
     const cascadeModel = this.buildCascadeModel();
     let csv = "\uFEFF"; // UTF-8 BOM para Excel
-    csv += "Municipio,Parroquia,Eje Comunal,Sector,Casas,Familias,Habitantes,Votantes,Centro de Votacion\n";
+    csv += "Municipio,Parroquia,Eje Comunal,Sector,Casas,Familias,Habitantes,Votantes,Voto Duro,Voto Blando,Voto Nuevo,Electores Nominales,Centro de Votacion\n";
 
     cascadeModel.forEach(mun => {
       mun.parroquias.forEach(p => {
         p.ejes.forEach(eje => {
           if (eje.sectores.length === 0) {
-            csv += `\"${mun.nombre}\",\"${p.nombre}\",\"${eje.nombre}\",\"(Sin sectores)\",${eje.casas},${eje.familias},${eje.habitantes},${eje.votantes},\"\"\n`;
+            csv += `\"${mun.nombre}\",\"${p.nombre}\",\"${eje.nombre}\",\"(Sin sectores)\",${eje.casas},${eje.familias},${eje.habitantes},${eje.votantes},${eje.votoDuro || 0},${eje.votoBlando || 0},${eje.votoNuevo || 0},${eje.electoresNominales || 0},\"\"\n`;
           } else {
             eje.sectores.forEach(sec => {
               const vot = sec.militantes !== undefined ? sec.militantes : (sec.habitantes || 0);
-              csv += `\"${mun.nombre}\",\"${p.nombre}\",\"${eje.nombre}\",\"${sec.nombre || ''}\",${sec.casas || 0},${sec.familias || sec.casas || 0},${sec.habitantes || vot || 0},${vot || 0},\"${sec.centroVotacion || ''}\"\n`;
+              csv += `\"${mun.nombre}\",\"${p.nombre}\",\"${eje.nombre}\",\"${sec.nombre || ''}\",${sec.casas || 0},${sec.familias || sec.casas || 0},${sec.habitantes || vot || 0},${vot || 0},${sec.votoDuro || 0},${sec.votoBlando || 0},${sec.votoNuevo || 0},${sec.electoresNominales || 0},\"${sec.centroVotacion || ''}\"\n`;
             });
           }
         });
@@ -955,7 +1198,7 @@ export class TerritorialDashboardApp {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `censo_territorial_monagas_${new Date().toISOString().slice(0, 10)}.csv`;
+    a.download = `censo_electoral_migato_${new Date().toISOString().slice(0, 10)}.csv`;
     a.click();
     URL.revokeObjectURL(url);
   }

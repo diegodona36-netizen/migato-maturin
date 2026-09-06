@@ -968,14 +968,51 @@ export const MONAGAS_DEMO_DATA = {
 /**
  * Helper: Obtiene la lista aplanada de todos los sectores de Monagas
  */
+function getNominalElectoresFromStorage() {
+  try {
+    if (typeof localStorage !== "undefined") {
+      const raw = localStorage.getItem("migato_caracterizacion_voto_v1");
+      if (raw) return JSON.parse(raw) || [];
+    }
+  } catch (e) {}
+  return [];
+}
+
+/**
+ * Helper: Obtiene la lista aplanada de todos los sectores con contexto territorial completo
+ */
 export function getAllSectorsFlattened() {
+  const nominalElectores = getNominalElectoresFromStorage();
   const list = [];
   MONAGAS_DEMO_DATA.municipios.forEach(m => {
     m.parroquias.forEach(p => {
       p.subparroquias.forEach(sp => {
         sp.sectores.forEach(s => {
+          const secNameLower = (s.nombre || "").toLowerCase().trim();
+          const secInLocal = nominalElectores.filter(e => {
+            const sec = (e.sector || "").toLowerCase().trim();
+            return sec && (sec === secNameLower || sec.includes(secNameLower) || secNameLower.includes(sec));
+          });
+
+          const dCount = secInLocal.filter(e => (e.clasificacionVoto || e.clasificacion) === "duro").length;
+          const bCount = secInLocal.filter(e => (e.clasificacionVoto || e.clasificacion) === "blando").length;
+          const nCount = secInLocal.filter(e => (e.clasificacionVoto || e.clasificacion) === "nuevo").length;
+
+          const vTotal = s.votantes || 0;
+          let vDuro = s.votoDuro !== undefined ? s.votoDuro : (dCount > 0 ? dCount : Math.round(vTotal * 0.60));
+          let vBlando = s.votoBlando !== undefined ? s.votoBlando : (bCount > 0 ? bCount : Math.round(vTotal * 0.25));
+          let vNuevo = s.votoNuevo !== undefined ? s.votoNuevo : (nCount > 0 ? nCount : Math.max(0, vTotal - vDuro - vBlando));
+
+          if (dCount > vDuro) vDuro = dCount;
+          if (bCount > vBlando) vBlando = bCount;
+          if (nCount > vNuevo) vNuevo = nCount;
+
           list.push({
             ...s,
+            votoDuro: vDuro,
+            votoBlando: vBlando,
+            votoNuevo: vNuevo,
+            electoresNominales: secInLocal.length,
             munId: m.id,
             munNombre: m.nombre,
             parishId: p.id,
@@ -1012,9 +1049,13 @@ export function computeTerritorialAggregates(filterMunId = "todos", filterParish
     acc.familias += s.familias;
     acc.habitantes += s.habitantes;
     acc.votantes += s.votantes;
+    acc.votoDuro += (s.votoDuro || 0);
+    acc.votoBlando += (s.votoBlando || 0);
+    acc.votoNuevo += (s.votoNuevo || 0);
+    acc.electoresNominales += (s.electoresNominales || 0);
     acc.coberturaSum += s.cobertura;
     return acc;
-  }, { casas: 0, familias: 0, habitantes: 0, votantes: 0, coberturaSum: 0 });
+  }, { casas: 0, familias: 0, habitantes: 0, votantes: 0, votoDuro: 0, votoBlando: 0, votoNuevo: 0, electoresNominales: 0, coberturaSum: 0 });
 
   const totalSectores = filteredSectors.length;
   const uniqueSubparroquias = new Set(filteredSectors.map(s => s.subParroquiaId)).size;
@@ -1046,22 +1087,27 @@ export function computeTerritorialAggregates(filterMunId = "todos", filterParish
  * Helper: Calcula el balance comparativo de todos los municipios para la tabla ejecutiva
  */
 export function getMunicipalComparisonMatrix() {
+  const flattened = getAllSectorsFlattened();
   return MONAGAS_DEMO_DATA.municipios.map(m => {
-    let casas = 0, familias = 0, habitantes = 0, votantes = 0, secCount = 0, subCount = 0;
+    const secInMun = flattened.filter(s => s.munId === m.id);
+    let casas = 0, familias = 0, habitantes = 0, votantes = 0, votoDuro = 0, votoBlando = 0, votoNuevo = 0, electoresNominales = 0;
     const centros = new Set();
+    let subCount = 0;
 
     m.parroquias.forEach(p => {
       subCount += p.subparroquias.length;
-      p.subparroquias.forEach(sp => {
-        secCount += sp.sectores.length;
-        sp.sectores.forEach(s => {
-          casas += s.casas;
-          familias += s.familias;
-          habitantes += s.habitantes;
-          votantes += s.votantes;
-          centros.add(s.centroVotacion);
-        });
-      });
+    });
+
+    secInMun.forEach(s => {
+      casas += s.casas;
+      familias += s.familias;
+      habitantes += s.habitantes;
+      votantes += s.votantes;
+      votoDuro += s.votoDuro || 0;
+      votoBlando += s.votoBlando || 0;
+      votoNuevo += s.votoNuevo || 0;
+      electoresNominales += s.electoresNominales || 0;
+      if (s.centroVotacion) centros.add(s.centroVotacion);
     });
 
     const habCasa = casas > 0 ? (habitantes / casas).toFixed(2) : "0.00";
@@ -1073,11 +1119,15 @@ export function getMunicipalComparisonMatrix() {
       tipo: m.tipo,
       parroquiasCount: m.parroquias.length,
       subCount,
-      secCount,
+      secCount: secInMun.length,
       casas,
       familias,
       habitantes,
       votantes,
+      votoDuro,
+      votoBlando,
+      votoNuevo,
+      electoresNominales,
       centrosCount: centros.size,
       habCasa,
       padronPct,

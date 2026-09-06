@@ -552,6 +552,89 @@ export class PropertiesDialog {
         if (inHab) inHab.value = item.habitantes !== undefined ? item.habitantes : numMilitantes;
         if (inCentroVot) inCentroVot.value = item.centroVotacion || "";
 
+        // 3 Votos Oficiales (Nuevo Estándar)
+        const inVotoDuro = document.getElementById("prop-voto-duro");
+        const inVotoBlando = document.getElementById("prop-voto-blando");
+        const inVotoNuevo = document.getElementById("prop-voto-nuevo");
+
+        // Cargar electores caracterizados vinculados a este sector desde localStorage
+        let electoresSector = [];
+        try {
+          const raw = localStorage.getItem("migato_caracterizacion_voto_v1");
+          if (raw) {
+            const todos = JSON.parse(raw);
+            const nombreSecLower = (item.nombre || "").toLowerCase().trim();
+            electoresSector = todos.filter(e => {
+              const sec = (e.sector || "").toLowerCase().trim();
+              return sec && (sec === nombreSecLower || sec.includes(nombreSecLower) || nombreSecLower.includes(sec));
+            });
+          }
+        } catch (err) {
+          console.warn("Error leyendo electores de localStorage:", err);
+        }
+
+        let durosCalc = item.votoDuro !== undefined ? item.votoDuro : 0;
+        let blandosCalc = item.votoBlando !== undefined ? item.votoBlando : 0;
+        let nuevosCalc = item.votoNuevo !== undefined ? item.votoNuevo : 0;
+
+        if (electoresSector.length > 0) {
+          const dCount = electoresSector.filter(e => e.clasificacionVoto === "duro").length;
+          const bCount = electoresSector.filter(e => e.clasificacionVoto === "blando").length;
+          const nCount = electoresSector.filter(e => e.clasificacionVoto === "nuevo").length;
+          if (durosCalc === 0) durosCalc = dCount;
+          if (blandosCalc === 0) blandosCalc = bCount;
+          if (nuevosCalc === 0) nuevosCalc = nCount;
+        }
+
+        if (inVotoDuro) inVotoDuro.value = durosCalc;
+        if (inVotoBlando) inVotoBlando.value = blandosCalc;
+        if (inVotoNuevo) inVotoNuevo.value = nuevosCalc;
+
+        const badgeTotalCaract = document.getElementById("prop-total-caracterizados-badge");
+        if (badgeTotalCaract) {
+          badgeTotalCaract.textContent = `${electoresSector.length} Caracterizados`;
+        }
+
+        // Poblar Pestaña de Militantes del Sector
+        const elCountDuro = document.getElementById("tab-mil-count-duro");
+        const elCountBlando = document.getElementById("tab-mil-count-blando");
+        const elCountNuevo = document.getElementById("tab-mil-count-nuevo");
+        if (elCountDuro) elCountDuro.textContent = durosCalc;
+        if (elCountBlando) elCountBlando.textContent = blandosCalc;
+        if (elCountNuevo) elCountNuevo.textContent = nuevosCalc;
+
+        const tabMilTbody = document.getElementById("tab-mil-tbody");
+        if (tabMilTbody) {
+          if (electoresSector.length === 0) {
+            tabMilTbody.innerHTML = `
+              <tr>
+                <td colspan="5" class="py-6 px-3 text-center text-slate-400">
+                  <p class="font-bold text-slate-300">Sin electores registrados en ${item.nombre || 'este sector'}</p>
+                  <p class="text-[10px] text-slate-500 mt-1">Usa el botón "Cargar Elector" para registrar personas con los 10 campos oficiales.</p>
+                </td>
+              </tr>
+            `;
+          } else {
+            tabMilTbody.innerHTML = electoresSector.map(e => `
+              <tr class="hover:bg-slate-900/60 transition text-slate-300">
+                <td class="p-2 font-bold text-white">${e.nombreApellido}</td>
+                <td class="p-2 text-center font-mono text-sky-300">${e.cedula}</td>
+                <td class="p-2 text-center font-mono">${e.edad || '--'}</td>
+                <td class="p-2 truncate max-w-[100px]" title="${e.profesion || ''}">${e.profesion || '--'}</td>
+                <td class="p-2 text-center">
+                  <span class="px-2 py-0.5 rounded-full text-[10px] font-black uppercase ${
+                    e.clasificacionVoto === 'duro' ? 'bg-emerald-950 text-emerald-300 border border-emerald-500/40' :
+                    (e.clasificacionVoto === 'blando' ? 'bg-amber-950 text-amber-300 border border-amber-500/40' :
+                    'bg-sky-950 text-sky-300 border border-sky-500/40')
+                  }">
+                    ${e.clasificacionVoto}
+                  </span>
+                </td>
+              </tr>
+            `).join("");
+          }
+        }
+
         // Poblar datalist con centros electorales oficiales de la parroquia activa
         const dl = document.getElementById("centros-votacion-datalist");
         if (dl) {
@@ -709,6 +792,9 @@ export class PropertiesDialog {
       familias: familiasVal,
       habitantes: habitantesVal,
       centroVotacion: centroVotacionVal,
+      votoDuro: parseInt(document.getElementById("prop-voto-duro")?.value) || 0,
+      votoBlando: parseInt(document.getElementById("prop-voto-blando")?.value) || 0,
+      votoNuevo: parseInt(document.getElementById("prop-voto-nuevo")?.value) || 0,
       munId: targetMunId,
       parishId: targetParishId,
       subParroquiaId: this.currentType === "subparroquia" ? null : subParroquiaId,

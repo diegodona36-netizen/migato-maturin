@@ -35,6 +35,7 @@ export class DemoStatsApp {
 
     // Instancias de Chart.js
     this.electoralChartInstance = null;
+    this.politicalChartInstance = null;
     this.coverageChartInstance = null;
 
     this.init();
@@ -218,6 +219,16 @@ export class DemoStatsApp {
     const elHabCasa = document.getElementById("demo-kpi-ratio-hab");
     const elPadronPct = document.getElementById("demo-kpi-padron-pct");
 
+    const elDuro = document.getElementById("demo-kpi-voto-duro");
+    const elDuroPct = document.getElementById("demo-kpi-voto-duro-pct");
+    const elBlando = document.getElementById("demo-kpi-voto-blando");
+    const elBlandoPct = document.getElementById("demo-kpi-voto-blando-pct");
+    const elNuevo = document.getElementById("demo-kpi-voto-nuevo");
+    const elNuevoPct = document.getElementById("demo-kpi-voto-nuevo-pct");
+    const elNominales = document.getElementById("demo-kpi-electores-nominales");
+
+    const polTotal = (agg.votoDuro + agg.votoBlando + agg.votoNuevo) || 1;
+
     if (elCasas) elCasas.textContent = this.nf.format(agg.casas);
     if (elFamilias) elFamilias.textContent = this.nf.format(agg.familias);
     if (elHabitantes) elHabitantes.textContent = this.nf.format(agg.habitantes);
@@ -227,6 +238,14 @@ export class DemoStatsApp {
     if (elCentros) elCentros.textContent = `${agg.uniqueCentros} Centros CNE`;
     if (elHabCasa) elHabCasa.textContent = `${agg.avgHabCasa} hab/casa`;
     if (elPadronPct) elPadronPct.textContent = `${agg.pctVotantes}% Padrón`;
+
+    if (elDuro) elDuro.textContent = this.nf.format(agg.votoDuro || 0);
+    if (elDuroPct) elDuroPct.textContent = `${(((agg.votoDuro || 0) / polTotal) * 100).toFixed(1)}%`;
+    if (elBlando) elBlando.textContent = this.nf.format(agg.votoBlando || 0);
+    if (elBlandoPct) elBlandoPct.textContent = `${(((agg.votoBlando || 0) / polTotal) * 100).toFixed(1)}%`;
+    if (elNuevo) elNuevo.textContent = this.nf.format(agg.votoNuevo || 0);
+    if (elNuevoPct) elNuevoPct.textContent = `${(((agg.votoNuevo || 0) / polTotal) * 100).toFixed(1)}%`;
+    if (elNominales) elNominales.textContent = this.nf.format(agg.electoresNominales || 0);
 
     // Actualizar subtítulo de jurisdicción
     const subtitle = document.getElementById("demo-territory-subtitle");
@@ -254,6 +273,7 @@ export class DemoStatsApp {
 
     // 2. Gráficos de Torta / Dona (Chart.js con fallback SVG si Chart.js no ha cargado)
     this.renderElectoralShareChart(agg, matrix);
+    this.renderPoliticalVoteChart(agg);
     this.renderCoverageTrafficChart(agg);
   }
 
@@ -478,6 +498,98 @@ export class DemoStatsApp {
     }
   }
 
+  renderPoliticalVoteChart(agg) {
+    const canvas = document.getElementById("chart-political-vote-demo");
+    if (!canvas) return;
+
+    const duro = agg.votoDuro || 0;
+    const blando = agg.votoBlando || 0;
+    const nuevo = agg.votoNuevo || 0;
+    const total = (duro + blando + nuevo) || 1;
+
+    const labels = ["🟢 Voto Duro", "🟡 Voto Blando", "🔵 Voto Nuevo"];
+    const data = [duro, blando, nuevo];
+    const colors = ["#10b981", "#f59e0b", "#38bdf8"];
+
+    if (typeof Chart === "undefined") {
+      this.renderSVGDoughnutFallback(canvas, labels, data, colors, "VOTO DURO", `${((duro / total) * 100).toFixed(0)}%`);
+    } else {
+      if (this.politicalChartInstance) {
+        this.politicalChartInstance.destroy();
+        this.politicalChartInstance = null;
+      }
+      canvas.style.display = "block";
+      const svgOld = canvas.parentElement.querySelector(".svg-doughnut-fallback");
+      if (svgOld) svgOld.remove();
+
+      const ctx = canvas.getContext("2d");
+      this.politicalChartInstance = new Chart(ctx, {
+        type: "doughnut",
+        data: {
+          labels,
+          datasets: [{
+            data,
+            backgroundColor: colors,
+            borderColor: "#060913",
+            borderWidth: 2,
+            hoverOffset: 6
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          cutout: "62%",
+          plugins: {
+            legend: {
+              position: "bottom",
+              labels: {
+                color: "#cbd5e1",
+                boxWidth: 10,
+                font: { family: "Inter", size: 10 }
+              }
+            },
+            tooltip: {
+              backgroundColor: "#0f172a",
+              titleColor: "#10b981",
+              bodyColor: "#f8fafc",
+              borderColor: "rgba(16, 185, 129, 0.4)",
+              borderWidth: 1,
+              padding: 10,
+              callbacks: {
+                label: (context) => {
+                  const val = context.parsed;
+                  const pct = ((val / total) * 100).toFixed(1);
+                  return ` ${context.label}: ${this.nf.format(val)} (${pct}%)`;
+                }
+              }
+            }
+          }
+        }
+      });
+    }
+
+    const summaryEl = document.getElementById("chart-political-summary-demo");
+    if (summaryEl) {
+      summaryEl.innerHTML = `
+        <div class="p-1.5 rounded-xl bg-emerald-950/40 border border-emerald-500/30 text-emerald-300">
+          <span class="block text-[9px] text-slate-400">🟢 Duro</span>
+          <strong class="text-xs font-black">${this.nf.format(duro)}</strong>
+          <span class="text-[9px] text-slate-400 block">${((duro / total) * 100).toFixed(0)}%</span>
+        </div>
+        <div class="p-1.5 rounded-xl bg-amber-950/40 border border-amber-500/30 text-amber-300">
+          <span class="block text-[9px] text-slate-400">🟡 Blando</span>
+          <strong class="text-xs font-black">${this.nf.format(blando)}</strong>
+          <span class="text-[9px] text-slate-400 block">${((blando / total) * 100).toFixed(0)}%</span>
+        </div>
+        <div class="p-1.5 rounded-xl bg-sky-950/40 border border-sky-500/30 text-sky-300">
+          <span class="block text-[9px] text-slate-400">🔵 Nuevo</span>
+          <strong class="text-xs font-black">${this.nf.format(nuevo)}</strong>
+          <span class="text-[9px] text-slate-400 block">${((nuevo / total) * 100).toFixed(0)}%</span>
+        </div>
+      `;
+    }
+  }
+
   renderCoverageTrafficChart(agg) {
     const canvas = document.getElementById("chart-coverage-traffic");
     if (!canvas) return;
@@ -591,10 +703,13 @@ export class DemoStatsApp {
     const totalHabitantes = matrix.reduce((sum, m) => sum + m.habitantes, 0);
     const totalVotantes = matrix.reduce((sum, m) => sum + m.votantes, 0);
     const totalSectores = matrix.reduce((sum, m) => sum + m.secCount, 0);
+    const totalVotoDuro = matrix.reduce((sum, m) => sum + (m.votoDuro || 0), 0);
+    const totalVotoBlando = matrix.reduce((sum, m) => sum + (m.votoBlando || 0), 0);
+    const totalVotoNuevo = matrix.reduce((sum, m) => sum + (m.votoNuevo || 0), 0);
+    const totalNominales = matrix.reduce((sum, m) => sum + (m.electoresNominales || 0), 0);
 
     tbody.innerHTML = matrix.map((m, idx) => {
       const isSelected = m.munId === this.selectedMunId;
-      const pctVotantesDelTotal = ((m.votantes / (totalVotantes || 1)) * 100).toFixed(1);
 
       return `
         <tr class="border-b border-slate-800/80 hover:bg-slate-800/50 transition cursor-pointer ${isSelected ? 'bg-amber-500/10 border-amber-500/40' : ''}" onclick="window.demoApp.filterByMunRow('${m.munId}')">
@@ -607,19 +722,13 @@ export class DemoStatsApp {
           <td class="px-3 py-2.5 text-center font-mono text-xs text-purple-300 font-bold">${m.subCount}</td>
           <td class="px-3 py-2.5 text-center font-mono text-xs text-sky-400 font-bold">${m.secCount}</td>
           <td class="px-3 py-2.5 text-right font-mono text-xs text-amber-300">${this.nf.format(m.casas)}</td>
-          <td class="px-3 py-2.5 text-right font-mono text-xs text-slate-300">${this.nf.format(m.familias)}</td>
           <td class="px-3 py-2.5 text-right font-mono text-xs text-emerald-400 font-bold">${this.nf.format(m.habitantes)}</td>
-          <td class="px-3 py-2.5 text-right font-mono text-xs text-white font-black bg-amber-500/5">${this.nf.format(m.votantes)}</td>
-          <td class="px-3 py-2.5 text-center font-mono text-xs text-slate-400">${m.habCasa}</td>
+          <td class="px-3 py-2.5 text-right font-mono text-xs text-purple-300 font-black bg-purple-500/10">${this.nf.format(m.votantes)}</td>
+          <td class="px-3 py-2.5 text-right font-mono text-xs text-emerald-400 font-bold">${this.nf.format(m.votoDuro || 0)}</td>
+          <td class="px-3 py-2.5 text-right font-mono text-xs text-amber-400 font-bold">${this.nf.format(m.votoBlando || 0)}</td>
+          <td class="px-3 py-2.5 text-right font-mono text-xs text-sky-400 font-bold">${this.nf.format(m.votoNuevo || 0)}</td>
+          <td class="px-3 py-2.5 text-center font-mono text-xs text-purple-300 font-black">${this.nf.format(m.electoresNominales || 0)}</td>
           <td class="px-3 py-2.5 text-right font-mono text-xs text-sky-300 font-bold">${m.padronPct}%</td>
-          <td class="px-3 py-2.5 text-center">
-            <div class="flex items-center justify-center gap-1.5">
-              <div class="w-12 bg-slate-800 h-1.5 rounded-full overflow-hidden">
-                <div class="bg-amber-400 h-full rounded-full" style="width: ${Math.min(100, pctVotantesDelTotal * 2)}%"></div>
-              </div>
-              <span class="text-[10px] font-mono text-slate-400 font-bold">${pctVotantesDelTotal}%</span>
-            </div>
-          </td>
         </tr>
       `;
     }).join("");
@@ -634,12 +743,13 @@ export class DemoStatsApp {
           <td class="px-3 py-3 text-center text-purple-300">120+</td>
           <td class="px-3 py-3 text-center text-sky-400">${this.nf.format(totalSectores)}</td>
           <td class="px-3 py-3 text-right text-amber-300">${this.nf.format(totalCasas)}</td>
-          <td class="px-3 py-3 text-right text-slate-300">${this.nf.format(matrix.reduce((s, m) => s + m.familias, 0))}</td>
           <td class="px-3 py-3 text-right text-emerald-400">${this.nf.format(totalHabitantes)}</td>
-          <td class="px-3 py-3 text-right text-white font-black bg-amber-500/20">${this.nf.format(totalVotantes)}</td>
-          <td class="px-3 py-3 text-center text-slate-300">${(totalHabitantes / (totalCasas || 1)).toFixed(2)}</td>
+          <td class="px-3 py-3 text-right text-purple-300 font-black bg-purple-500/20">${this.nf.format(totalVotantes)}</td>
+          <td class="px-3 py-3 text-right text-emerald-400 font-black">${this.nf.format(totalVotoDuro)}</td>
+          <td class="px-3 py-3 text-right text-amber-400 font-black">${this.nf.format(totalVotoBlando)}</td>
+          <td class="px-3 py-3 text-right text-sky-400 font-black">${this.nf.format(totalVotoNuevo)}</td>
+          <td class="px-3 py-3 text-center text-purple-300 font-black">${this.nf.format(totalNominales)}</td>
           <td class="px-3 py-3 text-right text-sky-300">${((totalVotantes / (totalHabitantes || 1)) * 100).toFixed(1)}%</td>
-          <td class="px-3 py-3 text-center text-emerald-400 font-bold">100%</td>
         </tr>
       `;
     }
@@ -763,7 +873,7 @@ export class DemoStatsApp {
     if (paginated.length === 0) {
       tbody.innerHTML = `
         <tr>
-          <td colspan="10" class="text-center py-8 text-slate-400 text-xs">
+          <td colspan="13" class="text-center py-8 text-slate-400 text-xs">
             No se encontraron sectores con el criterio de búsqueda.
           </td>
         </tr>
@@ -779,9 +889,12 @@ export class DemoStatsApp {
         <td class="px-3 py-2 text-[11px] text-slate-300 whitespace-nowrap">${s.parishNombre}</td>
         <td class="px-3 py-2 text-[11px] text-slate-400 whitespace-nowrap">${s.munNombre}</td>
         <td class="px-3 py-2 text-right font-mono text-xs text-amber-300">${this.nf.format(s.casas)}</td>
-        <td class="px-3 py-2 text-right font-mono text-xs text-slate-300">${this.nf.format(s.familias)}</td>
         <td class="px-3 py-2 text-right font-mono text-xs text-emerald-400 font-bold">${this.nf.format(s.habitantes)}</td>
-        <td class="px-3 py-2 text-right font-mono text-xs text-white font-black bg-amber-500/10">${this.nf.format(s.votantes)}</td>
+        <td class="px-3 py-2 text-right font-mono text-xs text-purple-300 font-black bg-purple-500/10">${this.nf.format(s.votantes)}</td>
+        <td class="px-3 py-2 text-right font-mono text-xs text-emerald-400 font-bold">${this.nf.format(s.votoDuro || 0)}</td>
+        <td class="px-3 py-2 text-right font-mono text-xs text-amber-400 font-bold">${this.nf.format(s.votoBlando || 0)}</td>
+        <td class="px-3 py-2 text-right font-mono text-xs text-sky-400 font-bold">${this.nf.format(s.votoNuevo || 0)}</td>
+        <td class="px-3 py-2 text-center font-mono text-xs text-purple-300 font-black">${this.nf.format(s.electoresNominales || 0)}</td>
         <td class="px-3 py-2 text-[11px] text-slate-300 truncate max-w-[200px]" title="${s.centroVotacion}">${s.centroVotacion}</td>
       </tr>
     `).join("");
@@ -818,6 +931,9 @@ export class DemoStatsApp {
       munList = munList.filter(m => m.id === this.selectedMunId);
     }
 
+    const flattened = getAllSectorsFlattened();
+    const sectorMap = new Map(flattened.map(s => [s.id, s]));
+
     container.innerHTML = munList.map(m => {
       let filteredParishes = m.parroquias;
       if (this.selectedParishId !== "todas") {
@@ -836,21 +952,28 @@ export class DemoStatsApp {
           const totalSubHab = sp.sectores.reduce((sum, s) => sum + s.habitantes, 0);
           const totalSubVot = sp.sectores.reduce((sum, s) => sum + s.votantes, 0);
 
-          const sectorsListHtml = sp.sectores.map(s => `
+          const sectorsListHtml = sp.sectores.map(rawS => {
+            const s = sectorMap.get(rawS.id) || rawS;
+            return `
             <div class="p-2.5 bg-slate-950/70 border border-slate-800/80 rounded-xl hover:border-amber-500/40 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs transition">
               <div class="flex items-center gap-2 min-w-0">
                 <span class="w-2 h-2 rounded-full bg-amber-400 shrink-0"></span>
                 <span class="font-mono text-amber-400 font-bold text-[11px]">${s.id}</span>
                 <span class="font-bold text-white truncate">${s.nombre}</span>
               </div>
-              <div class="flex items-center gap-3 font-mono text-[11px] text-slate-300 shrink-0">
+              <div class="flex flex-wrap items-center gap-2 font-mono text-[11px] text-slate-300 shrink-0">
                 <span>🏠 ${s.casas}</span>
                 <span>👥 ${s.habitantes}</span>
-                <span class="px-2 py-0.5 rounded bg-amber-500/15 border border-amber-500/40 text-amber-300 font-bold font-mono">🗳️ ${s.votantes}</span>
-                <span class="text-[10px] text-slate-400 hidden md:inline truncate max-w-[160px]" title="${s.centroVotacion}">🏫 ${s.centroVotacion}</span>
+                <span class="px-2 py-0.5 rounded bg-purple-500/15 border border-purple-500/40 text-purple-300 font-bold font-mono">🗳️ ${s.votantes}</span>
+                <span class="px-1.5 py-0.5 rounded bg-emerald-950/60 border border-emerald-500/40 text-emerald-300 text-[10px]" title="Voto Duro">🟢 ${s.votoDuro || 0}</span>
+                <span class="px-1.5 py-0.5 rounded bg-amber-950/60 border border-amber-500/40 text-amber-300 text-[10px]" title="Voto Blando">🟡 ${s.votoBlando || 0}</span>
+                <span class="px-1.5 py-0.5 rounded bg-sky-950/60 border border-sky-500/40 text-sky-300 text-[10px]" title="Voto Nuevo">🔵 ${s.votoNuevo || 0}</span>
+                ${(s.electoresNominales || 0) > 0 ? `<span class="px-1.5 py-0.5 rounded bg-purple-950/80 border border-purple-500/50 text-purple-200 text-[10px] font-bold" title="Electores Nominales">📋 ${s.electoresNominales} nom</span>` : ''}
+                <span class="text-[10px] text-slate-400 hidden lg:inline truncate max-w-[160px]" title="${s.centroVotacion}">🏫 ${s.centroVotacion}</span>
               </div>
             </div>
-          `).join("");
+          `;
+          }).join("");
 
           return `
             <div class="border border-purple-500/30 bg-purple-950/20 rounded-2xl p-3 space-y-2.5">
@@ -965,6 +1088,10 @@ export class DemoStatsApp {
       "Familias",
       "Habitantes",
       "Votantes Registrados",
+      "Voto Duro",
+      "Voto Blando",
+      "Voto Nuevo",
+      "Electores Nominales",
       "Ratio Hab/Casa",
       "Padron Electoral %",
       "Centro Electoral Asignado",
@@ -981,6 +1108,10 @@ export class DemoStatsApp {
       s.familias,
       s.habitantes,
       s.votantes,
+      s.votoDuro || 0,
+      s.votoBlando || 0,
+      s.votoNuevo || 0,
+      s.electoresNominales || 0,
       s.ratioHabCasa,
       s.ratioVotHab,
       `"${s.centroVotacion}"`,
@@ -1012,6 +1143,10 @@ export class DemoStatsApp {
         totalFamilias: agg.familias,
         totalHabitantes: agg.habitantes,
         totalVotantes: agg.votantes,
+        totalVotoDuro: agg.votoDuro || 0,
+        totalVotoBlando: agg.votoBlando || 0,
+        totalVotoNuevo: agg.votoNuevo || 0,
+        totalElectoresNominales: agg.electoresNominales || 0,
         totalSectores: agg.totalSectores,
         totalEjes: agg.uniqueSubparroquias,
         centrosCNE: agg.uniqueCentros,
@@ -1074,6 +1209,26 @@ export class DemoStatsApp {
           <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
             <span class="text-[10px] text-slate-400 block">Padrón Electoral</span>
             <span class="text-lg font-black text-white">${this.nf.format(agg.votantes)}</span>
+          </div>
+        </div>
+
+        <!-- Caracterización Política del Voto (Estándar Oficial MIGATO) -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 font-mono text-center">
+          <div class="bg-emerald-950/40 p-2.5 rounded-xl border border-emerald-500/30 text-emerald-300">
+            <span class="text-[9px] text-slate-400 block">🟢 Voto Duro</span>
+            <span class="text-base font-black">${this.nf.format(agg.votoDuro || 0)}</span>
+          </div>
+          <div class="bg-amber-950/40 p-2.5 rounded-xl border border-amber-500/30 text-amber-300">
+            <span class="text-[9px] text-slate-400 block">🟡 Voto Blando</span>
+            <span class="text-base font-black">${this.nf.format(agg.votoBlando || 0)}</span>
+          </div>
+          <div class="bg-sky-950/40 p-2.5 rounded-xl border border-sky-500/30 text-sky-300">
+            <span class="text-[9px] text-slate-400 block">🔵 Voto Nuevo</span>
+            <span class="text-base font-black">${this.nf.format(agg.votoNuevo || 0)}</span>
+          </div>
+          <div class="bg-purple-950/40 p-2.5 rounded-xl border border-purple-500/30 text-purple-300">
+            <span class="text-[9px] text-slate-400 block">📋 Nominales</span>
+            <span class="text-base font-black">${this.nf.format(agg.electoresNominales || 0)}</span>
           </div>
         </div>
 

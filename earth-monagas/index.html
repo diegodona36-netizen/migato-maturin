@@ -791,8 +791,12 @@
       <!-- Pestañas de Navegación -->
       <div class="flex border-b border-slate-800 bg-slate-950/60 text-xs font-bold shrink-0 overflow-x-auto scrollbar-none">
         <button type="button" data-tab="desc" class="prop-tab-btn flex-1 min-w-[90px] py-2.5 text-center text-sky-400 border-b-2 border-sky-500 bg-slate-800 flex items-center justify-center gap-1.5 whitespace-nowrap">
-          <i data-lucide="users" class="w-3.5 h-3.5 text-sky-400"></i>
-          <span><span class="sm:hidden">Ficha</span><span class="hidden sm:inline">Ficha de Militancia</span></span>
+          <i data-lucide="map-pin" class="w-3.5 h-3.5 text-sky-400"></i>
+          <span><span class="sm:hidden">Ficha</span><span class="hidden sm:inline">Ficha Sector</span></span>
+        </button>
+        <button type="button" data-tab="militantes" class="prop-tab-btn flex-1 min-w-[100px] py-2.5 text-center text-slate-400 hover:text-slate-200 flex items-center justify-center gap-1.5 whitespace-nowrap">
+          <i data-lucide="user-check" class="w-3.5 h-3.5 text-amber-400"></i>
+          <span>Electores (10 Campos)</span>
         </button>
         <button type="button" data-tab="style" class="prop-tab-btn flex-1 min-w-[80px] py-2.5 text-center text-slate-400 hover:text-slate-200 flex items-center justify-center gap-1.5 whitespace-nowrap">
           <i data-lucide="palette" class="w-3.5 h-3.5 text-purple-400"></i>
@@ -900,12 +904,45 @@
               </div>
             </div>
 
-            <!-- Protección y Seguridad de la Militancia (Cero datos personales identificables) -->
-            <div class="p-2.5 rounded-xl bg-emerald-950/50 border border-emerald-500/30 flex items-center gap-2.5">
-              <i data-lucide="shield-check" class="w-4 h-4 text-emerald-400 shrink-0"></i>
-              <p class="text-[10px] text-emerald-300 font-medium leading-tight">
-                <strong>Protección de Militancia Activa:</strong> Cero nombres personales, cédulas ni números telefónicos registrados en el sistema. Registro 100% numérico y seguro.
-              </p>
+            <!-- NUEVO ESTÁNDAR: CLASIFICACIÓN POLÍTICA DEL VOTO (DURO / BLANDO / NUEVO) -->
+            <div class="p-2.5 rounded-2xl bg-[#140e40] border-2 border-amber-500/50 space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="text-[10px] font-black uppercase text-amber-400 font-mono tracking-wider flex items-center gap-1">
+                  <span>★ Caracterización Del Voto</span>
+                </span>
+                <span class="text-[9px] font-bold text-slate-400 font-mono">Nuevo Estándar Oficial</span>
+              </div>
+
+              <div class="grid grid-cols-3 gap-2 text-center">
+                <!-- Voto Duro -->
+                <div class="bg-emerald-950/70 border border-emerald-500/60 p-2 rounded-xl">
+                  <span class="text-[9px] font-black uppercase text-emerald-300 block">🟢 Duro</span>
+                  <input type="number" id="prop-voto-duro" min="0" placeholder="0" class="w-full bg-slate-950 text-white font-mono font-black text-center text-sm py-1 rounded border border-emerald-600 focus:outline-none focus:border-emerald-400">
+                  <span class="text-[8px] text-emerald-400 block mt-0.5">Leal</span>
+                </div>
+
+                <!-- Voto Blando -->
+                <div class="bg-amber-950/70 border border-amber-500/60 p-2 rounded-xl">
+                  <span class="text-[9px] font-black uppercase text-amber-300 block">🟡 Blando</span>
+                  <input type="number" id="prop-voto-blando" min="0" placeholder="0" class="w-full bg-slate-950 text-white font-mono font-black text-center text-sm py-1 rounded border border-amber-600 focus:outline-none focus:border-amber-400">
+                  <span class="text-[8px] text-amber-400 block mt-0.5">Persuasión</span>
+                </div>
+
+                <!-- Voto Nuevo -->
+                <div class="bg-sky-950/70 border border-sky-500/60 p-2 rounded-xl">
+                  <span class="text-[9px] font-black uppercase text-sky-300 block">🔵 Nuevo</span>
+                  <input type="number" id="prop-voto-nuevo" min="0" placeholder="0" class="w-full bg-slate-950 text-white font-mono font-black text-center text-sm py-1 rounded border border-sky-600 focus:outline-none focus:border-sky-400">
+                  <span class="text-[8px] text-sky-400 block mt-0.5">Juventud</span>
+                </div>
+              </div>
+
+              <div class="pt-1 flex items-center justify-between text-[10px]">
+                <a href="../caracterizacion-voto/" target="_blank" class="text-amber-300 hover:text-amber-200 font-bold flex items-center gap-1 underline">
+                  <i data-lucide="external-link" class="w-3 h-3"></i>
+                  <span>Abrir Sábana Electoral</span>
+                </a>
+                <span id="prop-total-caracterizados-badge" class="font-mono text-slate-300 font-bold bg-slate-900 px-2 py-0.5 rounded border border-slate-700">0 Electores</span>
+              </div>
             </div>
           </div>
 
@@ -961,7 +998,64 @@
 
         </div>
 
+        <!-- PESTAÑA 2: ELECTORES CARACTERIZADOS (10 CAMPOS PAPELÓGRAFO) -->
+        <div class="prop-tab-content hidden space-y-3" data-tab="militantes">
+          
+          <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+            <div>
+              <h4 class="text-xs font-black text-white uppercase tracking-wider flex items-center gap-1.5">
+                <i data-lucide="user-check" class="w-4 h-4 text-amber-400"></i>
+                <span>Padrón Nominal del Sector</span>
+              </h4>
+              <p class="text-[10px] text-slate-400">Electores caracterizados con los 10 campos del papelógrafo</p>
+            </div>
+            <a href="../caracterizacion-voto/" target="_blank" class="px-2.5 py-1 bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-[10px] rounded-lg shadow transition flex items-center gap-1 active:scale-95">
+              <i data-lucide="plus" class="w-3 h-3"></i>
+              <span>Cargar Elector</span>
+            </a>
+          </div>
 
+          <!-- Semáforo Rápido del Sector -->
+          <div class="grid grid-cols-3 gap-2 text-center text-xs font-mono">
+            <div class="bg-emerald-950/60 border border-emerald-500/50 p-2 rounded-xl">
+              <span class="text-[9px] text-emerald-400 font-bold block uppercase">🟢 Voto Duro</span>
+              <strong id="tab-mil-count-duro" class="text-base text-white font-black">0</strong>
+            </div>
+            <div class="bg-amber-950/60 border border-amber-500/50 p-2 rounded-xl">
+              <span class="text-[9px] text-amber-400 font-bold block uppercase">🟡 Voto Blando</span>
+              <strong id="tab-mil-count-blando" class="text-base text-white font-black">0</strong>
+            </div>
+            <div class="bg-sky-950/60 border border-sky-500/50 p-2 rounded-xl">
+              <span class="text-[9px] text-sky-400 font-bold block uppercase">🔵 Voto Nuevo</span>
+              <strong id="tab-mil-count-nuevo" class="text-base text-white font-black">0</strong>
+            </div>
+          </div>
+
+          <!-- Tabla de Electores -->
+          <div class="border border-slate-800 rounded-xl overflow-hidden bg-slate-950/70">
+            <div class="max-h-64 overflow-y-auto">
+              <table class="w-full text-left text-xs border-collapse">
+                <thead class="bg-slate-900 sticky top-0 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                  <tr class="border-b border-slate-800">
+                    <th class="p-2">Elector</th>
+                    <th class="p-2 text-center">Cédula</th>
+                    <th class="p-2 text-center">Edad</th>
+                    <th class="p-2">Profesión</th>
+                    <th class="p-2 text-center">Voto</th>
+                  </tr>
+                </thead>
+                <tbody id="tab-mil-tbody" class="divide-y divide-slate-800/80 text-[11px]">
+                  <tr>
+                    <td colspan="5" class="p-4 text-center text-slate-500">
+                      Cargando electores del sector...
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
 
         <!-- PESTAÑA 3: ESTILO Y COLOR -->
         <div class="prop-tab-content hidden space-y-3" data-tab="style">
