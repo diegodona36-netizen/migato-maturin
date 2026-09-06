@@ -56,7 +56,7 @@
   <meta http-equiv="Expires" content="0" />
 
   <!-- Custom Styles -->
-  <link rel="stylesheet" href="css/styles.css?v=97">
+  <link rel="stylesheet" href="css/styles.css?v=98">
 
   <!-- Script de Autenticación Rápida, Limpieza Integral de Caché y Activador de Herramientas -->
   <script>
@@ -89,13 +89,13 @@
     }
   </style>
   <script>
-    // Auto-actualización obligatoria a la versión más reciente v=97
+    // Auto-actualización obligatoria a la versión más reciente v=98
     (function() {
       try {
         var p = new URLSearchParams(window.location.search);
         var curV = p.get('v');
-        if (!curV || curV !== '93') {
-          p.set('v', '93');
+        if (!curV || curV !== '98') {
+          p.set('v', '98');
           window.location.replace(window.location.pathname + '?' + p.toString() + window.location.hash);
         }
       } catch(e) {}
@@ -1178,14 +1178,14 @@
   <!-- ============================================================== -->
   <!-- 5. MODAL SELECTOR RÁPIDO PARA CAMBIAR PARROQUIA                -->
   <!-- ============================================================== -->
-  <div id="modal-select-parish" style="z-index: 99999;" class="fixed inset-0 bg-slate-950/85 backdrop-blur-sm hidden items-center justify-center p-3 sm:p-4">
-    <div class="bg-slate-900 border border-slate-700 w-full max-w-lg rounded-2xl shadow-2xl p-4 sm:p-5 space-y-3 max-h-[85vh] flex flex-col">
+  <div id="modal-select-parish" style="z-index: 99999; display: none;" class="fixed inset-0 bg-slate-950/85 backdrop-blur-sm hidden items-center justify-center p-3 sm:p-4" onclick="if(event.target === this) window.earthApp?.closeParishSelector ? window.earthApp.closeParishSelector() : (this.style.display = 'none')">
+    <div class="bg-slate-900 border border-slate-700 w-full max-w-lg rounded-2xl shadow-2xl p-4 sm:p-5 space-y-3 max-h-[85vh] flex flex-col pointer-events-auto">
       <div class="flex items-center justify-between border-b border-slate-800 pb-2.5">
         <div>
           <span class="text-[10px] font-bold text-amber-400 uppercase tracking-wider">Territorio de Monagas</span>
           <h3 class="text-base font-black text-white">Seleccionar Parroquia de Trabajo</h3>
         </div>
-        <button id="btn-close-parish-modal" class="p-1 rounded-lg text-slate-400 hover:text-white">
+        <button type="button" id="btn-close-parish-modal" onclick="window.earthApp?.closeParishSelector ? window.earthApp.closeParishSelector() : (document.getElementById('modal-select-parish').style.display = 'none')" class="p-1.5 rounded-lg text-slate-400 hover:text-white bg-slate-800/80 hover:bg-slate-700 transition cursor-pointer" title="Cerrar ventana">
           <i data-lucide="x" class="w-4 h-4"></i>
         </button>
       </div>
@@ -1478,7 +1478,7 @@
   </div>
 
   <!-- SCRIPT -->
-  <script type="module" src="js/app.js?v=97"></script>
+  <script type="module" src="js/app.js?v=98"></script>
   <script>
     if (window.lucide && typeof window.lucide.createIcons === 'function') {
       window.lucide.createIcons();

@@ -218,8 +218,14 @@ input, select, textarea {
   color: #ffffff !important;
 }
 
-/* Forzar ocultamiento del modal de autenticación */
-#modal-auth-login.hidden {
+/* Forzar ocultamiento infalible de todos los modales y elementos cuando tengan la clase .hidden */
+.hidden,
+#modal-select-parish.hidden,
+#modal-select-subparish.hidden,
+#modal-auth-login.hidden,
+#modal-kml-import.hidden,
+#modal-firebase-config.hidden,
+#modal-image-overlay.hidden {
   display: none !important;
   visibility: hidden !important;
   pointer-events: none !important;

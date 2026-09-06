@@ -2,21 +2,21 @@
  * Controlador Principal — Google Earth Pro Web (Edición Estado Monagas)
  * Robusto, 100% Operativo y Totalmente Individualizado
  */
-import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=97";
-import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=97";
-import { getAllParishesForSelector } from "./usersCatalog.js?v=97";
-import { EarthStore } from "./earthStore.js?v=97";
-import { EarthMapEngine } from "./mapEngine.js?v=97";
-import { PropertiesDialog } from "./propertiesDialog.js?v=97";
-import { ToolsManager } from "./toolsManager.js?v=97";
-import { detectParishFromGeometry } from "./geoMonagas.js?v=97";
-import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=97";
+import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=98";
+import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=98";
+import { getAllParishesForSelector } from "./usersCatalog.js?v=98";
+import { EarthStore } from "./earthStore.js?v=98";
+import { EarthMapEngine } from "./mapEngine.js?v=98";
+import { PropertiesDialog } from "./propertiesDialog.js?v=98";
+import { ToolsManager } from "./toolsManager.js?v=98";
+import { detectParishFromGeometry } from "./geoMonagas.js?v=98";
+import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=98";
 import { 
   getSavedFirebaseConfig, 
   saveFirebaseConfig, 
   isFirebaseConfigured, 
   initFirebase 
-} from "./firebaseConfig.js?v=97";
+} from "./firebaseConfig.js?v=98";
 
 class EarthMonagasApp {
   constructor() {
@@ -409,6 +409,7 @@ class EarthMonagasApp {
     if (modal) {
       modal.classList.add("hidden");
       modal.classList.remove("flex");
+      modal.style.display = "none";
     }
   }
 
@@ -1077,16 +1078,25 @@ class EarthMonagasApp {
     const btnClose = document.getElementById("btn-close-parish-modal");
 
     if (btnOpen) {
-      btnOpen.addEventListener("click", () => this.openParishSelector());
+      btnOpen.onclick = (e) => {
+        e?.preventDefault?.();
+        this.openParishSelector();
+      };
     }
 
     if (btnClose) {
-      btnClose.addEventListener("click", () => {
-        if (modal) {
-          modal.classList.add("hidden");
-          modal.classList.remove("flex");
+      btnClose.onclick = (e) => {
+        e?.preventDefault?.();
+        this.closeParishSelector();
+      };
+    }
+
+    if (modal) {
+      modal.onclick = (e) => {
+        if (e.target === modal) {
+          this.closeParishSelector();
         }
-      });
+      };
     }
   }
 
@@ -1171,13 +1181,18 @@ class EarthMonagasApp {
     }
   }
 
-  selectParishFromModal(munId, parishId) {
+  closeParishSelector() {
     const modal = document.getElementById("modal-select-parish");
     if (modal) {
       modal.classList.add("hidden");
       modal.classList.remove("flex");
+      modal.style.display = "none";
     }
-    this.selectParish(munId, parishId);
+  }
+
+  selectParishFromModal(munId, parishId) {
+    this.closeParishSelector();
+    this.selectParish(munId, parishId, true);
   }
 
   handleMapItemSelection(type, item) {
@@ -2152,6 +2167,8 @@ class EarthMonagasApp {
     };
     this.openLayers = openLayers;
     window.earthApp.openLayers = openLayers;
+    window.earthApp.closeParishSelector = () => this.closeParishSelector();
+    window.earthApp.selectParishFromModal = (m, p) => this.selectParishFromModal(m, p);
 
     if (btnToggleSidebar) btnToggleSidebar.addEventListener("click", () => toggleSidebar());
     if (btnCloseSidebar) btnCloseSidebar.addEventListener("click", () => toggleSidebar(false));
