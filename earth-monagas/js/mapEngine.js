@@ -2,7 +2,7 @@
  * Motor Cartográfico Acelerado por GPU — Google Earth Pro Web (Monagas)
  * Integrado con Capas Jerárquicas Oficiales (INE 2021) y Edición de Vértices
  */
-import { GEO_ESTADO_OFICIAL, GEO_MUNICIPIOS_OFICIAL, GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=92";
+import { GEO_ESTADO_OFICIAL, GEO_MUNICIPIOS_OFICIAL, GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=93";
 
 export class EarthMapEngine {
   constructor(containerId, onCoordUpdate) {
@@ -68,11 +68,18 @@ export class EarthMapEngine {
       { maxZoom: 20, maxNativeZoom: 19, attribution: "OpenStreetMap" }
     );
 
+    const isTouchDevice = typeof window !== "undefined" && (
+      "ontouchstart" in window ||
+      (navigator && navigator.maxTouchPoints > 0) ||
+      window.innerWidth < 768
+    );
+    this.isTouchDevice = isTouchDevice;
+
     this.map = L.map(this.containerId, {
       center: [9.7469, -63.1812], // Maturín
       zoom: 13,
-      preferCanvas: false,
-      renderer: this.svgRenderer,
+      preferCanvas: true, // Aceleración por GPU en Canvas para eliminar miles de nodos SVG
+      renderer: this.canvasRenderer,
       zoomSnap: 1,
       zoomDelta: 1,
       zoomAnimation: true,
@@ -110,10 +117,21 @@ export class EarthMapEngine {
     // Inicializar Capas Jerárquicas Oficiales (LOD 1 a 5)
     this.initHierarchicalLayers();
 
-    // Seguimiento dinámico de coordenadas en la barra de estado
-    this.map.on("mousemove", (e) => {
+    // Seguimiento de coordenadas optimizado:
+    // En escritorio: mousemove
+    // En pantallas táctiles: solo al soltar el mapa (moveend) para no gastar batería ni saturar la CPU
+    if (!this.isTouchDevice) {
+      this.map.on("mousemove", (e) => {
+        if (this.onCoordUpdate) {
+          this.onCoordUpdate(e.latlng.lat, e.latlng.lng, this.getEyeAltitude());
+        }
+      });
+    }
+
+    this.map.on("moveend", () => {
+      const center = this.map.getCenter();
       if (this.onCoordUpdate) {
-        this.onCoordUpdate(e.latlng.lat, e.latlng.lng, this.getEyeAltitude());
+        this.onCoordUpdate(center.lat, center.lng, this.getEyeAltitude());
       }
     });
 
@@ -139,8 +157,21 @@ export class EarthMapEngine {
    * Construye las capas oficiales de los 5 niveles jerárquicos
    */
   initHierarchicalLayers() {
+    const isIsolated = typeof document !== "undefined" && document.documentElement.classList.contains("isolated-parish-view");
+    if (isIsolated) {
+      // MODO AISLAMIENTO PARROQUIAL (Operador móvil comunal):
+      // NO instanciar los 13 municipios ni las 44 parroquias ajenas.
+      // El teléfono móvil vuela inmediatamente a 60 FPS con mínimo consumo de RAM.
+      this.layerL1_Estado = L.layerGroup();
+      this.layerL2_Municipios = L.layerGroup();
+      this.layerL3_Parroquias = L.layerGroup();
+      this.layerL4_SubParroquias = L.layerGroup();
+      return;
+    }
+
     // 1. Capa L1: Estado Monagas (Oficial INE/IGVSB)
     this.layerL1_Estado = L.geoJSON(GEO_ESTADO_OFICIAL, {
+      renderer: this.canvasRenderer,
       style: {
         color: "#f59e0b",
         weight: 3.5,
@@ -150,22 +181,25 @@ export class EarthMapEngine {
         dashArray: "8, 6"
       },
       onEachFeature: (feature, layer) => {
-        layer.bindTooltip(`
-          <div class="p-2 font-mono text-xs max-w-[240px] bg-[#08061a] rounded-xl border border-amber-500/50 shadow-2xl">
-            <div class="flex items-center justify-between border-b border-amber-800/60 pb-1 mb-1">
-              <span class="text-[9px] uppercase tracking-wider text-amber-400 font-black">Nivel 1 • Macro</span>
-              <span class="text-[9px] font-bold text-amber-200 bg-amber-950 px-1.5 py-0.5 rounded border border-amber-700">Estado</span>
+        if (!this.isTouchDevice) {
+          layer.bindTooltip(`
+            <div class="p-2 font-mono text-xs max-w-[240px] bg-[#08061a] rounded-xl border border-amber-500/50 shadow-2xl">
+              <div class="flex items-center justify-between border-b border-amber-800/60 pb-1 mb-1">
+                <span class="text-[9px] uppercase tracking-wider text-amber-400 font-black">Nivel 1 • Macro</span>
+                <span class="text-[9px] font-bold text-amber-200 bg-amber-950 px-1.5 py-0.5 rounded border border-amber-700">Estado</span>
+              </div>
+              <strong class="text-white block font-black text-sm mb-0.5">Estado Monagas</strong>
+              <span class="text-[10px] text-slate-300 block mb-1.5">13 Municipios • 44 Parroquias • 536 Centros de Votación</span>
+              <span class="text-[9px] text-amber-300 font-bold block text-center">Acércate con el zoom para ver municipios</span>
             </div>
-            <strong class="text-white block font-black text-sm mb-0.5">Estado Monagas</strong>
-            <span class="text-[10px] text-slate-300 block mb-1.5">13 Municipios • 44 Parroquias • 536 Centros de Votación</span>
-            <span class="text-[9px] text-amber-300 font-bold block text-center">Acércate con el zoom para ver municipios</span>
-          </div>
-        `, { sticky: true, className: "earth-tooltip" });
+          `, { sticky: true, className: "earth-tooltip" });
+        }
       }
     });
 
     // 2. Capa L2: 13 Municipios (Oficial INE)
     this.layerL2_Municipios = L.geoJSON(GEO_MUNICIPIOS_OFICIAL, {
+      renderer: this.canvasRenderer,
       style: (feature) => ({
         color: feature.properties.color || "#38bdf8",
         weight: 2,
@@ -175,18 +209,20 @@ export class EarthMapEngine {
       }),
       onEachFeature: (feature, layer) => {
         const p = feature.properties;
-        layer.bindTooltip(`
-          <div class="p-2 font-mono text-xs max-w-[250px] bg-[#08061a] rounded-xl border border-sky-500/50 shadow-2xl">
-            <div class="flex items-center justify-between border-b border-sky-800/60 pb-1 mb-1">
-              <span class="text-[9px] uppercase tracking-wider text-sky-400 font-black">Nivel 2 • Municipio</span>
-              <span class="text-[9px] font-bold text-sky-200 bg-sky-950 px-1.5 py-0.5 rounded border border-sky-700">Cantonal</span>
+        if (!this.isTouchDevice) {
+          layer.bindTooltip(`
+            <div class="p-2 font-mono text-xs max-w-[250px] bg-[#08061a] rounded-xl border border-sky-500/50 shadow-2xl">
+              <div class="flex items-center justify-between border-b border-sky-800/60 pb-1 mb-1">
+                <span class="text-[9px] uppercase tracking-wider text-sky-400 font-black">Nivel 2 • Municipio</span>
+                <span class="text-[9px] font-bold text-sky-200 bg-sky-950 px-1.5 py-0.5 rounded border border-sky-700">Cantonal</span>
+              </div>
+              <strong class="text-white block font-black text-sm mb-0.5">Municipio ${p.nombre || p.ADM2_ES}</strong>
+              <span class="text-[10px] text-slate-300 block mb-1">Capital: <strong class="text-white">${p.capital || 'N/D'}</strong> • ${p.parroquias_count || ''} Parroquias</span>
+              ${p.electores ? `<div class="text-[10px] text-sky-300 font-mono bg-sky-950/60 px-2 py-0.5 rounded border border-sky-800/40 mb-1">Electores: ~${p.electores.toLocaleString()}</div>` : ''}
+              <span class="text-[9px] text-sky-300 font-bold block text-center">👉 Clic para enfocar municipio</span>
             </div>
-            <strong class="text-white block font-black text-sm mb-0.5">Municipio ${p.nombre || p.ADM2_ES}</strong>
-            <span class="text-[10px] text-slate-300 block mb-1">Capital: <strong class="text-white">${p.capital || 'N/D'}</strong> • ${p.parroquias_count || ''} Parroquias</span>
-            ${p.electores ? `<div class="text-[10px] text-sky-300 font-mono bg-sky-950/60 px-2 py-0.5 rounded border border-sky-800/40 mb-1">Electores: ~${p.electores.toLocaleString()}</div>` : ''}
-            <span class="text-[9px] text-sky-300 font-bold block text-center">👉 Clic para enfocar municipio</span>
-          </div>
-        `, { sticky: true, className: "earth-tooltip" });
+          `, { sticky: true, className: "earth-tooltip" });
+        }
 
         layer.on("click", (e) => {
           if (e.originalEvent?.target?.blur) e.originalEvent.target.blur();
@@ -206,6 +242,7 @@ export class EarthMapEngine {
 
     // 3. Capa L3: 44 Parroquias Oficiales (INE 2021)
     this.layerL3_Parroquias = L.geoJSON(GEO_PARROQUIAS_OFICIAL, {
+      renderer: this.canvasRenderer,
       style: (feature) => ({
         color: "#ffffff",
         weight: 1.5,
@@ -216,17 +253,19 @@ export class EarthMapEngine {
       }),
       onEachFeature: (feature, layer) => {
         const p = feature.properties;
-        layer.bindTooltip(`
-          <div class="p-2 font-mono text-xs max-w-[250px] bg-[#08061a] rounded-xl border border-emerald-500/50 shadow-2xl">
-            <div class="flex items-center justify-between border-b border-emerald-800/60 pb-1 mb-1">
-              <span class="text-[9px] uppercase tracking-wider text-emerald-400 font-black">Nivel 3 • Parroquia</span>
-              <span class="text-[9px] font-bold text-emerald-200 bg-emerald-950 px-1.5 py-0.5 rounded border border-emerald-700">INE 2021</span>
+        if (!this.isTouchDevice) {
+          layer.bindTooltip(`
+            <div class="p-2 font-mono text-xs max-w-[250px] bg-[#08061a] rounded-xl border border-emerald-500/50 shadow-2xl">
+              <div class="flex items-center justify-between border-b border-emerald-800/60 pb-1 mb-1">
+                <span class="text-[9px] uppercase tracking-wider text-emerald-400 font-black">Nivel 3 • Parroquia</span>
+                <span class="text-[9px] font-bold text-emerald-200 bg-emerald-950 px-1.5 py-0.5 rounded border border-emerald-700">INE 2021</span>
+              </div>
+              <strong class="text-white block font-black text-sm mb-0.5">${p.nombre || p.ADM3_ES}</strong>
+              <span class="text-[10px] text-slate-300 block mb-1.5">Municipio ${p.municipioNombre || p.ADM2_ES || 'Monagas'}</span>
+              <span class="text-[9px] text-amber-300 font-bold block text-center bg-amber-950/60 py-1 rounded border border-amber-800/40">👉 Clic para abrir y mapear sectores</span>
             </div>
-            <strong class="text-white block font-black text-sm mb-0.5">${p.nombre || p.ADM3_ES}</strong>
-            <span class="text-[10px] text-slate-300 block mb-1.5">Municipio ${p.municipioNombre || p.ADM2_ES || 'Monagas'}</span>
-            <span class="text-[9px] text-amber-300 font-bold block text-center bg-amber-950/60 py-1 rounded border border-amber-800/40">👉 Clic para abrir y mapear sectores</span>
-          </div>
-        `, { sticky: true, className: "earth-tooltip" });
+          `, { sticky: true, className: "earth-tooltip" });
+        }
 
         layer.on("click", (e) => {
           if (e.originalEvent?.target?.blur) e.originalEvent.target.blur();
@@ -465,7 +504,7 @@ export class EarthMapEngine {
       fill: false,
       dashArray: "6, 4",
       interactive: false,
-      renderer: this.svgRenderer
+      renderer: this.canvasRenderer
     });
 
     this.boundaryLayer.addLayer(bPoly);
@@ -510,7 +549,7 @@ export class EarthMapEngine {
       fill: false,
       dashArray: "6, 4",
       interactive: false,
-      renderer: this.svgRenderer
+      renderer: this.canvasRenderer
     });
     this.boundaryLayer.addLayer(bPoly);
 
@@ -658,14 +697,14 @@ export class EarthMapEngine {
             fillOpacity: isFocused ? 0.12 : 0.08,
             dashArray: isFocused ? "8, 6" : "6, 4",
             interactive: !isDrawing,
-            renderer: this.svgRenderer
+            renderer: this.canvasRenderer
           });
 
           if (sp && sp.id) {
             this.leafletLayersMap.set(String(sp.id), spLayer);
           }
 
-          if (!isDrawing) {
+          if (!isDrawing && !this.isTouchDevice) {
             // Calcular consolidado suma viva de sectores dentro de este Eje Comunal
             const childSecs = (pData.poligonos || []).filter(p => String(p.subParroquiaId) === String(sp.id));
             let totCasas = 0, totFam = 0, totHab = 0, totVot = 0;
@@ -784,7 +823,7 @@ export class EarthMapEngine {
             fillColor: poly.colorRelleno || "#38bdf8",
             fillOpacity: poly.opacidad !== undefined ? poly.opacidad : (isActiveParish ? 0.35 : 0.25),
             interactive: !isDrawing,
-            renderer: this.svgRenderer
+            renderer: this.canvasRenderer
           });
 
           if (poly && poly.id) {
@@ -799,7 +838,7 @@ export class EarthMapEngine {
           const spTag = spObj ? ` • ${spObj.nombre}` : "";
           const centroVot = poly.centroVotacion ? `🏫 ${poly.centroVotacion}` : "🏫 Centro no asignado";
 
-          if (!isDrawing) {
+          if (!isDrawing && !this.isTouchDevice) {
             pLayer.bindTooltip(`
               <div class="p-2 font-mono text-xs max-w-[260px] bg-[#08061a] rounded-xl border border-sky-500/50 shadow-2xl">
                 <div class="flex items-center justify-between gap-2 border-b border-sky-800/60 pb-1.5 mb-1.5">
@@ -1058,7 +1097,8 @@ export class EarthMapEngine {
     }
 
     // L5: Sectores Comunales (Base)
-    const showSecLabels = z >= 15;
+    const isMobileScreen = typeof window !== "undefined" && window.innerWidth < 640;
+    const showSecLabels = isMobileScreen ? z >= 16 : z >= 15;
     if (this.polygonsLayer) {
       if (this.hierarchicalVisibility.l5) {
         if (!this.map.hasLayer(this.polygonsLayer)) this.map.addLayer(this.polygonsLayer);

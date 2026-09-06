@@ -56,7 +56,7 @@
   <meta http-equiv="Expires" content="0" />
 
   <!-- Custom Styles -->
-  <link rel="stylesheet" href="css/styles.css?v=92">
+  <link rel="stylesheet" href="css/styles.css?v=93">
 
   <!-- Script de Autenticación Rápida, Limpieza Integral de Caché y Activador de Herramientas -->
   <script>
@@ -89,13 +89,13 @@
     }
   </style>
   <script>
-    // Auto-actualización obligatoria a la versión más reciente v=92
+    // Auto-actualización obligatoria a la versión más reciente v=93
     (function() {
       try {
         var p = new URLSearchParams(window.location.search);
         var curV = p.get('v');
-        if (!curV || curV !== '92') {
-          p.set('v', '92');
+        if (!curV || curV !== '93') {
+          p.set('v', '93');
           window.location.replace(window.location.pathname + '?' + p.toString() + window.location.hash);
         }
       } catch(e) {}
@@ -656,7 +656,7 @@
   <!-- ============================================================== -->
   <!-- 3. BARRA DE ESTADO INFERIOR (COORDENADAS GOOGLE EARTH PRO)     -->
   <!-- ============================================================== -->
-  <footer class="earth-status-bar h-7 px-2.5 sm:px-3 flex items-center justify-between font-mono shrink-0 select-text w-full overflow-hidden bg-[#08061a] border-t border-[#23176d]/80 text-slate-400">
+  <footer class="earth-status-bar h-7 px-2.5 sm:px-3 hidden sm:flex items-center justify-between font-mono shrink-0 select-text w-full overflow-hidden bg-[#08061a] border-t border-[#23176d]/80 text-slate-400">
     <div class="flex items-center gap-2 truncate">
       <span id="status-coords" class="text-slate-300 font-bold text-[10px] sm:text-xs truncate">9°44'51.2"N 63°11'05.4"W</span>
     </div>
@@ -759,16 +759,16 @@
       </div>
 
       <!-- Pestañas de Navegación -->
-      <div class="flex border-b border-slate-800 bg-slate-950/60 text-xs font-bold shrink-0">
-        <button type="button" data-tab="desc" class="prop-tab-btn flex-1 py-2.5 text-center text-sky-400 border-b-2 border-sky-500 bg-slate-800 flex items-center justify-center gap-1.5">
+      <div class="flex border-b border-slate-800 bg-slate-950/60 text-xs font-bold shrink-0 overflow-x-auto scrollbar-none">
+        <button type="button" data-tab="desc" class="prop-tab-btn flex-1 min-w-[90px] py-2.5 text-center text-sky-400 border-b-2 border-sky-500 bg-slate-800 flex items-center justify-center gap-1.5 whitespace-nowrap">
           <i data-lucide="users" class="w-3.5 h-3.5 text-sky-400"></i>
-          <span>Ficha de Militancia</span>
+          <span><span class="sm:hidden">Ficha</span><span class="hidden sm:inline">Ficha de Militancia</span></span>
         </button>
-        <button type="button" data-tab="style" class="prop-tab-btn flex-1 py-2.5 text-center text-slate-400 hover:text-slate-200 flex items-center justify-center gap-1.5">
+        <button type="button" data-tab="style" class="prop-tab-btn flex-1 min-w-[80px] py-2.5 text-center text-slate-400 hover:text-slate-200 flex items-center justify-center gap-1.5 whitespace-nowrap">
           <i data-lucide="palette" class="w-3.5 h-3.5 text-purple-400"></i>
           <span>Estilo</span>
         </button>
-        <button type="button" data-tab="measure" class="prop-tab-btn flex-1 py-2.5 text-center text-slate-400 hover:text-slate-200 flex items-center justify-center gap-1.5">
+        <button type="button" data-tab="measure" class="prop-tab-btn flex-1 min-w-[80px] py-2.5 text-center text-slate-400 hover:text-slate-200 flex items-center justify-center gap-1.5 whitespace-nowrap">
           <i data-lucide="ruler" class="w-3.5 h-3.5 text-emerald-400"></i>
           <span>Medidas</span>
         </button>
@@ -1030,18 +1030,18 @@
           </div>
         </div>
 
-        <!-- Botones de Acción y Ajuste de Vértices -->
-        <div class="pt-3 flex items-center justify-between border-t border-slate-800 shrink-0 gap-2">
+        <!-- Botones de Acción y Ajuste de Vértices (Sticky al fondo en móviles) -->
+        <div class="sticky bottom-0 bg-slate-900/95 backdrop-blur-md pt-3 pb-1 flex items-center justify-between border-t border-slate-800 shrink-0 gap-2 mt-auto">
           <button type="button" id="btn-prop-edit-geometry" class="px-3.5 py-2 text-xs font-black bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 rounded-xl flex items-center gap-1.5 active:scale-95 transition" title="Arrastrar y modificar vértices directamente sobre la foto satelital">
             <i data-lucide="move" class="w-3.5 h-3.5"></i>
-            <span>Ajustar Vértices</span>
+            <span><span class="sm:hidden">Vértices</span><span class="hidden sm:inline">Ajustar Vértices</span></span>
           </button>
 
           <div class="flex items-center gap-2">
-            <button type="button" id="btn-prop-cancel" class="px-4 py-2 text-xs font-semibold text-slate-400 hover:text-white">
+            <button type="button" id="btn-prop-cancel" class="px-3 sm:px-4 py-2 text-xs font-semibold text-slate-400 hover:text-white cursor-pointer">
               Cancelar
             </button>
-            <button type="button" id="btn-prop-save" class="px-5 py-2.5 text-xs font-black bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 text-white rounded-xl shadow-lg flex items-center gap-1.5 active:scale-95 transition">
+            <button type="button" id="btn-prop-save" class="px-4 sm:px-5 py-2.5 text-xs font-black bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 text-white rounded-xl shadow-lg flex items-center gap-1.5 active:scale-95 transition cursor-pointer">
               <i data-lucide="check" class="w-4 h-4"></i>
               <span>Guardar Datos</span>
             </button>
@@ -1457,7 +1457,7 @@
   </div>
 
   <!-- SCRIPT -->
-  <script type="module" src="js/app.js?v=92"></script>
+  <script type="module" src="js/app.js?v=93"></script>
   <script>
     if (window.lucide && typeof window.lucide.createIcons === 'function') {
       window.lucide.createIcons();
