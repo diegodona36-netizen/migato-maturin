@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Censo Territorial Comunal • Registro por Parroquia</title>
+  <title>Acceso Territorial Privado • Monagas</title>
 
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -51,43 +51,94 @@
 <body class="text-slate-100 min-h-screen flex flex-col selection:bg-emerald-500 selection:text-white pb-12">
 
   <!-- ============================================================== -->
-  <!-- 1. CABECERA INSTITUCIONAL MÓVIL                                -->
+  <!-- 1. MODAL DE ACCESO PRIVADO (BLOQUEO DE SEGURIDAD)              -->
   <!-- ============================================================== -->
-  <header class="border-b border-slate-800 bg-slate-950/95 backdrop-blur-md sticky top-0 z-40">
+  <div id="gate-login" class="fixed inset-0 z-50 bg-slate-950 flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 w-full max-w-md shadow-2xl space-y-5">
+      
+      <div class="text-center space-y-2">
+        <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-purple-600 to-sky-600 flex items-center justify-center text-white mx-auto shadow-lg shadow-purple-600/30">
+          <i data-lucide="lock" class="w-6 h-6"></i>
+        </div>
+        <h2 class="text-base sm:text-lg font-black text-white uppercase tracking-tight">
+          Acceso Territorial Privado
+        </h2>
+        <p id="gate-parish-subtitle" class="text-xs text-sky-400 font-bold font-mono">
+          Cargando parroquia...
+        </p>
+      </div>
+
+      <form id="form-login" class="space-y-4 text-xs">
+        <div>
+          <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">
+            Usuario Asignado:
+          </label>
+          <input type="text" id="login-user" required placeholder="Ej: san-simon" class="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-700 rounded-xl text-white font-mono font-bold focus:outline-none focus:border-sky-500">
+        </div>
+
+        <div>
+          <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">
+            Contraseña:
+          </label>
+          <input type="password" id="login-pass" required placeholder="••••••••" class="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-700 rounded-xl text-white font-mono focus:outline-none focus:border-sky-500">
+        </div>
+
+        <div id="login-error" class="hidden p-2.5 bg-rose-950/80 border border-rose-800 rounded-xl text-rose-300 text-xs text-center font-bold">
+          Credenciales incorrectas. Verifique su usuario y clave.
+        </div>
+
+        <button type="submit" class="w-full py-3 bg-sky-600 hover:bg-sky-500 text-white font-black text-xs uppercase tracking-wider rounded-xl shadow-lg shadow-sky-600/30 transition active:scale-95 cursor-pointer">
+          Ingresar al Censo
+        </button>
+      </form>
+
+      <div class="text-center text-[11px] text-slate-500 font-mono">
+        Solo personal autorizado para esta parroquia
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================== -->
+  <!-- 2. CABECERA INSTITUCIONAL (VISIBLE TRAS LOGIN)                 -->
+  <!-- ============================================================== -->
+  <header id="app-header" class="border-b border-slate-800 bg-slate-950/95 backdrop-blur-md sticky top-0 z-40">
     <div class="max-w-xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
       <div class="flex items-center gap-2.5 min-w-0">
         <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-emerald-600 to-teal-700 flex items-center justify-center text-white shadow-lg font-black text-sm shrink-0">
-          <i data-lucide="clipboard-list" class="w-5 h-5"></i>
+          <i data-lucide="clipboard-check" class="w-5 h-5"></i>
         </div>
         <div class="truncate">
           <h1 class="text-xs sm:text-sm font-black text-white uppercase tracking-tight truncate">
-            Censo Comunal Monagas
+            Censo de Sectores
           </h1>
           <div class="flex items-center gap-1.5 text-[11px] font-bold text-sky-400 truncate">
             <i data-lucide="map-pin" class="w-3 h-3 shrink-0"></i>
-            <span id="header-parish-title" class="truncate">Cargando territorio...</span>
+            <span id="header-parish-title" class="truncate">Parroquia</span>
           </div>
         </div>
       </div>
 
       <div class="flex items-center gap-2 shrink-0">
         <span id="cloud-status-badge" class="px-2 py-1 rounded-lg text-[10px] font-mono font-bold bg-slate-900 border border-slate-800 text-slate-400 flex items-center gap-1">
-          <span id="cloud-dot" class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
-          <span id="cloud-text">Conectando</span>
+          <span id="cloud-dot" class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span id="cloud-text">En Línea</span>
         </span>
+        <button type="button" id="btn-logout" class="p-1.5 rounded-lg bg-slate-800 hover:bg-rose-950 text-slate-400 hover:text-rose-300 border border-slate-700 transition" title="Cerrar sesión">
+          <i data-lucide="log-out" class="w-4 h-4"></i>
+        </button>
       </div>
     </div>
   </header>
 
   <!-- ============================================================== -->
-  <!-- 2. CONTENIDO PRINCIPAL: FORMULARIO Y LISTADO                   -->
+  <!-- 3. CONTENIDO PRINCIPAL: FORMULARIO SIMPLIFICADO                -->
   <!-- ============================================================== -->
-  <main class="flex-1 max-w-xl mx-auto w-full px-4 py-4 space-y-4">
+  <main id="app-main" class="flex-1 max-w-xl mx-auto w-full px-4 py-4 space-y-4">
 
     <!-- Tarjeta de Resumen Territorial de la Parroquia -->
     <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-3 sm:p-4 shadow-lg space-y-2">
       <div class="flex items-center justify-between text-xs">
-        <span class="text-slate-400 font-bold uppercase tracking-wider text-[10px]">Totales Registrados en Parroquia</span>
+        <span class="text-slate-400 font-bold uppercase tracking-wider text-[10px]">Totales de la Parroquia</span>
         <span id="badge-total-sectors" class="font-mono text-sky-400 font-black">0 Sectores</span>
       </div>
 
@@ -111,64 +162,55 @@
       </div>
     </div>
 
-    <!-- TARJETA DEL FORMULARIO DE CARGA -->
+    <!-- TARJETA DEL FORMULARIO DE CARGA (SOLO 4 CAMPOS + SECTOR) -->
     <div class="bg-slate-900 border-2 border-emerald-500/40 rounded-3xl p-4 sm:p-5 shadow-2xl space-y-4 relative">
       
       <div class="flex items-center justify-between border-b border-slate-800 pb-3">
         <div class="flex items-center gap-2">
           <div class="w-7 h-7 rounded-lg bg-emerald-950 border border-emerald-500/50 flex items-center justify-center text-emerald-400">
-            <i id="form-mode-icon" data-lucide="plus" class="w-4 h-4"></i>
+            <i id="form-mode-icon" data-lucide="edit-3" class="w-4 h-4"></i>
           </div>
           <h2 id="form-mode-title" class="text-xs sm:text-sm font-black text-white uppercase tracking-wider">
-            Registrar Sector Comunal
+            Cargar Datos de Sector
           </h2>
         </div>
         <button type="button" id="btn-cancel-edit" class="hidden px-2.5 py-1 text-[11px] font-bold text-slate-400 hover:text-white bg-slate-800 border border-slate-700 rounded-lg">
-          Cancelar Edición
+          Limpiar
         </button>
       </div>
 
       <form id="form-sector" class="space-y-3.5">
         <input type="hidden" id="field-editing-id" value="">
 
-        <!-- Campo 1: Eje Comunal / Sub-Parroquia -->
+        <!-- Selector de Sector / Comunidad -->
         <div>
           <label class="block text-[11px] font-bold uppercase text-slate-300 mb-1 flex items-center justify-between">
-            <span>Eje Comunal / Sub-Parroquia *</span>
-            <span class="text-[10px] text-purple-400 font-mono">Nivel 4</span>
+            <span>Seleccionar Sector / Comunidad *</span>
+            <span class="text-[10px] text-sky-400 font-mono">Capa 5</span>
           </label>
-          <select id="select-eje" required class="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-700 rounded-xl text-white text-xs font-bold focus:outline-none focus:border-emerald-500 cursor-pointer">
-            <option value="">-- Seleccione el Eje Comunal --</option>
+          <select id="select-sector" required class="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-700 rounded-xl text-white text-xs sm:text-sm font-bold focus:outline-none focus:border-emerald-500 cursor-pointer">
+            <option value="">-- Toca aquí para elegir el sector --</option>
             <!-- Inyectado dinámicamente -->
-            <option value="__nuevo__">➕ Crear / Escribir Nuevo Eje...</option>
+            <option value="__nuevo__">➕ Registrar Nuevo Sector (Escribir nombre)...</option>
           </select>
         </div>
 
-        <!-- Input adicional si seleccionó "+ Crear Nuevo Eje" -->
-        <div id="wrapper-nuevo-eje" class="hidden">
-          <label class="block text-[10px] font-bold uppercase text-purple-400 mb-1">
-            Nombre del Nuevo Eje Comunal:
+        <!-- Campo de texto si eligió "+ Registrar Nuevo Sector" -->
+        <div id="wrapper-nuevo-sector" class="hidden">
+          <label class="block text-[10px] font-bold uppercase text-sky-400 mb-1">
+            Nombre del Nuevo Sector o Comunidad:
           </label>
-          <input type="text" id="input-nuevo-eje" placeholder="Ej: Eje Comunal 4 • La Victoria" class="w-full px-3.5 py-2.5 bg-slate-950 border border-purple-500/60 rounded-xl text-white text-xs font-medium focus:outline-none focus:border-purple-400">
+          <input type="text" id="input-nuevo-sector" placeholder="Ej: Sector Los Guaros, Calle 2, Casco Central..." class="w-full px-3.5 py-2.5 bg-slate-950 border border-sky-500/60 rounded-xl text-white text-xs sm:text-sm font-semibold focus:outline-none focus:border-sky-400">
         </div>
 
-        <!-- Campo 2: Nombre del Sector / Comunidad -->
-        <div>
-          <label class="block text-[11px] font-bold uppercase text-slate-300 mb-1 flex items-center justify-between">
-            <span>Nombre del Sector o Comunidad *</span>
-            <span class="text-[10px] text-sky-400 font-mono">Capa 5</span>
-          </label>
-          <input type="text" id="input-sector-nombre" required placeholder="Ej: Sector Las Brisas, Calle 3, La Muralla..." class="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-700 rounded-xl text-white text-xs sm:text-sm font-semibold focus:outline-none focus:border-emerald-500">
-        </div>
-
-        <!-- Campos Numéricos 2x2 -->
+        <!-- Los 4 Campos Numéricos Clave -->
         <div class="grid grid-cols-2 gap-3 pt-1">
           <!-- Casas -->
           <div>
             <label class="block text-[10px] font-bold uppercase text-amber-400 mb-1">
-              🏠 Número de Casas *
+              🏠 Casas *
             </label>
-            <input type="number" id="input-casas" required min="0" placeholder="0" class="w-full px-3 py-2 bg-slate-950 border border-slate-700 rounded-xl text-white text-center font-mono font-black text-sm focus:outline-none focus:border-amber-500">
+            <input type="number" id="input-casas" required min="0" placeholder="0" class="w-full px-3 py-2.5 bg-slate-950 border border-slate-700 rounded-xl text-white text-center font-mono font-black text-base focus:outline-none focus:border-amber-500">
           </div>
 
           <!-- Familias -->
@@ -176,7 +218,7 @@
             <label class="block text-[10px] font-bold uppercase text-sky-400 mb-1">
               👨‍👩‍👧 Familias *
             </label>
-            <input type="number" id="input-familias" required min="0" placeholder="0" class="w-full px-3 py-2 bg-slate-950 border border-slate-700 rounded-xl text-white text-center font-mono font-black text-sm focus:outline-none focus:border-sky-500">
+            <input type="number" id="input-familias" required min="0" placeholder="0" class="w-full px-3 py-2.5 bg-slate-950 border border-slate-700 rounded-xl text-white text-center font-mono font-black text-base focus:outline-none focus:border-sky-500">
           </div>
 
           <!-- Habitantes -->
@@ -184,7 +226,7 @@
             <label class="block text-[10px] font-bold uppercase text-emerald-400 mb-1">
               👥 Habitantes Totales *
             </label>
-            <input type="number" id="input-habitantes" required min="0" placeholder="0" class="w-full px-3 py-2 bg-slate-950 border border-slate-700 rounded-xl text-white text-center font-mono font-black text-sm focus:outline-none focus:border-emerald-500">
+            <input type="number" id="input-habitantes" required min="0" placeholder="0" class="w-full px-3 py-2.5 bg-slate-950 border border-slate-700 rounded-xl text-white text-center font-mono font-black text-base focus:outline-none focus:border-emerald-500">
           </div>
 
           <!-- Votantes -->
@@ -192,51 +234,43 @@
             <label class="block text-[10px] font-bold uppercase text-purple-400 mb-1">
               🗳️ Votantes Estimados
             </label>
-            <input type="number" id="input-votantes" min="0" placeholder="0" class="w-full px-3 py-2 bg-slate-950 border border-slate-700 rounded-xl text-white text-center font-mono font-black text-sm focus:outline-none focus:border-purple-500">
+            <input type="number" id="input-votantes" min="0" placeholder="0" class="w-full px-3 py-2.5 bg-slate-950 border border-slate-700 rounded-xl text-white text-center font-mono font-black text-base focus:outline-none focus:border-purple-500">
           </div>
         </div>
 
-        <!-- Campo Opcional: Centro de Votación Referencial -->
-        <div>
-          <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">
-            🏫 Centro de Votación / Escuela de Referencia (Opcional):
-          </label>
-          <input type="text" id="input-centro-ref" placeholder="Ej: Escuela Básica San Simón" class="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-slate-300 text-xs focus:outline-none focus:border-sky-500">
-        </div>
-
         <!-- Botón Guardar -->
-        <button type="submit" id="btn-submit" class="w-full py-3.5 bg-emerald-600 hover:bg-emerald-500 text-white font-black text-xs sm:text-sm rounded-xl shadow-lg shadow-emerald-600/30 transition flex items-center justify-center gap-2 active:scale-95 cursor-pointer mt-3">
+        <button type="submit" id="btn-submit" class="w-full py-3.5 bg-emerald-600 hover:bg-emerald-500 text-white font-black text-xs sm:text-sm uppercase tracking-wider rounded-xl shadow-lg shadow-emerald-600/30 transition flex items-center justify-center gap-2 active:scale-95 cursor-pointer mt-3">
           <i data-lucide="check-circle" class="w-4 h-4"></i>
-          <span id="btn-submit-text">Guardar Sector Comunal</span>
+          <span id="btn-submit-text">Guardar Datos del Sector</span>
         </button>
       </form>
 
     </div>
 
-    <!-- TARJETA: LISTADO DE SECTORES CARGADOS EN ESTA PARROQUIA -->
+    <!-- TARJETA: LISTADO DE SECTORES DE ESTA PARROQUIA -->
     <div class="bg-slate-900 border border-slate-800 rounded-3xl p-4 sm:p-5 space-y-3">
       
       <div class="flex items-center justify-between">
         <div class="flex items-center gap-2">
           <i data-lucide="list" class="w-4 h-4 text-sky-400"></i>
           <h3 class="text-xs sm:text-sm font-black text-white uppercase tracking-wider">
-            Sectores Cargados
+            Sectores Registrados
           </h3>
         </div>
         <span id="list-counter-badge" class="px-2 py-0.5 rounded-lg text-[10px] font-mono font-bold bg-slate-950 text-slate-300 border border-slate-800">
-          0 registros
+          0 sectores
         </span>
       </div>
 
       <!-- Buscador rápido de sectores -->
       <div class="relative">
         <i data-lucide="search" class="w-3.5 h-3.5 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2"></i>
-        <input type="text" id="input-search-sectors" placeholder="Buscar en la lista..." class="w-full pl-8 pr-3 py-1.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-sky-500">
+        <input type="text" id="input-search-sectors" placeholder="Buscar sector..." class="w-full pl-8 pr-3 py-1.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-sky-500">
       </div>
 
       <!-- Contenedor del Listado -->
       <div id="sectors-list-container" class="space-y-2 max-h-[60vh] overflow-y-auto pr-1">
-        <!-- Generado dinámicamente con JS -->
+        <!-- Inyectado por JS -->
       </div>
 
     </div>
@@ -257,15 +291,13 @@
     import { 
       getFirestore, 
       doc, 
-      getDoc, 
       setDoc, 
       onSnapshot,
       enableIndexedDbPersistence 
     } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
     import { CATALOGO_MONAGAS } from "../earth-monagas/js/catalogoMonagas.js?v=90";
-    import { SUBPARROQUIAS_GODOS, SECTORES_LAPUENTE } from "../earth-monagas/js/geoMonagas.js?v=90";
-    import { DEFAULT_SAN_SIMON_SUBPARROQUIAS, DEFAULT_COROZO_SUBPARROQUIAS } from "../earth-monagas/js/earthStore.js?v=90";
+    import { SECTORES_LAPUENTE } from "../earth-monagas/js/geoMonagas.js?v=90";
 
     const FIREBASE_CONFIG = {
       apiKey: "AIzaSyCK8DBZWsVflfMoA_z-9XupX0BvLE4iJjc",
@@ -277,14 +309,14 @@
       measurementId: "G-G1617P2MM0"
     };
 
-    class CargaParroquiaApp {
+    class CargaPrivadaApp {
       constructor() {
         this.munId = "maturin";
         this.parishId = "san-simon";
         this.parishNombre = "San Simón";
         this.munNombre = "Maturín";
-        this.subparroquias = [];
         this.poligonos = [];
+        this.subparroquias = [];
         this.searchQuery = "";
         this.editingSectorId = null;
 
@@ -292,23 +324,23 @@
         this.unsubscribeFirestore = null;
 
         this.resolveParishFromUrl();
-        this.initFirebase();
+        this.checkSessionGate();
         this.bindEvents();
-        this.renderAll();
       }
 
       resolveParishFromUrl() {
         const params = new URLSearchParams(window.location.search);
-        const pId = params.get("p") || params.get("parroquia") || params.get("parish") || "san-simon";
+        const pId = (params.get("p") || params.get("parroquia") || params.get("parish") || "san-simon").toLowerCase();
         
         let found = false;
+        // 1. Coincidencia exacta por ID de parroquia
         for (const mun of CATALOGO_MONAGAS) {
           for (const p of mun.parroquias) {
-            if (p.id === pId || p.nombre.toLowerCase().includes(pId.toLowerCase())) {
+            if (p.id.toLowerCase() === pId) {
               this.munId = mun.id;
               this.parishId = p.id;
               this.parishNombre = p.nombre;
-              this.munNombre = mun.nombre;
+              this.munNombre = mun.nombre.replace("Municipio ", "");
               found = true;
               break;
             }
@@ -316,11 +348,60 @@
           if (found) break;
         }
 
-        document.title = `Censo • Parroquia ${this.parishNombre} (${this.munNombre})`;
-        const headerTitle = document.getElementById("header-parish-title");
-        if (headerTitle) {
-          headerTitle.textContent = `${this.parishNombre} • ${this.munNombre}`;
+        // 2. Coincidencia difusa o por Municipio (ej: ?p=caripe)
+        if (!found) {
+          for (const mun of CATALOGO_MONAGAS) {
+            if (mun.id.toLowerCase() === pId) {
+              const p = mun.parroquias[0];
+              this.munId = mun.id;
+              this.parishId = p.id;
+              this.parishNombre = p.nombre;
+              this.munNombre = mun.nombre.replace("Municipio ", "");
+              found = true;
+              break;
+            }
+            for (const p of mun.parroquias) {
+              if (p.nombre.toLowerCase().includes(pId) || pId.includes(p.id.toLowerCase())) {
+                this.munId = mun.id;
+                this.parishId = p.id;
+                this.parishNombre = p.nombre;
+                this.munNombre = mun.nombre.replace("Municipio ", "");
+                found = true;
+                break;
+              }
+            }
+            if (found) break;
+          }
         }
+
+        const gateSubtitle = document.getElementById("gate-parish-subtitle");
+        if (gateSubtitle) gateSubtitle.textContent = `Parroquia ${this.parishNombre} (${this.munNombre})`;
+
+        const headerTitle = document.getElementById("header-parish-title");
+        if (headerTitle) headerTitle.textContent = `${this.parishNombre} (${this.munNombre})`;
+
+        const inputUser = document.getElementById("login-user");
+        if (inputUser) {
+          inputUser.value = this.parishId;
+        }
+      }
+
+      checkSessionGate() {
+        const sessionKey = `auth_parish_${this.parishId}`;
+        const isAuth = sessionStorage.getItem(sessionKey) === "ok" || localStorage.getItem(sessionKey) === "ok";
+
+        const gate = document.getElementById("gate-login");
+        if (isAuth) {
+          if (gate) gate.classList.add("hidden");
+          this.startApplication();
+        } else {
+          if (gate) gate.classList.remove("hidden");
+        }
+      }
+
+      startApplication() {
+        this.initFirebase();
+        this.renderAll();
       }
 
       get docId() {
@@ -329,11 +410,9 @@
 
       initFirebase() {
         try {
-          const app = initializeApp(FIREBASE_CONFIG, "CARGA_PARROQUIA_APP");
+          const app = initializeApp(FIREBASE_CONFIG, "CARGA_PRIVADA_APP");
           this.db = getFirestore(app);
           try { enableIndexedDbPersistence(this.db).catch(() => {}); } catch(e) {}
-
-          this.updateCloudBadge(true, "Conectando");
 
           const docRef = doc(this.db, "territorios_monagas", this.docId);
           this.unsubscribeFirestore = onSnapshot(docRef, (docSnap) => {
@@ -345,19 +424,18 @@
                   data = { ...data, ...parsed };
                 } catch(e) {}
               }
-              this.subparroquias = data.subparroquias || [];
               this.poligonos = data.poligonos || [];
+              this.subparroquias = data.subparroquias || [];
             } else {
               this.loadDefaultFallback();
             }
             this.syncWithLocalStorage();
             this.renderAll();
-            this.updateCloudBadge(true, "En Línea");
           }, (err) => {
             console.warn("Aviso Firestore:", err);
             this.fallbackToLocalStorage();
           });
-        } catch (e) {
+        } catch(e) {
           console.warn("Error Firebase:", e);
           this.fallbackToLocalStorage();
         }
@@ -365,38 +443,22 @@
 
       loadDefaultFallback() {
         if (this.munId === "maturin" && this.parishId === "alto-de-los-godos") {
-          this.subparroquias = JSON.parse(JSON.stringify(SUBPARROQUIAS_GODOS || []));
           this.poligonos = JSON.parse(JSON.stringify(SECTORES_LAPUENTE || []));
-        } else if (this.munId === "maturin" && this.parishId === "san-simon") {
-          this.subparroquias = JSON.parse(JSON.stringify(DEFAULT_SAN_SIMON_SUBPARROQUIAS || []));
-          this.poligonos = [];
-        } else if (this.munId === "maturin" && this.parishId === "el-corozo") {
-          this.subparroquias = JSON.parse(JSON.stringify(DEFAULT_COROZO_SUBPARROQUIAS || []));
-          this.poligonos = [];
         } else {
-          // Si no tiene predeterminados, crear 1 eje base
-          this.subparroquias = [
-            {
-              id: `sub-${this.parishId}-1`,
-              parroquiaId: this.parishId,
-              nombre: `Eje 1 • Casco ${this.parishNombre}`,
-              alias: `Eje Central`
-            }
-          ];
+          // Si no tiene sectores mapeados aún, iniciar vacío
           this.poligonos = [];
         }
       }
 
       fallbackToLocalStorage() {
-        this.updateCloudBadge(false, "Modo Local");
         try {
           const raw = localStorage.getItem("earth_monagas_places_v8");
           if (raw) {
             const parsed = JSON.parse(raw);
             const p = parsed?.municipios?.[this.munId]?.parroquias?.[this.parishId];
-            if (p) {
+            if (p && p.poligonos) {
+              this.poligonos = p.poligonos;
               this.subparroquias = p.subparroquias || [];
-              this.poligonos = p.poligonos || [];
               this.renderAll();
               return;
             }
@@ -449,23 +511,9 @@
               })
             };
             await setDoc(docRef, payload, { merge: true });
-            this.updateCloudBadge(true, "Guardado");
           } catch(e) {
             console.warn("Error guardando en Firestore:", e);
-            this.updateCloudBadge(false, "Guardado Local");
           }
-        }
-      }
-
-      updateCloudBadge(isOnline, text) {
-        const dot = document.getElementById("cloud-dot");
-        const txt = document.getElementById("cloud-text");
-        if (!dot || !txt) return;
-        txt.textContent = text;
-        if (isOnline) {
-          dot.className = "w-2 h-2 rounded-full bg-emerald-400";
-        } else {
-          dot.className = "w-2 h-2 rounded-full bg-amber-400";
         }
       }
 
@@ -481,44 +529,102 @@
       }
 
       bindEvents() {
-        const form = document.getElementById("form-sector");
-        if (form) {
-          form.addEventListener("submit", (e) => {
+        // Formulario de Login Privado
+        const formLogin = document.getElementById("form-login");
+        if (formLogin) {
+          formLogin.addEventListener("submit", (e) => {
             e.preventDefault();
-            this.handleSubmitForm();
+            const u = (document.getElementById("login-user").value || "").trim().toLowerCase();
+            const p = (document.getElementById("login-pass").value || "").trim().toLowerCase();
+            const errorMsg = document.getElementById("login-error");
+
+            const cleanUser = u.replace(/[\s_]+/g, '-').normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+            const cleanParish = this.parishId.toLowerCase();
+            const cleanMun = this.munId.toLowerCase();
+
+            // Valida coincidencia con parroquia, municipio, admin o milicia
+            const isUserValid = cleanUser === cleanParish || 
+                                cleanUser.includes(cleanParish) || 
+                                cleanParish.includes(cleanUser) || 
+                                cleanUser === cleanMun || 
+                                cleanMun.includes(cleanUser) || 
+                                cleanUser === "admin" ||
+                                cleanUser === "milicia";
+
+            const isPassValid = p === "admin" || p.length >= 3;
+
+            if (isUserValid && isPassValid) {
+              if (errorMsg) errorMsg.classList.add("hidden");
+              sessionStorage.setItem(`auth_parish_${this.parishId}`, "ok");
+              document.getElementById("gate-login").classList.add("hidden");
+              this.startApplication();
+            } else {
+              if (errorMsg) {
+                errorMsg.innerHTML = `Credenciales incorrectas.<br><span class="text-[10px] text-slate-300 font-mono">Usuario asignado: <strong>${this.parishId}</strong> | Clave: <strong>admin</strong></span>`;
+                errorMsg.classList.remove("hidden");
+              }
+            }
           });
         }
 
-        const selectEje = document.getElementById("select-eje");
-        const wrapperNuevo = document.getElementById("wrapper-nuevo-eje");
-        const inputNuevoEje = document.getElementById("input-nuevo-eje");
-        if (selectEje && wrapperNuevo) {
-          selectEje.addEventListener("change", (e) => {
-            if (e.target.value === "__nuevo__") {
+        // Botón Logout
+        const btnLogout = document.getElementById("btn-logout");
+        if (btnLogout) {
+          btnLogout.addEventListener("click", () => {
+            sessionStorage.removeItem(`auth_parish_${this.parishId}`);
+            localStorage.removeItem(`auth_parish_${this.parishId}`);
+            window.location.reload();
+          });
+        }
+
+        // Formulario Sector
+        const formSector = document.getElementById("form-sector");
+        if (formSector) {
+          formSector.addEventListener("submit", (e) => {
+            e.preventDefault();
+            this.handleSubmitSector();
+          });
+        }
+
+        // Selector de Sector
+        const selectSector = document.getElementById("select-sector");
+        const wrapperNuevo = document.getElementById("wrapper-nuevo-sector");
+        const inputNuevo = document.getElementById("input-nuevo-sector");
+        if (selectSector && wrapperNuevo) {
+          selectSector.addEventListener("change", (e) => {
+            const val = e.target.value;
+            if (val === "__nuevo__") {
               wrapperNuevo.classList.remove("hidden");
-              if (inputNuevoEje) inputNuevoEje.focus();
+              if (inputNuevo) inputNuevo.focus();
+              this.resetFormNumbers();
+            } else if (val) {
+              wrapperNuevo.classList.add("hidden");
+              this.loadSectorData(val);
             } else {
               wrapperNuevo.classList.add("hidden");
+              this.resetFormNumbers();
             }
           });
         }
 
-        // Auto-sugerir familias al escribir casas
+        // Auto-sugerir Familias = Casas
         const inCasas = document.getElementById("input-casas");
-        const inFamilias = document.getElementById("input-familias");
-        if (inCasas && inFamilias) {
+        const inFam = document.getElementById("input-familias");
+        if (inCasas && inFam) {
           inCasas.addEventListener("input", () => {
-            if (!inFamilias.value && inCasas.value) {
-              inFamilias.value = inCasas.value;
+            if (!inFam.value && inCasas.value) {
+              inFam.value = inCasas.value;
             }
           });
         }
 
+        // Cancelar / Limpiar
         const btnCancel = document.getElementById("btn-cancel-edit");
         if (btnCancel) {
           btnCancel.addEventListener("click", () => this.cancelEditing());
         }
 
+        // Buscador
         const inputSearch = document.getElementById("input-search-sectors");
         if (inputSearch) {
           inputSearch.addEventListener("input", (e) => {
@@ -528,74 +634,81 @@
         }
       }
 
-      handleSubmitForm() {
-        const selectEje = document.getElementById("select-eje");
-        const inputNuevoEje = document.getElementById("input-nuevo-eje");
-        const inputNombre = document.getElementById("input-sector-nombre");
-        const inputCasas = document.getElementById("input-casas");
-        const inputFamilias = document.getElementById("input-familias");
-        const inputHabitantes = document.getElementById("input-habitantes");
-        const inputVotantes = document.getElementById("input-votantes");
-        const inputCentroRef = document.getElementById("input-centro-ref");
+      loadSectorData(sectorId) {
+        const sec = this.poligonos.find(p => p.id === sectorId);
+        if (!sec) return;
 
-        let ejeId = selectEje.value;
-        if (ejeId === "__nuevo__") {
-          const nuevoNombre = (inputNuevoEje.value || "").trim();
-          if (!nuevoNombre) {
-            alert("Por favor escribe el nombre del nuevo Eje Comunal.");
+        this.editingSectorId = sec.id;
+        document.getElementById("field-editing-id").value = sec.id;
+        document.getElementById("input-casas").value = sec.casas || 0;
+        document.getElementById("input-familias").value = sec.familias || sec.casas || 0;
+        document.getElementById("input-habitantes").value = sec.habitantes || 0;
+        document.getElementById("input-votantes").value = sec.militantes !== undefined ? sec.militantes : 0;
+        
+        document.getElementById("form-mode-title").textContent = `Modificar: ${sec.nombre}`;
+        document.getElementById("btn-submit-text").textContent = "Guardar Cambios";
+        document.getElementById("btn-cancel-edit").classList.remove("hidden");
+      }
+
+      resetFormNumbers() {
+        this.editingSectorId = null;
+        document.getElementById("field-editing-id").value = "";
+        document.getElementById("input-casas").value = "";
+        document.getElementById("input-familias").value = "";
+        document.getElementById("input-habitantes").value = "";
+        document.getElementById("input-votantes").value = "";
+        document.getElementById("form-mode-title").textContent = "Cargar Datos de Sector";
+        document.getElementById("btn-submit-text").textContent = "Guardar Datos del Sector";
+        document.getElementById("btn-cancel-edit").classList.add("hidden");
+      }
+
+      handleSubmitSector() {
+        const selectSec = document.getElementById("select-sector");
+        const inputNuevo = document.getElementById("input-nuevo-sector");
+        const inputCasas = document.getElementById("input-casas");
+        const inputFam = document.getElementById("input-familias");
+        const inputHab = document.getElementById("input-habitantes");
+        const inputVot = document.getElementById("input-votantes");
+
+        const casas = parseInt(inputCasas.value, 10) || 0;
+        const familias = parseInt(inputFam.value, 10) || casas;
+        const habitantes = parseInt(inputHab.value, 10) || 0;
+        const votantes = parseInt(inputVot.value, 10) || 0;
+
+        let sectorObj = null;
+
+        if (selectSec.value === "__nuevo__") {
+          const nombreNuevo = (inputNuevo.value || "").trim();
+          if (!nombreNuevo) {
+            alert("Por favor ingresa el nombre del nuevo sector.");
             return;
           }
-          ejeId = `sub-${this.parishId}-${Date.now()}`;
-          this.subparroquias.push({
-            id: ejeId,
-            parroquiaId: this.parishId,
-            nombre: nuevoNombre,
-            alias: nuevoNombre
-          });
-        }
-
-        const nombre = (inputNombre.value || "").trim();
-        const casas = parseInt(inputCasas.value, 10) || 0;
-        const familias = parseInt(inputFamilias.value, 10) || casas;
-        const habitantes = parseInt(inputHabitantes.value, 10) || 0;
-        const votantes = parseInt(inputVotantes.value, 10) || 0;
-        const centroRef = (inputCentroRef?.value || "").trim();
-
-        if (!nombre) {
-          alert("Ingresa el nombre del sector.");
-          return;
-        }
-
-        if (this.editingSectorId) {
-          // Edición
-          const sec = this.poligonos.find(p => p.id === this.editingSectorId);
-          if (sec) {
-            sec.nombre = nombre;
-            sec.subParroquiaId = ejeId;
-            sec.casas = casas;
-            sec.familias = familias;
-            sec.habitantes = habitantes;
-            sec.militantes = votantes;
-            sec.centroVotacion = centroRef;
-          }
-          this.showToast(`✓ Sector "${nombre}" actualizado`);
-        } else {
-          // Nuevo
           const newId = `sec-${this.parishId}-${Date.now()}`;
-          this.poligonos.push({
+          sectorObj = {
             id: newId,
             parroquiaId: this.parishId,
-            subParroquiaId: ejeId,
-            nombre: nombre,
-            casas: casas,
-            familias: familias,
-            habitantes: habitantes,
+            nombre: nombreNuevo,
+            casas,
+            familias,
+            habitantes,
             militantes: votantes,
-            centroVotacion: centroRef,
             tipo: "sector",
             visible: true
-          });
-          this.showToast(`✓ Sector "${nombre}" registrado`);
+          };
+          this.poligonos.push(sectorObj);
+          this.showToast(`✓ Sector "${nombreNuevo}" registrado`);
+        } else if (selectSec.value) {
+          sectorObj = this.poligonos.find(p => p.id === selectSec.value);
+          if (sectorObj) {
+            sectorObj.casas = casas;
+            sectorObj.familias = familias;
+            sectorObj.habitantes = habitantes;
+            sectorObj.militantes = votantes;
+            this.showToast(`✓ Datos de "${sectorObj.nombre}" actualizados`);
+          }
+        } else {
+          alert("Por favor selecciona un sector o registra uno nuevo.");
+          return;
         }
 
         this.saveToCloud();
@@ -603,44 +716,25 @@
         this.renderAll();
       }
 
-      startEditSector(sectorId) {
-        const sec = this.poligonos.find(p => p.id === sectorId);
-        if (!sec) return;
-
-        this.editingSectorId = sec.id;
-
-        document.getElementById("field-editing-id").value = sec.id;
-        document.getElementById("form-mode-title").textContent = `Editar: ${sec.nombre}`;
-        document.getElementById("btn-submit-text").textContent = "Guardar Cambios";
-        document.getElementById("btn-cancel-edit").classList.remove("hidden");
-
-        const selectEje = document.getElementById("select-eje");
-        selectEje.value = sec.subParroquiaId || "";
-
-        document.getElementById("input-sector-nombre").value = sec.nombre || "";
-        document.getElementById("input-casas").value = sec.casas || 0;
-        document.getElementById("input-familias").value = sec.familias || sec.casas || 0;
-        document.getElementById("input-habitantes").value = sec.habitantes || 0;
-        document.getElementById("input-votantes").value = sec.militantes !== undefined ? sec.militantes : 0;
-        document.getElementById("input-centro-ref").value = sec.centroVotacion || "";
-
-        window.scrollTo({ top: 0, behavior: "smooth" });
+      cancelEditing() {
+        this.resetFormNumbers();
+        document.getElementById("select-sector").value = "";
+        document.getElementById("input-nuevo-sector").value = "";
+        document.getElementById("wrapper-nuevo-sector").classList.add("hidden");
       }
 
-      cancelEditing() {
-        this.editingSectorId = null;
-        document.getElementById("form-sector").reset();
-        document.getElementById("field-editing-id").value = "";
-        document.getElementById("wrapper-nuevo-eje").classList.add("hidden");
-        document.getElementById("form-mode-title").textContent = "Registrar Sector Comunal";
-        document.getElementById("btn-submit-text").textContent = "Guardar Sector Comunal";
-        document.getElementById("btn-cancel-edit").classList.add("hidden");
+      editSectorDirectly(sectorId) {
+        const selectSec = document.getElementById("select-sector");
+        selectSec.value = sectorId;
+        document.getElementById("wrapper-nuevo-sector").classList.add("hidden");
+        this.loadSectorData(sectorId);
+        window.scrollTo({ top: 0, behavior: "smooth" });
       }
 
       deleteSector(sectorId) {
         const sec = this.poligonos.find(p => p.id === sectorId);
         if (!sec) return;
-        if (!confirm(`¿Eliminar el sector "${sec.nombre}"?`)) return;
+        if (!confirm(`¿Eliminar los datos del sector "${sec.nombre}"?`)) return;
 
         this.poligonos = this.poligonos.filter(p => p.id !== sectorId);
         if (this.editingSectorId === sectorId) {
@@ -652,7 +746,7 @@
       }
 
       renderAll() {
-        this.renderEjesSelector();
+        this.renderSectorDropdown();
         this.renderKPIs();
         this.renderSectorsList();
         if (window.lucide && typeof window.lucide.createIcons === "function") {
@@ -660,18 +754,18 @@
         }
       }
 
-      renderEjesSelector() {
-        const select = document.getElementById("select-eje");
+      renderSectorDropdown() {
+        const select = document.getElementById("select-sector");
         if (!select) return;
 
         const currentVal = select.value;
-        let html = '<option value="">-- Seleccione el Eje Comunal --</option>';
+        let html = '<option value="">-- Toca aquí para elegir el sector --</option>';
 
-        this.subparroquias.forEach(eje => {
-          html += `<option value="${eje.id}">${eje.nombre || eje.alias || 'Eje Comunal'}</option>`;
+        this.poligonos.forEach(s => {
+          html += `<option value="${s.id}">${s.nombre} (${s.casas || 0} casas)</option>`;
         });
 
-        html += '<option value="__nuevo__">➕ Crear / Escribir Nuevo Eje...</option>';
+        html += '<option value="__nuevo__">➕ Registrar Nuevo Sector (Escribir nombre)...</option>';
         select.innerHTML = html;
 
         if (currentVal && select.querySelector(`option[value="${currentVal}"]`)) {
@@ -697,9 +791,8 @@
         document.getElementById("kpi-habitantes").textContent = totHabitantes.toLocaleString();
         document.getElementById("kpi-votantes").textContent = totVotantes.toLocaleString();
         
-        const countStr = `${this.poligonos.length} Sectores`;
-        document.getElementById("badge-total-sectors").textContent = countStr;
-        document.getElementById("list-counter-badge").textContent = `${this.poligonos.length} registrados`;
+        document.getElementById("badge-total-sectors").textContent = `${this.poligonos.length} Sectores`;
+        document.getElementById("list-counter-badge").textContent = `${this.poligonos.length} sectores`;
       }
 
       renderSectorsList() {
@@ -709,65 +802,49 @@
         const q = (this.searchQuery || "").toLowerCase().trim();
         const filtered = this.poligonos.filter(s => {
           if (!q) return true;
-          return (s.nombre || "").toLowerCase().includes(q) ||
-                 (s.centroVotacion || "").toLowerCase().includes(q);
+          return (s.nombre || "").toLowerCase().includes(q);
         });
 
         if (filtered.length === 0) {
           container.innerHTML = `
             <div class="py-8 text-center text-slate-500 bg-slate-950/60 rounded-2xl border border-slate-800">
-              <i data-lucide="inbox" class="w-7 h-7 mx-auto mb-1.5 text-slate-600"></i>
-              <p class="text-xs font-bold">No hay sectores registrados ${q ? 'con esa búsqueda' : 'aún'}</p>
-              <p class="text-[10px] text-slate-600 mt-0.5">Usa el formulario de arriba para cargar el primero</p>
+              <i data-lucide="folder-open" class="w-7 h-7 mx-auto mb-1.5 text-slate-600"></i>
+              <p class="text-xs font-bold">No hay sectores ${q ? 'con esa búsqueda' : 'registrados aún'}</p>
+              <p class="text-[10px] text-slate-600 mt-0.5">Selecciona o registra un sector en el formulario de arriba</p>
             </div>
           `;
           if (window.lucide) window.lucide.createIcons();
           return;
         }
 
-        // Mapa de nombres de ejes
-        const ejesMap = {};
-        this.subparroquias.forEach(e => {
-          ejesMap[e.id] = e.nombre || e.alias || 'Eje Comunal';
-        });
-
         container.innerHTML = filtered.map(s => {
-          const ejeNombre = ejesMap[s.subParroquiaId] || "(Sin Eje Asignado)";
           const casas = s.casas || 0;
           const familias = s.familias || s.casas || 0;
           const habitantes = s.habitantes || 0;
           const votantes = s.militantes !== undefined ? s.militantes : 0;
 
           return `
-            <div class="p-3 bg-slate-950/90 border border-slate-800/90 rounded-2xl space-y-2 hover:border-slate-700 transition">
+            <div class="p-3.5 bg-slate-950/90 border border-slate-800/90 rounded-2xl space-y-2.5 hover:border-slate-700 transition">
               
               <div class="flex items-start justify-between gap-2">
                 <div class="min-w-0">
-                  <span class="text-[10px] font-bold text-purple-400 font-mono block truncate">
-                    ${ejeNombre}
-                  </span>
-                  <h4 class="text-xs sm:text-sm font-black text-white leading-tight mt-0.5">
+                  <h4 class="text-xs sm:text-sm font-black text-white leading-tight">
                     ${s.nombre}
                   </h4>
-                  ${s.centroVotacion ? `
-                    <span class="text-[10px] text-slate-400 font-medium block truncate mt-0.5">
-                      🏫 ${s.centroVotacion}
-                    </span>
-                  ` : ''}
                 </div>
 
                 <div class="flex items-center gap-1.5 shrink-0">
-                  <button type="button" onclick="window.cargaApp.startEditSector('${s.id}')" class="p-2 bg-slate-900 hover:bg-sky-950 border border-slate-700 text-sky-400 rounded-xl transition active:scale-95 cursor-pointer" title="Editar sector">
+                  <button type="button" onclick="window.cargaApp.editSectorDirectly('${s.id}')" class="p-2 bg-slate-900 hover:bg-sky-950 border border-slate-700 text-sky-400 rounded-xl transition active:scale-95 cursor-pointer" title="Modificar números">
                     <i data-lucide="edit-2" class="w-3.5 h-3.5"></i>
                   </button>
-                  <button type="button" onclick="window.cargaApp.deleteSector('${s.id}')" class="p-2 bg-slate-900 hover:bg-rose-950 border border-slate-700 text-rose-400 rounded-xl transition active:scale-95 cursor-pointer" title="Eliminar sector">
+                  <button type="button" onclick="window.cargaApp.deleteSector('${s.id}')" class="p-2 bg-slate-900 hover:bg-rose-950 border border-slate-700 text-rose-400 rounded-xl transition active:scale-95 cursor-pointer" title="Eliminar">
                     <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
                   </button>
                 </div>
               </div>
 
               <!-- Badges de métricas numéricas -->
-              <div class="grid grid-cols-4 gap-1.5 text-center font-mono text-[10px] pt-1 border-t border-slate-900">
+              <div class="grid grid-cols-4 gap-1.5 text-center font-mono text-[10px]">
                 <div class="bg-slate-900/80 p-1.5 rounded-lg border border-slate-800">
                   <span class="text-[8px] text-amber-400 block font-bold">CASAS</span>
                   <strong class="text-white font-black">${casas}</strong>
@@ -795,7 +872,7 @@
     }
 
     document.addEventListener("DOMContentLoaded", () => {
-      window.cargaApp = new CargaParroquiaApp();
+      window.cargaApp = new CargaPrivadaApp();
     });
   </script>
 
