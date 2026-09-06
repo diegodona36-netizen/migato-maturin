@@ -48,6 +48,9 @@ mostrar_ayuda() {
     echo -e "  ${GREEN}./skills.sh test-mcp${NC}"
     echo "      Ejecuta el test de diagnóstico del servidor MCP de Inteligencia Territorial."
     echo ""
+    echo -e "  ${GREEN}./skills.sh frontend [detect|doctor|context]${NC}"
+    echo "      Audita y evalúa el diseño visual con la suite Impeccable."
+    echo ""
 }
 
 case "$1" in
@@ -99,6 +102,32 @@ case "$1" in
     test-mcp)
         mostrar_banner
         python3 "$SCRIPT_DIR/mcp/test_mcp.py"
+        ;;
+
+    frontend|impeccable)
+        mostrar_banner
+        shift
+        export PATH="$SCRIPT_DIR/.bin:$PATH"
+        SUBCMD="${1:-doctor}"
+        shift || true
+        case "$SUBCMD" in
+            detect)
+                node "$SCRIPT_DIR/.agents/skills/impeccable/scripts/detect.mjs" "$@"
+                ;;
+            doctor)
+                node "$SCRIPT_DIR/.agents/skills/impeccable/scripts/doctor.mjs" "$@"
+                ;;
+            context)
+                node "$SCRIPT_DIR/.agents/skills/impeccable/scripts/context.mjs" "$@"
+                ;;
+            *)
+                if [ -f "$SCRIPT_DIR/.agents/skills/impeccable/scripts/$SUBCMD.mjs" ]; then
+                    node "$SCRIPT_DIR/.agents/skills/impeccable/scripts/$SUBCMD.mjs" "$@"
+                else
+                    echo -e "${RED}Subcomando no reconocido. Disponibles: detect, doctor, context${NC}"
+                fi
+                ;;
+        esac
         ;;
 
     help|--help|-h|"")
