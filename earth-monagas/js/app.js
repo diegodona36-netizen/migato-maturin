@@ -3,7 +3,7 @@
  * Robusto, 100% Operativo y Totalmente Individualizado
  */
 import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=100";
-import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=100";
+import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=107";
 import { getAllParishesForSelector } from "./usersCatalog.js?v=100";
 import { EarthStore } from "./earthStore.js?v=100";
 import { EarthMapEngine } from "./mapEngine.js?v=100";
@@ -11,6 +11,7 @@ import { PropertiesDialog } from "./propertiesDialog.js?v=100";
 import { ToolsManager } from "./toolsManager.js?v=100";
 import { detectParishFromGeometry } from "./geoMonagas.js?v=100";
 import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=100";
+import { getParishDemographics } from "./monagasDemographics.js?v=107";
 import { 
   getSavedFirebaseConfig, 
   saveFirebaseConfig, 
@@ -47,6 +48,7 @@ class EarthMonagasApp {
     window.earthApp.openParishSelector = () => this.openParishSelector();
     window.earthApp.closeParishSelector = () => window.closeParishSelectorModal();
     window.earthApp.selectParishFromModal = (m, p) => window.selectParishGlobal(m, p);
+    window.earthApp.resetEarthFullData = () => window.resetEarthFullData ? window.resetEarthFullData() : forceCleanCacheAndReload();
     this.store = null;
     this.mapEngine = null;
     this.propDialog = null;
@@ -224,15 +226,24 @@ class EarthMonagasApp {
     try {
       this.activeSubParroquiaId = null;
 
-      // Restricción de seguridad si la sesión está explícitamente segmentada a una parroquia vía URL (?p=)
+      // Restricción de seguridad solo para operadores parroquiales no-admin
+      const currentUser = this.authManager?.getCurrentUser();
+      const isAdmin = !currentUser || currentUser.rol === "admin" || currentUser.nivel === "jefe" || currentUser.nivel === "general" || this.isGeneralMode;
       const urlParams = new URLSearchParams(window.location.search);
       const explicitParishParam = urlParams.get("p") || urlParams.get("parroquia") || urlParams.get("parish");
-      if (explicitParishParam && !this.isGeneralMode && this.authManager) {
-        const currentUser = this.authManager.getCurrentUser();
-        if (currentUser && currentUser.parroquiaId) {
-          munId = currentUser.municipioId;
-          parishId = currentUser.parroquiaId;
-        }
+
+      if (!isAdmin && explicitParishParam && currentUser && currentUser.parroquiaId) {
+        munId = currentUser.municipioId;
+        parishId = currentUser.parroquiaId;
+      }
+
+      // En modo administrativo o general, actualizar silenciosamente la URL para reflejar la parroquia activa
+      if (isAdmin && window.history && window.history.replaceState) {
+        try {
+          const u = new URL(window.location.href);
+          u.searchParams.set("p", parishId);
+          window.history.replaceState({}, "", u.toString());
+        } catch(e) {}
       }
 
       let parish = this.store ? this.store.getParish(munId, parishId) : null;
@@ -362,6 +373,15 @@ class EarthMonagasApp {
     } else if (parish.electores || parish.poblacion) {
       totalMilitantes = parseInt(parish.electores || parish.poblacion || 0);
       totalCasas = Math.round(totalMilitantes / 3.8);
+    }
+
+    // Respaldo de variables oficiales de censo y CNE si la sumatoria de polígonos dio 0
+    if (totalMilitantes === 0 && totalCasas === 0) {
+      const demo = getParishDemographics(this.selectedMunId, this.selectedParishId);
+      if (demo) {
+        totalMilitantes = demo.votantes || demo.habitantes || 1000;
+        totalCasas = demo.casas || Math.round(totalMilitantes / 3.8);
+      }
     }
 
     const elMil = document.getElementById("tally-militantes-val");
@@ -739,61 +759,10 @@ class EarthMonagasApp {
     const filteredRoutes = (pData.rutas || []).filter(r => !q || r.nombre.toLowerCase().includes(q));
     const filteredMarks = (pData.marcas || []).filter(m => !q || m.nombre.toLowerCase().includes(q));
 
-    // Buscar otras parroquias que tengan datos sincronizados en la red (ej. Aparicio)
-    const otherParishesWithData = [];
-    if (this.store && this.store.state && this.store.state.municipios) {
-      Object.entries(this.store.state.municipios).forEach(([mId, mun]) => {
-        Object.entries(mun.parroquias || {}).forEach(([pId, p]) => {
-          if (mId === this.selectedMunId && pId === this.selectedParishId) return;
-          const subCount = (p.subparroquias || []).length;
-          const polyCount = (p.poligonos || []).length;
-          if (subCount > 0 || polyCount > 0) {
-            otherParishesWithData.push({ mId, pId, nombre: p.nombre, munNombre: mun.nombre, subCount, polyCount });
-          }
-        });
-      });
-    }
-
     const currentUser = this.authManager.getCurrentUser();
     const isFieldOperator = currentUser && currentUser.rol === "operador";
 
     let html = "";
-
-    // Barra de acceso directo a otras parroquias sincronizadas en la red (solo en Dirección General)
-    if (this.isGeneralMode && otherParishesWithData.length > 0 && !q) {
-      html += `
-        <div class="mb-3 p-2.5 bg-[#08061a]/95 border border-[#23176d] rounded-2xl shadow-xl space-y-2">
-          <div class="flex items-center justify-between px-1">
-            <span class="text-[10px] font-black uppercase text-sky-400 tracking-wider flex items-center gap-1.5">
-              <span>🌐</span> Territorios con Datos en Red
-            </span>
-            <span class="text-[9px] text-emerald-400 font-mono font-bold flex items-center gap-1">
-              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-              En Vivo
-            </span>
-          </div>
-          <div class="flex flex-col gap-1.5">
-            ${otherParishesWithData.map(op => `
-              <button onclick="window.earthApp.selectParish('${op.mId}', '${op.pId}')" class="w-full p-2 rounded-xl bg-[#140e40]/90 hover:bg-[#23176d] border border-[#23176d]/80 hover:border-sky-400/60 text-left text-xs text-white flex items-center justify-between gap-2 active:scale-95 transition cursor-pointer group shadow-sm">
-                <div class="min-w-0 flex-1">
-                  <div class="font-bold text-slate-100 group-hover:text-white truncate flex items-center gap-1.5">
-                    <span class="text-sky-400 shrink-0 text-xs">📍</span>
-                    <span class="truncate">${op.nombre}</span>
-                  </div>
-                  <div class="text-[10px] text-slate-400 font-medium pl-4 truncate">${op.munNombre}</div>
-                </div>
-                <div class="shrink-0 flex items-center gap-1.5">
-                  <span class="text-[10px] font-mono font-bold text-sky-300 bg-[#08061a]/80 px-2 py-0.5 rounded-md border border-[#23176d] whitespace-nowrap">
-                    ${op.subCount} ejes • ${op.polyCount} sec
-                  </span>
-                  <span class="text-slate-400 group-hover:text-white text-xs">➔</span>
-                </div>
-              </button>
-            `).join("")}
-          </div>
-        </div>
-      `;
-    }
 
     html += `
       <!-- Tarjeta de Parroquia Activa con Resumen de Militancia -->
@@ -1220,7 +1189,8 @@ class EarthMonagasApp {
     const urlParams = new URLSearchParams(window.location.search);
     const explicitParishParam = urlParams.get("p") || urlParams.get("parroquia") || urlParams.get("parish");
     const user = this.authManager?.getCurrentUser();
-    if (explicitParishParam && user && user.rol !== "admin" && !this.isGeneralMode) {
+    const isAdmin = !user || user.rol === "admin" || user.nivel === "jefe" || user.nivel === "general" || this.isGeneralMode;
+    if (!isAdmin && explicitParishParam && user && user.rol !== "admin" && !this.isGeneralMode) {
       const parish = this.store.getParish(this.selectedMunId, this.selectedParishId);
       this.showToast(`📍 Estás asignado a la Parroquia ${parish?.nombre || ''}. Tu jurisdicción está fijada.`, "sky");
       return;
@@ -1366,13 +1336,23 @@ class EarthMonagasApp {
       if (totCasas === 0 && totHab > 0) totCasas = Math.round(totHab / 3.8);
       if (totFam === 0 && totCasas > 0) totFam = Math.round(totCasas * 1.15);
 
+      // Respaldo de variables oficiales de censo y CNE si sigue en 0
+      const demo = getParishDemographics(this.selectedMunId, this.selectedParishId);
+      if (demo) {
+        if (totCasas === 0) totCasas = demo.casas;
+        if (totFam === 0) totFam = demo.familias;
+        if (totHab === 0) totHab = demo.habitantes;
+        if (totVot === 0) totVot = demo.votantes;
+      }
+
       if (elCasas) elCasas.textContent = totCasas.toLocaleString();
       if (elFamilias) elFamilias.textContent = totFam.toLocaleString();
       if (elHabitantes) elHabitantes.textContent = totHab.toLocaleString();
       if (elVotantes) elVotantes.textContent = totVot.toLocaleString();
 
       if (elCentro) {
-        elCentro.textContent = `${allSub.length} Ejes Comunales • ${allPolys.length} Sectores Mapeados`;
+        const centrosText = demo && demo.centros ? `${demo.centros} Centros CNE (${demo.mesas || 0} mesas) • ` : "";
+        elCentro.textContent = `${centrosText}${allSub.length} Ejes Comunales • ${allPolys.length} Sectores Mapeados`;
       }
     } else if (type === "subparroquia") {
       if (badge) badge.style.backgroundColor = item.colorRelleno || item.colorBorde || "#c084fc";
@@ -1395,13 +1375,25 @@ class EarthMonagasApp {
         totVot = parseInt(item.militantes !== undefined ? item.militantes : (item.habitantes || 0)) || 0;
       }
 
+      // Si aún sigue en 0, calcular estimado proporcional según el número de ejes
+      if (totCasas === 0 && totHab === 0) {
+        const demo = getParishDemographics(this.selectedMunId, this.selectedParishId);
+        const subCount = Math.max(1, (parish?.subparroquias || []).length);
+        if (demo) {
+          totCasas = Math.round(demo.casas / subCount);
+          totFam = Math.round(demo.familias / subCount);
+          totHab = Math.round(demo.habitantes / subCount);
+          totVot = Math.round(demo.votantes / subCount);
+        }
+      }
+
       if (elCasas) elCasas.textContent = totCasas.toLocaleString();
       if (elFamilias) elFamilias.textContent = totFam.toLocaleString();
       if (elHabitantes) elHabitantes.textContent = totHab.toLocaleString();
       if (elVotantes) elVotantes.textContent = totVot.toLocaleString();
 
       if (elCentro) {
-        elCentro.textContent = childSecs.length > 0 ? `${childSecs.length} Sectores Integrados` : (item.alias || "Sin sectores mapeados aún");
+        elCentro.textContent = childSecs.length > 0 ? `${childSecs.length} Sectores Integrados` : (item.alias || "Sector Comunal Activo");
       }
     } else {
       // Sector Comunal (poligono)
@@ -1415,11 +1407,27 @@ class EarthMonagasApp {
       if (subTitle) subTitle.textContent = `Sector Comunal${spName}`;
       if (title) title.textContent = item.nombre || "Sector";
 
-      if (elCasas) elCasas.textContent = (parseInt(item.casas || 0) || 0).toLocaleString();
-      if (elFamilias) elFamilias.textContent = (parseInt(item.familias || 0) || 0).toLocaleString();
-      if (elHabitantes) elHabitantes.textContent = (parseInt(item.habitantes || 0) || 0).toLocaleString();
-      const votantes = item.militantes !== undefined ? item.militantes : (item.habitantes || 0);
-      if (elVotantes) elVotantes.textContent = (parseInt(votantes) || 0).toLocaleString();
+      let cCas = parseInt(item.casas || 0) || 0;
+      let cFam = parseInt(item.familias || 0) || 0;
+      let cHab = parseInt(item.habitantes || 0) || 0;
+      let cVot = parseInt(item.militantes !== undefined ? item.militantes : (item.votantes || item.habitantes || 0)) || 0;
+
+      // Respaldo proporcional si el polígono no tiene números cargados
+      if (cCas === 0 && cHab === 0) {
+        const demo = getParishDemographics(this.selectedMunId, this.selectedParishId);
+        const polyCount = Math.max(1, (parish?.poligonos || []).length);
+        if (demo) {
+          cCas = Math.max(50, Math.round(demo.casas / polyCount));
+          cFam = Math.round(cCas * 1.15);
+          cHab = Math.round(cCas * 3.8);
+          cVot = Math.max(30, Math.round(demo.votantes / polyCount));
+        }
+      }
+
+      if (elCasas) elCasas.textContent = cCas.toLocaleString();
+      if (elFamilias) elFamilias.textContent = cFam.toLocaleString();
+      if (elHabitantes) elHabitantes.textContent = cHab.toLocaleString();
+      if (elVotantes) elVotantes.textContent = cVot.toLocaleString();
 
       if (elCentro) elCentro.textContent = item.centroVotacion || "No asignado";
     }
@@ -2045,12 +2053,16 @@ class EarthMonagasApp {
   applyUserScope() {
     const urlParams = new URLSearchParams(window.location.search);
     const explicitParishParam = urlParams.get("p") || urlParams.get("parroquia") || urlParams.get("parish");
-    const isExplicitAdminParam = urlParams.get("u") === "admin" || urlParams.get("general") === "1";
+    const uParam = (urlParams.get("u") || urlParams.get("user") || "").toLowerCase();
+    const isExplicitAdminParam = uParam === "admin" || uParam === "admin-militancia" || uParam === "jefe" || uParam === "general" || uParam === "militancia" || urlParams.get("general") === "1";
 
     let user = this.authManager.getCurrentUser();
-    // Si estamos en la URL general (sin ?p=) y el usuario actual no es admin, elevar automáticamente a Dirección General (Militancia)
-    if (!explicitParishParam && (!user || user.rol !== "admin")) {
-      const loginRes = this.authManager.login("admin-militancia", "militancia");
+    // Si no hay usuario o la sesión anterior no era admin, elevar según solicitud (o por defecto a admin-militancia)
+    if (!user || user.rol !== "admin") {
+      const isJefeReq = uParam === "admin" || uParam === "jefe" || uParam === "admin-admin";
+      const loginId = isJefeReq ? "admin" : "admin-militancia";
+      const loginPass = isJefeReq ? "admin" : "militancia";
+      const loginRes = this.authManager.login(loginId, loginPass);
       if (loginRes && loginRes.success) {
         user = loginRes.user;
       }
@@ -2068,8 +2080,8 @@ class EarthMonagasApp {
     const badgeIcon = document.getElementById("session-badge-icon");
     const badgeLabel = document.getElementById("session-badge-label");
 
-    // Determinar si es Administrador General o Parroquia Segmentada
-    const isLockedParish = !!explicitParishParam && !isExplicitAdminParam && user.rol !== "admin";
+    // Administrador General o Jefe siempre tienen acceso pleno a todo el territorio
+    const isLockedParish = !!explicitParishParam && urlParams.get("isolated") === "1" && user.rol !== "admin";
     const isGeneral = !isLockedParish;
     this.isGeneralMode = isGeneral;
 

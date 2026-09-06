@@ -5,11 +5,12 @@
 
 import { findUserByCredentials, USERS_CATALOG } from "./usersCatalog.js?v=100";
 
-const AUTH_STORAGE_KEY = "migato_earth_session_v6";
+const AUTH_STORAGE_KEY = "migato_earth_session_v7";
 
 export function forceCleanCacheAndReload() {
   try {
     sessionStorage.clear();
+    localStorage.removeItem("migato_earth_session_v7");
     localStorage.removeItem("migato_earth_session_v6");
     localStorage.removeItem("migato_earth_session_v5");
     localStorage.removeItem("migato_earth_session_v4");
@@ -34,7 +35,7 @@ export function forceCleanCacheAndReload() {
   }
 
   setTimeout(() => {
-    window.location.href = window.location.pathname + "?v=" + Date.now();
+    window.location.href = window.location.pathname + "?v=107&u=admin";
   }, 100);
 }
 
@@ -50,11 +51,13 @@ export class AuthManager {
       localStorage.removeItem("migato_earth_session_v3");
       localStorage.removeItem("migato_earth_session_v4");
       localStorage.removeItem("migato_earth_session_v5");
+      localStorage.removeItem("migato_earth_session_v6");
       sessionStorage.removeItem("migato_earth_session_v1");
       sessionStorage.removeItem("migato_earth_session_v2");
       sessionStorage.removeItem("migato_earth_session_v3");
       sessionStorage.removeItem("migato_earth_session_v4");
       sessionStorage.removeItem("migato_earth_session_v5");
+      sessionStorage.removeItem("migato_earth_session_v6");
     } catch (e) {}
     this.currentUser = this.loadSession();
   }

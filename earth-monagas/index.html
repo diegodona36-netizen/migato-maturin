@@ -60,20 +60,27 @@
 
   <!-- Script de Autenticación Rápida, Limpieza Integral de Caché y Activador de Herramientas -->
   <script>
-    // Blindaje instantáneo de aislamiento parroquial previo a cualquier renderizado
+    // Blindaje instantáneo de aislamiento parroquial solo para enlaces de operadores no-admin
     (function() {
       try {
         var sp = new URLSearchParams(window.location.search);
         var p = sp.get('p') || sp.get('parroquia') || sp.get('parish');
-        var isExplicitAdmin = sp.get('u') === 'admin' || sp.get('general') === '1';
-        if (p && !isExplicitAdmin) {
+        var u = (sp.get('u') || sp.get('user') || '').toLowerCase();
+        var isExplicitAdmin = u === 'admin' || u === 'admin-militancia' || u === 'jefe' || u === 'general' || u === 'militancia' || sp.get('general') === '1';
+        var session = null;
+        try {
+          var raw = localStorage.getItem("migato_earth_session_v7") || localStorage.getItem("migato_earth_session_v6");
+          if (raw) session = JSON.parse(raw);
+        } catch(e) {}
+        var isAdmin = isExplicitAdmin || (session && (session.rol === 'admin' || session.nivel === 'jefe' || session.nivel === 'general'));
+        if (p && !isAdmin) {
           document.documentElement.classList.add('isolated-parish-view');
         }
       } catch(e) {}
     })();
   </script>
   <style>
-    /* Aislamiento Parroquial Estricto: jamás renderizar elementos master ni coronas en links parroquiales */
+    /* Aislamiento Parroquial Estricto: jamás renderizar elementos master ni coronas en links de operadores */
     html.isolated-parish-view #btn-session-badge,
     html.isolated-parish-view #admin-module-links,
     html.isolated-parish-view #toolbar-tools-row,
@@ -89,12 +96,37 @@
     }
   </style>
   <script>
-    // Auto-actualización obligatoria a la versión más reciente v=106 y cierre total de sesiones residuales
+    // Reseteo Total de Fábrica global
+    window.resetEarthFullData = function() {
+      if (confirm("¿Desea restaurar de fábrica toda la plataforma MIGATO Earth?\n\nSe limpiarán la memoria local, la caché y se recargarán los datos oficiales actualizados (v=107).")) {
+        try {
+          localStorage.clear();
+          sessionStorage.clear();
+        } catch(e) {}
+        if ('caches' in window) {
+          caches.keys().then(function(keys) {
+            keys.forEach(function(key) { caches.delete(key); });
+          }).catch(function(){});
+        }
+        if ('serviceWorker' in navigator) {
+          navigator.serviceWorker.getRegistrations().then(function(regs) {
+            for (var i = 0; i < regs.length; i++) regs[i].unregister();
+          }).catch(function(){});
+        }
+        setTimeout(function() {
+          window.location.replace(window.location.pathname + '?v=107&u=admin');
+        }, 150);
+      }
+    };
+
+    // Auto-actualización obligatoria a la versión más reciente v=107 y cierre total de sesiones residuales
     (function() {
       try {
         var p = new URLSearchParams(window.location.search);
         var curV = p.get('v');
-        if (!curV || parseInt(curV) < 106) {
+        var isReset = p.get('reset') === '1';
+
+        if (isReset || !curV || parseInt(curV) < 107) {
           // Limpiar todas las sesiones en localStorage y sessionStorage
           try {
             localStorage.removeItem("migato_earth_session_v1");
@@ -103,6 +135,7 @@
             localStorage.removeItem("migato_earth_session_v4");
             localStorage.removeItem("migato_earth_session_v5");
             localStorage.removeItem("migato_earth_session_v6");
+            localStorage.removeItem("migato_earth_session_v7");
             localStorage.removeItem("migato_session");
             localStorage.removeItem("migato_user");
             localStorage.removeItem("migato_last_mun");
@@ -110,7 +143,7 @@
             var keysToRemove = [];
             for (var i = 0; i < localStorage.length; i++) {
               var k = localStorage.key(i);
-              if (k && k.indexOf("auth_parish_") === 0) {
+              if (k && (k.indexOf("auth_parish_") === 0 || k.indexOf("earth_monagas_places_") === 0)) {
                 keysToRemove.push(k);
               }
             }
@@ -118,7 +151,8 @@
             sessionStorage.clear();
           } catch(err) {}
 
-          p.set('v', '106');
+          if (isReset) p.delete('reset');
+          p.set('v', '107');
           window.location.replace(window.location.pathname + '?' + p.toString() + window.location.hash);
         }
       } catch(e) {}
@@ -416,6 +450,10 @@
               <span>Exportar KML</span>
             </button>
             <div class="h-[1px] bg-slate-800 my-0.5"></div>
+            <button type="button" onclick="window.resetEarthFullData?.(); window.closeToolsDropdown?.();" class="w-full text-left px-3 py-2 rounded-xl bg-rose-500/10 hover:bg-rose-500/25 border border-rose-500/30 text-rose-300 hover:text-white font-bold flex items-center gap-2.5 transition cursor-pointer">
+              <i data-lucide="refresh-cw" class="w-4 h-4 text-rose-400"></i>
+              <span>Restaurar Datos de Fábrica</span>
+            </button>
             <button type="button" id="btn-user-logout" class="w-full text-left px-3 py-2 rounded-xl hover:bg-rose-950/80 text-rose-300 font-bold flex items-center gap-2.5 transition cursor-pointer">
               <i data-lucide="log-out" class="w-4 h-4 text-rose-400"></i>
               <span>Cerrar Sesión</span>
@@ -1603,7 +1641,7 @@
   </div>
 
   <!-- SCRIPT -->
-  <script type="module" src="js/app.js?v=106"></script>
+  <script type="module" src="js/app.js?v=107"></script>
   <script>
     if (window.lucide && typeof window.lucide.createIcons === 'function') {
       window.lucide.createIcons();
