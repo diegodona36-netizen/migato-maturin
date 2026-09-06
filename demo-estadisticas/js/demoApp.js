@@ -33,6 +33,10 @@ export class DemoStatsApp {
 
     this.nf = new Intl.NumberFormat("es-VE");
 
+    // Instancias de Chart.js
+    this.electoralChartInstance = null;
+    this.coverageChartInstance = null;
+
     this.init();
   }
 
@@ -114,6 +118,7 @@ export class DemoStatsApp {
   render() {
     this.updateParishPills();
     this.renderKPICards();
+    this.renderDecisionCenter();
     this.renderMunicipalMatrix();
     this.renderTopSectors();
     this.renderSectorsTable();
@@ -237,6 +242,271 @@ export class DemoStatsApp {
           subtitle.textContent = `Municipio ${m ? m.nombre : ''} • ${agg.uniqueParroquias} Parroquias • ${agg.totalSectores} Sectores Censados`;
         }
       }
+    }
+  }
+
+  renderDecisionCenter() {
+    const agg = computeTerritorialAggregates(this.selectedMunId, this.selectedParishId);
+    const matrix = getMunicipalComparisonMatrix();
+
+    // 1. Cockpit de Métricas Clave de Decisión
+    this.renderDecisionCockpit(agg, matrix);
+
+    // 2. Gráficos de Torta / Dona (si Chart.js está cargado en el navegador)
+    if (typeof Chart !== "undefined") {
+      this.renderElectoralShareChart(agg, matrix);
+      this.renderCoverageTrafficChart(agg);
+    }
+  }
+
+  renderDecisionCockpit(agg, matrix) {
+    // 1. Pareto de Concentración Top 3
+    let items = [];
+    if (this.selectedMunId === "todos") {
+      items = [...matrix].sort((a, b) => b.votantes - a.votantes).map(m => ({ nombre: m.nombre, votantes: m.votantes }));
+    } else if (this.selectedParishId === "todas") {
+      const pMap = {};
+      agg.filteredSectors.forEach(s => {
+        pMap[s.parroquiaNombre] = (pMap[s.parroquiaNombre] || 0) + s.votantes;
+      });
+      items = Object.entries(pMap).map(([nombre, votantes]) => ({ nombre, votantes })).sort((a, b) => b.votantes - a.votantes);
+    } else {
+      const spMap = {};
+      agg.filteredSectors.forEach(s => {
+        spMap[s.subParroquiaNombre] = (spMap[s.subParroquiaNombre] || 0) + s.votantes;
+      });
+      items = Object.entries(spMap).map(([nombre, votantes]) => ({ nombre, votantes })).sort((a, b) => b.votantes - a.votantes);
+    }
+
+    const top3 = items.slice(0, 3);
+    const top3Votantes = top3.reduce((sum, it) => sum + it.votantes, 0);
+    const paretoPct = agg.votantes > 0 ? ((top3Votantes / agg.votantes) * 100).toFixed(1) : "0.0";
+    const elParetoPct = document.getElementById("decision-pareto-pct");
+    const elParetoDesc = document.getElementById("decision-pareto-desc");
+    if (elParetoPct) elParetoPct.textContent = `${paretoPct}%`;
+    if (elParetoDesc) {
+      const names = top3.map(it => it.nombre).join(", ");
+      elParetoDesc.innerHTML = `Concentrado en <strong class="text-amber-300 font-bold">${names || "territorios líderes"}</strong>. Focalizar la movilización aquí asegura la meta.`;
+    }
+
+    // 2. Alerta Operativa / Sectores Críticos (<50%)
+    const critSectors = agg.filteredSectors.filter(s => s.cobertura < 50);
+    const critCount = critSectors.length;
+    const critPct = agg.totalSectores > 0 ? ((critCount / agg.totalSectores) * 100).toFixed(1) : "0.0";
+    const elRiskCount = document.getElementById("decision-risk-count");
+    const elRiskDesc = document.getElementById("decision-risk-desc");
+    if (elRiskCount) elRiskCount.textContent = critCount;
+    if (elRiskDesc) {
+      elRiskDesc.innerHTML = `<strong class="text-rose-300 font-bold">${critPct}%</strong> del territorio (${critCount} sectores) con censo &lt;50%. Desplegar brigadas.`;
+    }
+
+    // 3. Presión Social / Familias por Casa
+    const famCasa = parseFloat(agg.avgFamCasa) || 1.0;
+    const deficitPct = Math.max(0, Math.round((famCasa - 1.0) * 100));
+    const elCohabit = document.getElementById("decision-cohabit-ratio");
+    const elCohabitDesc = document.getElementById("decision-cohabit-desc");
+    if (elCohabit) elCohabit.textContent = agg.avgFamCasa;
+    if (elCohabitDesc) {
+      elCohabitDesc.innerHTML = `Déficit de <strong class="text-sky-300 font-bold">${deficitPct}%</strong> en viviendas (cohabitación familiar múltiple detectada).`;
+    }
+
+    // 4. Ratio Logístico por Centro CNE
+    const schoolLoad = agg.uniqueCentros > 0 ? Math.round(agg.votantes / agg.uniqueCentros) : 0;
+    const elSchoolLoad = document.getElementById("decision-school-load");
+    const elSchoolDesc = document.getElementById("decision-school-desc");
+    if (elSchoolLoad) elSchoolLoad.textContent = this.nf.format(schoolLoad);
+    if (elSchoolDesc) {
+      elSchoolDesc.innerHTML = `Promedio de <strong class="text-purple-300 font-bold">${this.nf.format(schoolLoad)}</strong> electores por escuela para dimensionar testigos y transporte.`;
+    }
+  }
+
+  renderElectoralShareChart(agg, matrix) {
+    const canvas = document.getElementById("chart-electoral-share");
+    if (!canvas) return;
+
+    let items = [];
+    let subtitleText = "13 Municipios";
+
+    if (this.selectedMunId === "todos") {
+      subtitleText = "13 Municipios del Estado";
+      items = [...matrix].sort((a, b) => b.votantes - a.votantes).map(m => ({
+        label: m.nombre,
+        value: m.votantes
+      }));
+    } else if (this.selectedParishId === "todas") {
+      const currentMun = MONAGAS_DEMO_DATA.municipios.find(m => m.id === this.selectedMunId);
+      subtitleText = currentMun ? `Parroquias de ${currentMun.nombre}` : "Parroquias";
+      const pMap = {};
+      agg.filteredSectors.forEach(s => {
+        pMap[s.parroquiaNombre] = (pMap[s.parroquiaNombre] || 0) + s.votantes;
+      });
+      items = Object.entries(pMap).map(([label, value]) => ({ label, value })).sort((a, b) => b.value - a.value);
+    } else {
+      subtitleText = "Ejes Comunales";
+      const spMap = {};
+      agg.filteredSectors.forEach(s => {
+        spMap[s.subParroquiaNombre] = (spMap[s.subParroquiaNombre] || 0) + s.votantes;
+      });
+      items = Object.entries(spMap).map(([label, value]) => ({ label, value })).sort((a, b) => b.value - a.value);
+    }
+
+    const subEl = document.getElementById("chart-electoral-subtitle");
+    if (subEl) subEl.textContent = subtitleText;
+
+    const colors = [
+      "#f59e0b", "#38bdf8", "#34d399", "#a855f7", "#f43f5e",
+      "#fbbf24", "#818cf8", "#2dd4bf", "#fb923c", "#e879f9",
+      "#4ade80", "#60a5fa", "#94a3b8"
+    ];
+
+    const labels = items.map(it => it.label);
+    const data = items.map(it => it.value);
+
+    if (this.electoralChartInstance) {
+      this.electoralChartInstance.destroy();
+      this.electoralChartInstance = null;
+    }
+
+    const ctx = canvas.getContext("2d");
+    this.electoralChartInstance = new Chart(ctx, {
+      type: "doughnut",
+      data: {
+        labels,
+        datasets: [{
+          data,
+          backgroundColor: colors.slice(0, labels.length),
+          borderColor: "#060913",
+          borderWidth: 2,
+          hoverOffset: 6
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        cutout: "62%",
+        plugins: {
+          legend: {
+            position: window.innerWidth < 640 ? "bottom" : "right",
+            labels: {
+              color: "#cbd5e1",
+              boxWidth: 10,
+              font: { family: "Inter", size: 10 }
+            }
+          },
+          tooltip: {
+            backgroundColor: "#0f172a",
+            titleColor: "#f59e0b",
+            bodyColor: "#f8fafc",
+            borderColor: "rgba(245, 158, 11, 0.4)",
+            borderWidth: 1,
+            padding: 10,
+            callbacks: {
+              label: (context) => {
+                const val = context.parsed;
+                const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                const pct = total > 0 ? ((val / total) * 100).toFixed(1) : 0;
+                return ` ${context.label}: ${this.nf.format(val)} votantes (${pct}%)`;
+              }
+            }
+          }
+        }
+      }
+    });
+
+    const summaryEl = document.getElementById("chart-electoral-summary");
+    if (summaryEl && items.length > 0) {
+      const topItem = items[0];
+      const topPct = agg.votantes > 0 ? ((topItem.value / agg.votantes) * 100).toFixed(1) : 0;
+      summaryEl.innerHTML = `
+        <span class="truncate">Líder: <strong class="text-amber-400 font-bold">${topItem.label}</strong> (${this.nf.format(topItem.value)} • ${topPct}%)</span>
+        <span class="shrink-0 text-slate-400">Total: <strong class="text-white">${this.nf.format(agg.votantes)}</strong></span>
+      `;
+    }
+  }
+
+  renderCoverageTrafficChart(agg) {
+    const canvas = document.getElementById("chart-coverage-traffic");
+    if (!canvas) return;
+
+    const high = agg.filteredSectors.filter(s => s.cobertura >= 80);
+    const mid = agg.filteredSectors.filter(s => s.cobertura >= 50 && s.cobertura < 80);
+    const low = agg.filteredSectors.filter(s => s.cobertura < 50);
+    const total = agg.totalSectores;
+
+    const data = [high.length, mid.length, low.length];
+    const labels = ["Alta (≥80%)", "Media (50-79%)", "Crítica (<50%)"];
+    const colors = ["#10b981", "#f59e0b", "#ef4444"];
+
+    if (this.coverageChartInstance) {
+      this.coverageChartInstance.destroy();
+      this.coverageChartInstance = null;
+    }
+
+    const ctx = canvas.getContext("2d");
+    this.coverageChartInstance = new Chart(ctx, {
+      type: "doughnut",
+      data: {
+        labels,
+        datasets: [{
+          data,
+          backgroundColor: colors,
+          borderColor: "#060913",
+          borderWidth: 2,
+          hoverOffset: 6
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        cutout: "62%",
+        plugins: {
+          legend: {
+            position: "bottom",
+            labels: {
+              color: "#cbd5e1",
+              boxWidth: 12,
+              font: { family: "Inter", size: 11 }
+            }
+          },
+          tooltip: {
+            backgroundColor: "#0f172a",
+            titleColor: "#34d399",
+            bodyColor: "#f8fafc",
+            borderColor: "rgba(52, 211, 153, 0.4)",
+            borderWidth: 1,
+            padding: 10,
+            callbacks: {
+              label: (context) => {
+                const val = context.parsed;
+                const pct = total > 0 ? ((val / total) * 100).toFixed(1) : 0;
+                return ` ${context.label}: ${val} sectores (${pct}%)`;
+              }
+            }
+          }
+        }
+      }
+    });
+
+    const summaryEl = document.getElementById("chart-coverage-summary");
+    if (summaryEl) {
+      const highPct = total > 0 ? ((high.length / total) * 100).toFixed(0) : 0;
+      const midPct = total > 0 ? ((mid.length / total) * 100).toFixed(0) : 0;
+      const lowPct = total > 0 ? ((low.length / total) * 100).toFixed(0) : 0;
+
+      summaryEl.innerHTML = `
+        <div class="p-2 rounded-xl bg-emerald-950/40 border border-emerald-500/30 text-emerald-300">
+          <span class="block text-[10px] text-slate-400">🟢 Óptimo</span>
+          <strong class="text-sm font-black">${high.length}</strong> <span class="text-[10px] text-slate-400">(${highPct}%)</span>
+        </div>
+        <div class="p-2 rounded-xl bg-amber-950/40 border border-amber-500/30 text-amber-300">
+          <span class="block text-[10px] text-slate-400">🟡 En Progreso</span>
+          <strong class="text-sm font-black">${mid.length}</strong> <span class="text-[10px] text-slate-400">(${midPct}%)</span>
+        </div>
+        <div class="p-2 rounded-xl bg-rose-950/40 border border-rose-500/30 text-rose-300">
+          <span class="block text-[10px] text-slate-400">🔴 Crítico</span>
+          <strong class="text-sm font-black">${low.length}</strong> <span class="text-[10px] text-slate-400">(${lowPct}%)</span>
+        </div>
+      `;
     }
   }
 

@@ -29,6 +29,9 @@
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
 
+  <!-- Chart.js CDN para visualización ejecutiva de toma de decisiones (Torta y Semáforo) -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
   <!-- Google Fonts: Inter + JetBrains Mono -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -284,8 +287,163 @@
     <!-- ============================================================== -->
     <!-- PESTAÑA 1: TABLAS ESTADÍSTICAS Y RATIOS                         -->
     <!-- ============================================================== -->
-    <section id="pane-demo-stats" class="space-y-5">
+    <section id="pane-demo-stats" class="space-y-6">
       
+      <!-- ============================================================== -->
+      <!-- CENTRO DE DIAGNÓSTICO Y TOMA DE DECISIONES (GRÁFICOS DE TORTA) -->
+      <!-- ============================================================== -->
+      <div class="space-y-4">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+          <div>
+            <h2 class="text-sm sm:text-base font-black text-white uppercase tracking-wider flex items-center gap-2">
+              <span class="p-1 rounded-lg bg-amber-500/20 text-amber-400 text-sm">🎯</span>
+              <span>Centro de Diagnóstico y Toma de Decisiones Estratégicas</span>
+            </h2>
+            <p class="text-xs text-slate-400 mt-0.5">
+              Análisis visual de concentración de votantes, semáforo de riesgo territorial y ratios ejecutivos de movilización
+            </p>
+          </div>
+          <span class="text-xs font-mono text-emerald-400 font-bold bg-emerald-950/80 px-2.5 py-1 rounded-xl border border-emerald-500/40 flex items-center gap-1.5 self-start sm:self-auto">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span>Motor Analítico Activo</span>
+          </span>
+        </div>
+
+        <!-- Fila de Gráficos de Torta / Dona Interactivos -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
+          
+          <!-- Torta 1: Cuota y Distribución de Votantes -->
+          <div class="lg:col-span-6 bg-slate-900/90 border border-slate-800 rounded-3xl p-4 sm:p-5 shadow-xl flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between border-b border-slate-800 pb-2.5 mb-3">
+                <div class="flex items-center gap-2">
+                  <i data-lucide="pie-chart" class="w-4 h-4 text-amber-400"></i>
+                  <h3 class="text-xs sm:text-sm font-black text-white uppercase tracking-wider">
+                    Distribución del Peso Electoral
+                  </h3>
+                </div>
+                <span id="chart-electoral-subtitle" class="text-[10px] font-mono font-bold text-amber-300 bg-amber-950/60 px-2 py-0.5 rounded-md border border-amber-500/30">
+                  13 Municipios
+                </span>
+              </div>
+              <p class="text-[11px] text-slate-400 mb-2">
+                Participación porcentual de cada jurisdicción sobre el padrón electoral total.
+              </p>
+              
+              <div class="relative flex items-center justify-center min-h-[250px] max-h-[270px]">
+                <canvas id="chart-electoral-share"></canvas>
+              </div>
+            </div>
+
+            <div id="chart-electoral-summary" class="mt-3 pt-3 border-t border-slate-800/80 text-xs flex items-center justify-between text-slate-300 font-mono">
+              <!-- Inyectado por JS -->
+            </div>
+          </div>
+
+          <!-- Torta 2: Semáforo de Cobertura y Riesgo Territorial -->
+          <div class="lg:col-span-6 bg-slate-900/90 border border-slate-800 rounded-3xl p-4 sm:p-5 shadow-xl flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between border-b border-slate-800 pb-2.5 mb-3">
+                <div class="flex items-center gap-2">
+                  <i data-lucide="activity" class="w-4 h-4 text-emerald-400"></i>
+                  <h3 class="text-xs sm:text-sm font-black text-white uppercase tracking-wider">
+                    Semáforo de Cobertura y Riesgo
+                  </h3>
+                </div>
+                <span class="text-[10px] font-mono font-bold text-emerald-300 bg-emerald-950/60 px-2 py-0.5 rounded-md border border-emerald-500/30">
+                  Salud Territorial
+                </span>
+              </div>
+              <p class="text-[11px] text-slate-400 mb-2">
+                Segmentación de sectores por estado operativo: consolidado, en progreso o riesgo crítico.
+              </p>
+
+              <div class="relative flex items-center justify-center min-h-[250px] max-h-[270px]">
+                <canvas id="chart-coverage-traffic"></canvas>
+              </div>
+            </div>
+
+            <div id="chart-coverage-summary" class="mt-3 pt-3 border-t border-slate-800/80 grid grid-cols-3 gap-2 text-center text-xs font-mono">
+              <!-- Inyectado por JS -->
+            </div>
+          </div>
+
+        </div>
+
+        <!-- 4 Tarjetas de Decisión Estratégica (Cockpit Ejecutivo) -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+          
+          <!-- Decisión 1: Pareto de Concentración -->
+          <div class="bg-slate-900/80 border border-amber-500/30 rounded-2xl p-3.5 space-y-1.5 shadow-md">
+            <div class="flex items-center justify-between">
+              <span class="text-[10px] font-black uppercase text-amber-400 flex items-center gap-1">
+                <span>🎯</span> Regla de Pareto
+              </span>
+              <span class="text-[9px] font-mono bg-amber-950 text-amber-300 px-1.5 py-0.5 rounded border border-amber-700/50">Top 3</span>
+            </div>
+            <div class="flex items-baseline gap-1.5">
+              <strong id="decision-pareto-pct" class="text-2xl font-black text-amber-300">0%</strong>
+              <span class="text-[11px] text-slate-400">del padrón</span>
+            </div>
+            <p id="decision-pareto-desc" class="text-[11px] text-slate-300 leading-snug">
+              Concentrado en los 3 territorios líderes.
+            </p>
+          </div>
+
+          <!-- Decisión 2: Sectores en Riesgo Operativo -->
+          <div class="bg-slate-900/80 border border-rose-500/30 rounded-2xl p-3.5 space-y-1.5 shadow-md">
+            <div class="flex items-center justify-between">
+              <span class="text-[10px] font-black uppercase text-rose-400 flex items-center gap-1">
+                <span>🚨</span> Alerta Operativa
+              </span>
+              <span class="text-[9px] font-mono bg-rose-950 text-rose-300 px-1.5 py-0.5 rounded border border-rose-700/50">&lt; 50%</span>
+            </div>
+            <div class="flex items-baseline gap-1.5">
+              <strong id="decision-risk-count" class="text-2xl font-black text-rose-400">0</strong>
+              <span class="text-[11px] text-slate-400">sectores críticos</span>
+            </div>
+            <p id="decision-risk-desc" class="text-[11px] text-slate-300 leading-snug">
+              Requieren despliegue inmediato de brigadas comunales.
+            </p>
+          </div>
+
+          <!-- Decisión 3: Presión Social / Familias por Casa -->
+          <div class="bg-slate-900/80 border border-sky-500/30 rounded-2xl p-3.5 space-y-1.5 shadow-md">
+            <div class="flex items-center justify-between">
+              <span class="text-[10px] font-black uppercase text-sky-400 flex items-center gap-1">
+                <span>🏠</span> Presión Social
+              </span>
+              <span class="text-[9px] font-mono bg-sky-950 text-sky-300 px-1.5 py-0.5 rounded border border-sky-700/50">Fam/Casa</span>
+            </div>
+            <div class="flex items-baseline gap-1.5">
+              <strong id="decision-cohabit-ratio" class="text-2xl font-black text-sky-300">1.00</strong>
+              <span class="text-[11px] text-slate-400">familias/vivienda</span>
+            </div>
+            <p id="decision-cohabit-desc" class="text-[11px] text-slate-300 leading-snug">
+              Déficit habitacional e índice de vulnerabilidad social.
+            </p>
+          </div>
+
+          <!-- Decisión 4: Ratio Logístico por Centro CNE -->
+          <div class="bg-slate-900/80 border border-purple-500/30 rounded-2xl p-3.5 space-y-1.5 shadow-md">
+            <div class="flex items-center justify-between">
+              <span class="text-[10px] font-black uppercase text-purple-400 flex items-center gap-1">
+                <span>🏫</span> Carga por Centro
+              </span>
+              <span class="text-[9px] font-mono bg-purple-950 text-purple-300 px-1.5 py-0.5 rounded border border-purple-700/50">Electores</span>
+            </div>
+            <div class="flex items-baseline gap-1.5">
+              <strong id="decision-school-load" class="text-2xl font-black text-purple-300">0</strong>
+              <span class="text-[11px] text-slate-400">electores/escuela</span>
+            </div>
+            <p id="decision-school-desc" class="text-[11px] text-slate-300 leading-snug">
+              Planificación de logística de transporte, testigos y refrigerio.
+            </p>
+          </div>
+
+        </div>
+      </div>
+
       <!-- Tabla 1: Matriz Comparativa Inter-Municipal -->
       <div class="bg-slate-900/90 border border-slate-800 rounded-3xl p-4 sm:p-5 shadow-xl space-y-3">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 pb-3">
