@@ -31,6 +31,14 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;800&display=swap" rel="stylesheet">
 
   <style>
+    html, body {
+      max-width: 100vw;
+      overflow-x: hidden !important;
+      box-sizing: border-box;
+    }
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
     body {
       font-family: 'Inter', sans-serif;
       background-color: #060913;
@@ -58,7 +66,7 @@
     }
   </style>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col antialiased selection:bg-sky-500 selection:text-white">
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col antialiased selection:bg-sky-500 selection:text-white max-w-full overflow-x-hidden">
 
   <!-- ============================================================== -->
   <!-- 1. CABECERA PRINCIPAL                                           -->
@@ -70,7 +78,7 @@
         <a href="../" class="p-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-800 transition flex items-center gap-1 text-xs font-bold shrink-0" title="Volver al Portal Central">
           <i data-lucide="home" class="w-4 h-4"></i>
         </a>
-        <a href="../earth-monagas/?v=90&u=admin" class="p-2 sm:px-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-sky-400 border border-slate-800 transition flex items-center gap-1.5 text-xs font-bold shrink-0" title="Ir al Mapa Satelital 3D">
+        <a href="../earth-monagas/?v=94&u=admin" class="p-2 sm:px-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-sky-400 border border-slate-800 transition flex items-center gap-1.5 text-xs font-bold shrink-0" title="Ir al Mapa Satelital 3D">
           <i data-lucide="globe" class="w-4 h-4 text-sky-400"></i>
           <span class="hidden sm:inline">Mapa Satelital</span>
         </a>
@@ -254,7 +262,7 @@
   </footer>
 
   <!-- App Script -->
-  <script type="module" src="./js/dashboardApp.js?v=90"></script>
+  <script type="module" src="./js/dashboardApp.js?v=94"></script>
 
 </body>
 </html>

@@ -56,7 +56,7 @@
   <meta http-equiv="Expires" content="0" />
 
   <!-- Custom Styles -->
-  <link rel="stylesheet" href="css/styles.css?v=93">
+  <link rel="stylesheet" href="css/styles.css?v=94">
 
   <!-- Script de Autenticación Rápida, Limpieza Integral de Caché y Activador de Herramientas -->
   <script>
@@ -89,7 +89,7 @@
     }
   </style>
   <script>
-    // Auto-actualización obligatoria a la versión más reciente v=93
+    // Auto-actualización obligatoria a la versión más reciente v=94
     (function() {
       try {
         var p = new URLSearchParams(window.location.search);
@@ -306,8 +306,8 @@
   <!-- ============================================================== -->
   <!-- 1. BARRA SUPERIOR DE HERRAMIENTAS (SEGMENTADA CON AUTENTICACIÓN) -->
   <!-- ============================================================== -->
-    <header style="z-index: 2000;" class="bg-[#08061a] border-b border-[#23176d]/80 shadow-2xl shrink-0 w-full h-[52px]">
-    <div class="h-full px-2.5 sm:px-4 flex items-center justify-between gap-2.5 w-full">
+    <header style="z-index: 2000;" class="bg-[#08061a] border-b border-[#23176d]/80 shadow-2xl shrink-0 w-full h-[52px] max-w-full overflow-hidden">
+    <div class="h-full px-2 sm:px-4 flex items-center justify-between gap-1.5 sm:gap-2.5 w-full min-w-0">
       
       <!-- LADO IZQUIERDO: Identidad MIGATO + Selector Territorial -->
       <div class="flex items-center gap-2 shrink-0 min-w-0">
@@ -323,7 +323,7 @@
         <div class="h-4 w-[1px] bg-[#23176d]/60 shrink-0 hidden sm:block"></div>
 
         <!-- Selector Territorial Sobrio (Maturín / Las Cocuizas) -->
-        <button id="btn-open-parish-modal" class="px-2.5 py-1.5 rounded-xl bg-[#140e40] hover:bg-[#23176d] border border-sky-400/50 text-white text-xs font-bold flex items-center gap-1.5 transition active:scale-95 cursor-pointer max-w-[190px] sm:max-w-xs shrink shadow-sm" title="Cambiar Parroquia o Territorio">
+        <button id="btn-open-parish-modal" class="px-2 sm:px-2.5 py-1.5 rounded-xl bg-[#140e40] hover:bg-[#23176d] border border-sky-400/50 text-white text-xs font-bold flex items-center gap-1.5 transition active:scale-95 cursor-pointer max-w-[125px] sm:max-w-[190px] md:max-w-xs shrink min-w-0 shadow-sm" title="Cambiar Parroquia o Territorio">
           <i data-lucide="map-pin" class="w-3.5 h-3.5 text-amber-400 shrink-0"></i>
           <span id="nav-current-location" class="truncate font-black text-xs text-sky-200">Territorio</span>
           <i id="nav-arrow-icon" data-lucide="chevron-down" class="w-3 h-3 text-slate-400 shrink-0"></i>
@@ -354,10 +354,10 @@
 
         <!-- 1. BOTÓN UNIFICADO "+ TRAZAR" CON MENÚ DESPLEGABLE -->
         <div class="relative" id="dropdown-tools-wrapper">
-          <button id="btn-toggle-tools-menu" type="button" class="px-3 py-1.5 rounded-xl bg-gradient-to-r from-[#23176d] to-[#3825a6] hover:from-[#31228e] hover:to-[#4530c8] border border-sky-400/60 text-white text-xs font-black flex items-center gap-1.5 transition active:scale-95 shadow-md cursor-pointer">
-            <i data-lucide="pen-tool" class="w-3.5 h-3.5 text-sky-300"></i>
-            <span>+ Trazar</span>
-            <i data-lucide="chevron-down" class="w-3 h-3 text-sky-300"></i>
+          <button id="btn-toggle-tools-menu" type="button" class="px-2.5 sm:px-3 py-1.5 rounded-xl bg-gradient-to-r from-[#23176d] to-[#3825a6] hover:from-[#31228e] hover:to-[#4530c8] border border-sky-400/60 text-white text-xs font-black flex items-center gap-1.5 transition active:scale-95 shadow-md cursor-pointer shrink-0">
+            <i data-lucide="pen-tool" class="w-3.5 h-3.5 text-sky-300 shrink-0"></i>
+            <span class="hidden sm:inline">+ Trazar</span>
+            <i data-lucide="chevron-down" class="w-3 h-3 text-sky-300 shrink-0"></i>
           </button>
 
           <!-- Menú flotante de herramientas -->
@@ -400,14 +400,14 @@
         <button id="btn-cloud-sync" class="hidden"><span id="cloud-sync-dot"></span><span id="cloud-sync-text"></span></button>
 
         <!-- 2. BOTÓN "TERRITORIO" (TOGGLE DEL SIDEBAR) -->
-        <button id="btn-toggle-sidebar" type="button" class="px-2.5 sm:px-3 py-1.5 rounded-xl bg-[#140e40] hover:bg-[#23176d] border border-slate-700 text-slate-200 hover:text-white text-xs font-bold flex items-center gap-1.5 transition active:scale-95 cursor-pointer shadow-sm" title="Mostrar/Ocultar Estructura Territorial">
+        <button id="btn-toggle-sidebar" type="button" class="px-2 sm:px-2.5 sm:px-3 py-1.5 rounded-xl bg-[#140e40] hover:bg-[#23176d] border border-slate-700 text-slate-200 hover:text-white text-xs font-bold flex items-center gap-1.5 transition active:scale-95 cursor-pointer shadow-sm shrink-0" title="Mostrar/Ocultar Estructura Territorial">
           <i data-lucide="layers" class="w-3.5 h-3.5 text-sky-400"></i>
           <span class="hidden sm:inline">Territorio</span>
         </button>
 
         <!-- 3. MENÚ DE OPCIONES EXTERNAS (PORTAL, CENTROS, DASHBOARD, SALIR) -->
         <div class="relative" id="dropdown-options-wrapper">
-          <button id="btn-toggle-options-menu" type="button" class="px-2.5 py-1.5 rounded-xl bg-[#140e40] hover:bg-[#23176d] border border-slate-700 text-slate-300 hover:text-white text-xs font-bold flex items-center gap-1.5 transition active:scale-95 cursor-pointer shadow-sm" title="Menú de Navegación">
+          <button id="btn-toggle-options-menu" type="button" class="px-2 sm:px-2.5 py-1.5 rounded-xl bg-[#140e40] hover:bg-[#23176d] border border-slate-700 text-slate-300 hover:text-white text-xs font-bold flex items-center gap-1.5 transition active:scale-95 cursor-pointer shadow-sm shrink-0" title="Menú de Navegación">
             <i data-lucide="more-vertical" class="w-4 h-4"></i>
             <span class="hidden md:inline">Opciones</span>
           </button>
@@ -695,23 +695,23 @@
         </button>
       </div>
 
-      <!-- Cuadrícula de KPIs Rápidos -->
-      <div class="grid grid-cols-4 gap-1.5 text-center font-mono">
-        <div class="bg-slate-900/90 sm:bg-slate-950/80 p-2 rounded-xl border border-amber-500/30">
-          <span class="text-[9px] text-amber-400 font-bold block uppercase">Casas</span>
-          <span id="quick-stats-casas" class="text-xs sm:text-sm font-black text-amber-300">0</span>
+      <!-- Cuadrícula de KPIs Rápidos (2x2 en móvil, 4x1 en desktop) -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center font-mono">
+        <div class="bg-slate-900/90 sm:bg-slate-950/80 p-2 sm:p-2.5 rounded-xl border border-amber-500/30 min-w-0">
+          <span class="text-[10px] sm:text-[9px] text-amber-400 font-bold block uppercase truncate">🏠 Casas</span>
+          <span id="quick-stats-casas" class="text-sm font-black text-amber-300 block truncate">0</span>
         </div>
-        <div class="bg-slate-900/90 sm:bg-slate-950/80 p-2 rounded-xl border border-sky-500/30">
-          <span class="text-[9px] text-sky-400 font-bold block uppercase">Familias</span>
-          <span id="quick-stats-familias" class="text-xs sm:text-sm font-black text-sky-300">0</span>
+        <div class="bg-slate-900/90 sm:bg-slate-950/80 p-2 sm:p-2.5 rounded-xl border border-sky-500/30 min-w-0">
+          <span class="text-[10px] sm:text-[9px] text-sky-400 font-bold block uppercase truncate">👨‍👩‍👧 Familias</span>
+          <span id="quick-stats-familias" class="text-sm font-black text-sky-300 block truncate">0</span>
         </div>
-        <div class="bg-slate-900/90 sm:bg-slate-950/80 p-2 rounded-xl border border-emerald-500/30">
-          <span class="text-[9px] text-emerald-400 font-bold block uppercase">Habitantes</span>
-          <span id="quick-stats-habitantes" class="text-xs sm:text-sm font-black text-emerald-300">0</span>
+        <div class="bg-slate-900/90 sm:bg-slate-950/80 p-2 sm:p-2.5 rounded-xl border border-emerald-500/30 min-w-0">
+          <span class="text-[10px] sm:text-[9px] text-emerald-400 font-bold block uppercase truncate">👥 Habitantes</span>
+          <span id="quick-stats-habitantes" class="text-sm font-black text-emerald-300 block truncate">0</span>
         </div>
-        <div class="bg-slate-900/90 sm:bg-slate-950/80 p-2 rounded-xl border border-purple-500/30">
-          <span class="text-[9px] text-purple-400 font-bold block uppercase">Votantes</span>
-          <span id="quick-stats-votantes" class="text-xs sm:text-sm font-black text-purple-300">0</span>
+        <div class="bg-slate-900/90 sm:bg-slate-950/80 p-2 sm:p-2.5 rounded-xl border border-purple-500/30 min-w-0">
+          <span class="text-[10px] sm:text-[9px] text-purple-400 font-bold block uppercase truncate">🗳️ Votantes</span>
+          <span id="quick-stats-votantes" class="text-sm font-black text-purple-300 block truncate">0</span>
         </div>
       </div>
 
@@ -721,7 +721,7 @@
           <span class="text-purple-300 font-bold flex items-center gap-1">
             <span>🗳️</span> Centro:
           </span>
-          <span id="quick-stats-centro" class="text-white font-bold truncate max-w-[240px]">No asignado</span>
+          <span id="quick-stats-centro" class="text-white font-bold truncate flex-1 text-right">No asignado</span>
         </div>
       </div>
 
@@ -743,7 +743,7 @@
   <!-- 4. DIÁLOGO FLOTANTE DE PROPIEDADES Y MILITANTES (ESTILO GE)    -->
   <!-- ============================================================== -->
   <div id="dialog-properties" style="z-index: 99999;" class="fixed inset-0 bg-slate-950/85 backdrop-blur-sm hidden items-end sm:items-center justify-center p-0 sm:p-4">
-    <div class="bg-slate-900 border-t sm:border border-slate-700 w-full sm:max-w-xl rounded-t-3xl sm:rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[92vh]">
+    <div class="bg-slate-900 border-t sm:border border-slate-700 w-full max-w-full sm:max-w-xl rounded-t-3xl sm:rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[92vh]">
       
       <!-- Cabecera del Diálogo -->
       <div class="bg-slate-950 px-4 py-3 border-b border-slate-800 flex items-center justify-between shrink-0">
@@ -775,7 +775,7 @@
       </div>
 
       <!-- Contenido del Formulario de Propiedades -->
-      <form id="form-properties" class="p-4 space-y-3.5 overflow-y-auto flex-1">
+      <form id="form-properties" class="p-3 sm:p-4 space-y-3 sm:space-y-3.5 overflow-y-auto overflow-x-hidden flex-1 max-w-full">
         
         <!-- PESTAÑA 1: FICHA DE MILITANCIA & TERRITORIO (ULTRA DIRECTA PARA EL CAMPO) -->
         <div class="prop-tab-content space-y-3" data-tab="desc">
@@ -843,31 +843,30 @@
               <span class="text-[10px] font-mono text-emerald-400 font-bold bg-emerald-950/80 px-2 py-0.5 rounded border border-emerald-800/50">Base Sectorial</span>
             </div>
 
-            <!-- Fila 1: Casas, Familias, Habitantes -->
-            <div class="grid grid-cols-3 gap-2">
-              <div class="bg-slate-900/90 p-2 rounded-xl border border-slate-800">
-                <label class="block text-[10px] font-bold text-amber-300 uppercase mb-1">🏠 Casas</label>
-                <input type="number" id="prop-casas" min="0" placeholder="0" class="w-full px-2.5 py-1.5 text-xs bg-slate-950 border border-slate-700 rounded-lg text-amber-200 font-mono font-bold focus:outline-none focus:border-amber-400">
-              </div>
-              <div class="bg-slate-900/90 p-2 rounded-xl border border-slate-800">
-                <label class="block text-[10px] font-bold text-sky-300 uppercase mb-1">👨‍👩‍👧 Familias</label>
-                <input type="number" id="prop-familias" min="0" placeholder="0" class="w-full px-2.5 py-1.5 text-xs bg-slate-950 border border-slate-700 rounded-lg text-sky-200 font-mono font-bold focus:outline-none focus:border-sky-400">
-              </div>
-              <div class="bg-slate-900/90 p-2 rounded-xl border border-slate-800">
-                <label class="block text-[10px] font-bold text-emerald-300 uppercase mb-1">👥 Habitantes</label>
-                <input type="number" id="prop-habitantes" min="0" placeholder="0" class="w-full px-2.5 py-1.5 text-xs bg-slate-950 border border-slate-700 rounded-lg text-emerald-200 font-mono font-bold focus:outline-none focus:border-emerald-400">
-              </div>
+            <!-- Fila 1: Centro de Votación / Escuela Oficial (Ancho Completo) -->
+            <div class="bg-slate-900/90 p-2.5 rounded-xl border border-slate-800">
+              <label class="block text-[10px] font-bold text-purple-300 uppercase mb-1">🗳️ Centro de Votación / Escuela Oficial CNE</label>
+              <input type="text" id="prop-centro-votacion" list="centros-votacion-datalist" placeholder="Escribe o selecciona escuela oficial..." class="w-full px-3 py-2 text-xs bg-slate-950 border border-slate-700 rounded-lg text-white font-bold focus:outline-none focus:border-purple-400">
+              <datalist id="centros-votacion-datalist"></datalist>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
-              <div class="sm:col-span-2 bg-slate-900/90 p-2 rounded-xl border border-slate-800">
-                <label class="block text-[10px] font-bold text-purple-300 uppercase mb-1">🗳️ Centro de Votación / Escuela</label>
-                <input type="text" id="prop-centro-votacion" list="centros-votacion-datalist" placeholder="Escribe o selecciona escuela oficial..." class="w-full px-2.5 py-1.5 text-xs bg-slate-950 border border-slate-700 rounded-lg text-white font-bold focus:outline-none focus:border-purple-400">
-                <datalist id="centros-votacion-datalist"></datalist>
+            <!-- Fila 2: Las 4 Métricas Clave (2x2 en móvil, 4x1 en tablet/desktop) -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+              <div class="bg-slate-900/90 p-2 sm:p-2.5 rounded-xl border border-amber-500/30 min-w-0">
+                <label class="block text-[10px] font-bold text-amber-300 uppercase mb-1 truncate">🏠 Casas</label>
+                <input type="number" id="prop-casas" min="0" placeholder="0" inputmode="numeric" class="w-full px-2.5 py-2 text-xs sm:text-sm bg-slate-950 border border-slate-700 rounded-lg text-amber-200 font-mono font-black focus:outline-none focus:border-amber-400">
               </div>
-              <div class="bg-slate-900/90 p-2 rounded-xl border border-slate-800">
-                <label class="block text-[10px] font-bold text-purple-300 uppercase mb-1">🗳️ Votantes</label>
-                <input type="number" id="prop-militantes" min="0" placeholder="0" class="w-full px-2.5 py-1.5 text-xs bg-slate-950 border border-slate-700 rounded-lg text-purple-200 font-mono font-bold focus:outline-none focus:border-purple-400">
+              <div class="bg-slate-900/90 p-2 sm:p-2.5 rounded-xl border border-sky-500/30 min-w-0">
+                <label class="block text-[10px] font-bold text-sky-300 uppercase mb-1 truncate">👨‍👩‍👧 Familias</label>
+                <input type="number" id="prop-familias" min="0" placeholder="0" inputmode="numeric" class="w-full px-2.5 py-2 text-xs sm:text-sm bg-slate-950 border border-slate-700 rounded-lg text-sky-200 font-mono font-black focus:outline-none focus:border-sky-400">
+              </div>
+              <div class="bg-slate-900/90 p-2 sm:p-2.5 rounded-xl border border-emerald-500/30 min-w-0">
+                <label class="block text-[10px] font-bold text-emerald-300 uppercase mb-1 truncate">👥 Habitantes</label>
+                <input type="number" id="prop-habitantes" min="0" placeholder="0" inputmode="numeric" class="w-full px-2.5 py-2 text-xs sm:text-sm bg-slate-950 border border-slate-700 rounded-lg text-emerald-200 font-mono font-black focus:outline-none focus:border-emerald-400">
+              </div>
+              <div class="bg-slate-900/90 p-2 sm:p-2.5 rounded-xl border border-purple-500/30 min-w-0">
+                <label class="block text-[10px] font-bold text-purple-300 uppercase mb-1 truncate">🗳️ Votantes</label>
+                <input type="number" id="prop-militantes" min="0" placeholder="0" inputmode="numeric" class="w-full px-2.5 py-2 text-xs sm:text-sm bg-slate-950 border border-slate-700 rounded-lg text-purple-200 font-mono font-black focus:outline-none focus:border-purple-400">
               </div>
             </div>
 
@@ -890,26 +889,26 @@
               <span id="palette-color-name" class="text-[10px] font-mono text-slate-400">Azul Celeste</span>
             </div>
             
-            <div class="grid grid-cols-7 gap-2 pt-0.5">
-              <button type="button" data-color="#38bdf8" data-name="Azul Celeste" class="btn-quick-color h-9 rounded-xl bg-sky-400 border-2 border-white shadow-lg flex items-center justify-center hover:scale-105 active:scale-95 transition" title="Azul Celeste">
+            <div class="grid grid-cols-7 gap-1.5 sm:gap-2 pt-0.5">
+              <button type="button" data-color="#38bdf8" data-name="Azul Celeste" class="btn-quick-color h-8 sm:h-9 min-w-0 rounded-xl bg-sky-400 border-2 border-white shadow-lg flex items-center justify-center hover:scale-105 active:scale-95 transition" title="Azul Celeste">
                 <i data-lucide="check" class="w-4 h-4 text-slate-950 font-black check-icon"></i>
               </button>
-              <button type="button" data-color="#10b981" data-name="Verde Esmeralda" class="btn-quick-color h-9 rounded-xl bg-emerald-500 border-2 border-slate-700 hover:border-white shadow flex items-center justify-center hover:scale-105 active:scale-95 transition" title="Verde Esmeralda">
+              <button type="button" data-color="#10b981" data-name="Verde Esmeralda" class="btn-quick-color h-8 sm:h-9 min-w-0 rounded-xl bg-emerald-500 border-2 border-slate-700 hover:border-white shadow flex items-center justify-center hover:scale-105 active:scale-95 transition" title="Verde Esmeralda">
                 <i data-lucide="check" class="w-4 h-4 text-slate-950 font-black check-icon hidden"></i>
               </button>
-              <button type="button" data-color="#eab308" data-name="Amarillo Canario" class="btn-quick-color h-9 rounded-xl bg-yellow-400 border-2 border-slate-700 hover:border-white shadow flex items-center justify-center hover:scale-105 active:scale-95 transition" title="Amarillo Canario">
+              <button type="button" data-color="#eab308" data-name="Amarillo Canario" class="btn-quick-color h-8 sm:h-9 min-w-0 rounded-xl bg-yellow-400 border-2 border-slate-700 hover:border-white shadow flex items-center justify-center hover:scale-105 active:scale-95 transition" title="Amarillo Canario">
                 <i data-lucide="check" class="w-4 h-4 text-slate-950 font-black check-icon hidden"></i>
               </button>
-              <button type="button" data-color="#ef4444" data-name="Rojo Crítico" class="btn-quick-color h-9 rounded-xl bg-red-500 border-2 border-slate-700 hover:border-white shadow flex items-center justify-center hover:scale-105 active:scale-95 transition" title="Rojo Crítico">
+              <button type="button" data-color="#ef4444" data-name="Rojo Crítico" class="btn-quick-color h-8 sm:h-9 min-w-0 rounded-xl bg-red-500 border-2 border-slate-700 hover:border-white shadow flex items-center justify-center hover:scale-105 active:scale-95 transition" title="Rojo Crítico">
                 <i data-lucide="check" class="w-4 h-4 text-white font-black check-icon hidden"></i>
               </button>
-              <button type="button" data-color="#a855f7" data-name="Morado / Violeta" class="btn-quick-color h-9 rounded-xl bg-purple-500 border-2 border-slate-700 hover:border-white shadow flex items-center justify-center hover:scale-105 active:scale-95 transition" title="Morado">
+              <button type="button" data-color="#a855f7" data-name="Morado / Violeta" class="btn-quick-color h-8 sm:h-9 min-w-0 rounded-xl bg-purple-500 border-2 border-slate-700 hover:border-white shadow flex items-center justify-center hover:scale-105 active:scale-95 transition" title="Morado">
                 <i data-lucide="check" class="w-4 h-4 text-white font-black check-icon hidden"></i>
               </button>
-              <button type="button" data-color="#f97316" data-name="Naranja Teja" class="btn-quick-color h-9 rounded-xl bg-orange-500 border-2 border-slate-700 hover:border-white shadow flex items-center justify-center hover:scale-105 active:scale-95 transition" title="Naranja">
+              <button type="button" data-color="#f97316" data-name="Naranja Teja" class="btn-quick-color h-8 sm:h-9 min-w-0 rounded-xl bg-orange-500 border-2 border-slate-700 hover:border-white shadow flex items-center justify-center hover:scale-105 active:scale-95 transition" title="Naranja">
                 <i data-lucide="check" class="w-4 h-4 text-slate-950 font-black check-icon hidden"></i>
               </button>
-              <button type="button" data-color="#ffffff" data-name="Blanco Puro" class="btn-quick-color h-9 rounded-xl bg-white border-2 border-slate-700 hover:border-sky-400 shadow flex items-center justify-center hover:scale-105 active:scale-95 transition" title="Blanco">
+              <button type="button" data-color="#ffffff" data-name="Blanco Puro" class="btn-quick-color h-8 sm:h-9 min-w-0 rounded-xl bg-white border-2 border-slate-700 hover:border-sky-400 shadow flex items-center justify-center hover:scale-105 active:scale-95 transition" title="Blanco">
                 <i data-lucide="check" class="w-4 h-4 text-slate-950 font-black check-icon hidden"></i>
               </button>
             </div>
@@ -946,26 +945,26 @@
               <span id="palette-color-name" class="text-[10px] font-mono text-slate-400">Azul Celeste</span>
             </div>
             
-            <div class="grid grid-cols-7 gap-2 pt-1">
-              <button type="button" data-color="#38bdf8" data-name="Azul Celeste" class="btn-quick-color h-9 rounded-xl bg-sky-400 border-2 border-white shadow-lg flex items-center justify-center hover:scale-105 active:scale-95 transition" title="Azul Celeste">
+            <div class="grid grid-cols-7 gap-1.5 sm:gap-2 pt-1">
+              <button type="button" data-color="#38bdf8" data-name="Azul Celeste" class="btn-quick-color h-8 sm:h-9 min-w-0 rounded-xl bg-sky-400 border-2 border-white shadow-lg flex items-center justify-center hover:scale-105 active:scale-95 transition" title="Azul Celeste">
                 <i data-lucide="check" class="w-4 h-4 text-slate-950 font-black check-icon"></i>
               </button>
-              <button type="button" data-color="#10b981" data-name="Verde Esmeralda" class="btn-quick-color h-9 rounded-xl bg-emerald-500 border-2 border-slate-700 hover:border-white shadow flex items-center justify-center hover:scale-105 active:scale-95 transition" title="Verde Esmeralda">
+              <button type="button" data-color="#10b981" data-name="Verde Esmeralda" class="btn-quick-color h-8 sm:h-9 min-w-0 rounded-xl bg-emerald-500 border-2 border-slate-700 hover:border-white shadow flex items-center justify-center hover:scale-105 active:scale-95 transition" title="Verde Esmeralda">
                 <i data-lucide="check" class="w-4 h-4 text-slate-950 font-black check-icon hidden"></i>
               </button>
-              <button type="button" data-color="#eab308" data-name="Amarillo Canario" class="btn-quick-color h-9 rounded-xl bg-yellow-400 border-2 border-slate-700 hover:border-white shadow flex items-center justify-center hover:scale-105 active:scale-95 transition" title="Amarillo Canario">
+              <button type="button" data-color="#eab308" data-name="Amarillo Canario" class="btn-quick-color h-8 sm:h-9 min-w-0 rounded-xl bg-yellow-400 border-2 border-slate-700 hover:border-white shadow flex items-center justify-center hover:scale-105 active:scale-95 transition" title="Amarillo Canario">
                 <i data-lucide="check" class="w-4 h-4 text-slate-950 font-black check-icon hidden"></i>
               </button>
-              <button type="button" data-color="#ef4444" data-name="Rojo Crítico" class="btn-quick-color h-9 rounded-xl bg-red-500 border-2 border-slate-700 hover:border-white shadow flex items-center justify-center hover:scale-105 active:scale-95 transition" title="Rojo Crítico">
+              <button type="button" data-color="#ef4444" data-name="Rojo Crítico" class="btn-quick-color h-8 sm:h-9 min-w-0 rounded-xl bg-red-500 border-2 border-slate-700 hover:border-white shadow flex items-center justify-center hover:scale-105 active:scale-95 transition" title="Rojo Crítico">
                 <i data-lucide="check" class="w-4 h-4 text-white font-black check-icon hidden"></i>
               </button>
-              <button type="button" data-color="#a855f7" data-name="Morado / Violeta" class="btn-quick-color h-9 rounded-xl bg-purple-500 border-2 border-slate-700 hover:border-white shadow flex items-center justify-center hover:scale-105 active:scale-95 transition" title="Morado">
+              <button type="button" data-color="#a855f7" data-name="Morado / Violeta" class="btn-quick-color h-8 sm:h-9 min-w-0 rounded-xl bg-purple-500 border-2 border-slate-700 hover:border-white shadow flex items-center justify-center hover:scale-105 active:scale-95 transition" title="Morado">
                 <i data-lucide="check" class="w-4 h-4 text-white font-black check-icon hidden"></i>
               </button>
-              <button type="button" data-color="#f97316" data-name="Naranja Teja" class="btn-quick-color h-9 rounded-xl bg-orange-500 border-2 border-slate-700 hover:border-white shadow flex items-center justify-center hover:scale-105 active:scale-95 transition" title="Naranja">
+              <button type="button" data-color="#f97316" data-name="Naranja Teja" class="btn-quick-color h-8 sm:h-9 min-w-0 rounded-xl bg-orange-500 border-2 border-slate-700 hover:border-white shadow flex items-center justify-center hover:scale-105 active:scale-95 transition" title="Naranja">
                 <i data-lucide="check" class="w-4 h-4 text-slate-950 font-black check-icon hidden"></i>
               </button>
-              <button type="button" data-color="#ffffff" data-name="Blanco Puro" class="btn-quick-color h-9 rounded-xl bg-white border-2 border-slate-700 hover:border-sky-400 shadow flex items-center justify-center hover:scale-105 active:scale-95 transition" title="Blanco">
+              <button type="button" data-color="#ffffff" data-name="Blanco Puro" class="btn-quick-color h-8 sm:h-9 min-w-0 rounded-xl bg-white border-2 border-slate-700 hover:border-sky-400 shadow flex items-center justify-center hover:scale-105 active:scale-95 transition" title="Blanco">
                 <i data-lucide="check" class="w-4 h-4 text-slate-950 font-black check-icon hidden"></i>
               </button>
             </div>
@@ -1457,7 +1456,7 @@
   </div>
 
   <!-- SCRIPT -->
-  <script type="module" src="js/app.js?v=93"></script>
+  <script type="module" src="js/app.js?v=94"></script>
   <script>
     if (window.lucide && typeof window.lucide.createIcons === 'function') {
       window.lucide.createIcons();

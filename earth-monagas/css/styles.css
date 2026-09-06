@@ -1,12 +1,27 @@
 /* Estilos Oficiales para Google Earth Pro Web — Edición Monagas (Mobile & Desktop) */
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap");
 
+html, body {
+  max-width: 100vw;
+  overflow-x: hidden !important;
+  box-sizing: border-box;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
 body {
   font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   overflow: hidden;
   background-color: #08061a;
   color: #f8fafc;
   -webkit-tap-highlight-color: transparent;
+}
+
+input, select, textarea {
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .font-mono {

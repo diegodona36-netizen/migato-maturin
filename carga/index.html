@@ -38,6 +38,18 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;800&display=swap" rel="stylesheet">
 
   <style>
+    html, body {
+      max-width: 100vw;
+      overflow-x: hidden !important;
+      box-sizing: border-box;
+    }
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+    input, select, textarea {
+      max-width: 100%;
+      box-sizing: border-box;
+    }
     body {
       font-family: "Inter", sans-serif;
       background-color: #08061a;
@@ -88,7 +100,7 @@
     }
   </style>
 </head>
-<body class="text-slate-100 min-h-screen flex flex-col selection:bg-emerald-500 selection:text-white pb-12">
+<body class="text-slate-100 min-h-screen flex flex-col selection:bg-emerald-500 selection:text-white pb-12 max-w-full overflow-x-hidden">
 
   <!-- ============================================================== -->
   <!-- 1. MODAL DE ACCESO PRIVADO (BLOQUEO DE SEGURIDAD)              -->
@@ -253,7 +265,7 @@
             <label class="block text-[10px] font-bold uppercase text-amber-400 mb-1">
               🏠 Casas *
             </label>
-            <input type="number" id="input-casas" required min="0" placeholder="0" inputmode="numeric" pattern="[0-9]*" class="w-full px-3 py-3 bg-[#0a0722] border border-slate-700 rounded-xl text-white text-center font-mono font-black text-xl focus:outline-none focus:border-amber-500 sunlight-input">
+            <input type="number" id="input-casas" required min="0" placeholder="0" inputmode="numeric" pattern="[0-9]*" class="w-full px-2.5 sm:px-3 py-2.5 sm:py-3 bg-[#0a0722] border border-slate-700 rounded-xl text-white text-center font-mono font-black text-lg sm:text-xl focus:outline-none focus:border-amber-500 sunlight-input min-w-0">
           </div>
 
           <!-- Habitantes -->
@@ -261,7 +273,7 @@
             <label class="block text-[10px] font-bold uppercase text-emerald-400 mb-1">
               👥 Habitantes *
             </label>
-            <input type="number" id="input-habitantes" required min="0" placeholder="0" inputmode="numeric" pattern="[0-9]*" class="w-full px-3 py-3 bg-[#0a0722] border border-slate-700 rounded-xl text-white text-center font-mono font-black text-xl focus:outline-none focus:border-emerald-500 sunlight-input">
+            <input type="number" id="input-habitantes" required min="0" placeholder="0" inputmode="numeric" pattern="[0-9]*" class="w-full px-2.5 sm:px-3 py-2.5 sm:py-3 bg-[#0a0722] border border-slate-700 rounded-xl text-white text-center font-mono font-black text-lg sm:text-xl focus:outline-none focus:border-emerald-500 sunlight-input min-w-0">
           </div>
 
           <!-- Votantes -->
@@ -269,7 +281,7 @@
             <label class="block text-[10px] font-bold uppercase text-purple-400 mb-1">
               🗳️ Votantes *
             </label>
-            <input type="number" id="input-votantes" required min="0" placeholder="0" inputmode="numeric" pattern="[0-9]*" class="w-full px-3 py-3 bg-[#0a0722] border border-slate-700 rounded-xl text-white text-center font-mono font-black text-xl focus:outline-none focus:border-purple-500 sunlight-input">
+            <input type="number" id="input-votantes" required min="0" placeholder="0" inputmode="numeric" pattern="[0-9]*" class="w-full px-2.5 sm:px-3 py-2.5 sm:py-3 bg-[#0a0722] border border-slate-700 rounded-xl text-white text-center font-mono font-black text-lg sm:text-xl focus:outline-none focus:border-purple-500 sunlight-input min-w-0">
           </div>
 
           <!-- Militantes -->
@@ -277,7 +289,7 @@
             <label class="block text-[10px] font-bold uppercase text-sky-400 mb-1">
               ✊ Militantes *
             </label>
-            <input type="number" id="input-militantes" required min="0" placeholder="0" inputmode="numeric" pattern="[0-9]*" class="w-full px-3 py-3 bg-[#0a0722] border border-slate-700 rounded-xl text-white text-center font-mono font-black text-xl focus:outline-none focus:border-sky-500 sunlight-input">
+            <input type="number" id="input-militantes" required min="0" placeholder="0" inputmode="numeric" pattern="[0-9]*" class="w-full px-2.5 sm:px-3 py-2.5 sm:py-3 bg-[#0a0722] border border-slate-700 rounded-xl text-white text-center font-mono font-black text-lg sm:text-xl focus:outline-none focus:border-sky-500 sunlight-input min-w-0">
           </div>
         </div>
 
@@ -311,8 +323,8 @@
       enableIndexedDbPersistence 
     } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-    import { CATALOGO_MONAGAS } from "../earth-monagas/js/catalogoMonagas.js?v=90";
-    import { SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "../earth-monagas/js/geoMonagas.js?v=90";
+    import { CATALOGO_MONAGAS } from "../earth-monagas/js/catalogoMonagas.js?v=94";
+    import { SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "../earth-monagas/js/geoMonagas.js?v=94";
 
     const FIREBASE_CONFIG = {
       apiKey: "AIzaSyCK8DBZWsVflfMoA_z-9XupX0BvLE4iJjc",
