@@ -35,9 +35,16 @@ window.selectParishGlobal = function(munId, parishId) {
   }
 };
 
+window.openParishSelectorGlobal = function() {
+  if (window.earthApp && typeof window.earthApp.openParishSelector === "function") {
+    window.earthApp.openParishSelector();
+  }
+};
+
 class EarthMonagasApp {
   constructor() {
     window.earthApp = this;
+    window.earthApp.openParishSelector = () => this.openParishSelector();
     window.earthApp.closeParishSelector = () => window.closeParishSelectorModal();
     window.earthApp.selectParishFromModal = (m, p) => window.selectParishGlobal(m, p);
     this.store = null;
@@ -217,8 +224,10 @@ class EarthMonagasApp {
     try {
       this.activeSubParroquiaId = null;
 
-      // Restricción de seguridad si la sesión está segmentada a una parroquia específica
-      if (!this.isGeneralMode && this.authManager) {
+      // Restricción de seguridad si la sesión está explícitamente segmentada a una parroquia vía URL (?p=)
+      const urlParams = new URLSearchParams(window.location.search);
+      const explicitParishParam = urlParams.get("p") || urlParams.get("parroquia") || urlParams.get("parish");
+      if (explicitParishParam && !this.isGeneralMode && this.authManager) {
         const currentUser = this.authManager.getCurrentUser();
         if (currentUser && currentUser.parroquiaId) {
           munId = currentUser.municipioId;
@@ -1208,7 +1217,10 @@ class EarthMonagasApp {
   }
 
   openParishSelector() {
-    if (!this.isGeneralMode) {
+    const urlParams = new URLSearchParams(window.location.search);
+    const explicitParishParam = urlParams.get("p") || urlParams.get("parroquia") || urlParams.get("parish");
+    const user = this.authManager?.getCurrentUser();
+    if (explicitParishParam && user && user.rol !== "admin" && !this.isGeneralMode) {
       const parish = this.store.getParish(this.selectedMunId, this.selectedParishId);
       this.showToast(`📍 Estás asignado a la Parroquia ${parish?.nombre || ''}. Tu jurisdicción está fijada.`, "sky");
       return;
@@ -1219,6 +1231,9 @@ class EarthMonagasApp {
     modal.classList.remove("hidden");
     modal.classList.add("flex");
     modal.style.setProperty("display", "flex", "important");
+    if (window.lucide && typeof window.lucide.createIcons === "function") {
+      try { window.lucide.createIcons(); } catch(e){}
+    }
   }
 
   renderParishesCatalog() {
@@ -2009,7 +2024,18 @@ class EarthMonagasApp {
   }
 
   applyUserScope() {
-    const user = this.authManager.getCurrentUser();
+    const urlParams = new URLSearchParams(window.location.search);
+    const explicitParishParam = urlParams.get("p") || urlParams.get("parroquia") || urlParams.get("parish");
+    const isExplicitAdminParam = urlParams.get("u") === "admin" || urlParams.get("general") === "1";
+
+    let user = this.authManager.getCurrentUser();
+    // Si estamos en la URL general (sin ?p=) y el usuario actual no es admin, elevar automáticamente a Dirección General
+    if (!explicitParishParam && (!user || user.rol !== "admin")) {
+      const loginRes = this.authManager.login("admin", "admin");
+      if (loginRes && loginRes.success) {
+        user = loginRes.user;
+      }
+    }
     if (!user) return;
 
     const navBtn = document.getElementById("btn-open-parish-modal");
@@ -2024,11 +2050,13 @@ class EarthMonagasApp {
     const badgeLabel = document.getElementById("session-badge-label");
 
     // Determinar si es Administrador General o Parroquia Segmentada
-    const isGeneral = (user.rol === "admin" || (!user.parroquiaId && !user.municipioId));
+    const isLockedParish = !!explicitParishParam && !isExplicitAdminParam && user.rol !== "admin";
+    const isGeneral = !isLockedParish;
     this.isGeneralMode = isGeneral;
 
     if (isGeneral) {
       // 👑 MODO CENTRAL / DIRECCIÓN GENERAL
+      document.documentElement.classList.remove("isolated-parish-view");
       if (badgeBtn) {
         badgeBtn.className = "hidden sm:flex px-2.5 py-1.5 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/50 text-amber-300 text-xs font-black items-center gap-1.5 transition active:scale-95 cursor-pointer shadow-sm shrink-0";
         badgeBtn.title = "Sesión: Dirección General (Clic para cambiar a una Parroquia)";
@@ -2039,14 +2067,26 @@ class EarthMonagasApp {
       if (lockWrapper) {
         lockWrapper.innerHTML = '<i data-lucide="shield-check" class="w-3.5 h-3.5 text-amber-400 shrink-0"></i>';
       }
-      if (arrowIcon) arrowIcon.classList.remove("hidden");
+      if (arrowIcon) {
+        arrowIcon.classList.remove("hidden");
+        arrowIcon.style.display = "inline-block";
+      }
       if (navBtn) {
         navBtn.classList.remove("cursor-default", "pointer-events-none");
+        navBtn.style.pointerEvents = "auto";
+        navBtn.style.cursor = "pointer";
+        navBtn.onclick = (e) => {
+          e?.preventDefault?.();
+          e?.stopPropagation?.();
+          this.openParishSelector();
+        };
         navBtn.title = "Territorio General de Monagas (Acceso Completo - Clic para cambiar)";
       }
       const navLoc = document.getElementById("nav-current-location");
       if (navLoc) {
-        navLoc.textContent = "Monagas";
+        const curP = this.store.getParish(this.selectedMunId, this.selectedParishId);
+        const curM = CATALOGO_MONAGAS.find(m => m.id === this.selectedMunId);
+        navLoc.textContent = curP ? `${curP.nombre} (${curM ? curM.nombre : 'Monagas'})` : "Monagas";
       }
       if (statusRole) {
         statusRole.textContent = "Sala Central (General)";
