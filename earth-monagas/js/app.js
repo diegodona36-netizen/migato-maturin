@@ -265,8 +265,8 @@ class EarthMonagasApp {
           parish = found.parish;
         } else {
           munId = "maturin";
-          parishId = "san-simon";
-          parish = this.store.getParish("maturin", "san-simon");
+          parishId = "alto-de-los-godos";
+          parish = this.store.getParish("maturin", "alto-de-los-godos");
         }
       }
       if (!parish) return;
