@@ -472,3 +472,7 @@ export function subscribeToTerritories(onDataCallback) {
 
 export const db = null;
 export const app = null;
+
+// Alias de retrocompatibilidad
+export const syncParishToFirestore = saveParishToFirestore;
+export const subscribeToTerritoryChanges = subscribeToTerritories;

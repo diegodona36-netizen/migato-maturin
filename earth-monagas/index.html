@@ -56,7 +56,7 @@
   <meta http-equiv="Expires" content="0" />
 
   <!-- Custom Styles -->
-  <link rel="stylesheet" href="css/styles.css?v=115">
+  <link rel="stylesheet" href="css/styles.css?v=116">
 
   <!-- Script de Autenticación Rápida, Limpieza Integral de Caché y Activador de Herramientas -->
   <script>
@@ -90,7 +90,7 @@
   <script>
     // Reseteo Total de Fábrica global
     window.resetEarthFullData = function() {
-      if (confirm("¿Desea restaurar de fábrica toda la plataforma MIGATO Earth?\n\nSe limpiarán la memoria local, la caché y se recargarán los datos limpios de producción (v=115).")) {
+      if (confirm("¿Desea restaurar de fábrica toda la plataforma MIGATO Earth?\n\nSe limpiarán la memoria local, la caché y se recargarán los datos limpios de producción (v=116).")) {
         try {
           localStorage.clear();
           sessionStorage.clear();
@@ -106,12 +106,12 @@
           }).catch(function(){});
         }
         setTimeout(function() {
-          window.location.replace(window.location.pathname + '?v=115&u=admin-militancia&p=alto-de-los-godos');
+          window.location.replace(window.location.pathname + '?v=116&u=admin-militancia&p=alto-de-los-godos');
         }, 150);
       }
     };
 
-    // Auto-actualización obligatoria a la versión más reciente v=115 y recarga limpia
+    // Auto-actualización obligatoria a la versión más reciente v=116 y recarga limpia
     (function() {
       try {
         var p = new URLSearchParams(window.location.search);
@@ -128,7 +128,7 @@
           needsRedirect = true;
         }
 
-        if (isReset || !curV || parseInt(curV) < 115 || needsRedirect) {
+        if (isReset || !curV || parseInt(curV) < 116 || needsRedirect) {
           try {
             localStorage.removeItem("migato_earth_session_v1");
             localStorage.removeItem("migato_earth_session_v2");
@@ -152,7 +152,7 @@
           } catch(err) {}
 
           if (isReset) p.delete('reset');
-          p.set('v', '115');
+          p.set('v', '116');
           if (!p.get('u')) p.set('u', 'admin-militancia');
           if (!p.get('p')) p.set('p', 'alto-de-los-godos');
           window.location.replace(window.location.pathname + '?' + p.toString() + window.location.hash);
@@ -1673,7 +1673,7 @@
   </div>
 
   <!-- SCRIPT -->
-  <script type="module" src="js/app.js?v=115"></script>
+  <script type="module" src="js/app.js?v=116"></script>
   <script>
     if (window.lucide && typeof window.lucide.createIcons === 'function') {
       window.lucide.createIcons();

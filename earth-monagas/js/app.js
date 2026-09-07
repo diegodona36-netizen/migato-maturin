@@ -2,16 +2,16 @@
  * Controlador Principal — Google Earth Pro Web (Edición Estado Monagas)
  * Robusto, 100% Operativo y Totalmente Individualizado
  */
-import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=115";
-import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=115";
-import { getAllParishesForSelector } from "./usersCatalog.js?v=115";
-import { EarthStore } from "./earthStore.js?v=115";
-import { EarthMapEngine } from "./mapEngine.js?v=115";
-import { PropertiesDialog } from "./propertiesDialog.js?v=115";
-import { ToolsManager } from "./toolsManager.js?v=115";
-import { detectParishFromGeometry, SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=115";
-import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=115";
-import { getParishDemographics } from "./monagasDemographics.js?v=115";
+import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=116";
+import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=116";
+import { getAllParishesForSelector } from "./usersCatalog.js?v=116";
+import { EarthStore } from "./earthStore.js?v=116";
+import { EarthMapEngine } from "./mapEngine.js?v=116";
+import { PropertiesDialog } from "./propertiesDialog.js?v=116";
+import { ToolsManager } from "./toolsManager.js?v=116";
+import { detectParishFromGeometry, SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=116";
+import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=116";
+import { getParishDemographics } from "./monagasDemographics.js?v=116";
 import { 
   getMunicipios, 
   getParroquiasByMun, 
@@ -21,13 +21,13 @@ import {
   findSectorById, 
   searchSectores, 
   ALL_SECTORES_FLAT 
-} from "./monagasSectoresCatalog.js?v=115";
+} from "./monagasSectoresCatalog.js?v=116";
 import { 
   getSavedFirebaseConfig, 
   saveFirebaseConfig, 
   isFirebaseConfigured, 
   initFirebase 
-} from "./firebaseConfig.js?v=115";
+} from "./firebaseConfig.js?v=116";
 
 // Controladores globales infalibles accesibles en cualquier contexto
 window.closeParishSelectorModal = function() {
