@@ -56,7 +56,7 @@
   <meta http-equiv="Expires" content="0" />
 
   <!-- Custom Styles -->
-  <link rel="stylesheet" href="css/styles.css?v=116">
+  <link rel="stylesheet" href="css/styles.css?v=117">
 
   <!-- Script de Autenticación Rápida, Limpieza Integral de Caché y Activador de Herramientas -->
   <script>
@@ -90,7 +90,7 @@
   <script>
     // Reseteo Total de Fábrica global
     window.resetEarthFullData = function() {
-      if (confirm("¿Desea restaurar de fábrica toda la plataforma MIGATO Earth?\n\nSe limpiarán la memoria local, la caché y se recargarán los datos limpios de producción (v=116).")) {
+      if (confirm("¿Desea restaurar de fábrica toda la plataforma MIGATO Earth?\n\nSe limpiarán la memoria local, la caché y se recargarán los datos limpios de producción (v=117).")) {
         try {
           localStorage.clear();
           sessionStorage.clear();
@@ -106,12 +106,12 @@
           }).catch(function(){});
         }
         setTimeout(function() {
-          window.location.replace(window.location.pathname + '?v=116&u=admin-militancia&p=alto-de-los-godos');
+          window.location.replace(window.location.pathname + '?v=117&u=admin-militancia');
         }, 150);
       }
     };
 
-    // Auto-actualización obligatoria a la versión más reciente v=116 y recarga limpia
+    // Auto-actualización a la versión más reciente v=117
     (function() {
       try {
         var p = new URLSearchParams(window.location.search);
@@ -119,42 +119,22 @@
         var isReset = p.get('reset') === '1';
         var paramP = p.get('p') || p.get('parroquia') || p.get('parish');
 
-        var needsRedirect = false;
-        if (paramP === 'la-pica' || paramP === 'san-simon') {
-          p.delete('p');
-          p.delete('parroquia');
-          p.delete('parish');
-          p.set('p', 'alto-de-los-godos');
-          needsRedirect = true;
-        }
+        if (isReset || !curV || parseInt(curV) < 117) {
+          if (isReset) {
+            try {
+              localStorage.removeItem("migato_last_parish");
+              localStorage.removeItem("migato_last_mun");
+            } catch(err) {}
+            p.delete('reset');
+          }
 
-        if (isReset || !curV || parseInt(curV) < 116 || needsRedirect) {
-          try {
-            localStorage.removeItem("migato_earth_session_v1");
-            localStorage.removeItem("migato_earth_session_v2");
-            localStorage.removeItem("migato_earth_session_v3");
-            localStorage.removeItem("migato_earth_session_v4");
-            localStorage.removeItem("migato_earth_session_v5");
-            localStorage.removeItem("migato_earth_session_v6");
-            localStorage.removeItem("migato_session");
-            localStorage.removeItem("migato_user");
-            localStorage.removeItem("migato_last_parish");
-            localStorage.removeItem("migato_last_mun");
-            localStorage.removeItem("earth_monagas_places_v9");
-            var keysToRemove = [];
-            for (var i = 0; i < localStorage.length; i++) {
-              var k = localStorage.key(i);
-              if (k && (k.indexOf("auth_parish_") === 0 || k.indexOf("earth_monagas_places_") === 0)) {
-                keysToRemove.push(k);
-              }
-            }
-            keysToRemove.forEach(function(k) { localStorage.removeItem(k); });
-          } catch(err) {}
-
-          if (isReset) p.delete('reset');
-          p.set('v', '116');
+          p.set('v', '117');
           if (!p.get('u')) p.set('u', 'admin-militancia');
-          if (!p.get('p')) p.set('p', 'alto-de-los-godos');
+          if (paramP) {
+            p.set('p', paramP);
+            p.delete('parroquia');
+            p.delete('parish');
+          }
           window.location.replace(window.location.pathname + '?' + p.toString() + window.location.hash);
         }
       } catch(e) {}
@@ -1362,7 +1342,7 @@
   <!-- 5. MODAL SELECTOR RÁPIDO: MUNICIPIO ➔ PARROQUIA ➔ SECTORES       -->
   <!-- ============================================================== -->
   <div id="modal-select-parish" style="z-index: 100050; display: none;" class="fixed inset-0 bg-slate-950/85 backdrop-blur-md hidden items-center justify-center p-2.5 sm:p-4" onclick="if(event.target === this) { if (window.earthApp?.closeParishSelector) window.earthApp.closeParishSelector(); else { this.style.display = 'none'; this.classList.add('hidden'); } }">
-    <div class="bg-slate-900 border border-sky-500/40 w-full max-w-2xl sm:max-w-3xl lg:max-w-4xl rounded-2xl shadow-2xl p-3.5 sm:p-5 space-y-3 max-h-[90vh] flex flex-col pointer-events-auto">
+    <div class="bg-slate-900 border border-sky-500/40 w-full max-w-2xl sm:max-w-4xl lg:max-w-5xl rounded-2xl shadow-2xl p-3.5 sm:p-5 space-y-3 max-h-[92vh] flex flex-col pointer-events-auto">
       <div class="flex items-center justify-between border-b border-slate-800 pb-2.5">
         <div class="flex items-center gap-2.5">
           <div class="w-8 h-8 rounded-xl bg-[#23176d] border border-sky-400/50 flex items-center justify-center text-amber-400 shrink-0 shadow-sm">
@@ -1370,7 +1350,7 @@
           </div>
           <div>
             <span class="text-[10px] font-black text-amber-400 uppercase tracking-wider">Territorio de Monagas • Navegador Oficial</span>
-            <h3 class="text-sm sm:text-base font-black text-white">Navegador Territorial: Municipio ➔ Parroquia ➔ Sectores</h3>
+            <h3 class="text-sm sm:text-base font-black text-white">Navegador Territorial: Municipios ➔ Parroquias ➔ Sectores</h3>
           </div>
         </div>
         <button type="button" id="btn-close-parish-modal" data-action="close-parish-modal" onclick="if(window.earthApp?.closeParishSelector) window.earthApp.closeParishSelector(); else { const m = document.getElementById('modal-select-parish'); if (m) { m.style.display = 'none'; m.classList.add('hidden'); } }" class="p-1.5 rounded-lg text-slate-400 hover:text-white bg-slate-800/80 hover:bg-slate-700 transition cursor-pointer" title="Cerrar ventana">
@@ -1381,11 +1361,11 @@
       <!-- Buscador en tiempo real interno -->
       <div class="relative shrink-0">
         <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none"></i>
-        <input type="text" id="input-filter-parish-modal" placeholder="🔍 Buscar sector o comunidad (ej. Rómulo Gallegos, Guanaguanay, La Puente, Casco)..." autocomplete="off"
-          class="w-full bg-[#08061a] border border-[#23176d] focus:border-sky-400 text-xs text-white rounded-xl pl-9 pr-3 py-2 focus:outline-none placeholder-slate-400 font-medium transition">
+        <input type="text" id="input-filter-parish-modal" placeholder="🔍 Buscar municipio, parroquia o sector (ej. La Puente, Caripe, Caripito, Punta de Mata, Guanaguanay, Casco)..." autocomplete="off"
+          class="w-full bg-[#08061a] border border-[#23176d] focus:border-sky-400 text-xs text-white rounded-xl pl-9 pr-3 py-2.5 focus:outline-none placeholder-slate-400 font-medium transition shadow-inner">
       </div>
 
-      <div id="modal-parishes-catalog" class="space-y-2.5 overflow-y-auto pr-1 flex-1">
+      <div id="modal-parishes-catalog" class="space-y-3 overflow-y-auto pr-1 flex-1">
         <!-- Inyectado con JS -->
       </div>
     </div>
@@ -1673,7 +1653,7 @@
   </div>
 
   <!-- SCRIPT -->
-  <script type="module" src="js/app.js?v=116"></script>
+  <script type="module" src="js/app.js?v=117"></script>
   <script>
     if (window.lucide && typeof window.lucide.createIcons === 'function') {
       window.lucide.createIcons();

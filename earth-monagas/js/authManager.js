@@ -3,23 +3,13 @@
  * Control de Acceso Basado en Roles (RBAC) para el Estado Monagas
  */
 
-import { findUserByCredentials, USERS_CATALOG } from "./usersCatalog.js?v=116";
+import { findUserByCredentials, USERS_CATALOG } from "./usersCatalog.js?v=117";
 
 const AUTH_STORAGE_KEY = "migato_earth_session_v7";
 
 export function forceCleanCacheAndReload() {
   try {
     sessionStorage.clear();
-    localStorage.removeItem("migato_earth_session_v7");
-    localStorage.removeItem("migato_earth_session_v6");
-    localStorage.removeItem("migato_earth_session_v5");
-    localStorage.removeItem("migato_earth_session_v4");
-    localStorage.removeItem("migato_earth_session_v3");
-    localStorage.removeItem("migato_earth_session_v2");
-    localStorage.removeItem("migato_earth_session_v1");
-    localStorage.removeItem("migato_session");
-    localStorage.removeItem("migato_last_mun");
-    localStorage.removeItem("migato_last_parish");
   } catch (e) {}
 
   if ("serviceWorker" in navigator) {
@@ -35,7 +25,13 @@ export function forceCleanCacheAndReload() {
   }
 
   setTimeout(() => {
-    window.location.href = window.location.pathname + "?v=116&u=admin-militancia&p=alto-de-los-godos";
+    const url = new URL(window.location.href);
+    const mun = url.searchParams.get("mun");
+    const p = url.searchParams.get("p");
+    let reloadUrl = window.location.pathname + "?v=117&u=admin-militancia";
+    if (mun) reloadUrl += "&mun=" + mun;
+    if (p) reloadUrl += "&p=" + p;
+    window.location.href = reloadUrl;
   }, 100);
 }
 
