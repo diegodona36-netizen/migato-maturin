@@ -1,8 +1,8 @@
 /**
  * Gestor de Estado y Árbol de Lugares (Places) — Google Earth Pro Web (Monagas)
  */
-import { SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=119";
-import { getEjesByParish, getSectoresByParish } from "./monagasSectoresCatalog.js?v=119";
+import { SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=120";
+import { getEjesByParish, getSectoresByParish } from "./monagasSectoresCatalog.js?v=120";
 import { 
   getSavedFirebaseConfig, 
   saveFirebaseConfig, 
@@ -12,9 +12,9 @@ import {
   fetchAllTerritoriesFromFirestore,
   subscribeToTerritories,
   mergeItemCollections
-} from "./firebaseConfig.js?v=119";
+} from "./firebaseConfig.js?v=120";
 
-const STORAGE_KEY = "earth_monagas_places_v9";
+const STORAGE_KEY = "earth_monagas_places_v10_prod";
 
 // En producción real, las parroquias inician limpias para ser levantadas con precisión en campo
 export const DEFAULT_SAN_SIMON_SUBPARROQUIAS = [];
@@ -25,6 +25,7 @@ export const DEFAULT_COROZO_POLIGONOS = [];
 export class EarthStore {
   constructor(catalogo) {
     this.catalogo = catalogo;
+    this.purgeOldStorageKeys();
     const loaded = this.loadFromStorage();
     this.state = loaded || this.buildInitialState();
     this.ensureAllParishes(this.state);
@@ -32,6 +33,25 @@ export class EarthStore {
     this.cloudDebounceTimer = null;
     this.cloudSyncState = "idle";
     this.unsubscribeFirestore = null;
+  }
+
+  purgeOldStorageKeys() {
+    try {
+      if (typeof localStorage === "undefined") return;
+      const oldKeys = [
+        "earth_monagas_places_v9",
+        "earth_monagas_places_v8",
+        "earth_monagas_places_v2",
+        "earth_monagas_places_v1",
+        "earth_monagas_places",
+        "earth_places_monagas"
+      ];
+      oldKeys.forEach(k => {
+        try { localStorage.removeItem(k); } catch(e){}
+      });
+    } catch(e) {
+      console.warn("[EarthStore] Error purgando claves viejas:", e);
+    }
   }
 
   startRealtimeSync() {
@@ -109,23 +129,12 @@ export class EarthStore {
           if (!storedP.poligonos) storedP.poligonos = [];
           if (!storedP.rutas) storedP.rutas = [];
           if (!storedP.marcas) storedP.marcas = [];
+          if (!storedP.superposiciones) storedP.superposiciones = [];
           if (!storedP.limite && p.limite) storedP.limite = p.limite;
           if (!storedP.centro && p.centro) storedP.centro = p.centro;
 
-          // Precarga segura de sectores oficiales
-          if (mun.id === "maturin" && p.id === "alto-de-los-godos") {
-            if (!storedP.subparroquias || storedP.subparroquias.length === 0) {
-              storedP.subparroquias = JSON.parse(JSON.stringify(SUBPARROQUIAS_GODOS || []));
-            }
-            if (!storedP.poligonos || storedP.poligonos.length === 0 || !storedP.poligonos.some(s => String(s.id).startsWith("sec-lp-"))) {
-              storedP.poligonos = JSON.parse(JSON.stringify(SECTORES_LAPUENTE || []));
-            }
-          } else if (!storedP.poligonos || storedP.poligonos.length === 0) {
-            const catSecs = (typeof getSectoresByParish === "function") ? getSectoresByParish(mun.id, p.id) : [];
-            if (catSecs && catSecs.length > 0) {
-              storedP.poligonos = JSON.parse(JSON.stringify(catSecs));
-            }
-          }
+          // Capa 4 (Subparroquias) y Capa 5 (Polígonos/Sectores) inician limpias al 100%
+          // para registrar levantamiento real de campo sin datos ficticios de prueba.
         });
       });
     } catch (e) {
@@ -134,7 +143,7 @@ export class EarthStore {
   }
 
   purgeDummySectors(state) {
-    // Purgar polígonos y cajas de prueba ficticias en toda la entidad
+    // Purgar polígonos, subparroquias y cajas de prueba ficticias en toda la entidad
     let anyPurged = false;
     try {
       if (!state || !state.municipios) return false;
@@ -149,9 +158,10 @@ export class EarthStore {
               const beforeCount = p.poligonos.length;
               p.poligonos = p.poligonos.filter(sec => {
                 if (!sec || !sec.id) return false;
-                if (String(sec.id).startsWith("sec-lp-")) return true;
-                if (dummyIds.has(String(sec.id))) return false;
-                if (String(sec.id).startsWith("sec-ss-") || String(sec.id).startsWith("sec-cor-") || String(sec.id).startsWith("POL-")) return false;
+                const idStr = String(sec.id);
+                if (idStr.startsWith("sec-lp-")) return false; // Eliminar datos de prueba previos
+                if (dummyIds.has(idStr)) return false;
+                if (idStr.startsWith("sec-ss-") || idStr.startsWith("sec-cor-") || idStr.startsWith("POL-")) return false;
                 return true;
               });
               if (p.poligonos.length !== beforeCount) {
@@ -163,7 +173,8 @@ export class EarthStore {
               const beforeSub = p.subparroquias.length;
               p.subparroquias = p.subparroquias.filter(sp => {
                 if (!sp || !sp.id) return false;
-                if (String(sp.id).startsWith("sub-ss-") || String(sp.id).startsWith("sub-corozo-") || String(sp.id).startsWith("EJE-") || String(sp.id).startsWith("sub-pic-")) return false;
+                const idStr = String(sp.id);
+                if (idStr.startsWith("sub-ss-") || idStr.startsWith("sub-corozo-") || idStr.startsWith("EJE-") || idStr.startsWith("sub-pic-") || idStr.startsWith("sub-godos-")) return false;
                 return true;
               });
               if (p.subparroquias.length !== beforeSub) {
@@ -178,6 +189,26 @@ export class EarthStore {
       console.warn("Error purgando poligonos dummy:", e);
     }
     return anyPurged;
+  }
+
+  resetAllParishesToClean() {
+    if (!this.state || !this.state.municipios) return;
+    Object.keys(this.state.municipios).forEach(munId => {
+      const mun = this.state.municipios[munId];
+      if (mun && mun.parroquias) {
+        Object.keys(mun.parroquias).forEach(pId => {
+          const p = mun.parroquias[pId];
+          p.subparroquias = [];
+          p.poligonos = [];
+          p.rutas = [];
+          p.marcas = [];
+          p.superposiciones = [];
+          p.updatedAt = Date.now();
+        });
+      }
+    });
+    this.saveToStorage();
+    console.log("✨ [EarthStore] Capas 4 y 5 reseteadas limpias para todas las 44 parroquias.");
   }
 
   buildInitialState() {
@@ -223,13 +254,7 @@ export class EarthStore {
   loadFromStorage() {
     try {
       if (typeof localStorage === "undefined") return null;
-      let data = localStorage.getItem(STORAGE_KEY);
-      if (!data) {
-        data = localStorage.getItem("earth_monagas_places_v2") ||
-               localStorage.getItem("earth_monagas_places") ||
-               localStorage.getItem("earth_monagas_places_v1") ||
-               localStorage.getItem("earth_places_monagas");
-      }
+      const data = localStorage.getItem(STORAGE_KEY);
       if (!data) return null;
       const parsed = JSON.parse(data);
       // Validar estructura básica

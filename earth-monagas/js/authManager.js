@@ -3,7 +3,7 @@
  * Control de Acceso Basado en Roles (RBAC) para el Estado Monagas
  */
 
-import { findUserByCredentials, USERS_CATALOG } from "./usersCatalog.js?v=119";
+import { findUserByCredentials, USERS_CATALOG } from "./usersCatalog.js?v=120";
 
 const AUTH_STORAGE_KEY = "migato_earth_session_v7";
 
@@ -28,7 +28,7 @@ export function forceCleanCacheAndReload() {
     const url = new URL(window.location.href);
     const mun = url.searchParams.get("mun");
     const p = url.searchParams.get("p");
-    let reloadUrl = window.location.pathname + "?v=119&u=admin-militancia";
+    let reloadUrl = window.location.pathname + "?v=120&u=admin-militancia";
     if (mun) reloadUrl += "&mun=" + mun;
     if (p) reloadUrl += "&p=" + p;
     window.location.href = reloadUrl;

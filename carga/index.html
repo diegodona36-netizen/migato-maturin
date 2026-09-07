@@ -557,99 +557,17 @@
       }
 
       getOfficialSubparroquias() {
-        // 1. Alto de Los Godos: las 10 sub-parroquias oficiales
-        if (this.munId === "maturin" && this.parishId === "alto-de-los-godos") {
-          return JSON.parse(JSON.stringify(SUBPARROQUIAS_GODOS || []));
-        }
-
-        // 2. San Simón: las 3 sub-parroquias oficiales
-        if (this.munId === "maturin" && this.parishId === "san-simon") {
-          return [
-            { id: "sub-ss-casco", nombre: "Sub-Parroquia 1 • Casco Central" },
-            { id: "sub-ss-palonegro", nombre: "Sub-Parroquia 2 • Palo Negro / Brisas" },
-            { id: "sub-ss-muralla", nombre: "Sub-Parroquia 3 • La Muralla" }
-          ];
-        }
-
-        // 3. Fallback genérico para otras parroquias
-        return [
-          { id: `sub-${this.parishId}-1`, nombre: `Sub-Parroquia 1 • ${this.parishNombre} Centro` }
-        ];
+        // En producción real, las sub-parroquias / ejes se cargan directamente desde la base de datos
+        return [];
       }
 
       getOfficialParishSectors() {
-        // 1. Caso Alto de Los Godos: 11 sectores oficiales de La Puente (Sub-Parroquia 6)
-        if (this.munId === "maturin" && this.parishId === "alto-de-los-godos") {
-          return JSON.parse(JSON.stringify(SECTORES_LAPUENTE || []));
-        }
-
-        // 2. Buscar en CATALOGO_MONAGAS para la parroquia activa
-        for (const mun of CATALOGO_MONAGAS) {
-          for (const p of mun.parroquias) {
-            if (p.id === this.parishId) {
-              if (Array.isArray(p.sectores) && p.sectores.length > 0) {
-                return p.sectores.map((secName, idx) => ({
-                  id: `sec-${this.parishId}-${idx + 1}`,
-                  subParroquiaId: `sub-${this.parishId}-1`,
-                  parroquiaId: this.parishId,
-                  numero: idx + 1,
-                  nombre: secName,
-                  casas: 0,
-                  familias: 0,
-                  habitantes: 0,
-                  votantes: 0,
-                  militantes: 0,
-                  tipo: "sector",
-                  visible: true,
-                  color: "#38bdf8",
-                  colorBorde: "#38bdf8",
-                  colorRelleno: "#38bdf8",
-                  opacidad: 0.38,
-                  historial: []
-                }));
-              }
-            }
-          }
-        }
-
-        // 3. Fallback genérico para asegurar que siempre haya al menos el sector central
-        return [
-          {
-            id: `sec-${this.parishId}-1`,
-            subParroquiaId: `sub-${this.parishId}-1`,
-            parroquiaId: this.parishId,
-            numero: 1,
-            nombre: "Casco Central",
-            casas: 0,
-            familias: 0,
-            habitantes: 0,
-            votantes: 0,
-            militantes: 0,
-            tipo: "sector",
-            visible: true,
-            historial: []
-          }
-        ];
+        // En producción real, los sectores inician limpios para registrar datos reales de campo
+        return [];
       }
 
       mergeWithOfficialSectors(existingList = []) {
-        const official = this.getOfficialParishSectors();
-        if (!existingList || existingList.length === 0) {
-          return official;
-        }
-
-        const merged = [...existingList];
-        official.forEach(off => {
-          const offName = (off.nombre || "").toLowerCase().trim();
-          const exists = merged.some(p => 
-            p.id === off.id || 
-            (p.nombre && p.nombre.toLowerCase().trim() === offName)
-          );
-          if (!exists) {
-            merged.push(off);
-          }
-        });
-        return merged;
+        return existingList || [];
       }
 
       initFirebase() {
@@ -695,7 +613,7 @@
 
       fallbackToLocalStorage() {
         try {
-          const raw = localStorage.getItem("earth_monagas_places_v8");
+          const raw = localStorage.getItem("earth_monagas_places_v10_prod");
           if (raw) {
             const parsed = JSON.parse(raw);
             const p = parsed?.municipios?.[this.munId]?.parroquias?.[this.parishId];
@@ -716,7 +634,7 @@
       syncWithLocalStorage() {
         try {
           let root = {};
-          const raw = localStorage.getItem("earth_monagas_places_v8");
+          const raw = localStorage.getItem("earth_monagas_places_v10_prod");
           if (raw) root = JSON.parse(raw);
           if (!root.municipios) root.municipios = {};
           if (!root.municipios[this.munId]) root.municipios[this.munId] = { id: this.munId, parroquias: {} };
@@ -730,7 +648,7 @@
             updatedAt: Date.now()
           };
 
-          localStorage.setItem("earth_monagas_places_v8", JSON.stringify(root));
+          localStorage.setItem("earth_monagas_places_v10_prod", JSON.stringify(root));
         } catch(e) {}
       }
 

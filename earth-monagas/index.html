@@ -56,7 +56,7 @@
   <meta http-equiv="Expires" content="0" />
 
   <!-- Custom Styles -->
-  <link rel="stylesheet" href="css/styles.css?v=119">
+  <link rel="stylesheet" href="css/styles.css?v=120">
 
   <!-- Script de Autenticación Rápida, Limpieza Integral de Caché y Activador de Herramientas -->
   <script>
@@ -115,7 +115,7 @@
 
     // Reseteo Total de Fábrica global
     window.resetEarthFullData = function() {
-      if (confirm("¿Desea restaurar de fábrica toda la plataforma MIGATO Earth?\n\nSe limpiarán la memoria local, la caché y se recargarán los datos limpios de producción (v=119).")) {
+      if (confirm("¿Desea restaurar de fábrica toda la plataforma MIGATO Earth?\n\nSe limpiarán la memoria local, la caché y se recargarán los datos limpios de producción (v=120).")) {
         try {
           localStorage.clear();
           sessionStorage.clear();
@@ -131,12 +131,12 @@
           }).catch(function(){});
         }
         setTimeout(function() {
-          window.location.replace(window.location.pathname + '?v=119&u=admin-militancia');
+          window.location.replace(window.location.pathname + '?v=120&u=admin-militancia');
         }, 150);
       }
     };
 
-    // Auto-actualización a la versión más reciente v=119
+    // Auto-actualización a la versión más reciente v=120
     (function() {
       try {
         var p = new URLSearchParams(window.location.search);
@@ -144,7 +144,7 @@
         var isReset = p.get('reset') === '1';
         var paramP = p.get('p') || p.get('parroquia') || p.get('parish');
 
-        if (isReset || !curV || parseInt(curV) < 119) {
+        if (isReset || !curV || parseInt(curV) < 120) {
           if (isReset) {
             try {
               localStorage.removeItem("migato_last_parish");
@@ -153,7 +153,7 @@
             p.delete('reset');
           }
 
-          p.set('v', '119');
+          p.set('v', '120');
           if (!p.get('u')) p.set('u', 'admin-militancia');
           if (paramP) {
             p.set('p', paramP);
@@ -1699,7 +1699,7 @@
   </div>
 
   <!-- SCRIPT -->
-  <script type="module" src="js/app.js?v=119"></script>
+  <script type="module" src="js/app.js?v=120"></script>
   <script>
     if (window.lucide && typeof window.lucide.createIcons === 'function') {
       window.lucide.createIcons();

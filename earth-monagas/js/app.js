@@ -2,16 +2,16 @@
  * Controlador Principal — Google Earth Pro Web (Edición Estado Monagas)
  * Robusto, 100% Operativo y Totalmente Individualizado
  */
-import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=119";
-import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=119";
-import { getAllParishesForSelector } from "./usersCatalog.js?v=119";
-import { EarthStore } from "./earthStore.js?v=119";
-import { EarthMapEngine } from "./mapEngine.js?v=119";
-import { PropertiesDialog } from "./propertiesDialog.js?v=119";
-import { ToolsManager } from "./toolsManager.js?v=119";
-import { detectParishFromGeometry, SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=119";
-import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=119";
-import { getParishDemographics } from "./monagasDemographics.js?v=119";
+import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=120";
+import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=120";
+import { getAllParishesForSelector } from "./usersCatalog.js?v=120";
+import { EarthStore } from "./earthStore.js?v=120";
+import { EarthMapEngine } from "./mapEngine.js?v=120";
+import { PropertiesDialog } from "./propertiesDialog.js?v=120";
+import { ToolsManager } from "./toolsManager.js?v=120";
+import { detectParishFromGeometry, SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=120";
+import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=120";
+import { getParishDemographics } from "./monagasDemographics.js?v=120";
 import { 
   getMunicipios, 
   getParroquiasByMun, 
@@ -21,13 +21,13 @@ import {
   findSectorById, 
   searchSectores, 
   ALL_SECTORES_FLAT 
-} from "./monagasSectoresCatalog.js?v=119";
+} from "./monagasSectoresCatalog.js?v=120";
 import { 
   getSavedFirebaseConfig, 
   saveFirebaseConfig, 
   isFirebaseConfigured, 
   initFirebase 
-} from "./firebaseConfig.js?v=119";
+} from "./firebaseConfig.js?v=120";
 
 // Controladores globales infalibles accesibles en cualquier contexto
 window.closeParishSelectorModal = function() {
@@ -114,7 +114,7 @@ class EarthMonagasApp {
     this.authManager = new AuthManager();
 
     this.selectedMunId = "maturin";
-    this.selectedParishId = "alto-de-los-godos";
+    this.selectedParishId = "san-simon";
     this.catalogViewMode = "table";
     window.earthApp = this;
 
@@ -1334,54 +1334,9 @@ class EarthMonagasApp {
   getSectorsForParishCatalog(munId, parishId) {
     try {
       const parishData = this.store?.getParish(munId, parishId);
-      let polys = (parishData?.poligonos || []).slice();
-
-      if (munId === "maturin" && parishId === "alto-de-los-godos") {
-        if (polys.length === 0 || !polys.some(p => String(p.id).startsWith("sec-lp-"))) {
-          polys = JSON.parse(JSON.stringify(SECTORES_LAPUENTE || []));
-        }
-      } else {
-        if (polys.length === 0) {
-          const catSectores = (typeof getSectoresByParish === "function") ? (getSectoresByParish(munId, parishId) || []) : [];
-          if (catSectores.length > 0) {
-            polys = catSectores.map(s => ({
-              id: s.id,
-              nombre: s.nombre,
-              subParroquiaId: s.subParroquiaId,
-              casas: s.casas,
-              familias: s.familias,
-              habitantes: s.habitantes,
-              militantes: s.votantes || s.militantes,
-              votantes: s.votantes || s.militantes,
-              votoDuro: s.votoDuro,
-              votoBlando: s.votoBlando,
-              votoNuevo: s.votoNuevo,
-              centroVotacion: s.centroVotacion,
-              vertices: s.vertices || s.poligono || [],
-              colorRelleno: s.colorRelleno || s.color
-            }));
-          }
-        }
-
-        if (polys.length === 0) {
-          const munObj = CATALOGO_MONAGAS.find(m => m.id === munId);
-          const pObj = munObj?.parroquias.find(p => p.id === parishId);
-          if (pObj && Array.isArray(pObj.sectores) && pObj.sectores.length > 0) {
-            polys = pObj.sectores.map((secName, idx) => ({
-              id: `sec-${munId}-${parishId}-${idx + 1}`,
-              nombre: secName,
-              casas: null,
-              habitantes: null,
-              centroVotacion: null,
-              vertices: []
-            }));
-          }
-        }
-      }
-
-      return polys;
+      return (parishData?.poligonos || []).slice();
     } catch(err) {
-      console.warn("getSectorsForParishCatalog fallback:", munId, parishId, err);
+      console.warn("getSectorsForParishCatalog error:", munId, parishId, err);
       return [];
     }
   }
@@ -1645,11 +1600,14 @@ class EarthMonagasApp {
                       </div>
                     `
                   ) : `
-                    <div class="p-3 rounded-xl bg-[#08061a]/60 border border-[#23176d]/40 flex items-center justify-between text-slate-400 text-xs">
-                      <span class="italic text-[11px]">Parroquia oficial disponible en satélite. Puedes trazar y registrar sectores comunales.</span>
+                    <div class="p-3 rounded-xl bg-[#08061a]/80 border border-[#23176d]/60 flex items-center justify-between text-slate-300 text-xs">
+                      <div class="flex items-center gap-2 min-w-0">
+                        <span class="text-emerald-400 font-bold text-sm">✨</span>
+                        <span class="text-slate-300 text-xs font-medium">Base de datos lista y limpia (0 sectores / polígonos). Lista para registrar polígonos reales.</span>
+                      </div>
                       <button type="button" onclick="window.selectParishGlobal('${mun.id}', '${p.id}')"
-                        class="text-xs text-sky-400 hover:text-sky-300 font-bold cursor-pointer shrink-0 ml-2">
-                        Cargar en Satélite ➔
+                        class="px-3 py-1.5 rounded-xl bg-sky-500 hover:bg-sky-400 text-white font-bold text-xs cursor-pointer shrink-0 ml-2 shadow-sm transition">
+                        Trazar en Satélite ➔
                       </button>
                     </div>
                   `}
@@ -1692,47 +1650,6 @@ class EarthMonagasApp {
     // 2. Localizar el sector en la parroquia activa
     const parish = this.store?.getParish(this.selectedMunId, this.selectedParishId);
     let poly = (parish?.poligonos || []).find(p => String(p.id) === String(sectorId));
-
-    if (!poly && this.selectedMunId === "maturin" && this.selectedParishId === "alto-de-los-godos") {
-      poly = SECTORES_LAPUENTE.find(p => String(p.id) === String(sectorId) || p.nombre.toLowerCase().trim() === String(sectorId).toLowerCase().trim());
-      if (poly) {
-        if (parish && (!parish.poligonos || !parish.poligonos.some(s => s.id === poly.id))) {
-          if (!parish.poligonos) parish.poligonos = [];
-          parish.poligonos.push(JSON.parse(JSON.stringify(poly)));
-          this.store?.saveToStorage();
-        }
-      }
-    }
-
-    if (!poly) {
-      const catSec = findSectorById(sectorId);
-      if (catSec) {
-        poly = (parish?.poligonos || []).find(p => p.nombre.toLowerCase().trim() === catSec.nombre.toLowerCase().trim());
-        if (!poly) {
-          poly = {
-            id: catSec.id,
-            nombre: catSec.nombre,
-            subParroquiaId: catSec.subParroquiaId,
-            casas: catSec.casas,
-            familias: catSec.familias,
-            habitantes: catSec.habitantes,
-            votantes: catSec.votantes || catSec.militantes,
-            militantes: catSec.votantes || catSec.militantes,
-            centroVotacion: catSec.centroVotacion,
-            vertices: catSec.vertices || catSec.poligono || [],
-            centro: catSec.centro,
-            colorRelleno: catSec.colorRelleno || catSec.color
-          };
-          if (parish) {
-            if (!parish.poligonos) parish.poligonos = [];
-            parish.poligonos.push(poly);
-            this.mapEngine?.renderPolygons(parish.poligonos, this.authManager?.canEditLayers() || false);
-            this.renderPlacesTree();
-            this.store?.saveToStorage();
-          }
-        }
-      }
-    }
 
     if (!poly) {
       const anywhere = this.store?.findItemAnywhere("poligonos", sectorId);
@@ -3485,25 +3402,38 @@ class EarthMonagasApp {
     }
 
     if (form) {
-      form.addEventListener("submit", (e) => {
+      form.addEventListener("submit", async (e) => {
         e.preventDefault();
         const fileInput = document.getElementById("input-overlay-file");
-        const file = fileInput.files[0];
+        const file = fileInput?.files?.[0];
         if (!file) return;
 
-        const reader = new FileReader();
-        reader.onload = (event) => {
-          const imgUrl = event.target.result;
+        try {
+          this.showToast("🖼️ Optimizando plano antes de colocar en satélite...", "purple");
+          const optimized = await ImageOptimizer.compressImage(file, { maxDimension: 1600, quality: 0.82 });
           const bounds = this.mapEngine.map.getBounds();
           const op = parseFloat(inputOpacity.value) || 0.65;
-          this.mapEngine.addImageOverlay(imgUrl, bounds, op);
+          this.mapEngine.addImageOverlay(optimized.dataUrl, bounds, op);
           if (modal) {
             modal.classList.add("hidden");
             modal.classList.remove("flex");
           }
-          alert("Plano superpuesto con éxito sobre el satélite. Ya puedes calcar polígonos y calles encima.");
-        };
-        reader.readAsDataURL(file);
+          this.showToast(`✅ Plano optimizado y superpuesto con éxito (${optimized.reduction} de compresión). Ya puedes calcar polígonos encima.`, "purple");
+        } catch (err) {
+          console.warn("Aviso optimizando imagen:", err);
+          const reader = new FileReader();
+          reader.onload = (event) => {
+            const imgUrl = event.target.result;
+            const bounds = this.mapEngine.map.getBounds();
+            const op = parseFloat(inputOpacity.value) || 0.65;
+            this.mapEngine.addImageOverlay(imgUrl, bounds, op);
+            if (modal) {
+              modal.classList.add("hidden");
+              modal.classList.remove("flex");
+            }
+          };
+          reader.readAsDataURL(file);
+        }
       });
     }
   }
