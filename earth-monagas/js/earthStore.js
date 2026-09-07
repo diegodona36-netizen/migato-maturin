@@ -1,8 +1,8 @@
 /**
  * Gestor de Estado y Árbol de Lugares (Places) — Google Earth Pro Web (Monagas)
  */
-import { SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=118";
-import { getEjesByParish, getSectoresByParish } from "./monagasSectoresCatalog.js?v=118";
+import { SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=119";
+import { getEjesByParish, getSectoresByParish } from "./monagasSectoresCatalog.js?v=119";
 import { 
   getSavedFirebaseConfig, 
   saveFirebaseConfig, 
@@ -12,7 +12,7 @@ import {
   fetchAllTerritoriesFromFirestore,
   subscribeToTerritories,
   mergeItemCollections
-} from "./firebaseConfig.js?v=118";
+} from "./firebaseConfig.js?v=119";
 
 const STORAGE_KEY = "earth_monagas_places_v9";
 
@@ -112,13 +112,18 @@ export class EarthStore {
           if (!storedP.limite && p.limite) storedP.limite = p.limite;
           if (!storedP.centro && p.centro) storedP.centro = p.centro;
 
-          // Precarga segura obligatoria para Alto de Los Godos (piloto de campo La Puente y sus 11 sectores)
+          // Precarga segura de sectores oficiales
           if (mun.id === "maturin" && p.id === "alto-de-los-godos") {
             if (!storedP.subparroquias || storedP.subparroquias.length === 0) {
               storedP.subparroquias = JSON.parse(JSON.stringify(SUBPARROQUIAS_GODOS || []));
             }
             if (!storedP.poligonos || storedP.poligonos.length === 0 || !storedP.poligonos.some(s => String(s.id).startsWith("sec-lp-"))) {
               storedP.poligonos = JSON.parse(JSON.stringify(SECTORES_LAPUENTE || []));
+            }
+          } else if (!storedP.poligonos || storedP.poligonos.length === 0) {
+            const catSecs = (typeof getSectoresByParish === "function") ? getSectoresByParish(mun.id, p.id) : [];
+            if (catSecs && catSecs.length > 0) {
+              storedP.poligonos = JSON.parse(JSON.stringify(catSecs));
             }
           }
         });

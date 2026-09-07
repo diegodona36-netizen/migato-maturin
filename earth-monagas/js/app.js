@@ -2,16 +2,16 @@
  * Controlador Principal — Google Earth Pro Web (Edición Estado Monagas)
  * Robusto, 100% Operativo y Totalmente Individualizado
  */
-import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=118";
-import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=118";
-import { getAllParishesForSelector } from "./usersCatalog.js?v=118";
-import { EarthStore } from "./earthStore.js?v=118";
-import { EarthMapEngine } from "./mapEngine.js?v=118";
-import { PropertiesDialog } from "./propertiesDialog.js?v=118";
-import { ToolsManager } from "./toolsManager.js?v=118";
-import { detectParishFromGeometry, SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=118";
-import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=118";
-import { getParishDemographics } from "./monagasDemographics.js?v=118";
+import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=119";
+import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=119";
+import { getAllParishesForSelector } from "./usersCatalog.js?v=119";
+import { EarthStore } from "./earthStore.js?v=119";
+import { EarthMapEngine } from "./mapEngine.js?v=119";
+import { PropertiesDialog } from "./propertiesDialog.js?v=119";
+import { ToolsManager } from "./toolsManager.js?v=119";
+import { detectParishFromGeometry, SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=119";
+import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=119";
+import { getParishDemographics } from "./monagasDemographics.js?v=119";
 import { 
   getMunicipios, 
   getParroquiasByMun, 
@@ -21,13 +21,13 @@ import {
   findSectorById, 
   searchSectores, 
   ALL_SECTORES_FLAT 
-} from "./monagasSectoresCatalog.js?v=118";
+} from "./monagasSectoresCatalog.js?v=119";
 import { 
   getSavedFirebaseConfig, 
   saveFirebaseConfig, 
   isFirebaseConfigured, 
   initFirebase 
-} from "./firebaseConfig.js?v=118";
+} from "./firebaseConfig.js?v=119";
 
 // Controladores globales infalibles accesibles en cualquier contexto
 window.closeParishSelectorModal = function() {
@@ -61,6 +61,14 @@ window.selectSubParishGlobal = function(munId, parishId, spId) {
 window.setTerritoryModalFilterGlobal = function(munId) {
   if (window.earthApp && typeof window.earthApp.setTerritoryModalFilter === "function") {
     window.earthApp.setTerritoryModalFilter(munId);
+  }
+};
+
+window.setTerritoryModalViewModeGlobal = function(mode) {
+  if (window.earthApp) {
+    window.earthApp.catalogViewMode = mode;
+    const input = document.getElementById("input-filter-parish-modal");
+    window.earthApp.renderParishesCatalog(input ? input.value : "");
   }
 };
 
@@ -107,6 +115,7 @@ class EarthMonagasApp {
 
     this.selectedMunId = "maturin";
     this.selectedParishId = "alto-de-los-godos";
+    this.catalogViewMode = "table";
     window.earthApp = this;
 
     this.init();
@@ -1343,8 +1352,13 @@ class EarthMonagasApp {
               familias: s.familias,
               habitantes: s.habitantes,
               militantes: s.votantes || s.militantes,
+              votantes: s.votantes || s.militantes,
+              votoDuro: s.votoDuro,
+              votoBlando: s.votoBlando,
+              votoNuevo: s.votoNuevo,
               centroVotacion: s.centroVotacion,
-              vertices: s.vertices || s.poligono || []
+              vertices: s.vertices || s.poligono || [],
+              colorRelleno: s.colorRelleno || s.color
             }));
           }
         }
@@ -1379,24 +1393,39 @@ class EarthMonagasApp {
     const q = (filterText || "").toLowerCase().trim();
     const activeFilter = this.modalMunFilter || "all";
 
-    // 1. BARRA DE FILTRO POR MUNICIPIOS (PÍLDORAS DIRECTAS DE LOS 13 MUNICIPIOS)
+    // 1. BARRA DE FILTRO POR MUNICIPIOS (PÍLDORAS DIRECTAS DE LOS 13 MUNICIPIOS + SWITCHER TABLA/TARJETAS)
     let pillsHtml = `
-      <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-1 shrink-0 border-b border-[#23176d]/60 pb-2">
-        <button type="button" onclick="window.setTerritoryModalFilterGlobal('all')"
-          class="px-3 py-1.5 rounded-xl text-xs font-black transition shrink-0 cursor-pointer flex items-center gap-1.5 ${activeFilter === 'all' ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20' : 'bg-[#140e40] text-slate-300 hover:text-white hover:bg-[#23176d] border border-[#23176d]'}">
-          <span>⭐ Todos (13)</span>
-        </button>
-        ${CATALOGO_MONAGAS.map(m => {
-          const isActive = activeFilter === m.id;
-          return `
-            <button type="button" onclick="window.setTerritoryModalFilterGlobal('${m.id}')"
-              class="px-3 py-1.5 rounded-xl text-xs font-bold transition shrink-0 cursor-pointer flex items-center gap-1.5 ${isActive ? 'bg-sky-500 text-white font-black shadow-md border border-sky-300' : 'bg-[#140e40] text-slate-300 hover:text-white hover:bg-[#23176d] border border-[#23176d]'}">
-              <span class="w-1.5 h-1.5 rounded-full ${isActive ? 'bg-white' : 'bg-slate-500'}"></span>
-              <span>${m.nombre.replace(/^Municipio\s+/i, '')}</span>
-              <span class="text-[10px] font-mono opacity-80 font-normal">(${m.parroquias.length})</span>
-            </button>
-          `;
-        }).join("")}
+      <div class="flex items-center justify-between gap-2 overflow-x-auto no-scrollbar py-1 shrink-0 border-b border-[#23176d]/60 pb-2">
+        <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5">
+          <button type="button" onclick="window.setTerritoryModalFilterGlobal('all')"
+            class="px-3 py-1.5 rounded-xl text-xs font-black transition shrink-0 cursor-pointer flex items-center gap-1.5 ${activeFilter === 'all' ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20' : 'bg-[#140e40] text-slate-300 hover:text-white hover:bg-[#23176d] border border-[#23176d]'}">
+            <span>⭐ Todos (13)</span>
+          </button>
+          ${CATALOGO_MONAGAS.map(m => {
+            const isActive = activeFilter === m.id;
+            return `
+              <button type="button" onclick="window.setTerritoryModalFilterGlobal('${m.id}')"
+                class="px-3 py-1.5 rounded-xl text-xs font-bold transition shrink-0 cursor-pointer flex items-center gap-1.5 ${isActive ? 'bg-sky-500 text-white font-black shadow-md border border-sky-300' : 'bg-[#140e40] text-slate-300 hover:text-white hover:bg-[#23176d] border border-[#23176d]'}">
+                <span class="w-1.5 h-1.5 rounded-full ${isActive ? 'bg-white' : 'bg-slate-500'}"></span>
+                <span>${m.nombre.replace(/^Municipio\s+/i, '')}</span>
+                <span class="text-[10px] font-mono opacity-80 font-normal">(${m.parroquias.length})</span>
+              </button>
+            `;
+          }).join("")}
+        </div>
+
+        <div class="flex items-center bg-[#08061a] border border-[#23176d] rounded-xl p-0.5 shrink-0 ml-auto">
+          <button type="button" onclick="window.setTerritoryModalViewModeGlobal('table')" title="Vista Tabla Oficial (Recomendada)"
+            class="px-2.5 py-1 rounded-lg text-xs font-bold flex items-center gap-1.5 transition cursor-pointer ${this.catalogViewMode !== 'grid' ? 'bg-sky-500 text-white shadow-sm font-black' : 'text-slate-400 hover:text-white'}">
+            <i data-lucide="table" class="w-3.5 h-3.5"></i>
+            <span class="hidden sm:inline">Tabla</span>
+          </button>
+          <button type="button" onclick="window.setTerritoryModalViewModeGlobal('grid')" title="Vista Cuadrícula / Tarjetas"
+            class="px-2.5 py-1 rounded-lg text-xs font-bold flex items-center gap-1.5 transition cursor-pointer ${this.catalogViewMode === 'grid' ? 'bg-sky-500 text-white shadow-sm font-black' : 'text-slate-400 hover:text-white'}">
+            <i data-lucide="layout-grid" class="w-3.5 h-3.5"></i>
+            <span class="hidden sm:inline">Tarjetas</span>
+          </button>
+        </div>
       </div>
     `;
 
@@ -1451,61 +1480,172 @@ class EarthMonagasApp {
                 }
               }
 
+              let totalCasas = 0;
+              let totalHabitantes = 0;
+              let totalVotantes = 0;
+              let mappedCount = 0;
+
+              sectors.forEach(s => {
+                if (s.casas) totalCasas += Number(s.casas) || 0;
+                const hab = Number(s.habitantes || s.militantes) || 0;
+                totalHabitantes += hab;
+                const vot = Number(s.votantes || s.militantes) || 0;
+                totalVotantes += vot;
+                const hasCoords = (s.vertices && s.vertices.length > 0) || (s.poligono && s.poligono.length > 0);
+                if (hasCoords) mappedCount++;
+              });
+
               return `
-                <div class="bg-[#0b0824] rounded-xl border ${isCurrentParish ? 'border-sky-400 ring-1 ring-sky-400/40' : 'border-[#1f1555]'} p-3 space-y-2.5">
+                <div class="bg-[#0b0824] rounded-xl border ${isCurrentParish ? 'border-sky-400 ring-1 ring-sky-400/40 shadow-lg shadow-sky-950/40' : 'border-[#1f1555]'} p-3 space-y-2.5">
                   <!-- Cabecera de la Parroquia -->
                   <div class="flex items-center justify-between gap-2 flex-wrap sm:flex-nowrap">
                     <div class="flex items-center gap-2 truncate min-w-0">
                       <span class="w-2.5 h-2.5 rounded-full ${isCurrentParish ? 'bg-emerald-400 animate-pulse' : 'bg-sky-400'} shrink-0"></span>
                       <span class="text-xs sm:text-sm font-black text-white truncate">${p.nombre}</span>
-                      ${isCurrentParish ? `<span class="text-[9px] font-mono px-2 py-0.5 rounded-md bg-emerald-950 text-emerald-300 border border-emerald-500/40 font-bold shrink-0">Parroquia Activa</span>` : ''}
-                      <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-[#140e40] text-slate-400 border border-[#23176d] shrink-0 font-bold">${sectors.length} sectores</span>
+                      ${isCurrentParish ? `<span class="text-[9px] font-mono px-2 py-0.5 rounded-md bg-emerald-950 text-emerald-300 border border-emerald-500/40 font-bold shrink-0">● Parroquia Activa</span>` : ''}
+                      <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-[#140e40] text-slate-300 border border-[#23176d] shrink-0 font-bold">${sectors.length} sectores</span>
+                      ${totalCasas > 0 ? `<span class="hidden md:inline-flex text-[10px] font-mono px-2 py-0.5 rounded bg-amber-950/50 text-amber-300 border border-amber-500/30 font-bold">🏠 ${totalCasas.toLocaleString()} casas</span>` : ''}
+                      ${totalHabitantes > 0 ? `<span class="hidden md:inline-flex text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-950/50 text-emerald-300 border border-emerald-500/30 font-bold">👥 ${totalHabitantes.toLocaleString()} hab.</span>` : ''}
                     </div>
 
                     <div class="flex items-center gap-1.5 shrink-0 ml-auto">
                       <button type="button" onclick="window.selectParishGlobal('${mun.id}', '${p.id}')"
-                        class="px-3 py-1.5 rounded-xl ${isCurrentParish ? 'bg-sky-500 text-white font-black' : 'bg-sky-600/80 hover:bg-sky-500 text-sky-100 hover:text-white font-bold'} text-xs transition active:scale-95 flex items-center gap-1 cursor-pointer shadow-sm">
+                        class="px-3 py-1.5 rounded-xl ${isCurrentParish ? 'bg-sky-500 text-white font-black shadow-md' : 'bg-sky-600/80 hover:bg-sky-500 text-sky-100 hover:text-white font-bold'} text-xs transition active:scale-95 flex items-center gap-1.5 cursor-pointer shadow-sm">
                         <i data-lucide="crosshair" class="w-3.5 h-3.5"></i>
                         <span>Cargar Parroquia</span>
                       </button>
                       <a href="../carga/?p=${p.id}" target="_blank"
-                        class="px-2.5 py-1.5 rounded-xl bg-emerald-700/70 hover:bg-emerald-600 text-emerald-100 hover:text-white text-xs font-bold transition active:scale-95 flex items-center gap-1 cursor-pointer shadow-sm" title="Abrir Formulario de Carga">
+                        class="px-3 py-1.5 rounded-xl bg-emerald-700/80 hover:bg-emerald-600 text-emerald-100 hover:text-white text-xs font-bold transition active:scale-95 flex items-center gap-1.5 cursor-pointer shadow-sm border border-emerald-500/30" title="Abrir Formulario Oficial de Carga y Registro">
                         <i data-lucide="clipboard-list" class="w-3.5 h-3.5"></i>
-                        <span class="hidden sm:inline font-bold">Carga</span>
+                        <span class="font-bold">Carga</span>
                       </a>
                     </div>
                   </div>
 
                   <!-- Sectores de la Parroquia -->
-                  ${sectors.length > 0 ? `
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-1.5 pt-1">
-                      ${sectors.map(sec => {
-                        const hasCoords = (sec.vertices && sec.vertices.length > 0) || (sec.poligono && sec.poligono.length > 0);
-                        return `
-                          <div onclick="window.selectSectorGlobal('${mun.id}', '${p.id}', '${sec.id}')"
-                            class="p-2.5 rounded-xl bg-[#08061a] hover:bg-[#140e40] border border-[#23176d]/80 hover:border-sky-400 text-left transition flex items-center justify-between gap-2 cursor-pointer group shadow-sm hover:shadow-sky-500/20">
-                            <div class="truncate min-w-0 flex-1">
-                              <div class="flex items-center gap-1.5 mb-0.5">
-                                <span class="w-2 h-2 rounded-full bg-sky-400 shrink-0 group-hover:scale-125 transition-transform"></span>
-                                <span class="text-xs font-black text-white group-hover:text-sky-300 truncate">${sec.nombre}</span>
-                                ${hasCoords ? `<span class="text-[9px] font-mono px-1 py-0.2 rounded bg-emerald-950 text-emerald-300 border border-emerald-500/40 font-bold shrink-0">Mapeado</span>` : ''}
+                  ${sectors.length > 0 ? (
+                    this.catalogViewMode === "grid" ? `
+                      <!-- VISTA CUADRÍCULA (TARJETAS) -->
+                      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-1.5 pt-1">
+                        ${sectors.map(sec => {
+                          const hasCoords = (sec.vertices && sec.vertices.length > 0) || (sec.poligono && sec.poligono.length > 0);
+                          return `
+                            <div onclick="window.selectSectorGlobal('${mun.id}', '${p.id}', '${sec.id}')"
+                              class="p-2.5 rounded-xl bg-[#08061a] hover:bg-[#140e40] border border-[#23176d]/80 hover:border-sky-400 text-left transition flex items-center justify-between gap-2 cursor-pointer group shadow-sm hover:shadow-sky-500/20">
+                              <div class="truncate min-w-0 flex-1">
+                                <div class="flex items-center gap-1.5 mb-0.5">
+                                  <span class="w-2 h-2 rounded-full bg-sky-400 shrink-0 group-hover:scale-125 transition-transform" style="${sec.colorRelleno ? `background-color: ${sec.colorRelleno};` : ''}"></span>
+                                  <span class="text-xs font-black text-white group-hover:text-sky-300 truncate">${sec.nombre}</span>
+                                  ${hasCoords ? `<span class="text-[9px] font-mono px-1 py-0.2 rounded bg-emerald-950 text-emerald-300 border border-emerald-500/40 font-bold shrink-0">Mapeado</span>` : ''}
+                                </div>
+                                <div class="flex items-center gap-2 text-[10px] font-mono text-slate-400 flex-wrap">
+                                  ${sec.casas ? `<span class="text-amber-300 font-bold">🏠 ${Number(sec.casas).toLocaleString()}</span>` : ''}
+                                  ${(sec.habitantes || sec.militantes) ? `<span class="text-emerald-300 font-bold">👥 ${Number(sec.habitantes || sec.militantes).toLocaleString()}</span>` : ''}
+                                  ${sec.centroVotacion ? `<span class="text-slate-400 truncate max-w-[150px]" title="${sec.centroVotacion}">🏫 ${sec.centroVotacion}</span>` : ''}
+                                </div>
                               </div>
-                              <div class="flex items-center gap-1.5 text-[10px] font-mono text-slate-400 flex-wrap">
-                                ${sec.casas ? `<span class="text-amber-300 font-bold">🏠 ${sec.casas}</span>` : ''}
-                                ${(sec.habitantes || sec.militantes) ? `<span class="text-emerald-300 font-bold">👥 ${sec.habitantes || sec.militantes}</span>` : ''}
-                                ${sec.centroVotacion ? `<span class="text-slate-400 truncate max-w-[130px]" title="${sec.centroVotacion}">🏫 ${sec.centroVotacion}</span>` : ''}
-                              </div>
+                              <button type="button" class="px-2 py-1 rounded-lg bg-sky-500/20 group-hover:bg-sky-500 text-sky-300 group-hover:text-white font-black text-[11px] transition shrink-0 border border-sky-400/40 flex items-center gap-0.5">
+                                <span>Ir</span>
+                                <i data-lucide="chevron-right" class="w-3 h-3"></i>
+                              </button>
                             </div>
-                            <button type="button" class="px-2 py-1 rounded-lg bg-sky-500/20 group-hover:bg-sky-500 text-sky-300 group-hover:text-white font-black text-[11px] transition shrink-0 border border-sky-400/40 flex items-center gap-0.5">
-                              <span>Ir</span>
-                              <i data-lucide="chevron-right" class="w-3 h-3"></i>
-                            </button>
-                          </div>
-                        `;
-                      }).join("")}
-                    </div>
-                  ` : `
-                    <div class="p-2.5 rounded-xl bg-[#08061a]/60 border border-[#23176d]/40 flex items-center justify-between text-slate-400 text-xs">
+                          `;
+                        }).join("")}
+                      </div>
+                    ` : `
+                      <!-- VISTA TABLA COMPLETA (PREDETERMINADA / OFICIAL) -->
+                      <div class="overflow-x-auto rounded-xl border border-[#23176d]/80 bg-[#08061a] shadow-inner mt-1">
+                        <table class="w-full text-left border-collapse text-xs font-mono">
+                          <thead>
+                            <tr class="text-[10px] uppercase text-slate-400 bg-[#120c3b] border-b border-[#23176d]/80">
+                              <th class="py-2.5 px-3 text-center w-9 text-slate-500 font-semibold">#</th>
+                              <th class="py-2.5 px-3 font-bold text-slate-200 min-w-[170px]">Sector Comunal</th>
+                              <th class="py-2.5 px-3 text-right font-bold text-amber-400 whitespace-nowrap">🏠 Casas</th>
+                              <th class="py-2.5 px-3 text-right font-bold text-emerald-400 whitespace-nowrap">👥 Habitantes</th>
+                              <th class="py-2.5 px-3 text-right font-bold text-purple-300 whitespace-nowrap">🗳️ Votantes</th>
+                              <th class="py-2.5 px-3 font-bold text-slate-300 min-w-[190px]">🏫 Centro Electoral CNE</th>
+                              <th class="py-2.5 px-3 text-center whitespace-nowrap">Estado</th>
+                              <th class="py-2.5 px-3 text-center w-20 whitespace-nowrap">Acción</th>
+                            </tr>
+                          </thead>
+                          <tbody class="divide-y divide-[#1f1555]/60 text-slate-300">
+                            ${sectors.map((sec, idx) => {
+                              const hasCoords = (sec.vertices && sec.vertices.length > 0) || (sec.poligono && sec.poligono.length > 0);
+                              const casasVal = sec.casas ? Number(sec.casas).toLocaleString() : '<span class="text-slate-600">-</span>';
+                              const habVal = (sec.habitantes || sec.militantes) ? Number(sec.habitantes || sec.militantes).toLocaleString() : '<span class="text-slate-600">-</span>';
+                              const votVal = (sec.votantes || sec.militantes) ? Number(sec.votantes || sec.militantes).toLocaleString() : '<span class="text-slate-600">-</span>';
+                              const centro = sec.centroVotacion || '';
+                              const colorDot = sec.colorRelleno || (hasCoords ? '#10b981' : '#38bdf8');
+
+                              return `
+                                <tr onclick="window.selectSectorGlobal('${mun.id}', '${p.id}', '${sec.id}')"
+                                  class="hover:bg-[#160f47] hover:text-white transition-colors cursor-pointer group">
+                                  <td class="py-2 px-3 text-center text-slate-500 font-mono text-[11px]">${idx + 1}</td>
+                                  <td class="py-2 px-3 font-sans font-bold text-white group-hover:text-sky-300 transition-colors">
+                                    <div class="flex items-center gap-2 min-w-0">
+                                      <span class="w-2.5 h-2.5 rounded-full shrink-0 group-hover:scale-125 transition-transform" style="background-color: ${colorDot}"></span>
+                                      <span class="truncate" title="${sec.nombre}">${sec.nombre}</span>
+                                    </div>
+                                  </td>
+                                  <td class="py-2 px-3 text-right font-mono text-amber-300 font-bold whitespace-nowrap">${casasVal}</td>
+                                  <td class="py-2 px-3 text-right font-mono text-emerald-300 font-bold whitespace-nowrap">${habVal}</td>
+                                  <td class="py-2 px-3 text-right font-mono text-purple-300 font-bold whitespace-nowrap">${votVal}</td>
+                                  <td class="py-2 px-3 font-sans text-slate-300">
+                                    ${centro ? `
+                                      <div class="flex items-center gap-1.5 min-w-0" title="${centro}">
+                                        <span class="shrink-0 text-slate-400">🏫</span>
+                                        <span class="text-[11px] text-slate-300 group-hover:text-slate-100">${centro}</span>
+                                      </div>
+                                    ` : `
+                                      <span class="text-slate-600 text-[11px] italic">Sin asignar</span>
+                                    `}
+                                  </td>
+                                  <td class="py-2 px-3 text-center whitespace-nowrap">
+                                    ${hasCoords ? `
+                                      <span class="inline-flex items-center gap-1 text-[9px] font-mono px-2 py-0.5 rounded-full bg-emerald-950/80 text-emerald-300 border border-emerald-500/40 font-bold">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                                        Mapeado
+                                      </span>
+                                    ` : `
+                                      <span class="inline-flex items-center gap-1 text-[9px] font-mono px-2 py-0.5 rounded-full bg-slate-900 text-slate-400 border border-slate-800 font-medium">
+                                        Por trazar
+                                      </span>
+                                    `}
+                                  </td>
+                                  <td class="py-2 px-3 text-center whitespace-nowrap" onclick="event.stopPropagation(); window.selectSectorGlobal('${mun.id}', '${p.id}', '${sec.id}');">
+                                    <button type="button" class="px-2.5 py-1 rounded-lg bg-sky-500/20 group-hover:bg-sky-500 text-sky-300 group-hover:text-white font-bold text-[11px] transition shrink-0 border border-sky-400/40 flex items-center justify-center gap-1 w-full shadow-sm">
+                                      <span>Ir</span>
+                                      <i data-lucide="chevron-right" class="w-3 h-3"></i>
+                                    </button>
+                                  </td>
+                                </tr>
+                              `;
+                            }).join("")}
+                          </tbody>
+                          <tfoot class="bg-[#120c3b]/90 border-t border-[#23176d] font-mono text-[11px] text-slate-200">
+                            <tr>
+                              <td colspan="2" class="py-2 px-3 font-sans font-bold text-sky-300">
+                                Total Parroquia (${sectors.length} sectores)
+                              </td>
+                              <td class="py-2 px-3 text-right text-amber-300 font-bold whitespace-nowrap">
+                                ${totalCasas > 0 ? totalCasas.toLocaleString() : '-'}
+                              </td>
+                              <td class="py-2 px-3 text-right text-emerald-300 font-bold whitespace-nowrap">
+                                ${totalHabitantes > 0 ? totalHabitantes.toLocaleString() : '-'}
+                              </td>
+                              <td class="py-2 px-3 text-right text-purple-300 font-bold whitespace-nowrap">
+                                ${totalVotantes > 0 ? totalVotantes.toLocaleString() : '-'}
+                              </td>
+                              <td colspan="3" class="py-2 px-3 text-[10px] text-slate-400 font-sans italic text-right">
+                                ${mappedCount} de ${sectors.length} sectores mapeados
+                              </td>
+                            </tr>
+                          </tfoot>
+                        </table>
+                      </div>
+                    `
+                  ) : `
+                    <div class="p-3 rounded-xl bg-[#08061a]/60 border border-[#23176d]/40 flex items-center justify-between text-slate-400 text-xs">
                       <span class="italic text-[11px]">Parroquia oficial disponible en satélite. Puedes trazar y registrar sectores comunales.</span>
                       <button type="button" onclick="window.selectParishGlobal('${mun.id}', '${p.id}')"
                         class="text-xs text-sky-400 hover:text-sky-300 font-bold cursor-pointer shrink-0 ml-2">
@@ -1576,10 +1716,20 @@ class EarthMonagasApp {
             casas: catSec.casas,
             familias: catSec.familias,
             habitantes: catSec.habitantes,
+            votantes: catSec.votantes || catSec.militantes,
             militantes: catSec.votantes || catSec.militantes,
             centroVotacion: catSec.centroVotacion,
-            vertices: catSec.vertices || catSec.poligono || []
+            vertices: catSec.vertices || catSec.poligono || [],
+            centro: catSec.centro,
+            colorRelleno: catSec.colorRelleno || catSec.color
           };
+          if (parish) {
+            if (!parish.poligonos) parish.poligonos = [];
+            parish.poligonos.push(poly);
+            this.mapEngine?.renderPolygons(parish.poligonos, this.authManager?.canEditLayers() || false);
+            this.renderPlacesTree();
+            this.store?.saveToStorage();
+          }
         }
       }
     }
