@@ -31,14 +31,15 @@ export class EarthMapEngine {
     this.layerCentros = null;
 
     // Estado explícito de visibilidad para filtros de capas (LOD 1 a 5)
+    // Sectores y Ejes SIEMPRE activos y visibles por defecto para que el usuario no tenga que habilitarlos manualmente
     this.hierarchicalVisibility = {
       l1: false,
       l2: false,
       l3: false,
-      l4: false,
+      l4: true,
       l5: true
     };
-    this.autoZoomLOD = true; // Zoom Inteligente y Dinámico activado por defecto
+    this.autoZoomLOD = false; // Desactivado por defecto: los sectores y ejes nunca se ocultan al cambiar de zoom
 
     // Estado de Edición de Vértices
     this.editingPoly = null;
@@ -169,16 +170,18 @@ export class EarthMapEngine {
       return;
     }
 
-    // 1. Capa L1: Estado Monagas (Oficial INE/IGVSB)
+    // 1. Capa L1: Estado Monagas (Oficial INE/IGVSB) - Capa puramente visual sin eventos invasivos
     this.layerL1_Estado = L.geoJSON(GEO_ESTADO_OFICIAL, {
       renderer: this.canvasRenderer,
+      interactive: false,
       style: {
         color: "#f59e0b",
         weight: 3.5,
         opacity: 0.95,
         fillColor: "#f59e0b",
         fillOpacity: 0.06,
-        dashArray: "8, 6"
+        dashArray: "8, 6",
+        interactive: false
       },
       onEachFeature: (feature, layer) => {
         if (!this.isTouchDevice) {
@@ -724,11 +727,6 @@ export class EarthMapEngine {
               return;
             }
             L.DomEvent.stopPropagation(e);
-
-            if (window.earthApp && String(window.earthApp.selectedParishId) !== String(parishId)) {
-              window.earthApp.selectParish(munId, parishId);
-            }
-
             if (onSelectCallback) {
               onSelectCallback("subparroquia", sp, e);
             } else if (window.earthApp) {
@@ -753,9 +751,6 @@ export class EarthMapEngine {
             const spMarker = L.marker(spCentroid, { icon: spIcon, interactive: !isDrawing });
             spMarker.on("click", (e) => {
               L.DomEvent.stopPropagation(e);
-              if (window.earthApp && String(window.earthApp.selectedParishId) !== String(parishId)) {
-                window.earthApp.selectParish(munId, parishId);
-              }
               if (onSelectCallback) {
                 onSelectCallback("subparroquia", sp, e);
               } else if (window.earthApp) {
@@ -772,9 +767,11 @@ export class EarthMapEngine {
       // 1. Polígonos de Sectores Comunales (Nivel 5)
       (pData.poligonos || []).forEach(poly => {
         try {
-          if (poly.visible === false || !poly.vertices || poly.vertices.length < 3) return;
+          const rawCoords = poly.vertices || poly.poligono || [];
+          if (!poly.vertices && poly.poligono) poly.vertices = poly.poligono;
+          if (poly.visible === false || rawCoords.length < 3) return;
 
-          const pLayer = L.polygon(poly.vertices, {
+          const pLayer = L.polygon(rawCoords, {
             color: poly.colorBorde || "#38bdf8",
             weight: poly.anchoBorde || (isActiveParish ? 2.5 : 2),
             opacity: isActiveParish ? 0.95 : 0.85,
@@ -863,17 +860,13 @@ export class EarthMapEngine {
             }
             L.DomEvent.stopPropagation(e);
 
-            if (window.earthApp && String(window.earthApp.selectedParishId) !== String(parishId)) {
-              window.earthApp.selectParish(munId, parishId);
-            }
-
             if (onSelectCallback) onSelectCallback("poligono", poly);
           });
 
           this.polygonsLayer.addLayer(pLayer);
 
           // Marcador de Centroide con militantes siempre visible en el mapa
-          const centroid = this.calculateCentroid(poly.vertices);
+          const centroid = this.calculateCentroid(rawCoords);
           if (centroid && this.sectorLabelsLayer) {
             const badgeIcon = L.divIcon({
               className: "custom-sector-pin",
@@ -888,9 +881,6 @@ export class EarthMapEngine {
             const badgeMarker = L.marker(centroid, { icon: badgeIcon, interactive: !isDrawing });
             badgeMarker.on("click", (e) => {
               L.DomEvent.stopPropagation(e);
-              if (window.earthApp && String(window.earthApp.selectedParishId) !== String(parishId)) {
-                window.earthApp.selectParish(munId, parishId);
-              }
               if (onSelectCallback) onSelectCallback("poligono", poly);
             });
             this.sectorLabelsLayer.addLayer(badgeMarker);
@@ -1066,7 +1056,7 @@ export class EarthMapEngine {
 
     // L5: Sectores Comunales (Base)
     const isMobileScreen = typeof window !== "undefined" && window.innerWidth < 640;
-    const showSecLabels = isMobileScreen ? z >= 16 : z >= 15;
+    const showSecLabels = isMobileScreen ? z >= 13 : z >= 12;
     if (this.polygonsLayer) {
       if (this.hierarchicalVisibility.l5) {
         if (!this.map.hasLayer(this.polygonsLayer)) this.map.addLayer(this.polygonsLayer);
