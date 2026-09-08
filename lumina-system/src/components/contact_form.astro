@@ -1,0 +1,265 @@
+---
+// --- SECCION DE LOGICA (JS) ---
+const mostrado = Astro.url.searchParams.get('enviado') === 'true';
+---
+
+<section class="contact-form-section" id="contact-form-section">
+    <div class="container-form">
+        <div class="form-header">
+            <span class="badge-tech">CONTACTO DIRECTO</span>
+            <h2 class="title">Inicia Tu Próximo Proyecto</h2>
+            <p class="subtitle">Cuéntanos sobre tus requerimientos técnicos, automatizaciones o infraestructura digital. Te responderemos en menos de 24 horas hábiles.</p>
+        </div>
+
+        <div class="form-card">
+            <form method="POST" class="contact-form" id="main-contact-form">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="name">Nombre o Empresa *</label>
+                        <input type="text" id="name" name="name" placeholder="Ej. Corporación Alpha C.A." required />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Correo Corporativo *</label>
+                        <input type="email" id="email" name="email" placeholder="contacto@empresa.com" required />
+                    </div>
+                </div>
+                   
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="phone">Teléfono / WhatsApp</label>
+                        <input type="tel" id="phone" name="phone" placeholder="Ej. +58 412 1234567" />
+                    </div>
+                       
+                    <div class="form-group">
+                        <label for="affair">Tipo de Solución / Asunto *</label>
+                        <input type="text" id="affair" name="affair" placeholder="Ej. Sistema de Facturación & Control ISP" required />
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="details">Especificaciones y Alcance del Proyecto *</label>
+                    <textarea id="details" name="details" rows="5" placeholder="Detalla módulos necesarios, usuarios concurrentes, integraciones requeridas o plazo estimado..." required></textarea>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" id="btn-submit" class="btn-primary">
+                        <span>Enviar Solicitud</span>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+                    </button>
+
+                    <a href="https://wa.me/584249000000?text=Hola%20LuminaSystem,%20deseo%20cotizar%20un%20proyecto%20de%20software" target="_blank" rel="noopener" class="btn-whatsapp">
+                        <span>Chatear por WhatsApp</span>
+                    </a>
+                </div>
+
+                {mostrado && (
+                    <div class="alert-success" id="alert-success">
+                        <span class="check-icon">✓</span>
+                        <div>
+                            <strong>¡Solicitud enviada con éxito!</strong>
+                            <p>Nuestro equipo de ingeniería evaluará tus requerimientos y te contactará a la brevedad.</p>
+                        </div>
+                    </div>
+                )}
+            </form>
+        </div>
+    </div>
+</section>
+
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    .contact-form-section {
+        background: #07090e;
+        padding: 5rem 1.5rem;
+        position: relative;
+    }
+
+    .container-form {
+        max-width: 860px;
+        margin: 0 auto;
+    }
+
+    .form-header {
+        text-align: center;
+        margin-bottom: 2.5rem;
+    }
+
+    .badge-tech {
+        font-family: monospace;
+        font-size: 0.75rem;
+        letter-spacing: 0.1em;
+        color: #00f2fe;
+        background: rgba(0, 242, 254, 0.08);
+        border: 1px solid rgba(0, 242, 254, 0.25);
+        padding: 0.3rem 0.8rem;
+        border-radius: 9999px;
+        display: inline-block;
+        margin-bottom: 1rem;
+    }
+
+    .title {
+        font-size: 2.25rem;
+        font-weight: 800;
+        color: #ffffff;
+        letter-spacing: -0.02em;
+        margin-bottom: 0.75rem;
+    }
+
+    .subtitle {
+        color: #94a3b8;
+        font-size: 1rem;
+        line-height: 1.6;
+        max-width: 620px;
+        margin: 0 auto;
+    }
+
+    .form-card {
+        background: #0e131f;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 16px;
+        padding: 2.5rem;
+        box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.5);
+    }
+
+    .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+        color: #e2e8f0;
+        font-size: 0.875rem;
+        font-weight: 600;
+        letter-spacing: 0.01em;
+    }
+
+    .form-group input,
+    .form-group textarea {
+        background: #07090e;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 10px;
+        padding: 0.85rem 1rem;
+        color: #ffffff;
+        font-size: 0.95rem;
+        font-family: inherit;
+        outline: none;
+        transition: all 0.2s ease;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+        border-color: #00f2fe;
+        box-shadow: 0 0 0 3px rgba(0, 242, 254, 0.15);
+    }
+
+    .form-group input::placeholder,
+    .form-group textarea::placeholder {
+        color: #475569;
+    }
+
+    .form-actions {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+        margin-top: 2rem;
+    }
+
+    .btn-primary {
+        flex: 1;
+        min-width: 200px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        background: linear-gradient(135deg, #00f2fe 0%, #2563eb 100%);
+        color: #07090e;
+        font-weight: 700;
+        font-size: 0.95rem;
+        padding: 0.9rem 1.75rem;
+        border-radius: 10px;
+        border: none;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px -5px rgba(0, 242, 254, 0.4);
+    }
+
+    .btn-whatsapp {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        background: rgba(37, 211, 102, 0.1);
+        color: #25d366;
+        border: 1px solid rgba(37, 211, 102, 0.3);
+        padding: 0.9rem 1.5rem;
+        border-radius: 10px;
+        font-weight: 600;
+        font-size: 0.95rem;
+        text-decoration: none;
+        transition: all 0.2s ease;
+    }
+
+    .btn-whatsapp:hover {
+        background: rgba(37, 211, 102, 0.2);
+        border-color: #25d366;
+    }
+
+    .alert-success {
+        margin-top: 1.5rem;
+        background: rgba(16, 185, 129, 0.1);
+        border: 1px solid rgba(16, 185, 129, 0.3);
+        border-radius: 10px;
+        padding: 1rem 1.25rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        color: #34d399;
+    }
+
+    .check-icon {
+        font-size: 1.5rem;
+        font-weight: bold;
+    }
+
+    .alert-success strong {
+        display: block;
+        color: #ffffff;
+        margin-bottom: 0.25rem;
+    }
+
+    .alert-success p {
+        font-size: 0.875rem;
+        color: #a7f3d0;
+        margin: 0;
+    }
+
+    @media (max-width: 640px) {
+        .form-grid {
+            grid-template-columns: 1fr;
+            gap: 0;
+        }
+        .form-card {
+            padding: 1.5rem;
+        }
+        .form-actions {
+            flex-direction: column;
+        }
+    }
+</style>

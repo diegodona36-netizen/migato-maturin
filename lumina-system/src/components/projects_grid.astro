@@ -1,0 +1,123 @@
+---
+import { Image } from "astro:assets";
+import sistemaGestionActivos from "../assets/projects/Sistema_Gestion_Activos_Informaticos.png";
+import sistemaIventarioIsp from "../assets/projects/Sistema_Inventario_ISP.png";
+import sistemaGestionEmpleados from "../assets/projects/Sistema_Gestion_Empleados.png";
+---
+
+<section class="py-20 px-4 sm:px-6 max-w-7xl mx-auto w-full border-t border-slate-800/60" id="projects-container">
+  <div class="flex flex-col md:flex-row items-start md:items-end justify-between gap-4 mb-12">
+    <div class="space-y-2">
+      <span class="text-xs font-mono text-cyan-400 font-bold uppercase tracking-widest block">Casos de Éxito de Software</span>
+      <h2 class="text-3xl sm:text-4xl font-black text-white tracking-tight">Proyectos Diseñados & Desarrollados</h2>
+      <p class="text-slate-400 text-sm max-w-xl">Sistemas en producción creados para resolver retos reales de infraestructura, conectividad y operaciones empresariales.</p>
+    </div>
+    <span class="px-3 py-1 rounded-full bg-slate-900 border border-slate-800 text-slate-400 text-xs font-mono">
+      3 Casos Destacados
+    </span>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <!-- Proyecto 1: Activos Informáticos -->
+    <article class="bg-slate-900/60 backdrop-blur-md border border-white/10 hover:border-cyan-500/50 rounded-3xl overflow-hidden flex flex-col justify-between transition-all duration-300 group">
+      <div>
+        <div class="relative overflow-hidden aspect-video bg-slate-950 border-b border-slate-800/80">
+          <Image 
+            src={sistemaGestionActivos} 
+            alt="Sistema de Gestión de Activos Informáticos" 
+            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
+            loading="lazy" 
+          />
+          <span class="absolute top-3 left-3 px-2.5 py-1 rounded-lg bg-slate-950/80 backdrop-blur-md border border-slate-800 text-[10px] font-mono font-bold text-cyan-400">
+            IT Infrastructure
+          </span>
+        </div>
+        <div class="p-6 space-y-3">
+          <h3 class="font-black text-lg text-white group-hover:text-cyan-300 transition leading-snug">
+            Sistema de Gestión de Incidencias y Activos Informáticos
+          </h3>
+          <p class="text-xs text-slate-300 leading-relaxed">
+            Plataforma integral para control de inventario de equipos, asignación por departamento, historial de mantenimiento y mesa de ayuda (Helpdesk) con seguimiento de tickets en tiempo real.
+          </p>
+          <div class="flex flex-wrap gap-1.5 pt-2">
+            <span class="px-2 py-0.5 rounded-md bg-slate-900 border border-slate-800 text-slate-300 text-[10px] font-mono">PostgreSQL</span>
+            <span class="px-2 py-0.5 rounded-md bg-slate-900 border border-slate-800 text-slate-300 text-[10px] font-mono">Dashboard TI</span>
+            <span class="px-2 py-0.5 rounded-md bg-slate-900 border border-slate-800 text-slate-300 text-[10px] font-mono">Tickets SLA</span>
+          </div>
+        </div>
+      </div>
+      <div class="p-6 pt-0 border-t border-slate-800/40 mt-3 flex items-center justify-between text-xs text-slate-400 font-mono">
+        <span>Arquitectura Modular</span>
+        <span class="text-cyan-400 font-bold">100% Funcional</span>
+      </div>
+    </article>
+
+    <!-- Proyecto 2: Inventario ISP -->
+    <article class="bg-slate-900/60 backdrop-blur-md border border-white/10 hover:border-indigo-500/50 rounded-3xl overflow-hidden flex flex-col justify-between transition-all duration-300 group">
+      <div>
+        <div class="relative overflow-hidden aspect-video bg-slate-950 border-b border-slate-800/80">
+          <Image 
+            src={sistemaIventarioIsp} 
+            alt="Sistema de Inventario de Materiales para ISP" 
+            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
+            loading="lazy" 
+          />
+          <span class="absolute top-3 left-3 px-2.5 py-1 rounded-lg bg-slate-950/80 backdrop-blur-md border border-slate-800 text-[10px] font-mono font-bold text-indigo-400">
+            Telecom / ISP
+          </span>
+        </div>
+        <div class="p-6 space-y-3">
+          <h3 class="font-black text-lg text-white group-hover:text-indigo-300 transition leading-snug">
+            Sistema de Inventario de Materiales por Sede para ISP
+          </h3>
+          <p class="text-xs text-slate-300 leading-relaxed">
+            Software especializado para logística de telecomunicaciones: control de existencias de fibra óptica, OLTs, ONUs, bobinas y despachos por cuadrilla técnica con trazabilidad multi-sucursal.
+          </p>
+          <div class="flex flex-wrap gap-1.5 pt-2">
+            <span class="px-2 py-0.5 rounded-md bg-slate-900 border border-slate-800 text-slate-300 text-[10px] font-mono">Gestión Multisede</span>
+            <span class="px-2 py-0.5 rounded-md bg-slate-900 border border-slate-800 text-slate-300 text-[10px] font-mono">Alertas de Stock</span>
+            <span class="px-2 py-0.5 rounded-md bg-slate-900 border border-slate-800 text-slate-300 text-[10px] font-mono">Auditoría</span>
+          </div>
+        </div>
+      </div>
+      <div class="p-6 pt-0 border-t border-slate-800/40 mt-3 flex items-center justify-between text-xs text-slate-400 font-mono">
+        <span>Control de Despachos</span>
+        <span class="text-indigo-400 font-bold">100% Funcional</span>
+      </div>
+    </article>
+
+    <!-- Proyecto 3: Empleados -->
+    <article class="bg-slate-900/60 backdrop-blur-md border border-white/10 hover:border-purple-500/50 rounded-3xl overflow-hidden flex flex-col justify-between transition-all duration-300 group">
+      <div>
+        <div class="relative overflow-hidden aspect-video bg-slate-950 border-b border-slate-800/80">
+          <Image 
+            src={sistemaGestionEmpleados} 
+            alt="Sistema de Gestión de Empleados" 
+            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
+            loading="lazy" 
+          />
+          <span class="absolute top-3 left-3 px-2.5 py-1 rounded-lg bg-slate-950/80 backdrop-blur-md border border-slate-800 text-[10px] font-mono font-bold text-purple-400">
+            Enterprise HR
+          </span>
+        </div>
+        <div class="p-6 space-y-3">
+          <h3 class="font-black text-lg text-white group-hover:text-purple-300 transition leading-snug">
+            Sistema Integral de Gestión de Empleados y Talento Humano
+          </h3>
+          <p class="text-xs text-slate-300 leading-relaxed">
+            Plataforma para administración de personal corporativo: expedientes de trabajadores, registro de asistencias, historial laboral, roles de acceso granulares y exportación de reportes a Excel/PDF.
+          </p>
+          <div class="flex flex-wrap gap-1.5 pt-2">
+            <span class="px-2 py-0.5 rounded-md bg-slate-900 border border-slate-800 text-slate-300 text-[10px] font-mono">Seguridad RBAC</span>
+            <span class="px-2 py-0.5 rounded-md bg-slate-900 border border-slate-800 text-slate-300 text-[10px] font-mono">Nómina & Asistencia</span>
+            <span class="px-2 py-0.5 rounded-md bg-slate-900 border border-slate-800 text-slate-300 text-[10px] font-mono">Export PDF</span>
+          </div>
+        </div>
+      </div>
+      <div class="p-6 pt-0 border-t border-slate-800/40 mt-3 flex items-center justify-between text-xs text-slate-400 font-mono">
+        <span>Roles & Permisos</span>
+        <span class="text-purple-400 font-bold">100% Funcional</span>
+      </div>
+    </article>
+  </div>
+</section>

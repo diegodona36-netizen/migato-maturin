@@ -1,0 +1,98 @@
+---
+// --- SECCIÓN DE LÓGICA (JS) ---
+export const prerender = false;
+
+import { Resend } from 'resend';
+import Header from "../components/header.astro";
+import Hero from "../components/hero.astro";
+import ProjectsGrid from "../components/projects_grid.astro";
+import ContactForm from "../components/contact_form.astro";
+import Footer from "../components/footer.astro";
+
+const resend = new Resend(import.meta.env.API_SEND_MAIL_RESEND);
+
+// Verificar peticion POST
+if (Astro.request.method === "POST") {
+    try {
+        // Extraer datos del formulario
+        const data = await Astro.request.formData();
+
+        // Obtener valores especificos de los inputs del formulario
+        const name = data.get("name");
+        const email = data.get("email");
+        const phone = data.get("phone");
+        const affair = data.get("affair");
+        const details = data.get("details");
+		
+		// Construir y enviar correo
+		const { data: resData, error} = await resend.emails.send({
+			from: 'onboarding@resend.dev', 
+        	to: ['luminasystem.devs@gmail.com'],
+        	subject: `🚀 Solicitud: ${affair}`,
+        	html: `
+          		<div style="font-family: sans-serif; line-height: 1.6; color: #333;">
+            		<h2>Nueva solicitud de servicio</h2>
+            		<p><strong>Cliente:</strong> ${name}</p>
+            		<p><strong>Correo:</strong> ${email}</p>
+            		<p><strong>Teléfono:</strong> ${phone || 'No proporcionado'}</p>
+            		<hr />
+            		<p><strong>Asunto:</strong> ${affair}</p>
+            		<p><strong>Detalles del proyecto:</strong></p>
+            		<p style="background: #f4f4f4; padding: 15px; border-radius: 5px;">${details}</p>
+          		</div>
+        	`,
+		});
+		
+		// Capturar error de envio
+		if (error) {
+			throw new Error(error.message)
+		}
+
+		// Añadir enviado a la ruta
+        return Astro.redirect("/?enviado=true#alert-success");
+
+	// Capturar errores al obtner y procesar los datos ingresados en el formulario
+    } catch (e) {
+        if (e instanceof Error) {
+                console.error("Error encontrado: ", e.message)
+        }
+	}
+}
+
+---
+
+<html lang="es" class="dark">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<link rel="icon" href="/favicon.ico" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta name="generator" content={Astro.generator} />
+		<title>LuminaSystem • Ingeniería de Software & Automatización Digital</title>
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;800&display=swap" rel="stylesheet">
+	</head>
+	<body>
+		<Header />
+		<Hero />
+		<ProjectsGrid />
+		<ContactForm />
+		<Footer />
+	</body>
+</html>
+
+<style is:global>
+	* {
+		box-sizing: border-box;
+		margin: 0;
+		padding: 0;
+	}
+	html, body {
+		background-color: #07090e;
+		color: #f1f5f9;
+		font-family: 'Inter', system-ui, -apple-system, sans-serif;
+		overflow-x: hidden;
+		scroll-behavior: smooth;
+	}
+</style>
