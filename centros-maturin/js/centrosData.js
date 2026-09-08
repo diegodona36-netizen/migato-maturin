@@ -1,6 +1,6 @@
 /**
  * Base de Datos Oficial de Centros Electorales de Maturín (CNE 2024 / Actas Oficiales)
- * 175 Centros y 361 Mesas Electorales
+ * 175 Centros y 361 Mesas Electorales Enriquecidos con Sectores, Direcciones y Escrutinio Simulado
  */
 const CENTROS_MATURIN = [
   {
@@ -15,7 +15,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.749,
     "lng": -63.17485,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "Casco Central",
+    "direccion": "Av. Principal con Calle 3, Casco Central",
+    "coordinador": "Prof. Carmen Salazar",
+    "testigoPrincipal": "Luisa Marcano",
+    "telefono": "+58 414-738242",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "20:16",
+      "participacionPct": 78.4,
+      "votosEmitidos": 130,
+      "votosOposicion": 91,
+      "votosOficialismo": 25,
+      "votosOtros": 14,
+      "actasVerificadas": 1,
+      "actasTotal": 1,
+      "qrHash": "CNE-2024-MON-140711032-ACTA-01"
+    }
   },
   {
     "id": "140711035",
@@ -29,7 +46,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.752513,
     "lng": -63.182026,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "La Manga",
+    "direccion": "Calle Bolívar, frente a la Plaza, La Manga",
+    "coordinador": "Ing. Pedro Luis Figuera",
+    "testigoPrincipal": "Manuel Antonio Sosa",
+    "telefono": "+58 414-764132",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "18:15",
+      "participacionPct": 78.8,
+      "votosEmitidos": 451,
+      "votosOposicion": 347,
+      "votosOficialismo": 83,
+      "votosOtros": 21,
+      "actasVerificadas": 1,
+      "actasTotal": 1,
+      "qrHash": "CNE-2024-MON-140711035-ACTA-01"
+    }
   },
   {
     "id": "140711013",
@@ -43,7 +77,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.742912,
     "lng": -63.177439,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "El Centro",
+    "direccion": "Carrera 4 entre Calles 5 y 6, El Centro",
+    "coordinador": "Dra. María Elena Rondón",
+    "testigoPrincipal": "Patricia Velásquez",
+    "telefono": "+58 414-735833",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "20:54",
+      "participacionPct": 74.2,
+      "votosEmitidos": 407,
+      "votosOposicion": 301,
+      "votosOficialismo": 74,
+      "votosOtros": 32,
+      "actasVerificadas": 1,
+      "actasTotal": 1,
+      "qrHash": "CNE-2024-MON-140711013-ACTA-01"
+    }
   },
   {
     "id": "140711017",
@@ -57,7 +108,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.754405,
     "lng": -63.173649,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "Av. Bicentenario",
+    "direccion": "Av. Bicentenario, Edif. Escolar, Av. Bicentenario",
+    "coordinador": "Lcdo. José Gregorio Caña",
+    "testigoPrincipal": "Gabriel Subero",
+    "telefono": "+58 414-710877",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "18:54",
+      "participacionPct": 77.5,
+      "votosEmitidos": 469,
+      "votosOposicion": 336,
+      "votosOficialismo": 103,
+      "votosOtros": 30,
+      "actasVerificadas": 1,
+      "actasTotal": 1,
+      "qrHash": "CNE-2024-MON-140711017-ACTA-01"
+    }
   },
   {
     "id": "140711016",
@@ -71,7 +139,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.747711,
     "lng": -63.185651,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "Barrio Obrero",
+    "direccion": "Calle Sucre c/c Av. Miranda, Barrio Obrero",
+    "coordinador": "Ing. Andrés Eloy Blanco",
+    "testigoPrincipal": "Beatriz Centeno",
+    "telefono": "+58 414-753204",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "18:34",
+      "participacionPct": 76.2,
+      "votosEmitidos": 1276,
+      "votosOposicion": 921,
+      "votosOficialismo": 248,
+      "votosOtros": 107,
+      "actasVerificadas": 1,
+      "actasTotal": 1,
+      "qrHash": "CNE-2024-MON-140711016-ACTA-01"
+    }
   },
   {
     "id": "140711003",
@@ -85,7 +170,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.744749,
     "lng": -63.170984,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "Viento Colao",
+    "direccion": "Sector Central, Calle El Sol, Viento Colao",
+    "coordinador": "Prof. Luisa Marcano",
+    "testigoPrincipal": "Elena Quijada",
+    "telefono": "+58 414-715847",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "19:44",
+      "participacionPct": 73.0,
+      "votosEmitidos": 298,
+      "votosOposicion": 228,
+      "votosOficialismo": 66,
+      "votosOtros": 4,
+      "actasVerificadas": 1,
+      "actasTotal": 1,
+      "qrHash": "CNE-2024-MON-140711003-ACTA-01"
+    }
   },
   {
     "id": "140711001",
@@ -100,7 +202,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.757101,
     "lng": -63.180287,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "Las Avenidas",
+    "direccion": "Av. Alirio Ugarte Pelayo, km 2, Las Avenidas",
+    "coordinador": "Lcdo. Manuel Antonio Sosa",
+    "testigoPrincipal": "Rafael Monagas",
+    "telefono": "+58 414-747949",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "20:49",
+      "participacionPct": 73.2,
+      "votosEmitidos": 1190,
+      "votosOposicion": 920,
+      "votosOficialismo": 220,
+      "votosOtros": 50,
+      "actasVerificadas": 2,
+      "actasTotal": 2,
+      "qrHash": "CNE-2024-MON-140711001-ACTA-01"
+    }
   },
   {
     "id": "140711014",
@@ -114,7 +233,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.741172,
     "lng": -63.182269,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "Palo Negro",
+    "direccion": "Calle Ribas con Boyacá, Palo Negro",
+    "coordinador": "Dra. Patricia Velásquez",
+    "testigoPrincipal": "Hernán Malavé",
+    "telefono": "+58 414-718146",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "20:24",
+      "participacionPct": 80.8,
+      "votosEmitidos": 94,
+      "votosOposicion": 68,
+      "votosOficialismo": 18,
+      "votosOtros": 8,
+      "actasVerificadas": 1,
+      "actasTotal": 1,
+      "qrHash": "CNE-2024-MON-140711014-ACTA-01"
+    }
   },
   {
     "id": "140711029",
@@ -128,7 +264,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.752163,
     "lng": -63.168904,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "Campo Obrero",
+    "direccion": "Av. Universidad, Sector 2, Campo Obrero",
+    "coordinador": "Ing. Gabriel Subero",
+    "testigoPrincipal": "Sofía Granado",
+    "telefono": "+58 414-722489",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "19:39",
+      "participacionPct": 79.7,
+      "votosEmitidos": 199,
+      "votosOposicion": 154,
+      "votosOficialismo": 47,
+      "votosOtros": -2,
+      "actasVerificadas": 1,
+      "actasTotal": 1,
+      "qrHash": "CNE-2024-MON-140711029-ACTA-01"
+    }
   },
   {
     "id": "140711028",
@@ -142,7 +295,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.752663,
     "lng": -63.187317,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "Calle Monagas",
+    "direccion": "Calle Las Flores c/c Av. Los Próceres, Calle Monagas",
+    "coordinador": "Prof. Beatriz Centeno",
+    "testigoPrincipal": "David Farías",
+    "telefono": "+58 414-736786",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "19:54",
+      "participacionPct": 78.4,
+      "votosEmitidos": 736,
+      "votosOposicion": 536,
+      "votosOficialismo": 151,
+      "votosOtros": 49,
+      "actasVerificadas": 1,
+      "actasTotal": 1,
+      "qrHash": "CNE-2024-MON-140711028-ACTA-01"
+    }
   },
   {
     "id": "140706022",
@@ -157,7 +327,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.732,
     "lng": -63.20885,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "Canadá",
+    "direccion": "Av. El Ejército, Manzana 8, Canadá",
+    "coordinador": "Lcda. Elena Quijada",
+    "testigoPrincipal": "Carmen Salazar",
+    "telefono": "+58 414-731646",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "20:25",
+      "participacionPct": 81.4,
+      "votosEmitidos": 848,
+      "votosOposicion": 637,
+      "votosOficialismo": 188,
+      "votosOtros": 23,
+      "actasVerificadas": 2,
+      "actasTotal": 2,
+      "qrHash": "CNE-2024-MON-140706022-ACTA-01"
+    }
   },
   {
     "id": "140706012",
@@ -172,7 +359,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.735513,
     "lng": -63.216026,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "Villa de los Ángeles",
+    "direccion": "Av. Principal con Calle 3, Villa de los Ángeles",
+    "coordinador": "Ing. Rafael Monagas",
+    "testigoPrincipal": "Pedro Luis Figuera",
+    "telefono": "+58 414-791804",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "20:24",
+      "participacionPct": 73.6,
+      "votosEmitidos": 1287,
+      "votosOposicion": 940,
+      "votosOficialismo": 320,
+      "votosOtros": 27,
+      "actasVerificadas": 2,
+      "actasTotal": 2,
+      "qrHash": "CNE-2024-MON-140706012-ACTA-01"
+    }
   },
   {
     "id": "140706057",
@@ -186,7 +390,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.725912,
     "lng": -63.211439,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "El Samán",
+    "direccion": "Calle Bolívar, frente a la Plaza, El Samán",
+    "coordinador": "Prof. Hernán Malavé",
+    "testigoPrincipal": "María Elena Rondón",
+    "telefono": "+58 414-739941",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "18:30",
+      "participacionPct": 78.8,
+      "votosEmitidos": 342,
+      "votosOposicion": 262,
+      "votosOficialismo": 80,
+      "votosOtros": 0,
+      "actasVerificadas": 1,
+      "actasTotal": 1,
+      "qrHash": "CNE-2024-MON-140706057-ACTA-01"
+    }
   },
   {
     "id": "140706064",
@@ -201,7 +422,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.737405,
     "lng": -63.207649,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "Sector 1A",
+    "direccion": "Carrera 4 entre Calles 5 y 6, Sector 1A",
+    "coordinador": "Dra. Sofía Granado",
+    "testigoPrincipal": "José Gregorio Caña",
+    "telefono": "+58 414-782997",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "20:30",
+      "participacionPct": 76.0,
+      "votosEmitidos": 962,
+      "votosOposicion": 678,
+      "votosOficialismo": 234,
+      "votosOtros": 50,
+      "actasVerificadas": 2,
+      "actasTotal": 2,
+      "qrHash": "CNE-2024-MON-140706064-ACTA-01"
+    }
   },
   {
     "id": "140706062",
@@ -215,7 +453,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.730711,
     "lng": -63.219651,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "Sector 1B",
+    "direccion": "Av. Bicentenario, Edif. Escolar, Sector 1B",
+    "coordinador": "Lcdo. David Farías",
+    "testigoPrincipal": "Andrés Eloy Blanco",
+    "telefono": "+58 414-792569",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "18:26",
+      "participacionPct": 74.1,
+      "votosEmitidos": 477,
+      "votosOposicion": 352,
+      "votosOficialismo": 115,
+      "votosOtros": 10,
+      "actasVerificadas": 1,
+      "actasTotal": 1,
+      "qrHash": "CNE-2024-MON-140706062-ACTA-01"
+    }
   },
   {
     "id": "140706061",
@@ -229,7 +484,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.727749,
     "lng": -63.204984,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "La Puente",
+    "direccion": "Calle Sucre c/c Av. Miranda, La Puente",
+    "coordinador": "Prof. Carmen Salazar",
+    "testigoPrincipal": "Luisa Marcano",
+    "telefono": "+58 414-784538",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "20:35",
+      "participacionPct": 73.4,
+      "votosEmitidos": 361,
+      "votosOposicion": 274,
+      "votosOficialismo": 78,
+      "votosOtros": 9,
+      "actasVerificadas": 1,
+      "actasTotal": 1,
+      "qrHash": "CNE-2024-MON-140706061-ACTA-01"
+    }
   },
   {
     "id": "140706059",
@@ -243,7 +515,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.740101,
     "lng": -63.214287,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "El Nazareno",
+    "direccion": "Sector Central, Calle El Sol, El Nazareno",
+    "coordinador": "Ing. Pedro Luis Figuera",
+    "testigoPrincipal": "Manuel Antonio Sosa",
+    "telefono": "+58 414-773193",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "18:17",
+      "participacionPct": 75.6,
+      "votosEmitidos": 614,
+      "votosOposicion": 478,
+      "votosOficialismo": 116,
+      "votosOtros": 20,
+      "actasVerificadas": 1,
+      "actasTotal": 1,
+      "qrHash": "CNE-2024-MON-140706059-ACTA-01"
+    }
   },
   {
     "id": "140706029",
@@ -257,7 +546,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.724172,
     "lng": -63.216269,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "Los Godos I",
+    "direccion": "Av. Alirio Ugarte Pelayo, km 2, Los Godos I",
+    "coordinador": "Dra. María Elena Rondón",
+    "testigoPrincipal": "Patricia Velásquez",
+    "telefono": "+58 414-786165",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "19:34",
+      "participacionPct": 73.5,
+      "votosEmitidos": 1459,
+      "votosOposicion": 1039,
+      "votosOficialismo": 332,
+      "votosOtros": 88,
+      "actasVerificadas": 1,
+      "actasTotal": 1,
+      "qrHash": "CNE-2024-MON-140706029-ACTA-01"
+    }
   },
   {
     "id": "140706028",
@@ -272,7 +578,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.735163,
     "lng": -63.202904,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "Los Godos II",
+    "direccion": "Calle Ribas con Boyacá, Los Godos II",
+    "coordinador": "Lcdo. José Gregorio Caña",
+    "testigoPrincipal": "Gabriel Subero",
+    "telefono": "+58 414-780981",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "18:53",
+      "participacionPct": 78.0,
+      "votosEmitidos": 1367,
+      "votosOposicion": 1008,
+      "votosOficialismo": 270,
+      "votosOtros": 89,
+      "actasVerificadas": 2,
+      "actasTotal": 2,
+      "qrHash": "CNE-2024-MON-140706028-ACTA-01"
+    }
   },
   {
     "id": "140706045",
@@ -287,7 +610,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.735663,
     "lng": -63.221317,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "La Morrocoya",
+    "direccion": "Av. Universidad, Sector 2, La Morrocoya",
+    "coordinador": "Ing. Andrés Eloy Blanco",
+    "testigoPrincipal": "Beatriz Centeno",
+    "telefono": "+58 414-744887",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "20:31",
+      "participacionPct": 79.2,
+      "votosEmitidos": 973,
+      "votosOposicion": 734,
+      "votosOficialismo": 211,
+      "votosOtros": 28,
+      "actasVerificadas": 2,
+      "actasTotal": 2,
+      "qrHash": "CNE-2024-MON-140706045-ACTA-01"
+    }
   },
   {
     "id": "140706026",
@@ -303,7 +643,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.722981,
     "lng": -63.207569,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "Las Vírgenes",
+    "direccion": "Calle Las Flores c/c Av. Los Próceres, Las Vírgenes",
+    "coordinador": "Prof. Luisa Marcano",
+    "testigoPrincipal": "Elena Quijada",
+    "telefono": "+58 414-743612",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "18:42",
+      "participacionPct": 73.1,
+      "votosEmitidos": 1610,
+      "votosOposicion": 1183,
+      "votosOficialismo": 340,
+      "votosOtros": 87,
+      "actasVerificadas": 3,
+      "actasTotal": 3,
+      "qrHash": "CNE-2024-MON-140706026-ACTA-01"
+    }
   },
   {
     "id": "140706035",
@@ -319,7 +676,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.741825,
     "lng": -63.208764,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "Fundemos",
+    "direccion": "Av. El Ejército, Manzana 8, Fundemos",
+    "coordinador": "Lcdo. Manuel Antonio Sosa",
+    "testigoPrincipal": "Rafael Monagas",
+    "telefono": "+58 414-791619",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "20:22",
+      "participacionPct": 81.1,
+      "votosEmitidos": 1825,
+      "votosOposicion": 1404,
+      "votosOficialismo": 366,
+      "votosOtros": 55,
+      "actasVerificadas": 3,
+      "actasTotal": 3,
+      "qrHash": "CNE-2024-MON-140706035-ACTA-01"
+    }
   },
   {
     "id": "140706027",
@@ -335,7 +709,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.726675,
     "lng": -63.221649,
-    "estatus": "prioritario"
+    "estatus": "prioritario",
+    "sector": "Morichal",
+    "direccion": "Av. Principal con Calle 3, Morichal",
+    "coordinador": "Dra. Patricia Velásquez",
+    "testigoPrincipal": "Hernán Malavé",
+    "telefono": "+58 414-777100",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "20:30",
+      "participacionPct": 73.5,
+      "votosEmitidos": 2613,
+      "votosOposicion": 1988,
+      "votosOficialismo": 569,
+      "votosOtros": 56,
+      "actasVerificadas": 3,
+      "actasTotal": 3,
+      "qrHash": "CNE-2024-MON-140706027-ACTA-01"
+    }
   },
   {
     "id": "140706019",
@@ -351,7 +742,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.729652,
     "lng": -63.200789,
-    "estatus": "prioritario"
+    "estatus": "prioritario",
+    "sector": "La Lucha",
+    "direccion": "Calle Bolívar, frente a la Plaza, La Lucha",
+    "coordinador": "Ing. Gabriel Subero",
+    "testigoPrincipal": "Sofía Granado",
+    "telefono": "+58 414-749345",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "18:25",
+      "participacionPct": 76.9,
+      "votosEmitidos": 3164,
+      "votosOposicion": 2242,
+      "votosOficialismo": 649,
+      "votosOtros": 273,
+      "actasVerificadas": 3,
+      "actasTotal": 3,
+      "qrHash": "CNE-2024-MON-140706019-ACTA-01"
+    }
   },
   {
     "id": "140706047",
@@ -368,7 +776,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.741188,
     "lng": -63.218782,
-    "estatus": "prioritario"
+    "estatus": "prioritario",
+    "sector": "Valle Real",
+    "direccion": "Carrera 4 entre Calles 5 y 6, Valle Real",
+    "coordinador": "Prof. Beatriz Centeno",
+    "testigoPrincipal": "David Farías",
+    "telefono": "+58 414-772935",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "18:58",
+      "participacionPct": 80.8,
+      "votosEmitidos": 2584,
+      "votosOposicion": 2004,
+      "votosOficialismo": 480,
+      "votosOtros": 100,
+      "actasVerificadas": 4,
+      "actasTotal": 4,
+      "qrHash": "CNE-2024-MON-140706047-ACTA-01"
+    }
   },
   {
     "id": "140706016",
@@ -384,7 +809,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.720575,
     "lng": -63.213555,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "Canadá",
+    "direccion": "Av. Bicentenario, Edif. Escolar, Canadá",
+    "coordinador": "Lcda. Elena Quijada",
+    "testigoPrincipal": "Carmen Salazar",
+    "telefono": "+58 414-780269",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "19:43",
+      "participacionPct": 77.3,
+      "votosEmitidos": 1925,
+      "votosOposicion": 1366,
+      "votosOficialismo": 435,
+      "votosOtros": 124,
+      "actasVerificadas": 3,
+      "actasTotal": 3,
+      "qrHash": "CNE-2024-MON-140706016-ACTA-01"
+    }
   },
   {
     "id": "140706031",
@@ -398,7 +840,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.739604,
     "lng": -63.202526,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "Villa de los Ángeles",
+    "direccion": "Calle Sucre c/c Av. Miranda, Villa de los Ángeles",
+    "coordinador": "Ing. Rafael Monagas",
+    "testigoPrincipal": "Pedro Luis Figuera",
+    "telefono": "+58 414-779873",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "20:54",
+      "participacionPct": 80.7,
+      "votosEmitidos": 1360,
+      "votosOposicion": 998,
+      "votosOficialismo": 264,
+      "votosOtros": 98,
+      "actasVerificadas": 1,
+      "actasTotal": 1,
+      "qrHash": "CNE-2024-MON-140706031-ACTA-01"
+    }
   },
   {
     "id": "140706037",
@@ -412,7 +871,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.732499,
     "lng": -63.224664,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "El Samán",
+    "direccion": "Sector Central, Calle El Sol, El Samán",
+    "coordinador": "Prof. Hernán Malavé",
+    "testigoPrincipal": "María Elena Rondón",
+    "telefono": "+58 414-793482",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "19:43",
+      "participacionPct": 74.0,
+      "votosEmitidos": 672,
+      "votosOposicion": 487,
+      "votosOficialismo": 167,
+      "votosOtros": 18,
+      "actasVerificadas": 1,
+      "actasTotal": 1,
+      "qrHash": "CNE-2024-MON-140706037-ACTA-01"
+    }
   },
   {
     "id": "140706018",
@@ -428,7 +904,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.723299,
     "lng": -63.202821,
-    "estatus": "prioritario"
+    "estatus": "prioritario",
+    "sector": "Sector 1A",
+    "direccion": "Av. Alirio Ugarte Pelayo, km 2, Sector 1A",
+    "coordinador": "Dra. Sofía Granado",
+    "testigoPrincipal": "José Gregorio Caña",
+    "telefono": "+58 414-712702",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "20:24",
+      "participacionPct": 76.5,
+      "votosEmitidos": 2100,
+      "votosOposicion": 1511,
+      "votosOficialismo": 387,
+      "votosOtros": 202,
+      "actasVerificadas": 3,
+      "actasTotal": 3,
+      "qrHash": "CNE-2024-MON-140706018-ACTA-01"
+    }
   },
   {
     "id": "140706043",
@@ -442,7 +935,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.744576,
     "lng": -63.21261,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "Sector 1B",
+    "direccion": "Calle Ribas con Boyacá, Sector 1B",
+    "coordinador": "Lcdo. David Farías",
+    "testigoPrincipal": "Andrés Eloy Blanco",
+    "telefono": "+58 414-717334",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "18:12",
+      "participacionPct": 77.9,
+      "votosEmitidos": 303,
+      "votosOposicion": 212,
+      "votosOficialismo": 69,
+      "votosOtros": 22,
+      "actasVerificadas": 1,
+      "actasTotal": 1,
+      "qrHash": "CNE-2024-MON-140706043-ACTA-01"
+    }
   },
   {
     "id": "140706004",
@@ -458,7 +968,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.722143,
     "lng": -63.220638,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "La Puente",
+    "direccion": "Av. Universidad, Sector 2, La Puente",
+    "coordinador": "Prof. Carmen Salazar",
+    "testigoPrincipal": "Luisa Marcano",
+    "telefono": "+58 414-795597",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "18:44",
+      "participacionPct": 80.6,
+      "votosEmitidos": 1686,
+      "votosOposicion": 1189,
+      "votosOficialismo": 331,
+      "votosOtros": 166,
+      "actasVerificadas": 3,
+      "actasTotal": 3,
+      "qrHash": "CNE-2024-MON-140706004-ACTA-01"
+    }
   },
   {
     "id": "140706024",
@@ -476,7 +1003,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.733744,
     "lng": -63.198387,
-    "estatus": "prioritario"
+    "estatus": "prioritario",
+    "sector": "El Nazareno",
+    "direccion": "Calle Las Flores c/c Av. Los Próceres, El Nazareno",
+    "coordinador": "Ing. Pedro Luis Figuera",
+    "testigoPrincipal": "Manuel Antonio Sosa",
+    "telefono": "+58 414-770348",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "19:36",
+      "participacionPct": 73.3,
+      "votosEmitidos": 3171,
+      "votosOposicion": 2456,
+      "votosOficialismo": 697,
+      "votosOtros": 18,
+      "actasVerificadas": 5,
+      "actasTotal": 5,
+      "qrHash": "CNE-2024-MON-140706024-ACTA-01"
+    }
   },
   {
     "id": "140706006",
@@ -491,7 +1035,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.739608,
     "lng": -63.223479,
-    "estatus": "prioritario"
+    "estatus": "prioritario",
+    "sector": "Los Godos I",
+    "direccion": "Av. El Ejército, Manzana 8, Los Godos I",
+    "coordinador": "Dra. María Elena Rondón",
+    "testigoPrincipal": "Patricia Velásquez",
+    "telefono": "+58 414-764520",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "19:56",
+      "participacionPct": 73.9,
+      "votosEmitidos": 2142,
+      "votosOposicion": 1516,
+      "votosOficialismo": 450,
+      "votosOtros": 176,
+      "actasVerificadas": 2,
+      "actasTotal": 2,
+      "qrHash": "CNE-2024-MON-140706006-ACTA-01"
+    }
   },
   {
     "id": "140706001",
@@ -506,7 +1067,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.718779,
     "lng": -63.208878,
-    "estatus": "prioritario"
+    "estatus": "prioritario",
+    "sector": "Los Godos II",
+    "direccion": "Av. Principal con Calle 3, Los Godos II",
+    "coordinador": "Lcdo. José Gregorio Caña",
+    "testigoPrincipal": "Gabriel Subero",
+    "telefono": "+58 414-717512",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "20:31",
+      "participacionPct": 72.5,
+      "votosEmitidos": 2145,
+      "votosOposicion": 1613,
+      "votosOficialismo": 483,
+      "votosOtros": 49,
+      "actasVerificadas": 2,
+      "actasTotal": 2,
+      "qrHash": "CNE-2024-MON-140706001-ACTA-01"
+    }
   },
   {
     "id": "140706052",
@@ -520,7 +1098,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.743954,
     "lng": -63.204806,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "La Morrocoya",
+    "direccion": "Calle Bolívar, frente a la Plaza, La Morrocoya",
+    "coordinador": "Ing. Andrés Eloy Blanco",
+    "testigoPrincipal": "Beatriz Centeno",
+    "telefono": "+58 414-778559",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "18:37",
+      "participacionPct": 80.0,
+      "votosEmitidos": 737,
+      "votosOposicion": 522,
+      "votosOficialismo": 142,
+      "votosOtros": 73,
+      "actasVerificadas": 1,
+      "actasTotal": 1,
+      "qrHash": "CNE-2024-MON-140706052-ACTA-01"
+    }
   },
   {
     "id": "140706032",
@@ -536,7 +1131,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.727746,
     "lng": -63.226005,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "Las Vírgenes",
+    "direccion": "Carrera 4 entre Calles 5 y 6, Las Vírgenes",
+    "coordinador": "Prof. Luisa Marcano",
+    "testigoPrincipal": "Elena Quijada",
+    "telefono": "+58 414-719553",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "20:16",
+      "participacionPct": 73.8,
+      "votosEmitidos": 1627,
+      "votosOposicion": 1199,
+      "votosOficialismo": 392,
+      "votosOtros": 36,
+      "actasVerificadas": 3,
+      "actasTotal": 3,
+      "qrHash": "CNE-2024-MON-140706032-ACTA-01"
+    }
   },
   {
     "id": "140706042",
@@ -550,7 +1162,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.726036,
     "lng": -63.198448,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "Fundemos",
+    "direccion": "Av. Bicentenario, Edif. Escolar, Fundemos",
+    "coordinador": "Lcdo. Manuel Antonio Sosa",
+    "testigoPrincipal": "Rafael Monagas",
+    "telefono": "+58 414-721871",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "18:20",
+      "participacionPct": 72.5,
+      "votosEmitidos": 320,
+      "votosOposicion": 249,
+      "votosOficialismo": 76,
+      "votosOtros": -5,
+      "actasVerificadas": 1,
+      "actasTotal": 1,
+      "qrHash": "CNE-2024-MON-140706042-ACTA-01"
+    }
   },
   {
     "id": "140706015",
@@ -565,7 +1194,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.745313,
     "lng": -63.217849,
-    "estatus": "prioritario"
+    "estatus": "prioritario",
+    "sector": "Morichal",
+    "direccion": "Calle Sucre c/c Av. Miranda, Morichal",
+    "coordinador": "Dra. Patricia Velásquez",
+    "testigoPrincipal": "Hernán Malavé",
+    "telefono": "+58 414-717268",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "19:10",
+      "participacionPct": 76.1,
+      "votosEmitidos": 2161,
+      "votosOposicion": 1595,
+      "votosOficialismo": 519,
+      "votosOtros": 47,
+      "actasVerificadas": 2,
+      "actasTotal": 2,
+      "qrHash": "CNE-2024-MON-140706015-ACTA-01"
+    }
   },
   {
     "id": "140706008",
@@ -580,7 +1226,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.718223,
     "lng": -63.217204,
-    "estatus": "prioritario"
+    "estatus": "prioritario",
+    "sector": "La Lucha",
+    "direccion": "Sector Central, Calle El Sol, La Lucha",
+    "coordinador": "Ing. Gabriel Subero",
+    "testigoPrincipal": "Sofía Granado",
+    "telefono": "+58 414-768392",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "19:54",
+      "participacionPct": 81.8,
+      "votosEmitidos": 2446,
+      "votosOposicion": 1764,
+      "votosOficialismo": 574,
+      "votosOtros": 108,
+      "actasVerificadas": 2,
+      "actasTotal": 2,
+      "qrHash": "CNE-2024-MON-140706008-ACTA-01"
+    }
   },
   {
     "id": "140706051",
@@ -595,7 +1258,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.738906,
     "lng": -63.198199,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "Valle Real",
+    "direccion": "Av. Alirio Ugarte Pelayo, km 2, Valle Real",
+    "coordinador": "Prof. Beatriz Centeno",
+    "testigoPrincipal": "David Farías",
+    "telefono": "+58 414-772258",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "18:28",
+      "participacionPct": 81.6,
+      "votosEmitidos": 1635,
+      "votosOposicion": 1274,
+      "votosOficialismo": 357,
+      "votosOtros": 4,
+      "actasVerificadas": 2,
+      "actasTotal": 2,
+      "qrHash": "CNE-2024-MON-140706051-ACTA-01"
+    }
   },
   {
     "id": "140706046",
@@ -609,7 +1289,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.735837,
     "lng": -63.22728,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "Canadá",
+    "direccion": "Calle Ribas con Boyacá, Canadá",
+    "coordinador": "Lcda. Elena Quijada",
+    "testigoPrincipal": "Carmen Salazar",
+    "telefono": "+58 414-717865",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "19:13",
+      "participacionPct": 74.2,
+      "votosEmitidos": 1483,
+      "votosOposicion": 1045,
+      "votosOficialismo": 343,
+      "votosOtros": 95,
+      "actasVerificadas": 1,
+      "actasTotal": 1,
+      "qrHash": "CNE-2024-MON-140706046-ACTA-01"
+    }
   },
   {
     "id": "140706014",
@@ -624,7 +1321,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.719173,
     "lng": -63.203342,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "Villa de los Ángeles",
+    "direccion": "Av. Universidad, Sector 2, Villa de los Ángeles",
+    "coordinador": "Ing. Rafael Monagas",
+    "testigoPrincipal": "Pedro Luis Figuera",
+    "telefono": "+58 414-777261",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "18:42",
+      "participacionPct": 72.5,
+      "votosEmitidos": 922,
+      "votosOposicion": 680,
+      "votosOficialismo": 225,
+      "votosOtros": 17,
+      "actasVerificadas": 2,
+      "actasTotal": 2,
+      "qrHash": "CNE-2024-MON-140706014-ACTA-01"
+    }
   },
   {
     "id": "140706011",
@@ -639,7 +1353,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.747222,
     "lng": -63.209252,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "El Samán",
+    "direccion": "Calle Las Flores c/c Av. Los Próceres, El Samán",
+    "coordinador": "Prof. Hernán Malavé",
+    "testigoPrincipal": "María Elena Rondón",
+    "telefono": "+58 414-796982",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "18:35",
+      "participacionPct": 72.8,
+      "votosEmitidos": 1117,
+      "votosOposicion": 798,
+      "votosOficialismo": 247,
+      "votosOtros": 72,
+      "actasVerificadas": 2,
+      "actasTotal": 2,
+      "qrHash": "CNE-2024-MON-140706011-ACTA-01"
+    }
   },
   {
     "id": "140706036",
@@ -654,7 +1385,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.722426,
     "lng": -63.224983,
-    "estatus": "prioritario"
+    "estatus": "prioritario",
+    "sector": "Sector 1A",
+    "direccion": "Av. El Ejército, Manzana 8, Sector 1A",
+    "coordinador": "Dra. Sofía Granado",
+    "testigoPrincipal": "José Gregorio Caña",
+    "telefono": "+58 414-786140",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "20:15",
+      "participacionPct": 73.2,
+      "votosEmitidos": 2170,
+      "votosOposicion": 1673,
+      "votosOficialismo": 427,
+      "votosOtros": 70,
+      "actasVerificadas": 2,
+      "actasTotal": 2,
+      "qrHash": "CNE-2024-MON-140706036-ACTA-01"
+    }
   },
   {
     "id": "140706048",
@@ -668,7 +1416,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.730691,
     "lng": -63.195437,
-    "estatus": "prioritario"
+    "estatus": "prioritario",
+    "sector": "Sector 1B",
+    "direccion": "Av. Principal con Calle 3, Sector 1B",
+    "coordinador": "Lcdo. David Farías",
+    "testigoPrincipal": "Andrés Eloy Blanco",
+    "telefono": "+58 414-743309",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "20:55",
+      "participacionPct": 76.2,
+      "votosEmitidos": 2616,
+      "votosOposicion": 1953,
+      "votosOficialismo": 566,
+      "votosOtros": 97,
+      "actasVerificadas": 1,
+      "actasTotal": 1,
+      "qrHash": "CNE-2024-MON-140706048-ACTA-01"
+    }
   },
   {
     "id": "140706017",
@@ -684,7 +1449,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.743758,
     "lng": -63.223418,
-    "estatus": "prioritario"
+    "estatus": "prioritario",
+    "sector": "La Puente",
+    "direccion": "Calle Bolívar, frente a la Plaza, La Puente",
+    "coordinador": "Prof. Carmen Salazar",
+    "testigoPrincipal": "Luisa Marcano",
+    "telefono": "+58 414-792407",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "19:30",
+      "participacionPct": 75.1,
+      "votosEmitidos": 1891,
+      "votosOposicion": 1363,
+      "votosOficialismo": 357,
+      "votosOtros": 171,
+      "actasVerificadas": 3,
+      "actasTotal": 3,
+      "qrHash": "CNE-2024-MON-140706017-ACTA-01"
+    }
   },
   {
     "id": "140706021",
@@ -701,7 +1483,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.7158,
     "lng": -63.211919,
-    "estatus": "prioritario"
+    "estatus": "prioritario",
+    "sector": "El Nazareno",
+    "direccion": "Carrera 4 entre Calles 5 y 6, El Nazareno",
+    "coordinador": "Ing. Pedro Luis Figuera",
+    "testigoPrincipal": "Manuel Antonio Sosa",
+    "telefono": "+58 414-789676",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "18:14",
+      "participacionPct": 81.3,
+      "votosEmitidos": 2993,
+      "votosOposicion": 2319,
+      "votosOficialismo": 540,
+      "votosOtros": 134,
+      "actasVerificadas": 4,
+      "actasTotal": 4,
+      "qrHash": "CNE-2024-MON-140706021-ACTA-01"
+    }
   },
   {
     "id": "140706010",
@@ -716,7 +1515,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.744132,
     "lng": -63.200441,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "Los Godos I",
+    "direccion": "Av. Bicentenario, Edif. Escolar, Los Godos I",
+    "coordinador": "Dra. María Elena Rondón",
+    "testigoPrincipal": "Patricia Velásquez",
+    "telefono": "+58 414-754170",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "18:33",
+      "participacionPct": 77.4,
+      "votosEmitidos": 1002,
+      "votosOposicion": 741,
+      "votosOficialismo": 189,
+      "votosOtros": 72,
+      "actasVerificadas": 2,
+      "actasTotal": 2,
+      "qrHash": "CNE-2024-MON-140706010-ACTA-01"
+    }
   },
   {
     "id": "140706005",
@@ -730,7 +1546,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.730474,
     "lng": -63.229316,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "Los Godos II",
+    "direccion": "Calle Sucre c/c Av. Miranda, Los Godos II",
+    "coordinador": "Lcdo. José Gregorio Caña",
+    "testigoPrincipal": "Gabriel Subero",
+    "telefono": "+58 414-748726",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "20:43",
+      "participacionPct": 74.9,
+      "votosEmitidos": 657,
+      "votosOposicion": 482,
+      "votosOficialismo": 143,
+      "votosOtros": 32,
+      "actasVerificadas": 1,
+      "actasTotal": 1,
+      "qrHash": "CNE-2024-MON-140706005-ACTA-01"
+    }
   },
   {
     "id": "140706007",
@@ -746,7 +1579,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.721879,
     "lng": -63.198001,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "La Morrocoya",
+    "direccion": "Sector Central, Calle El Sol, La Morrocoya",
+    "coordinador": "Ing. Andrés Eloy Blanco",
+    "testigoPrincipal": "Beatriz Centeno",
+    "telefono": "+58 414-794206",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "18:26",
+      "participacionPct": 72.1,
+      "votosEmitidos": 1747,
+      "votosOposicion": 1337,
+      "votosOficialismo": 351,
+      "votosOtros": 59,
+      "actasVerificadas": 3,
+      "actasTotal": 3,
+      "qrHash": "CNE-2024-MON-140706007-ACTA-01"
+    }
   },
   {
     "id": "140707024",
@@ -760,7 +1610,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.789,
     "lng": -63.19185,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "Boquerón Centro",
+    "direccion": "Av. Alirio Ugarte Pelayo, km 2, Boquerón Centro",
+    "coordinador": "Prof. Luisa Marcano",
+    "testigoPrincipal": "Elena Quijada",
+    "telefono": "+58 414-744388",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "20:23",
+      "participacionPct": 73.2,
+      "votosEmitidos": 296,
+      "votosOposicion": 209,
+      "votosOficialismo": 64,
+      "votosOtros": 23,
+      "actasVerificadas": 1,
+      "actasTotal": 1,
+      "qrHash": "CNE-2024-MON-140707024-ACTA-01"
+    }
   },
   {
     "id": "140707027",
@@ -774,7 +1641,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.792513,
     "lng": -63.199026,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "Tipuro I",
+    "direccion": "Calle Ribas con Boyacá, Tipuro I",
+    "coordinador": "Lcdo. Manuel Antonio Sosa",
+    "testigoPrincipal": "Rafael Monagas",
+    "telefono": "+58 414-743617",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "19:26",
+      "participacionPct": 79.2,
+      "votosEmitidos": 657,
+      "votosOposicion": 470,
+      "votosOficialismo": 147,
+      "votosOtros": 40,
+      "actasVerificadas": 1,
+      "actasTotal": 1,
+      "qrHash": "CNE-2024-MON-140707027-ACTA-01"
+    }
   },
   {
     "id": "140707026",
@@ -789,7 +1673,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.782912,
     "lng": -63.194439,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "Tipuro II",
+    "direccion": "Av. Universidad, Sector 2, Tipuro II",
+    "coordinador": "Dra. Patricia Velásquez",
+    "testigoPrincipal": "Hernán Malavé",
+    "telefono": "+58 414-764949",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "19:12",
+      "participacionPct": 81.0,
+      "votosEmitidos": 1243,
+      "votosOposicion": 954,
+      "votosOficialismo": 231,
+      "votosOtros": 58,
+      "actasVerificadas": 2,
+      "actasTotal": 2,
+      "qrHash": "CNE-2024-MON-140707026-ACTA-01"
+    }
   },
   {
     "id": "140707030",
@@ -803,7 +1704,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.794405,
     "lng": -63.190649,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "La Floresta",
+    "direccion": "Calle Las Flores c/c Av. Los Próceres, La Floresta",
+    "coordinador": "Ing. Gabriel Subero",
+    "testigoPrincipal": "Sofía Granado",
+    "telefono": "+58 414-743265",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "20:38",
+      "participacionPct": 72.0,
+      "votosEmitidos": 321,
+      "votosOposicion": 244,
+      "votosOficialismo": 72,
+      "votosOtros": 5,
+      "actasVerificadas": 1,
+      "actasTotal": 1,
+      "qrHash": "CNE-2024-MON-140707030-ACTA-01"
+    }
   },
   {
     "id": "140707003",
@@ -819,7 +1737,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.787711,
     "lng": -63.202651,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "Costanera",
+    "direccion": "Av. El Ejército, Manzana 8, Costanera",
+    "coordinador": "Prof. Beatriz Centeno",
+    "testigoPrincipal": "David Farías",
+    "telefono": "+58 414-719807",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "18:44",
+      "participacionPct": 77.5,
+      "votosEmitidos": 1872,
+      "votosOposicion": 1374,
+      "votosOficialismo": 338,
+      "votosOtros": 160,
+      "actasVerificadas": 3,
+      "actasTotal": 3,
+      "qrHash": "CNE-2024-MON-140707003-ACTA-01"
+    }
   },
   {
     "id": "140707004",
@@ -833,7 +1768,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.784749,
     "lng": -63.187984,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "Palma Real",
+    "direccion": "Av. Principal con Calle 3, Palma Real",
+    "coordinador": "Lcda. Elena Quijada",
+    "testigoPrincipal": "Carmen Salazar",
+    "telefono": "+58 414-765230",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "18:29",
+      "participacionPct": 72.4,
+      "votosEmitidos": 541,
+      "votosOposicion": 394,
+      "votosOficialismo": 118,
+      "votosOtros": 29,
+      "actasVerificadas": 1,
+      "actasTotal": 1,
+      "qrHash": "CNE-2024-MON-140707004-ACTA-01"
+    }
   },
   {
     "id": "140707005",
@@ -848,7 +1800,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.797101,
     "lng": -63.197287,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "San Judas Tadeo",
+    "direccion": "Calle Bolívar, frente a la Plaza, San Judas Tadeo",
+    "coordinador": "Ing. Rafael Monagas",
+    "testigoPrincipal": "Pedro Luis Figuera",
+    "telefono": "+58 414-715466",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "18:53",
+      "participacionPct": 75.6,
+      "votosEmitidos": 809,
+      "votosOposicion": 626,
+      "votosOficialismo": 200,
+      "votosOtros": -17,
+      "actasVerificadas": 2,
+      "actasTotal": 2,
+      "qrHash": "CNE-2024-MON-140707005-ACTA-01"
+    }
   },
   {
     "id": "140707010",
@@ -864,7 +1833,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.781172,
     "lng": -63.199269,
-    "estatus": "prioritario"
+    "estatus": "prioritario",
+    "sector": "Doña Berta",
+    "direccion": "Carrera 4 entre Calles 5 y 6, Doña Berta",
+    "coordinador": "Prof. Hernán Malavé",
+    "testigoPrincipal": "María Elena Rondón",
+    "telefono": "+58 414-762735",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "20:19",
+      "participacionPct": 74.5,
+      "votosEmitidos": 2181,
+      "votosOposicion": 1544,
+      "votosOficialismo": 511,
+      "votosOtros": 126,
+      "actasVerificadas": 3,
+      "actasTotal": 3,
+      "qrHash": "CNE-2024-MON-140707010-ACTA-01"
+    }
   },
   {
     "id": "140707002",
@@ -878,7 +1864,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.792163,
     "lng": -63.185904,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "El Rincón",
+    "direccion": "Av. Bicentenario, Edif. Escolar, El Rincón",
+    "coordinador": "Dra. Sofía Granado",
+    "testigoPrincipal": "José Gregorio Caña",
+    "telefono": "+58 414-732522",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "18:21",
+      "participacionPct": 81.3,
+      "votosEmitidos": 1023,
+      "votosOposicion": 735,
+      "votosOficialismo": 195,
+      "votosOtros": 93,
+      "actasVerificadas": 1,
+      "actasTotal": 1,
+      "qrHash": "CNE-2024-MON-140707002-ACTA-01"
+    }
   },
   {
     "id": "140707017",
@@ -893,7 +1896,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.792663,
     "lng": -63.204317,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "Los Jabillos",
+    "direccion": "Calle Sucre c/c Av. Miranda, Los Jabillos",
+    "coordinador": "Lcdo. David Farías",
+    "testigoPrincipal": "Andrés Eloy Blanco",
+    "telefono": "+58 414-795984",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "20:25",
+      "participacionPct": 79.4,
+      "votosEmitidos": 875,
+      "votosOposicion": 635,
+      "votosOficialismo": 214,
+      "votosOtros": 26,
+      "actasVerificadas": 2,
+      "actasTotal": 2,
+      "qrHash": "CNE-2024-MON-140707017-ACTA-01"
+    }
   },
   {
     "id": "140707023",
@@ -907,7 +1927,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.779981,
     "lng": -63.190569,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "Boquerón Centro",
+    "direccion": "Sector Central, Calle El Sol, Boquerón Centro",
+    "coordinador": "Prof. Carmen Salazar",
+    "testigoPrincipal": "Luisa Marcano",
+    "telefono": "+58 414-714979",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "19:24",
+      "participacionPct": 74.7,
+      "votosEmitidos": 570,
+      "votosOposicion": 434,
+      "votosOficialismo": 106,
+      "votosOtros": 30,
+      "actasVerificadas": 1,
+      "actasTotal": 1,
+      "qrHash": "CNE-2024-MON-140707023-ACTA-01"
+    }
   },
   {
     "id": "140707007",
@@ -925,7 +1962,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.798825,
     "lng": -63.191764,
-    "estatus": "prioritario"
+    "estatus": "prioritario",
+    "sector": "Tipuro I",
+    "direccion": "Av. Alirio Ugarte Pelayo, km 2, Tipuro I",
+    "coordinador": "Ing. Pedro Luis Figuera",
+    "testigoPrincipal": "Manuel Antonio Sosa",
+    "telefono": "+58 414-739328",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "18:52",
+      "participacionPct": 74.0,
+      "votosEmitidos": 3379,
+      "votosOposicion": 2613,
+      "votosOficialismo": 691,
+      "votosOtros": 75,
+      "actasVerificadas": 5,
+      "actasTotal": 5,
+      "qrHash": "CNE-2024-MON-140707007-ACTA-01"
+    }
   },
   {
     "id": "140707015",
@@ -941,7 +1995,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.783675,
     "lng": -63.204649,
-    "estatus": "prioritario"
+    "estatus": "prioritario",
+    "sector": "Tipuro II",
+    "direccion": "Calle Ribas con Boyacá, Tipuro II",
+    "coordinador": "Dra. María Elena Rondón",
+    "testigoPrincipal": "Patricia Velásquez",
+    "telefono": "+58 414-745459",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "20:42",
+      "participacionPct": 73.9,
+      "votosEmitidos": 2714,
+      "votosOposicion": 1971,
+      "votosOficialismo": 652,
+      "votosOtros": 91,
+      "actasVerificadas": 3,
+      "actasTotal": 3,
+      "qrHash": "CNE-2024-MON-140707015-ACTA-01"
+    }
   },
   {
     "id": "140707021",
@@ -955,7 +2026,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.786652,
     "lng": -63.183789,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "La Floresta",
+    "direccion": "Av. Universidad, Sector 2, La Floresta",
+    "coordinador": "Lcdo. José Gregorio Caña",
+    "testigoPrincipal": "Gabriel Subero",
+    "telefono": "+58 414-713218",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "19:21",
+      "participacionPct": 76.0,
+      "votosEmitidos": 812,
+      "votosOposicion": 632,
+      "votosOficialismo": 176,
+      "votosOtros": 4,
+      "actasVerificadas": 1,
+      "actasTotal": 1,
+      "qrHash": "CNE-2024-MON-140707021-ACTA-01"
+    }
   },
   {
     "id": "140707016",
@@ -970,7 +2058,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.798188,
     "lng": -63.201782,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "Costanera",
+    "direccion": "Calle Las Flores c/c Av. Los Próceres, Costanera",
+    "coordinador": "Ing. Andrés Eloy Blanco",
+    "testigoPrincipal": "Beatriz Centeno",
+    "telefono": "+58 414-786544",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "19:56",
+      "participacionPct": 77.8,
+      "votosEmitidos": 1530,
+      "votosOposicion": 1191,
+      "votosOficialismo": 279,
+      "votosOtros": 60,
+      "actasVerificadas": 2,
+      "actasTotal": 2,
+      "qrHash": "CNE-2024-MON-140707016-ACTA-01"
+    }
   },
   {
     "id": "140707008",
@@ -988,7 +2093,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.777575,
     "lng": -63.196555,
-    "estatus": "prioritario"
+    "estatus": "prioritario",
+    "sector": "Palma Real",
+    "direccion": "Av. El Ejército, Manzana 8, Palma Real",
+    "coordinador": "Prof. Luisa Marcano",
+    "testigoPrincipal": "Elena Quijada",
+    "telefono": "+58 414-724494",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "20:22",
+      "participacionPct": 79.9,
+      "votosEmitidos": 4141,
+      "votosOposicion": 3043,
+      "votosOficialismo": 1030,
+      "votosOtros": 68,
+      "actasVerificadas": 5,
+      "actasTotal": 5,
+      "qrHash": "CNE-2024-MON-140707008-ACTA-01"
+    }
   },
   {
     "id": "140707011",
@@ -1004,7 +2126,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.796604,
     "lng": -63.185526,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "San Judas Tadeo",
+    "direccion": "Av. Principal con Calle 3, San Judas Tadeo",
+    "coordinador": "Lcdo. Manuel Antonio Sosa",
+    "testigoPrincipal": "Rafael Monagas",
+    "telefono": "+58 414-778803",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "20:57",
+      "participacionPct": 74.6,
+      "votosEmitidos": 1639,
+      "votosOposicion": 1240,
+      "votosOficialismo": 295,
+      "votosOtros": 104,
+      "actasVerificadas": 3,
+      "actasTotal": 3,
+      "qrHash": "CNE-2024-MON-140707011-ACTA-01"
+    }
   },
   {
     "id": "140703001",
@@ -1020,7 +2159,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.676,
     "lng": -63.216,
-    "estatus": "prioritario"
+    "estatus": "prioritario",
+    "sector": "El Banqueao",
+    "direccion": "Calle Bolívar, frente a la Plaza, El Banqueao",
+    "coordinador": "Dra. Patricia Velásquez",
+    "testigoPrincipal": "Hernán Malavé",
+    "telefono": "+58 414-795438",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "20:30",
+      "participacionPct": 79.4,
+      "votosEmitidos": 2068,
+      "votosOposicion": 1480,
+      "votosOficialismo": 434,
+      "votosOtros": 154,
+      "actasVerificadas": 3,
+      "actasTotal": 3,
+      "qrHash": "CNE-2024-MON-140703001-ACTA-01"
+    }
   },
   {
     "id": "140702006",
@@ -1034,7 +2190,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.749,
     "lng": -63.50085,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "Jusepín Centro",
+    "direccion": "Carrera 4 entre Calles 5 y 6, Jusepín Centro",
+    "coordinador": "Ing. Gabriel Subero",
+    "testigoPrincipal": "Sofía Granado",
+    "telefono": "+58 414-774416",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "20:36",
+      "participacionPct": 78.6,
+      "votosEmitidos": 610,
+      "votosOposicion": 433,
+      "votosOficialismo": 148,
+      "votosOtros": 29,
+      "actasVerificadas": 1,
+      "actasTotal": 1,
+      "qrHash": "CNE-2024-MON-140702006-ACTA-01"
+    }
   },
   {
     "id": "140702004",
@@ -1048,7 +2221,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.752513,
     "lng": -63.508026,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "Campo Rojo",
+    "direccion": "Av. Bicentenario, Edif. Escolar, Campo Rojo",
+    "coordinador": "Prof. Beatriz Centeno",
+    "testigoPrincipal": "David Farías",
+    "telefono": "+58 414-734530",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "20:34",
+      "participacionPct": 75.3,
+      "votosEmitidos": 632,
+      "votosOposicion": 477,
+      "votosOficialismo": 138,
+      "votosOtros": 17,
+      "actasVerificadas": 1,
+      "actasTotal": 1,
+      "qrHash": "CNE-2024-MON-140702004-ACTA-01"
+    }
   },
   {
     "id": "140702001",
@@ -1064,7 +2254,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.749,
     "lng": -63.504,
-    "estatus": "prioritario"
+    "estatus": "prioritario",
+    "sector": "La Sabana",
+    "direccion": "Calle Sucre c/c Av. Miranda, La Sabana",
+    "coordinador": "Lcda. Elena Quijada",
+    "testigoPrincipal": "Carmen Salazar",
+    "telefono": "+58 414-748515",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "20:10",
+      "participacionPct": 78.8,
+      "votosEmitidos": 2151,
+      "votosOposicion": 1661,
+      "votosOficialismo": 479,
+      "votosOtros": 11,
+      "actasVerificadas": 3,
+      "actasTotal": 3,
+      "qrHash": "CNE-2024-MON-140702001-ACTA-01"
+    }
   },
   {
     "id": "140702002",
@@ -1078,7 +2285,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.742912,
     "lng": -63.503439,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "El Tejero Arriba",
+    "direccion": "Sector Central, Calle El Sol, El Tejero Arriba",
+    "coordinador": "Ing. Rafael Monagas",
+    "testigoPrincipal": "Pedro Luis Figuera",
+    "telefono": "+58 414-787770",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "19:39",
+      "participacionPct": 75.0,
+      "votosEmitidos": 513,
+      "votosOposicion": 367,
+      "votosOficialismo": 120,
+      "votosOtros": 26,
+      "actasVerificadas": 1,
+      "actasTotal": 1,
+      "qrHash": "CNE-2024-MON-140702002-ACTA-01"
+    }
   },
   {
     "id": "140702003",
@@ -1094,7 +2318,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.754405,
     "lng": -63.499649,
-    "estatus": "prioritario"
+    "estatus": "prioritario",
+    "sector": "Jusepín Centro",
+    "direccion": "Av. Alirio Ugarte Pelayo, km 2, Jusepín Centro",
+    "coordinador": "Prof. Hernán Malavé",
+    "testigoPrincipal": "María Elena Rondón",
+    "telefono": "+58 414-731774",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "18:28",
+      "participacionPct": 76.4,
+      "votosEmitidos": 2358,
+      "votosOposicion": 1778,
+      "votosOficialismo": 508,
+      "votosOtros": 72,
+      "actasVerificadas": 3,
+      "actasTotal": 3,
+      "qrHash": "CNE-2024-MON-140702003-ACTA-01"
+    }
   },
   {
     "id": "140702008",
@@ -1108,7 +2349,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.747711,
     "lng": -63.511651,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "Campo Rojo",
+    "direccion": "Calle Ribas con Boyacá, Campo Rojo",
+    "coordinador": "Dra. Sofía Granado",
+    "testigoPrincipal": "José Gregorio Caña",
+    "telefono": "+58 414-740788",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "19:24",
+      "participacionPct": 77.1,
+      "votosEmitidos": 337,
+      "votosOposicion": 252,
+      "votosOficialismo": 68,
+      "votosOtros": 17,
+      "actasVerificadas": 1,
+      "actasTotal": 1,
+      "qrHash": "CNE-2024-MON-140702008-ACTA-01"
+    }
   },
   {
     "id": "140702005",
@@ -1122,7 +2380,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.744749,
     "lng": -63.496984,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "La Sabana",
+    "direccion": "Av. Universidad, Sector 2, La Sabana",
+    "coordinador": "Lcdo. David Farías",
+    "testigoPrincipal": "Andrés Eloy Blanco",
+    "telefono": "+58 414-770725",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "18:39",
+      "participacionPct": 80.1,
+      "votosEmitidos": 605,
+      "votosOposicion": 430,
+      "votosOficialismo": 110,
+      "votosOtros": 65,
+      "actasVerificadas": 1,
+      "actasTotal": 1,
+      "qrHash": "CNE-2024-MON-140702005-ACTA-01"
+    }
   },
   {
     "id": "140705012",
@@ -1136,7 +2411,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.776,
     "lng": -63.07585,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "La Pica Centro",
+    "direccion": "Calle Las Flores c/c Av. Los Próceres, La Pica Centro",
+    "coordinador": "Prof. Carmen Salazar",
+    "testigoPrincipal": "Luisa Marcano",
+    "telefono": "+58 414-799493",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "19:35",
+      "participacionPct": 76.1,
+      "votosEmitidos": 756,
+      "votosOposicion": 567,
+      "votosOficialismo": 146,
+      "votosOtros": 43,
+      "actasVerificadas": 1,
+      "actasTotal": 1,
+      "qrHash": "CNE-2024-MON-140705012-ACTA-01"
+    }
   },
   {
     "id": "140705004",
@@ -1150,7 +2442,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.779513,
     "lng": -63.083026,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "Vuelta Larga",
+    "direccion": "Av. El Ejército, Manzana 8, Vuelta Larga",
+    "coordinador": "Ing. Pedro Luis Figuera",
+    "testigoPrincipal": "Manuel Antonio Sosa",
+    "telefono": "+58 414-723897",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "19:24",
+      "participacionPct": 74.4,
+      "votosEmitidos": 1288,
+      "votosOposicion": 969,
+      "votosOficialismo": 232,
+      "votosOtros": 87,
+      "actasVerificadas": 1,
+      "actasTotal": 1,
+      "qrHash": "CNE-2024-MON-140705004-ACTA-01"
+    }
   },
   {
     "id": "140705009",
@@ -1164,7 +2473,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.769912,
     "lng": -63.078439,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "El Fangal",
+    "direccion": "Av. Principal con Calle 3, El Fangal",
+    "coordinador": "Dra. María Elena Rondón",
+    "testigoPrincipal": "Patricia Velásquez",
+    "telefono": "+58 414-716670",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "18:17",
+      "participacionPct": 73.8,
+      "votosEmitidos": 384,
+      "votosOposicion": 298,
+      "votosOficialismo": 83,
+      "votosOtros": 3,
+      "actasVerificadas": 1,
+      "actasTotal": 1,
+      "qrHash": "CNE-2024-MON-140705009-ACTA-01"
+    }
   },
   {
     "id": "140705005",
@@ -1178,7 +2504,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.781405,
     "lng": -63.074649,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "La Morita",
+    "direccion": "Calle Bolívar, frente a la Plaza, La Morita",
+    "coordinador": "Lcdo. José Gregorio Caña",
+    "testigoPrincipal": "Gabriel Subero",
+    "telefono": "+58 414-781709",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "19:58",
+      "participacionPct": 76.6,
+      "votosEmitidos": 444,
+      "votosOposicion": 339,
+      "votosOficialismo": 100,
+      "votosOtros": 5,
+      "actasVerificadas": 1,
+      "actasTotal": 1,
+      "qrHash": "CNE-2024-MON-140705005-ACTA-01"
+    }
   },
   {
     "id": "140705007",
@@ -1192,7 +2535,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.774711,
     "lng": -63.086651,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "El Barril",
+    "direccion": "Carrera 4 entre Calles 5 y 6, El Barril",
+    "coordinador": "Ing. Andrés Eloy Blanco",
+    "testigoPrincipal": "Beatriz Centeno",
+    "telefono": "+58 414-774536",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "20:38",
+      "participacionPct": 80.9,
+      "votosEmitidos": 264,
+      "votosOposicion": 197,
+      "votosOficialismo": 60,
+      "votosOtros": 7,
+      "actasVerificadas": 1,
+      "actasTotal": 1,
+      "qrHash": "CNE-2024-MON-140705007-ACTA-01"
+    }
   },
   {
     "id": "140705003",
@@ -1206,7 +2566,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.761,
     "lng": -63.092,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "La Pica Centro",
+    "direccion": "Av. Bicentenario, Edif. Escolar, La Pica Centro",
+    "coordinador": "Prof. Luisa Marcano",
+    "testigoPrincipal": "Elena Quijada",
+    "telefono": "+58 414-743869",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "18:50",
+      "participacionPct": 81.0,
+      "votosEmitidos": 538,
+      "votosOposicion": 408,
+      "votosOficialismo": 114,
+      "votosOtros": 16,
+      "actasVerificadas": 1,
+      "actasTotal": 1,
+      "qrHash": "CNE-2024-MON-140705003-ACTA-01"
+    }
   },
   {
     "id": "140705002",
@@ -1221,7 +2598,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.782,
     "lng": -63.068,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "Vuelta Larga",
+    "direccion": "Calle Sucre c/c Av. Miranda, Vuelta Larga",
+    "coordinador": "Lcdo. Manuel Antonio Sosa",
+    "testigoPrincipal": "Rafael Monagas",
+    "telefono": "+58 414-740381",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "19:14",
+      "participacionPct": 74.8,
+      "votosEmitidos": 955,
+      "votosOposicion": 727,
+      "votosOficialismo": 204,
+      "votosOtros": 24,
+      "actasVerificadas": 2,
+      "actasTotal": 2,
+      "qrHash": "CNE-2024-MON-140705002-ACTA-01"
+    }
   },
   {
     "id": "140705006",
@@ -1235,7 +2629,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.771749,
     "lng": -63.071984,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "El Fangal",
+    "direccion": "Sector Central, Calle El Sol, El Fangal",
+    "coordinador": "Dra. Patricia Velásquez",
+    "testigoPrincipal": "Hernán Malavé",
+    "telefono": "+58 414-779182",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "18:19",
+      "participacionPct": 79.1,
+      "votosEmitidos": 633,
+      "votosOposicion": 455,
+      "votosOficialismo": 128,
+      "votosOtros": 50,
+      "actasVerificadas": 1,
+      "actasTotal": 1,
+      "qrHash": "CNE-2024-MON-140705006-ACTA-01"
+    }
   },
   {
     "id": "140708035",
@@ -1249,7 +2660,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.758,
     "lng": -63.14585,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "Sabaneta",
+    "direccion": "Av. Alirio Ugarte Pelayo, km 2, Sabaneta",
+    "coordinador": "Ing. Gabriel Subero",
+    "testigoPrincipal": "Sofía Granado",
+    "telefono": "+58 414-718524",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "19:31",
+      "participacionPct": 74.3,
+      "votosEmitidos": 592,
+      "votosOposicion": 447,
+      "votosOficialismo": 135,
+      "votosOtros": 10,
+      "actasVerificadas": 1,
+      "actasTotal": 1,
+      "qrHash": "CNE-2024-MON-140708035-ACTA-01"
+    }
   },
   {
     "id": "140708015",
@@ -1264,7 +2692,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.761513,
     "lng": -63.153026,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "La Muralla",
+    "direccion": "Calle Ribas con Boyacá, La Muralla",
+    "coordinador": "Prof. Beatriz Centeno",
+    "testigoPrincipal": "David Farías",
+    "telefono": "+58 414-763498",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "20:54",
+      "participacionPct": 77.4,
+      "votosEmitidos": 1124,
+      "votosOposicion": 824,
+      "votosOficialismo": 218,
+      "votosOtros": 82,
+      "actasVerificadas": 2,
+      "actasTotal": 2,
+      "qrHash": "CNE-2024-MON-140708015-ACTA-01"
+    }
   },
   {
     "id": "140708030",
@@ -1279,7 +2724,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.751912,
     "lng": -63.148439,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "El Paraíso",
+    "direccion": "Av. Universidad, Sector 2, El Paraíso",
+    "coordinador": "Lcda. Elena Quijada",
+    "testigoPrincipal": "Carmen Salazar",
+    "telefono": "+58 414-771106",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "19:29",
+      "participacionPct": 72.2,
+      "votosEmitidos": 958,
+      "votosOposicion": 738,
+      "votosOficialismo": 211,
+      "votosOtros": 9,
+      "actasVerificadas": 2,
+      "actasTotal": 2,
+      "qrHash": "CNE-2024-MON-140708030-ACTA-01"
+    }
   },
   {
     "id": "140708032",
@@ -1293,7 +2755,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.763405,
     "lng": -63.144649,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "Los Cortijos",
+    "direccion": "Calle Las Flores c/c Av. Los Próceres, Los Cortijos",
+    "coordinador": "Ing. Rafael Monagas",
+    "testigoPrincipal": "Pedro Luis Figuera",
+    "telefono": "+58 414-763651",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "20:57",
+      "participacionPct": 79.5,
+      "votosEmitidos": 289,
+      "votosOposicion": 222,
+      "votosOficialismo": 71,
+      "votosOtros": -4,
+      "actasVerificadas": 1,
+      "actasTotal": 1,
+      "qrHash": "CNE-2024-MON-140708032-ACTA-01"
+    }
   },
   {
     "id": "140708044",
@@ -1307,7 +2786,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.756711,
     "lng": -63.156651,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "Brisas del Aeropuerto",
+    "direccion": "Av. El Ejército, Manzana 8, Brisas del Aeropuerto",
+    "coordinador": "Prof. Hernán Malavé",
+    "testigoPrincipal": "María Elena Rondón",
+    "telefono": "+58 414-738379",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "19:41",
+      "participacionPct": 77.5,
+      "votosEmitidos": 282,
+      "votosOposicion": 211,
+      "votosOficialismo": 55,
+      "votosOtros": 16,
+      "actasVerificadas": 1,
+      "actasTotal": 1,
+      "qrHash": "CNE-2024-MON-140708044-ACTA-01"
+    }
   },
   {
     "id": "140708041",
@@ -1321,7 +2817,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.753749,
     "lng": -63.141984,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "Amarilis",
+    "direccion": "Av. Principal con Calle 3, Amarilis",
+    "coordinador": "Dra. Sofía Granado",
+    "testigoPrincipal": "José Gregorio Caña",
+    "telefono": "+58 414-761841",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "18:39",
+      "participacionPct": 72.3,
+      "votosEmitidos": 238,
+      "votosOposicion": 173,
+      "votosOficialismo": 54,
+      "votosOtros": 11,
+      "actasVerificadas": 1,
+      "actasTotal": 1,
+      "qrHash": "CNE-2024-MON-140708041-ACTA-01"
+    }
   },
   {
     "id": "140708046",
@@ -1335,7 +2848,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.766101,
     "lng": -63.151287,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "La Gran Parada",
+    "direccion": "Calle Bolívar, frente a la Plaza, La Gran Parada",
+    "coordinador": "Lcdo. David Farías",
+    "testigoPrincipal": "Andrés Eloy Blanco",
+    "telefono": "+58 414-760706",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "20:52",
+      "participacionPct": 81.2,
+      "votosEmitidos": 184,
+      "votosOposicion": 143,
+      "votosOficialismo": 40,
+      "votosOtros": 1,
+      "actasVerificadas": 1,
+      "actasTotal": 1,
+      "qrHash": "CNE-2024-MON-140708046-ACTA-01"
+    }
   },
   {
     "id": "140708045",
@@ -1349,7 +2879,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.750172,
     "lng": -63.153269,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "Las Cocuizas Centro",
+    "direccion": "Carrera 4 entre Calles 5 y 6, Las Cocuizas Centro",
+    "coordinador": "Prof. Carmen Salazar",
+    "testigoPrincipal": "Luisa Marcano",
+    "telefono": "+58 414-769286",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "18:26",
+      "participacionPct": 72.3,
+      "votosEmitidos": 487,
+      "votosOposicion": 365,
+      "votosOficialismo": 92,
+      "votosOtros": 30,
+      "actasVerificadas": 1,
+      "actasTotal": 1,
+      "qrHash": "CNE-2024-MON-140708045-ACTA-01"
+    }
   },
   {
     "id": "140708018",
@@ -1366,7 +2913,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.761163,
     "lng": -63.139904,
-    "estatus": "prioritario"
+    "estatus": "prioritario",
+    "sector": "El Silencio",
+    "direccion": "Av. Bicentenario, Edif. Escolar, El Silencio",
+    "coordinador": "Ing. Pedro Luis Figuera",
+    "testigoPrincipal": "Manuel Antonio Sosa",
+    "telefono": "+58 414-758384",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "19:26",
+      "participacionPct": 75.8,
+      "votosEmitidos": 3192,
+      "votosOposicion": 2288,
+      "votosOficialismo": 647,
+      "votosOtros": 257,
+      "actasVerificadas": 4,
+      "actasTotal": 4,
+      "qrHash": "CNE-2024-MON-140708018-ACTA-01"
+    }
   },
   {
     "id": "140708037",
@@ -1380,7 +2944,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.761663,
     "lng": -63.158317,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "Sabaneta",
+    "direccion": "Calle Sucre c/c Av. Miranda, Sabaneta",
+    "coordinador": "Dra. María Elena Rondón",
+    "testigoPrincipal": "Patricia Velásquez",
+    "telefono": "+58 414-716458",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "18:51",
+      "participacionPct": 80.3,
+      "votosEmitidos": 1130,
+      "votosOposicion": 833,
+      "votosOficialismo": 262,
+      "votosOtros": 35,
+      "actasVerificadas": 1,
+      "actasTotal": 1,
+      "qrHash": "CNE-2024-MON-140708037-ACTA-01"
+    }
   },
   {
     "id": "140708017",
@@ -1397,7 +2978,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.748981,
     "lng": -63.144569,
-    "estatus": "prioritario"
+    "estatus": "prioritario",
+    "sector": "La Muralla",
+    "direccion": "Sector Central, Calle El Sol, La Muralla",
+    "coordinador": "Lcdo. José Gregorio Caña",
+    "testigoPrincipal": "Gabriel Subero",
+    "telefono": "+58 414-713353",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "18:11",
+      "participacionPct": 72.7,
+      "votosEmitidos": 2611,
+      "votosOposicion": 2027,
+      "votosOficialismo": 477,
+      "votosOtros": 107,
+      "actasVerificadas": 4,
+      "actasTotal": 4,
+      "qrHash": "CNE-2024-MON-140708017-ACTA-01"
+    }
   },
   {
     "id": "140708008",
@@ -1415,7 +3013,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.767825,
     "lng": -63.145764,
-    "estatus": "prioritario"
+    "estatus": "prioritario",
+    "sector": "El Paraíso",
+    "direccion": "Av. Alirio Ugarte Pelayo, km 2, El Paraíso",
+    "coordinador": "Ing. Andrés Eloy Blanco",
+    "testigoPrincipal": "Beatriz Centeno",
+    "telefono": "+58 414-724677",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "18:39",
+      "participacionPct": 78.2,
+      "votosEmitidos": 4321,
+      "votosOposicion": 3107,
+      "votosOficialismo": 920,
+      "votosOtros": 294,
+      "actasVerificadas": 5,
+      "actasTotal": 5,
+      "qrHash": "CNE-2024-MON-140708008-ACTA-01"
+    }
   },
   {
     "id": "140708010",
@@ -1430,7 +3045,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.752675,
     "lng": -63.158649,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "Los Cortijos",
+    "direccion": "Calle Ribas con Boyacá, Los Cortijos",
+    "coordinador": "Prof. Luisa Marcano",
+    "testigoPrincipal": "Elena Quijada",
+    "telefono": "+58 414-787865",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "20:17",
+      "participacionPct": 79.0,
+      "votosEmitidos": 1189,
+      "votosOposicion": 905,
+      "votosOficialismo": 227,
+      "votosOtros": 57,
+      "actasVerificadas": 2,
+      "actasTotal": 2,
+      "qrHash": "CNE-2024-MON-140708010-ACTA-01"
+    }
   },
   {
     "id": "140708016",
@@ -1444,7 +3076,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.755652,
     "lng": -63.137789,
-    "estatus": "prioritario"
+    "estatus": "prioritario",
+    "sector": "Brisas del Aeropuerto",
+    "direccion": "Av. Universidad, Sector 2, Brisas del Aeropuerto",
+    "coordinador": "Lcdo. Manuel Antonio Sosa",
+    "testigoPrincipal": "Rafael Monagas",
+    "telefono": "+58 414-784126",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "19:46",
+      "participacionPct": 79.8,
+      "votosEmitidos": 2543,
+      "votosOposicion": 1813,
+      "votosOficialismo": 513,
+      "votosOtros": 217,
+      "actasVerificadas": 1,
+      "actasTotal": 1,
+      "qrHash": "CNE-2024-MON-140708016-ACTA-01"
+    }
   },
   {
     "id": "140708027",
@@ -1458,7 +3107,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.767188,
     "lng": -63.155782,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "Amarilis",
+    "direccion": "Calle Las Flores c/c Av. Los Próceres, Amarilis",
+    "coordinador": "Dra. Patricia Velásquez",
+    "testigoPrincipal": "Hernán Malavé",
+    "telefono": "+58 414-735177",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "20:54",
+      "participacionPct": 78.8,
+      "votosEmitidos": 641,
+      "votosOposicion": 497,
+      "votosOficialismo": 133,
+      "votosOtros": 11,
+      "actasVerificadas": 1,
+      "actasTotal": 1,
+      "qrHash": "CNE-2024-MON-140708027-ACTA-01"
+    }
   },
   {
     "id": "140708001",
@@ -1474,7 +3140,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.746575,
     "lng": -63.150555,
-    "estatus": "prioritario"
+    "estatus": "prioritario",
+    "sector": "La Gran Parada",
+    "direccion": "Av. El Ejército, Manzana 8, La Gran Parada",
+    "coordinador": "Ing. Gabriel Subero",
+    "testigoPrincipal": "Sofía Granado",
+    "telefono": "+58 414-748970",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "20:48",
+      "participacionPct": 80.3,
+      "votosEmitidos": 2071,
+      "votosOposicion": 1489,
+      "votosOficialismo": 473,
+      "votosOtros": 109,
+      "actasVerificadas": 3,
+      "actasTotal": 3,
+      "qrHash": "CNE-2024-MON-140708001-ACTA-01"
+    }
   },
   {
     "id": "140708006",
@@ -1489,7 +3172,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.765604,
     "lng": -63.139526,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "Las Cocuizas Centro",
+    "direccion": "Av. Principal con Calle 3, Las Cocuizas Centro",
+    "coordinador": "Prof. Beatriz Centeno",
+    "testigoPrincipal": "David Farías",
+    "telefono": "+58 414-715455",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "20:37",
+      "participacionPct": 80.1,
+      "votosEmitidos": 1489,
+      "votosOposicion": 1137,
+      "votosOficialismo": 326,
+      "votosOtros": 26,
+      "actasVerificadas": 2,
+      "actasTotal": 2,
+      "qrHash": "CNE-2024-MON-140708006-ACTA-01"
+    }
   },
   {
     "id": "140708020",
@@ -1504,7 +3204,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.758499,
     "lng": -63.161664,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "El Silencio",
+    "direccion": "Calle Bolívar, frente a la Plaza, El Silencio",
+    "coordinador": "Lcda. Elena Quijada",
+    "testigoPrincipal": "Carmen Salazar",
+    "telefono": "+58 414-711969",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "19:41",
+      "participacionPct": 78.6,
+      "votosEmitidos": 1207,
+      "votosOposicion": 851,
+      "votosOficialismo": 271,
+      "votosOtros": 85,
+      "actasVerificadas": 2,
+      "actasTotal": 2,
+      "qrHash": "CNE-2024-MON-140708020-ACTA-01"
+    }
   },
   {
     "id": "140708014",
@@ -1520,7 +3237,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.749299,
     "lng": -63.139821,
-    "estatus": "prioritario"
+    "estatus": "prioritario",
+    "sector": "Sabaneta",
+    "direccion": "Carrera 4 entre Calles 5 y 6, Sabaneta",
+    "coordinador": "Ing. Rafael Monagas",
+    "testigoPrincipal": "Pedro Luis Figuera",
+    "telefono": "+58 414-768824",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "18:37",
+      "participacionPct": 73.1,
+      "votosEmitidos": 2291,
+      "votosOposicion": 1779,
+      "votosOficialismo": 514,
+      "votosOtros": -2,
+      "actasVerificadas": 3,
+      "actasTotal": 3,
+      "qrHash": "CNE-2024-MON-140708014-ACTA-01"
+    }
   },
   {
     "id": "140708019",
@@ -1537,7 +3271,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.770576,
     "lng": -63.14961,
-    "estatus": "prioritario"
+    "estatus": "prioritario",
+    "sector": "La Muralla",
+    "direccion": "Av. Bicentenario, Edif. Escolar, La Muralla",
+    "coordinador": "Prof. Hernán Malavé",
+    "testigoPrincipal": "María Elena Rondón",
+    "telefono": "+58 414-788927",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "20:59",
+      "participacionPct": 73.8,
+      "votosEmitidos": 3010,
+      "votosOposicion": 2232,
+      "votosOficialismo": 678,
+      "votosOtros": 100,
+      "actasVerificadas": 4,
+      "actasTotal": 4,
+      "qrHash": "CNE-2024-MON-140708019-ACTA-01"
+    }
   },
   {
     "id": "140708005",
@@ -1552,7 +3303,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.748143,
     "lng": -63.157638,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "El Paraíso",
+    "direccion": "Calle Sucre c/c Av. Miranda, El Paraíso",
+    "coordinador": "Dra. Sofía Granado",
+    "testigoPrincipal": "José Gregorio Caña",
+    "telefono": "+58 414-744430",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "18:15",
+      "participacionPct": 76.8,
+      "votosEmitidos": 1395,
+      "votosOposicion": 1025,
+      "votosOficialismo": 322,
+      "votosOtros": 48,
+      "actasVerificadas": 2,
+      "actasTotal": 2,
+      "qrHash": "CNE-2024-MON-140708005-ACTA-01"
+    }
   },
   {
     "id": "140708002",
@@ -1569,7 +3337,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.759744,
     "lng": -63.135387,
-    "estatus": "prioritario"
+    "estatus": "prioritario",
+    "sector": "Los Cortijos",
+    "direccion": "Sector Central, Calle El Sol, Los Cortijos",
+    "coordinador": "Lcdo. David Farías",
+    "testigoPrincipal": "Andrés Eloy Blanco",
+    "telefono": "+58 414-782724",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "20:34",
+      "participacionPct": 74.8,
+      "votosEmitidos": 2328,
+      "votosOposicion": 1713,
+      "votosOficialismo": 541,
+      "votosOtros": 74,
+      "actasVerificadas": 4,
+      "actasTotal": 4,
+      "qrHash": "CNE-2024-MON-140708002-ACTA-01"
+    }
   },
   {
     "id": "140708029",
@@ -1583,7 +3368,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.765608,
     "lng": -63.160479,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "Brisas del Aeropuerto",
+    "direccion": "Av. Alirio Ugarte Pelayo, km 2, Brisas del Aeropuerto",
+    "coordinador": "Prof. Carmen Salazar",
+    "testigoPrincipal": "Luisa Marcano",
+    "telefono": "+58 414-772317",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "19:26",
+      "participacionPct": 75.4,
+      "votosEmitidos": 561,
+      "votosOposicion": 414,
+      "votosOficialismo": 113,
+      "votosOtros": 34,
+      "actasVerificadas": 1,
+      "actasTotal": 1,
+      "qrHash": "CNE-2024-MON-140708029-ACTA-01"
+    }
   },
   {
     "id": "140708003",
@@ -1599,7 +3401,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.744779,
     "lng": -63.145878,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "Amarilis",
+    "direccion": "Calle Ribas con Boyacá, Amarilis",
+    "coordinador": "Ing. Pedro Luis Figuera",
+    "testigoPrincipal": "Manuel Antonio Sosa",
+    "telefono": "+58 414-745669",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "18:43",
+      "participacionPct": 75.4,
+      "votosEmitidos": 1786,
+      "votosOposicion": 1375,
+      "votosOficialismo": 409,
+      "votosOtros": 2,
+      "actasVerificadas": 3,
+      "actasTotal": 3,
+      "qrHash": "CNE-2024-MON-140708003-ACTA-01"
+    }
   },
   {
     "id": "140708011",
@@ -1615,7 +3434,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.769954,
     "lng": -63.141806,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "La Gran Parada",
+    "direccion": "Av. Universidad, Sector 2, La Gran Parada",
+    "coordinador": "Dra. María Elena Rondón",
+    "testigoPrincipal": "Patricia Velásquez",
+    "telefono": "+58 414-772668",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "18:54",
+      "participacionPct": 81.5,
+      "votosEmitidos": 1769,
+      "votosOposicion": 1250,
+      "votosOficialismo": 407,
+      "votosOtros": 112,
+      "actasVerificadas": 3,
+      "actasTotal": 3,
+      "qrHash": "CNE-2024-MON-140708011-ACTA-01"
+    }
   },
   {
     "id": "140708038",
@@ -1629,7 +3465,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.753746,
     "lng": -63.163005,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "Las Cocuizas Centro",
+    "direccion": "Calle Las Flores c/c Av. Los Próceres, Las Cocuizas Centro",
+    "coordinador": "Lcdo. José Gregorio Caña",
+    "testigoPrincipal": "Gabriel Subero",
+    "telefono": "+58 414-712195",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "19:24",
+      "participacionPct": 76.8,
+      "votosEmitidos": 223,
+      "votosOposicion": 168,
+      "votosOficialismo": 47,
+      "votosOtros": 8,
+      "actasVerificadas": 1,
+      "actasTotal": 1,
+      "qrHash": "CNE-2024-MON-140708038-ACTA-01"
+    }
   },
   {
     "id": "140708004",
@@ -1645,7 +3498,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.752036,
     "lng": -63.135448,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "El Silencio",
+    "direccion": "Av. El Ejército, Manzana 8, El Silencio",
+    "coordinador": "Ing. Andrés Eloy Blanco",
+    "testigoPrincipal": "Beatriz Centeno",
+    "telefono": "+58 414-757584",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "20:43",
+      "participacionPct": 76.0,
+      "votosEmitidos": 1553,
+      "votosOposicion": 1117,
+      "votosOficialismo": 351,
+      "votosOtros": 85,
+      "actasVerificadas": 3,
+      "actasTotal": 3,
+      "qrHash": "CNE-2024-MON-140708004-ACTA-01"
+    }
   },
   {
     "id": "140708023",
@@ -1660,7 +3530,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.771313,
     "lng": -63.154849,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "Sabaneta",
+    "direccion": "Av. Principal con Calle 3, Sabaneta",
+    "coordinador": "Prof. Luisa Marcano",
+    "testigoPrincipal": "Elena Quijada",
+    "telefono": "+58 414-755819",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "19:27",
+      "participacionPct": 75.4,
+      "votosEmitidos": 1252,
+      "votosOposicion": 976,
+      "votosOficialismo": 273,
+      "votosOtros": 3,
+      "actasVerificadas": 2,
+      "actasTotal": 2,
+      "qrHash": "CNE-2024-MON-140708023-ACTA-01"
+    }
   },
   {
     "id": "140708007",
@@ -1675,7 +3562,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.744223,
     "lng": -63.154204,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "La Muralla",
+    "direccion": "Calle Bolívar, frente a la Plaza, La Muralla",
+    "coordinador": "Lcdo. Manuel Antonio Sosa",
+    "testigoPrincipal": "Rafael Monagas",
+    "telefono": "+58 414-750222",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "20:44",
+      "participacionPct": 75.1,
+      "votosEmitidos": 1215,
+      "votosOposicion": 872,
+      "votosOficialismo": 280,
+      "votosOtros": 63,
+      "actasVerificadas": 2,
+      "actasTotal": 2,
+      "qrHash": "CNE-2024-MON-140708007-ACTA-01"
+    }
   },
   {
     "id": "140708034",
@@ -1689,7 +3593,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.764906,
     "lng": -63.135199,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "El Paraíso",
+    "direccion": "Carrera 4 entre Calles 5 y 6, El Paraíso",
+    "coordinador": "Dra. Patricia Velásquez",
+    "testigoPrincipal": "Hernán Malavé",
+    "telefono": "+58 414-771383",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "20:47",
+      "participacionPct": 81.5,
+      "votosEmitidos": 252,
+      "votosOposicion": 190,
+      "votosOficialismo": 48,
+      "votosOtros": 14,
+      "actasVerificadas": 1,
+      "actasTotal": 1,
+      "qrHash": "CNE-2024-MON-140708034-ACTA-01"
+    }
   },
   {
     "id": "140708021",
@@ -1704,7 +3625,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.761837,
     "lng": -63.16428,
-    "estatus": "prioritario"
+    "estatus": "prioritario",
+    "sector": "Los Cortijos",
+    "direccion": "Av. Bicentenario, Edif. Escolar, Los Cortijos",
+    "coordinador": "Ing. Gabriel Subero",
+    "testigoPrincipal": "Sofía Granado",
+    "telefono": "+58 414-722952",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "18:28",
+      "participacionPct": 81.8,
+      "votosEmitidos": 2363,
+      "votosOposicion": 1753,
+      "votosOficialismo": 472,
+      "votosOtros": 138,
+      "actasVerificadas": 2,
+      "actasTotal": 2,
+      "qrHash": "CNE-2024-MON-140708021-ACTA-01"
+    }
   },
   {
     "id": "140710079",
@@ -1719,7 +3657,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.737981,
     "lng": -63.176569,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "Las Avenidas",
+    "direccion": "Calle Sucre c/c Av. Miranda, Las Avenidas",
+    "coordinador": "Prof. Beatriz Centeno",
+    "testigoPrincipal": "David Farías",
+    "telefono": "+58 414-778229",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "19:12",
+      "participacionPct": 74.3,
+      "votosEmitidos": 1116,
+      "votosOposicion": 797,
+      "votosOficialismo": 201,
+      "votosOtros": 118,
+      "actasVerificadas": 2,
+      "actasTotal": 2,
+      "qrHash": "CNE-2024-MON-140710079-ACTA-01"
+    }
   },
   {
     "id": "140710013",
@@ -1733,7 +3688,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.756825,
     "lng": -63.177764,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "Palo Negro",
+    "direccion": "Sector Central, Calle El Sol, Palo Negro",
+    "coordinador": "Lcda. Elena Quijada",
+    "testigoPrincipal": "Carmen Salazar",
+    "telefono": "+58 414-726753",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "19:16",
+      "participacionPct": 81.7,
+      "votosEmitidos": 808,
+      "votosOposicion": 601,
+      "votosOficialismo": 184,
+      "votosOtros": 23,
+      "actasVerificadas": 1,
+      "actasTotal": 1,
+      "qrHash": "CNE-2024-MON-140710013-ACTA-01"
+    }
   },
   {
     "id": "140710028",
@@ -1747,7 +3719,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.741675,
     "lng": -63.190649,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "Campo Obrero",
+    "direccion": "Av. Alirio Ugarte Pelayo, km 2, Campo Obrero",
+    "coordinador": "Ing. Rafael Monagas",
+    "testigoPrincipal": "Pedro Luis Figuera",
+    "telefono": "+58 414-766448",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "18:13",
+      "participacionPct": 80.7,
+      "votosEmitidos": 632,
+      "votosOposicion": 471,
+      "votosOficialismo": 134,
+      "votosOtros": 27,
+      "actasVerificadas": 1,
+      "actasTotal": 1,
+      "qrHash": "CNE-2024-MON-140710028-ACTA-01"
+    }
   },
   {
     "id": "140710080",
@@ -1761,7 +3750,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.744652,
     "lng": -63.169789,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "Calle Monagas",
+    "direccion": "Calle Ribas con Boyacá, Calle Monagas",
+    "coordinador": "Prof. Hernán Malavé",
+    "testigoPrincipal": "María Elena Rondón",
+    "telefono": "+58 414-718510",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "19:14",
+      "participacionPct": 74.5,
+      "votosEmitidos": 639,
+      "votosOposicion": 491,
+      "votosOficialismo": 120,
+      "votosOtros": 28,
+      "actasVerificadas": 1,
+      "actasTotal": 1,
+      "qrHash": "CNE-2024-MON-140710080-ACTA-01"
+    }
   },
   {
     "id": "140710078",
@@ -1776,7 +3782,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.756188,
     "lng": -63.187782,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "Guanaguanay",
+    "direccion": "Av. Universidad, Sector 2, Guanaguanay",
+    "coordinador": "Dra. Sofía Granado",
+    "testigoPrincipal": "José Gregorio Caña",
+    "telefono": "+58 414-782411",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "18:25",
+      "participacionPct": 77.8,
+      "votosEmitidos": 1207,
+      "votosOposicion": 911,
+      "votosOficialismo": 230,
+      "votosOtros": 66,
+      "actasVerificadas": 2,
+      "actasTotal": 2,
+      "qrHash": "CNE-2024-MON-140710078-ACTA-01"
+    }
   },
   {
     "id": "140710077",
@@ -1790,7 +3813,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.735575,
     "lng": -63.182555,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "Pueblo Nuevo",
+    "direccion": "Calle Las Flores c/c Av. Los Próceres, Pueblo Nuevo",
+    "coordinador": "Lcdo. David Farías",
+    "testigoPrincipal": "Andrés Eloy Blanco",
+    "telefono": "+58 414-789331",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "20:34",
+      "participacionPct": 73.2,
+      "votosEmitidos": 335,
+      "votosOposicion": 255,
+      "votosOficialismo": 74,
+      "votosOtros": 6,
+      "actasVerificadas": 1,
+      "actasTotal": 1,
+      "qrHash": "CNE-2024-MON-140710077-ACTA-01"
+    }
   },
   {
     "id": "140710055",
@@ -1805,7 +3845,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.754604,
     "lng": -63.171526,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "Casco Central",
+    "direccion": "Av. El Ejército, Manzana 8, Casco Central",
+    "coordinador": "Prof. Carmen Salazar",
+    "testigoPrincipal": "Luisa Marcano",
+    "telefono": "+58 414-764412",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "20:49",
+      "participacionPct": 76.5,
+      "votosEmitidos": 888,
+      "votosOposicion": 653,
+      "votosOficialismo": 213,
+      "votosOtros": 22,
+      "actasVerificadas": 2,
+      "actasTotal": 2,
+      "qrHash": "CNE-2024-MON-140710055-ACTA-01"
+    }
   },
   {
     "id": "140710001",
@@ -1819,7 +3876,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.747499,
     "lng": -63.193664,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "La Manga",
+    "direccion": "Av. Principal con Calle 3, La Manga",
+    "coordinador": "Ing. Pedro Luis Figuera",
+    "testigoPrincipal": "Manuel Antonio Sosa",
+    "telefono": "+58 414-736740",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "18:26",
+      "participacionPct": 72.6,
+      "votosEmitidos": 728,
+      "votosOposicion": 565,
+      "votosOficialismo": 136,
+      "votosOtros": 27,
+      "actasVerificadas": 1,
+      "actasTotal": 1,
+      "qrHash": "CNE-2024-MON-140710001-ACTA-01"
+    }
   },
   {
     "id": "140710027",
@@ -1834,7 +3908,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.738299,
     "lng": -63.171821,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "El Centro",
+    "direccion": "Calle Bolívar, frente a la Plaza, El Centro",
+    "coordinador": "Dra. María Elena Rondón",
+    "testigoPrincipal": "Patricia Velásquez",
+    "telefono": "+58 414-719260",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "18:36",
+      "participacionPct": 78.6,
+      "votosEmitidos": 859,
+      "votosOposicion": 612,
+      "votosOficialismo": 165,
+      "votosOtros": 82,
+      "actasVerificadas": 2,
+      "actasTotal": 2,
+      "qrHash": "CNE-2024-MON-140710027-ACTA-01"
+    }
   },
   {
     "id": "140710005",
@@ -1850,7 +3941,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.759576,
     "lng": -63.18161,
-    "estatus": "prioritario"
+    "estatus": "prioritario",
+    "sector": "Av. Bicentenario",
+    "direccion": "Carrera 4 entre Calles 5 y 6, Av. Bicentenario",
+    "coordinador": "Lcdo. José Gregorio Caña",
+    "testigoPrincipal": "Gabriel Subero",
+    "telefono": "+58 414-739395",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "20:28",
+      "participacionPct": 76.5,
+      "votosEmitidos": 2248,
+      "votosOposicion": 1680,
+      "votosOficialismo": 450,
+      "votosOtros": 118,
+      "actasVerificadas": 3,
+      "actasTotal": 3,
+      "qrHash": "CNE-2024-MON-140710005-ACTA-01"
+    }
   },
   {
     "id": "140710074",
@@ -1865,7 +3973,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.737143,
     "lng": -63.189638,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "Barrio Obrero",
+    "direccion": "Av. Bicentenario, Edif. Escolar, Barrio Obrero",
+    "coordinador": "Ing. Andrés Eloy Blanco",
+    "testigoPrincipal": "Beatriz Centeno",
+    "telefono": "+58 414-743906",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "20:47",
+      "participacionPct": 79.0,
+      "votosEmitidos": 844,
+      "votosOposicion": 621,
+      "votosOficialismo": 192,
+      "votosOtros": 31,
+      "actasVerificadas": 2,
+      "actasTotal": 2,
+      "qrHash": "CNE-2024-MON-140710074-ACTA-01"
+    }
   },
   {
     "id": "140710006",
@@ -1881,7 +4006,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.748744,
     "lng": -63.167387,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "Viento Colao",
+    "direccion": "Calle Sucre c/c Av. Miranda, Viento Colao",
+    "coordinador": "Prof. Luisa Marcano",
+    "testigoPrincipal": "Elena Quijada",
+    "telefono": "+58 414-779330",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "20:19",
+      "participacionPct": 78.6,
+      "votosEmitidos": 1575,
+      "votosOposicion": 1220,
+      "votosOficialismo": 330,
+      "votosOtros": 25,
+      "actasVerificadas": 3,
+      "actasTotal": 3,
+      "qrHash": "CNE-2024-MON-140710006-ACTA-01"
+    }
   },
   {
     "id": "140710002",
@@ -1897,7 +4039,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.754608,
     "lng": -63.192479,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "Las Avenidas",
+    "direccion": "Sector Central, Calle El Sol, Las Avenidas",
+    "coordinador": "Lcdo. Manuel Antonio Sosa",
+    "testigoPrincipal": "Rafael Monagas",
+    "telefono": "+58 414-731911",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "19:48",
+      "participacionPct": 81.1,
+      "votosEmitidos": 1649,
+      "votosOposicion": 1263,
+      "votosOficialismo": 305,
+      "votosOtros": 81,
+      "actasVerificadas": 3,
+      "actasTotal": 3,
+      "qrHash": "CNE-2024-MON-140710002-ACTA-01"
+    }
   },
   {
     "id": "140710059",
@@ -1912,7 +4071,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.733779,
     "lng": -63.177878,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "Palo Negro",
+    "direccion": "Av. Alirio Ugarte Pelayo, km 2, Palo Negro",
+    "coordinador": "Dra. Patricia Velásquez",
+    "testigoPrincipal": "Hernán Malavé",
+    "telefono": "+58 414-725579",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "20:29",
+      "participacionPct": 79.5,
+      "votosEmitidos": 1166,
+      "votosOposicion": 869,
+      "votosOficialismo": 233,
+      "votosOtros": 64,
+      "actasVerificadas": 2,
+      "actasTotal": 2,
+      "qrHash": "CNE-2024-MON-140710059-ACTA-01"
+    }
   },
   {
     "id": "140710057",
@@ -1926,7 +4102,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.758954,
     "lng": -63.173806,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "Campo Obrero",
+    "direccion": "Calle Ribas con Boyacá, Campo Obrero",
+    "coordinador": "Ing. Gabriel Subero",
+    "testigoPrincipal": "Sofía Granado",
+    "telefono": "+58 414-773548",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "18:48",
+      "participacionPct": 79.0,
+      "votosEmitidos": 443,
+      "votosOposicion": 343,
+      "votosOficialismo": 95,
+      "votosOtros": 5,
+      "actasVerificadas": 1,
+      "actasTotal": 1,
+      "qrHash": "CNE-2024-MON-140710057-ACTA-01"
+    }
   },
   {
     "id": "140710070",
@@ -1940,7 +4133,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.742746,
     "lng": -63.195005,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "Calle Monagas",
+    "direccion": "Av. Universidad, Sector 2, Calle Monagas",
+    "coordinador": "Prof. Beatriz Centeno",
+    "testigoPrincipal": "David Farías",
+    "telefono": "+58 414-742126",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "18:24",
+      "participacionPct": 72.4,
+      "votosEmitidos": 237,
+      "votosOposicion": 174,
+      "votosOficialismo": 48,
+      "votosOtros": 15,
+      "actasVerificadas": 1,
+      "actasTotal": 1,
+      "qrHash": "CNE-2024-MON-140710070-ACTA-01"
+    }
   },
   {
     "id": "140710007",
@@ -1957,7 +4167,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.741036,
     "lng": -63.167448,
-    "estatus": "prioritario"
+    "estatus": "prioritario",
+    "sector": "Guanaguanay",
+    "direccion": "Calle Las Flores c/c Av. Los Próceres, Guanaguanay",
+    "coordinador": "Lcda. Elena Quijada",
+    "testigoPrincipal": "Carmen Salazar",
+    "telefono": "+58 414-712883",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "20:27",
+      "participacionPct": 81.6,
+      "votosEmitidos": 2534,
+      "votosOposicion": 1943,
+      "votosOficialismo": 558,
+      "votosOtros": 33,
+      "actasVerificadas": 4,
+      "actasTotal": 4,
+      "qrHash": "CNE-2024-MON-140710007-ACTA-01"
+    }
   },
   {
     "id": "140710021",
@@ -1972,7 +4199,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.760313,
     "lng": -63.186849,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "Pueblo Nuevo",
+    "direccion": "Av. El Ejército, Manzana 8, Pueblo Nuevo",
+    "coordinador": "Ing. Rafael Monagas",
+    "testigoPrincipal": "Pedro Luis Figuera",
+    "telefono": "+58 414-776767",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "19:27",
+      "participacionPct": 77.8,
+      "votosEmitidos": 1824,
+      "votosOposicion": 1388,
+      "votosOficialismo": 350,
+      "votosOtros": 86,
+      "actasVerificadas": 2,
+      "actasTotal": 2,
+      "qrHash": "CNE-2024-MON-140710021-ACTA-01"
+    }
   },
   {
     "id": "140710015",
@@ -1986,7 +4230,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.733223,
     "lng": -63.186204,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "Casco Central",
+    "direccion": "Av. Principal con Calle 3, Casco Central",
+    "coordinador": "Prof. Hernán Malavé",
+    "testigoPrincipal": "María Elena Rondón",
+    "telefono": "+58 414-772193",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "19:32",
+      "participacionPct": 73.8,
+      "votosEmitidos": 1251,
+      "votosOposicion": 934,
+      "votosOficialismo": 280,
+      "votosOtros": 37,
+      "actasVerificadas": 1,
+      "actasTotal": 1,
+      "qrHash": "CNE-2024-MON-140710015-ACTA-01"
+    }
   },
   {
     "id": "140710075",
@@ -2000,7 +4261,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.753906,
     "lng": -63.167199,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "La Manga",
+    "direccion": "Calle Bolívar, frente a la Plaza, La Manga",
+    "coordinador": "Dra. Sofía Granado",
+    "testigoPrincipal": "José Gregorio Caña",
+    "telefono": "+58 414-730437",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "19:54",
+      "participacionPct": 76.1,
+      "votosEmitidos": 519,
+      "votosOposicion": 376,
+      "votosOficialismo": 97,
+      "votosOtros": 46,
+      "actasVerificadas": 1,
+      "actasTotal": 1,
+      "qrHash": "CNE-2024-MON-140710075-ACTA-01"
+    }
   },
   {
     "id": "140710029",
@@ -2016,7 +4294,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.750837,
     "lng": -63.19628,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "El Centro",
+    "direccion": "Carrera 4 entre Calles 5 y 6, El Centro",
+    "coordinador": "Lcdo. David Farías",
+    "testigoPrincipal": "Andrés Eloy Blanco",
+    "telefono": "+58 414-780137",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "19:15",
+      "participacionPct": 77.0,
+      "votosEmitidos": 1625,
+      "votosOposicion": 1223,
+      "votosOficialismo": 338,
+      "votosOtros": 64,
+      "actasVerificadas": 3,
+      "actasTotal": 3,
+      "qrHash": "CNE-2024-MON-140710029-ACTA-01"
+    }
   },
   {
     "id": "140710056",
@@ -2032,7 +4327,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.734173,
     "lng": -63.172342,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "Av. Bicentenario",
+    "direccion": "Av. Bicentenario, Edif. Escolar, Av. Bicentenario",
+    "coordinador": "Prof. Carmen Salazar",
+    "testigoPrincipal": "Luisa Marcano",
+    "telefono": "+58 414-761985",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "20:10",
+      "participacionPct": 75.1,
+      "votosEmitidos": 1551,
+      "votosOposicion": 1125,
+      "votosOficialismo": 384,
+      "votosOtros": 42,
+      "actasVerificadas": 3,
+      "actasTotal": 3,
+      "qrHash": "CNE-2024-MON-140710056-ACTA-01"
+    }
   },
   {
     "id": "140710017",
@@ -2046,7 +4358,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.762222,
     "lng": -63.178252,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "Barrio Obrero",
+    "direccion": "Calle Sucre c/c Av. Miranda, Barrio Obrero",
+    "coordinador": "Ing. Pedro Luis Figuera",
+    "testigoPrincipal": "Manuel Antonio Sosa",
+    "telefono": "+58 414-734630",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "19:49",
+      "participacionPct": 78.6,
+      "votosEmitidos": 1953,
+      "votosOposicion": 1451,
+      "votosOficialismo": 407,
+      "votosOtros": 95,
+      "actasVerificadas": 1,
+      "actasTotal": 1,
+      "qrHash": "CNE-2024-MON-140710017-ACTA-01"
+    }
   },
   {
     "id": "140710014",
@@ -2063,7 +4392,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.737426,
     "lng": -63.193983,
-    "estatus": "prioritario"
+    "estatus": "prioritario",
+    "sector": "Viento Colao",
+    "direccion": "Sector Central, Calle El Sol, Viento Colao",
+    "coordinador": "Dra. María Elena Rondón",
+    "testigoPrincipal": "Patricia Velásquez",
+    "telefono": "+58 414-736373",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "20:18",
+      "participacionPct": 79.6,
+      "votosEmitidos": 2782,
+      "votosOposicion": 2086,
+      "votosOficialismo": 648,
+      "votosOtros": 48,
+      "actasVerificadas": 4,
+      "actasTotal": 4,
+      "qrHash": "CNE-2024-MON-140710014-ACTA-01"
+    }
   },
   {
     "id": "140710003",
@@ -2079,7 +4425,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.745691,
     "lng": -63.164437,
-    "estatus": "prioritario"
+    "estatus": "prioritario",
+    "sector": "Las Avenidas",
+    "direccion": "Av. Alirio Ugarte Pelayo, km 2, Las Avenidas",
+    "coordinador": "Lcdo. José Gregorio Caña",
+    "testigoPrincipal": "Gabriel Subero",
+    "telefono": "+58 414-725129",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "20:48",
+      "participacionPct": 81.3,
+      "votosEmitidos": 2130,
+      "votosOposicion": 1565,
+      "votosOficialismo": 487,
+      "votosOtros": 78,
+      "actasVerificadas": 3,
+      "actasTotal": 3,
+      "qrHash": "CNE-2024-MON-140710003-ACTA-01"
+    }
   },
   {
     "id": "140710010",
@@ -2093,7 +4456,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.758758,
     "lng": -63.192418,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "Palo Negro",
+    "direccion": "Calle Ribas con Boyacá, Palo Negro",
+    "coordinador": "Ing. Andrés Eloy Blanco",
+    "testigoPrincipal": "Beatriz Centeno",
+    "telefono": "+58 414-711665",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "19:15",
+      "participacionPct": 80.0,
+      "votosEmitidos": 1471,
+      "votosOposicion": 1113,
+      "votosOficialismo": 296,
+      "votosOtros": 62,
+      "actasVerificadas": 1,
+      "actasTotal": 1,
+      "qrHash": "CNE-2024-MON-140710010-ACTA-01"
+    }
   },
   {
     "id": "140710009",
@@ -2109,7 +4489,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.7308,
     "lng": -63.180919,
-    "estatus": "prioritario"
+    "estatus": "prioritario",
+    "sector": "Campo Obrero",
+    "direccion": "Av. Universidad, Sector 2, Campo Obrero",
+    "coordinador": "Prof. Luisa Marcano",
+    "testigoPrincipal": "Elena Quijada",
+    "telefono": "+58 414-725763",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "18:41",
+      "participacionPct": 74.2,
+      "votosEmitidos": 1893,
+      "votosOposicion": 1452,
+      "votosOficialismo": 355,
+      "votosOtros": 86,
+      "actasVerificadas": 3,
+      "actasTotal": 3,
+      "qrHash": "CNE-2024-MON-140710009-ACTA-01"
+    }
   },
   {
     "id": "140710023",
@@ -2124,7 +4521,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.759132,
     "lng": -63.169441,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "Calle Monagas",
+    "direccion": "Calle Las Flores c/c Av. Los Próceres, Calle Monagas",
+    "coordinador": "Lcdo. Manuel Antonio Sosa",
+    "testigoPrincipal": "Rafael Monagas",
+    "telefono": "+58 414-763954",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "19:40",
+      "participacionPct": 81.3,
+      "votosEmitidos": 982,
+      "votosOposicion": 710,
+      "votosOficialismo": 225,
+      "votosOtros": 47,
+      "actasVerificadas": 2,
+      "actasTotal": 2,
+      "qrHash": "CNE-2024-MON-140710023-ACTA-01"
+    }
   },
   {
     "id": "140710018",
@@ -2140,7 +4554,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.745474,
     "lng": -63.198316,
-    "estatus": "prioritario"
+    "estatus": "prioritario",
+    "sector": "Guanaguanay",
+    "direccion": "Av. El Ejército, Manzana 8, Guanaguanay",
+    "coordinador": "Dra. Patricia Velásquez",
+    "testigoPrincipal": "Hernán Malavé",
+    "telefono": "+58 414-786620",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "20:18",
+      "participacionPct": 74.4,
+      "votosEmitidos": 1903,
+      "votosOposicion": 1416,
+      "votosOficialismo": 393,
+      "votosOtros": 94,
+      "actasVerificadas": 3,
+      "actasTotal": 3,
+      "qrHash": "CNE-2024-MON-140710018-ACTA-01"
+    }
   },
   {
     "id": "140710081",
@@ -2155,7 +4586,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.736879,
     "lng": -63.167001,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "Pueblo Nuevo",
+    "direccion": "Av. Principal con Calle 3, Pueblo Nuevo",
+    "coordinador": "Ing. Gabriel Subero",
+    "testigoPrincipal": "Sofía Granado",
+    "telefono": "+58 414-763448",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "20:27",
+      "participacionPct": 80.6,
+      "votosEmitidos": 958,
+      "votosOposicion": 691,
+      "votosOficialismo": 225,
+      "votosOtros": 42,
+      "actasVerificadas": 2,
+      "actasTotal": 2,
+      "qrHash": "CNE-2024-MON-140710081-ACTA-01"
+    }
   },
   {
     "id": "140710076",
@@ -2170,7 +4618,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.763641,
     "lng": -63.184176,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "Casco Central",
+    "direccion": "Calle Bolívar, frente a la Plaza, Casco Central",
+    "coordinador": "Prof. Beatriz Centeno",
+    "testigoPrincipal": "David Farías",
+    "telefono": "+58 414-785693",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "20:41",
+      "participacionPct": 80.2,
+      "votosEmitidos": 928,
+      "votosOposicion": 670,
+      "votosOficialismo": 186,
+      "votosOtros": 72,
+      "actasVerificadas": 2,
+      "actasTotal": 2,
+      "qrHash": "CNE-2024-MON-140710076-ACTA-01"
+    }
   },
   {
     "id": "140710012",
@@ -2186,7 +4651,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.732539,
     "lng": -63.190558,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "La Manga",
+    "direccion": "Carrera 4 entre Calles 5 y 6, La Manga",
+    "coordinador": "Lcda. Elena Quijada",
+    "testigoPrincipal": "Carmen Salazar",
+    "telefono": "+58 414-752665",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "20:34",
+      "participacionPct": 80.7,
+      "votosEmitidos": 1933,
+      "votosOposicion": 1422,
+      "votosOficialismo": 413,
+      "votosOtros": 98,
+      "actasVerificadas": 3,
+      "actasTotal": 3,
+      "qrHash": "CNE-2024-MON-140710012-ACTA-01"
+    }
   },
   {
     "id": "140710030",
@@ -2202,7 +4684,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.751559,
     "lng": -63.163523,
-    "estatus": "prioritario"
+    "estatus": "prioritario",
+    "sector": "El Centro",
+    "direccion": "Av. Bicentenario, Edif. Escolar, El Centro",
+    "coordinador": "Ing. Rafael Monagas",
+    "testigoPrincipal": "Pedro Luis Figuera",
+    "telefono": "+58 414-799344",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "20:34",
+      "participacionPct": 76.5,
+      "votosEmitidos": 2147,
+      "votosOposicion": 1558,
+      "votosOficialismo": 414,
+      "votosOtros": 175,
+      "actasVerificadas": 3,
+      "actasTotal": 3,
+      "qrHash": "CNE-2024-MON-140710030-ACTA-01"
+    }
   },
   {
     "id": "140710026",
@@ -2218,7 +4717,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.754959,
     "lng": -63.197278,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "Av. Bicentenario",
+    "direccion": "Calle Sucre c/c Av. Miranda, Av. Bicentenario",
+    "coordinador": "Prof. Hernán Malavé",
+    "testigoPrincipal": "María Elena Rondón",
+    "telefono": "+58 414-770822",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "19:34",
+      "participacionPct": 74.3,
+      "votosEmitidos": 1515,
+      "votosOposicion": 1154,
+      "votosOficialismo": 277,
+      "votosOtros": 84,
+      "actasVerificadas": 3,
+      "actasTotal": 3,
+      "qrHash": "CNE-2024-MON-140710026-ACTA-01"
+    }
   },
   {
     "id": "140710011",
@@ -2233,7 +4749,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.730503,
     "lng": -63.174581,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "Barrio Obrero",
+    "direccion": "Sector Central, Calle El Sol, Barrio Obrero",
+    "coordinador": "Dra. Sofía Granado",
+    "testigoPrincipal": "José Gregorio Caña",
+    "telefono": "+58 414-729607",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "18:18",
+      "participacionPct": 81.9,
+      "votosEmitidos": 2036,
+      "votosOposicion": 1554,
+      "votosOficialismo": 459,
+      "votosOtros": 23,
+      "actasVerificadas": 2,
+      "actasTotal": 2,
+      "qrHash": "CNE-2024-MON-140710011-ACTA-01"
+    }
   },
   {
     "id": "140710022",
@@ -2249,7 +4782,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.763446,
     "lng": -63.173967,
-    "estatus": "prioritario"
+    "estatus": "prioritario",
+    "sector": "Viento Colao",
+    "direccion": "Av. Alirio Ugarte Pelayo, km 2, Viento Colao",
+    "coordinador": "Lcdo. David Farías",
+    "testigoPrincipal": "Andrés Eloy Blanco",
+    "telefono": "+58 414-766202",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "20:39",
+      "participacionPct": 77.0,
+      "votosEmitidos": 2169,
+      "votosOposicion": 1620,
+      "votosOficialismo": 522,
+      "votosOtros": 27,
+      "actasVerificadas": 3,
+      "actasTotal": 3,
+      "qrHash": "CNE-2024-MON-140710022-ACTA-01"
+    }
   },
   {
     "id": "140710008",
@@ -2264,7 +4814,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.739328,
     "lng": -63.198005,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "Las Avenidas",
+    "direccion": "Calle Ribas con Boyacá, Las Avenidas",
+    "coordinador": "Prof. Carmen Salazar",
+    "testigoPrincipal": "Luisa Marcano",
+    "telefono": "+58 414-729176",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "19:26",
+      "participacionPct": 72.2,
+      "votosEmitidos": 1177,
+      "votosOposicion": 837,
+      "votosOficialismo": 283,
+      "votosOtros": 57,
+      "actasVerificadas": 2,
+      "actasTotal": 2,
+      "qrHash": "CNE-2024-MON-140710008-ACTA-01"
+    }
   },
   {
     "id": "140710020",
@@ -2280,7 +4847,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.74167,
     "lng": -63.162857,
-    "estatus": "prioritario"
+    "estatus": "prioritario",
+    "sector": "Palo Negro",
+    "direccion": "Av. Universidad, Sector 2, Palo Negro",
+    "coordinador": "Ing. Pedro Luis Figuera",
+    "testigoPrincipal": "Manuel Antonio Sosa",
+    "telefono": "+58 414-752972",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "20:44",
+      "participacionPct": 75.4,
+      "votosEmitidos": 2188,
+      "votosOposicion": 1652,
+      "votosOficialismo": 493,
+      "votosOtros": 43,
+      "actasVerificadas": 3,
+      "actasTotal": 3,
+      "qrHash": "CNE-2024-MON-140710020-ACTA-01"
+    }
   },
   {
     "id": "140710033",
@@ -2294,7 +4878,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.76274,
     "lng": -63.190682,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "Campo Obrero",
+    "direccion": "Calle Las Flores c/c Av. Los Próceres, Campo Obrero",
+    "coordinador": "Dra. María Elena Rondón",
+    "testigoPrincipal": "Patricia Velásquez",
+    "telefono": "+58 414-772993",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "20:12",
+      "participacionPct": 75.8,
+      "votosEmitidos": 706,
+      "votosOposicion": 512,
+      "votosOficialismo": 162,
+      "votosOtros": 32,
+      "actasVerificadas": 1,
+      "actasTotal": 1,
+      "qrHash": "CNE-2024-MON-140710033-ACTA-01"
+    }
   },
   {
     "id": "140710019",
@@ -2311,7 +4912,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.729011,
     "lng": -63.185059,
-    "estatus": "prioritario"
+    "estatus": "prioritario",
+    "sector": "Calle Monagas",
+    "direccion": "Av. El Ejército, Manzana 8, Calle Monagas",
+    "coordinador": "Lcdo. José Gregorio Caña",
+    "testigoPrincipal": "Gabriel Subero",
+    "telefono": "+58 414-746332",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "20:15",
+      "participacionPct": 78.2,
+      "votosEmitidos": 2880,
+      "votosOposicion": 2070,
+      "votosOficialismo": 656,
+      "votosOtros": 154,
+      "actasVerificadas": 4,
+      "actasTotal": 4,
+      "qrHash": "CNE-2024-MON-140710019-ACTA-01"
+    }
   },
   {
     "id": "140710025",
@@ -2326,7 +4944,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.757744,
     "lng": -63.165114,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "Guanaguanay",
+    "direccion": "Av. Principal con Calle 3, Guanaguanay",
+    "coordinador": "Ing. Andrés Eloy Blanco",
+    "testigoPrincipal": "Beatriz Centeno",
+    "telefono": "+58 414-722554",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "18:54",
+      "participacionPct": 76.3,
+      "votosEmitidos": 1187,
+      "votosOposicion": 840,
+      "votosOficialismo": 266,
+      "votosOtros": 81,
+      "actasVerificadas": 2,
+      "actasTotal": 2,
+      "qrHash": "CNE-2024-MON-140710025-ACTA-01"
+    }
   },
   {
     "id": "140710064",
@@ -2342,7 +4977,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.749317,
     "lng": -63.200495,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "Pueblo Nuevo",
+    "direccion": "Calle Bolívar, frente a la Plaza, Pueblo Nuevo",
+    "coordinador": "Prof. Luisa Marcano",
+    "testigoPrincipal": "Elena Quijada",
+    "telefono": "+58 414-717400",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "19:33",
+      "participacionPct": 75.0,
+      "votosEmitidos": 1803,
+      "votosOposicion": 1266,
+      "votosOficialismo": 365,
+      "votosOtros": 172,
+      "actasVerificadas": 3,
+      "actasTotal": 3,
+      "qrHash": "CNE-2024-MON-140710064-ACTA-01"
+    }
   },
   {
     "id": "140704005",
@@ -2356,7 +5008,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.729,
     "lng": -63.28085,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "Pueblo Nuevo",
+    "direccion": "Carrera 4 entre Calles 5 y 6, Pueblo Nuevo",
+    "coordinador": "Lcdo. Manuel Antonio Sosa",
+    "testigoPrincipal": "Rafael Monagas",
+    "telefono": "+58 414-797911",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "18:20",
+      "participacionPct": 76.3,
+      "votosEmitidos": 963,
+      "votosOposicion": 692,
+      "votosOficialismo": 201,
+      "votosOtros": 70,
+      "actasVerificadas": 1,
+      "actasTotal": 1,
+      "qrHash": "CNE-2024-MON-140704005-ACTA-01"
+    }
   },
   {
     "id": "140704006",
@@ -2370,7 +5039,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.732513,
     "lng": -63.288026,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "La Candelaria",
+    "direccion": "Av. Bicentenario, Edif. Escolar, La Candelaria",
+    "coordinador": "Dra. Patricia Velásquez",
+    "testigoPrincipal": "Hernán Malavé",
+    "telefono": "+58 414-797346",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "19:47",
+      "participacionPct": 73.8,
+      "votosEmitidos": 248,
+      "votosOposicion": 185,
+      "votosOficialismo": 51,
+      "votosOtros": 12,
+      "actasVerificadas": 1,
+      "actasTotal": 1,
+      "qrHash": "CNE-2024-MON-140704006-ACTA-01"
+    }
   },
   {
     "id": "140704002",
@@ -2387,7 +5073,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.729,
     "lng": -63.284,
-    "estatus": "prioritario"
+    "estatus": "prioritario",
+    "sector": "Corazón de Jesús",
+    "direccion": "Calle Sucre c/c Av. Miranda, Corazón de Jesús",
+    "coordinador": "Ing. Gabriel Subero",
+    "testigoPrincipal": "Sofía Granado",
+    "telefono": "+58 414-742782",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "18:39",
+      "participacionPct": 73.4,
+      "votosEmitidos": 2271,
+      "votosOposicion": 1673,
+      "votosOficialismo": 449,
+      "votosOtros": 149,
+      "actasVerificadas": 4,
+      "actasTotal": 4,
+      "qrHash": "CNE-2024-MON-140704002-ACTA-01"
+    }
   },
   {
     "id": "140704003",
@@ -2401,7 +5104,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.722912,
     "lng": -63.283439,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "El Samán",
+    "direccion": "Sector Central, Calle El Sol, El Samán",
+    "coordinador": "Prof. Beatriz Centeno",
+    "testigoPrincipal": "David Farías",
+    "telefono": "+58 414-766453",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "20:29",
+      "participacionPct": 81.0,
+      "votosEmitidos": 897,
+      "votosOposicion": 676,
+      "votosOficialismo": 171,
+      "votosOtros": 50,
+      "actasVerificadas": 1,
+      "actasTotal": 1,
+      "qrHash": "CNE-2024-MON-140704003-ACTA-01"
+    }
   },
   {
     "id": "140709017",
@@ -2415,7 +5135,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.715,
     "lng": -63.23485,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "El Rosario",
+    "direccion": "Av. Alirio Ugarte Pelayo, km 2, El Rosario",
+    "coordinador": "Lcda. Elena Quijada",
+    "testigoPrincipal": "Carmen Salazar",
+    "telefono": "+58 414-748303",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "19:40",
+      "participacionPct": 78.4,
+      "votosEmitidos": 274,
+      "votosOposicion": 201,
+      "votosOficialismo": 54,
+      "votosOtros": 19,
+      "actasVerificadas": 1,
+      "actasTotal": 1,
+      "qrHash": "CNE-2024-MON-140709017-ACTA-01"
+    }
   },
   {
     "id": "140709006",
@@ -2429,7 +5166,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.718513,
     "lng": -63.242026,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "Santa Cruz Centro",
+    "direccion": "Calle Ribas con Boyacá, Santa Cruz Centro",
+    "coordinador": "Ing. Rafael Monagas",
+    "testigoPrincipal": "Pedro Luis Figuera",
+    "telefono": "+58 414-747816",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "19:11",
+      "participacionPct": 73.1,
+      "votosEmitidos": 423,
+      "votosOposicion": 309,
+      "votosOficialismo": 86,
+      "votosOtros": 28,
+      "actasVerificadas": 1,
+      "actasTotal": 1,
+      "qrHash": "CNE-2024-MON-140709006-ACTA-01"
+    }
   },
   {
     "id": "140709016",
@@ -2446,7 +5200,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.708912,
     "lng": -63.237439,
-    "estatus": "prioritario"
+    "estatus": "prioritario",
+    "sector": "Zona Industrial",
+    "direccion": "Av. Universidad, Sector 2, Zona Industrial",
+    "coordinador": "Prof. Hernán Malavé",
+    "testigoPrincipal": "María Elena Rondón",
+    "telefono": "+58 414-782985",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "20:59",
+      "participacionPct": 81.8,
+      "votosEmitidos": 2890,
+      "votosOposicion": 2175,
+      "votosOficialismo": 575,
+      "votosOtros": 140,
+      "actasVerificadas": 4,
+      "actasTotal": 4,
+      "qrHash": "CNE-2024-MON-140709016-ACTA-01"
+    }
   },
   {
     "id": "140709009",
@@ -2462,7 +5233,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.720405,
     "lng": -63.233649,
-    "estatus": "prioritario"
+    "estatus": "prioritario",
+    "sector": "Paramaconi",
+    "direccion": "Calle Las Flores c/c Av. Los Próceres, Paramaconi",
+    "coordinador": "Dra. Sofía Granado",
+    "testigoPrincipal": "José Gregorio Caña",
+    "telefono": "+58 414-773952",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "19:59",
+      "participacionPct": 79.5,
+      "votosEmitidos": 2729,
+      "votosOposicion": 1920,
+      "votosOficialismo": 606,
+      "votosOtros": 203,
+      "actasVerificadas": 3,
+      "actasTotal": 3,
+      "qrHash": "CNE-2024-MON-140709009-ACTA-01"
+    }
   },
   {
     "id": "140709008",
@@ -2479,7 +5267,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.713711,
     "lng": -63.245651,
-    "estatus": "prioritario"
+    "estatus": "prioritario",
+    "sector": "La Gran Victoria",
+    "direccion": "Av. El Ejército, Manzana 8, La Gran Victoria",
+    "coordinador": "Lcdo. David Farías",
+    "testigoPrincipal": "Andrés Eloy Blanco",
+    "telefono": "+58 414-791294",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "20:26",
+      "participacionPct": 80.0,
+      "votosEmitidos": 4341,
+      "votosOposicion": 3249,
+      "votosOficialismo": 888,
+      "votosOtros": 204,
+      "actasVerificadas": 4,
+      "actasTotal": 4,
+      "qrHash": "CNE-2024-MON-140709008-ACTA-01"
+    }
   },
   {
     "id": "140709002",
@@ -2496,7 +5301,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.710749,
     "lng": -63.230984,
-    "estatus": "prioritario"
+    "estatus": "prioritario",
+    "sector": "Los Samanes",
+    "direccion": "Av. Principal con Calle 3, Los Samanes",
+    "coordinador": "Prof. Carmen Salazar",
+    "testigoPrincipal": "Luisa Marcano",
+    "telefono": "+58 414-727743",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "18:50",
+      "participacionPct": 78.8,
+      "votosEmitidos": 2531,
+      "votosOposicion": 1917,
+      "votosOficialismo": 572,
+      "votosOtros": 42,
+      "actasVerificadas": 4,
+      "actasTotal": 4,
+      "qrHash": "CNE-2024-MON-140709002-ACTA-01"
+    }
   },
   {
     "id": "140709005",
@@ -2511,7 +5333,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.723101,
     "lng": -63.240287,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "Los Mangos",
+    "direccion": "Calle Bolívar, frente a la Plaza, Los Mangos",
+    "coordinador": "Ing. Pedro Luis Figuera",
+    "testigoPrincipal": "Manuel Antonio Sosa",
+    "telefono": "+58 414-784473",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "20:18",
+      "participacionPct": 78.5,
+      "votosEmitidos": 1402,
+      "votosOposicion": 1016,
+      "votosOficialismo": 295,
+      "votosOtros": 91,
+      "actasVerificadas": 2,
+      "actasTotal": 2,
+      "qrHash": "CNE-2024-MON-140709005-ACTA-01"
+    }
   },
   {
     "id": "140709010",
@@ -2525,7 +5364,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.707172,
     "lng": -63.242269,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "El Rosario",
+    "direccion": "Carrera 4 entre Calles 5 y 6, El Rosario",
+    "coordinador": "Dra. María Elena Rondón",
+    "testigoPrincipal": "Patricia Velásquez",
+    "telefono": "+58 414-732305",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "18:44",
+      "participacionPct": 72.9,
+      "votosEmitidos": 546,
+      "votosOposicion": 395,
+      "votosOficialismo": 126,
+      "votosOtros": 25,
+      "actasVerificadas": 1,
+      "actasTotal": 1,
+      "qrHash": "CNE-2024-MON-140709010-ACTA-01"
+    }
   },
   {
     "id": "140709001",
@@ -2541,7 +5397,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.718163,
     "lng": -63.228904,
-    "estatus": "prioritario"
+    "estatus": "prioritario",
+    "sector": "Santa Cruz Centro",
+    "direccion": "Av. Bicentenario, Edif. Escolar, Santa Cruz Centro",
+    "coordinador": "Lcdo. José Gregorio Caña",
+    "testigoPrincipal": "Gabriel Subero",
+    "telefono": "+58 414-744950",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "18:26",
+      "participacionPct": 80.8,
+      "votosEmitidos": 2869,
+      "votosOposicion": 2092,
+      "votosOficialismo": 617,
+      "votosOtros": 160,
+      "actasVerificadas": 3,
+      "actasTotal": 3,
+      "qrHash": "CNE-2024-MON-140709001-ACTA-01"
+    }
   },
   {
     "id": "140709015",
@@ -2556,7 +5429,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.718663,
     "lng": -63.247317,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "Zona Industrial",
+    "direccion": "Calle Sucre c/c Av. Miranda, Zona Industrial",
+    "coordinador": "Ing. Andrés Eloy Blanco",
+    "testigoPrincipal": "Beatriz Centeno",
+    "telefono": "+58 414-747864",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "19:17",
+      "participacionPct": 81.1,
+      "votosEmitidos": 1006,
+      "votosOposicion": 780,
+      "votosOficialismo": 249,
+      "votosOtros": -23,
+      "actasVerificadas": 2,
+      "actasTotal": 2,
+      "qrHash": "CNE-2024-MON-140709015-ACTA-01"
+    }
   },
   {
     "id": "140709004",
@@ -2572,7 +5462,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.705981,
     "lng": -63.233569,
-    "estatus": "prioritario"
+    "estatus": "prioritario",
+    "sector": "Paramaconi",
+    "direccion": "Sector Central, Calle El Sol, Paramaconi",
+    "coordinador": "Prof. Luisa Marcano",
+    "testigoPrincipal": "Elena Quijada",
+    "telefono": "+58 414-738980",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "20:56",
+      "participacionPct": 76.7,
+      "votosEmitidos": 2127,
+      "votosOposicion": 1501,
+      "votosOficialismo": 495,
+      "votosOtros": 131,
+      "actasVerificadas": 3,
+      "actasTotal": 3,
+      "qrHash": "CNE-2024-MON-140709004-ACTA-01"
+    }
   },
   {
     "id": "140709011",
@@ -2588,7 +5495,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.724825,
     "lng": -63.234764,
-    "estatus": "prioritario"
+    "estatus": "prioritario",
+    "sector": "La Gran Victoria",
+    "direccion": "Av. Alirio Ugarte Pelayo, km 2, La Gran Victoria",
+    "coordinador": "Lcdo. Manuel Antonio Sosa",
+    "testigoPrincipal": "Rafael Monagas",
+    "telefono": "+58 414-781474",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "18:35",
+      "participacionPct": 78.7,
+      "votosEmitidos": 4150,
+      "votosOposicion": 3036,
+      "votosOficialismo": 992,
+      "votosOtros": 122,
+      "actasVerificadas": 3,
+      "actasTotal": 3,
+      "qrHash": "CNE-2024-MON-140709011-ACTA-01"
+    }
   },
   {
     "id": "140708001",
@@ -2606,7 +5530,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.726,
     "lng": -63.366,
-    "estatus": "prioritario"
+    "estatus": "prioritario",
+    "sector": "El Furrial Centro",
+    "direccion": "Calle Ribas con Boyacá, El Furrial Centro",
+    "coordinador": "Dra. Patricia Velásquez",
+    "testigoPrincipal": "Hernán Malavé",
+    "telefono": "+58 414-796866",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "20:26",
+      "participacionPct": 72.1,
+      "votosEmitidos": 2820,
+      "votosOposicion": 2094,
+      "votosOficialismo": 597,
+      "votosOtros": 129,
+      "actasVerificadas": 5,
+      "actasTotal": 5,
+      "qrHash": "CNE-2024-MON-140708001-ACTA-01"
+    }
   },
   {
     "id": "140708002",
@@ -2622,7 +5563,24 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.731,
     "lng": -63.372,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "Corocito",
+    "direccion": "Av. Universidad, Sector 2, Corocito",
+    "coordinador": "Ing. Gabriel Subero",
+    "testigoPrincipal": "Sofía Granado",
+    "telefono": "+58 414-723791",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "18:40",
+      "participacionPct": 77.8,
+      "votosEmitidos": 1930,
+      "votosOposicion": 1477,
+      "votosOficialismo": 474,
+      "votosOtros": -21,
+      "actasVerificadas": 3,
+      "actasTotal": 3,
+      "qrHash": "CNE-2024-MON-140708002-ACTA-01"
+    }
   },
   {
     "id": "140708003",
@@ -2637,8 +5595,25 @@ const CENTROS_MATURIN = [
     ],
     "lat": 9.715,
     "lng": -63.354,
-    "estatus": "cubierto"
+    "estatus": "cubierto",
+    "sector": "Bajo Guarapiche",
+    "direccion": "Calle Las Flores c/c Av. Los Próceres, Bajo Guarapiche",
+    "coordinador": "Prof. Beatriz Centeno",
+    "testigoPrincipal": "David Farías",
+    "telefono": "+58 414-788326",
+    "escrutinio": {
+      "transmitido": true,
+      "hora": "20:14",
+      "participacionPct": 72.2,
+      "votosEmitidos": 1004,
+      "votosOposicion": 773,
+      "votosOficialismo": 220,
+      "votosOtros": 11,
+      "actasVerificadas": 2,
+      "actasTotal": 2,
+      "qrHash": "CNE-2024-MON-140708003-ACTA-01"
+    }
   }
 ];
-if (typeof window !== 'undefined') { window.CENTROS_MATURIN = CENTROS_MATURIN; }
-if (typeof module !== 'undefined' && module.exports) { module.exports = { CENTROS_MATURIN }; }
+
+if (typeof window !== "undefined") window.CENTROS_MATURIN = CENTROS_MATURIN;

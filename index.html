@@ -8,8 +8,13 @@
   <meta name="theme-color" content="#070a14">
   <link rel="icon" type="image/png" href="assets/logo-migato.png">
 
-  <!-- Tailwind CSS CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Tailwind CSS (Local de Alta Disponibilidad + CDN de Respaldo) -->
+  <script src="vendor/tailwindcss.js"></script>
+  <script>
+    if (!window.tailwind) {
+      document.write('<script src="https://cdn.tailwindcss.com"><\/script>');
+    }
+  </script>
   <script>
     tailwind.config = {
       darkMode: "class",
@@ -33,8 +38,13 @@
     }
   </script>
 
-  <!-- Lucide Icons -->
-  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Lucide Icons (Local + CDN) -->
+  <script src="vendor/lucide.min.js"></script>
+  <script>
+    if (!window.lucide) {
+      document.write('<script src="https://unpkg.com/lucide@latest"><\/script>');
+    }
+  </script>
 
   <!-- Google Fonts: Outfit (Display) + Public Sans (Body) + JetBrains Mono (Datos) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">

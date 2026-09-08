@@ -24,6 +24,7 @@ class Handler(http.server.SimpleHTTPRequestHandler):
 
 def run():
     global PORT
+    socketserver.TCPServer.allow_reuse_address = True
     while PORT < 8050:
         try:
             with socketserver.TCPServer(("", PORT), Handler) as httpd:
