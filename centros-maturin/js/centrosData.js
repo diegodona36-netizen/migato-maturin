@@ -2,7 +2,7 @@
  * Base de Datos Oficial de Centros Electorales de Maturín (CNE 2024 / Actas Oficiales)
  * 175 Centros y 361 Mesas Electorales Enriquecidos con Sectores, Direcciones y Escrutinio Simulado
  */
-const CENTROS_MATURIN = [
+var CENTROS_MATURIN = [
   {
     "id": "140711032",
     "nombre": "Centro De Votacion Los Arenales",

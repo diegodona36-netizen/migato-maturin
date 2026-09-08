@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Centros Electorales de Maturín • Tablero ConVzla Monagas</title>
+  <title>Centros Electorales y Tablilla de Escrutinio • Maturín | ConVzla Monagas</title>
   
   <!-- Tailwind CSS (Local de Alta Disponibilidad + CDN de Respaldo) -->
   <script src="../vendor/tailwindcss.js"></script>
@@ -51,7 +51,7 @@
   </script>
 
   <!-- Base de Datos Oficial 175 Centros y 361 Mesas Enriquecida con Escrutinio Simulado -->
-  <script src="js/centrosData.js"></script>
+  <script src="js/centrosData.js?v=122"></script>
 
   <!-- Google Fonts: Inter + JetBrains Mono -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -105,6 +105,30 @@
     .leaflet-popup-tip {
       background: #0f172a !important;
     }
+    /* Estilos de Impresión Oficial para la Tablilla */
+    @media print {
+      body {
+        background-color: #ffffff !important;
+        color: #000000 !important;
+      }
+      header, section, nav, .no-print, #view-map, #escrutinio-global-panel, #parish-pills-container {
+        display: none !important;
+      }
+      #view-tablilla {
+        display: block !important;
+        width: 100% !important;
+      }
+      table {
+        color: #000000 !important;
+        border-collapse: collapse !important;
+        width: 100% !important;
+        font-size: 9pt !important;
+      }
+      th, td {
+        border: 1px solid #000000 !important;
+        padding: 4px 6px !important;
+      }
+    }
   </style>
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col antialiased selection:bg-sky-500 selection:text-white max-w-full overflow-x-hidden">
@@ -112,15 +136,15 @@
   <!-- ============================================================== -->
   <!-- 1. BARRA DE NAVEGACIÓN SUPERIOR ESTILO TABLERO ELECTORAL       -->
   <!-- ============================================================== -->
-  <header class="sticky top-0 z-50 bg-slate-900/95 backdrop-blur-md border-b border-slate-800 shadow-xl">
+  <header class="sticky top-0 z-50 bg-slate-900/95 backdrop-blur-md border-b border-slate-800 shadow-xl no-print">
     <div class="max-w-7xl mx-auto px-3 sm:px-6 py-2.5 flex items-center justify-between gap-3">
       
       <!-- Logo e Identidad -->
       <div class="flex items-center gap-2 min-w-0">
-        <a href="../" class="p-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 transition flex items-center gap-1 text-xs font-bold shrink-0" title="Volver al Portal Central de Mando">
+        <a href="../" class="p-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 transition flex items-center gap-1 text-xs font-bold shrink-0" title="Volver al Portal Central">
           <i data-lucide="home" class="w-4 h-4"></i>
         </a>
-        <a href="../earth-monagas/?v=120" class="p-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-sky-400 border border-slate-700 transition flex items-center gap-1 text-xs font-bold shrink-0" title="Volver al Mapa Satelital 3D">
+        <a href="../earth-monagas/?v=122" class="p-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-sky-400 border border-slate-700 transition flex items-center gap-1 text-xs font-bold shrink-0" title="Volver al Mapa Satelital 3D">
           <i data-lucide="globe" class="w-4 h-4"></i>
           <span class="hidden sm:inline">Mapa Satelital</span>
         </a>
@@ -131,10 +155,10 @@
           </div>
           <div class="truncate">
             <div class="flex items-center gap-1.5">
-              <h1 class="text-sm sm:text-base font-black tracking-tight text-white uppercase truncate">Centros Electorales • Maturín</h1>
-              <span class="px-2 py-0.5 rounded-md bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 text-[10px] font-black uppercase tracking-wider hidden xs:inline-block">Red de Testigos</span>
+              <h1 class="text-sm sm:text-base font-black tracking-tight text-white uppercase truncate">Centros Electorales y Tablilla CNE</h1>
+              <span class="px-2 py-0.5 rounded-md bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 text-[10px] font-black uppercase tracking-wider hidden xs:inline-block">Maturín</span>
             </div>
-            <p class="text-[11px] text-slate-400 truncate">175 Centros • 361 Mesas • Auditoría Electoral CNE</p>
+            <p class="text-[11px] text-slate-400 truncate">175 Centros • 361 Mesas • Tablilla Oficial de Escrutinio</p>
           </div>
         </div>
       </div>
@@ -143,22 +167,22 @@
       <div class="flex items-center gap-2 shrink-0">
         <a href="../dashboard-campana/" class="px-2.5 sm:px-3 py-1.5 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 text-xs font-black transition flex items-center gap-1.5 shadow-sm active:scale-95" title="Ver Balance de Campaña">
           <i data-lucide="bar-chart-3" class="w-4 h-4 text-amber-400"></i>
-          <span class="hidden sm:inline">Dashboard Campaña</span>
+          <span class="hidden md:inline">Dashboard Campaña</span>
         </a>
 
-        <button onclick="toggleMapView()" id="btn-toggle-map" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-sky-400 border border-slate-700 text-xs font-bold transition flex items-center gap-1.5 shadow-sm active:scale-95">
-          <i data-lucide="map" class="w-4 h-4"></i>
-          <span id="map-toggle-text" class="hidden sm:inline">Ver Mapa</span>
-        </button>
-
-        <button onclick="exportToCSV()" class="px-3 py-1.5 rounded-xl bg-sky-600 hover:bg-sky-500 text-white text-xs font-black transition flex items-center gap-1.5 shadow-md shadow-sky-600/30 active:scale-95">
+        <button onclick="exportToCSV()" class="px-3 py-1.5 rounded-xl bg-sky-600 hover:bg-sky-500 text-white text-xs font-black transition flex items-center gap-1.5 shadow-md shadow-sky-600/30 active:scale-95" title="Descargar Tablilla en CSV">
           <i data-lucide="download" class="w-4 h-4"></i>
           <span class="hidden sm:inline">Exportar CSV</span>
         </button>
 
-        <a href="centros_electorales_maturin.kml" download="centros_electorales_maturin.kml" class="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-black transition flex items-center gap-1.5 shadow-md shadow-emerald-600/30 active:scale-95" title="Descargar archivo KML oficial">
-          <i data-lucide="globe" class="w-4 h-4"></i>
-          <span class="hidden sm:inline">KML</span>
+        <button onclick="window.print()" class="px-2.5 sm:px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-bold transition flex items-center gap-1.5 active:scale-95" title="Imprimir Tablilla Oficial">
+          <i data-lucide="printer" class="w-4 h-4"></i>
+          <span class="hidden sm:inline">Imprimir</span>
+        </button>
+
+        <a href="centros_electorales_maturin.kml" download="centros_electorales_maturin.kml" class="px-2.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-black transition flex items-center gap-1 shadow-md active:scale-95" title="Descargar KML oficial">
+          <i data-lucide="map-pin" class="w-3.5 h-3.5"></i>
+          <span class="hidden md:inline">KML</span>
         </a>
       </div>
 
@@ -168,14 +192,14 @@
   <!-- ============================================================== -->
   <!-- 2. BANNER DE MÉTRICAS GLOBALES (KPIs OFICIALES CNE)           -->
   <!-- ============================================================== -->
-  <section class="bg-gradient-to-b from-slate-900 to-slate-950 border-b border-slate-800/80 py-4 px-3 sm:px-6">
+  <section class="bg-gradient-to-b from-slate-900 to-slate-950 border-b border-slate-800/80 py-3.5 px-3 sm:px-6 no-print">
     <div class="max-w-7xl mx-auto">
       
       <div class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
         
         <!-- Total Centros -->
-        <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-3.5 sm:p-4 shadow-lg flex items-center gap-3">
-          <div class="w-11 h-11 rounded-xl bg-blue-950/80 border border-blue-500/40 text-sky-400 flex items-center justify-center shrink-0">
+        <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-3 sm:p-3.5 shadow-lg flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-blue-950/80 border border-blue-500/40 text-sky-400 flex items-center justify-center shrink-0">
             <i data-lucide="school" class="w-5 h-5"></i>
           </div>
           <div>
@@ -185,8 +209,8 @@
         </div>
 
         <!-- Total Mesas -->
-        <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-3.5 sm:p-4 shadow-lg flex items-center gap-3">
-          <div class="w-11 h-11 rounded-xl bg-purple-950/80 border border-purple-500/40 text-purple-400 flex items-center justify-center shrink-0">
+        <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-3 sm:p-3.5 shadow-lg flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-purple-950/80 border border-purple-500/40 text-purple-400 flex items-center justify-center shrink-0">
             <i data-lucide="box" class="w-5 h-5"></i>
           </div>
           <div>
@@ -196,19 +220,19 @@
         </div>
 
         <!-- Padrón de Electores -->
-        <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-3.5 sm:p-4 shadow-lg flex items-center gap-3">
-          <div class="w-11 h-11 rounded-xl bg-emerald-950/80 border border-emerald-500/40 text-emerald-400 flex items-center justify-center shrink-0">
+        <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-3 sm:p-3.5 shadow-lg flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-emerald-950/80 border border-emerald-500/40 text-emerald-400 flex items-center justify-center shrink-0">
             <i data-lucide="users" class="w-5 h-5"></i>
           </div>
           <div>
-            <span class="text-[10px] sm:text-xs font-bold uppercase text-slate-400 tracking-wider block">Electores Registrados</span>
+            <span class="text-[10px] sm:text-xs font-bold uppercase text-slate-400 tracking-wider block">Padrón Electoral</span>
             <span class="text-xl sm:text-2xl font-black text-emerald-400 font-mono" id="stat-total-electores">318.601</span>
           </div>
         </div>
 
         <!-- Cobertura de Testigos -->
-        <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-3.5 sm:p-4 shadow-lg flex items-center gap-3">
-          <div class="w-11 h-11 rounded-xl bg-amber-950/80 border border-amber-500/40 text-amber-400 flex items-center justify-center shrink-0">
+        <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-3 sm:p-3.5 shadow-lg flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-amber-950/80 border border-amber-500/40 text-amber-400 flex items-center justify-center shrink-0">
             <i data-lucide="shield-check" class="w-5 h-5"></i>
           </div>
           <div>
@@ -228,7 +252,7 @@
   <!-- ============================================================== -->
   <!-- 2.5 BANNER DE TRANSMISIÓN ELECTORAL SIMULADA (API CNE EN VIVO) -->
   <!-- ============================================================== -->
-  <section class="max-w-7xl mx-auto px-3 sm:px-6 pt-4 w-full">
+  <section class="max-w-7xl mx-auto px-3 sm:px-6 pt-3 w-full no-print">
     <div class="bg-gradient-to-r from-slate-900 via-indigo-950/40 to-slate-900 border border-indigo-500/40 rounded-2xl p-4 sm:p-5 shadow-2xl space-y-4">
       
       <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-3 border-b border-slate-800 pb-3">
@@ -240,21 +264,29 @@
           <div>
             <h2 class="text-sm sm:text-base font-black text-white uppercase tracking-tight flex items-center gap-2">
               <span>Transmisión y Escrutinio Electoral CNE</span>
-              <span class="px-2 py-0.5 rounded-md bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-[10px] font-mono font-bold">API SIMULADOR ACTIVO</span>
+              <span class="px-2 py-0.5 rounded-md bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-[10px] font-mono font-bold">SIMULADOR ACTIVO</span>
             </h2>
-            <p class="text-[11px] text-slate-400">Simulación matemática en tiempo real para demostración táctica • Modo Local Offline</p>
+            <p class="text-[11px] text-slate-400">Totalización de Actas CNE con validación de código QR y firma de testigos • Modo Local/Offline</p>
           </div>
         </div>
 
-        <!-- Botones de Acción de Simulación -->
-        <div class="flex items-center gap-2">
-          <button id="btn-toggle-escrutinio" onclick="toggleEscrutinioPanel()" class="px-3 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs shadow transition flex items-center gap-1.5 active:scale-95">
-            <i data-lucide="bar-chart-2" class="w-4 h-4"></i>
-            <span id="txt-toggle-escrutinio">Ocultar Escrutinio</span>
-          </button>
-          <button onclick="simularTransmisionEnVivo()" class="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-black text-xs shadow-lg shadow-emerald-600/30 transition flex items-center gap-1.5 active:scale-95">
+        <!-- Botones de Control de Simulación -->
+        <div class="flex items-center gap-2 flex-wrap">
+          <select id="select-preset-escrutinio" onchange="cambiarPresetEscrutinio(this.value)" class="bg-slate-950 border border-indigo-500/50 text-indigo-200 text-xs rounded-xl px-2.5 py-1.5 font-mono font-bold focus:outline-none cursor-pointer">
+            <option value="100">100% Actas (Totalizado)</option>
+            <option value="80">80% Transmitido (2do Boletín)</option>
+            <option value="50">50% Transmitido (1er Boletín)</option>
+            <option value="25">25% Transmisión Inicial</option>
+          </select>
+
+          <button onclick="simularTransmisionEnVivo()" class="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-black text-xs shadow-lg shadow-emerald-600/30 transition flex items-center gap-1.5 active:scale-95 cursor-pointer" title="Ejecutar animación de recepción de actas">
             <i data-lucide="refresh-cw" class="w-4 h-4"></i>
             <span>⚡ Simular Transmisión</span>
+          </button>
+
+          <button id="btn-toggle-escrutinio" onclick="toggleEscrutinioPanel()" class="px-3 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs shadow transition flex items-center gap-1.5 active:scale-95 cursor-pointer">
+            <i data-lucide="bar-chart-2" class="w-4 h-4"></i>
+            <span id="txt-toggle-escrutinio">Ocultar Resultados</span>
           </button>
         </div>
       </div>
@@ -265,7 +297,7 @@
           <span class="text-slate-300 font-bold flex items-center gap-1.5">
             <span>Centros Transmitidos:</span>
             <strong class="text-emerald-400 font-black" id="sim-centros-count">175 / 175</strong>
-            <span class="text-[10px] text-slate-500">(100%)</span>
+            <span class="text-[10px] text-slate-500" id="sim-centros-pct">(100%)</span>
           </span>
           <span class="text-slate-300 font-bold flex items-center gap-1.5">
             <span>Mesas Escrutadas:</span>
@@ -286,49 +318,61 @@
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
           
           <!-- Bloque Opción Cambio / ConVzla / MIGATO -->
-          <div class="bg-blue-950/40 border border-blue-500/40 rounded-xl p-3 space-y-1">
+          <div class="bg-blue-950/40 border border-blue-500/40 rounded-xl p-3 space-y-1 shadow-md">
             <div class="flex items-center justify-between">
-              <span class="text-[11px] font-bold text-blue-300 uppercase">Fuerza del Cambio / MIGATO</span>
+              <span class="text-[11px] font-black text-blue-300 uppercase flex items-center gap-1.5">
+                <span class="w-2.5 h-2.5 rounded-full bg-blue-500"></span>
+                <span>Fuerza del Cambio / MIGATO</span>
+              </span>
               <span class="text-sm font-black text-blue-400 font-mono" id="sim-pct-op">74.6%</span>
             </div>
-            <div class="text-lg font-black text-white font-mono" id="sim-votos-op">181.650 votos</div>
-            <div class="w-full h-1.5 bg-slate-900 rounded-full overflow-hidden">
-              <div id="sim-bar-op" class="h-full bg-blue-500 rounded-full" style="width: 74.6%;"></div>
+            <div class="text-xl font-black text-white font-mono" id="sim-votos-op">181.650 votos</div>
+            <div class="w-full h-2 bg-slate-900 rounded-full overflow-hidden">
+              <div id="sim-bar-op" class="h-full bg-blue-500 rounded-full transition-all duration-500" style="width: 74.6%;"></div>
             </div>
+            <span class="text-[10px] text-blue-400/80 font-mono block">Candidatura Unitaria • Edmundo González</span>
           </div>
 
           <!-- Bloque Oficialismo -->
-          <div class="bg-red-950/30 border border-red-500/40 rounded-xl p-3 space-y-1">
+          <div class="bg-red-950/30 border border-red-500/40 rounded-xl p-3 space-y-1 shadow-md">
             <div class="flex items-center justify-between">
-              <span class="text-[11px] font-bold text-red-300 uppercase">Oficialismo / PSUV</span>
+              <span class="text-[11px] font-black text-red-300 uppercase flex items-center gap-1.5">
+                <span class="w-2.5 h-2.5 rounded-full bg-red-500"></span>
+                <span>Oficialismo / PSUV</span>
+              </span>
               <span class="text-sm font-black text-red-400 font-mono" id="sim-pct-of">22.4%</span>
             </div>
-            <div class="text-lg font-black text-white font-mono" id="sim-votos-of">54.550 votos</div>
-            <div class="w-full h-1.5 bg-slate-900 rounded-full overflow-hidden">
-              <div id="sim-bar-of" class="h-full bg-red-500 rounded-full" style="width: 22.4%;"></div>
+            <div class="text-xl font-black text-white font-mono" id="sim-votos-of">54.550 votos</div>
+            <div class="w-full h-2 bg-slate-900 rounded-full overflow-hidden">
+              <div id="sim-bar-of" class="h-full bg-red-500 rounded-full transition-all duration-500" style="width: 22.4%;"></div>
             </div>
+            <span class="text-[10px] text-red-400/80 font-mono block">Gran Polo Patriótico • Nicolás Maduro</span>
           </div>
 
           <!-- Bloque Otros y Nulos -->
-          <div class="bg-slate-950 border border-slate-800 rounded-xl p-3 space-y-1">
+          <div class="bg-slate-950 border border-slate-800 rounded-xl p-3 space-y-1 shadow-md">
             <div class="flex items-center justify-between">
-              <span class="text-[11px] font-bold text-slate-400 uppercase">Otros / Nulos</span>
+              <span class="text-[11px] font-black text-slate-400 uppercase flex items-center gap-1.5">
+                <span class="w-2.5 h-2.5 rounded-full bg-slate-600"></span>
+                <span>Otros y Nulos</span>
+              </span>
               <span class="text-sm font-black text-slate-300 font-mono" id="sim-pct-ot">3.0%</span>
             </div>
-            <div class="text-lg font-black text-slate-300 font-mono" id="sim-votos-ot">7.300 votos</div>
-            <div class="w-full h-1.5 bg-slate-900 rounded-full overflow-hidden">
-              <div id="sim-bar-ot" class="h-full bg-slate-600 rounded-full" style="width: 3.0%;"></div>
+            <div class="text-xl font-black text-slate-300 font-mono" id="sim-votos-ot">7.300 votos</div>
+            <div class="w-full h-2 bg-slate-900 rounded-full overflow-hidden">
+              <div id="sim-bar-ot" class="h-full bg-slate-600 rounded-full transition-all duration-500" style="width: 3.0%;"></div>
             </div>
+            <span class="text-[10px] text-slate-500 font-mono block">Otras Alianzas y Votos No Válidos</span>
           </div>
 
         </div>
 
-        <div class="text-center text-[10px] text-slate-400 font-mono flex items-center justify-center gap-3">
+        <div class="text-center text-[11px] text-slate-400 font-mono flex flex-wrap items-center justify-center gap-3 pt-1">
           <span>Participación Estimada: <strong class="text-emerald-400" id="sim-part-total">76.4% (243.500 Votantes)</strong></span>
           <span>•</span>
-          <span>Transmisión CNE: <strong class="text-sky-400">100% Finalizada</strong></span>
+          <span>Margen Promedio: <strong class="text-blue-400 font-bold" id="sim-margen-total">+52.2 pts a favor</strong></span>
           <span>•</span>
-          <span>Margen de Victoria: <strong class="text-blue-400">+52.2 pts</strong></span>
+          <span>Estatus CNE: <strong class="text-sky-400">Totalización Concluida</strong></span>
         </div>
       </div>
 
@@ -336,37 +380,61 @@
   </section>
 
   <!-- ============================================================== -->
-  <!-- 3. BARRA DE BÚSQUEDA Y FILTROS POR PARROQUIA                   -->
+  <!-- 3. BARRA DE VISTAS, BÚSQUEDA Y FILTROS POR PARROQUIA           -->
   <!-- ============================================================== -->
-  <section class="max-w-7xl mx-auto px-3 sm:px-6 py-4 w-full space-y-3">
+  <section class="max-w-7xl mx-auto px-3 sm:px-6 py-4 w-full space-y-3 no-print">
     
-    <!-- Fila del Buscador -->
-    <div class="flex flex-col sm:flex-row gap-2.5 items-stretch sm:items-center justify-between">
+    <!-- Selector de Vistas: Tablilla vs Tarjetas vs Estadísticas vs Mapa -->
+    <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-slate-900/80 p-2 rounded-2xl border border-slate-800">
       
-      <!-- Input de búsqueda -->
-      <div class="relative flex-1">
-        <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none"></i>
-        <input 
-          type="text" 
-          id="search-input" 
-          placeholder="Buscar por nombre de colegio, liceo, código CNE, sector o dirección..." 
-          class="w-full pl-10 pr-4 py-2.5 bg-slate-900 border border-slate-800 focus:border-sky-500 rounded-xl text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none transition shadow-inner font-mono"
-          oninput="applyFilters()"
-        >
-        <button id="btn-clear-search" onclick="clearSearch()" class="hidden absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white p-1">
-          <i data-lucide="x" class="w-3.5 h-3.5"></i>
+      <!-- Pestañas de Vista -->
+      <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar">
+        <button onclick="switchView('tablilla')" id="tab-tablilla" class="px-3.5 py-2 rounded-xl text-xs font-black transition flex items-center gap-2 cursor-pointer bg-sky-600 text-white shadow-md shadow-sky-600/30">
+          <i data-lucide="table" class="w-4 h-4"></i>
+          <span>📋 Tablilla Electoral</span>
+        </button>
+
+        <button onclick="switchView('cards')" id="tab-cards" class="px-3.5 py-2 rounded-xl text-xs font-black transition flex items-center gap-2 cursor-pointer bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white">
+          <i data-lucide="grid" class="w-4 h-4"></i>
+          <span>📇 Tarjetas de Centros</span>
+        </button>
+
+        <button onclick="switchView('parroquia-stats')" id="tab-parroquia-stats" class="px-3.5 py-2 rounded-xl text-xs font-black transition flex items-center gap-2 cursor-pointer bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white">
+          <i data-lucide="pie-chart" class="w-4 h-4"></i>
+          <span>📊 Por Parroquia</span>
+        </button>
+
+        <button onclick="switchView('map')" id="tab-map" class="px-3.5 py-2 rounded-xl text-xs font-black transition flex items-center gap-2 cursor-pointer bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white">
+          <i data-lucide="map" class="w-4 h-4"></i>
+          <span>🗺️ Mapa Satelital</span>
         </button>
       </div>
 
-      <!-- Filtro de Estatus -->
-      <div class="flex items-center gap-2">
-        <select id="status-filter" onchange="applyFilters()" class="bg-slate-900 border border-slate-800 text-slate-300 text-xs rounded-xl px-3 py-2.5 focus:outline-none focus:border-sky-500 font-bold cursor-pointer">
-          <option value="todos">Todos los Estatus</option>
-          <option value="cubierto">✅ 100% Cubierto (Con Testigos)</option>
-          <option value="prioritario">🚨 Centro Prioritario / Grande</option>
+      <!-- Filtro de Estatus / Acta -->
+      <div class="flex items-center gap-2 shrink-0">
+        <select id="status-filter" onchange="applyFilters()" class="bg-slate-950 border border-slate-700 text-slate-200 text-xs rounded-xl px-3 py-2 focus:outline-none focus:border-sky-500 font-bold cursor-pointer">
+          <option value="todos">Todos los Estatus de Acta</option>
+          <option value="transmitido">✅ Solo Actas Transmitidas</option>
+          <option value="prioritario">🚨 Centros Prioritarios / Grandes</option>
+          <option value="ventaja70">🔥 Mayoría > 70% Votos</option>
         </select>
       </div>
 
+    </div>
+
+    <!-- Fila del Buscador -->
+    <div class="relative w-full">
+      <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none"></i>
+      <input 
+        type="text" 
+        id="search-input" 
+        placeholder="Buscar en la tablilla por nombre de colegio, liceo, código CNE, sector o dirección..." 
+        class="w-full pl-10 pr-10 py-2.5 bg-slate-900 border border-slate-800 focus:border-sky-500 rounded-xl text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none transition shadow-inner font-mono"
+        oninput="applyFilters()"
+      >
+      <button id="btn-clear-search" onclick="clearSearch()" class="hidden absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white p-1">
+        <i data-lucide="x" class="w-3.5 h-3.5"></i>
+      </button>
     </div>
 
     <!-- Píldoras de Parroquias de Maturín (10 Parroquias) -->
@@ -377,36 +445,166 @@
   </section>
 
   <!-- ============================================================== -->
-  <!-- 4. CONTENEDOR PRINCIPAL: VISTA DE TARJETAS Y MAPA SATELITAL    -->
+  <!-- 4. CONTENEDOR PRINCIPAL: VISTA DE TABLILLA, TARJETAS Y MAPA    -->
   <!-- ============================================================== -->
   <main class="max-w-7xl mx-auto px-3 sm:px-6 py-2 flex-1 w-full space-y-4">
 
-    <!-- CONTENEDOR DEL MAPA (Ocultable) -->
-    <div id="map-container" class="hidden w-full h-[400px] sm:h-[480px] rounded-2xl overflow-hidden border border-slate-800 shadow-2xl relative">
+    <!-- Indicador de Resultados Activos -->
+    <div class="flex items-center justify-between text-xs text-slate-400 px-1 font-mono no-print">
+      <span>Mostrando <strong class="text-sky-400 font-bold" id="showing-count">175</strong> centros electorales</span>
+      <div class="flex items-center gap-2">
+        <span id="active-parish-name" class="font-bold text-slate-300">Todas las Parroquias</span>
+        <span class="text-slate-600">•</span>
+        <span id="active-sort-indicator" class="text-slate-400">Orden: CNE</span>
+      </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- 4.1 VISTA 1: TABLILLA ELECTORAL TIPO SÁBANA CNE (OFICIAL)     -->
+    <!-- ============================================================ -->
+    <div id="view-tablilla" class="space-y-3">
+      
+      <!-- Contenedor con Scroll Horizontal para la Tabla -->
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-2xl">
+        <div class="overflow-x-auto max-h-[700px] overflow-y-auto">
+          <table class="w-full text-left border-collapse font-mono text-xs" id="tablilla-table">
+            
+            <!-- Cabecera de la Tablilla -->
+            <thead class="sticky top-0 z-20 bg-slate-950 text-slate-300 border-b border-slate-800 uppercase tracking-wider text-[11px] shadow-sm">
+              <tr>
+                <th class="py-3 px-3 cursor-pointer hover:text-sky-400 transition" onclick="sortTablilla('id')" title="Ordenar por Código CNE">
+                  <div class="flex items-center gap-1">
+                    <span>CNE</span>
+                    <i data-lucide="arrow-up-down" class="w-3 h-3"></i>
+                  </div>
+                </th>
+                <th class="py-3 px-3 min-w-[240px] cursor-pointer hover:text-sky-400 transition" onclick="sortTablilla('nombre')" title="Ordenar por Nombre de Centro">
+                  <div class="flex items-center gap-1">
+                    <span>Centro de Votación</span>
+                    <i data-lucide="arrow-up-down" class="w-3 h-3"></i>
+                  </div>
+                </th>
+                <th class="py-3 px-2 min-w-[130px] cursor-pointer hover:text-sky-400 transition" onclick="sortTablilla('parroquia')" title="Ordenar por Parroquia">
+                  <div class="flex items-center gap-1">
+                    <span>Parroquia</span>
+                    <i data-lucide="arrow-up-down" class="w-3 h-3"></i>
+                  </div>
+                </th>
+                <th class="py-3 px-2 text-center cursor-pointer hover:text-sky-400 transition" onclick="sortTablilla('mesas')" title="Ordenar por Número de Mesas">
+                  <div class="flex items-center justify-center gap-1">
+                    <span>Mesas</span>
+                    <i data-lucide="arrow-up-down" class="w-3 h-3"></i>
+                  </div>
+                </th>
+                <th class="py-3 px-2 text-right cursor-pointer hover:text-sky-400 transition" onclick="sortTablilla('electores')" title="Ordenar por Electores">
+                  <div class="flex items-center justify-end gap-1">
+                    <span>Padrón</span>
+                    <i data-lucide="arrow-up-down" class="w-3 h-3"></i>
+                  </div>
+                </th>
+                <th class="py-3 px-3 text-right bg-blue-950/20 text-blue-300 cursor-pointer hover:text-blue-200 transition" onclick="sortTablilla('votosOposicion')" title="Ordenar por Votos MIGATO">
+                  <div class="flex items-center justify-end gap-1">
+                    <span>MIGATO / Cambio</span>
+                    <i data-lucide="arrow-up-down" class="w-3 h-3"></i>
+                  </div>
+                </th>
+                <th class="py-3 px-3 text-right bg-red-950/20 text-red-300 cursor-pointer hover:text-red-200 transition" onclick="sortTablilla('votosOficialismo')" title="Ordenar por Votos Oficialismo">
+                  <div class="flex items-center justify-end gap-1">
+                    <span>Oficialismo</span>
+                    <i data-lucide="arrow-up-down" class="w-3 h-3"></i>
+                  </div>
+                </th>
+                <th class="py-3 px-2 text-right text-emerald-400 cursor-pointer hover:text-emerald-300 transition" onclick="sortTablilla('margen')" title="Ordenar por Margen">
+                  <div class="flex items-center justify-end gap-1">
+                    <span>Margen</span>
+                    <i data-lucide="arrow-up-down" class="w-3 h-3"></i>
+                  </div>
+                </th>
+                <th class="py-3 px-3 text-center">Estatus Acta</th>
+                <th class="py-3 px-3 text-center min-w-[140px] no-print">Acción</th>
+              </tr>
+            </thead>
+
+            <!-- Cuerpo Dinámico de la Tablilla -->
+            <tbody id="tablilla-tbody" class="divide-y divide-slate-800/80">
+              <!-- Inyectado con JS -->
+            </tbody>
+
+            <!-- Pie de Totales Consolidado -->
+            <tfoot class="sticky bottom-0 z-20 bg-slate-950 text-white font-black border-t-2 border-slate-700 text-xs shadow-lg">
+              <tr id="tablilla-tfoot-row">
+                <td colspan="3" class="py-3 px-3 text-right uppercase tracking-wider text-slate-300 font-bold">
+                  Total Consolidado en Vista:
+                </td>
+                <td class="py-3 px-2 text-center text-white" id="foot-total-mesas">361</td>
+                <td class="py-3 px-2 text-right text-emerald-400" id="foot-total-electores">318.601</td>
+                <td class="py-3 px-3 text-right text-blue-400 bg-blue-950/30" id="foot-total-op">181.650 (74.6%)</td>
+                <td class="py-3 px-3 text-right text-red-400 bg-red-950/30" id="foot-total-of">54.550 (22.4%)</td>
+                <td class="py-3 px-2 text-right text-emerald-400" id="foot-total-margen">+52.2%</td>
+                <td class="py-3 px-3 text-center text-emerald-400" id="foot-total-actas">361/361 (100%)</td>
+                <td class="py-3 px-3 text-center text-slate-500 no-print">—</td>
+              </tr>
+            </tfoot>
+
+          </table>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- 4.2 VISTA 2: GRID DE TARJETAS DE CENTROS ELECTORALES          -->
+    <!-- ============================================================ -->
+    <div id="view-cards" class="hidden">
+      <div id="centers-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5 sm:gap-4">
+        <!-- Inyectado dinámicamente con JS -->
+      </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- 4.3 VISTA 3: PANEL DE ESTADÍSTICAS POR PARROQUIA (10 Ejes)    -->
+    <!-- ============================================================ -->
+    <div id="view-parroquia-stats" class="hidden space-y-4">
+      
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-xl">
+        <div class="flex items-center justify-between border-b border-slate-800 pb-3 mb-4">
+          <div class="flex items-center gap-2">
+            <div class="w-8 h-8 rounded-lg bg-indigo-950 border border-indigo-500/40 flex items-center justify-center text-indigo-400">
+              <i data-lucide="pie-chart" class="w-4 h-4"></i>
+            </div>
+            <div>
+              <h3 class="text-sm font-black text-white uppercase tracking-tight">Desglose Estadístico por las 10 Parroquias de Maturín</h3>
+              <p class="text-[11px] text-slate-400">Comparativa de centros, mesas, participación y votos por circuito</p>
+            </div>
+          </div>
+          <span class="text-xs font-mono font-bold text-sky-400">10 / 10 Parroquias Totalizadas</span>
+        </div>
+
+        <!-- Grid de las 10 Parroquias -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5" id="parroquia-stats-cards">
+          <!-- Inyectado dinámicamente con JS -->
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- 4.4 VISTA 4: CONTENEDOR DEL MAPA SATELITAL (LEAFLET)          -->
+    <!-- ============================================================ -->
+    <div id="view-map" class="hidden w-full h-[520px] rounded-2xl overflow-hidden border border-slate-800 shadow-2xl relative">
       <div id="map" class="w-full h-full"></div>
       
       <!-- Leyenda flotante sobre el mapa -->
       <div class="absolute bottom-3 left-3 z-[1000] bg-slate-950/90 backdrop-blur-md border border-slate-800 p-2.5 rounded-xl text-[11px] font-mono space-y-1 shadow-lg">
         <div class="flex items-center gap-2">
           <span class="w-3 h-3 rounded-full bg-emerald-400"></span>
-          <span>Centro Cubierto (Testigos OK)</span>
+          <span>Acta Transmitida y Verificada</span>
         </div>
         <div class="flex items-center gap-2">
           <span class="w-3 h-3 rounded-full bg-amber-400"></span>
-          <span>Prioritario / Gran Volumen</span>
+          <span>Centro Prioritario / Gran Volumen</span>
         </div>
       </div>
-    </div>
-
-    <!-- Indicador de Resultados -->
-    <div class="flex items-center justify-between text-xs text-slate-400 px-1 font-mono">
-      <span>Mostrando <strong class="text-sky-400 font-bold" id="showing-count">175</strong> centros electorales</span>
-      <span id="active-parish-name">Todas las Parroquias</span>
-    </div>
-
-    <!-- Grid de Tarjetas de Centros Electorales -->
-    <div id="centers-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5 sm:gap-4">
-      <!-- Inyectado dinámicamente con JS -->
     </div>
 
     <!-- Mensaje de no resultados -->
@@ -437,7 +635,7 @@
             <h3 class="text-base font-black text-white leading-snug" id="modal-center-name">Nombre del Centro</h3>
           </div>
         </div>
-        <button onclick="closeFichaModal()" class="p-1 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition">
+        <button onclick="closeFichaModal()" class="p-1 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition cursor-pointer">
           <i data-lucide="x" class="w-5 h-5"></i>
         </button>
       </div>
@@ -504,16 +702,16 @@
 
       <!-- Botonera Modal -->
       <div class="pt-2 border-t border-slate-800 flex items-center justify-between gap-2">
-        <button onclick="openActaModalFromFicha()" class="px-3.5 py-2 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 font-bold text-xs transition flex items-center gap-1.5">
+        <button onclick="openActaModalFromFicha()" class="px-3.5 py-2 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 font-bold text-xs transition flex items-center gap-1.5 cursor-pointer">
           <i data-lucide="file-check" class="w-3.5 h-3.5"></i>
           <span>Ver Acta CNE QR</span>
         </button>
 
         <div class="flex items-center gap-2">
-          <button onclick="closeFichaModal()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs transition">
+          <button onclick="closeFichaModal()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs transition cursor-pointer">
             Cerrar
           </button>
-          <button onclick="focusInMapFromModal()" class="px-4 py-2 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-black text-xs shadow-lg shadow-sky-600/30 flex items-center gap-1.5 transition">
+          <button onclick="focusInMapFromModal()" class="px-4 py-2 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-black text-xs shadow-lg shadow-sky-600/30 flex items-center gap-1.5 transition cursor-pointer">
             <i data-lucide="map-pin" class="w-3.5 h-3.5"></i>
             <span>Ubicar en Mapa</span>
           </button>
@@ -527,18 +725,18 @@
   <!-- 6. MODAL DE ACTA DE ESCRUTINIO CNE DIGITALIZADA CON QR         -->
   <!-- ============================================================== -->
   <div id="modal-acta-cne" style="display: none; z-index: 100000;" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md items-center justify-center p-3 sm:p-4 overflow-y-auto">
-    <div class="bg-white text-slate-950 w-full max-w-lg rounded-2xl shadow-[0_25px_70px_rgba(0,0,0,0.95)] p-5 sm:p-6 space-y-4 my-auto border-4 border-slate-300 font-mono">
+    <div class="bg-white text-slate-950 w-full max-w-lg rounded-2xl shadow-[0_25px_70px_rgba(0,0,0,0.95)] p-5 sm:p-6 space-y-3.5 my-auto border-4 border-slate-300 font-mono">
       
       <!-- Membrete Oficial CNE -->
-      <div class="text-center border-b-2 border-slate-900 pb-3 space-y-1">
+      <div class="text-center border-b-2 border-slate-900 pb-2.5 space-y-1">
         <div class="text-[10px] font-black uppercase tracking-widest text-slate-700">REPÚBLICA BOLIVARIANA DE VENEZUELA</div>
         <div class="text-xs font-black uppercase tracking-wider text-slate-900">CONSEJO NACIONAL ELECTORAL</div>
-        <div class="text-sm font-black uppercase text-blue-900 bg-blue-50 py-0.5 border border-blue-200 rounded">
+        <div class="text-sm font-black uppercase text-blue-900 bg-blue-50 py-1 border border-blue-200 rounded tracking-tight">
           ACTA DE ESCRUTINIO DE MESA ELECTORAL
         </div>
-        <div class="text-[10px] text-slate-600 flex items-center justify-between pt-1">
+        <div class="text-[10px] text-slate-600 flex items-center justify-between pt-0.5">
           <span>ELECCIÓN PRESIDENCIAL / REGIONAL</span>
-          <span class="font-bold text-slate-900" id="acta-fecha-hora">HORA: 19:42:15</span>
+          <span class="font-bold text-slate-900" id="acta-fecha-hora">HORA: 19:42:15 • 28-JUL-2024</span>
         </div>
       </div>
 
@@ -549,28 +747,29 @@
           <span><strong>MUNICIPIO:</strong> MATURÍN (07)</span>
         </div>
         <div class="flex justify-between">
-          <span><strong>PARROQUIA:</strong> <span id="acta-parroquia">ALTO DE LOS GODOS</span></span>
-          <span><strong>MESA N°:</strong> <span id="acta-mesa">01</span></span>
+          <span><strong>PARROQUIA:</strong> <span id="acta-parroquia" class="font-bold">ALTO DE LOS GODOS</span></span>
+          <span><strong>MESA N°:</strong> <span id="acta-mesa" class="font-bold">01</span></span>
         </div>
-        <div>
-          <strong>CENTRO:</strong> <span id="acta-centro-nombre">CENTRO EDUCATIVO</span>
+        <div class="truncate">
+          <strong>CENTRO:</strong> <span id="acta-centro-nombre" class="font-bold">CENTRO EDUCATIVO</span>
         </div>
-        <div>
-          <strong>CÓDIGO CNE:</strong> <span id="acta-codigo-cne" class="font-bold text-blue-800">140706022</span>
+        <div class="flex justify-between">
+          <span><strong>CÓDIGO CNE:</strong> <span id="acta-codigo-cne" class="font-bold text-blue-800">140706022</span></span>
+          <span><strong>ESTATUS:</strong> <span class="text-emerald-700 font-bold">TRANSMITIDA OK</span></span>
         </div>
       </div>
 
       <!-- Tabla de Escrutinio -->
       <div class="border border-slate-900 rounded overflow-hidden text-xs">
         <div class="bg-slate-900 text-white font-bold px-2 py-1 flex justify-between text-[10px] uppercase">
-          <span>CANDIDATO / ORGANIZACIÓN</span>
+          <span>CANDIDATO / ORGANIZACIÓN POLÍTICA</span>
           <span>TOTAL VOTOS</span>
         </div>
 
         <!-- Opción ConVzla / MIGATO -->
-        <div class="flex justify-between items-center px-2 py-1.5 border-b border-slate-200 bg-blue-50/50">
+        <div class="flex justify-between items-center px-2 py-1.5 border-b border-slate-200 bg-blue-50/70">
           <div class="font-bold">
-            <span class="text-blue-900">EDMUNDO GONZÁLEZ / FUERZA DEL CAMBIO (MIGATO)</span>
+            <span class="text-blue-950">EDMUNDO GONZÁLEZ / FUERZA DEL CAMBIO (MIGATO)</span>
           </div>
           <div class="font-black text-blue-900 font-mono text-sm" id="acta-votos-op">
             412 (74.9%)
@@ -603,58 +802,78 @@
       <!-- Código QR Simulado de Validación CNE y Firmas -->
       <div class="flex items-center justify-between gap-3 pt-2 border-t-2 border-dashed border-slate-300">
         
-        <!-- Código QR SVG Simulado -->
-        <div class="p-1.5 border border-slate-400 rounded bg-white shrink-0">
+        <!-- Código QR Visual Matriz SVG -->
+        <div class="p-1 border-2 border-slate-900 rounded bg-white shrink-0 shadow-sm">
           <svg class="w-16 h-16" viewBox="0 0 100 100" fill="currentColor">
-            <!-- Patrón QR esquemático -->
-            <rect x="5" y="5" width="28" height="28" fill="#000" />
-            <rect x="9" y="9" width="20" height="20" fill="#fff" />
-            <rect x="13" y="13" width="12" height="12" fill="#000" />
+            <!-- Posicionadores Esquinas -->
+            <rect x="5" y="5" width="26" height="26" fill="#000" />
+            <rect x="9" y="9" width="18" height="18" fill="#fff" />
+            <rect x="13" y="13" width="10" height="10" fill="#000" />
 
-            <rect x="67" y="5" width="28" height="28" fill="#000" />
-            <rect x="71" y="9" width="20" height="20" fill="#fff" />
-            <rect x="75" y="13" width="12" height="12" fill="#000" />
+            <rect x="69" y="5" width="26" height="26" fill="#000" />
+            <rect x="73" y="9" width="18" height="18" fill="#fff" />
+            <rect x="77" y="13" width="10" height="10" fill="#000" />
 
-            <rect x="5" y="67" width="28" height="28" fill="#000" />
-            <rect x="9" y="71" width="20" height="20" fill="#fff" />
-            <rect x="13" y="75" width="12" height="12" fill="#000" />
+            <rect x="5" y="69" width="26" height="26" fill="#000" />
+            <rect x="9" y="73" width="18" height="18" fill="#fff" />
+            <rect x="13" y="77" width="10" height="10" fill="#000" />
 
-            <!-- Puntos internos -->
-            <rect x="40" y="10" width="8" height="8" fill="#000" />
-            <rect x="52" y="15" width="8" height="8" fill="#000" />
-            <rect x="40" y="25" width="8" height="8" fill="#000" />
-            <rect x="45" y="45" width="12" height="12" fill="#000" />
-            <rect x="65" y="45" width="8" height="8" fill="#000" />
-            <rect x="25" y="45" width="8" height="8" fill="#000" />
-            <rect x="40" y="65" width="8" height="8" fill="#000" />
-            <rect x="55" y="70" width="8" height="8" fill="#000" />
-            <rect x="75" y="65" width="15" height="15" fill="#000" />
+            <!-- Puntos de Matriz QR Dinámica -->
+            <rect x="36" y="8" width="6" height="6" fill="#000" />
+            <rect x="46" y="8" width="6" height="6" fill="#000" />
+            <rect x="56" y="12" width="6" height="6" fill="#000" />
+            <rect x="36" y="24" width="6" height="6" fill="#000" />
+            <rect x="48" y="22" width="6" height="6" fill="#000" />
+            <rect x="58" y="26" width="6" height="6" fill="#000" />
+            <rect x="8" y="38" width="6" height="6" fill="#000" />
+            <rect x="22" y="38" width="6" height="6" fill="#000" />
+            <rect x="38" y="38" width="14" height="14" fill="#000" />
+            <rect x="58" y="38" width="6" height="6" fill="#000" />
+            <rect x="72" y="38" width="8" height="8" fill="#000" />
+            <rect x="86" y="38" width="6" height="6" fill="#000" />
+            <rect x="36" y="58" width="6" height="6" fill="#000" />
+            <rect x="48" y="56" width="6" height="6" fill="#000" />
+            <rect x="62" y="58" width="6" height="6" fill="#000" />
+            <rect x="76" y="54" width="6" height="6" fill="#000" />
+            <rect x="38" y="72" width="8" height="8" fill="#000" />
+            <rect x="52" y="74" width="6" height="6" fill="#000" />
+            <rect x="68" y="72" width="8" height="8" fill="#000" />
+            <rect x="82" y="76" width="8" height="8" fill="#000" />
+            <rect x="40" y="86" width="6" height="6" fill="#000" />
+            <rect x="56" y="86" width="6" height="6" fill="#000" />
+            <rect x="72" y="86" width="6" height="6" fill="#000" />
           </svg>
         </div>
 
         <!-- Hash Criptográfico y Validación -->
-        <div class="text-[9px] text-slate-600 space-y-0.5 flex-1">
-          <div class="font-bold text-slate-800">DIGITAL SIGNATURE HASH (SHA-256):</div>
-          <div class="text-[8px] font-mono break-all text-slate-500" id="acta-hash">
-            e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+        <div class="text-[9px] text-slate-600 space-y-0.5 flex-1 min-w-0">
+          <div class="font-bold text-slate-800">FIRMA CRIPTOGRÁFICA DE TRANSMISIÓN (SHA-256):</div>
+          <div class="text-[8px] font-mono break-all text-slate-600 bg-slate-100 p-1 rounded border border-slate-200" id="acta-hash">
+            CNE-2024-MON-140706022-ACTA-01-A4F98E231C4
           </div>
           <div class="text-emerald-700 font-bold flex items-center gap-1 pt-0.5">
-            <span>✔ TRANSMISIÓN VERIFICADA SATELITALMENTE</span>
+            <span>✔ ACTA TRANSMITIDA Y AUDITADA SATELITALMENTE</span>
           </div>
-          <div class="text-slate-500">Testigo ConVzla/MIGATO: <strong class="text-slate-800" id="acta-testigo-nombre">Acreditado</strong></div>
+          <div class="text-slate-500 truncate">Testigo ConVzla/MIGATO: <strong class="text-slate-800" id="acta-testigo-nombre">Prof. Carmen Salazar</strong></div>
         </div>
 
       </div>
 
       <!-- Botonera Modal Acta -->
-      <div class="pt-2 flex items-center justify-between gap-2">
-        <button onclick="window.print()" class="px-3 py-1.5 rounded bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold text-xs flex items-center gap-1">
-          <i data-lucide="printer" class="w-3.5 h-3.5"></i>
-          <span>Imprimir</span>
+      <div class="pt-2 flex items-center justify-between gap-2 border-t border-slate-200">
+        <button onclick="copiarHashActa()" class="px-3 py-1.5 rounded bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs flex items-center gap-1 border border-slate-300 cursor-pointer">
+          <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+          <span id="txt-copiar-hash">Copiar Hash</span>
         </button>
-        <button onclick="closeActaModal()" class="px-4 py-1.5 rounded bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs">
-          Cerrar Acta
-        </button>
+        <div class="flex items-center gap-2">
+          <button onclick="window.print()" class="px-3 py-1.5 rounded bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold text-xs flex items-center gap-1 cursor-pointer">
+            <i data-lucide="printer" class="w-3.5 h-3.5"></i>
+            <span>Imprimir</span>
+          </button>
+          <button onclick="closeActaModal()" class="px-4 py-1.5 rounded bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs cursor-pointer">
+            Cerrar
+          </button>
+        </div>
       </div>
 
     </div>
@@ -663,7 +882,7 @@
   <!-- ============================================================== -->
   <!-- 7. FOOTER INFORMATIVO                                          -->
   <!-- ============================================================== -->
-  <footer class="mt-auto border-t border-slate-900 bg-slate-950/80 py-4 px-3 sm:px-6 text-center text-xs text-slate-500">
+  <footer class="mt-auto border-t border-slate-900 bg-slate-950/80 py-4 px-3 sm:px-6 text-center text-xs text-slate-500 no-print">
     <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
       <span>Plataforma Ciudadana de Monitoreo Territorial • Municipio Maturín (10 Parroquias)</span>
       <span class="font-mono text-slate-400">Edición Especial ConVzla • CNE 2024</span>
@@ -689,28 +908,118 @@
       { id: "el-corozo", nombre: "El Corozo" }
     ];
 
-    // Base de Datos Integral de Centros Electorales de Maturín (175 Centros y 361 Mesas Oficiales)
-    const CENTROS_MATURIN = window.CENTROS_MATURIN || [];
+    // Fallback garantizado de Centros Electorales por si falla script externo
+    const CENTROS_FALLBACK_DEFAULT = [
+      { id: "140711032", nombre: "Centro De Votacion Los Arenales", parroquia: "san-simon", parroquiaNombre: "San Simón (Casco Central)", electores: 167, mesas: 1, lat: 9.749, lng: -63.17485, estatus: "cubierto", sector: "Casco Central", direccion: "Av. Principal con Calle 3", coordinador: "Prof. Carmen Salazar", testigoPrincipal: "Luisa Marcano", escrutinio: { transmitido: true, hora: "20:16", participacionPct: 78.4, votosEmitidos: 130, votosOposicion: 91, votosOficialismo: 25, votosOtros: 14 } },
+      { id: "140711035", nombre: "Centro Educativo Gran Cacique Alberto Tovar", parroquia: "san-simon", parroquiaNombre: "San Simón (Casco Central)", electores: 573, mesas: 1, lat: 9.7525, lng: -63.1820, estatus: "cubierto", sector: "La Manga", direccion: "Calle Bolívar, frente a la Plaza", coordinador: "Ing. Pedro Luis Figuera", testigoPrincipal: "Manuel Antonio Sosa", escrutinio: { transmitido: true, hora: "18:15", participacionPct: 78.8, votosEmitidos: 451, votosOposicion: 347, votosOficialismo: 92, votosOtros: 12 } },
+      { id: "140706001", nombre: "Escuela Básica Félix Armando Núñez Beaperthuy", parroquia: "alto-de-los-godos", parroquiaNombre: "Alto de Los Godos", electores: 2540, mesas: 3, lat: 9.738, lng: -63.195, estatus: "prioritario", sector: "Los Godos", direccion: "Av. El Ejército, Sector Los Godos", coordinador: "Lic. María Elena Ramos", testigoPrincipal: "Carlos Eduardo Rondón", escrutinio: { transmitido: true, hora: "19:40", participacionPct: 76.5, votosEmitidos: 1943, votosOposicion: 1480, votosOficialismo: 410, votosOtros: 53 } },
+      { id: "140706022", nombre: "Liceo Nacional Los Godos", parroquia: "alto-de-los-godos", parroquiaNombre: "Alto de Los Godos", electores: 3120, mesas: 4, lat: 9.741, lng: -63.202, estatus: "prioritario", sector: "La Puente", direccion: "Av. Principal La Puente", coordinador: "Prof. José Gregorio Ortiz", testigoPrincipal: "Andrés Velásquez", escrutinio: { transmitido: true, hora: "20:05", participacionPct: 77.2, votosEmitidos: 2408, votosOposicion: 1810, votosOficialismo: 520, votosOtros: 78 } },
+      { id: "140702001", nombre: "Escuela Básica Boquerón", parroquia: "boqueron", parroquiaNombre: "Boquerón", electores: 1850, mesas: 2, lat: 9.782, lng: -63.165, estatus: "cubierto", sector: "Boquerón Centro", direccion: "Carretera Nacional Boquerón", coordinador: "Ing. Rafael Cova", testigoPrincipal: "Yelitza Pérez", escrutinio: { transmitido: true, hora: "19:10", participacionPct: 75.0, votosEmitidos: 1387, votosOposicion: 1040, votosOficialismo: 310, votosOtros: 37 } },
+      { id: "140703001", nombre: "Unidad Educativa Las Cocuizas", parroquia: "las-cocuizas", parroquiaNombre: "Las Cocuizas", electores: 2980, mesas: 3, lat: 9.756, lng: -63.148, estatus: "prioritario", sector: "Las Cocuizas", direccion: "Av. Principal Las Cocuizas", coordinador: "Dra. Juana Morales", testigoPrincipal: "Héctor Gómez", escrutinio: { transmitido: true, hora: "19:55", participacionPct: 76.8, votosEmitidos: 2288, votosOposicion: 1720, votosOficialismo: 510, votosOtros: 58 } },
+      { id: "140704001", nombre: "Liceo Santa Cruz", parroquia: "santa-cruz", parroquiaNombre: "Santa Cruz", electores: 2100, mesas: 2, lat: 9.721, lng: -63.210, estatus: "cubierto", sector: "Santa Cruz", direccion: "Calle 1 c/c Av. Sur", coordinador: "Prof. Alberto Navarro", testigoPrincipal: "Rosa Rivas", escrutinio: { transmitido: true, hora: "19:30", participacionPct: 74.5, votosEmitidos: 1564, votosOposicion: 1180, votosOficialismo: 340, votosOtros: 44 } },
+      { id: "140705001", nombre: "Escuela Básica San Vicente", parroquia: "san-vicente", parroquiaNombre: "San Vicente", electores: 1450, mesas: 2, lat: 9.712, lng: -63.245, estatus: "cubierto", sector: "San Vicente", direccion: "Av. Bolívar San Vicente", coordinador: "Lic. Daniel Millán", testigoPrincipal: "Patricia Bermúdez", escrutinio: { transmitido: true, hora: "18:50", participacionPct: 73.0, votosEmitidos: 1058, votosOposicion: 770, votosOficialismo: 260, votosOtros: 28 } },
+      { id: "140707001", nombre: "Unidad Educativa La Pica", parroquia: "la-pica", parroquiaNombre: "La Pica", electores: 1680, mesas: 2, lat: 9.770, lng: -63.110, estatus: "cubierto", sector: "La Pica", direccion: "Carretera La Pica, frente a la Iglesia", coordinador: "Prof. Sandra Cedeño", testigoPrincipal: "Gabriel Subero", escrutinio: { transmitido: true, hora: "19:25", participacionPct: 71.5, votosEmitidos: 1201, votosOposicion: 860, votosOficialismo: 310, votosOtros: 31 } },
+      { id: "140708001", nombre: "Escuela Básica El Furrial", parroquia: "el-furrial", parroquiaNombre: "El Furrial", electores: 1920, mesas: 2, lat: 9.702, lng: -63.360, estatus: "cubierto", sector: "El Furrial", direccion: "Calle Principal El Furrial", coordinador: "Ing. Marcos Gil", testigoPrincipal: "Elena Salazar", escrutinio: { transmitido: true, hora: "19:15", participacionPct: 73.5, votosEmitidos: 1411, votosOposicion: 1030, votosOficialismo: 340, votosOtros: 41 } },
+      { id: "140709001", nombre: "Liceo Jusepín", parroquia: "jusepin", parroquiaNombre: "Jusepín", electores: 1750, mesas: 2, lat: 9.745, lng: -63.480, estatus: "cubierto", sector: "Jusepín Centro", direccion: "Av. Campo Petrolero Jusepín", coordinador: "Prof. Reinaldo Campos", testigoPrincipal: "Clara Maita", escrutinio: { transmitido: true, hora: "19:00", participacionPct: 74.0, votosEmitidos: 1295, votosOposicion: 960, votosOficialismo: 300, votosOtros: 35 } },
+      { id: "140710001", nombre: "Escuela El Corozo", parroquia: "el-corozo", parroquiaNombre: "El Corozo", electores: 1350, mesas: 2, lat: 9.680, lng: -63.290, estatus: "cubierto", sector: "El Corozo", direccion: "Carretera Nacional El Corozo", coordinador: "Lic. Teresa Monroy", testigoPrincipal: "José Gregorio Lezama", escrutinio: { transmitido: true, hora: "18:45", participacionPct: 72.0, votosEmitidos: 972, votosOposicion: 700, votosOficialismo: 245, votosOtros: 27 } }
+    ];
 
-    let currentParishFilter = "todas";
-    let map = null;
-    let mapMarkers = [];
-    let activeSelectedCenter = null;
+    // Obtener centros de votación con respaldo seguro
+    function getCentrosData() {
+      if (typeof window !== "undefined" && window.CENTROS_MATURIN && Array.isArray(window.CENTROS_MATURIN) && window.CENTROS_MATURIN.length > 0) {
+        return window.CENTROS_MATURIN;
+      }
+      if (typeof CENTROS_MATURIN !== "undefined" && Array.isArray(CENTROS_MATURIN) && CENTROS_MATURIN.length > 0) {
+        return CENTROS_MATURIN;
+      }
+      return CENTROS_FALLBACK_DEFAULT;
+    }
 
-    // Inicialización al cargar la página
-    document.addEventListener("DOMContentLoaded", () => {
-      renderParishPills();
-      updateGlobalStats();
-      renderCentersGrid(CENTROS_MATURIN);
-      initMap();
+    var centrosList = getCentrosData();
+    var currentParishFilter = "todas";
+    var currentStatusFilter = "todos";
+    var currentSearchQuery = "";
+    var currentSortColumn = "id";
+    var currentSortAsc = true;
+    var currentViewMode = "tablilla";
+    var simulatedTransmissionPct = 100;
+    var map = null;
+    var mapMarkers = [];
+    var activeSelectedCenter = null;
+
+    // Inicialización al cargar el script o el DOM
+    function initApp() {
+      centrosList = getCentrosData();
+      try { renderParishPills(); } catch(e) { console.warn(e); }
+      try { updateGlobalStats(); } catch(e) { console.warn(e); }
+      try { applyFilters(); } catch(e) { console.warn(e); }
+      try { renderParroquiaStats(); } catch(e) { console.warn(e); }
+      try { if (window.lucide) lucide.createIcons(); } catch(e) { console.warn(e); }
+    }
+
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", initApp);
+    } else {
+      initApp();
+    }
+
+    // ==============================================================
+    // GESTIÓN DE VISTAS (TABLILLA vs TARJETAS vs PARROQUIA vs MAPA)
+    // ==============================================================
+    function switchView(mode) {
+      currentViewMode = mode;
+      
+      const views = {
+        'tablilla': document.getElementById("view-tablilla"),
+        'cards': document.getElementById("view-cards"),
+        'parroquia-stats': document.getElementById("view-parroquia-stats"),
+        'map': document.getElementById("view-map")
+      };
+
+      const tabs = {
+        'tablilla': document.getElementById("tab-tablilla"),
+        'cards': document.getElementById("tab-cards"),
+        'parroquia-stats': document.getElementById("tab-parroquia-stats"),
+        'map': document.getElementById("tab-map")
+      };
+
+      // Ocultar todas las vistas y resetear pestañas
+      Object.keys(views).forEach(key => {
+        if (views[key]) views[key].classList.add("hidden");
+        if (tabs[key]) {
+          tabs[key].className = "px-3.5 py-2 rounded-xl text-xs font-black transition flex items-center gap-2 cursor-pointer bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white";
+        }
+      });
+
+      // Activar vista seleccionada
+      if (views[mode]) views[mode].classList.remove("hidden");
+      if (tabs[mode]) {
+        tabs[mode].className = "px-3.5 py-2 rounded-xl text-xs font-black transition flex items-center gap-2 cursor-pointer bg-sky-600 text-white shadow-md shadow-sky-600/30";
+      }
+
+      // Si se selecciona el mapa, inicializar o redimensionar
+      if (mode === "map") {
+        if (!map) {
+          initMap();
+        } else {
+          setTimeout(() => { map.invalidateSize(); }, 150);
+        }
+      }
+
       if (window.lucide) lucide.createIcons();
-    });
+    }
 
-    // Renderizar Píldoras de Parroquias
+    // ==============================================================
+    // RENDERIZAR PÍLDORAS DE PARROQUIAS
+    // ==============================================================
     function renderParishPills() {
       const container = document.getElementById("parish-pills-container");
+      if (!container) return;
+      
       container.innerHTML = PARROQUIAS_MATURIN.map(p => {
-        const count = p.id === "todas" ? CENTROS_MATURIN.length : CENTROS_MATURIN.filter(c => c.parroquia === p.id).length;
+        const count = p.id === "todas" 
+          ? centrosList.length 
+          : centrosList.filter(c => c.parroquia === p.id).length;
         const isActive = p.id === currentParishFilter;
         return `
           <button 
@@ -728,93 +1037,316 @@
       }).join("");
     }
 
-    // Filtrar por Parroquia
     function setParishFilter(parishId) {
       currentParishFilter = parishId;
       renderParishPills();
       applyFilters();
     }
 
-    // Aplicar Filtros (Búsqueda + Parroquia + Estatus)
+    // ==============================================================
+    // APLICAR FILTROS Y BÚSQUEDA
+    // ==============================================================
     function applyFilters() {
-      const searchVal = document.getElementById("search-input").value.toLowerCase().trim();
-      const statusVal = document.getElementById("status-filter").value;
+      const searchInput = document.getElementById("search-input");
+      const searchVal = searchInput ? searchInput.value.toLowerCase().trim() : "";
+      const statusSelect = document.getElementById("status-filter");
+      const statusVal = statusSelect ? statusSelect.value : "todos";
       const clearBtn = document.getElementById("btn-clear-search");
 
       if (clearBtn) {
         clearBtn.classList.toggle("hidden", searchVal.length === 0);
       }
 
-      let filtered = CENTROS_MATURIN;
+      let filtered = centrosList;
 
       // Filtro Parroquia
       if (currentParishFilter !== "todas") {
         filtered = filtered.filter(c => c.parroquia === currentParishFilter);
       }
 
-      // Filtro Estatus
-      if (statusVal !== "todos") {
-        filtered = filtered.filter(c => c.estatus === statusVal);
+      // Filtro Estatus / Acta
+      if (statusVal === "prioritario") {
+        filtered = filtered.filter(c => c.estatus === "prioritario");
+      } else if (statusVal === "transmitido") {
+        filtered = filtered.filter(c => (c.escrutinio && c.escrutinio.transmitido !== false));
+      } else if (statusVal === "ventaja70") {
+        filtered = filtered.filter(c => {
+          const esc = getEscrutinioCentro(c);
+          return esc.pctOposicion >= 70;
+        });
       }
 
-      // Filtro Texto (Búsqueda segura sin fallos por undefined)
+      // Filtro Texto
       if (searchVal) {
         filtered = filtered.filter(c => 
           (c.nombre && c.nombre.toLowerCase().includes(searchVal)) ||
           (c.id && c.id.toLowerCase().includes(searchVal)) ||
           (c.sector && c.sector.toLowerCase().includes(searchVal)) ||
-          (c.direccion && c.direccion.toLowerCase().includes(searchVal))
+          (c.direccion && c.direccion.toLowerCase().includes(searchVal)) ||
+          (c.parroquiaNombre && c.parroquiaNombre.toLowerCase().includes(searchVal))
         );
       }
 
-      const parishObj = PARROQUIAS_MATURIN.find(p => p.id === currentParishFilter);
-      document.getElementById("active-parish-name").textContent = parishObj ? parishObj.nombre : "Todas";
+      // Ordenar resultados según columna actual
+      filtered = sortDataset(filtered, currentSortColumn, currentSortAsc);
 
+      // Actualizar contador y parroquia activa
+      const countLabel = document.getElementById("showing-count");
+      if (countLabel) countLabel.textContent = filtered.length;
+
+      const parishObj = PARROQUIAS_MATURIN.find(p => p.id === currentParishFilter);
+      const activeNameLabel = document.getElementById("active-parish-name");
+      if (activeNameLabel) activeNameLabel.textContent = parishObj ? parishObj.nombre : "Todas las Parroquias";
+
+      // Renderizar ambas vistas (Tablilla y Tarjetas)
+      renderTablilla(filtered);
       renderCentersGrid(filtered);
       updateMapMarkers(filtered);
     }
 
     function clearSearch() {
-      document.getElementById("search-input").value = "";
+      const searchInput = document.getElementById("search-input");
+      if (searchInput) searchInput.value = "";
       applyFilters();
     }
 
-    // Actualizar Estadísticas Generales
-    function updateGlobalStats() {
-      const totalCentros = CENTROS_MATURIN.length;
-      const totalMesas = CENTROS_MATURIN.reduce((acc, c) => acc + (c.mesas || 0), 0);
-      const totalElectores = CENTROS_MATURIN.reduce((acc, c) => acc + (c.electores || 0), 0);
+    // ==============================================================
+    // CÁLCULO DE ESCRUTINIO SEGURO POR CENTRO
+    // ==============================================================
+    function getEscrutinioCentro(c) {
+      const padron = c.electores || 500;
+      const participacionPct = c.escrutinio?.participacionPct || 76.4;
+      const emitidos = c.escrutinio?.votosEmitidos || Math.round(padron * (participacionPct / 100));
+      const op = c.escrutinio?.votosOposicion || Math.round(emitidos * 0.746);
+      const of = c.escrutinio?.votosOficialismo || Math.round(emitidos * 0.224);
+      const otros = emitidos - op - of;
+      const pctOp = emitidos > 0 ? ((op / emitidos) * 100).toFixed(1) : "0.0";
+      const pctOf = emitidos > 0 ? ((of / emitidos) * 100).toFixed(1) : "0.0";
+      const margen = (parseFloat(pctOp) - parseFloat(pctOf)).toFixed(1);
 
-      document.getElementById("stat-total-centros").textContent = totalCentros || 175;
-      document.getElementById("stat-total-mesas").textContent = totalMesas || 361;
-      document.getElementById("stat-total-electores").textContent = (totalElectores || 318601).toLocaleString();
+      return {
+        votosEmitidos: emitidos,
+        votosOposicion: op,
+        votosOficialismo: of,
+        votosOtros: Math.max(0, otros),
+        pctOposicion: parseFloat(pctOp),
+        pctOficialismo: parseFloat(pctOf),
+        margen: parseFloat(margen),
+        participacionPct: participacionPct,
+        hora: c.escrutinio?.hora || "19:42",
+        transmitido: c.escrutinio?.transmitido !== false
+      };
     }
 
-    // Renderizar Tarjetas de Centros Electorales
-    function renderCentersGrid(centers) {
-      const grid = document.getElementById("centers-grid");
+    // ==============================================================
+    // 4.1 RENDERIZAR TABLILLA ELECTORAL
+    // ==============================================================
+    function renderTablilla(centers) {
+      const tbody = document.getElementById("tablilla-tbody");
       const noResults = document.getElementById("no-results");
-      const countLabel = document.getElementById("showing-count");
-
-      countLabel.textContent = centers.length;
+      if (!tbody) return;
 
       if (centers.length === 0) {
-        grid.innerHTML = "";
-        noResults.classList.remove("hidden");
+        tbody.innerHTML = `<tr><td colspan="10" class="py-10 text-center text-slate-500 font-mono">No hay centros que coincidan con la búsqueda.</td></tr>`;
+        if (noResults) noResults.classList.remove("hidden");
+        updateTablillaFoot(0, 0, 0, 0, 0);
         return;
       }
 
-      noResults.classList.add("hidden");
+      if (noResults) noResults.classList.add("hidden");
+
+      let sumMesas = 0;
+      let sumElectores = 0;
+      let sumOp = 0;
+      let sumOf = 0;
+      let sumEmitidos = 0;
+
+      tbody.innerHTML = centers.map((c, index) => {
+        sumMesas += (c.mesas || 0);
+        sumElectores += (c.electores || 0);
+        const esc = getEscrutinioCentro(c);
+        sumOp += esc.votosOposicion;
+        sumOf += esc.votosOficialismo;
+        sumEmitidos += esc.votosEmitidos;
+
+        const parishName = c.parroquiaNombre || PARROQUIAS_MATURIN.find(p => p.id === c.parroquia)?.nombre || c.parroquia;
+        const isOdd = index % 2 === 1;
+
+        return `
+          <tr class="${isOdd ? 'bg-slate-900/40' : 'bg-slate-900/90'} hover:bg-slate-800/80 transition-colors border-b border-slate-800/60 group">
+            
+            <!-- Código CNE -->
+            <td class="py-2.5 px-3 font-mono font-bold text-sky-400 whitespace-nowrap">
+              <span class="bg-slate-950 px-2 py-0.5 rounded border border-slate-800 group-hover:border-sky-500/40">
+                ${c.id}
+              </span>
+            </td>
+
+            <!-- Nombre de Centro y Sector -->
+            <td class="py-2.5 px-3">
+              <strong class="text-white block font-bold text-xs leading-tight group-hover:text-sky-300 transition">
+                ${c.nombre}
+              </strong>
+              <span class="text-[10px] text-slate-400 block truncate max-w-xs mt-0.5">
+                📍 ${c.sector || 'Casco Central'} • ${c.direccion || ''}
+              </span>
+            </td>
+
+            <!-- Parroquia -->
+            <td class="py-2.5 px-2 whitespace-nowrap">
+              <span class="px-2 py-0.5 rounded-md bg-slate-950 text-slate-300 border border-slate-800 text-[10px] font-semibold">
+                ${parishName.replace("Parroquia ", "")}
+              </span>
+            </td>
+
+            <!-- Mesas -->
+            <td class="py-2.5 px-2 text-center font-bold text-slate-200">
+              <span class="w-6 h-6 inline-flex items-center justify-center rounded-lg bg-slate-950 border border-slate-800 text-xs">
+                ${c.mesas}
+              </span>
+            </td>
+
+            <!-- Padrón -->
+            <td class="py-2.5 px-2 text-right font-black text-emerald-400">
+              ${(c.electores || 0).toLocaleString()}
+            </td>
+
+            <!-- Votos ConVzla / MIGATO -->
+            <td class="py-2.5 px-3 text-right bg-blue-950/20">
+              <div class="font-black text-blue-300">
+                ${esc.votosOposicion.toLocaleString()}
+                <span class="text-[10px] text-blue-400 font-bold ml-1">(${esc.pctOposicion}%)</span>
+              </div>
+              <div class="w-full h-1 bg-slate-900 rounded-full overflow-hidden mt-1">
+                <div class="h-full bg-blue-500 rounded-full" style="width: ${esc.pctOposicion}%;"></div>
+              </div>
+            </td>
+
+            <!-- Votos Oficialismo -->
+            <td class="py-2.5 px-3 text-right bg-red-950/20 font-bold text-red-300">
+              ${esc.votosOficialismo.toLocaleString()}
+              <span class="text-[10px] text-red-400 ml-1">(${esc.pctOficialismo}%)</span>
+            </td>
+
+            <!-- Margen -->
+            <td class="py-2.5 px-2 text-right font-black text-emerald-400">
+              +${esc.margen}%
+            </td>
+
+            <!-- Estatus Acta -->
+            <td class="py-2.5 px-3 text-center whitespace-nowrap">
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-black border inline-flex items-center gap-1 ${
+                esc.transmitido 
+                  ? 'bg-emerald-950 text-emerald-300 border-emerald-500/50' 
+                  : 'bg-amber-950 text-amber-300 border-amber-500/50'
+              }">
+                <span class="w-1.5 h-1.5 rounded-full ${esc.transmitido ? 'bg-emerald-400' : 'bg-amber-400 animate-ping'}"></span>
+                <span>${esc.transmitido ? 'OK (' + esc.hora + ')' : 'En Espera'}</span>
+              </span>
+            </td>
+
+            <!-- Botones de Acción -->
+            <td class="py-2.5 px-3 text-center whitespace-nowrap no-print">
+              <div class="flex items-center justify-center gap-1">
+                <button 
+                  onclick="openActaModal('${c.id}')"
+                  class="px-2 py-1 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 text-[11px] font-bold flex items-center gap-1 cursor-pointer transition"
+                  title="Ver Acta CNE Digitalizada con Código QR"
+                >
+                  <i data-lucide="file-check" class="w-3 h-3"></i>
+                  <span>Acta</span>
+                </button>
+
+                <button 
+                  onclick="openFichaModal('${c.id}')"
+                  class="px-2 py-1 rounded-lg bg-slate-800 hover:bg-sky-600 text-slate-300 hover:text-white border border-slate-700 text-[11px] font-bold flex items-center gap-1 cursor-pointer transition"
+                  title="Ver Ficha Técnica y Testigos"
+                >
+                  <i data-lucide="info" class="w-3 h-3"></i>
+                  <span>Ficha</span>
+                </button>
+              </div>
+            </td>
+
+          </tr>
+        `;
+      }).join("");
+
+      updateTablillaFoot(sumMesas, sumElectores, sumOp, sumOf, sumEmitidos);
+
+      if (window.lucide) lucide.createIcons();
+    }
+
+    function updateTablillaFoot(mesas, electores, op, of, emitidos) {
+      const footMesas = document.getElementById("foot-total-mesas");
+      const footElectores = document.getElementById("foot-total-electores");
+      const footOp = document.getElementById("foot-total-op");
+      const footOf = document.getElementById("foot-total-of");
+      const footMargen = document.getElementById("foot-total-margen");
+
+      if (footMesas) footMesas.textContent = mesas;
+      if (footElectores) footElectores.textContent = electores.toLocaleString();
+
+      const pctOp = emitidos > 0 ? ((op / emitidos) * 100).toFixed(1) : "0.0";
+      const pctOf = emitidos > 0 ? ((of / emitidos) * 100).toFixed(1) : "0.0";
+      const margen = (parseFloat(pctOp) - parseFloat(pctOf)).toFixed(1);
+
+      if (footOp) footOp.textContent = `${op.toLocaleString()} (${pctOp}%)`;
+      if (footOf) footOf.textContent = `${of.toLocaleString()} (${pctOf}%)`;
+      if (footMargen) footMargen.textContent = `+${margen}%`;
+    }
+
+    // ==============================================================
+    // ORDENACIÓN DE LA TABLILLA
+    // ==============================================================
+    function sortTablilla(column) {
+      if (currentSortColumn === column) {
+        currentSortAsc = !currentSortAsc;
+      } else {
+        currentSortColumn = column;
+        currentSortAsc = true;
+      }
+
+      const ind = document.getElementById("active-sort-indicator");
+      if (ind) ind.textContent = `Orden: ${column.toUpperCase()} (${currentSortAsc ? 'Asc' : 'Desc'})`;
+
+      applyFilters();
+    }
+
+    function sortDataset(list, col, asc) {
+      return [...list].sort((a, b) => {
+        let valA = a[col];
+        let valB = b[col];
+
+        if (col === "votosOposicion" || col === "votosOficialismo" || col === "margen") {
+          const escA = getEscrutinioCentro(a);
+          const escB = getEscrutinioCentro(b);
+          valA = escA[col];
+          valB = escB[col];
+        }
+
+        if (typeof valA === "string") {
+          return asc ? valA.localeCompare(valB) : valB.localeCompare(valA);
+        }
+        return asc ? (valA - valB) : (valB - valA);
+      });
+    }
+
+    // ==============================================================
+    // 4.2 RENDERIZAR GRID DE TARJETAS DE CENTROS
+    // ==============================================================
+    function renderCentersGrid(centers) {
+      const grid = document.getElementById("centers-grid");
+      if (!grid) return;
+
+      if (centers.length === 0) {
+        grid.innerHTML = "";
+        return;
+      }
 
       grid.innerHTML = centers.map(c => {
-        const parishName = PARROQUIAS_MATURIN.find(p => p.id === c.parroquia)?.nombre || c.parroquia;
-        const esc = c.escrutinio || {
-          votosOposicion: Math.round(c.electores * 0.55),
-          votosOficialismo: Math.round(c.electores * 0.17),
-          participacionPct: 76.5,
-          hora: "19:30"
-        };
-        const pctOp = Math.round((esc.votosOposicion / (esc.votosEmitidos || (c.electores * 0.76))) * 100) || 75;
+        const parishName = c.parroquiaNombre || PARROQUIAS_MATURIN.find(p => p.id === c.parroquia)?.nombre || c.parroquia;
+        const esc = getEscrutinioCentro(c);
 
         return `
           <div class="bg-slate-900 border border-slate-800 hover:border-sky-500/60 rounded-2xl p-4 shadow-lg hover:shadow-sky-500/10 transition-all flex flex-col justify-between group">
@@ -847,17 +1379,17 @@
               </p>
 
               <!-- Mini Escrutinio Simulado de la Escuela -->
-              <div class="bg-slate-950 p-2 rounded-xl border border-slate-800/80 space-y-1 text-[11px] font-mono">
+              <div class="bg-slate-950 p-2.5 rounded-xl border border-slate-800/80 space-y-1.5 text-[11px] font-mono">
                 <div class="flex items-center justify-between">
                   <span class="text-blue-400 font-bold">MIGATO / Cambio:</span>
-                  <span class="text-white font-black">${(esc.votosOposicion || 0).toLocaleString()} (${pctOp}%)</span>
+                  <span class="text-white font-black">${esc.votosOposicion.toLocaleString()} (${esc.pctOposicion}%)</span>
                 </div>
-                <div class="w-full h-1 bg-slate-900 rounded-full overflow-hidden">
-                  <div class="h-full bg-blue-500 rounded-full" style="width: ${pctOp}%;"></div>
+                <div class="w-full h-1.5 bg-slate-900 rounded-full overflow-hidden">
+                  <div class="h-full bg-blue-500 rounded-full" style="width: ${esc.pctOposicion}%;"></div>
                 </div>
-                <div class="flex items-center justify-between text-[10px] text-slate-500 pt-0.5">
-                  <span>Oficialismo: ${(esc.votosOficialismo || 0).toLocaleString()}</span>
-                  <span>Part: ${esc.participacionPct || 76}%</span>
+                <div class="flex items-center justify-between text-[10px] text-slate-400 pt-0.5">
+                  <span>Oficialismo: ${esc.votosOficialismo.toLocaleString()} (${esc.pctOficialismo}%)</span>
+                  <span class="text-emerald-400 font-bold">Part: ${esc.participacionPct}%</span>
                 </div>
               </div>
             </div>
@@ -872,7 +1404,7 @@
                 <div class="h-4 w-[1px] bg-slate-800"></div>
                 <div>
                   <span class="text-[9px] uppercase text-slate-500 block font-bold">Padrón</span>
-                  <span class="font-black text-emerald-400">~${c.electores.toLocaleString()}</span>
+                  <span class="font-black text-emerald-400">${(c.electores || 0).toLocaleString()}</span>
                 </div>
               </div>
 
@@ -902,46 +1434,306 @@
       if (window.lucide) lucide.createIcons();
     }
 
-    // Inicializar Mapa Leaflet con Satélite y Fallback Local
+    // ==============================================================
+    // 4.3 RENDERIZAR ESTADÍSTICAS POR PARROQUIA
+    // ==============================================================
+    function renderParroquiaStats() {
+      const container = document.getElementById("parroquia-stats-cards");
+      if (!container) return;
+
+      const parishesOnly = PARROQUIAS_MATURIN.filter(p => p.id !== "todas");
+
+      container.innerHTML = parishesOnly.map(p => {
+        const pCentros = centrosList.filter(c => c.parroquia === p.id);
+        const totalMesas = pCentros.reduce((acc, c) => acc + (c.mesas || 0), 0);
+        const totalElectores = pCentros.reduce((acc, c) => acc + (c.electores || 0), 0);
+
+        let sumOp = 0;
+        let sumOf = 0;
+        let sumEmitidos = 0;
+
+        pCentros.forEach(c => {
+          const esc = getEscrutinioCentro(c);
+          sumOp += esc.votosOposicion;
+          sumOf += esc.votosOficialismo;
+          sumEmitidos += esc.votosEmitidos;
+        });
+
+        const pctOp = sumEmitidos > 0 ? ((sumOp / sumEmitidos) * 100).toFixed(1) : "74.6";
+        const pctOf = sumEmitidos > 0 ? ((sumOf / sumEmitidos) * 100).toFixed(1) : "22.4";
+        const participacion = totalElectores > 0 ? ((sumEmitidos / totalElectores) * 100).toFixed(1) : "76.4";
+
+        return `
+          <div class="bg-slate-950 border border-slate-800 hover:border-indigo-500/50 rounded-2xl p-4 space-y-3 shadow-lg transition">
+            <div class="flex items-center justify-between border-b border-slate-800/80 pb-2">
+              <h4 class="font-black text-sm text-white">${p.nombre}</h4>
+              <span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-[10px] font-mono font-bold">
+                ${pCentros.length} Centros
+              </span>
+            </div>
+
+            <div class="grid grid-cols-3 gap-2 text-center font-mono text-xs">
+              <div class="bg-slate-900 p-2 rounded-xl border border-slate-800/60">
+                <span class="text-[9px] uppercase text-slate-500 block">Mesas</span>
+                <span class="font-black text-white">${totalMesas}</span>
+              </div>
+              <div class="bg-slate-900 p-2 rounded-xl border border-slate-800/60">
+                <span class="text-[9px] uppercase text-slate-500 block">Padrón</span>
+                <span class="font-black text-emerald-400">${totalElectores.toLocaleString()}</span>
+              </div>
+              <div class="bg-slate-900 p-2 rounded-xl border border-slate-800/60">
+                <span class="text-[9px] uppercase text-slate-500 block">Participación</span>
+                <span class="font-black text-sky-400">${participacion}%</span>
+              </div>
+            </div>
+
+            <!-- Barras Comparativas de la Parroquia -->
+            <div class="space-y-1.5 font-mono text-xs">
+              <div class="flex justify-between items-center text-[11px]">
+                <span class="text-blue-400 font-bold">MIGATO / Cambio:</span>
+                <span class="text-white font-black">${sumOp.toLocaleString()} (${pctOp}%)</span>
+              </div>
+              <div class="w-full h-2 bg-slate-900 rounded-full overflow-hidden">
+                <div class="h-full bg-blue-500 rounded-full" style="width: ${pctOp}%;"></div>
+              </div>
+
+              <div class="flex justify-between items-center text-[11px] pt-1">
+                <span class="text-red-400 font-bold">Oficialismo:</span>
+                <span class="text-slate-300 font-bold">${sumOf.toLocaleString()} (${pctOf}%)</span>
+              </div>
+              <div class="w-full h-1.5 bg-slate-900 rounded-full overflow-hidden">
+                <div class="h-full bg-red-500 rounded-full" style="width: ${pctOf}%;"></div>
+              </div>
+            </div>
+
+            <button 
+              onclick="filtrarPorParroquiaEnTablilla('${p.id}')"
+              class="w-full py-1.5 px-3 rounded-xl bg-slate-800 hover:bg-sky-600 text-slate-300 hover:text-white text-xs font-bold transition flex items-center justify-center gap-1 cursor-pointer"
+            >
+              <span>Ver en Tablilla Oficial</span>
+              <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+            </button>
+          </div>
+        `;
+      }).join("");
+
+      if (window.lucide) lucide.createIcons();
+    }
+
+    function filtrarPorParroquiaEnTablilla(parishId) {
+      setParishFilter(parishId);
+      switchView('tablilla');
+    }
+
+    // ==============================================================
+    // ACTUALIZAR ESTADÍSTICAS GLOBALES DE CABECERA
+    // ==============================================================
+    function updateGlobalStats() {
+      const totalCentros = centrosList.length || 175;
+      const totalMesas = centrosList.reduce((acc, c) => acc + (c.mesas || 0), 0) || 361;
+      const totalElectores = centrosList.reduce((acc, c) => acc + (c.electores || 0), 0) || 318601;
+
+      const cElem = document.getElementById("stat-total-centros");
+      const mElem = document.getElementById("stat-total-mesas");
+      const eElem = document.getElementById("stat-total-electores");
+
+      if (cElem) cElem.textContent = totalCentros;
+      if (mElem) mElem.textContent = totalMesas;
+      if (eElem) eElem.textContent = totalElectores.toLocaleString();
+    }
+
+    // ==============================================================
+    // CONTROL DEL SIMULADOR DE TRANSMISIÓN CNE
+    // ==============================================================
+    function cambiarPresetEscrutinio(pct) {
+      simulatedTransmissionPct = parseInt(pct) || 100;
+      actualizarEscrutinioVisual(simulatedTransmissionPct);
+    }
+
+    function actualizarEscrutinioVisual(pct) {
+      const progressBar = document.getElementById("sim-progress-bar");
+      const centrosCount = document.getElementById("sim-centros-count");
+      const centrosPct = document.getElementById("sim-centros-pct");
+      const mesasCount = document.getElementById("sim-mesas-count");
+      const actasCount = document.getElementById("sim-actas-count");
+
+      if (progressBar) progressBar.style.width = pct + "%";
+
+      const totalCentros = centrosList.length || 175;
+      const totalMesas = centrosList.reduce((acc, c) => acc + (c.mesas || 0), 0) || 361;
+
+      const cVal = Math.round((pct / 100) * totalCentros);
+      const mVal = Math.round((pct / 100) * totalMesas);
+
+      if (centrosCount) centrosCount.textContent = `${cVal} / ${totalCentros}`;
+      if (centrosPct) centrosPct.textContent = `(${pct}%)`;
+      if (mesasCount) mesasCount.textContent = `${mVal} / ${totalMesas}`;
+      if (actasCount) actasCount.textContent = `${mVal}`;
+
+      // Recalcular Votos en base al % transmitido
+      const totalEmitidosGlobal = Math.round(318601 * 0.764 * (pct / 100));
+      const opGlobal = Math.round(totalEmitidosGlobal * 0.746);
+      const ofGlobal = Math.round(totalEmitidosGlobal * 0.224);
+      const otGlobal = totalEmitidosGlobal - opGlobal - ofGlobal;
+
+      const vOpElem = document.getElementById("sim-votos-op");
+      const vOfElem = document.getElementById("sim-votos-of");
+      const vOtElem = document.getElementById("sim-votos-ot");
+
+      if (vOpElem) vOpElem.textContent = `${opGlobal.toLocaleString()} votos`;
+      if (vOfElem) vOfElem.textContent = `${ofGlobal.toLocaleString()} votos`;
+      if (vOtElem) vOtElem.textContent = `${otGlobal.toLocaleString()} votos`;
+    }
+
+    function simularTransmisionEnVivo() {
+      const progressBar = document.getElementById("sim-progress-bar");
+      if (progressBar) progressBar.style.width = "0%";
+      let current = 0;
+
+      const interval = setInterval(() => {
+        current += 5;
+        if (current > 100) current = 100;
+        actualizarEscrutinioVisual(current);
+
+        if (current >= 100) {
+          clearInterval(interval);
+          const select = document.getElementById("select-preset-escrutinio");
+          if (select) select.value = "100";
+        }
+      }, 60);
+    }
+
+    function toggleEscrutinioPanel() {
+      const panel = document.getElementById("escrutinio-global-panel");
+      const txt = document.getElementById("txt-toggle-escrutinio");
+      if (!panel || !txt) return;
+
+      const isHidden = panel.classList.contains("hidden");
+      if (isHidden) {
+        panel.classList.remove("hidden");
+        txt.textContent = "Ocultar Resultados";
+      } else {
+        panel.classList.add("hidden");
+        txt.textContent = "Ver Resultados CNE";
+      }
+    }
+
+    // ==============================================================
+    // MODAL DE FICHA TÉCNICA DEL CENTRO
+    // ==============================================================
+    function openFichaModal(centerId) {
+      const c = centrosList.find(item => item.id === centerId);
+      if (!c) return;
+
+      activeSelectedCenter = c;
+      const parishName = c.parroquiaNombre || PARROQUIAS_MATURIN.find(p => p.id === c.parroquia)?.nombre || c.parroquia;
+
+      document.getElementById("modal-cne-code").textContent = `CNE #${c.id}`;
+      document.getElementById("modal-center-name").textContent = c.nombre;
+      document.getElementById("modal-parish").textContent = `Parroquia ${parishName}`;
+      document.getElementById("modal-sector").textContent = c.sector || "Sector Central";
+      document.getElementById("modal-address").textContent = c.direccion || "Av. Principal, Maturín";
+      document.getElementById("modal-mesas").textContent = c.mesas;
+      document.getElementById("modal-electores").textContent = (c.electores || 0).toLocaleString();
+      document.getElementById("modal-promedio").textContent = Math.round(c.electores / c.mesas);
+
+      document.getElementById("modal-testigo-1").textContent = c.testigoPrincipal || "Prof. Carmen Salazar";
+      document.getElementById("modal-coordinador").textContent = `${c.coordinador || 'Ing. Pedro Figuera'} (${c.telefono || '+58 414-7821430'})`;
+
+      const modal = document.getElementById("modal-ficha-centro");
+      if (modal) modal.style.display = "flex";
+
+      if (window.lucide) lucide.createIcons();
+    }
+
+    function closeFichaModal() {
+      const modal = document.getElementById("modal-ficha-centro");
+      if (modal) modal.style.display = "none";
+    }
+
+    function openActaModalFromFicha() {
+      if (!activeSelectedCenter) return;
+      closeFichaModal();
+      openActaModal(activeSelectedCenter.id);
+    }
+
+    // ==============================================================
+    // MODAL DE ACTA DE ESCRUTINIO CNE DIGITALIZADA CON QR
+    // ==============================================================
+    function openActaModal(centerId) {
+      const c = centrosList.find(item => item.id === centerId);
+      if (!c) return;
+
+      activeSelectedCenter = c;
+      const esc = getEscrutinioCentro(c);
+      const parishName = c.parroquiaNombre || PARROQUIAS_MATURIN.find(p => p.id === c.parroquia)?.nombre || c.parroquia;
+
+      document.getElementById("acta-fecha-hora").textContent = `HORA TRANSMISIÓN: ${esc.hora}:15 • 28-JUL-2024`;
+      document.getElementById("acta-parroquia").textContent = parishName.toUpperCase();
+      document.getElementById("acta-mesa").textContent = "01 DE " + String(c.mesas).padStart(2, '0');
+      document.getElementById("acta-centro-nombre").textContent = c.nombre.toUpperCase();
+      document.getElementById("acta-codigo-cne").textContent = c.id;
+
+      document.getElementById("acta-votos-op").textContent = `${esc.votosOposicion.toLocaleString()} (${esc.pctOposicion}%)`;
+      document.getElementById("acta-votos-of").textContent = `${esc.votosOficialismo.toLocaleString()} (${esc.pctOficialismo}%)`;
+      document.getElementById("acta-votos-otros").textContent = `${esc.votosOtros.toLocaleString()} (${(100 - esc.pctOposicion - esc.pctOficialismo).toFixed(1)}%)`;
+      document.getElementById("acta-votos-total").textContent = esc.votosEmitidos.toLocaleString();
+
+      const qrHash = `CNE-2024-MON-${c.id}-M01-SHA256-${c.id.slice(-4)}${Math.round(esc.votosOposicion)}`;
+      document.getElementById("acta-hash").textContent = qrHash;
+      document.getElementById("acta-testigo-nombre").textContent = c.testigoPrincipal || "Acreditado por ConVzla";
+
+      const modal = document.getElementById("modal-acta-cne");
+      if (modal) modal.style.display = "flex";
+
+      if (window.lucide) lucide.createIcons();
+    }
+
+    function closeActaModal() {
+      const modal = document.getElementById("modal-acta-cne");
+      if (modal) modal.style.display = "none";
+    }
+
+    function copiarHashActa() {
+      const hashElem = document.getElementById("acta-hash");
+      const btnTxt = document.getElementById("txt-copiar-hash");
+      if (!hashElem) return;
+
+      navigator.clipboard.writeText(hashElem.textContent.trim()).then(() => {
+        if (btnTxt) btnTxt.textContent = "¡Copiado!";
+        setTimeout(() => {
+          if (btnTxt) btnTxt.textContent = "Copiar Hash";
+        }, 2000);
+      });
+    }
+
+    // ==============================================================
+    // MAPA SATELITAL LEAFLET
+    // ==============================================================
     function initMap() {
       if (typeof L === 'undefined') return;
 
-      map = L.map('map', {
-        center: [9.7469, -63.1812],
-        zoom: 12,
-        zoomControl: true
-      });
+      try {
+        map = L.map('map', {
+          center: [9.7469, -63.1812],
+          zoom: 12,
+          zoomControl: true
+        });
 
-      if (L.Icon && L.Icon.Default) {
-        L.Icon.Default.imagePath = '../vendor/images/';
-      }
+        if (L.Icon && L.Icon.Default) {
+          L.Icon.Default.imagePath = '../vendor/images/';
+        }
 
-      L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-        attribution: 'Esri Satellite'
-      }).addTo(map);
+        L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+          attribution: 'Esri Satellite'
+        }).addTo(map);
 
-      updateMapMarkers(CENTROS_MATURIN);
-    }
-
-    // Alternar Vista Mapa
-    function toggleMapView() {
-      const container = document.getElementById("map-container");
-      const text = document.getElementById("map-toggle-text");
-      const isHidden = container.classList.contains("hidden");
-
-      if (isHidden) {
-        container.classList.remove("hidden");
-        text.textContent = "Ocultar Mapa";
-        setTimeout(() => {
-          if (map) map.invalidateSize();
-        }, 150);
-      } else {
-        container.classList.add("hidden");
-        text.textContent = "Ver Mapa";
+        updateMapMarkers(centrosList);
+      } catch (e) {
+        console.warn("Leaflet init error:", e);
       }
     }
 
-    // Actualizar Pines en el Mapa
     function updateMapMarkers(centers) {
       if (!map) return;
 
@@ -949,6 +1741,7 @@
       mapMarkers = [];
 
       centers.forEach(c => {
+        if (!c.lat || !c.lng) return;
         const isPrio = c.estatus === "prioritario";
         const pinColor = isPrio ? "#f59e0b" : "#10b981";
 
@@ -971,13 +1764,13 @@
           <div class="p-1 font-mono text-xs max-w-[240px]">
             <span class="text-[9px] uppercase font-black text-amber-400 block">CNE #${c.id}</span>
             <strong class="text-white block font-bold text-sm leading-tight mt-0.5">${c.nombre}</strong>
-            <span class="text-[10px] text-slate-300 block mt-1">👥 ~${c.electores.toLocaleString()} Electores • ${c.mesas} Mesas</span>
+            <span class="text-[10px] text-slate-300 block mt-1">👥 ${(c.electores || 0).toLocaleString()} Electores • ${c.mesas} Mesas</span>
             <span class="text-[10px] text-slate-400 block">${c.direccion || ''}</span>
             <div class="flex gap-1 mt-2">
-              <button onclick="openActaModal('${c.id}')" class="flex-1 py-1 px-2 rounded-lg bg-amber-600 hover:bg-amber-500 text-slate-950 font-black text-[10px] text-center">
+              <button onclick="openActaModal('${c.id}')" class="flex-1 py-1 px-2 rounded-lg bg-amber-600 hover:bg-amber-500 text-slate-950 font-black text-[10px] text-center cursor-pointer">
                 Acta QR
               </button>
-              <button onclick="openFichaModal('${c.id}')" class="flex-1 py-1 px-2 rounded-lg bg-sky-600 hover:bg-sky-500 text-white font-bold text-[10px] text-center">
+              <button onclick="openFichaModal('${c.id}')" class="flex-1 py-1 px-2 rounded-lg bg-sky-600 hover:bg-sky-500 text-white font-bold text-[10px] text-center cursor-pointer">
                 Ficha
               </button>
             </div>
@@ -989,97 +1782,13 @@
       });
     }
 
-    // Abrir Modal de Ficha Técnica
-    function openFichaModal(centerId) {
-      const c = CENTROS_MATURIN.find(item => item.id === centerId);
-      if (!c) return;
-
-      activeSelectedCenter = c;
-      const parishName = PARROQUIAS_MATURIN.find(p => p.id === c.parroquia)?.nombre || c.parroquia;
-
-      document.getElementById("modal-cne-code").textContent = `CNE #${c.id}`;
-      document.getElementById("modal-center-name").textContent = c.nombre;
-      document.getElementById("modal-parish").textContent = `Parroquia ${parishName}`;
-      document.getElementById("modal-sector").textContent = c.sector || "Sector Central";
-      document.getElementById("modal-address").textContent = c.direccion || "Av. Principal, Maturín";
-      document.getElementById("modal-mesas").textContent = c.mesas;
-      document.getElementById("modal-electores").textContent = c.electores.toLocaleString();
-      document.getElementById("modal-promedio").textContent = Math.round(c.electores / c.mesas);
-
-      document.getElementById("modal-testigo-1").textContent = c.testigoPrincipal || "Prof. Carmen Salazar";
-      document.getElementById("modal-coordinador").textContent = `${c.coordinador || 'Ing. Pedro Figuera'} (${c.telefono || '+58 414-7821430'})`;
-
-      const modal = document.getElementById("modal-ficha-centro");
-      modal.style.display = "flex";
-
-      if (window.lucide) lucide.createIcons();
-    }
-
-    function closeFichaModal() {
-      document.getElementById("modal-ficha-centro").style.display = "none";
-    }
-
-    function openActaModalFromFicha() {
-      if (!activeSelectedCenter) return;
-      closeFichaModal();
-      openActaModal(activeSelectedCenter.id);
-    }
-
-    // Abrir Modal de Acta CNE Digitalizada con QR
-    function openActaModal(centerId) {
-      const c = CENTROS_MATURIN.find(item => item.id === centerId);
-      if (!c) return;
-
-      const esc = c.escrutinio || {
-        votosEmitidos: Math.round(c.electores * 0.76),
-        votosOposicion: Math.round(c.electores * 0.55),
-        votosOficialismo: Math.round(c.electores * 0.17),
-        votosOtros: Math.round(c.electores * 0.04),
-        hora: "19:42",
-        qrHash: `CNE-2024-MON-${c.id}-ACTA-01`
-      };
-
-      const parishName = PARROQUIAS_MATURIN.find(p => p.id === c.parroquia)?.nombre || c.parroquia;
-
-      document.getElementById("acta-fecha-hora").textContent = `HORA TRANSMISIÓN: ${esc.hora}:15 • 28-JUL-2024`;
-      document.getElementById("acta-parroquia").textContent = parishName.toUpperCase();
-      document.getElementById("acta-mesa").textContent = "01 DE " + String(c.mesas).padStart(2, '0');
-      document.getElementById("acta-centro-nombre").textContent = c.nombre.toUpperCase();
-      document.getElementById("acta-codigo-cne").textContent = c.id;
-
-      const pctOp = ((esc.votosOposicion / esc.votosEmitidos) * 100).toFixed(1);
-      const pctOf = ((esc.votosOficialismo / esc.votosEmitidos) * 100).toFixed(1);
-      const pctOt = ((esc.votosOtros / esc.votosEmitidos) * 100).toFixed(1);
-
-      document.getElementById("acta-votos-op").textContent = `${esc.votosOposicion.toLocaleString()} (${pctOp}%)`;
-      document.getElementById("acta-votos-of").textContent = `${esc.votosOficialismo.toLocaleString()} (${pctOf}%)`;
-      document.getElementById("acta-votos-otros").textContent = `${esc.votosOtros.toLocaleString()} (${pctOt}%)`;
-      document.getElementById("acta-votos-total").textContent = esc.votosEmitidos.toLocaleString();
-
-      document.getElementById("acta-hash").textContent = esc.qrHash + "-" + Math.random().toString(16).substring(2, 10).toUpperCase();
-      document.getElementById("acta-testigo-nombre").textContent = c.testigoPrincipal || "Acreditado";
-
-      const modal = document.getElementById("modal-acta-cne");
-      modal.style.display = "flex";
-
-      if (window.lucide) lucide.createIcons();
-    }
-
-    function closeActaModal() {
-      document.getElementById("modal-acta-cne").style.display = "none";
-    }
-
     function focusInMapFromModal() {
       if (!activeSelectedCenter) return;
       closeFichaModal();
-
-      const container = document.getElementById("map-container");
-      if (container.classList.contains("hidden")) {
-        toggleMapView();
-      }
+      switchView('map');
 
       setTimeout(() => {
-        if (map) {
+        if (map && activeSelectedCenter.lat && activeSelectedCenter.lng) {
           map.flyTo([activeSelectedCenter.lat, activeSelectedCenter.lng], 16, { duration: 1.2 });
           const targetMarker = mapMarkers.find(m => {
             const latlng = m.getLatLng();
@@ -1087,69 +1796,25 @@
           });
           if (targetMarker) targetMarker.openPopup();
         }
-      }, 200);
+      }, 250);
     }
 
-    // Alternar Panel de Escrutinio Global
-    function toggleEscrutinioPanel() {
-      const panel = document.getElementById("escrutinio-global-panel");
-      const txt = document.getElementById("txt-toggle-escrutinio");
-      const isHidden = panel.classList.contains("hidden");
-
-      if (isHidden) {
-        panel.classList.remove("hidden");
-        txt.textContent = "Ocultar Escrutinio";
-      } else {
-        panel.classList.add("hidden");
-        txt.textContent = "Ver Tablero de Escrutinio";
-      }
-    }
-
-    // Simulación Interactiva de Transmisión en Vivo
-    function simularTransmisionEnVivo() {
-      const progressBar = document.getElementById("sim-progress-bar");
-      const centrosCount = document.getElementById("sim-centros-count");
-      const mesasCount = document.getElementById("sim-mesas-count");
-      const actasCount = document.getElementById("sim-actas-count");
-
-      progressBar.style.width = "0%";
-      let currentPercent = 0;
-      centrosCount.textContent = "0 / 175";
-      mesasCount.textContent = "0 / 361";
-      actasCount.textContent = "0";
-
-      const interval = setInterval(() => {
-        currentPercent += 5;
-        if (currentPercent > 100) currentPercent = 100;
-
-        progressBar.style.width = currentPercent + "%";
-        const cVal = Math.round((currentPercent / 100) * 175);
-        const mVal = Math.round((currentPercent / 100) * 361);
-
-        centrosCount.textContent = `${cVal} / 175`;
-        mesasCount.textContent = `${mVal} / 361`;
-        actasCount.textContent = `${mVal}`;
-
-        if (currentPercent >= 100) {
-          clearInterval(interval);
-        }
-      }, 50);
-    }
-
-    // Exportar Listado a CSV
+    // ==============================================================
+    // EXPORTACIÓN A CSV DE LA TABLILLA COMPLETA
+    // ==============================================================
     function exportToCSV() {
-      let csv = "Código CNE,Nombre del Centro,Parroquia,Sector,Dirección,Mesas,Electores,Latitud,Longitud,Estatus,Votos MIGATO,Votos Oficialismo\n";
-      CENTROS_MATURIN.forEach(c => {
+      let csv = "Código CNE,Nombre del Centro,Parroquia,Sector,Dirección,Mesas,Electores,Votos MIGATO,Pct MIGATO,Votos Oficialismo,Pct Oficialismo,Margen,Estatus Acta,Hora Transmisión\n";
+      centrosList.forEach(c => {
         const pName = c.parroquiaNombre || PARROQUIAS_MATURIN.find(p => p.id === c.parroquia)?.nombre || c.parroquia;
-        const esc = c.escrutinio || {};
-        csv += `"${c.id}","${c.nombre}","${pName}","${c.sector || ''}","${c.direccion || ''}",${c.mesas},${c.electores},${c.lat},${c.lng},"${c.estatus}",${esc.votosOposicion || 0},${esc.votosOficialismo || 0}\n`;
+        const esc = getEscrutinioCentro(c);
+        csv += `"${c.id}","${c.nombre}","${pName}","${c.sector || ''}","${c.direccion || ''}",${c.mesas},${c.electores},${esc.votosOposicion},"${esc.pctOposicion}%",${esc.votosOficialismo},"${esc.pctOficialismo}%","+${esc.margen}%","${esc.transmitido ? 'Transmitida' : 'Pendiente'}","${esc.hora}"\n`;
       });
 
       const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
       const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.setAttribute("href", url);
-      link.setAttribute("download", "Centros_Electorales_Maturin_CNE2024.csv");
+      link.setAttribute("download", "Tablilla_Electoral_Maturin_CNE2024.csv");
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
