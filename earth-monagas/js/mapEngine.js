@@ -2,7 +2,7 @@
  * Motor Cartográfico Acelerado por GPU — Google Earth Pro Web (Monagas)
  * Integrado con Capas Jerárquicas Oficiales (INE 2021) y Edición de Vértices
  */
-import { GEO_ESTADO_OFICIAL, GEO_MUNICIPIOS_OFICIAL, GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=100";
+import { GEO_ESTADO_OFICIAL, GEO_MUNICIPIOS_OFICIAL, GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=128";
 
 export class EarthMapEngine {
   constructor(containerId, onCoordUpdate) {
@@ -14,6 +14,7 @@ export class EarthMapEngine {
 
     // Capas Base
     this.boundaryLayer = null;
+    this.layerMunicipioParroquias = null;
     this.subParroquiasLayer = null;
     this.subParroquiaLabelsLayer = null;
     this.polygonsLayer = null;
@@ -112,6 +113,7 @@ export class EarthMapEngine {
 
     // Inicializar Grupos de Capas de Usuario
     this.boundaryLayer = L.layerGroup().addTo(this.map);
+    this.layerMunicipioParroquias = L.layerGroup().addTo(this.map);
     this.subParroquiasLayer = L.layerGroup().addTo(this.map);
     this.subParroquiaLabelsLayer = L.layerGroup().addTo(this.map);
     this.polygonsLayer = L.layerGroup().addTo(this.map);
@@ -391,7 +393,11 @@ export class EarthMapEngine {
   }
 
   showStateBoundary(flyCamera = true) {
+    if (this.layerMunicipioParroquias) this.layerMunicipioParroquias.clearLayers();
+    this.currentSectorVertices = null;
+    this.currentSubParishVertices = null;
     this.activeFocusLevel = "estado";
+
     let coords = null;
     if (GEO_ESTADO_OFICIAL && GEO_ESTADO_OFICIAL.features && GEO_ESTADO_OFICIAL.features[0]) {
       const feat = GEO_ESTADO_OFICIAL.features[0];
@@ -417,6 +423,14 @@ export class EarthMapEngine {
     if (!munId) munId = window.earthApp?.selectedMunId || "maturin";
     this.activeMunicipioId = munId;
     this.activeFocusLevel = "municipio";
+    this.currentSectorVertices = null;
+    this.currentSubParishVertices = null;
+
+    // Limpiar capas de detalle parroquial para vista municipal limpia
+    if (this.polygonsLayer) this.polygonsLayer.clearLayers();
+    if (this.subParroquiasLayer) this.subParroquiasLayer.clearLayers();
+    if (this.subParroquiaLabelsLayer) this.subParroquiaLabelsLayer.clearLayers();
+    if (this.sectorLabelsLayer) this.sectorLabelsLayer.clearLayers();
 
     let coords = null;
     if (GEO_MUNICIPIOS_OFICIAL && GEO_MUNICIPIOS_OFICIAL.features) {
@@ -440,15 +454,115 @@ export class EarthMapEngine {
     if (!coords || coords.length < 3) return;
     this.activeFocusCoords = coords;
 
-    const bPoly = this.renderSpotlightMask(coords, "#38bdf8", "8, 5", 3);
+    const bPoly = this.renderSpotlightMask(coords, "#38bdf8", "8, 5", 3.2);
     if (bPoly && flyCamera) {
       this.map.flyToBounds(bPoly.getBounds(), { padding: [40, 40], duration: 1.2 });
     }
+
+    // Renderizar todas las parroquias oficiales pertenecientes a este municipio como interactivas
+    this.renderMunicipalParishes(munId);
+  }
+
+  renderMunicipalParishes(munId) {
+    if (!this.map) return;
+    if (!this.layerMunicipioParroquias) {
+      this.layerMunicipioParroquias = L.layerGroup().addTo(this.map);
+    }
+    this.layerMunicipioParroquias.clearLayers();
+
+    if (!GEO_PARROQUIAS_OFICIAL || !GEO_PARROQUIAS_OFICIAL.features) return;
+
+    const cleanMunId = String(munId).toLowerCase().replace(/_/g, "-").trim();
+    const parishFeatures = GEO_PARROQUIAS_OFICIAL.features.filter(f => {
+      if (!f.properties) return false;
+      const fMun = String(f.properties.municipioId || f.properties.ADM2_ES || "").toLowerCase().replace(/_/g, "-").trim();
+      return fMun === cleanMunId || fMun.includes(cleanMunId) || cleanMunId.includes(fMun);
+    });
+
+    parishFeatures.forEach(feature => {
+      const pProps = feature.properties || {};
+      const pColor = pProps.color || "#10b981";
+      const pName = pProps.nombre || "Parroquia";
+      const pId = pProps.id;
+
+      const layer = L.geoJSON(feature, {
+        renderer: this.canvasRenderer,
+        interactive: true,
+        style: {
+          color: "#ffffff",
+          weight: 2,
+          opacity: 0.9,
+          fillColor: pColor,
+          fillOpacity: 0.22,
+          dashArray: "5, 4"
+        }
+      });
+
+      layer.on({
+        mouseover: () => {
+          layer.setStyle({ weight: 3.5, color: "#facc15", fillOpacity: 0.45 });
+        },
+        mouseout: () => {
+          layer.setStyle({ weight: 2, color: "#ffffff", fillOpacity: 0.22 });
+        },
+        click: (e) => {
+          if (e.originalEvent?.target?.blur) e.originalEvent.target.blur();
+          if (document.activeElement?.blur) document.activeElement.blur();
+          L.DomEvent.stopPropagation(e);
+          if (window.earthApp?.selectParish) {
+            window.earthApp.selectParish(cleanMunId, pId, true);
+          }
+        }
+      });
+
+      layer.bindTooltip(`
+        <div style="font-family:system-ui;font-size:12px;color:#ffffff;line-height:1.3;padding:3px 6px;">
+          <div style="font-weight:800;color:#38bdf8;">📍 Parroquia ${pName}</div>
+          <div style="font-size:10px;color:#94a3b8;">Clic para enfocar con velo blanco</div>
+        </div>
+      `, {
+        sticky: true,
+        direction: "top",
+        className: "leaflet-tooltip-dark"
+      });
+
+      this.layerMunicipioParroquias.addLayer(layer);
+
+      // Etiqueta visible e interactiva en el centroide de la parroquia
+      try {
+        const bounds = layer.getBounds();
+        if (bounds.isValid()) {
+          const center = bounds.getCenter();
+          const labelMarker = L.marker(center, {
+            icon: L.divIcon({
+              className: "parish-municipal-label",
+              html: `<div class="px-2.5 py-1 rounded-full text-[11px] font-black border shadow-xl cursor-pointer whitespace-nowrap transition transform hover:scale-110 flex items-center gap-1.5 bg-[#08061a]/95 text-sky-200 border-sky-400 hover:border-amber-400 hover:text-white" style="backdrop-filter: blur(4px);">
+                <span class="w-2 h-2 rounded-full bg-sky-400 shrink-0"></span>
+                <span>${pName}</span>
+              </div>`,
+              iconSize: null,
+              iconAnchor: [35, 12]
+            }),
+            interactive: true
+          });
+          labelMarker.on("click", (e) => {
+            L.DomEvent.stopPropagation(e);
+            if (window.earthApp?.selectParish) {
+              window.earthApp.selectParish(cleanMunId, pId, true);
+            }
+          });
+          this.layerMunicipioParroquias.addLayer(labelMarker);
+        }
+      } catch (e) {}
+    });
   }
 
   showParishBoundary(limite, parishId = null, flyCamera = true) {
+    if (this.layerMunicipioParroquias) this.layerMunicipioParroquias.clearLayers();
     this.currentParishLimite = limite;
     this.currentParishId = parishId;
+    this.currentSectorVertices = null;
+    this.currentSubParishVertices = null;
     this.activeFocusLevel = "parroquia";
 
     let coords = null;
@@ -486,7 +600,9 @@ export class EarthMapEngine {
   }
 
   showSubParishBoundary(spVertices, flyCamera = true) {
+    if (this.layerMunicipioParroquias) this.layerMunicipioParroquias.clearLayers();
     this.currentSubParishVertices = spVertices;
+    this.currentSectorVertices = null;
     this.activeFocusLevel = "subparroquia";
 
     if (!spVertices || spVertices.length < 3) return;
@@ -498,6 +614,20 @@ export class EarthMapEngine {
     }
   }
 
+  showSectorBoundary(sectorVertices, flyCamera = false) {
+    if (this.layerMunicipioParroquias) this.layerMunicipioParroquias.clearLayers();
+    this.currentSectorVertices = sectorVertices;
+    this.activeFocusLevel = "sector";
+
+    if (!sectorVertices || sectorVertices.length < 3) return;
+    this.activeFocusCoords = sectorVertices;
+
+    const bPoly = this.renderSpotlightMask(sectorVertices, "#eab308", "5, 3", 3.2);
+    if (bPoly && flyCamera) {
+      this.map.flyToBounds(bPoly.getBounds(), { padding: [60, 60], duration: 1.0 });
+    }
+  }
+
   toggleSpotlight(enabled = null) {
     if (enabled !== null) {
       this.spotlightEnabled = !!enabled;
@@ -505,7 +635,26 @@ export class EarthMapEngine {
       this.spotlightEnabled = !this.spotlightEnabled;
     }
 
-    // Re-renderizar de inmediato el velo blanco según el nivel territorial activo (escala mínima: Sub-Parroquia)
+    // Re-renderizar de inmediato el velo blanco según el nivel territorial activo en cascada:
+    // Nivel 4: Sector Comunal
+    if (this.activeFocusLevel === "sector" && this.currentSectorVertices) {
+      this.showSectorBoundary(this.currentSectorVertices, false);
+      return this.spotlightEnabled;
+    }
+    if (window.earthApp?.activeSectorId) {
+      const parish = window.earthApp.store?.getParish(window.earthApp.selectedMunId, window.earthApp.selectedParishId);
+      const sec = (parish?.poligonos || []).find(p => String(p.id) === String(window.earthApp.activeSectorId));
+      if (sec && (sec.vertices || sec.poligono)) {
+        this.showSectorBoundary(sec.vertices || sec.poligono, false);
+        return this.spotlightEnabled;
+      }
+    }
+
+    // Nivel 3: Sub-Parroquia / Eje Comunal
+    if (this.activeFocusLevel === "subparroquia" && this.currentSubParishVertices) {
+      this.showSubParishBoundary(this.currentSubParishVertices, false);
+      return this.spotlightEnabled;
+    }
     if (window.earthApp?.activeSubParroquiaId) {
       const parish = window.earthApp.store?.getParish(window.earthApp.selectedMunId, window.earthApp.selectedParishId);
       const sp = (parish?.subparroquias || []).find(s => String(s.id) === String(window.earthApp.activeSubParroquiaId));
@@ -515,17 +664,23 @@ export class EarthMapEngine {
       }
     }
 
-    if (this.activeFocusLevel === "subparroquia" && this.currentSubParishVertices) {
-      this.showSubParishBoundary(this.currentSubParishVertices, false);
-    } else if (this.activeFocusLevel === "municipio") {
+    // Nivel 2: Parroquia
+    if (this.activeFocusLevel === "parroquia" || (!this.activeFocusLevel && window.earthApp?.selectedParishId)) {
+      const p = window.earthApp?.store?.getParish(window.earthApp.selectedMunId, window.earthApp.selectedParishId);
+      this.showParishBoundary(this.currentParishLimite || p?.limite || null, this.currentParishId || window.earthApp?.selectedParishId, false);
+      return this.spotlightEnabled;
+    }
+
+    // Nivel 1: Municipio
+    if (this.activeFocusLevel === "municipio") {
       this.showMunicipioBoundary(this.activeMunicipioId || window.earthApp?.selectedMunId, false);
-    } else if (this.activeFocusLevel === "estado") {
+      return this.spotlightEnabled;
+    }
+
+    // Nivel 0: Estado Monagas
+    if (this.activeFocusLevel === "estado") {
       this.showStateBoundary(false);
-    } else if (this.currentParishLimite || this.currentParishId) {
-      this.showParishBoundary(this.currentParishLimite, this.currentParishId, false);
-    } else if (window.earthApp?.selectedParishId) {
-      const p = window.earthApp.store?.getParish(window.earthApp.selectedMunId, window.earthApp.selectedParishId);
-      this.showParishBoundary(p?.limite || null, window.earthApp.selectedParishId, false);
+      return this.spotlightEnabled;
     }
 
     return this.spotlightEnabled;

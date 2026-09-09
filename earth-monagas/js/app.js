@@ -2,16 +2,16 @@
  * Controlador Principal — Google Earth Pro Web (Edición Estado Monagas)
  * Robusto, 100% Operativo y Totalmente Individualizado
  */
-import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=127";
-import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=127";
-import { getAllParishesForSelector } from "./usersCatalog.js?v=127";
-import { EarthStore } from "./earthStore.js?v=127";
-import { EarthMapEngine } from "./mapEngine.js?v=127";
-import { PropertiesDialog } from "./propertiesDialog.js?v=127";
-import { ToolsManager } from "./toolsManager.js?v=127";
-import { detectParishFromGeometry, SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=127";
-import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=127";
-import { getParishDemographics } from "./monagasDemographics.js?v=127";
+import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=128";
+import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=128";
+import { getAllParishesForSelector } from "./usersCatalog.js?v=128";
+import { EarthStore } from "./earthStore.js?v=128";
+import { EarthMapEngine } from "./mapEngine.js?v=128";
+import { PropertiesDialog } from "./propertiesDialog.js?v=128";
+import { ToolsManager } from "./toolsManager.js?v=128";
+import { detectParishFromGeometry, SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=128";
+import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=128";
+import { getParishDemographics } from "./monagasDemographics.js?v=128";
 import { 
   getMunicipios, 
   getParroquiasByMun, 
@@ -21,13 +21,13 @@ import {
   findSectorById, 
   searchSectores, 
   ALL_SECTORES_FLAT 
-} from "./monagasSectoresCatalog.js?v=127";
+} from "./monagasSectoresCatalog.js?v=128";
 import { 
   getSavedFirebaseConfig, 
   saveFirebaseConfig, 
   isFirebaseConfigured, 
   initFirebase 
-} from "./firebaseConfig.js?v=127";
+} from "./firebaseConfig.js?v=128";
 
 // Controladores globales infalibles accesibles en cualquier contexto
 window.closeParishSelectorModal = function() {
@@ -115,11 +115,16 @@ class EarthMonagasApp {
 
     this.selectedMunId = "maturin";
     this.selectedParishId = "san-simon";
+    this.activeSubParroquiaId = null;
+    this.activeSectorId = null;
     this.catalogViewMode = "table";
     window.earthApp = this;
     window.toggleSpotlight = (enabled = null) => window.earthApp?.toggleSpotlight(enabled);
     window.closeQuickStats = () => window.earthApp?.closeQuickStats();
     window.clearSubParishFocus = () => window.earthApp?.clearSubParishFocus();
+    window.clearSectorFocus = (toSub = true) => window.earthApp?.clearSectorFocus(toSub);
+    window.focusMunicipio = (m, fly = true) => window.earthApp?.focusMunicipio(m, fly);
+    window.focusEstado = (fly = true) => window.earthApp?.focusEstado(fly);
 
     this.init();
   }
@@ -292,6 +297,7 @@ class EarthMonagasApp {
   selectParish(munId, parishId, flyCamera = true) {
     try {
       this.activeSubParroquiaId = null;
+      this.activeSectorId = null;
 
       // Restricción de seguridad solo para operadores parroquiales no-admin
       const currentUser = this.authManager?.getCurrentUser();
@@ -496,6 +502,7 @@ class EarthMonagasApp {
     const sp = (parish.subparroquias || []).find(s => String(s.id) === String(subParishId));
     if (!sp || !sp.vertices || sp.vertices.length < 3) return;
 
+    this.activeSectorId = null;
     this.activeSubParroquiaId = String(subParishId);
     if (this.mapEngine) {
       if (this.mapEngine.spotlightEnabled) {
@@ -519,6 +526,7 @@ class EarthMonagasApp {
   }
 
   clearSubParishFocus() {
+    this.activeSectorId = null;
     this.activeSubParroquiaId = null;
     this.closeQuickStats();
     const parish = this.store ? this.store.getParish(this.selectedMunId, this.selectedParishId) : null;
@@ -541,26 +549,293 @@ class EarthMonagasApp {
     this.renderPlacesTree();
   }
 
-  updateTerritorialFocusUI() {
-    const hud = document.getElementById("hud-territorial-focus");
-    const hudName = document.getElementById("hud-focus-subparish-name");
-    const btnReturnParish = document.getElementById("btn-return-parish");
-    const parish = this.store ? this.store.getParish(this.selectedMunId, this.selectedParishId) : null;
+  clearSectorFocus(toSubParish = true) {
+    this.activeSectorId = null;
+    this.closeQuickStats();
 
-    if (this.activeSubParroquiaId && parish) {
+    const parish = this.store ? this.store.getParish(this.selectedMunId, this.selectedParishId) : null;
+    if (!parish) return;
+
+    if (toSubParish && this.activeSubParroquiaId) {
       const sp = (parish.subparroquias || []).find(s => String(s.id) === String(this.activeSubParroquiaId));
-      if (sp) {
-        if (hud) hud.style.display = "block";
-        if (hudName) hudName.textContent = sp.nombre || "Eje Comunal";
-        if (btnReturnParish) {
-          btnReturnParish.style.display = "flex";
-          btnReturnParish.title = `Devolver velo y cámara a toda la parroquia (${parish.nombre})`;
-        }
-        if (window.lucide && typeof window.lucide.createIcons === "function") {
-          try { window.lucide.createIcons(); } catch(e) {}
-        }
+      if (sp && sp.vertices && sp.vertices.length >= 3) {
+        this.focusSubParish(this.activeSubParroquiaId, false);
+        this.showToast(`↩ Velo restablecido al Eje Comunal: <strong>${sp.nombre}</strong>`, "purple");
+        this.updateTerritorialFocusUI();
         return;
       }
+    }
+
+    // Volver a toda la parroquia
+    this.activeSubParroquiaId = null;
+    if (this.mapEngine) {
+      this.mapEngine.showParishBoundary(parish.limite, parish.id, false);
+      this.mapEngine.renderParishItems(parish, (type, item) => {
+        this.handleMapItemSelection(type, item);
+      });
+    }
+    this.showToast(`↩ Velo restablecido a la Parroquia: <strong>${parish.nombre}</strong>`, "sky");
+    this.updateTerritorialFocusUI();
+    this.renderPlacesTree();
+  }
+
+  focusMunicipio(munId = null, flyCamera = true) {
+    if (!munId) munId = this.selectedMunId || "maturin";
+    this.selectedMunId = munId;
+    this.activeSectorId = null;
+    this.activeSubParroquiaId = null;
+    this.closeQuickStats();
+
+    if (this.mapEngine) {
+      this.mapEngine.showMunicipioBoundary(munId, flyCamera);
+    }
+
+    const munObj = CATALOGO_MONAGAS.find(m => m.id === munId);
+    const munNom = munObj ? munObj.nombre : munId;
+    const parishCount = munObj?.parroquias?.length || 1;
+
+    const navLoc = document.getElementById("nav-current-location");
+    if (navLoc) {
+      navLoc.textContent = `Municipio ${munNom} (${parishCount} Parroquias)`;
+    }
+
+    this.showToast(`🏛️ Enfocando Municipio <strong>${munNom}</strong> (${parishCount} Parroquias). Haz clic en cualquier parroquia para entrar.`, "sky");
+    this.updateTerritorialFocusUI();
+  }
+
+  focusEstado(flyCamera = true) {
+    this.activeSectorId = null;
+    this.activeSubParroquiaId = null;
+    this.closeQuickStats();
+
+    if (this.mapEngine) {
+      this.mapEngine.showStateBoundary(flyCamera);
+    }
+
+    const navLoc = document.getElementById("nav-current-location");
+    if (navLoc) {
+      navLoc.textContent = `Estado Monagas (13 Municipios)`;
+    }
+
+    this.showToast(`🗺️ Vista general del Estado Monagas (13 Municipios).`, "amber");
+    this.updateTerritorialFocusUI();
+  }
+
+  updateTerritorialFocusUI() {
+    const hud = document.getElementById("hud-territorial-focus");
+    const hudContent = document.getElementById("hud-territorial-content");
+    const btnReturnParish = document.getElementById("btn-return-parish");
+    const parish = this.store ? this.store.getParish(this.selectedMunId, this.selectedParishId) : null;
+    const munObj = CATALOGO_MONAGAS.find(m => m.id === this.selectedMunId);
+    const munNom = munObj ? munObj.nombre : (this.selectedMunId || "Maturín");
+    const parishCount = munObj?.parroquias?.length || 1;
+    const focusLevel = this.mapEngine?.activeFocusLevel || (this.activeSectorId ? "sector" : (this.activeSubParroquiaId ? "subparroquia" : "parroquia"));
+
+    // 1. Nivel Sector Comunal
+    if (this.activeSectorId && parish) {
+      const sec = (parish.poligonos || []).find(p => String(p.id) === String(this.activeSectorId));
+      const secName = sec?.nombre || "Sector Comunal";
+      let sp = null;
+      if (sec?.subParroquiaId && parish.subparroquias) {
+        sp = parish.subparroquias.find(s => String(s.id) === String(sec.subParroquiaId));
+      }
+
+      if (hud && hudContent) {
+        hud.style.display = "block";
+        hudContent.className = "flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#08061a]/95 border border-amber-500/70 shadow-2xl backdrop-blur-md text-xs flex-wrap justify-center";
+        hudContent.innerHTML = `
+          <span class="inline-flex items-center gap-1.5 font-bold text-amber-300">
+            <span class="w-2.5 h-2.5 rounded-full bg-amber-400 shrink-0 animate-pulse"></span>
+            <span class="text-[10px] text-amber-400 uppercase tracking-wider hidden sm:inline">Sector:</span>
+            <span class="text-white font-extrabold max-w-[140px] sm:max-w-[200px] truncate">${secName}</span>
+          </span>
+          <div class="h-3 w-px bg-amber-500/40"></div>
+          ${sp ? `
+            <button type="button" onclick="window.earthApp?.clearSectorFocus(true)"
+              class="px-2.5 py-1 rounded-full bg-purple-900/90 hover:bg-purple-800 text-purple-100 font-bold text-[11px] flex items-center gap-1 border border-purple-400/50 shadow transition active:scale-95 cursor-pointer"
+              title="Volver al eje ${sp.nombre}">
+              <span>↩ Eje: ${sp.nombre}</span>
+            </button>
+          ` : ''}
+          <button type="button" onclick="window.earthApp?.clearSectorFocus(false)"
+            class="px-2.5 py-1 rounded-full bg-sky-900/90 hover:bg-sky-800 text-sky-100 font-bold text-[11px] flex items-center gap-1 border border-sky-400/50 shadow transition active:scale-95 cursor-pointer"
+            title="Volver a toda la parroquia ${parish.nombre}">
+            <span>↩ Parroquia</span>
+          </button>
+          <button type="button" onclick="window.earthApp?.focusMunicipio('${this.selectedMunId}')"
+            class="px-2.5 py-1 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white font-bold text-[10px] hidden md:flex items-center gap-1 transition cursor-pointer"
+            title="Ver todo el municipio ${munNom}">
+            <span>🏛️ Municipio</span>
+          </button>
+        `;
+      }
+
+      if (btnReturnParish) {
+        btnReturnParish.style.display = "flex";
+        btnReturnParish.title = `Volver a la parroquia (${parish.nombre})`;
+        btnReturnParish.className = "px-2.5 py-1.5 rounded-xl bg-amber-900/90 hover:bg-amber-800 border border-amber-400/60 text-xs font-black text-amber-100 transition flex items-center gap-1.5 active:scale-95 shadow-lg cursor-pointer shrink-0";
+        btnReturnParish.innerHTML = '<i data-lucide="arrow-left-circle" class="w-3.5 h-3.5 text-amber-300 shrink-0"></i><span class="whitespace-nowrap font-bold text-xs">Volver a Parroquia</span>';
+        btnReturnParish.onclick = () => this.clearSectorFocus(false);
+      }
+
+      if (window.lucide && typeof window.lucide.createIcons === "function") {
+        try { window.lucide.createIcons(); } catch(e) {}
+      }
+      return;
+    }
+
+    // 2. Nivel Sub-Parroquia / Eje Comunal
+    if (this.activeSubParroquiaId && parish) {
+      const sp = (parish.subparroquias || []).find(s => String(s.id) === String(this.activeSubParroquiaId));
+      const spName = sp?.nombre || "Eje Comunal";
+
+      if (hud && hudContent) {
+        hud.style.display = "block";
+        hudContent.className = "flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#08061a]/95 border border-purple-500/70 shadow-2xl backdrop-blur-md text-xs flex-wrap justify-center";
+        hudContent.innerHTML = `
+          <span class="inline-flex items-center gap-1.5 font-bold text-purple-300">
+            <i data-lucide="shield" class="w-3.5 h-3.5 text-purple-400 shrink-0"></i>
+            <span class="text-[10px] text-purple-300 uppercase tracking-wider hidden sm:inline">Eje Comunal:</span>
+            <span class="text-white font-extrabold max-w-[150px] sm:max-w-xs truncate">${spName}</span>
+          </span>
+          <div class="h-3 w-px bg-purple-500/40"></div>
+          <button type="button" onclick="window.earthApp?.clearSubParishFocus()"
+            class="px-2.5 py-1 rounded-full bg-purple-600 hover:bg-purple-500 text-white font-black text-[11px] flex items-center gap-1 shadow transition active:scale-95 cursor-pointer"
+            title="Devolver vista y velo a toda la parroquia ${parish.nombre}">
+            <i data-lucide="arrow-left-circle" class="w-3.5 h-3.5 shrink-0"></i>
+            <span>Volver a Parroquia</span>
+          </button>
+          <button type="button" onclick="window.earthApp?.focusMunicipio('${this.selectedMunId}')"
+            class="px-2.5 py-1 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white font-bold text-[10px] hidden md:flex items-center gap-1 transition cursor-pointer"
+            title="Ver todo el municipio ${munNom}">
+            <span>🏛️ Municipio</span>
+          </button>
+        `;
+      }
+
+      if (btnReturnParish) {
+        btnReturnParish.style.display = "flex";
+        btnReturnParish.title = `Devolver velo y cámara a toda la parroquia (${parish.nombre})`;
+        btnReturnParish.className = "px-2.5 py-1.5 rounded-xl bg-purple-900/90 hover:bg-purple-800 border border-purple-400/60 text-xs font-black text-purple-100 transition flex items-center gap-1.5 active:scale-95 shadow-lg cursor-pointer shrink-0";
+        btnReturnParish.innerHTML = '<i data-lucide="arrow-left-circle" class="w-3.5 h-3.5 text-purple-300 shrink-0"></i><span class="whitespace-nowrap font-bold text-xs">Volver a Parroquia</span>';
+        btnReturnParish.onclick = () => this.clearSubParishFocus();
+      }
+
+      if (window.lucide && typeof window.lucide.createIcons === "function") {
+        try { window.lucide.createIcons(); } catch(e) {}
+      }
+      return;
+    }
+
+    // 3. Nivel Municipio
+    if (focusLevel === "municipio") {
+      if (hud && hudContent) {
+        hud.style.display = "block";
+        hudContent.className = "flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#08061a]/95 border border-cyan-500/70 shadow-2xl backdrop-blur-md text-xs flex-wrap justify-center";
+        hudContent.innerHTML = `
+          <span class="inline-flex items-center gap-1.5 font-bold text-cyan-300">
+            <span class="w-2.5 h-2.5 rounded-full bg-cyan-400 shrink-0 animate-pulse"></span>
+            <span class="text-[10px] text-cyan-300 uppercase tracking-wider hidden sm:inline">Municipio:</span>
+            <span class="text-white font-extrabold max-w-[150px] sm:max-w-xs truncate">${munNom}</span>
+            <span class="text-[10px] text-cyan-300 font-bold hidden md:inline">(${parishCount} Parroquias)</span>
+          </span>
+          <div class="h-3 w-px bg-cyan-500/40"></div>
+          <span class="text-[11px] text-slate-300 hidden lg:inline font-medium">👉 Clic en cualquier parroquia para entrar</span>
+          <button type="button" onclick="window.earthApp?.focusEstado()"
+            class="px-2.5 py-1 rounded-full bg-amber-600 hover:bg-amber-500 text-slate-950 font-black text-[11px] flex items-center gap-1 shadow transition active:scale-95 cursor-pointer"
+            title="Ver todo el Estado Monagas">
+            <i data-lucide="map" class="w-3.5 h-3.5 shrink-0"></i>
+            <span>Ver Estado Monagas</span>
+          </button>
+        `;
+      }
+
+      if (btnReturnParish) {
+        btnReturnParish.style.display = "flex";
+        btnReturnParish.title = "Ver todo el Estado Monagas";
+        btnReturnParish.className = "px-2.5 py-1.5 rounded-xl bg-cyan-900/90 hover:bg-cyan-800 border border-cyan-400/60 text-xs font-black text-cyan-100 transition flex items-center gap-1.5 active:scale-95 shadow-lg cursor-pointer shrink-0";
+        btnReturnParish.innerHTML = '<i data-lucide="map" class="w-3.5 h-3.5 text-cyan-300 shrink-0"></i><span class="whitespace-nowrap font-bold text-xs">Ver Estado</span>';
+        btnReturnParish.onclick = () => this.focusEstado();
+      }
+
+      if (window.lucide && typeof window.lucide.createIcons === "function") {
+        try { window.lucide.createIcons(); } catch(e) {}
+      }
+      return;
+    }
+
+    // 4. Nivel Estado
+    if (focusLevel === "estado") {
+      if (hud && hudContent) {
+        hud.style.display = "block";
+        hudContent.className = "flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#08061a]/95 border border-amber-500/70 shadow-2xl backdrop-blur-md text-xs flex-wrap justify-center";
+        hudContent.innerHTML = `
+          <span class="inline-flex items-center gap-1.5 font-bold text-amber-300">
+            <span class="w-2.5 h-2.5 rounded-full bg-amber-400 shrink-0 animate-pulse"></span>
+            <span class="text-white font-extrabold">Estado Monagas (13 Municipios)</span>
+          </span>
+          <div class="h-3 w-px bg-amber-500/40"></div>
+          <button type="button" onclick="window.earthApp?.focusMunicipio('${this.selectedMunId || "maturin"}')"
+            class="px-2.5 py-1 rounded-full bg-sky-600 hover:bg-sky-500 text-white font-black text-[11px] flex items-center gap-1 shadow transition active:scale-95 cursor-pointer"
+            title="Volver a enfocar el municipio ${munNom}">
+            <i data-lucide="landmark" class="w-3.5 h-3.5 shrink-0"></i>
+            <span>Volver a Municipio</span>
+          </button>
+        `;
+      }
+
+      if (btnReturnParish) {
+        btnReturnParish.style.display = "flex";
+        btnReturnParish.title = "Volver al municipio";
+        btnReturnParish.className = "px-2.5 py-1.5 rounded-xl bg-sky-900/90 hover:bg-sky-800 border border-sky-400/60 text-xs font-black text-sky-100 transition flex items-center gap-1.5 active:scale-95 shadow-lg cursor-pointer shrink-0";
+        btnReturnParish.innerHTML = '<i data-lucide="landmark" class="w-3.5 h-3.5 text-sky-300 shrink-0"></i><span class="whitespace-nowrap font-bold text-xs">Volver a Municipio</span>';
+        btnReturnParish.onclick = () => this.focusMunicipio();
+      }
+
+      if (window.lucide && typeof window.lucide.createIcons === "function") {
+        try { window.lucide.createIcons(); } catch(e) {}
+      }
+      return;
+    }
+
+    // 5. Nivel Parroquia (Predeterminado)
+    if (parish) {
+      if (hud && hudContent) {
+        hud.style.display = "block";
+        hudContent.className = "flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#08061a]/95 border border-sky-500/60 shadow-2xl backdrop-blur-md text-xs flex-wrap justify-center";
+        hudContent.innerHTML = `
+          <span class="inline-flex items-center gap-1.5 font-bold text-sky-300">
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 shrink-0"></span>
+            <span class="text-[10px] text-sky-300 uppercase tracking-wider hidden sm:inline">Parroquia:</span>
+            <span class="text-white font-extrabold max-w-[150px] sm:max-w-xs truncate">${parish.nombre}</span>
+          </span>
+          <div class="h-3 w-px bg-sky-500/40"></div>
+          <button type="button" onclick="window.earthApp?.focusMunicipio('${this.selectedMunId}')"
+            class="px-2.5 py-1 rounded-full bg-sky-700 hover:bg-sky-600 text-white font-black text-[11px] flex items-center gap-1 shadow transition active:scale-95 cursor-pointer"
+            title="Ver todo el municipio ${munNom} con sus ${parishCount} parroquias">
+            <i data-lucide="landmark" class="w-3.5 h-3.5 shrink-0"></i>
+            <span>Ver Todo el Municipio (${munNom})</span>
+          </button>
+          <button type="button" onclick="window.earthApp?.focusEstado()"
+            class="px-2 py-1 rounded-full bg-slate-800 hover:bg-slate-700 text-amber-300 hover:text-amber-200 font-bold text-[10px] hidden md:flex items-center gap-1 transition cursor-pointer"
+            title="Ver todo el Estado Monagas">
+            <span>🗺️ Estado</span>
+          </button>
+        `;
+      }
+
+      if (btnReturnParish) {
+        btnReturnParish.style.display = "flex";
+        btnReturnParish.title = `Ver todo el municipio ${munNom}`;
+        btnReturnParish.className = "px-2.5 py-1.5 rounded-xl bg-sky-900/90 hover:bg-sky-800 border border-sky-400/60 text-xs font-black text-sky-100 transition flex items-center gap-1.5 active:scale-95 shadow-lg cursor-pointer shrink-0";
+        btnReturnParish.innerHTML = '<i data-lucide="landmark" class="w-3.5 h-3.5 text-sky-300 shrink-0"></i><span class="whitespace-nowrap font-bold text-xs">Ver Municipio</span>';
+        btnReturnParish.onclick = () => this.focusMunicipio();
+      }
+
+      if (window.lucide && typeof window.lucide.createIcons === "function") {
+        try { window.lucide.createIcons(); } catch(e) {}
+      }
+      return;
     }
 
     if (hud) hud.style.display = "none";
@@ -1478,10 +1753,10 @@ class EarthMonagasApp {
                 <span class="text-[10px] font-mono text-slate-400 font-bold">${mun.parroquias.length} Parroquias oficiales • Monagas</span>
               </div>
             </div>
-            <button type="button" onclick="window.selectParishGlobal('${mun.id}', '${mun.parroquias[0].id}')"
-              class="px-3 py-1.5 rounded-xl bg-[#140e40] hover:bg-[#23176d] text-sky-300 hover:text-white text-xs font-black border border-sky-500/30 transition shrink-0 cursor-pointer flex items-center gap-1 shadow-sm" title="Cargar cabecera del municipio en Satélite">
-              <i data-lucide="map" class="w-3.5 h-3.5"></i>
-              <span class="hidden sm:inline">Ver Municipio</span>
+            <button type="button" onclick="window.earthApp?.focusMunicipio('${mun.id}', true); window.earthApp?.closeParishSelector();"
+              class="px-3 py-1.5 rounded-xl bg-sky-900/90 hover:bg-sky-800 text-sky-200 hover:text-white text-xs font-black border border-sky-400/50 transition shrink-0 cursor-pointer flex items-center gap-1 shadow-sm" title="Enfocar todo el Municipio ${mun.nombre} con velo blanco y ver todas sus parroquias">
+              <i data-lucide="landmark" class="w-3.5 h-3.5 text-sky-400"></i>
+              <span class="hidden sm:inline">Enfocar Municipio</span>
             </button>
           </div>
 
@@ -1769,6 +2044,7 @@ class EarthMonagasApp {
     if (!item) return;
 
     if (type === "subparroquia") {
+      this.activeSectorId = null;
       this.activeSubParroquiaId = String(item.id);
       if (this.mapEngine) {
         if (this.mapEngine.spotlightEnabled && item.vertices && item.vertices.length >= 3) {
@@ -1780,22 +2056,16 @@ class EarthMonagasApp {
       this.updateTerritorialFocusUI();
       this.renderPlacesTree();
     } else if (type === "poligono") {
+      this.activeSectorId = String(item.id);
+      if (item.subParroquiaId) {
+        this.activeSubParroquiaId = String(item.subParroquiaId);
+      }
       if (this.mapEngine) {
         this.mapEngine.highlightPolygon(item.id);
         if (this.mapEngine.spotlightEnabled) {
-          const parish = this.store?.getParish(this.selectedMunId, this.selectedParishId);
-          if (item.subParroquiaId && parish?.subparroquias) {
-            const sp = parish.subparroquias.find(s => String(s.id) === String(item.subParroquiaId));
-            if (sp && sp.vertices && sp.vertices.length >= 3) {
-              this.activeSubParroquiaId = String(sp.id);
-              this.mapEngine.showSubParishBoundary(sp.vertices, false);
-            } else {
-              this.activeSubParroquiaId = null;
-              this.mapEngine.showParishBoundary(parish.limite || null, this.selectedParishId, false);
-            }
-          } else if (parish) {
-            this.activeSubParroquiaId = null;
-            this.mapEngine.showParishBoundary(parish.limite || null, this.selectedParishId, false);
+          const rawCoords = item.vertices || item.poligono;
+          if (rawCoords && rawCoords.length >= 3) {
+            this.mapEngine.showSectorBoundary(rawCoords, false);
           }
         }
       }
@@ -1961,8 +2231,7 @@ class EarthMonagasApp {
       if (elCentro) elCentro.textContent = item.centroVotacion || "No asignado";
 
       const spRow = document.getElementById("quick-stats-subparish-row");
-      const spNameEl = document.getElementById("quick-stats-subparish-name");
-      if (spRow && spNameEl) {
+      if (spRow) {
         let spObj = null;
         if (item.subParroquiaId && parish?.subparroquias) {
           spObj = parish.subparroquias.find(s => String(s.id) === String(item.subParroquiaId));
@@ -1971,9 +2240,33 @@ class EarthMonagasApp {
         }
         if (spObj) {
           spRow.style.display = "flex";
-          spNameEl.textContent = spObj.nombre || "Eje Comunal";
+          spRow.innerHTML = `
+            <span class="text-purple-300 font-bold flex items-center gap-1 shrink-0">
+              <span>🟪</span> Eje Comunal:
+            </span>
+            <div class="flex items-center gap-1.5 truncate max-w-[70%] justify-end">
+              <span id="quick-stats-subparish-name" class="text-purple-100 font-extrabold truncate">${spObj.nombre || "Eje"}</span>
+              <button type="button" onclick="window.earthApp?.focusSubParish('${spObj.id}', false)" class="text-[10px] text-purple-200 hover:text-white bg-purple-900/90 hover:bg-purple-800 px-1.5 py-0.5 rounded-lg border border-purple-400/50 transition font-bold shrink-0 cursor-pointer" title="Enfocar este Eje">
+                Ver Eje
+              </button>
+              <button type="button" onclick="window.earthApp?.clearSectorFocus(false)" class="text-[10px] text-sky-200 hover:text-white bg-sky-900/90 hover:bg-sky-800 px-1.5 py-0.5 rounded-lg border border-sky-400/50 transition font-bold shrink-0 cursor-pointer" title="Ver toda la parroquia">
+                ↩ Parroquia
+              </button>
+            </div>
+          `;
         } else {
-          spRow.style.display = "none";
+          spRow.style.display = "flex";
+          spRow.innerHTML = `
+            <span class="text-sky-300 font-bold flex items-center gap-1 shrink-0">
+              <span>📍</span> Parroquia:
+            </span>
+            <div class="flex items-center gap-1.5 truncate max-w-[70%] justify-end">
+              <span class="text-sky-100 font-extrabold truncate">${parish?.nombre || "Parroquia"}</span>
+              <button type="button" onclick="window.earthApp?.clearSectorFocus(false)" class="text-[10px] text-sky-200 hover:text-white bg-sky-900/90 hover:bg-sky-800 px-1.5 py-0.5 rounded-lg border border-sky-400/50 transition font-bold shrink-0 cursor-pointer" title="Ver toda la parroquia">
+                ↩ Parroquia
+              </button>
+            </div>
+          `;
         }
       }
     }
@@ -2908,17 +3201,54 @@ class EarthMonagasApp {
       });
     }
 
-    // 6.1 Cerrar Ficha Rápida o Volver a Parroquia con la tecla Escape
+    // 6.1 Navegación en cascada inteligente con la tecla Escape: Sector ➔ Eje ➔ Parroquia ➔ Municipio ➔ Estado
     window.addEventListener("keydown", (e) => {
       if (e.key === "Escape") {
+        // 1. Cerrar modales si alguno está abierto
+        const parishModal = document.getElementById("modal-select-parish");
+        if (parishModal && parishModal.style.display !== "none" && !parishModal.classList.contains("hidden")) {
+          this.closeParishSelector();
+          return;
+        }
+
+        const propModal = document.getElementById("dialog-properties");
+        if (propModal && propModal.style.display !== "none" && !propModal.classList.contains("hidden")) {
+          this.propDialog?.close();
+          return;
+        }
+
         const quickCard = document.getElementById("card-quick-stats");
         const isQuickCardOpen = quickCard && quickCard.style.display !== "none";
+
+        // 2. Si estamos en Sector Comunal: regresar a Eje (si aplica) o a Parroquia
+        if (this.activeSectorId) {
+          if (isQuickCardOpen) this.closeQuickStats();
+          this.clearSectorFocus(true);
+          return;
+        }
+
+        // 3. Si estamos en Eje Comunal: regresar a Parroquia
+        if (this.activeSubParroquiaId) {
+          if (isQuickCardOpen) this.closeQuickStats();
+          this.clearSubParishFocus();
+          return;
+        }
+
         if (isQuickCardOpen) {
           this.closeQuickStats();
           return;
         }
-        if (this.activeSubParroquiaId) {
-          this.clearSubParishFocus();
+
+        // 4. Si estamos en Parroquia: subir a ver el Municipio completo
+        if (this.mapEngine?.activeFocusLevel === "parroquia") {
+          this.focusMunicipio();
+          return;
+        }
+
+        // 5. Si estamos en Municipio: subir a ver todo el Estado Monagas
+        if (this.mapEngine?.activeFocusLevel === "municipio") {
+          this.focusEstado();
+          return;
         }
       }
     });

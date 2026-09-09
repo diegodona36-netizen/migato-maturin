@@ -61,7 +61,7 @@
   <meta http-equiv="Expires" content="0" />
 
   <!-- Custom Styles -->
-  <link rel="stylesheet" href="css/styles.css?v=127">
+  <link rel="stylesheet" href="css/styles.css?v=128">
 
   <!-- Script de Autenticación Rápida, Limpieza Integral de Caché y Activador de Herramientas -->
   <script>
@@ -154,12 +154,12 @@
           }).catch(function(){});
         }
         setTimeout(function() {
-          window.location.replace(window.location.pathname + '?v=127&u=admin-militancia');
+          window.location.replace(window.location.pathname + '?v=128&u=admin-militancia');
         }, 150);
       }
     };
 
-    // Auto-actualización a la versión más reciente v=127
+    // Auto-actualización a la versión más reciente v=128
     (function() {
       try {
         var p = new URLSearchParams(window.location.search);
@@ -167,7 +167,7 @@
         var isReset = p.get('reset') === '1';
         var paramP = p.get('p') || p.get('parroquia') || p.get('parish');
 
-        if (isReset || !curV || parseInt(curV) < 127) {
+        if (isReset || !curV || parseInt(curV) < 128) {
           if (isReset) {
             try {
               localStorage.removeItem("migato_last_parish");
@@ -176,7 +176,7 @@
             p.delete('reset');
           }
 
-          p.set('v', '127');
+          p.set('v', '128');
           if (!p.get('u')) p.set('u', 'admin-militancia');
           if (paramP) {
             p.set('p', paramP);
@@ -765,21 +765,10 @@
         <span>Dividir: Ver Panel</span>
       </button>
 
-      <!-- HUD FLOTANTE DE ENFOQUE TERRITORIAL (SUB-PARROQUIA / EJE ACTIVO) -->
-      <div id="hud-territorial-focus" style="display: none;" class="absolute top-3 left-1/2 -translate-x-1/2 z-[1000] pointer-events-auto transition-all animate-in fade-in duration-200">
-        <div class="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#08061a]/95 border border-purple-500/70 shadow-2xl backdrop-blur-md text-xs">
-          <span class="inline-flex items-center gap-1.5 font-bold text-purple-300">
-            <i data-lucide="shield" class="w-3.5 h-3.5 text-purple-400 shrink-0"></i>
-            <span class="text-[10px] text-purple-300 uppercase tracking-wider hidden sm:inline">Eje Enfocado:</span>
-            <span id="hud-focus-subparish-name" class="text-white font-extrabold max-w-[150px] sm:max-w-xs truncate">Eje Comunal</span>
-          </span>
-          <div class="h-3 w-px bg-purple-500/40"></div>
-          <button type="button" id="btn-hud-return-parish" onclick="window.earthApp?.clearSubParishFocus?.()"
-            class="px-2.5 py-1 rounded-full bg-purple-600 hover:bg-purple-500 text-white font-black text-[11px] flex items-center gap-1 shadow transition active:scale-95 cursor-pointer"
-            title="Devolver vista y velo blanco a toda la parroquia">
-            <i data-lucide="arrow-left-circle" class="w-3.5 h-3.5 shrink-0"></i>
-            <span>Volver a Parroquia</span>
-          </button>
+      <!-- HUD FLOTANTE DE ENFOQUE TERRITORIAL MULTI-NIVEL EN CASCADA (MUNICIPIO ➔ PARROQUIA ➔ EJE ➔ SECTOR) -->
+      <div id="hud-territorial-focus" style="display: none;" class="absolute top-3 left-1/2 -translate-x-1/2 z-[1000] pointer-events-auto transition-all animate-in fade-in duration-200 max-w-[95vw]">
+        <div id="hud-territorial-content" class="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#08061a]/95 border border-sky-500/60 shadow-2xl backdrop-blur-md text-xs flex-wrap justify-center">
+          <!-- Contenido dinámico inyectado por updateTerritorialFocusUI() -->
         </div>
       </div>
 
@@ -1768,7 +1757,7 @@
   </div>
 
   <!-- SCRIPT -->
-  <script type="module" src="js/app.js?v=127"></script>
+  <script type="module" src="js/app.js?v=128"></script>
   <script>
     if (window.lucide && typeof window.lucide.createIcons === 'function') {
       window.lucide.createIcons();
