@@ -532,6 +532,14 @@
     <!-- ACCIONES DE ORIENTACIÓN Y VISTA TERRITORIAL -->
     <div class="flex items-center gap-1.5 shrink-0">
       
+      <!-- 👁️ Velo Blanco Exterior (Botón para Sombrear/Enfocar la Parroquia) -->
+      <button type="button" id="btn-toggle-spotlight"
+        class="px-2.5 py-1.5 rounded-xl bg-[#140e40] hover:bg-[#23176d] border border-white/20 text-xs font-bold text-slate-200 transition flex items-center gap-1.5 active:scale-95 shadow-sm cursor-pointer shrink-0"
+        title="Alternar Velo Blanco Exterior: sombrear en blanco las zonas de afuera del polígono para enfocar la parroquia">
+        <i data-lucide="sun" id="icon-toggle-spotlight" class="w-3.5 h-3.5 text-slate-400 shrink-0"></i>
+        <span id="text-toggle-spotlight" class="whitespace-nowrap font-bold text-xs">Velo Blanco: OFF</span>
+      </button>
+
       <!-- Botón Capas Directo -->
       <button type="button" id="btn-bar-layers" onclick="window.earthApp?.openLayers ? window.earthApp.openLayers() : (document.getElementById('btn-sidebar-tab-layers')?.click(), window.earthApp?.toggleSidebar?.(true));"
         class="px-2 py-1 rounded-lg bg-[#140e40]/70 hover:bg-[#23176d] text-[11px] text-slate-300 hover:text-white border border-[#23176d] transition flex items-center gap-1 cursor-pointer"
@@ -1704,7 +1712,7 @@
   </div>
 
   <!-- SCRIPT -->
-  <script type="module" src="js/app.js?v=120"></script>
+  <script type="module" src="js/app.js?v=121"></script>
   <script>
     if (window.lucide && typeof window.lucide.createIcons === 'function') {
       window.lucide.createIcons();

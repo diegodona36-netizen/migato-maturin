@@ -2,16 +2,16 @@
  * Controlador Principal — Google Earth Pro Web (Edición Estado Monagas)
  * Robusto, 100% Operativo y Totalmente Individualizado
  */
-import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=120";
-import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=120";
-import { getAllParishesForSelector } from "./usersCatalog.js?v=120";
-import { EarthStore } from "./earthStore.js?v=120";
-import { EarthMapEngine } from "./mapEngine.js?v=120";
-import { PropertiesDialog } from "./propertiesDialog.js?v=120";
-import { ToolsManager } from "./toolsManager.js?v=120";
-import { detectParishFromGeometry, SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=120";
-import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=120";
-import { getParishDemographics } from "./monagasDemographics.js?v=120";
+import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=121";
+import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=121";
+import { getAllParishesForSelector } from "./usersCatalog.js?v=121";
+import { EarthStore } from "./earthStore.js?v=121";
+import { EarthMapEngine } from "./mapEngine.js?v=121";
+import { PropertiesDialog } from "./propertiesDialog.js?v=121";
+import { ToolsManager } from "./toolsManager.js?v=121";
+import { detectParishFromGeometry, SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=121";
+import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=121";
+import { getParishDemographics } from "./monagasDemographics.js?v=121";
 import { 
   getMunicipios, 
   getParroquiasByMun, 
@@ -117,6 +117,7 @@ class EarthMonagasApp {
     this.selectedParishId = "san-simon";
     this.catalogViewMode = "table";
     window.earthApp = this;
+    window.toggleSpotlight = (enabled = null) => window.earthApp?.toggleSpotlight(enabled);
 
     this.init();
   }
@@ -765,20 +766,41 @@ class EarthMonagasApp {
     this.renderPlacesTree();
   }
 
+  toggleSpotlight(enabled = null) {
+    if (this.mapEngine) {
+      const isEnabled = this.mapEngine.toggleSpotlight(enabled);
+      this.updateSpotlightButtonUI(isEnabled);
+      return isEnabled;
+    }
+    return false;
+  }
+
   updateSpotlightButtonUI(isEnabled) {
     const btn = document.getElementById("btn-toggle-spotlight");
     const txt = document.getElementById("text-toggle-spotlight");
+    const icon = document.getElementById("icon-toggle-spotlight");
     if (btn && txt) {
       if (isEnabled) {
-        btn.classList.add("bg-purple-950/80", "text-purple-300", "border-purple-600/60");
-        btn.classList.remove("bg-slate-800", "text-amber-300", "border-slate-700");
-        txt.textContent = "Filtro Oscuro: ON";
-        btn.title = "Filtro oscuro activo (alrededores sombreados). Clic para quitar la sombra y ver solo la alineación en satélite limpio.";
+        btn.classList.add("bg-white", "text-slate-900", "border-white", "shadow-md");
+        btn.classList.remove("bg-[#140e40]", "hover:bg-[#23176d]", "text-slate-200", "border-white/20");
+        txt.textContent = "Velo Blanco: ON";
+        if (icon) {
+          icon.className = "w-3.5 h-3.5 text-amber-500 shrink-0";
+          icon.setAttribute("data-lucide", "sun");
+        }
+        btn.title = "Velo blanco exterior ACTIVO (alrededores sombreados en blanco). Clic para quitar el velo y ver satélite 100% limpio.";
       } else {
-        btn.classList.remove("bg-purple-950/80", "text-purple-300", "border-purple-600/60");
-        btn.classList.add("bg-slate-800", "text-amber-300", "border-slate-700");
-        txt.textContent = "Solo Alineación (Limpio)";
-        btn.title = "Satélite 100% visible y limpio (sin filtro oscuro). Solo líneas limítrofes. Clic para activar sombra.";
+        btn.classList.remove("bg-white", "text-slate-900", "border-white", "shadow-md");
+        btn.classList.add("bg-[#140e40]", "hover:bg-[#23176d]", "text-slate-200", "border-white/20");
+        txt.textContent = "Velo Blanco: OFF";
+        if (icon) {
+          icon.className = "w-3.5 h-3.5 text-slate-400 shrink-0";
+          icon.setAttribute("data-lucide", "sun");
+        }
+        btn.title = "Velo blanco exterior DESACTIVADO (satélite limpio sin sombras). Clic para sombrear el exterior en blanco y enfocar la parroquia.";
+      }
+      if (window.lucide && typeof window.lucide.createIcons === 'function') {
+        window.lucide.createIcons();
       }
     }
   }
@@ -2760,6 +2782,12 @@ class EarthMonagasApp {
         a.click();
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
+      });
+    // 5.1. Botón Alternar Velo Blanco Exterior
+    const btnSpotlight = document.getElementById("btn-toggle-spotlight");
+    if (btnSpotlight) {
+      btnSpotlight.addEventListener("click", () => {
+        this.toggleSpotlight();
       });
     }
 

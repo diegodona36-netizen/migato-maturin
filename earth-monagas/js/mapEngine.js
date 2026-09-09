@@ -419,9 +419,7 @@ export class EarthMapEngine {
       coords = limite;
     }
 
-    if (!coords || coords.length === 0) return;
-
-    // 2. Máscara de Foco (Efecto Reflector en Negro Azabache Universal SVG)
+     // 2. Máscara de Foco (Efecto Velo Blanco Exterior SVG con fill-rule: evenodd)
     if (this.spotlightEnabled) {
       const worldBox = [
         [-90, -180],
@@ -432,10 +430,11 @@ export class EarthMapEngine {
 
       // Máscara invertida con orificio para la parroquia activa (SVG con fill-rule: evenodd)
       const maskPoly = L.polygon([worldBox, coords], {
-        fillColor: "#000000",
-        fillOpacity: 0.38,
-        color: "#000000",
-        weight: 0,
+        fillColor: "#ffffff",
+        fillOpacity: 0.45,
+        color: "#ffffff",
+        weight: 1.5,
+        opacity: 0.7,
         fillRule: "evenodd",
         interactive: false,
         renderer: this.svgRenderer
@@ -445,15 +444,14 @@ export class EarthMapEngine {
 
     // 3. Contorno Neón Brillante para la Parroquia Iluminada
     const bPoly = L.polygon(coords, {
-      color: "#38bdf8",
-      weight: 2.5,
+      color: "#0284c7",
+      weight: 3,
       opacity: 0.95,
       fill: false,
       dashArray: "6, 4",
       interactive: false,
       renderer: this.canvasRenderer
     });
-
     this.boundaryLayer.addLayer(bPoly);
 
     if (flyCamera) {
@@ -478,10 +476,11 @@ export class EarthMapEngine {
       ];
 
       const maskPoly = L.polygon([worldBox, spVertices], {
-        fillColor: "#000000",
-        fillOpacity: 0.38,
-        color: "#000000",
-        weight: 0,
+        fillColor: "#ffffff",
+        fillOpacity: 0.45,
+        color: "#ffffff",
+        weight: 1.5,
+        opacity: 0.7,
         fillRule: "evenodd",
         interactive: false,
         renderer: this.svgRenderer
@@ -517,6 +516,9 @@ export class EarthMapEngine {
       this.showSubParishBoundary(this.currentSubParishVertices, false);
     } else if (this.currentParishLimite || this.currentParishId) {
       this.showParishBoundary(this.currentParishLimite, this.currentParishId, false);
+    } else if (window.earthApp?.selectedParishId) {
+      const p = window.earthApp.store?.getParish(window.earthApp.selectedMunId, window.earthApp.selectedParishId);
+      this.showParishBoundary(p?.limite || null, window.earthApp.selectedParishId, false);
     }
     return this.spotlightEnabled;
   }
@@ -540,8 +542,8 @@ export class EarthMapEngine {
       if (this.boundaryLayer) {
         this.boundaryLayer.eachLayer(l => {
           try {
-            if (l.options && (l.options.fillColor === "#020617" || l.options.fillColor === "#000000")) {
-              l.setStyle({ fillOpacity: 0.38 });
+            if (l.options && (l.options.fillColor === "#020617" || l.options.fillColor === "#000000" || l.options.fillColor === "#ffffff")) {
+              l.setStyle({ fillOpacity: 0.45 });
             }
           } catch(e) {}
         });
