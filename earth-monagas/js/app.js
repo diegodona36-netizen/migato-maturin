@@ -2,16 +2,16 @@
  * Controlador Principal — Google Earth Pro Web (Edición Estado Monagas)
  * Robusto, 100% Operativo y Totalmente Individualizado
  */
-import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=123";
-import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=123";
-import { getAllParishesForSelector } from "./usersCatalog.js?v=123";
-import { EarthStore } from "./earthStore.js?v=123";
-import { EarthMapEngine } from "./mapEngine.js?v=123";
-import { PropertiesDialog } from "./propertiesDialog.js?v=123";
-import { ToolsManager } from "./toolsManager.js?v=123";
-import { detectParishFromGeometry, SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=123";
-import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=123";
-import { getParishDemographics } from "./monagasDemographics.js?v=123";
+import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=124";
+import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=124";
+import { getAllParishesForSelector } from "./usersCatalog.js?v=124";
+import { EarthStore } from "./earthStore.js?v=124";
+import { EarthMapEngine } from "./mapEngine.js?v=124";
+import { PropertiesDialog } from "./propertiesDialog.js?v=124";
+import { ToolsManager } from "./toolsManager.js?v=124";
+import { detectParishFromGeometry, SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=124";
+import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=124";
+import { getParishDemographics } from "./monagasDemographics.js?v=124";
 import { 
   getMunicipios, 
   getParroquiasByMun, 
@@ -1736,6 +1736,9 @@ class EarthMonagasApp {
       this.renderPlacesTree();
     } else if (type === "poligono") {
       if (this.mapEngine) {
+        if (this.mapEngine.spotlightEnabled && item.vertices && item.vertices.length > 0) {
+          this.mapEngine.showSectorBoundary(item.vertices, false);
+        }
         this.mapEngine.highlightPolygon(item.id);
       }
       this.showQuickStats("poligono", item);
@@ -1936,6 +1939,14 @@ class EarthMonagasApp {
     }
     if (this.mapEngine) {
       this.mapEngine.clearPolygonHighlight();
+      if (this.mapEngine.activeFocusLevel === "sector") {
+        if (this.activeSubParroquiaId) {
+          this.focusSubParish(this.activeSubParroquiaId, false);
+        } else {
+          const parish = this.store.getParish(this.selectedMunId, this.selectedParishId);
+          this.mapEngine.showParishBoundary(parish?.limite || null, this.selectedParishId, false);
+        }
+      }
     }
     this.currentQuickStatsItem = null;
   }
@@ -1976,8 +1987,14 @@ class EarthMonagasApp {
     if (!item) return;
 
     if (type === "poligono" && item.vertices && item.vertices.length > 0) {
-      this.mapEngine.map.flyToBounds(L.polygon(item.vertices).getBounds(), { padding: [50, 50], maxZoom: 17, duration: 1.0 });
-      if (this.mapEngine) this.mapEngine.highlightPolygon(item.id);
+      if (this.mapEngine) {
+        if (this.mapEngine.spotlightEnabled) {
+          this.mapEngine.showSectorBoundary(item.vertices, true);
+        } else {
+          this.mapEngine.map.flyToBounds(L.polygon(item.vertices).getBounds(), { padding: [50, 50], maxZoom: 17, duration: 1.0 });
+        }
+        this.mapEngine.highlightPolygon(item.id);
+      }
       if (openDialogDirectly) {
         this.closeQuickStats();
         this.propDialog.open(type, item, munId, parishId);

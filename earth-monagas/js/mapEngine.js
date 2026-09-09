@@ -88,6 +88,15 @@ export class EarthMapEngine {
       layers: [googleHybrid]
     });
 
+    // Panel exclusivo para el Velo Blanco exterior (z-index 450, superior a todas las capas cartográficas)
+    this.map.createPane("spotlightMaskPane");
+    const spotlightPane = this.map.getPane("spotlightMaskPane");
+    if (spotlightPane) {
+      spotlightPane.style.zIndex = "450";
+      spotlightPane.style.pointerEvents = "none";
+    }
+    this.spotlightSvgRenderer = L.svg({ pane: "spotlightMaskPane", padding: 0.5 });
+
     // Control de capas satelitales clásico
     L.control.layers(
       { "Satélite Google (Híbrido)": googleHybrid, "Satélite Esri": esriSatellite, "Calles OSM": osmStreets },
@@ -111,9 +120,14 @@ export class EarthMapEngine {
     this.overlayLayer = L.layerGroup().addTo(this.map);
     this.tempDrawingLayer = L.layerGroup().addTo(this.map);
 
-    this.spotlightEnabled = false; // Modo Foco desactivado por defecto para ver simultáneamente todos los sectores del estado
+    this.spotlightEnabled = false; // Modo Foco / Velo Blanco desactivado por defecto
     this.currentParishLimite = null;
     this.currentParishId = null;
+    this.currentSubParishVertices = null;
+    this.currentSectorVertices = null;
+    this.activeFocusLevel = "parroquia"; // 'estado', 'municipio', 'parroquia', 'subparroquia', 'sector'
+    this.activeFocusCoords = null;
+    this.activeMunicipioId = null;
 
     // Inicializar Capas Jerárquicas Oficiales (LOD 1 a 5)
     this.initHierarchicalLayers();
@@ -260,113 +274,46 @@ export class EarthMapEngine {
     }
 
     if (levelKey === 'l1') {
-      if (this.layerL1_Estado) {
-        try {
-          const b = this.layerL1_Estado.getBounds();
-          if (b.isValid()) {
-            this.map.flyToBounds(b, { padding: [30, 30], duration: 1.2 });
-            return;
-          }
-        } catch(e) {}
-      }
-      this.map.flyTo([9.55, -63.15], 8, { duration: 1.2 });
+      this.showStateBoundary(true);
       return;
     }
 
     if (levelKey === 'l2') {
       const currentMunId = window.earthApp?.selectedMunId || "maturin";
-      let munFound = false;
-      if (this.layerL2_Municipios) {
-        this.layerL2_Municipios.eachLayer(ly => {
-          if (munFound) return;
-          const p = ly.feature?.properties;
-          if (p && (String(p.id) === String(currentMunId) || String(p.municipioId) === String(currentMunId) || (p.nombre && p.nombre.toLowerCase().includes(currentMunId.toLowerCase())))) {
-            try {
-              const b = ly.getBounds();
-              if (b.isValid()) {
-                this.map.flyToBounds(b, { padding: [40, 40], duration: 1.2 });
-                munFound = true;
-              }
-            } catch(e) {}
-          }
-        });
-      }
-      if (!munFound) {
-        this.map.flyTo([9.7469, -63.1812], 10, { duration: 1.2 });
-      }
+      this.showMunicipioBoundary(currentMunId, true);
       return;
     }
 
     if (levelKey === 'l3') {
-      if (this.boundaryLayer) {
-        try {
-          const b = this.boundaryLayer.getBounds();
-          if (b.isValid()) {
-            this.map.flyToBounds(b, { padding: [40, 40], duration: 1.2 });
-            return;
-          }
-        } catch(e) {}
-      }
-      if (this.currentParishLimite && this.currentParishLimite.length > 0) {
-        try {
-          const b = L.latLngBounds(this.currentParishLimite);
-          if (b.isValid()) {
-            this.map.flyToBounds(b, { padding: [40, 40], duration: 1.2 });
-            return;
-          }
-        } catch(e) {}
-      }
-      this.map.flyTo([9.7469, -63.1812], 12, { duration: 1.2 });
+      const p = window.earthApp?.store?.getParish(window.earthApp.selectedMunId, window.earthApp.selectedParishId);
+      this.showParishBoundary(p?.limite || this.currentParishLimite, window.earthApp?.selectedParishId, true);
       return;
     }
 
     if (levelKey === 'l4') {
-      // Enfocar las sub-parroquias / ejes de la parroquia activa
-      if (this.subParroquiasLayer) {
-        try {
-          const b = this.subParroquiasLayer.getBounds();
-          if (b.isValid()) {
-            this.map.flyToBounds(b, { padding: [40, 40], maxZoom: 15, duration: 1.2 });
-            return;
-          }
-        } catch(e) {}
+      if (this.currentSubParishVertices && window.earthApp?.activeSubParroquiaId) {
+        this.showSubParishBoundary(this.currentSubParishVertices, true);
+      } else if (window.earthApp?.activeSubParroquiaId) {
+        window.earthApp.focusSubParish(window.earthApp.activeSubParroquiaId, true);
+      } else {
+        const p = window.earthApp?.store?.getParish(window.earthApp.selectedMunId, window.earthApp.selectedParishId);
+        const firstSp = p?.subparroquias?.[0];
+        if (firstSp && firstSp.vertices) {
+          window.earthApp.focusSubParish(firstSp.id, true);
+        } else {
+          this.showParishBoundary(p?.limite || this.currentParishLimite, window.earthApp?.selectedParishId, true);
+        }
       }
-      // Si aún no hay ejes en esta parroquia, volar al perímetro de la parroquia activa
-      if (this.boundaryLayer) {
-        try {
-          const b = this.boundaryLayer.getBounds();
-          if (b.isValid()) {
-            this.map.flyToBounds(b, { padding: [40, 40], duration: 1.2 });
-            return;
-          }
-        } catch(e) {}
-      }
-      this.map.flyTo([9.7469, -63.1812], 13, { duration: 1.2 });
       return;
     }
 
     if (levelKey === 'l5') {
-      // Enfocar los sectores comunales de la parroquia activa
-      if (this.polygonsLayer) {
-        try {
-          const b = this.polygonsLayer.getBounds();
-          if (b.isValid()) {
-            this.map.flyToBounds(b, { padding: [40, 40], maxZoom: 16, duration: 1.2 });
-            return;
-          }
-        } catch(e) {}
+      if (this.currentSectorVertices) {
+        this.showSectorBoundary(this.currentSectorVertices, true);
+      } else {
+        const p = window.earthApp?.store?.getParish(window.earthApp.selectedMunId, window.earthApp.selectedParishId);
+        this.showParishBoundary(p?.limite || this.currentParishLimite, window.earthApp?.selectedParishId, true);
       }
-      // Si aún no hay sectores dibujados en esta parroquia, volar al perímetro de la parroquia activa
-      if (this.boundaryLayer) {
-        try {
-          const b = this.boundaryLayer.getBounds();
-          if (b.isValid()) {
-            this.map.flyToBounds(b, { padding: [40, 40], duration: 1.2 });
-            return;
-          }
-        } catch(e) {}
-      }
-      this.map.flyTo([9.7469, -63.1812], 14, { duration: 1.2 });
       return;
     }
   }
@@ -389,10 +336,118 @@ export class EarthMapEngine {
     this.map.flyToBounds(bounds, { padding: [50, 50], duration: 1.0 });
   }
 
+  renderSpotlightMask(coords, strokeColor = "#0284c7", strokeDash = "6, 4", strokeWeight = 3) {
+    if (!this.boundaryLayer) return null;
+    this.boundaryLayer.clearLayers();
+    if (!coords || coords.length < 3) return null;
+
+    if (this.spotlightEnabled) {
+      const worldBox = [
+        [-90, -180],
+        [-90, 180],
+        [90, 180],
+        [90, -180]
+      ];
+
+      // Máscara invertida con orificio para la zona activa (SVG con fill-rule: evenodd)
+      // Situada en pane superior 'spotlightMaskPane' (z-index 450) para cubrir todas las capas cartográficas
+      const maskPoly = L.polygon([worldBox, coords], {
+        pane: "spotlightMaskPane",
+        fillColor: "#ffffff",
+        fillOpacity: 0.78,
+        color: "#ffffff",
+        weight: 2,
+        opacity: 0.9,
+        fillRule: "evenodd",
+        interactive: false,
+        renderer: this.spotlightSvgRenderer || this.svgRenderer
+      });
+      this.boundaryLayer.addLayer(maskPoly);
+    }
+
+    // Contorno delimitador en pane superior para máxima visibilidad
+    const bPoly = L.polygon(coords, {
+      pane: "spotlightMaskPane",
+      color: strokeColor,
+      weight: strokeWeight,
+      opacity: 0.95,
+      fill: false,
+      dashArray: strokeDash,
+      interactive: false,
+      renderer: this.canvasRenderer
+    });
+    this.boundaryLayer.addLayer(bPoly);
+    return bPoly;
+  }
+
+  showStateBoundary(flyCamera = true) {
+    this.activeFocusLevel = "estado";
+    let coords = null;
+    if (GEO_ESTADO_OFICIAL && GEO_ESTADO_OFICIAL.features && GEO_ESTADO_OFICIAL.features[0]) {
+      const feat = GEO_ESTADO_OFICIAL.features[0];
+      if (feat.geometry) {
+        if (feat.geometry.type === "Polygon") {
+          coords = feat.geometry.coordinates[0].map(c => [c[1], c[0]]);
+        } else if (feat.geometry.type === "MultiPolygon") {
+          const polygons = feat.geometry.coordinates.map(p => p[0].map(c => [c[1], c[0]]));
+          coords = polygons.sort((a, b) => b.length - a.length)[0];
+        }
+      }
+    }
+    if (!coords || coords.length < 3) return;
+    this.activeFocusCoords = coords;
+
+    const bPoly = this.renderSpotlightMask(coords, "#f59e0b", "8, 6", 3.5);
+    if (bPoly) {
+      if (flyCamera) {
+        this.map.flyToBounds(bPoly.getBounds(), { padding: [30, 30], duration: 1.2 });
+      } else {
+        this.map.fitBounds(bPoly.getBounds(), { padding: [30, 30], animate: false });
+      }
+    }
+  }
+
+  showMunicipioBoundary(munId, flyCamera = true) {
+    if (!munId) munId = window.earthApp?.selectedMunId || "maturin";
+    this.activeMunicipioId = munId;
+    this.activeFocusLevel = "municipio";
+
+    let coords = null;
+    if (GEO_MUNICIPIOS_OFICIAL && GEO_MUNICIPIOS_OFICIAL.features) {
+      const cleanId = String(munId).toLowerCase().replace(/_/g, "-").trim();
+      const feat = GEO_MUNICIPIOS_OFICIAL.features.find(f => {
+        if (!f.properties) return false;
+        const fId = String(f.properties.id || "").toLowerCase().replace(/_/g, "-").trim();
+        const fNom = String(f.properties.nombre || "").toLowerCase().trim();
+        return fId === cleanId || fNom === cleanId || fId.includes(cleanId) || cleanId.includes(fId);
+      });
+      if (feat && feat.geometry) {
+        if (feat.geometry.type === "Polygon") {
+          coords = feat.geometry.coordinates[0].map(c => [c[1], c[0]]);
+        } else if (feat.geometry.type === "MultiPolygon") {
+          const polygons = feat.geometry.coordinates.map(p => p[0].map(c => [c[1], c[0]]));
+          coords = polygons.sort((a, b) => b.length - a.length)[0];
+        }
+      }
+    }
+
+    if (!coords || coords.length < 3) return;
+    this.activeFocusCoords = coords;
+
+    const bPoly = this.renderSpotlightMask(coords, "#38bdf8", "8, 5", 3);
+    if (bPoly) {
+      if (flyCamera) {
+        this.map.flyToBounds(bPoly.getBounds(), { padding: [40, 40], duration: 1.2 });
+      } else {
+        this.map.fitBounds(bPoly.getBounds(), { padding: [40, 40], animate: false });
+      }
+    }
+  }
+
   showParishBoundary(limite, parishId = null, flyCamera = true) {
     this.currentParishLimite = limite;
     this.currentParishId = parishId;
-    this.boundaryLayer.clearLayers();
+    this.activeFocusLevel = "parroquia";
 
     let coords = null;
 
@@ -419,92 +474,50 @@ export class EarthMapEngine {
       coords = limite;
     }
 
-    if (!coords || coords.length === 0) return;
+    if (!coords || coords.length < 3) return;
+    this.activeFocusCoords = coords;
 
-    // 2. Máscara de Foco (Efecto Velo Blanco Exterior SVG con fill-rule: evenodd)
-    if (this.spotlightEnabled) {
-      const worldBox = [
-        [-90, -180],
-        [-90, 180],
-        [90, 180],
-        [90, -180]
-      ];
-
-      // Máscara invertida con orificio para la parroquia activa (SVG con fill-rule: evenodd)
-      const maskPoly = L.polygon([worldBox, coords], {
-        fillColor: "#ffffff",
-        fillOpacity: 0.78,
-        color: "#ffffff",
-        weight: 2,
-        opacity: 0.9,
-        fillRule: "evenodd",
-        interactive: false,
-        renderer: this.svgRenderer
-      });
-      this.boundaryLayer.addLayer(maskPoly);
-    }
-
-    // 3. Contorno Neón Brillante para la Parroquia Iluminada
-    const bPoly = L.polygon(coords, {
-      color: "#0284c7",
-      weight: 3,
-      opacity: 0.95,
-      fill: false,
-      dashArray: "6, 4",
-      interactive: false,
-      renderer: this.canvasRenderer
-    });
-    this.boundaryLayer.addLayer(bPoly);
-
-    if (flyCamera) {
-      this.map.flyToBounds(bPoly.getBounds(), { padding: [40, 40], duration: 1.2 });
-    } else {
-      this.map.fitBounds(bPoly.getBounds(), { padding: [40, 40], animate: false });
+    const bPoly = this.renderSpotlightMask(coords, "#0284c7", "6, 4", 3);
+    if (bPoly) {
+      if (flyCamera) {
+        this.map.flyToBounds(bPoly.getBounds(), { padding: [40, 40], duration: 1.2 });
+      } else {
+        this.map.fitBounds(bPoly.getBounds(), { padding: [40, 40], animate: false });
+      }
     }
   }
 
   showSubParishBoundary(spVertices, flyCamera = true) {
     this.currentSubParishVertices = spVertices;
-    this.boundaryLayer.clearLayers();
+    this.activeFocusLevel = "subparroquia";
 
     if (!spVertices || spVertices.length < 3) return;
+    this.activeFocusCoords = spVertices;
 
-    if (this.spotlightEnabled) {
-      const worldBox = [
-        [-90, -180],
-        [-90, 180],
-        [90, 180],
-        [90, -180]
-      ];
-
-      const maskPoly = L.polygon([worldBox, spVertices], {
-        fillColor: "#ffffff",
-        fillOpacity: 0.78,
-        color: "#ffffff",
-        weight: 2,
-        opacity: 0.9,
-        fillRule: "evenodd",
-        interactive: false,
-        renderer: this.svgRenderer
-      });
-      this.boundaryLayer.addLayer(maskPoly);
+    const bPoly = this.renderSpotlightMask(spVertices, "#c084fc", "6, 4", 3);
+    if (bPoly) {
+      if (flyCamera) {
+        this.map.flyToBounds(bPoly.getBounds(), { padding: [50, 50], duration: 1.2 });
+      } else {
+        this.map.fitBounds(bPoly.getBounds(), { padding: [50, 50], animate: false });
+      }
     }
+  }
 
-    const bPoly = L.polygon(spVertices, {
-      color: "#c084fc",
-      weight: 3,
-      opacity: 0.95,
-      fill: false,
-      dashArray: "6, 4",
-      interactive: false,
-      renderer: this.canvasRenderer
-    });
-    this.boundaryLayer.addLayer(bPoly);
+  showSectorBoundary(sectorVertices, flyCamera = true) {
+    this.currentSectorVertices = sectorVertices;
+    this.activeFocusLevel = "sector";
 
-    if (flyCamera) {
-      this.map.flyToBounds(bPoly.getBounds(), { padding: [50, 50], duration: 1.2 });
-    } else {
-      this.map.fitBounds(bPoly.getBounds(), { padding: [50, 50], animate: false });
+    if (!sectorVertices || sectorVertices.length < 3) return;
+    this.activeFocusCoords = sectorVertices;
+
+    const bPoly = this.renderSpotlightMask(sectorVertices, "#38bdf8", "4, 3", 3);
+    if (bPoly) {
+      if (flyCamera) {
+        this.map.flyToBounds(bPoly.getBounds(), { padding: [50, 50], maxZoom: 17, duration: 1.0 });
+      } else {
+        this.map.fitBounds(bPoly.getBounds(), { padding: [50, 50], maxZoom: 17, animate: false });
+      }
     }
   }
 
@@ -514,14 +527,23 @@ export class EarthMapEngine {
     } else {
       this.spotlightEnabled = !this.spotlightEnabled;
     }
-    if (this.currentSubParishVertices && window.earthApp?.activeSubParroquiaId) {
+
+    // Re-renderizar de inmediato el velo blanco según el nivel territorial activo
+    if (this.activeFocusLevel === "sector" && this.currentSectorVertices) {
+      this.showSectorBoundary(this.currentSectorVertices, false);
+    } else if (this.activeFocusLevel === "subparroquia" && this.currentSubParishVertices) {
       this.showSubParishBoundary(this.currentSubParishVertices, false);
+    } else if (this.activeFocusLevel === "municipio") {
+      this.showMunicipioBoundary(this.activeMunicipioId || window.earthApp?.selectedMunId, false);
+    } else if (this.activeFocusLevel === "estado") {
+      this.showStateBoundary(false);
     } else if (this.currentParishLimite || this.currentParishId) {
       this.showParishBoundary(this.currentParishLimite, this.currentParishId, false);
     } else if (window.earthApp?.selectedParishId) {
       const p = window.earthApp.store?.getParish(window.earthApp.selectedMunId, window.earthApp.selectedParishId);
       this.showParishBoundary(p?.limite || null, window.earthApp.selectedParishId, false);
     }
+
     return this.spotlightEnabled;
   }
 
