@@ -61,7 +61,7 @@
   <meta http-equiv="Expires" content="0" />
 
   <!-- Custom Styles -->
-  <link rel="stylesheet" href="css/styles.css?v=120">
+  <link rel="stylesheet" href="css/styles.css?v=126">
 
   <!-- Script de Autenticación Rápida, Limpieza Integral de Caché y Activador de Herramientas -->
   <script>
@@ -154,12 +154,12 @@
           }).catch(function(){});
         }
         setTimeout(function() {
-          window.location.replace(window.location.pathname + '?v=120&u=admin-militancia');
+          window.location.replace(window.location.pathname + '?v=126&u=admin-militancia');
         }, 150);
       }
     };
 
-    // Auto-actualización a la versión más reciente v=120
+    // Auto-actualización a la versión más reciente v=126
     (function() {
       try {
         var p = new URLSearchParams(window.location.search);
@@ -167,7 +167,7 @@
         var isReset = p.get('reset') === '1';
         var paramP = p.get('p') || p.get('parroquia') || p.get('parish');
 
-        if (isReset || !curV || parseInt(curV) < 120) {
+        if (isReset || !curV || parseInt(curV) < 126) {
           if (isReset) {
             try {
               localStorage.removeItem("migato_last_parish");
@@ -176,7 +176,7 @@
             p.delete('reset');
           }
 
-          p.set('v', '120');
+          p.set('v', '126');
           if (!p.get('u')) p.set('u', 'admin-militancia');
           if (paramP) {
             p.set('p', paramP);
