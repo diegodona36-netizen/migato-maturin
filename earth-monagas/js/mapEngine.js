@@ -433,10 +433,10 @@ export class EarthMapEngine {
       // Máscara invertida con orificio para la parroquia activa (SVG con fill-rule: evenodd)
       const maskPoly = L.polygon([worldBox, coords], {
         fillColor: "#ffffff",
-        fillOpacity: 0.45,
+        fillOpacity: 0.78,
         color: "#ffffff",
-        weight: 1.5,
-        opacity: 0.7,
+        weight: 2,
+        opacity: 0.9,
         fillRule: "evenodd",
         interactive: false,
         renderer: this.svgRenderer
@@ -479,10 +479,10 @@ export class EarthMapEngine {
 
       const maskPoly = L.polygon([worldBox, spVertices], {
         fillColor: "#ffffff",
-        fillOpacity: 0.45,
+        fillOpacity: 0.78,
         color: "#ffffff",
-        weight: 1.5,
-        opacity: 0.7,
+        weight: 2,
+        opacity: 0.9,
         fillRule: "evenodd",
         interactive: false,
         renderer: this.svgRenderer
@@ -545,7 +545,7 @@ export class EarthMapEngine {
         this.boundaryLayer.eachLayer(l => {
           try {
             if (l.options && (l.options.fillColor === "#020617" || l.options.fillColor === "#000000" || l.options.fillColor === "#ffffff")) {
-              l.setStyle({ fillOpacity: 0.45 });
+              l.setStyle({ fillOpacity: 0.78 });
             }
           } catch(e) {}
         });
