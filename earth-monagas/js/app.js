@@ -2,16 +2,16 @@
  * Controlador Principal — Google Earth Pro Web (Edición Estado Monagas)
  * Robusto, 100% Operativo y Totalmente Individualizado
  */
-import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=121";
-import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=121";
-import { getAllParishesForSelector } from "./usersCatalog.js?v=121";
-import { EarthStore } from "./earthStore.js?v=121";
-import { EarthMapEngine } from "./mapEngine.js?v=121";
-import { PropertiesDialog } from "./propertiesDialog.js?v=121";
-import { ToolsManager } from "./toolsManager.js?v=121";
-import { detectParishFromGeometry, SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=121";
-import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=121";
-import { getParishDemographics } from "./monagasDemographics.js?v=121";
+import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=122";
+import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=122";
+import { getAllParishesForSelector } from "./usersCatalog.js?v=122";
+import { EarthStore } from "./earthStore.js?v=122";
+import { EarthMapEngine } from "./mapEngine.js?v=122";
+import { PropertiesDialog } from "./propertiesDialog.js?v=122";
+import { ToolsManager } from "./toolsManager.js?v=122";
+import { detectParishFromGeometry, SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=122";
+import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=122";
+import { getParishDemographics } from "./monagasDemographics.js?v=122";
 import { 
   getMunicipios, 
   getParroquiasByMun, 
@@ -2783,6 +2783,8 @@ class EarthMonagasApp {
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
       });
+    }
+
     // 5.1. Botón Alternar Velo Blanco Exterior
     const btnSpotlight = document.getElementById("btn-toggle-spotlight");
     if (btnSpotlight) {

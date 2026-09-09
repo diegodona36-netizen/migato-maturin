@@ -419,7 +419,9 @@ export class EarthMapEngine {
       coords = limite;
     }
 
-     // 2. Máscara de Foco (Efecto Velo Blanco Exterior SVG con fill-rule: evenodd)
+    if (!coords || coords.length === 0) return;
+
+    // 2. Máscara de Foco (Efecto Velo Blanco Exterior SVG con fill-rule: evenodd)
     if (this.spotlightEnabled) {
       const worldBox = [
         [-90, -180],
