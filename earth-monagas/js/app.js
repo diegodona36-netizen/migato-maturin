@@ -2,16 +2,16 @@
  * Controlador Principal — Google Earth Pro Web (Edición Estado Monagas)
  * Robusto, 100% Operativo y Totalmente Individualizado
  */
-import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=125";
-import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=125";
-import { getAllParishesForSelector } from "./usersCatalog.js?v=125";
-import { EarthStore } from "./earthStore.js?v=125";
-import { EarthMapEngine } from "./mapEngine.js?v=125";
-import { PropertiesDialog } from "./propertiesDialog.js?v=125";
-import { ToolsManager } from "./toolsManager.js?v=125";
-import { detectParishFromGeometry, SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=125";
-import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=125";
-import { getParishDemographics } from "./monagasDemographics.js?v=125";
+import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=126";
+import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=126";
+import { getAllParishesForSelector } from "./usersCatalog.js?v=126";
+import { EarthStore } from "./earthStore.js?v=126";
+import { EarthMapEngine } from "./mapEngine.js?v=126";
+import { PropertiesDialog } from "./propertiesDialog.js?v=126";
+import { ToolsManager } from "./toolsManager.js?v=126";
+import { detectParishFromGeometry, SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=126";
+import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=126";
+import { getParishDemographics } from "./monagasDemographics.js?v=126";
 import { 
   getMunicipios, 
   getParroquiasByMun, 
@@ -118,6 +118,7 @@ class EarthMonagasApp {
     this.catalogViewMode = "table";
     window.earthApp = this;
     window.toggleSpotlight = (enabled = null) => window.earthApp?.toggleSpotlight(enabled);
+    window.closeQuickStats = () => window.earthApp?.closeQuickStats();
 
     this.init();
   }
@@ -492,10 +493,10 @@ class EarthMonagasApp {
     if (!sp || !sp.vertices || sp.vertices.length < 3) return;
 
     this.activeSubParroquiaId = String(subParishId);
-    if (flyCamera) {
+    if (this.mapEngine) {
       if (this.mapEngine.spotlightEnabled) {
-        this.mapEngine.showSubParishBoundary(sp.vertices, true);
-      } else {
+        this.mapEngine.showSubParishBoundary(sp.vertices, flyCamera);
+      } else if (flyCamera) {
         const bounds = L.polygon(sp.vertices).getBounds();
         this.mapEngine.fitBounds(bounds);
       }
@@ -1730,6 +1731,9 @@ class EarthMonagasApp {
     if (type === "subparroquia") {
       this.activeSubParroquiaId = String(item.id);
       if (this.mapEngine) {
+        if (this.mapEngine.spotlightEnabled && item.vertices && item.vertices.length >= 3) {
+          this.mapEngine.showSubParishBoundary(item.vertices, false);
+        }
         this.mapEngine.highlightPolygon(item.id);
       }
       this.showQuickStats("subparroquia", item);
@@ -1737,6 +1741,20 @@ class EarthMonagasApp {
     } else if (type === "poligono") {
       if (this.mapEngine) {
         this.mapEngine.highlightPolygon(item.id);
+        if (this.mapEngine.spotlightEnabled) {
+          const parish = this.store?.getParish(this.selectedMunId, this.selectedParishId);
+          if (item.subParroquiaId && parish?.subparroquias) {
+            const sp = parish.subparroquias.find(s => String(s.id) === String(item.subParroquiaId));
+            if (sp && sp.vertices && sp.vertices.length >= 3) {
+              this.activeSubParroquiaId = String(sp.id);
+              this.mapEngine.showSubParishBoundary(sp.vertices, false);
+            } else {
+              this.mapEngine.showParishBoundary(parish.limite || null, this.selectedParishId, false);
+            }
+          } else if (parish) {
+            this.mapEngine.showParishBoundary(parish.limite || null, this.selectedParishId, false);
+          }
+        }
       }
       this.showQuickStats("poligono", item);
     } else {
@@ -1979,6 +1997,20 @@ class EarthMonagasApp {
       if (this.mapEngine) {
         this.mapEngine.map.flyToBounds(L.polygon(item.vertices).getBounds(), { padding: [50, 50], maxZoom: 17, duration: 1.0 });
         this.mapEngine.highlightPolygon(item.id);
+        if (this.mapEngine.spotlightEnabled) {
+          const parishObj = this.store?.getParish(munId, parishId);
+          if (item.subParroquiaId && parishObj?.subparroquias) {
+            const sp = parishObj.subparroquias.find(s => String(s.id) === String(item.subParroquiaId));
+            if (sp && sp.vertices && sp.vertices.length >= 3) {
+              this.activeSubParroquiaId = String(sp.id);
+              this.mapEngine.showSubParishBoundary(sp.vertices, false);
+            } else {
+              this.mapEngine.showParishBoundary(parishObj.limite || null, parishId, false);
+            }
+          } else if (parishObj) {
+            this.mapEngine.showParishBoundary(parishObj.limite || null, parishId, false);
+          }
+        }
       }
       if (openDialogDirectly) {
         this.closeQuickStats();

@@ -92,14 +92,26 @@
       display: none !important;
     }
     /* Velo Blanco 100% transparente a clics: permite interactuar y cerrar fichas tocando el mapa */
+    .leaflet-pane.leaflet-spotlightMask-pane,
+    .leaflet-pane.leaflet-spotlightMask-pane svg,
+    .leaflet-pane.leaflet-spotlightMask-pane path,
     .leaflet-pane.leaflet-spotlightMaskPane-pane,
     .leaflet-pane.leaflet-spotlightMaskPane-pane svg,
-    .leaflet-pane.leaflet-spotlightMaskPane-pane path {
+    .leaflet-pane.leaflet-spotlightMaskPane-pane path,
+    .leaflet-spotlightMask-pane,
+    .leaflet-spotlightMaskPane-pane {
       pointer-events: none !important;
     }
   </style>
   <script>
     // Controladores globales territoriales instantáneos (disponibles desde el milisegundo 0)
+    window.closeQuickStats = function() {
+      var card = document.getElementById("card-quick-stats");
+      if (card) card.style.display = "none";
+      if (window.earthApp && typeof window.earthApp.closeQuickStats === "function") {
+        window.earthApp.closeQuickStats();
+      }
+    };
     window.openParishSelectorGlobal = function() {
       var modal = document.getElementById("modal-select-parish");
       if (modal) {
@@ -1718,7 +1730,7 @@
   </div>
 
   <!-- SCRIPT -->
-  <script type="module" src="js/app.js?v=125"></script>
+  <script type="module" src="js/app.js?v=126"></script>
   <script>
     if (window.lucide && typeof window.lucide.createIcons === 'function') {
       window.lucide.createIcons();

@@ -95,7 +95,8 @@ export class EarthMapEngine {
       spotlightPane.style.zIndex = "450";
       spotlightPane.style.pointerEvents = "none";
     }
-    this.spotlightSvgRenderer = L.svg({ pane: "spotlightMaskPane", padding: 0.5 });
+    this.spotlightSvgRenderer = L.svg({ pane: "spotlightMaskPane", padding: 0.5 }).addTo(this.map);
+    this.svgRenderer = L.svg({ padding: 0.5 }).addTo(this.map);
 
     // Control de capas satelitales clásico
     L.control.layers(
@@ -383,7 +384,7 @@ export class EarthMapEngine {
       fill: false,
       dashArray: strokeDash,
       interactive: false,
-      renderer: this.canvasRenderer
+      renderer: this.spotlightSvgRenderer || this.svgRenderer
     });
     this.boundaryLayer.addLayer(bPoly);
     return bPoly;
@@ -407,12 +408,8 @@ export class EarthMapEngine {
     this.activeFocusCoords = coords;
 
     const bPoly = this.renderSpotlightMask(coords, "#f59e0b", "8, 6", 3.5);
-    if (bPoly) {
-      if (flyCamera) {
-        this.map.flyToBounds(bPoly.getBounds(), { padding: [30, 30], duration: 1.2 });
-      } else {
-        this.map.fitBounds(bPoly.getBounds(), { padding: [30, 30], animate: false });
-      }
+    if (bPoly && flyCamera) {
+      this.map.flyToBounds(bPoly.getBounds(), { padding: [30, 30], duration: 1.2 });
     }
   }
 
@@ -444,12 +441,8 @@ export class EarthMapEngine {
     this.activeFocusCoords = coords;
 
     const bPoly = this.renderSpotlightMask(coords, "#38bdf8", "8, 5", 3);
-    if (bPoly) {
-      if (flyCamera) {
-        this.map.flyToBounds(bPoly.getBounds(), { padding: [40, 40], duration: 1.2 });
-      } else {
-        this.map.fitBounds(bPoly.getBounds(), { padding: [40, 40], animate: false });
-      }
+    if (bPoly && flyCamera) {
+      this.map.flyToBounds(bPoly.getBounds(), { padding: [40, 40], duration: 1.2 });
     }
   }
 
@@ -487,12 +480,8 @@ export class EarthMapEngine {
     this.activeFocusCoords = coords;
 
     const bPoly = this.renderSpotlightMask(coords, "#0284c7", "6, 4", 3);
-    if (bPoly) {
-      if (flyCamera) {
-        this.map.flyToBounds(bPoly.getBounds(), { padding: [40, 40], duration: 1.2 });
-      } else {
-        this.map.fitBounds(bPoly.getBounds(), { padding: [40, 40], animate: false });
-      }
+    if (bPoly && flyCamera) {
+      this.map.flyToBounds(bPoly.getBounds(), { padding: [40, 40], duration: 1.2 });
     }
   }
 
@@ -504,12 +493,8 @@ export class EarthMapEngine {
     this.activeFocusCoords = spVertices;
 
     const bPoly = this.renderSpotlightMask(spVertices, "#c084fc", "6, 4", 3);
-    if (bPoly) {
-      if (flyCamera) {
-        this.map.flyToBounds(bPoly.getBounds(), { padding: [50, 50], duration: 1.2 });
-      } else {
-        this.map.fitBounds(bPoly.getBounds(), { padding: [50, 50], animate: false });
-      }
+    if (bPoly && flyCamera) {
+      this.map.flyToBounds(bPoly.getBounds(), { padding: [50, 50], duration: 1.2 });
     }
   }
 
@@ -521,6 +506,15 @@ export class EarthMapEngine {
     }
 
     // Re-renderizar de inmediato el velo blanco según el nivel territorial activo (escala mínima: Sub-Parroquia)
+    if (window.earthApp?.activeSubParroquiaId) {
+      const parish = window.earthApp.store?.getParish(window.earthApp.selectedMunId, window.earthApp.selectedParishId);
+      const sp = (parish?.subparroquias || []).find(s => String(s.id) === String(window.earthApp.activeSubParroquiaId));
+      if (sp && sp.vertices && sp.vertices.length >= 3) {
+        this.showSubParishBoundary(sp.vertices, false);
+        return this.spotlightEnabled;
+      }
+    }
+
     if (this.activeFocusLevel === "subparroquia" && this.currentSubParishVertices) {
       this.showSubParishBoundary(this.currentSubParishVertices, false);
     } else if (this.activeFocusLevel === "municipio") {
