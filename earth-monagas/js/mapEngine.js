@@ -308,11 +308,20 @@ export class EarthMapEngine {
     }
 
     if (levelKey === 'l5') {
-      if (this.currentSectorVertices) {
-        this.showSectorBoundary(this.currentSectorVertices, true);
+      if (this.currentSubParishVertices && window.earthApp?.activeSubParroquiaId) {
+        this.showSubParishBoundary(this.currentSubParishVertices, false);
       } else {
         const p = window.earthApp?.store?.getParish(window.earthApp.selectedMunId, window.earthApp.selectedParishId);
-        this.showParishBoundary(p?.limite || this.currentParishLimite, window.earthApp?.selectedParishId, true);
+        this.showParishBoundary(p?.limite || this.currentParishLimite, window.earthApp?.selectedParishId, false);
+      }
+      if (this.polygonsLayer) {
+        try {
+          const b = this.polygonsLayer.getBounds();
+          if (b.isValid()) {
+            this.map.flyToBounds(b, { padding: [40, 40], maxZoom: 16, duration: 1.2 });
+            return;
+          }
+        } catch(e) {}
       }
       return;
     }
@@ -504,23 +513,6 @@ export class EarthMapEngine {
     }
   }
 
-  showSectorBoundary(sectorVertices, flyCamera = true) {
-    this.currentSectorVertices = sectorVertices;
-    this.activeFocusLevel = "sector";
-
-    if (!sectorVertices || sectorVertices.length < 3) return;
-    this.activeFocusCoords = sectorVertices;
-
-    const bPoly = this.renderSpotlightMask(sectorVertices, "#38bdf8", "4, 3", 3);
-    if (bPoly) {
-      if (flyCamera) {
-        this.map.flyToBounds(bPoly.getBounds(), { padding: [50, 50], maxZoom: 17, duration: 1.0 });
-      } else {
-        this.map.fitBounds(bPoly.getBounds(), { padding: [50, 50], maxZoom: 17, animate: false });
-      }
-    }
-  }
-
   toggleSpotlight(enabled = null) {
     if (enabled !== null) {
       this.spotlightEnabled = !!enabled;
@@ -528,10 +520,8 @@ export class EarthMapEngine {
       this.spotlightEnabled = !this.spotlightEnabled;
     }
 
-    // Re-renderizar de inmediato el velo blanco según el nivel territorial activo
-    if (this.activeFocusLevel === "sector" && this.currentSectorVertices) {
-      this.showSectorBoundary(this.currentSectorVertices, false);
-    } else if (this.activeFocusLevel === "subparroquia" && this.currentSubParishVertices) {
+    // Re-renderizar de inmediato el velo blanco según el nivel territorial activo (escala mínima: Sub-Parroquia)
+    if (this.activeFocusLevel === "subparroquia" && this.currentSubParishVertices) {
       this.showSubParishBoundary(this.currentSubParishVertices, false);
     } else if (this.activeFocusLevel === "municipio") {
       this.showMunicipioBoundary(this.activeMunicipioId || window.earthApp?.selectedMunId, false);

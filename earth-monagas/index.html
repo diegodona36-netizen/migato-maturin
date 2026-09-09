@@ -91,6 +91,12 @@
     html.isolated-parish-view #admin-module-links {
       display: none !important;
     }
+    /* Velo Blanco 100% transparente a clics: permite interactuar y cerrar fichas tocando el mapa */
+    .leaflet-pane.leaflet-spotlightMaskPane-pane,
+    .leaflet-pane.leaflet-spotlightMaskPane-pane svg,
+    .leaflet-pane.leaflet-spotlightMaskPane-pane path {
+      pointer-events: none !important;
+    }
   </style>
   <script>
     // Controladores globales territoriales instantáneos (disponibles desde el milisegundo 0)
@@ -1712,7 +1718,7 @@
   </div>
 
   <!-- SCRIPT -->
-  <script type="module" src="js/app.js?v=124"></script>
+  <script type="module" src="js/app.js?v=125"></script>
   <script>
     if (window.lucide && typeof window.lucide.createIcons === 'function') {
       window.lucide.createIcons();
