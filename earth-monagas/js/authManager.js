@@ -28,7 +28,7 @@ export function forceCleanCacheAndReload() {
     const url = new URL(window.location.href);
     const mun = url.searchParams.get("mun");
     const p = url.searchParams.get("p");
-    let reloadUrl = window.location.pathname + "?v=126&u=admin-militancia";
+    let reloadUrl = window.location.pathname + "?v=127&u=admin-militancia";
     if (mun) reloadUrl += "&mun=" + mun;
     if (p) reloadUrl += "&p=" + p;
     window.location.href = reloadUrl;

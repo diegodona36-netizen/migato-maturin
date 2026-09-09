@@ -61,7 +61,7 @@
   <meta http-equiv="Expires" content="0" />
 
   <!-- Custom Styles -->
-  <link rel="stylesheet" href="css/styles.css?v=126">
+  <link rel="stylesheet" href="css/styles.css?v=127">
 
   <!-- Script de Autenticación Rápida, Limpieza Integral de Caché y Activador de Herramientas -->
   <script>
@@ -154,12 +154,12 @@
           }).catch(function(){});
         }
         setTimeout(function() {
-          window.location.replace(window.location.pathname + '?v=126&u=admin-militancia');
+          window.location.replace(window.location.pathname + '?v=127&u=admin-militancia');
         }, 150);
       }
     };
 
-    // Auto-actualización a la versión más reciente v=126
+    // Auto-actualización a la versión más reciente v=127
     (function() {
       try {
         var p = new URLSearchParams(window.location.search);
@@ -167,7 +167,7 @@
         var isReset = p.get('reset') === '1';
         var paramP = p.get('p') || p.get('parroquia') || p.get('parish');
 
-        if (isReset || !curV || parseInt(curV) < 126) {
+        if (isReset || !curV || parseInt(curV) < 127) {
           if (isReset) {
             try {
               localStorage.removeItem("migato_last_parish");
@@ -176,7 +176,7 @@
             p.delete('reset');
           }
 
-          p.set('v', '126');
+          p.set('v', '127');
           if (!p.get('u')) p.set('u', 'admin-militancia');
           if (paramP) {
             p.set('p', paramP);
@@ -558,6 +558,14 @@
         <span id="text-toggle-spotlight" class="whitespace-nowrap font-bold text-xs">Velo Blanco: OFF</span>
       </button>
 
+      <!-- ↩ Botón Rápido Volver a Parroquia (aparece cuando hay un eje enfocado) -->
+      <button type="button" id="btn-return-parish" style="display: none;" onclick="window.earthApp?.clearSubParishFocus?.()"
+        class="px-2.5 py-1.5 rounded-xl bg-purple-900/90 hover:bg-purple-800 border border-purple-400/60 text-xs font-black text-purple-100 transition flex items-center gap-1.5 active:scale-95 shadow-lg cursor-pointer shrink-0 animate-pulse"
+        title="Devolver vista y velo blanco a toda la parroquia">
+        <i data-lucide="arrow-left-circle" class="w-3.5 h-3.5 text-purple-300 shrink-0"></i>
+        <span class="whitespace-nowrap font-bold text-xs">Volver a Parroquia</span>
+      </button>
+
       <!-- Botón Capas Directo -->
       <button type="button" id="btn-bar-layers" onclick="window.earthApp?.openLayers ? window.earthApp.openLayers() : (document.getElementById('btn-sidebar-tab-layers')?.click(), window.earthApp?.toggleSidebar?.(true));"
         class="px-2 py-1 rounded-lg bg-[#140e40]/70 hover:bg-[#23176d] text-[11px] text-slate-300 hover:text-white border border-[#23176d] transition flex items-center gap-1 cursor-pointer"
@@ -757,6 +765,24 @@
         <span>Dividir: Ver Panel</span>
       </button>
 
+      <!-- HUD FLOTANTE DE ENFOQUE TERRITORIAL (SUB-PARROQUIA / EJE ACTIVO) -->
+      <div id="hud-territorial-focus" style="display: none;" class="absolute top-3 left-1/2 -translate-x-1/2 z-[1000] pointer-events-auto transition-all animate-in fade-in duration-200">
+        <div class="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#08061a]/95 border border-purple-500/70 shadow-2xl backdrop-blur-md text-xs">
+          <span class="inline-flex items-center gap-1.5 font-bold text-purple-300">
+            <i data-lucide="shield" class="w-3.5 h-3.5 text-purple-400 shrink-0"></i>
+            <span class="text-[10px] text-purple-300 uppercase tracking-wider hidden sm:inline">Eje Enfocado:</span>
+            <span id="hud-focus-subparish-name" class="text-white font-extrabold max-w-[150px] sm:max-w-xs truncate">Eje Comunal</span>
+          </span>
+          <div class="h-3 w-px bg-purple-500/40"></div>
+          <button type="button" id="btn-hud-return-parish" onclick="window.earthApp?.clearSubParishFocus?.()"
+            class="px-2.5 py-1 rounded-full bg-purple-600 hover:bg-purple-500 text-white font-black text-[11px] flex items-center gap-1 shadow transition active:scale-95 cursor-pointer"
+            title="Devolver vista y velo blanco a toda la parroquia">
+            <i data-lucide="arrow-left-circle" class="w-3.5 h-3.5 shrink-0"></i>
+            <span>Volver a Parroquia</span>
+          </button>
+        </div>
+      </div>
+
       <div id="earth-canvas"></div>
 
       <!-- BARRA FLOTANTE MÓVIL OBSOLETA (OCULTA PERMANENTEMENTE PARA NO DUPLICAR BOTONES) -->
@@ -865,6 +891,18 @@
             <span>🗳️</span> Centro:
           </span>
           <span id="quick-stats-centro" class="text-white font-bold truncate flex-1 text-right">No asignado</span>
+        </div>
+        <!-- Fila de Eje Comunal con retorno directo a parroquia -->
+        <div id="quick-stats-subparish-row" style="display: none;" class="flex items-center justify-between text-[11px] pt-1.5 border-t border-slate-800">
+          <span class="text-purple-300 font-bold flex items-center gap-1 shrink-0">
+            <span>🟪</span> Eje Comunal:
+          </span>
+          <div class="flex items-center gap-1.5 truncate max-w-[70%] justify-end">
+            <span id="quick-stats-subparish-name" class="text-purple-100 font-extrabold truncate">Eje</span>
+            <button type="button" onclick="window.earthApp?.clearSubParishFocus?.()" class="text-[10px] text-purple-200 hover:text-white bg-purple-900/90 hover:bg-purple-800 px-1.5 py-0.5 rounded-lg border border-purple-400/50 transition font-bold shrink-0 cursor-pointer" title="Ver toda la parroquia">
+              ↩ Parroquia
+            </button>
+          </div>
         </div>
       </div>
 
@@ -1730,7 +1768,7 @@
   </div>
 
   <!-- SCRIPT -->
-  <script type="module" src="js/app.js?v=126"></script>
+  <script type="module" src="js/app.js?v=127"></script>
   <script>
     if (window.lucide && typeof window.lucide.createIcons === 'function') {
       window.lucide.createIcons();
