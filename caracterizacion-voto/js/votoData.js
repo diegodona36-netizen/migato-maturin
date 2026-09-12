@@ -231,6 +231,52 @@ export class VotoStore {
     this.guardarEnStorage(this.electores);
   }
 
+  importarElectores(lista = []) {
+    if (!Array.isArray(lista) || lista.length === 0) return { agregados: 0, duplicados: 0 };
+
+    const cedulasExistentes = new Set(
+      this.electores.map(e => (e.cedula || "").replace(/\D/g, "")).filter(Boolean)
+    );
+
+    let correlativoMax = this.electores.reduce((max, e) => Math.max(max, e.correlativo || 0), 0);
+    const validos = [];
+    let duplicados = 0;
+
+    for (const item of lista) {
+      const digitos = (item.cedula || "").replace(/\D/g, "");
+      if (!digitos || cedulasExistentes.has(digitos)) {
+        duplicados++;
+        continue;
+      }
+      cedulasExistentes.add(digitos);
+      correlativoMax++;
+
+      const tipoDoc = /E/i.test(item.cedula || "") ? "E" : "V";
+      const nuevo = {
+        id: item.id || `god-${Date.now()}-${Math.floor(Math.random() * 10000)}-${correlativoMax}`,
+        correlativo: correlativoMax,
+        nombreApellido: (item.nombreApellido || "").trim().toUpperCase(),
+        cedula: item.cedula && item.cedula.includes("-") ? item.cedula : `${tipoDoc}-${digitos}`,
+        telefono: (item.telefono || "").trim(),
+        subParroquia: item.subParroquia || "",
+        centroElectoral: item.centroElectoral || "",
+        sector: item.sector || "",
+        edad: parseInt(item.edad, 10) || null,
+        profesion: (item.profesion || "").trim(),
+        clasificacionVoto: item.clasificacionVoto || "duro",
+        fechaRegistro: item.fechaRegistro || new Date().toISOString()
+      };
+      validos.push(nuevo);
+    }
+
+    if (validos.length > 0) {
+      this.electores = [...validos, ...this.electores];
+      this.guardarEnStorage(this.electores);
+    }
+
+    return { agregados: validos.length, duplicados, total: this.electores.length };
+  }
+
   calcularEstadisticas(lista = null) {
     const items = lista || this.electores;
     const total = items.length;

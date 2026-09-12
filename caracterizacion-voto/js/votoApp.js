@@ -261,6 +261,8 @@ class VotoApp {
     }
 
     // 7. Acciones de Exportación e Impresión
+    this.vincularImportacionMasiva();
+
     const btnExportar = document.getElementById("btn-exportar-csv");
     if (btnExportar) {
       btnExportar.addEventListener("click", () => {
@@ -675,6 +677,353 @@ class VotoApp {
     }
 
     tbody.innerHTML = rowsHtml;
+  }
+
+  vincularImportacionMasiva() {
+    const modal = document.getElementById("modal-importar-csv");
+    const btnAbrir = document.getElementById("btn-importar-csv");
+    const btnCerrar = document.getElementById("btn-cerrar-modal-importar");
+    const btnCancelar = document.getElementById("btn-modal-cancelar");
+    const btnDescargarPlantilla = document.getElementById("btn-modal-descargar-plantilla");
+    const dropzone = document.getElementById("dropzone-modal-importar");
+    const inputArchivo = document.getElementById("input-modal-archivo");
+    const labelArchivo = document.getElementById("label-modal-archivo");
+    const textareaPegado = document.getElementById("textarea-modal-pegado");
+    const btnLimpiar = document.getElementById("btn-modal-limpiar-texto");
+    const btnAnalizar = document.getElementById("btn-modal-analizar");
+    const btnConfirmar = document.getElementById("btn-modal-confirmar-inyeccion");
+    const textConfirmar = document.getElementById("text-modal-confirmar");
+    const wrapperPreview = document.getElementById("wrapper-modal-preview");
+    const tbodyPreview = document.getElementById("tbody-modal-preview");
+
+    this.masivoValidos = [];
+
+    const abrirModal = () => {
+      if (modal) modal.classList.remove("hidden");
+      if (window.lucide) window.lucide.createIcons();
+    };
+
+    const cerrarModal = () => {
+      if (modal) modal.classList.add("hidden");
+    };
+
+    if (btnAbrir) btnAbrir.addEventListener("click", abrirModal);
+    if (btnCerrar) btnCerrar.addEventListener("click", cerrarModal);
+    if (btnCancelar) btnCancelar.addEventListener("click", cerrarModal);
+
+    if (modal) {
+      modal.addEventListener("click", (e) => {
+        if (e.target === modal) cerrarModal();
+      });
+    }
+
+    if (btnDescargarPlantilla) {
+      btnDescargarPlantilla.addEventListener("click", () => {
+        const headers = ["Nombre y Apellido", "Cedula", "Telefono", "Voto (duro/blando/nuevo)", "Edad", "Profesion", "Sector", "Subparroquia", "Centro Electoral"];
+        const rows = [
+          ["CARLOS ALBERTO RONDON", "V-14892410", "0414-7891234", "duro", "38", "Docente", "Villa de los Ángeles", "Sub-Parroquia 6 • La Puente (Eje Central)", "Cruz Hernández Quijada"],
+          ["MARIA ELENA SALAZAR", "V-18942310", "0424-9123456", "blando", "42", "Comerciante", "La Puente Sector 1 (Plaza)", "Sub-Parroquia 6 • La Puente (Eje Central)", "Cruz Hernández Quijada"],
+          ["JOSE GREGORIO MARTINEZ", "V-26123456", "0416-5551234", "nuevo", "21", "Estudiante", "Monagzal", "Sub-Parroquia 6 • La Puente (Eje Central)", "U.E. Gregorio Rondón"]
+        ];
+        const BOM = "\uFEFF";
+        const csvContent = BOM + [headers.join(","), ...rows.map(r => r.map(c => `"${c}"`).join(","))].join("\r\n");
+        const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `plantilla_electores_central_MIGATO.csv`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      });
+    }
+
+    if (inputArchivo) {
+      inputArchivo.addEventListener("change", (e) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+        if (labelArchivo) labelArchivo.textContent = `Archivo: ${file.name}`;
+        const reader = new FileReader();
+        reader.onload = (evt) => {
+          const text = evt.target.result;
+          if (textareaPegado) textareaPegado.value = text;
+          analizarDatos(text);
+        };
+        reader.readAsText(file, "UTF-8");
+      });
+    }
+
+    if (dropzone) {
+      ["dragenter", "dragover"].forEach(evtName => {
+        dropzone.addEventListener(evtName, (e) => {
+          e.preventDefault();
+          dropzone.classList.add("border-sky-400", "bg-sky-950/20");
+        });
+      });
+      ["dragleave", "drop"].forEach(evtName => {
+        dropzone.addEventListener(evtName, (e) => {
+          e.preventDefault();
+          dropzone.classList.remove("border-sky-400", "bg-sky-950/20");
+        });
+      });
+      dropzone.addEventListener("drop", (e) => {
+        const file = e.dataTransfer?.files?.[0];
+        if (!file) return;
+        if (labelArchivo) labelArchivo.textContent = `Archivo arrastrado: ${file.name}`;
+        const reader = new FileReader();
+        reader.onload = (evt) => {
+          const text = evt.target.result;
+          if (textareaPegado) textareaPegado.value = text;
+          analizarDatos(text);
+        };
+        reader.readAsText(file, "UTF-8");
+      });
+    }
+
+    if (btnLimpiar) {
+      btnLimpiar.addEventListener("click", () => {
+        if (textareaPegado) textareaPegado.value = "";
+        if (inputArchivo) inputArchivo.value = "";
+        if (labelArchivo) labelArchivo.textContent = "Haz clic o arrastra tu archivo aquí";
+        if (wrapperPreview) wrapperPreview.classList.add("hidden");
+        this.masivoValidos = [];
+      });
+    }
+
+    const analizarDatos = (rawText) => {
+      if (!rawText || !rawText.trim()) {
+        this.mostrarToast("Ingresa datos o sube un archivo.");
+        return;
+      }
+
+      const cedulasExistentes = new Set(
+        this.store.electores.map(e => (e.cedula || "").replace(/\D/g, "")).filter(Boolean)
+      );
+
+      const lines = rawText.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+      if (lines.length === 0) {
+        this.mostrarToast("No se encontraron líneas de datos.");
+        return;
+      }
+
+      const cedulasEnLote = new Set();
+      const validos = [];
+      let countDuplicados = 0;
+      let countErrores = 0;
+      const previewRows = [];
+
+      lines.forEach((line, idx) => {
+        let cols = [];
+        if (line.includes("\t")) {
+          cols = line.split("\t");
+        } else if (line.includes(";")) {
+          cols = line.split(";");
+        } else {
+          const regex = /(?:,|\n|^)("(?:(?:"")*[^"]*)*"|[^",\n]*|(?:\n|$))/g;
+          let match;
+          const row = [];
+          while ((match = regex.exec(line)) !== null && match.index < line.length) {
+            let val = match[1] || "";
+            if (val.startsWith('"') && val.endsWith('"')) {
+              val = val.slice(1, -1).replace(/""/g, '"');
+            }
+            row.push(val.trim());
+          }
+          cols = row.length > 0 ? row : line.split(",");
+        }
+
+        cols = cols.map(c => (c || "").trim().replace(/^["']|["']$/g, ""));
+
+        const lineStr = line.toLowerCase();
+        if (idx === 0 && (lineStr.includes("cedula") || lineStr.includes("cédula") || lineStr.includes("nombre"))) {
+          return;
+        }
+
+        if (cols.length === 0 || (cols.length === 1 && !cols[0])) return;
+
+        let nombre = "";
+        let rawCedula = "";
+        let telefono = "";
+        let voto = "duro";
+        let edad = null;
+        let profesion = "";
+        let sector = "La Puente Sector 1 (Plaza)";
+        let subParroquia = "Sub-Parroquia 6 • La Puente (Eje Central)";
+        let centro = "Cruz Hernández Quijada";
+
+        const col0SoloDigitos = cols[0].replace(/\D/g, "");
+        const esCol0Cedula = /^(V|E|J)?[-.\s]?\d{5,9}$/i.test(cols[0]) || (col0SoloDigitos.length >= 6 && col0SoloDigitos.length <= 9 && !/[a-zA-Z\s]{4,}/.test(cols[0]));
+
+        if (esCol0Cedula) {
+          rawCedula = cols[0];
+          nombre = cols[1] || "";
+          telefono = cols[2] || "";
+          if (cols[3]) {
+            const v = cols[3].toLowerCase();
+            if (v.includes("bland")) voto = "blando";
+            else if (v.includes("nuev")) voto = "nuevo";
+            else if (v.includes("dur")) voto = "duro";
+            else if (/^\d+$/.test(cols[3])) edad = parseInt(cols[3]);
+          }
+          if (cols[4] && !edad && /^\d+$/.test(cols[4])) edad = parseInt(cols[4]);
+          if (cols[5]) profesion = cols[5];
+          if (cols[6]) sector = cols[6];
+          if (cols[7]) subParroquia = cols[7];
+          if (cols[8]) centro = cols[8];
+        } else {
+          nombre = cols[0] || "";
+          rawCedula = cols[1] || "";
+          telefono = cols[2] || "";
+          if (cols[3]) {
+            const v = cols[3].toLowerCase();
+            if (v.includes("bland")) voto = "blando";
+            else if (v.includes("nuev")) voto = "nuevo";
+            else if (v.includes("dur")) voto = "duro";
+          }
+          if (cols[4] && /^\d+$/.test(cols[4])) edad = parseInt(cols[4]);
+          if (cols[5]) profesion = cols[5];
+          if (cols[6]) sector = cols[6];
+          if (cols[7]) subParroquia = cols[7];
+          if (cols[8]) centro = cols[8];
+        }
+
+        const digitos = rawCedula.replace(/\D/g, "");
+        const tipoDoc = /E/i.test(rawCedula) ? "E" : "V";
+        const cedulaFormateada = digitos ? `${tipoDoc}-${digitos}` : "";
+
+        if (!nombre || nombre.length < 3 || !digitos || digitos.length < 5) {
+          countErrores++;
+          previewRows.push({
+            status: "error",
+            cedula: cedulaFormateada || rawCedula || "S/C",
+            nombre: nombre || "Fila incompleta",
+            sector: sector || "-",
+            voto: voto
+          });
+          return;
+        }
+
+        if (cedulasExistentes.has(digitos) || cedulasEnLote.has(digitos)) {
+          countDuplicados++;
+          previewRows.push({
+            status: "duplicado",
+            cedula: cedulaFormateada,
+            nombre: nombre,
+            sector: sector || "-",
+            voto: voto
+          });
+          return;
+        }
+
+        cedulasEnLote.add(digitos);
+        const electorValido = {
+          id: `god-masivo-${Date.now()}-${Math.floor(Math.random() * 10000)}-${idx}`,
+          nombreApellido: nombre.toUpperCase(),
+          cedula: cedulaFormateada,
+          telefono: telefono || "",
+          subParroquia: subParroquia,
+          sector: sector,
+          centroElectoral: centro,
+          edad: edad || null,
+          profesion: profesion || "",
+          clasificacionVoto: voto,
+          fechaRegistro: new Date().toISOString()
+        };
+
+        validos.push(electorValido);
+        previewRows.push({
+          status: "valido",
+          cedula: cedulaFormateada,
+          nombre: electorValido.nombreApellido,
+          sector: electorValido.sector,
+          voto: electorValido.clasificacionVoto
+        });
+      });
+
+      this.masivoValidos = validos;
+
+      const kpiValidos = document.getElementById("kpi-modal-validos");
+      const kpiDuplicados = document.getElementById("kpi-modal-duplicados");
+      const kpiInvalidos = document.getElementById("kpi-modal-invalidos");
+
+      if (kpiValidos) kpiValidos.textContent = validos.length;
+      if (kpiDuplicados) kpiDuplicados.textContent = countDuplicados;
+      if (kpiInvalidos) kpiInvalidos.textContent = countErrores;
+
+      if (wrapperPreview) wrapperPreview.classList.remove("hidden");
+
+      if (tbodyPreview) {
+        tbodyPreview.innerHTML = previewRows.slice(0, 50).map((r, i) => {
+          let badgeClass = "bg-emerald-950/60 text-emerald-400 border border-emerald-500/40";
+          let badgeText = "Válido";
+          if (r.status === "duplicado") {
+            badgeClass = "bg-amber-950/60 text-amber-400 border border-amber-500/40";
+            badgeText = "Duplicado";
+          } else if (r.status === "error") {
+            badgeClass = "bg-rose-950/60 text-rose-400 border border-rose-500/40";
+            badgeText = "Inválido";
+          }
+
+          let votoBadge = "🟢 Duro";
+          if (r.voto === "blando") votoBadge = "🟡 Blando";
+          else if (r.voto === "nuevo") votoBadge = "🔵 Nuevo";
+
+          return `
+            <tr class="hover:bg-white/5 transition">
+              <td class="p-2 text-center font-mono text-[10px] text-slate-400">${i + 1}</td>
+              <td class="p-2 font-mono font-bold text-white whitespace-nowrap">${r.cedula}</td>
+              <td class="p-2 font-semibold text-slate-200 truncate max-w-[140px]">${r.nombre}</td>
+              <td class="p-2 text-[10px] text-slate-300 truncate max-w-[120px]">${r.sector}</td>
+              <td class="p-2 text-center text-[10px] whitespace-nowrap">${votoBadge}</td>
+              <td class="p-2 text-center text-[10px]">
+                <span class="px-1.5 py-0.5 rounded text-[9px] font-bold ${badgeClass}">${badgeText}</span>
+              </td>
+            </tr>
+          `;
+        }).join("");
+      }
+
+      if (btnConfirmar && textConfirmar) {
+        if (validos.length > 0) {
+          btnConfirmar.disabled = false;
+          btnConfirmar.classList.remove("opacity-50", "pointer-events-none");
+          textConfirmar.textContent = `Inyectar ${validos.length} Electores`;
+        } else {
+          btnConfirmar.disabled = true;
+          btnConfirmar.classList.add("opacity-50", "pointer-events-none");
+          textConfirmar.textContent = `Sin electores válidos`;
+        }
+      }
+    };
+
+    if (btnAnalizar) {
+      btnAnalizar.addEventListener("click", () => {
+        const rawText = textareaPegado ? textareaPegado.value : "";
+        analizarDatos(rawText);
+      });
+    }
+
+    if (btnConfirmar) {
+      btnConfirmar.addEventListener("click", () => {
+        if (!this.masivoValidos || this.masivoValidos.length === 0) {
+          this.mostrarToast("No hay electores válidos para importar.");
+          return;
+        }
+
+        const resultado = this.store.importarElectores(this.masivoValidos);
+        this.actualizarUI();
+        this.mostrarToast(`✅ ${resultado.agregados} electores inyectados a la Central.`);
+        cerrarModal();
+
+        // Limpiar controles
+        if (textareaPegado) textareaPegado.value = "";
+        if (inputArchivo) inputArchivo.value = "";
+        if (labelArchivo) labelArchivo.textContent = "Haz clic o arrastra tu archivo aquí";
+        if (wrapperPreview) wrapperPreview.classList.add("hidden");
+        this.masivoValidos = [];
+      });
+    }
   }
 
   mostrarToast(mensaje) {
