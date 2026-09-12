@@ -22,80 +22,58 @@
   </script>
 
   <style>
-    /* Tipografía Gruesa y Alta Legibilidad para Operadores */
+    /* Tipografía Extra Gruesa y Máxima Legibilidad */
     body {
-      font-family: Arial, Helvetica, sans-serif;
-      background-color: #e2e8f0;
+      font-family: Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background-color: #f1f5f9;
       color: #000000;
-      font-size: 15px;
-      line-height: 1.4;
-      font-weight: 600;
+      font-size: 16px;
+      font-weight: 700;
+      margin: 0;
+      padding: 0;
     }
 
-    /* Tabla Simplificada, Espaciosa y con Letra Gruesa */
-    .simple-table {
+    /* Forzar eliminación de cualquier badge flotante que tape la pantalla */
+    #migato-user-badge {
+      display: none !important;
+    }
+
+    /* Tabla Amplia, Espaciosa y con Letra Gruesa */
+    .audit-table {
       width: 100%;
       border-collapse: collapse;
-      font-size: 14.5px;
       background-color: #ffffff;
     }
-    .simple-table th {
-      background-color: #1e3a5f;
+    .audit-table th {
+      background-color: #0f2b48;
       color: #ffffff;
+      font-size: 15px;
       font-weight: 900;
-      font-size: 13px;
       text-transform: uppercase;
-      letter-spacing: 0.04em;
-      border: 2px solid #0f2b48;
-      padding: 12px 14px;
+      letter-spacing: 0.03em;
+      border: 2px solid #081d33;
+      padding: 14px 16px;
       text-align: left;
     }
-    .simple-table td {
-      border: 1px solid #94a3b8;
-      padding: 12px 14px;
+    .audit-table td {
+      border: 2px solid #cbd5e1;
+      padding: 16px;
       vertical-align: middle;
       background-color: #ffffff;
       color: #000000;
     }
-    .simple-table tr:nth-child(even) td {
-      background-color: #f1f5f9;
+    .audit-table tr:nth-child(even) td {
+      background-color: #f8fafc;
     }
-    .simple-table tr:hover td {
+    .audit-table tr:hover td {
       background-color: #e2e8f0;
     }
 
-    /* Pestañas Grandes y Claras */
-    .nav-tab {
-      padding: 12px 24px;
-      font-size: 15px;
+    /* Botones Grandes de Fácil Lectura y Pulsación */
+    .btn-big {
+      font-size: 14px;
       font-weight: 900;
-      border: 2px solid #64748b;
-      border-bottom: none;
-      background-color: #cbd5e1;
-      color: #1e293b;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      margin-right: 4px;
-      text-transform: uppercase;
-      letter-spacing: 0.02em;
-    }
-    .nav-tab.active {
-      background-color: #ffffff;
-      color: #000000;
-      border-top: 4px solid #1e3a5f;
-      border-color: #1e3a5f #1e3a5f #ffffff #1e3a5f;
-      margin-bottom: -2px;
-      position: relative;
-      z-index: 10;
-    }
-
-    /* Botones de Mando Grandes y Robustos */
-    .btn-action {
-      font-size: 13px;
-      font-weight: 900;
-      padding: 10px 18px;
+      padding: 10px 20px;
       border-radius: 4px;
       cursor: pointer;
       display: inline-flex;
@@ -104,52 +82,61 @@
       gap: 8px;
       text-transform: uppercase;
       letter-spacing: 0.02em;
-      transition: all 0.15s ease-in-out;
+      border: 2px solid transparent;
+      text-decoration: none;
     }
-    .btn-action:hover {
-      transform: translateY(-1px);
+    .btn-big:hover {
+      opacity: 0.95;
     }
   </style>
 </head>
 <body class="min-h-screen flex flex-col antialiased">
 
   <!-- ============================================================== -->
-  <!-- 1. ENCABEZADO INSTITUCIONAL LIMPIO Y DIRECTO                   -->
+  <!-- 1. ENCABEZADO ÚNICO, LIMPIO Y SIN SATURACIÓN                    -->
   <!-- ============================================================== -->
-  <header class="bg-[#1e3a5f] text-white border-b-4 border-[#0f2b48] py-3 px-4 sm:px-6">
-    <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-3">
+  <header class="bg-[#0f2b48] text-white border-b-4 border-[#081d33] py-4 px-4 sm:px-8">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
       
-      <!-- Identificación del Sistema -->
-      <div class="flex items-center gap-3">
+      <!-- Título Directo -->
+      <div class="flex items-center gap-3.5">
         <div class="w-12 h-12 bg-white p-1 rounded border-2 border-white flex items-center justify-center shrink-0">
           <img src="../assets/logo-migato.png" alt="MIGATO" class="w-full h-full object-contain">
         </div>
         <div>
-          <div class="flex items-center gap-2">
-            <h1 class="text-xl sm:text-2xl font-black tracking-tight uppercase leading-none">
-              CONTROL DE PLANILLAS Y AUDITORÍA
+          <div class="flex items-center gap-2.5">
+            <h1 class="text-xl sm:text-2xl font-black uppercase tracking-tight text-white leading-none">
+              AUDITORÍA DE PLANILLAS
             </h1>
-            <span class="text-xs bg-amber-400 text-slate-950 font-black px-2 py-0.5 rounded font-mono">
+            <span class="text-xs bg-amber-400 text-black font-black px-2 py-0.5 rounded font-mono">
               MONAGAS 2026
             </span>
           </div>
-          <p class="text-xs sm:text-sm text-slate-200 font-bold mt-1">
-            Sala Situacional • Recepción de Actas por WhatsApp
+          <p class="text-xs sm:text-sm text-slate-300 font-bold mt-1">
+            Sala Situacional • Recepción de Actas y Planillas por WhatsApp
           </p>
         </div>
       </div>
 
-      <!-- Acciones Rápidas de la Central -->
-      <div class="flex items-center gap-2.5 flex-wrap">
-        <button onclick="exportToExcel()" class="btn-action bg-emerald-600 hover:bg-emerald-700 text-white border-2 border-emerald-800">
+      <!-- Resumen Inmediato: Pendientes y Botones de Acción -->
+      <div class="flex items-center gap-3 flex-wrap justify-center">
+        <!-- Indicador de Alerta de Pendientes -->
+        <div class="bg-amber-400 border-2 border-amber-500 text-black px-3.5 py-2 rounded flex items-center gap-2">
+          <span class="text-xs font-black uppercase">POR REVISAR:</span>
+          <span id="kpi-pendientes" class="text-2xl font-black font-mono">0</span>
+        </div>
+
+        <button onclick="exportToExcel()" class="btn-big bg-emerald-600 hover:bg-emerald-700 text-white border-emerald-800">
           <i data-lucide="file-spreadsheet" class="w-5 h-5"></i>
           <span>DESCARGAR EXCEL</span>
         </button>
-        <button onclick="window.location.reload()" class="btn-action bg-slate-700 hover:bg-slate-800 text-white border-2 border-slate-900">
+
+        <button onclick="window.location.reload()" class="btn-big bg-slate-700 hover:bg-slate-800 text-white border-slate-900">
           <i data-lucide="refresh-cw" class="w-4 h-4"></i>
           <span>ACTUALIZAR</span>
         </button>
-        <a href="../login.html" class="btn-action bg-red-700 hover:bg-red-800 text-white border-2 border-red-950">
+
+        <a href="../login.html" class="btn-big bg-red-700 hover:bg-red-800 text-white border-red-950">
           <i data-lucide="log-out" class="w-4 h-4"></i>
           <span>SALIR</span>
         </a>
@@ -158,266 +145,177 @@
     </div>
   </header>
 
-  <!-- Barra de Notificación de Estado -->
-  <div class="bg-[#0f2b48] text-white text-xs sm:text-sm font-bold px-4 py-2 flex items-center justify-between border-b border-slate-700">
-    <div class="max-w-7xl mx-auto w-full flex items-center justify-between">
-      <div class="flex items-center gap-2">
-        <span class="w-3 h-3 bg-emerald-400 rounded-full inline-block animate-pulse"></span>
-        <span class="text-emerald-300 uppercase font-black tracking-wide">RECEPTOR WHATSAPP ACTIVO:</span>
-        <span class="text-slate-200">Solo números autorizados en la Whitelist pueden enviar datos.</span>
+  <!-- ============================================================== -->
+  <!-- 2. RESUMEN COMPACTO DE 1 SOLA LÍNEA (NO GASTA ESPACIO)          -->
+  <!-- ============================================================== -->
+  <div class="bg-slate-200 border-b-2 border-slate-400 py-2.5 px-4 sm:px-8">
+    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3 text-sm font-black text-slate-900">
+      <div class="flex items-center gap-4 flex-wrap">
+        <div>
+          <span class="text-slate-600 font-bold uppercase text-xs">VOTANTES EN PADRÓN:</span>
+          <span id="kpi-certificados" class="text-emerald-800 font-mono text-base ml-1">0</span>
+        </div>
+        <span class="text-slate-400">|</span>
+        <div>
+          <span class="text-slate-600 font-bold uppercase text-xs">COBERTURA PARROQUIAS:</span>
+          <span id="kpi-cobertura" class="text-blue-900 font-mono text-base ml-1">0 / 44</span>
+          <span id="kpi-cobertura-pct" class="text-xs bg-blue-200 text-blue-950 px-1.5 py-0.5 rounded ml-1">0%</span>
+        </div>
+        <span class="text-slate-400">|</span>
+        <div>
+          <span class="text-slate-600 font-bold uppercase text-xs">TOTAL RECIBIDAS:</span>
+          <span id="kpi-total-planillas" class="text-black font-mono text-base ml-1">0</span>
+        </div>
       </div>
-      <div id="migato-user-badge" class="font-mono text-xs hidden md:block">
-        <!-- Usuario activo -->
+
+      <div class="text-xs font-bold text-emerald-800 flex items-center gap-1.5">
+        <span class="w-2.5 h-2.5 bg-emerald-600 rounded-full inline-block animate-pulse"></span>
+        <span>LÍNEA WHATSAPP ACTIVA (WHITELIST ESTRICTA)</span>
       </div>
     </div>
   </div>
 
   <!-- ============================================================== -->
-  <!-- 2. RESUMEN EN 3 NÚMEROS GRANDES (SIN SATURACIÓN)               -->
+  <!-- 3. CUERPO PRINCIPAL: BÚSQUEDA Y LISTA DE PLANILLAS              -->
   <!-- ============================================================== -->
-  <section class="max-w-7xl mx-auto w-full px-4 pt-4 pb-2">
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-      
-      <!-- CAJA 1: PENDIENTES POR AUDITAR (LO MÁS IMPORTANTE) -->
-      <div class="bg-amber-100 border-4 border-amber-500 rounded-md p-4 flex flex-col justify-between shadow-sm">
-        <div class="flex items-center justify-between">
-          <span class="text-sm font-black text-amber-950 uppercase tracking-wide">
-            1. PENDIENTES POR REVISAR
-          </span>
-          <span class="bg-amber-500 text-black text-xs font-black px-2 py-0.5 rounded">
-            ACCIÓN URGENTE
-          </span>
-        </div>
-        <div class="my-2 flex items-baseline justify-between">
-          <span id="kpi-pendientes" class="text-5xl font-black text-amber-950 font-mono">0</span>
-          <button onclick="showQuickAudit()" class="btn-action bg-amber-600 hover:bg-amber-700 text-white text-sm font-black border-2 border-amber-900 shadow">
-            REVISAR SIGUIENTE →
-          </button>
-        </div>
-        <p class="text-xs font-bold text-amber-900">
-          Planillas que necesitan verificación y firma
-        </p>
-      </div>
-
-      <!-- CAJA 2: ELECTORES CERTIFICADOS -->
-      <div class="bg-emerald-100 border-4 border-emerald-600 rounded-md p-4 flex flex-col justify-between shadow-sm">
-        <div class="flex items-center justify-between">
-          <span class="text-sm font-black text-emerald-950 uppercase tracking-wide">
-            2. ELECTORES EN PADRÓN
-          </span>
-          <span class="bg-emerald-600 text-white text-xs font-black px-2 py-0.5 rounded">
-            VALIDADOS
-          </span>
-        </div>
-        <div class="my-2">
-          <span id="kpi-certificados" class="text-5xl font-black text-emerald-950 font-mono">0</span>
-        </div>
-        <p class="text-xs font-bold text-emerald-900">
-          Votantes aprobados formalmente en Monagas
-        </p>
-      </div>
-
-      <!-- CAJA 3: TOTAL Y COBERTURA -->
-      <div class="bg-blue-100 border-4 border-blue-600 rounded-md p-4 flex flex-col justify-between shadow-sm">
-        <div class="flex items-center justify-between">
-          <span class="text-sm font-black text-blue-950 uppercase tracking-wide">
-            3. COBERTURA REGIONAL
-          </span>
-          <span id="kpi-cobertura-pct" class="bg-blue-600 text-white text-xs font-black px-2 py-0.5 rounded font-mono">
-            0%
-          </span>
-        </div>
-        <div class="my-2">
-          <span id="kpi-cobertura" class="text-5xl font-black text-blue-950 font-mono">0 / 44</span>
-        </div>
-        <p class="text-xs font-bold text-blue-900">
-          Parroquias con planillas recibidas (<span id="kpi-total-planillas">0</span> actas)
-        </p>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- ============================================================== -->
-  <!-- 3. BANDEJA PRINCIPAL DE PLANILLAS                              -->
-  <!-- ============================================================== -->
-  <main class="max-w-7xl mx-auto w-full px-4 pt-3 pb-12 flex-1">
+  <main class="max-w-7xl mx-auto w-full px-4 sm:px-8 py-5 flex-1 space-y-4">
     
-    <!-- Pestañas Grandes -->
-    <div class="flex items-end border-b-2 border-slate-400">
-      <button id="tab-btn-auditoria" onclick="switchTab('auditoria')" class="nav-tab active">
-        <i data-lucide="clipboard-list" class="w-5 h-5"></i>
-        <span>PLANILLAS DE CAMPO</span>
-        <span id="badge-pendientes-tab" class="bg-amber-500 text-black text-xs font-black px-2 py-0.5 rounded-full ml-1">0</span>
-      </button>
-
-      <button id="tab-btn-enlaces" onclick="switchTab('enlaces')" class="nav-tab">
-        <i data-lucide="phone-call" class="w-5 h-5"></i>
-        <span>NÚMEROS AUTORIZADOS (WHITELIST)</span>
-      </button>
-    </div>
-
-    <!-- CONTENEDOR 1: LISTADO DE PLANILLAS -->
-    <div id="tab-content-auditoria" class="bg-white border-2 border-t-0 border-slate-400 p-4 space-y-4">
+    <!-- Barra de Búsqueda y Filtros Simplificada -->
+    <div class="bg-white border-2 border-slate-300 p-3.5 rounded flex flex-col md:flex-row items-center justify-between gap-3 shadow-sm">
       
-      <!-- Barra de Filtros Rápida -->
-      <div class="bg-slate-100 border-2 border-slate-300 p-3 rounded flex flex-col sm:flex-row items-center justify-between gap-3">
-        
-        <!-- Búsqueda Grande -->
-        <div class="w-full sm:w-1/2">
-          <input type="text" id="input-search" oninput="applyFilters()" 
-                 placeholder="🔍 Buscar por nombre, cédula, parroquia o sector..." 
-                 class="w-full bg-white border-2 border-slate-400 px-3 py-2 text-sm font-bold text-black focus:outline-none focus:border-blue-700 rounded">
-        </div>
-
-        <!-- Botones de Filtro por Estado -->
-        <div class="flex items-center gap-2 w-full sm:w-auto flex-wrap">
-          <span class="text-xs font-black text-slate-700 uppercase">Mostrar:</span>
-          <button onclick="setFilterStatus('todos')" id="filter-btn-todos" class="btn-action bg-slate-800 text-white text-xs py-1.5 px-3">
-            TODAS
-          </button>
-          <button onclick="setFilterStatus('pendiente')" id="filter-btn-pendiente" class="btn-action bg-amber-500 hover:bg-amber-600 text-slate-950 text-xs py-1.5 px-3">
-            SOLO PENDIENTES
-          </button>
-          <button onclick="setFilterStatus('certificado')" id="filter-btn-certificado" class="btn-action bg-slate-200 hover:bg-slate-300 text-slate-800 text-xs py-1.5 px-3">
-            SOLO APROBADAS
-          </button>
-        </div>
-
+      <!-- Campo de Búsqueda Grande -->
+      <div class="w-full md:w-1/2">
+        <input type="text" id="input-search" oninput="applyFilters()" 
+               placeholder="🔍 Escriba un nombre, cédula, parroquia o sector..." 
+               class="w-full bg-slate-50 border-2 border-slate-400 px-3.5 py-2.5 text-base font-bold text-black focus:outline-none focus:border-blue-800 rounded">
       </div>
 
-      <!-- Tabla Limpia de 6 Columnas (Sin columnas innecesarias) -->
-      <div class="border-2 border-slate-400 overflow-x-auto">
-        <table class="simple-table">
-          <thead>
-            <tr>
-              <th class="w-28">CÓDIGO</th>
-              <th>PARROQUIA Y SECTOR</th>
-              <th>ENVIADO POR</th>
-              <th class="w-32 text-center">PERSONAS</th>
-              <th class="w-36 text-center">ESTADO</th>
-              <th class="w-40 text-center">ACCIÓN</th>
-            </tr>
-          </thead>
-          <tbody id="excel-table-body">
-            <!-- Filas dinámicas -->
-          </tbody>
-        </table>
-      </div>
-
-      <div class="text-xs text-slate-600 font-bold pt-1">
-        <span id="label-table-count">Mostrando 0 planillas</span>
+      <!-- Filtros Rápidos -->
+      <div class="flex items-center gap-2 w-full md:w-auto flex-wrap">
+        <span class="text-xs font-black text-slate-700 uppercase">Filtrar:</span>
+        <button onclick="setFilterStatus('todos')" id="filter-btn-todos" class="btn-big bg-slate-900 text-white text-xs py-2 px-3.5 border-black">
+          TODAS
+        </button>
+        <button onclick="setFilterStatus('pendiente')" id="filter-btn-pendiente" class="btn-big bg-amber-400 text-black text-xs py-2 px-3.5 border-amber-600 font-black">
+          ⏳ SOLO PENDIENTES
+        </button>
+        <button onclick="setFilterStatus('certificado')" id="filter-btn-certificado" class="btn-big bg-slate-200 text-slate-800 hover:bg-slate-300 text-xs py-2 px-3.5 border-slate-400 font-black">
+          ✅ SOLO APROBADAS
+        </button>
+        <button onclick="showWhitelistModal()" class="btn-big bg-slate-100 text-slate-700 hover:bg-slate-200 text-xs py-2 px-3 border-slate-400" title="Ver números de teléfono autorizados">
+          📞 WHITELIST
+        </button>
       </div>
 
     </div>
 
-    <!-- CONTENEDOR 2: TELÉFONOS AUTORIZADOS -->
-    <div id="tab-content-enlaces" class="bg-white border-2 border-t-0 border-slate-400 p-4 space-y-4 hidden">
-      <div class="border-b-2 border-slate-300 pb-2">
-        <h2 class="text-base font-black uppercase text-slate-900">
-          NÚMEROS DE WHATSAPP AUTORIZADOS (WHITELIST)
-        </h2>
-        <p class="text-xs text-slate-600 font-bold">
-          Cualquier mensaje que no provenga de estos teléfonos es rechazado automáticamente para evitar sabotaje o spam.
-        </p>
-      </div>
+    <!-- Tabla Principal: 5 Columnas Claras, Letras Grandes -->
+    <div class="border-2 border-slate-400 rounded overflow-x-auto shadow-sm bg-white">
+      <table class="audit-table">
+        <thead>
+          <tr>
+            <th class="w-32">CÓDIGO</th>
+            <th>PARROQUIA Y SECTOR</th>
+            <th>COORDINADOR REMITENTE</th>
+            <th class="w-28 text-center">PERSONAS</th>
+            <th class="w-36 text-center">ESTADO</th>
+            <th class="w-44 text-center">ACCIÓN</th>
+          </tr>
+        </thead>
+        <tbody id="excel-table-body">
+          <!-- Filas generadas dinámicamente -->
+        </tbody>
+      </table>
+    </div>
 
-      <div class="border-2 border-slate-400 overflow-x-auto">
-        <table class="simple-table">
-          <thead>
-            <tr>
-              <th class="w-12 text-center">N°</th>
-              <th>MUNICIPIO</th>
-              <th>PARROQUIA</th>
-              <th>COORDINADOR RESPONSABLE</th>
-              <th>NÚMERO TELEFÓNICO</th>
-              <th class="w-32 text-center">ESTADO</th>
-            </tr>
-          </thead>
-          <tbody id="whitelist-table-body">
-            <!-- Filas dinámicas -->
-          </tbody>
-        </table>
-      </div>
+    <div class="flex items-center justify-between text-xs font-bold text-slate-600 pt-1">
+      <span id="label-table-count">Mostrando 0 planillas</span>
+      <span>SALA DE AUDITORÍA Y CONTROL TERRITORIAL • MONAGAS 2026</span>
     </div>
 
   </main>
 
   <!-- ============================================================== -->
-  <!-- MODAL DE AUDITORÍA (REVISIÓN DE PLANILLA CLARA Y GRANDE)        -->
+  <!-- MODAL DE AUDITORÍA: REVISIÓN DE PLANILLA (LETRAS GRUESAS)      -->
   <!-- ============================================================== -->
-  <div id="modal-audit" class="fixed inset-0 z-50 bg-black/75 hidden items-center justify-center p-3 sm:p-6 overflow-y-auto">
-    <div class="bg-white border-4 border-[#1e3a5f] max-w-5xl w-full max-h-[95vh] flex flex-col rounded shadow-2xl">
+  <div id="modal-audit" class="fixed inset-0 z-50 bg-black/80 hidden items-center justify-center p-3 sm:p-6 overflow-y-auto">
+    <div class="bg-white border-4 border-[#0f2b48] max-w-5xl w-full max-h-[96vh] flex flex-col rounded shadow-2xl">
       
       <!-- Encabezado del Modal -->
-      <div class="bg-[#1e3a5f] text-white px-5 py-3 flex items-center justify-between border-b-2 border-slate-700">
+      <div class="bg-[#0f2b48] text-white px-5 py-3.5 flex items-center justify-between border-b-2 border-slate-800">
         <div>
-          <span class="text-xs text-amber-300 font-black font-mono uppercase">EXPEDIENTE DE AUDITORÍA:</span>
-          <h2 id="modal-report-id" class="text-xl font-black text-white font-mono leading-none">REP-2026-000</h2>
-          <p id="modal-report-title" class="text-xs text-slate-200 font-bold mt-1">Parroquia</p>
+          <span class="text-xs text-amber-300 font-black uppercase font-mono tracking-wider">EXPEDIENTE DE AUDITORÍA:</span>
+          <h2 id="modal-report-id" class="text-2xl font-black text-white font-mono leading-none">REP-2026-000</h2>
+          <p id="modal-report-title" class="text-sm text-slate-200 font-black mt-1">Parroquia</p>
         </div>
-        <button onclick="closeAuditModal()" class="bg-red-700 hover:bg-red-800 text-white font-black text-sm px-3 py-1.5 rounded cursor-pointer">
+        <button onclick="closeAuditModal()" class="bg-red-700 hover:bg-red-800 text-white font-black text-sm px-4 py-2 rounded border border-red-900 cursor-pointer">
           CERRAR [ ✕ ]
         </button>
       </div>
 
-      <!-- Ficha Rápida del Remitente -->
-      <div class="bg-slate-100 border-b-2 border-slate-300 px-5 py-2.5 text-xs font-bold text-slate-800 flex flex-wrap items-center justify-between gap-2">
-        <div>COORDINADOR: <strong id="modal-sender" class="text-black font-black">Nombre</strong></div>
-        <div>TELÉFONO: <strong id="modal-phone" class="text-blue-900 font-mono font-black">+58 414...</strong></div>
-        <div>SECTOR: <strong id="modal-location" class="text-black">Sector</strong></div>
+      <!-- Datos del Coordinador -->
+      <div class="bg-slate-100 border-b-2 border-slate-300 px-5 py-3 text-xs sm:text-sm font-bold text-slate-800 flex flex-wrap items-center justify-between gap-3">
+        <div>COORDINADOR: <strong id="modal-sender" class="text-black font-black text-sm">Carlos Gómez</strong></div>
+        <div>TELÉFONO: <strong id="modal-phone" class="text-blue-900 font-mono font-black text-sm">+58 414-XXXXXXX</strong></div>
+        <div>SECTOR: <strong id="modal-location" class="text-black font-bold">Sector</strong></div>
       </div>
 
-      <!-- Contenido en 2 Paneles Claros -->
+      <!-- Contenido en Dos Paneles de Alta Visibilidad -->
       <div class="flex-1 overflow-y-auto p-4 grid grid-cols-1 lg:grid-cols-2 gap-4 bg-slate-200">
         
-        <!-- Panel 1: Foto de la Planilla -->
-        <div class="bg-white border-2 border-slate-400 p-3 flex flex-col justify-between rounded">
+        <!-- Panel Izquierdo: Comprobante Físico -->
+        <div class="bg-white border-2 border-slate-400 p-3.5 flex flex-col justify-between rounded">
           <div>
-            <span class="text-xs font-black uppercase text-slate-800 block border-b-2 border-slate-300 pb-1 mb-2">
-              1. FOTO ORIGINAL ENVIADA POR WHATSAPP
-            </span>
-            <div class="bg-slate-100 border-2 border-slate-300 p-2 flex items-center justify-center min-h-[300px] overflow-hidden rounded">
-              <img id="modal-img-preview" src="../assets/logo-migato.png" alt="Planilla" class="max-h-[320px] w-auto object-contain border bg-white">
+            <div class="border-b-2 border-slate-300 pb-1.5 mb-2 flex items-center justify-between">
+              <span class="text-xs font-black uppercase text-slate-900">
+                1. FOTO ORIGINAL ENVIADA POR WHATSAPP
+              </span>
+              <span id="modal-img-caption" class="text-xs font-mono font-bold text-slate-500">foto.jpg</span>
+            </div>
+            <div class="bg-slate-100 border-2 border-slate-300 p-2 flex items-center justify-center min-h-[330px] overflow-hidden rounded">
+              <img id="modal-img-preview" src="../assets/logo-migato.png" alt="Planilla Original" class="max-h-[340px] w-auto object-contain border bg-white">
             </div>
           </div>
-          <p class="text-xs font-bold text-slate-600 mt-2 text-center">
-            Compare los nombres y cédulas con la imagen
+          <p class="text-xs font-bold text-slate-700 mt-2 text-center">
+            Coteje las firmas manuscritas y números de cédula con la imagen
           </p>
         </div>
 
-        <!-- Panel 2: Datos Extraídos (Editables) -->
-        <div class="bg-white border-2 border-slate-400 p-3 flex flex-col justify-between rounded">
+        <!-- Panel Derecho: Malla de Corrección de Personas -->
+        <div class="bg-white border-2 border-slate-400 p-3.5 flex flex-col justify-between rounded">
           <div>
-            <span class="text-xs font-black uppercase text-slate-800 block border-b-2 border-slate-300 pb-1 mb-2">
-              2. LISTA DE PERSONAS (CORRIJA SI HAY ERROR)
-            </span>
+            <div class="border-b-2 border-slate-300 pb-1.5 mb-2">
+              <span class="text-xs font-black uppercase text-slate-900">
+                2. LISTADO DE PERSONAS (EDITE DIRECTAMENTE SI HAY ERROR)
+              </span>
+            </div>
 
-            <div class="border-2 border-slate-300 overflow-x-auto max-h-[300px]">
-              <table class="simple-table text-xs">
+            <!-- Tabla de Personas sin texto cortado -->
+            <div class="border-2 border-slate-300 overflow-x-auto max-h-[320px] rounded">
+              <table class="w-full text-left font-bold text-xs border-collapse">
                 <thead>
-                  <tr class="bg-slate-800 text-white">
-                    <th class="w-8 text-center p-2">#</th>
-                    <th class="p-2">NOMBRE Y APELLIDO</th>
-                    <th class="w-32 p-2">CÉDULA</th>
-                    <th class="w-28 p-2">TELÉFONO</th>
+                  <tr class="bg-slate-800 text-white text-[11px] uppercase">
+                    <th class="w-8 text-center p-2.5">#</th>
+                    <th class="p-2.5 min-w-[180px]">NOMBRE Y APELLIDO</th>
+                    <th class="p-2.5 min-w-[130px]">CÉDULA</th>
+                    <th class="p-2.5 min-w-[130px]">TELÉFONO</th>
                   </tr>
                 </thead>
-                <tbody id="modal-electores-body">
-                  <!-- Celdas -->
+                <tbody id="modal-electores-body" class="divide-y divide-slate-300">
+                  <!-- Celdas con letra gruesa -->
                 </tbody>
               </table>
             </div>
           </div>
 
-          <!-- Botones Gigantes de Acción -->
+          <!-- Botones Gigantes de Decisión -->
           <div class="pt-4 border-t-2 border-slate-300 grid grid-cols-2 gap-3 mt-3">
-            <button onclick="handleRejectModal()" class="btn-action bg-red-700 hover:bg-red-800 text-white py-3 text-sm">
+            <button onclick="handleRejectModal()" class="btn-big bg-red-700 hover:bg-red-800 text-white py-3.5 text-sm">
               <i data-lucide="x-circle" class="w-5 h-5"></i>
               <span>RECHAZAR PLANILLA</span>
             </button>
 
-            <button onclick="handleCertifyModal()" class="btn-action bg-emerald-700 hover:bg-emerald-800 text-white py-3 text-sm">
+            <button onclick="handleCertifyModal()" class="btn-big bg-emerald-700 hover:bg-emerald-800 text-white py-3.5 text-sm">
               <i data-lucide="check-circle-2" class="w-5 h-5"></i>
               <span>APROBAR Y GUARDAR</span>
             </button>
@@ -430,8 +328,42 @@
     </div>
   </div>
 
+  <!-- MODAL DE WHITELIST (TELÉFONOS AUTORIZADOS) -->
+  <div id="modal-whitelist" class="fixed inset-0 z-50 bg-black/80 hidden items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-white border-4 border-[#0f2b48] max-w-3xl w-full p-5 rounded shadow-2xl space-y-3">
+      <div class="flex items-center justify-between border-b-2 border-slate-300 pb-2">
+        <h2 class="text-base font-black uppercase text-black">
+          LÍNEAS DE WHATSAPP AUTORIZADAS (WHITELIST)
+        </h2>
+        <button onclick="closeWhitelistModal()" class="bg-slate-800 text-white font-black text-xs px-3 py-1 rounded">
+          CERRAR [ ✕ ]
+        </button>
+      </div>
+      <p class="text-xs font-bold text-slate-700">
+        Solo estos coordinadores pueden enviar datos al bot. Si otra persona envía mensajes, el sistema los ignora.
+      </p>
+
+      <div class="border-2 border-slate-300 max-h-[350px] overflow-y-auto rounded">
+        <table class="w-full text-xs font-bold border-collapse">
+          <thead>
+            <tr class="bg-[#0f2b48] text-white">
+              <th class="p-2 text-center w-10">#</th>
+              <th class="p-2 text-left">MUNICIPIO</th>
+              <th class="p-2 text-left">PARROQUIA</th>
+              <th class="p-2 text-left">COORDINADOR</th>
+              <th class="p-2 text-left">TELÉFONO</th>
+            </tr>
+          </thead>
+          <tbody id="whitelist-table-body" class="divide-y divide-slate-200">
+            <!-- Filas -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
   <!-- Toast -->
-  <div id="toast" class="fixed bottom-6 right-6 z-50 transform transition-all duration-150 translate-y-20 opacity-0 pointer-events-none bg-[#0c2340] text-white px-5 py-3 border-2 border-slate-400 text-sm font-bold flex items-center gap-2 rounded shadow-2xl">
+  <div id="toast" class="fixed bottom-6 right-6 z-50 transform transition-all duration-150 translate-y-20 opacity-0 pointer-events-none bg-[#0f2b48] text-white px-5 py-3 border-2 border-slate-400 text-sm font-black flex items-center gap-2 rounded shadow-2xl">
     <span id="toast-icon">ℹ</span>
     <span id="toast-text">Acción completada.</span>
   </div>
@@ -465,27 +397,11 @@
       }, 2500);
     }
 
-    function switchTab(tabName) {
-      ['auditoria', 'enlaces'].forEach(t => {
-        const content = document.getElementById(`tab-content-${t}`);
-        const btn = document.getElementById(`tab-btn-${t}`);
-        if (t === tabName) {
-          content.classList.remove('hidden');
-          btn.classList.add('active');
-        } else {
-          content.classList.add('hidden');
-          btn.classList.remove('active');
-        }
-      });
-      if (window.lucide) lucide.createIcons();
-    }
-
     function renderStats() {
       const stats = MIGATO_AUDIT.getStats();
       document.getElementById('kpi-certificados').innerText = stats.totalElectoresCertificados.toLocaleString();
       document.getElementById('kpi-pendientes').innerText = stats.pendientesCount;
       document.getElementById('kpi-total-planillas').innerText = stats.totalPlanillas;
-      document.getElementById('badge-pendientes-tab').innerText = stats.pendientesCount;
 
       const pct = Math.round((stats.parroquiasActivas / stats.totalParroquiasMonagas) * 100);
       document.getElementById('kpi-cobertura').innerText = `${stats.parroquiasActivas} / ${stats.totalParroquiasMonagas}`;
@@ -497,9 +413,9 @@
       ['todos', 'pendiente', 'certificado'].forEach(s => {
         const btn = document.getElementById(`filter-btn-${s}`);
         if (s === status) {
-          btn.className = "btn-action bg-slate-900 text-white text-xs py-1.5 px-3 border-2 border-black";
+          btn.className = "btn-big bg-slate-900 text-white text-xs py-2 px-3.5 border-black";
         } else {
-          btn.className = "btn-action bg-slate-200 hover:bg-slate-300 text-slate-800 text-xs py-1.5 px-3 border-2 border-slate-400";
+          btn.className = "btn-big bg-slate-200 text-slate-800 hover:bg-slate-300 text-xs py-2 px-3.5 border-slate-400 font-black";
         }
       });
       renderSimpleTable();
@@ -532,8 +448,8 @@
       if (filtered.length === 0) {
         tbody.innerHTML = `
           <tr>
-            <td colspan="6" class="text-center py-8 text-slate-600 font-bold text-base bg-slate-50">
-              No hay planillas coincidentes.
+            <td colspan="6" class="text-center py-10 text-slate-700 font-black text-lg bg-slate-50">
+              No se encontraron planillas con los filtros actuales.
             </td>
           </tr>
         `;
@@ -545,46 +461,37 @@
         const isCertificado = r.estado === 'certificado';
         
         const statusBadge = isPendiente 
-          ? `<span class="px-3 py-1 bg-amber-200 text-amber-950 border-2 border-amber-500 font-black text-xs rounded uppercase">⏳ PENDIENTE</span>`
+          ? `<span class="px-3.5 py-1.5 bg-amber-300 text-amber-950 border-2 border-amber-600 font-black text-xs rounded uppercase inline-block">⏳ PENDIENTE</span>`
           : isCertificado 
-            ? `<span class="px-3 py-1 bg-emerald-200 text-emerald-950 border-2 border-emerald-600 font-black text-xs rounded uppercase">✅ APROBADA</span>`
-            : `<span class="px-3 py-1 bg-red-200 text-red-950 border-2 border-red-500 font-black text-xs rounded uppercase">❌ RECHAZADA</span>`;
+            ? `<span class="px-3.5 py-1.5 bg-emerald-200 text-emerald-950 border-2 border-emerald-700 font-black text-xs rounded uppercase inline-block">✅ APROBADA</span>`
+            : `<span class="px-3.5 py-1.5 bg-red-200 text-red-950 border-2 border-red-700 font-black text-xs rounded uppercase inline-block">❌ RECHAZADA</span>`;
 
         const countElectores = Array.isArray(r.electores) ? r.electores.length : 0;
 
         return `
           <tr>
-            <td class="font-black font-mono text-blue-900 text-sm">${r.id}</td>
+            <td class="font-black font-mono text-blue-900 text-base">${r.id}</td>
             <td>
-              <span class="text-base font-black text-black block leading-snug">${r.parroquiaNombre.toUpperCase()}</span>
-              <span class="text-xs font-bold text-slate-600">${r.munNombre} • ${r.sector}</span>
+              <span class="text-lg font-black text-black block leading-tight">${r.parroquiaNombre.toUpperCase()}</span>
+              <span class="text-xs font-bold text-slate-700">${r.munNombre} • ${r.sector}</span>
             </td>
             <td>
-              <span class="text-sm font-black text-slate-900 block leading-snug">${r.remitenteNombre}</span>
-              <span class="text-xs font-mono font-bold text-blue-900">${r.remitenteTlf}</span>
+              <span class="text-base font-black text-slate-900 block leading-tight">${r.remitenteNombre}</span>
+              <span class="text-xs font-mono font-black text-blue-900">${r.remitenteTlf}</span>
             </td>
-            <td class="text-center font-black font-mono text-lg text-black">
-              ${countElectores} <span class="text-xs font-bold text-slate-600 block">personas</span>
+            <td class="text-center font-black font-mono text-xl text-black">
+              ${countElectores}
+              <span class="text-[11px] font-bold text-slate-600 block uppercase">personas</span>
             </td>
             <td class="text-center">${statusBadge}</td>
             <td class="text-center">
-              <button onclick="openAuditModal('${r.id}')" class="btn-action bg-blue-800 hover:bg-blue-950 text-white text-xs py-2 px-3 border-2 border-blue-950">
+              <button onclick="openAuditModal('${r.id}')" class="btn-big bg-blue-800 hover:bg-blue-950 text-white text-xs py-2.5 px-4 border-2 border-blue-950">
                 REVISAR PLANILLA →
               </button>
             </td>
           </tr>
         `;
       }).join('');
-    }
-
-    function showQuickAudit() {
-      const reports = MIGATO_AUDIT.getReports();
-      const pendiente = reports.find(r => r.estado === 'pendiente');
-      if (pendiente) {
-        openAuditModal(pendiente.id);
-      } else {
-        showToast("No hay planillas pendientes por auditar.");
-      }
     }
 
     function openAuditModal(reportId) {
@@ -597,19 +504,20 @@
       document.getElementById('modal-sender').innerText = activeAuditReport.remitenteNombre;
       document.getElementById('modal-phone').innerText = activeAuditReport.remitenteTlf;
       document.getElementById('modal-location').innerText = `${activeAuditReport.parroquiaNombre} • ${activeAuditReport.sector}`;
+      document.getElementById('modal-img-caption').innerText = activeAuditReport.archivoNombre || 'planilla.jpg';
 
       const tbody = document.getElementById('modal-electores-body');
       tbody.innerHTML = (activeAuditReport.electores || []).map((e, idx) => `
-        <tr>
-          <td class="text-center font-black text-slate-700 p-2">${idx + 1}</td>
-          <td class="p-1">
-            <input type="text" value="${e.nombre || ''}" class="w-full bg-white border border-slate-400 p-1.5 text-xs font-black text-black elector-field-nombre">
+        <tr class="bg-white hover:bg-slate-50">
+          <td class="text-center font-black text-slate-800 p-2 text-sm">${idx + 1}</td>
+          <td class="p-1.5">
+            <input type="text" value="${e.nombre || ''}" class="w-full bg-slate-50 border-2 border-slate-300 p-2 text-sm font-black text-black rounded focus:border-blue-700 focus:bg-white elector-field-nombre">
           </td>
-          <td class="p-1">
-            <input type="text" value="${e.cedula || ''}" class="w-full bg-white border border-slate-400 p-1.5 text-xs font-black font-mono text-blue-900 elector-field-cedula">
+          <td class="p-1.5">
+            <input type="text" value="${e.cedula || ''}" class="w-full bg-slate-50 border-2 border-slate-300 p-2 text-sm font-black font-mono text-blue-900 rounded focus:border-blue-700 focus:bg-white elector-field-cedula">
           </td>
-          <td class="p-1">
-            <input type="text" value="${e.telefono || ''}" class="w-full bg-white border border-slate-400 p-1.5 text-xs font-bold font-mono text-black elector-field-telefono">
+          <td class="p-1.5">
+            <input type="text" value="${e.telefono || ''}" class="w-full bg-slate-50 border-2 border-slate-300 p-2 text-sm font-black font-mono text-slate-900 rounded focus:border-blue-700 focus:bg-white elector-field-telefono">
           </td>
         </tr>
       `).join('');
@@ -622,6 +530,16 @@
       document.getElementById('modal-audit').classList.add('hidden');
       document.getElementById('modal-audit').classList.remove('flex');
       activeAuditReport = null;
+    }
+
+    function showWhitelistModal() {
+      document.getElementById('modal-whitelist').classList.remove('hidden');
+      document.getElementById('modal-whitelist').classList.add('flex');
+    }
+
+    function closeWhitelistModal() {
+      document.getElementById('modal-whitelist').classList.add('hidden');
+      document.getElementById('modal-whitelist').classList.remove('flex');
     }
 
     function handleCertifyModal() {
@@ -661,13 +579,12 @@
       const tbody = document.getElementById('whitelist-table-body');
       const list = MIGATO_AUDIT.getWhitelist();
       tbody.innerHTML = list.map((item, idx) => `
-        <tr>
-          <td class="text-center font-black text-slate-700">${idx + 1}</td>
-          <td class="font-black text-black">${item.mun.toUpperCase()}</td>
-          <td class="font-black text-blue-900">${item.parroquia.toUpperCase()}</td>
-          <td class="font-bold text-slate-900">${item.responsable}</td>
-          <td class="font-mono font-black text-black">${item.telefono}</td>
-          <td class="text-center font-black text-emerald-800 text-xs bg-emerald-100 border border-emerald-400">HABILITADO</td>
+        <tr class="hover:bg-slate-50">
+          <td class="text-center font-black text-slate-700 p-2">${idx + 1}</td>
+          <td class="font-black text-black p-2">${item.mun.toUpperCase()}</td>
+          <td class="font-black text-blue-900 p-2">${item.parroquia.toUpperCase()}</td>
+          <td class="font-bold text-slate-900 p-2">${item.responsable}</td>
+          <td class="font-mono font-black text-black p-2">${item.telefono}</td>
         </tr>
       `).join('');
     }
@@ -689,7 +606,7 @@
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
-      showToast("Descarga de archivo Excel completada.");
+      showToast("Archivo Excel descargado.");
     }
   </script>
 </body>
