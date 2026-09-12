@@ -2,7 +2,8 @@
  * Motor Cartográfico Acelerado por GPU — Google Earth Pro Web (Monagas)
  * Integrado con Capas Jerárquicas Oficiales (INE 2021) y Edición de Vértices
  */
-import { GEO_ESTADO_OFICIAL, GEO_MUNICIPIOS_OFICIAL, GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=128";
+import { GEO_ESTADO_OFICIAL, GEO_MUNICIPIOS_OFICIAL, GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=130";
+import { CATALOGO_MONAGAS } from "./catalogoMonagas.js?v=130";
 
 export class EarthMapEngine {
   constructor(containerId, onCoordUpdate) {
@@ -455,11 +456,14 @@ export class EarthMapEngine {
     this.currentSectorVertices = null;
     this.currentSubParishVertices = null;
 
-    // Limpiar capas de detalle parroquial para vista municipal limpia
+    // Limpiar capas de detalle parroquial para vista municipal limpia y rápida (60 FPS)
     if (this.polygonsLayer) this.polygonsLayer.clearLayers();
     if (this.subParroquiasLayer) this.subParroquiasLayer.clearLayers();
     if (this.subParroquiaLabelsLayer) this.subParroquiaLabelsLayer.clearLayers();
     if (this.sectorLabelsLayer) this.sectorLabelsLayer.clearLayers();
+    if (this.routesLayer) this.routesLayer.clearLayers();
+    if (this.placemarksLayer) this.placemarksLayer.clearLayers();
+    if (this.leafletLayersMap) this.leafletLayersMap.clear();
 
     let coords = null;
     if (GEO_MUNICIPIOS_OFICIAL && GEO_MUNICIPIOS_OFICIAL.features) {
@@ -545,9 +549,9 @@ export class EarthMapEngine {
       });
 
       layer.bindTooltip(`
-        <div style="font-family:system-ui;font-size:12px;color:#ffffff;line-height:1.3;padding:3px 6px;">
+        <div style="font-family:system-ui;font-size:12px;color:#ffffff;line-height:1.3;padding:4px 8px;">
           <div style="font-weight:800;color:#38bdf8;">📍 Parroquia ${pName}</div>
-          <div style="font-size:10px;color:#94a3b8;">Clic para enfocar con velo blanco</div>
+          <div style="font-size:10px;color:#cbd5e1;">Haz clic para entrar y ver sectores</div>
         </div>
       `, {
         sticky: true,
@@ -556,33 +560,6 @@ export class EarthMapEngine {
       });
 
       this.layerMunicipioParroquias.addLayer(layer);
-
-      // Etiqueta visible e interactiva en el centroide de la parroquia
-      try {
-        const bounds = layer.getBounds();
-        if (bounds.isValid()) {
-          const center = bounds.getCenter();
-          const labelMarker = L.marker(center, {
-            icon: L.divIcon({
-              className: "parish-municipal-label",
-              html: `<div class="px-2.5 py-1 rounded-full text-[11px] font-black border shadow-xl cursor-pointer whitespace-nowrap transition transform hover:scale-110 flex items-center gap-1.5 bg-[#140e40]/95 text-sky-200 border-sky-400 hover:border-amber-400 hover:text-white" style="backdrop-filter: blur(4px);">
-                <span class="w-2 h-2 rounded-full bg-sky-400 shrink-0"></span>
-                <span>${pName}</span>
-              </div>`,
-              iconSize: null,
-              iconAnchor: [35, 12]
-            }),
-            interactive: true
-          });
-          labelMarker.on("click", (e) => {
-            L.DomEvent.stopPropagation(e);
-            if (window.earthApp?.selectParish) {
-              window.earthApp.selectParish(cleanMunId, pId, true);
-            }
-          });
-          this.layerMunicipioParroquias.addLayer(labelMarker);
-        }
-      } catch (e) {}
     });
   }
 
@@ -624,7 +601,32 @@ export class EarthMapEngine {
 
     const bPoly = this.renderSpotlightMask(coords, "#0284c7", "6, 4", 3);
     if (bPoly && flyCamera) {
-      this.map.flyToBounds(bPoly.getBounds(), { padding: [40, 40], duration: 1.2 });
+      const bounds = bPoly.getBounds();
+      const latDiff = Math.abs(bounds.getNorth() - bounds.getSouth());
+      const lngDiff = Math.abs(bounds.getEast() - bounds.getWest());
+
+      // Buscar si la parroquia tiene un centro poblado calibrado en el catálogo
+      let customCenter = null;
+      let customZoom = 12;
+
+      if (parishId && typeof CATALOGO_MONAGAS !== "undefined") {
+        for (const mun of CATALOGO_MONAGAS) {
+          const pFound = (mun.parroquias || []).find(p => p.id === parishId);
+          if (pFound && pFound.centro) {
+            customCenter = pFound.centro;
+            customZoom = pFound.zoom || 12;
+            break;
+          }
+        }
+      }
+
+      // Para parroquias rurales extensas (como La Pica que abarca 90 km hasta el delta fluvial),
+      // volar directamente a su centro poblado para enfocar de inmediato sus calles y sectores
+      if (customCenter && (latDiff > 0.20 || lngDiff > 0.20)) {
+        this.map.flyTo(customCenter, customZoom || 12, { duration: 1.2 });
+      } else {
+        this.map.flyToBounds(bounds, { padding: [40, 40], duration: 1.2, maxZoom: 14 });
+      }
     }
   }
 

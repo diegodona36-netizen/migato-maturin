@@ -2,16 +2,16 @@
  * Controlador Principal — Google Earth Pro Web (Edición Estado Monagas)
  * Robusto, 100% Operativo y Totalmente Individualizado
  */
-import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=128";
-import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=128";
-import { getAllParishesForSelector } from "./usersCatalog.js?v=128";
-import { EarthStore } from "./earthStore.js?v=128";
-import { EarthMapEngine } from "./mapEngine.js?v=129";
-import { PropertiesDialog } from "./propertiesDialog.js?v=128";
-import { ToolsManager } from "./toolsManager.js?v=128";
-import { detectParishFromGeometry, SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=128";
-import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=128";
-import { getParishDemographics } from "./monagasDemographics.js?v=128";
+import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=130";
+import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=130";
+import { getAllParishesForSelector } from "./usersCatalog.js?v=130";
+import { EarthStore } from "./earthStore.js?v=130";
+import { EarthMapEngine } from "./mapEngine.js?v=130";
+import { PropertiesDialog } from "./propertiesDialog.js?v=130";
+import { ToolsManager } from "./toolsManager.js?v=130";
+import { detectParishFromGeometry, SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=130";
+import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=130";
+import { getParishDemographics } from "./monagasDemographics.js?v=130";
 import { 
   getMunicipios, 
   getParroquiasByMun, 
@@ -306,19 +306,8 @@ class EarthMonagasApp {
       this.activeSubParroquiaId = null;
       this.activeSectorId = null;
 
-      // Restricción de seguridad solo para operadores parroquiales no-admin
-      const currentUser = this.authManager?.getCurrentUser();
-      const isAdmin = !currentUser || currentUser.rol === "admin" || currentUser.nivel === "jefe" || currentUser.nivel === "general" || this.isGeneralMode;
-      const urlParams = new URLSearchParams(window.location.search);
-      const explicitParishParam = urlParams.get("p") || urlParams.get("parroquia") || urlParams.get("parish");
-
-      if (!isAdmin && explicitParishParam && currentUser && currentUser.parroquiaId) {
-        munId = currentUser.municipioId;
-        parishId = currentUser.parroquiaId;
-      }
-
-      // En modo administrativo o general, actualizar silenciosamente la URL para reflejar la parroquia activa
-      if (isAdmin && window.history && window.history.replaceState) {
+      // Navegación territorial abierta para todos los funcionarios y usuarios
+      if (window.history && window.history.replaceState) {
         try {
           const u = new URL(window.location.href);
           u.searchParams.set("p", parishId);
@@ -738,22 +727,35 @@ class EarthMonagasApp {
     if (focusLevel === "municipio") {
       if (hud && hudContent) {
         hud.style.display = "block";
-        hudContent.className = "flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#140e40]/95 border border-cyan-500/70 shadow-2xl backdrop-blur-md text-xs flex-wrap justify-center";
-        hudContent.innerHTML = `
-          <span class="inline-flex items-center gap-1.5 font-bold text-cyan-300">
-            <span class="w-2.5 h-2.5 rounded-full bg-cyan-400 shrink-0 animate-pulse"></span>
-            <span class="text-[10px] text-cyan-300 uppercase tracking-wider hidden sm:inline">Municipio:</span>
-            <span class="text-white font-extrabold max-w-[150px] sm:max-w-xs truncate">${munNom}</span>
-            <span class="text-[10px] text-cyan-300 font-bold hidden md:inline">(${parishCount} Parroquias)</span>
-          </span>
-          <div class="h-3 w-px bg-cyan-500/40"></div>
-          <span class="text-[11px] text-slate-300 hidden lg:inline font-medium">👉 Clic en cualquier parroquia para entrar</span>
-          <button type="button" onclick="window.earthApp?.focusEstado()"
-            class="px-2.5 py-1 rounded-full bg-amber-600 hover:bg-amber-500 text-[#0e092e] font-black text-[11px] flex items-center gap-1 shadow transition active:scale-95 cursor-pointer"
-            title="Ver todo el Estado Monagas">
-            <i data-lucide="map" class="w-3.5 h-3.5 shrink-0"></i>
-            <span>Ver Estado Monagas</span>
+        hudContent.className = "flex flex-col items-center gap-1.5 px-4 py-2 rounded-2xl bg-[#140e40]/95 border border-cyan-500/70 shadow-2xl backdrop-blur-md text-xs max-w-[95vw]";
+        
+        const parishButtons = (munObj?.parroquias || []).map(p => `
+          <button type="button" onclick="window.earthApp?.selectParish('${this.selectedMunId}', '${p.id}', true)"
+            class="px-2.5 py-1 rounded-full font-bold text-[11px] transition active:scale-95 cursor-pointer border shadow-sm ${this.selectedParishId === p.id ? 'bg-sky-600 text-white border-sky-300 ring-2 ring-sky-400/50' : 'bg-[#1e1458] text-sky-200 border-sky-500/30 hover:bg-[#2e1f88] hover:text-white hover:border-amber-400'}"
+            title="Entrar a Parroquia ${p.nombre}">
+            <span>📍 ${p.nombre}</span>
           </button>
+        `).join("");
+
+        hudContent.innerHTML = `
+          <div class="flex items-center gap-2 flex-wrap justify-center">
+            <span class="inline-flex items-center gap-1.5 font-bold text-cyan-300">
+              <span class="w-2.5 h-2.5 rounded-full bg-cyan-400 shrink-0 animate-pulse"></span>
+              <span class="text-[10px] text-cyan-300 uppercase tracking-wider hidden sm:inline">Municipio:</span>
+              <span class="text-white font-extrabold text-sm">${munNom}</span>
+              <span class="text-[10px] text-cyan-300 font-bold">(${parishCount} Parroquias)</span>
+            </span>
+            <div class="h-3 w-px bg-cyan-500/40 hidden sm:block"></div>
+            <button type="button" onclick="window.earthApp?.focusEstado()"
+              class="px-2.5 py-1 rounded-full bg-amber-600 hover:bg-amber-500 text-[#0e092e] font-black text-[11px] flex items-center gap-1 shadow transition active:scale-95 cursor-pointer ml-1"
+              title="Ver todo el Estado Monagas">
+              <i data-lucide="map" class="w-3.5 h-3.5 shrink-0"></i>
+              <span>Ver Estado Monagas</span>
+            </button>
+          </div>
+          <div class="flex items-center gap-1.5 flex-wrap justify-center pt-1.5 border-t border-cyan-500/30 w-full max-h-[85px] overflow-y-auto custom-scrollbar">
+            ${parishButtons}
+          </div>
         `;
       }
 

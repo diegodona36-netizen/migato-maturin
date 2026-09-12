@@ -115,16 +115,13 @@ export class AuthManager {
     return this.currentUser;
   }
 
-  // Verifica si el usuario puede ver y editar una parroquia específica
+  // Verifica si el usuario puede ver una parroquia específica (libre navegación para todos)
   canAccessParish(munId, parishId) {
-    if (!this.currentUser) return true;
-    if (this.currentUser.rol === "admin") return true;
-    return this.currentUser.parroquiaId === parishId;
+    return true;
   }
 
-  // Verifica si el usuario tiene permiso de cambiar de parroquia
+  // Verifica si el usuario tiene permiso de cambiar de parroquia (libre navegación para todos)
   canSwitchParish() {
-    if (!this.currentUser) return true;
-    return this.currentUser.rol === "admin";
+    return true;
   }
 }
