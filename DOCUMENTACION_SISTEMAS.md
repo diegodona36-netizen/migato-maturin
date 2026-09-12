@@ -11,7 +11,7 @@ La presente suite de sistemas ha sido diseñada bajo un principio de **compartim
 
 ### Pilares Fundamentales:
 1. **Compartimentación Estricta:** Cada responsable de parroquia recibe un enlace directo y exclusivo. Al ingresar, el sistema no muestra menús desplegables con otras parroquias ni herramientas complejas innecesarias.
-2. **Protección Absoluta de la Militancia:** Se prohíbe el registro de datos personales (cero nombres, cero cédulas, cero números de teléfono). Toda la carga es **estrictamente numérica comunal** (casas, familias, habitantes, votantes estimados y escuela CNE asignada).
+2. **Protección Absoluta de la Militancia:** Se prohíbe el registro de datos personales (cero nombres, cero cédulas, cero números de teléfono). Toda la carga es **estrictamente numérica sectorial** (casas, familias, habitantes, votantes estimados y escuela CNE asignada).
 3. **Centralización en Dirección General:** Solo la Dirección General cuenta con la visión consolidada (13 Municipios, 44 Parroquias, 175 Centros y 361 Mesas Electorales).
 
 ---
@@ -30,7 +30,7 @@ flowchart TD
     subgraph OP["👤 MILITANCIA / OPERADOR DE CAMPO (Celda Parroquial)"]
         D -->|Recibe Link Privado| E["Acceso Silencioso (/earth-monagas/?p=id)"]
         E -->|Auto-Autenticación| F["Vista Exclusiva de su Parroquia"]
-        F --> G["Carga Numérica Comunal"]
+        F --> G["Carga Numérica Sectorial"]
         G -.->|Sin nombres ni cédulas| H["Casas, Familias, Habitantes, Votantes"]
         G -.->|Vinculación| I["Asignación de Centro CNE de la Parroquia"]
     end
@@ -83,7 +83,7 @@ flowchart TD
 
 ### MÓDULO 2: CARTOGRAFÍA SATELITAL Y MILITANCIA (MIGATO EARTH)
 - **Ruta Web:** `/earth-monagas/`
-- **Propósito:** Georreferenciación 3D satelital de ejes comunales y sectores territoriales.
+- **Propósito:** Georreferenciación 3D satelital de ejes territoriales y sectores vecinales.
 - **Comportamiento por Rol (RBAC):**
 
 #### A. Modo Militancia (Operador de Parroquia)
@@ -93,7 +93,7 @@ flowchart TD
   - **No existe ningún selector ni lista desplegable con las otras 43 parroquias.**
   - Se oculta la barra de herramientas técnicas de dibujo (polígonos, rutas, marcadores avanzados).
   - Se abre automáticamente el panel de "Lugares" mostrando únicamente los sectores y ejes de su parroquia.
-  - El operador solo se enfoca en completar los 5 campos numéricos comunales y vincular el centro de votación oficial.
+  - El operador solo se enfoca en completar los 5 campos numéricos sectoriales y vincular el centro de votación oficial.
 
 #### B. Modo Dirección General (Administración Central)
 - **Activación:** Se accede con credenciales master (`admin` / `admin` o `?u=admin`).
@@ -137,7 +137,7 @@ Para blindar a los militantes y dirigentes territoriales ante cualquier eventual
 | Campo Permitido | Tipo de Dato | Justificación Operativa |
 |---|---|---|
 | **Casas / Viviendas** | Numérico entero | Estimación de densidad habitacional en el sector. |
-| **Familias** | Numérico entero | Conteo de hogares para logística y atención comunal. |
+| **Familias** | Numérico entero | Conteo de hogares para logística y atención comunitaria. |
 | **Habitantes** | Numérico entero | Población total censada en el polígono. |
 | **Votantes Estimados** | Numérico entero | Padrón militante comprometido en el sector. |
 | **Centro Electoral CNE** | Selector oficial | Escuela a la que acude el sector a votar el día D. |
@@ -174,5 +174,5 @@ Para blindar a los militantes y dirigentes territoriales ante cualquier eventual
 4. Se abre la conversación con el responsable parroquial con el mensaje oficial ya redactado.
 5. El responsable parroquial hace clic en el enlace desde su teléfono.
 6. El sistema abre la cartografía directamente en su parroquia, sin contraseñas visibles ni menús globales.
-7. El responsable selecciona o agrega su sector, anota los números comunales, vincula el centro electoral y guarda.
+7. El responsable selecciona o agrega su sector, anota los números sectoriales, vincula el centro electoral y guarda.
 8. La Dirección General ve reflejado el progreso en tiempo real en la sala situacional.

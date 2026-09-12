@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>MIGATO • Sala de Mando y Cartografía Estratégica</title>
-  <meta name="description" content="Plataforma de Inteligencia Electoral, Cartografía 3D y Monitoreo Territorial Comunal del Estado Monagas 2026.">
+  <meta name="description" content="Plataforma de Inteligencia Electoral, Cartografía 3D y Monitoreo Territorial y Electoral del Estado Monagas 2026.">
   <meta name="theme-color" content="#070a14">
   <link rel="icon" type="image/png" href="assets/logo-migato.png">
 
@@ -65,7 +65,8 @@
     }
     body {
       font-family: "Public Sans", sans-serif;
-      background-color: #070a14;
+      background: radial-gradient(circle at 50% -10%, #221868 0%, #140e40 40%, #0d0828 100%);
+      background-color: #0e092e;
       color: #f1f5f9;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
@@ -109,7 +110,7 @@
   <!-- ============================================================== -->
   <!-- 1. BARRA SUPERIOR INSTITUCIONAL                                -->
   <!-- ============================================================== -->
-  <header class="border-b border-slate-800/80 bg-slate-950/90 backdrop-blur-md sticky top-0 z-50">
+  <header class="border-b border-[#2d1f85] bg-[#140e40]/95 backdrop-blur-md sticky top-0 z-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-3">
       
       <!-- Brand & Title -->
@@ -127,13 +128,18 @@
               EN VIVO
             </span>
           </div>
-          <p class="text-[11px] text-slate-400 font-medium">Estado Monagas • 13 Municipios y 44 Parroquias</p>
+          <p class="text-[11px] text-blue-200 font-medium">Estado Monagas • 13 Municipios y 44 Parroquias</p>
         </div>
       </a>
 
       <!-- Quick Actions Header -->
       <nav class="flex items-center gap-2 sm:gap-3" aria-label="Navegación Rápida">
-        <a href="caracterizacion-voto/" class="px-3 py-1.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs rounded-xl transition flex items-center gap-1.5 shadow-md shadow-amber-500/20 active:scale-95" title="Caracterización Del Voto (10 Campos Oficiales)">
+        <a href="dossiers.html" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white font-black text-xs rounded-xl transition flex items-center gap-1.5 shadow-md shadow-blue-500/20 active:scale-95" title="Dossiers Ejecutivos Oficiales (4 Módulos)">
+          <i data-lucide="file-text" class="w-3.5 h-3.5"></i>
+          <span class="hidden sm:inline">Dossiers Oficiales</span>
+          <span class="sm:hidden">Dossiers</span>
+        </a>
+        <a href="caracterizacion-voto/" class="px-3 py-1.5 bg-amber-500 hover:bg-amber-400 text-[#0e092e] font-black text-xs rounded-xl transition flex items-center gap-1.5 shadow-md shadow-amber-500/20 active:scale-95" title="Caracterización Del Voto (10 Campos Oficiales)">
           <i data-lucide="user-check" class="w-3.5 h-3.5"></i>
           <span class="hidden sm:inline">Caracterización Voto</span>
           <span class="sm:hidden">Voto</span>
@@ -151,6 +157,10 @@
           <span class="hidden sm:inline">Satélite 3D</span>
           <span class="sm:hidden">Satélite</span>
         </a>
+        <a href="login.html" class="px-3 py-1.5 bg-[#1f165a] hover:bg-[#2b1f7c] border border-blue-400/40 text-amber-300 font-bold text-xs rounded-xl transition flex items-center gap-1.5 shadow-sm active:scale-95" title="Acceso Institucional por Roles">
+          <i data-lucide="shield" class="w-3.5 h-3.5 text-amber-400"></i>
+          <span class="hidden sm:inline">Acceso / Roles</span>
+        </a>
       </nav>
 
     </div>
@@ -166,19 +176,19 @@
       <h2 class="font-display text-3xl sm:text-5xl font-black text-white tracking-tight leading-tight">
         Sala de Mando y Cartografía Territorial
       </h2>
-      <p class="text-sm sm:text-base text-slate-300 leading-relaxed max-w-2xl mx-auto">
-        Centro de operaciones unificado para la auditoría electoral de 175 escuelas CNE, control cartográfico satelital 3D y balance comunal de los 13 municipios del Estado Monagas.
+      <p class="text-sm sm:text-base text-blue-100/90 leading-relaxed max-w-2xl mx-auto font-medium">
+        Centro de operaciones unificado para la auditoría electoral de 175 escuelas CNE, control cartográfico satelital 3D y balance territorial y poblacional de los 13 municipios del Estado Monagas.
       </p>
 
       <!-- Buscador Rápido Interactivo de Parroquias y Sectores -->
       <div class="pt-2 max-w-md mx-auto">
         <div class="relative flex items-center">
-          <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3.5 pointer-events-none"></i>
+          <i data-lucide="search" class="w-4 h-4 text-blue-300 absolute left-3.5 pointer-events-none"></i>
           <input 
             id="searchParroquia" 
             type="text" 
             placeholder="Buscar parroquia, sector o municipio... (ej. Godos, Boquerón, Caripito)"
-            class="w-full pl-10 pr-10 py-2.5 bg-slate-900 border border-slate-700 rounded-xl text-xs sm:text-sm text-white placeholder-slate-400 focus:border-sky-400 focus:bg-slate-950 transition"
+            class="w-full pl-10 pr-10 py-2.5 bg-[#140e40]/90 border border-[#2d1f85] rounded-xl text-xs sm:text-sm text-white placeholder-blue-300/60 focus:border-sky-400 focus:bg-[#18114a] transition"
           >
           <button 
             id="clearSearch" 
@@ -197,28 +207,28 @@
     <!-- ============================================================== -->
     <section aria-label="Indicadores Generales del Estado" class="grid grid-cols-2 md:grid-cols-4 gap-3">
       
-      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 text-center space-y-1 shadow-sm">
+      <div class="bg-[#18114a]/90 border border-[#2d1f85] rounded-2xl p-4 text-center space-y-1 shadow-lg shadow-indigo-950/40">
         <span class="text-[11px] font-semibold text-sky-400 uppercase tracking-wide block">Jurisdicción Total</span>
         <strong class="font-display text-2xl sm:text-3xl font-extrabold text-white block tabular-nums">13 Mun / 44 Par</strong>
-        <span class="text-[10px] text-slate-400 block">Cobertura 100% Monagas</span>
+        <span class="text-[10px] text-blue-200 block">Cobertura 100% Monagas</span>
       </div>
 
-      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 text-center space-y-1 shadow-sm">
-        <span class="text-[11px] font-semibold text-indigo-400 uppercase tracking-wide block">Centros Electorales</span>
+      <div class="bg-[#18114a]/90 border border-[#2d1f85] rounded-2xl p-4 text-center space-y-1 shadow-lg shadow-indigo-950/40">
+        <span class="text-[11px] font-semibold text-indigo-300 uppercase tracking-wide block">Centros Electorales</span>
         <strong class="font-display text-2xl sm:text-3xl font-extrabold text-white block tabular-nums">175 Escuelas</strong>
-        <span class="text-[10px] text-slate-400 block">Oficiales CNE Maturín</span>
+        <span class="text-[10px] text-blue-200 block">Oficiales CNE Maturín</span>
       </div>
 
-      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 text-center space-y-1 shadow-sm">
+      <div class="bg-[#18114a]/90 border border-[#2d1f85] rounded-2xl p-4 text-center space-y-1 shadow-lg shadow-indigo-950/40">
         <span class="text-[11px] font-semibold text-amber-400 uppercase tracking-wide block">Mesas de Votación</span>
         <strong class="font-display text-2xl sm:text-3xl font-extrabold text-white block tabular-nums">361 Mesas</strong>
-        <span class="text-[10px] text-slate-400 block">Escrutinio y Testigos</span>
+        <span class="text-[10px] text-blue-200 block">Escrutinio y Testigos</span>
       </div>
 
-      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 text-center space-y-1 shadow-sm">
+      <div class="bg-[#18114a]/90 border border-[#2d1f85] rounded-2xl p-4 text-center space-y-1 shadow-lg shadow-indigo-950/40">
         <span class="text-[11px] font-semibold text-emerald-400 uppercase tracking-wide block">Padrón Electoral</span>
         <strong class="font-display text-2xl sm:text-3xl font-extrabold text-white block tabular-nums">318.601</strong>
-        <span class="text-[10px] text-slate-400 block">Electores Registrados</span>
+        <span class="text-[10px] text-blue-200 block">Electores Registrados</span>
       </div>
 
     </section>
@@ -229,7 +239,7 @@
     <section aria-label="Módulos Operativos de Mando" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
 
       <!-- MÓDULO 1: DESPACHO DE ENLACES -->
-      <article class="bg-slate-900/90 border border-slate-800 hover:border-emerald-500/50 rounded-2xl p-5 flex flex-col justify-between space-y-5 transition shadow-sm">
+      <article class="bg-[#18114a]/95 border border-[#2d1f85] hover:border-emerald-500/50 rounded-2xl p-5 flex flex-col justify-between space-y-5 transition shadow-xl shadow-indigo-950/50">
         <div class="space-y-3">
           <div class="flex items-center justify-between">
             <div class="w-10 h-10 rounded-xl bg-emerald-950/80 border border-emerald-500/40 flex items-center justify-center text-emerald-400">
@@ -242,12 +252,12 @@
 
           <div class="space-y-1">
             <h3 class="font-display text-lg font-bold text-white tracking-tight">Despacho de Enlaces</h3>
-            <p class="text-xs text-slate-300 leading-relaxed">
+            <p class="text-xs text-blue-100/90 leading-relaxed">
               Distribución con 1 toque de enlaces y credenciales de acceso a los coordinadores de las 10 parroquias para carga independiente.
             </p>
           </div>
 
-          <ul class="space-y-1.5 pt-2 border-t border-slate-800 text-xs text-slate-300">
+          <ul class="space-y-1.5 pt-2 border-t border-[#2d1f85] text-xs text-blue-200">
             <li class="flex items-center gap-2">
               <i data-lucide="check-circle" class="w-3.5 h-3.5 text-emerald-400 shrink-0"></i>
               <span>10 Parroquias con enlaces aislados</span>
@@ -264,12 +274,12 @@
             <span>Abrir Despacho</span>
             <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
           </a>
-          <span class="block text-[10px] text-slate-500 text-center font-mono">Ruta: /despacho/</span>
+          <span class="block text-[10px] text-blue-300/60 text-center font-mono">Ruta: /despacho/</span>
         </div>
       </article>
 
       <!-- MÓDULO 2: CENSO TERRITORIAL EN CASCADA -->
-      <article class="bg-slate-900/90 border border-slate-800 hover:border-amber-500/50 rounded-2xl p-5 flex flex-col justify-between space-y-5 transition shadow-sm">
+      <article class="bg-[#18114a]/95 border border-[#2d1f85] hover:border-amber-500/50 rounded-2xl p-5 flex flex-col justify-between space-y-5 transition shadow-xl shadow-indigo-950/50">
         <div class="space-y-3">
           <div class="flex items-center justify-between">
             <div class="w-10 h-10 rounded-xl bg-amber-950/80 border border-amber-500/40 flex items-center justify-center text-amber-400">
@@ -281,13 +291,13 @@
           </div>
 
           <div class="space-y-1">
-            <h3 class="font-display text-lg font-bold text-white tracking-tight">Censo Comunal</h3>
-            <p class="text-xs text-slate-300 leading-relaxed">
+            <h3 class="font-display text-lg font-bold text-white tracking-tight">Censo Sectorial</h3>
+            <p class="text-xs text-blue-100/90 leading-relaxed">
               Consolidación en cascada de 5 niveles: Casas, Familias, Habitantes y Votantes organizados por sector, eje y parroquia.
             </p>
           </div>
 
-          <ul class="space-y-1.5 pt-2 border-t border-slate-800 text-xs text-slate-300">
+          <ul class="space-y-1.5 pt-2 border-t border-[#2d1f85] text-xs text-blue-200">
             <li class="flex items-center gap-2">
               <i data-lucide="check-circle" class="w-3.5 h-3.5 text-amber-400 shrink-0"></i>
               <span>Cómputo automático en tiempo real</span>
@@ -299,20 +309,17 @@
           </ul>
         </div>
 
-        <div class="space-y-1.5 pt-2">
+        <div class="space-y-1 pt-2">
           <a href="dashboard-campana/" class="w-full py-2.5 px-3 bg-amber-500 hover:bg-amber-400 text-[#050814] font-bold text-xs rounded-xl shadow transition flex items-center justify-center gap-1.5 active:scale-95">
             <span>Ver Tablero de Censo</span>
             <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
           </a>
-          <a href="demo-estadisticas/" class="w-full py-1.5 px-3 bg-amber-950/60 hover:bg-amber-900/80 text-amber-300 border border-amber-500/40 font-bold text-[11px] rounded-xl transition flex items-center justify-center gap-1.5" title="Versión de demostración técnica aislada con datos de prueba de todos los municipios y sectores">
-            <span>🧪 Demo de Ingeniería (Aislada)</span>
-          </a>
-          <span class="block text-[10px] text-slate-500 text-center font-mono">Ruta: /dashboard-campana/ • /demo-estadisticas/</span>
+          <span class="block text-[10px] text-blue-300/60 text-center font-mono">Ruta: /dashboard-campana/</span>
         </div>
       </article>
 
       <!-- MÓDULO 3: 175 ESCUELAS CNE -->
-      <article class="bg-slate-900/90 border border-slate-800 hover:border-indigo-500/50 rounded-2xl p-5 flex flex-col justify-between space-y-5 transition shadow-sm">
+      <article class="bg-[#18114a]/95 border border-[#2d1f85] hover:border-indigo-500/50 rounded-2xl p-5 flex flex-col justify-between space-y-5 transition shadow-xl shadow-indigo-950/50">
         <div class="space-y-3">
           <div class="flex items-center justify-between">
             <div class="w-10 h-10 rounded-xl bg-indigo-950/80 border border-indigo-500/40 flex items-center justify-center text-indigo-400">
@@ -325,19 +332,19 @@
 
           <div class="space-y-1">
             <h3 class="font-display text-lg font-bold text-white tracking-tight">175 Centros y Tablilla CNE</h3>
-            <p class="text-xs text-slate-300 leading-relaxed">
-              Catálogo oficial de escuelas con padrón, código CNE, mesas, simulación de actas QR en tiempo real y sábana de escrutinio.
+            <p class="text-xs text-blue-100/90 leading-relaxed">
+              Catálogo oficial de escuelas con padrón, código CNE, mesas, auditoría de actas QR en tiempo real y sábana de escrutinio.
             </p>
           </div>
 
-          <ul class="space-y-1.5 pt-2 border-t border-slate-800 text-xs text-slate-300">
+          <ul class="space-y-1.5 pt-2 border-t border-[#2d1f85] text-xs text-blue-200">
             <li class="flex items-center gap-2">
               <i data-lucide="check-circle" class="w-3.5 h-3.5 text-indigo-400 shrink-0"></i>
               <span>Tablilla y Sábana Electoral oficial</span>
             </li>
             <li class="flex items-center gap-2">
               <i data-lucide="check-circle" class="w-3.5 h-3.5 text-indigo-400 shrink-0"></i>
-              <span>Simulador de Actas CNE con código QR</span>
+              <span>Auditoría y Validación de Actas CNE con QR</span>
             </li>
             <li class="flex items-center gap-2">
               <i data-lucide="check-circle" class="w-3.5 h-3.5 text-indigo-400 shrink-0"></i>
@@ -347,16 +354,16 @@
         </div>
 
         <div class="space-y-1 pt-2">
-          <a href="centros-maturin/?v=122" class="w-full py-2.5 px-3 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs rounded-xl shadow transition flex items-center justify-center gap-1.5 active:scale-95">
+          <a href="centros-maturin/?v=137" class="w-full py-2.5 px-3 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs rounded-xl shadow transition flex items-center justify-center gap-1.5 active:scale-95">
             <span>Explorar Tablilla y Actas CNE</span>
             <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
           </a>
-          <span class="block text-[10px] text-slate-500 text-center font-mono">Ruta: /centros-maturin/?v=122</span>
+          <span class="block text-[10px] text-blue-300/60 text-center font-mono">Ruta: /centros-maturin/</span>
         </div>
       </article>
 
       <!-- MÓDULO 4: CARTOGRAFÍA Y MAPA SATELITAL -->
-      <article class="bg-slate-900/90 border border-slate-800 hover:border-sky-500/50 rounded-2xl p-5 flex flex-col justify-between space-y-5 transition shadow-sm">
+      <article class="bg-[#18114a]/95 border border-[#2d1f85] hover:border-sky-500/50 rounded-2xl p-5 flex flex-col justify-between space-y-5 transition shadow-xl shadow-indigo-950/50">
         <div class="space-y-3">
           <div class="flex items-center justify-between">
             <div class="w-10 h-10 rounded-xl bg-sky-950/80 border border-sky-500/40 flex items-center justify-center text-sky-400">
@@ -369,12 +376,12 @@
 
           <div class="space-y-1">
             <h3 class="font-display text-lg font-bold text-white tracking-tight">Mapa Satelital 3D</h3>
-            <p class="text-xs text-slate-300 leading-relaxed">
+            <p class="text-xs text-blue-100/90 leading-relaxed">
               Consola satelital estilo Google Earth Pro con cobertura completa de los 13 municipios y 44 parroquias del Estado.
             </p>
           </div>
 
-          <ul class="space-y-1.5 pt-2 border-t border-slate-800 text-xs text-slate-300">
+          <ul class="space-y-1.5 pt-2 border-t border-[#2d1f85] text-xs text-blue-200">
             <li class="flex items-center gap-2">
               <i data-lucide="check-circle" class="w-3.5 h-3.5 text-sky-400 shrink-0"></i>
               <span>Alta resolución e imágenes satelitales</span>
@@ -391,7 +398,7 @@
             <span>Abrir Satélite Master</span>
             <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
           </a>
-          <span class="block text-[10px] text-slate-500 text-center font-mono">Ruta: /earth-monagas/</span>
+          <span class="block text-[10px] text-blue-300/60 text-center font-mono">Ruta: /earth-monagas/</span>
         </div>
       </article>
 
@@ -400,24 +407,27 @@
     <!-- ============================================================== -->
     <!-- 4.1. SECCIÓN DESTACADA: CARACTERIZACIÓN DEL VOTO Y MILITANCIA   -->
     <!-- ============================================================== -->
-    <section aria-label="Caracterización Electoral Oficial" class="bg-gradient-to-r from-[#140e40] via-[#1d1554] to-amber-950/40 border-2 border-amber-500/60 rounded-3xl p-6 sm:p-7 shadow-2xl flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+    <!-- ============================================================== -->
+    <!-- 4.1. SECCIÓN DESTACADA: CARACTERIZACIÓN DEL VOTO Y MILITANCIA   -->
+    <!-- ============================================================== -->
+    <section aria-label="Caracterización Electoral Oficial" class="bg-gradient-to-r from-[#18114a] via-[#1d1554] to-[#251b68] border-2 border-amber-400/60 rounded-3xl p-6 sm:p-7 shadow-2xl shadow-indigo-950/60 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
       <div class="space-y-2 max-w-2xl">
-        <div class="flex items-center gap-2">
-          <span class="text-[10px] font-black uppercase text-amber-400 font-mono bg-amber-950 border border-amber-500/50 px-2.5 py-0.5 rounded-full">
+        <div class="flex items-center gap-2 flex-wrap">
+          <span class="text-[10px] font-black uppercase text-amber-300 font-mono bg-[#140e40] border border-amber-400/50 px-2.5 py-0.5 rounded-full">
             Instrumento Oficial de Campo
           </span>
-          <span class="text-xs text-sky-400 font-bold font-mono">10 Campos • Alto de Los Godos</span>
+          <span class="text-xs text-sky-300 font-bold font-mono">10 Campos • Cobertura Monagas (Modelo Piloto: Alto de Los Godos)</span>
         </div>
         <h3 class="font-display text-xl sm:text-2xl font-black text-white tracking-tight">
           Caracterización Del Voto y Registro de Militancia
         </h3>
-        <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
-          Digitalización exacta del papelógrafo de la mesa técnica de Alto de Los Godos. Captura rápida en calle para brigadistas, sábana de 10 columnas con clasificación de voto (<strong>Duro</strong>, <strong>Blando</strong>, <strong>Nuevo</strong>), métricas de persuasión y generación de planilla imprimible en papel.
+        <p class="text-xs sm:text-sm text-blue-100/90 leading-relaxed">
+          Digitalización exacta del papelógrafo oficial de mesa técnica. Captura rápida en calle para brigadistas, sábana de 10 columnas con clasificación de voto (<strong>Duro</strong>, <strong>Blando</strong>, <strong>Nuevo</strong>), métricas de persuasión y generación de planilla imprimible en papel.
         </p>
       </div>
 
       <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full md:w-auto shrink-0">
-        <a href="caracterizacion-voto/" class="px-5 py-3.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs uppercase tracking-wider rounded-xl shadow-lg shadow-amber-500/20 transition flex items-center justify-center gap-2 active:scale-95">
+        <a href="caracterizacion-voto/" class="px-5 py-3.5 bg-amber-500 hover:bg-amber-400 text-[#0e092e] font-black text-xs uppercase tracking-wider rounded-xl shadow-lg shadow-amber-500/20 transition flex items-center justify-center gap-2 active:scale-95 cursor-pointer">
           <i data-lucide="user-check" class="w-4 h-4"></i>
           <span>Abrir Caracterización</span>
         </a>
@@ -427,96 +437,96 @@
     <!-- ============================================================== -->
     <!-- 5. ACCESO DIRECTO RÁPIDO A LAS 10 PARROQUIAS DE MATURÍN       -->
     <!-- ============================================================== -->
-    <section class="p-6 bg-slate-900 border border-slate-800 rounded-3xl space-y-4">
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800/80 pb-3">
+    <section class="p-6 bg-[#18114a]/90 border border-[#2d1f85] rounded-3xl space-y-4 shadow-xl shadow-indigo-950/50">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#2d1f85] pb-3">
         <div>
           <h3 class="text-sm font-black text-white uppercase tracking-wider flex items-center gap-2">
             <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
             Acceso Rápido por Parroquias de Maturín
           </h3>
-          <p class="text-xs text-slate-400">Selecciona una parroquia para abrir el satélite directamente individualizado en ella:</p>
+          <p class="text-xs text-blue-200">Selecciona una parroquia para abrir el satélite directamente individualizado en ella:</p>
         </div>
-        <span id="parroquiaCounter" class="text-xs font-mono text-slate-400 self-start sm:self-auto">10 Parroquias</span>
+        <span id="parroquiaCounter" class="text-xs font-mono text-blue-200 font-bold self-start sm:self-auto">10 Parroquias</span>
       </div>
 
       <div id="parroquiasGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2.5 text-xs font-mono">
         
-        <a href="earth-monagas/?v=128&p=alto-de-los-godos" data-name="alto de los godos la puente" class="parroquia-card p-3 bg-slate-950 border border-slate-800 hover:border-emerald-500/60 rounded-xl transition flex flex-col justify-between group">
+        <a href="earth-monagas/?v=128&p=alto-de-los-godos" data-name="alto de los godos la puente" class="parroquia-card p-3 bg-[#130d38] border border-[#2d1f85] hover:border-sky-400/60 rounded-xl transition flex flex-col justify-between group shadow-sm">
           <div class="flex items-center justify-between mb-1">
-            <span class="font-display font-bold text-white group-hover:text-emerald-300 truncate">Alto de Los Godos</span>
-            <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-slate-500 group-hover:text-emerald-400 transition"></i>
+            <span class="font-display font-bold text-white group-hover:text-sky-300 truncate">Alto de Los Godos</span>
+            <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-blue-300 group-hover:text-sky-400 transition"></i>
           </div>
           <span class="text-[11px] text-emerald-400 font-semibold tabular-nums">81.085 Votantes</span>
         </a>
 
-        <a href="earth-monagas/?v=128&p=san-simon" data-name="san simon casco central" class="parroquia-card p-3 bg-slate-950 border border-slate-800 hover:border-emerald-500/60 rounded-xl transition flex flex-col justify-between group">
+        <a href="earth-monagas/?v=128&p=san-simon" data-name="san simon casco central" class="parroquia-card p-3 bg-[#130d38] border border-[#2d1f85] hover:border-sky-400/60 rounded-xl transition flex flex-col justify-between group shadow-sm">
           <div class="flex items-center justify-between mb-1">
-            <span class="font-display font-bold text-white group-hover:text-emerald-300 truncate">San Simón</span>
-            <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-slate-500 group-hover:text-emerald-400 transition"></i>
+            <span class="font-display font-bold text-white group-hover:text-sky-300 truncate">San Simón</span>
+            <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-blue-300 group-hover:text-sky-400 transition"></i>
           </div>
           <span class="text-[11px] text-emerald-400 font-semibold tabular-nums">64.502 Votantes</span>
         </a>
 
-        <a href="earth-monagas/?v=128&p=las-cocuizas" data-name="las cocuizas aeropuerto" class="parroquia-card p-3 bg-slate-950 border border-slate-800 hover:border-emerald-500/60 rounded-xl transition flex flex-col justify-between group">
+        <a href="earth-monagas/?v=128&p=las-cocuizas" data-name="las cocuizas aeropuerto" class="parroquia-card p-3 bg-[#130d38] border border-[#2d1f85] hover:border-sky-400/60 rounded-xl transition flex flex-col justify-between group shadow-sm">
           <div class="flex items-center justify-between mb-1">
-            <span class="font-display font-bold text-white group-hover:text-emerald-300 truncate">Las Cocuizas</span>
-            <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-slate-500 group-hover:text-emerald-400 transition"></i>
+            <span class="font-display font-bold text-white group-hover:text-sky-300 truncate">Las Cocuizas</span>
+            <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-blue-300 group-hover:text-sky-400 transition"></i>
           </div>
           <span class="text-[11px] text-emerald-400 font-semibold tabular-nums">58.986 Votantes</span>
         </a>
 
-        <a href="earth-monagas/?v=128&p=boqueron" data-name="boqueron tipuro" class="parroquia-card p-3 bg-slate-950 border border-slate-800 hover:border-emerald-500/60 rounded-xl transition flex flex-col justify-between group">
+        <a href="earth-monagas/?v=128&p=boqueron" data-name="boqueron tipuro" class="parroquia-card p-3 bg-[#130d38] border border-[#2d1f85] hover:border-sky-400/60 rounded-xl transition flex flex-col justify-between group shadow-sm">
           <div class="flex items-center justify-between mb-1">
-            <span class="font-display font-bold text-white group-hover:text-emerald-300 truncate">Boquerón</span>
-            <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-slate-500 group-hover:text-emerald-400 transition"></i>
+            <span class="font-display font-bold text-white group-hover:text-sky-300 truncate">Boquerón</span>
+            <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-blue-300 group-hover:text-sky-400 transition"></i>
           </div>
           <span class="text-[11px] text-emerald-400 font-semibold tabular-nums">42.274 Votantes</span>
         </a>
 
-        <a href="earth-monagas/?v=128&p=santa-cruz" data-name="santa cruz zona industrial" class="parroquia-card p-3 bg-slate-950 border border-slate-800 hover:border-emerald-500/60 rounded-xl transition flex flex-col justify-between group">
+        <a href="earth-monagas/?v=128&p=santa-cruz" data-name="santa cruz zona industrial" class="parroquia-card p-3 bg-[#130d38] border border-[#2d1f85] hover:border-sky-400/60 rounded-xl transition flex flex-col justify-between group shadow-sm">
           <div class="flex items-center justify-between mb-1">
-            <span class="font-display font-bold text-white group-hover:text-emerald-300 truncate">Santa Cruz</span>
-            <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-slate-500 group-hover:text-emerald-400 transition"></i>
+            <span class="font-display font-bold text-white group-hover:text-sky-300 truncate">Santa Cruz</span>
+            <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-blue-300 group-hover:text-sky-400 transition"></i>
           </div>
           <span class="text-[11px] text-emerald-400 font-semibold tabular-nums">29.747 Votantes</span>
         </a>
 
-        <a href="earth-monagas/?v=128&p=la-pica" data-name="la pica" class="parroquia-card p-3 bg-slate-950 border border-slate-800 hover:border-emerald-500/60 rounded-xl transition flex flex-col justify-between group">
+        <a href="earth-monagas/?v=128&p=la-pica" data-name="la pica" class="parroquia-card p-3 bg-[#130d38] border border-[#2d1f85] hover:border-sky-400/60 rounded-xl transition flex flex-col justify-between group shadow-sm">
           <div class="flex items-center justify-between mb-1">
-            <span class="font-display font-bold text-white group-hover:text-emerald-300 truncate">La Pica</span>
-            <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-slate-500 group-hover:text-emerald-400 transition"></i>
+            <span class="font-display font-bold text-white group-hover:text-sky-300 truncate">La Pica</span>
+            <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-blue-300 group-hover:text-sky-400 transition"></i>
           </div>
           <span class="text-[11px] text-emerald-400 font-semibold tabular-nums">14.076 Votantes</span>
         </a>
 
-        <a href="earth-monagas/?v=128&p=jusepin" data-name="jusepin" class="parroquia-card p-3 bg-slate-950 border border-slate-800 hover:border-emerald-500/60 rounded-xl transition flex flex-col justify-between group">
+        <a href="earth-monagas/?v=128&p=jusepin" data-name="jusepin" class="parroquia-card p-3 bg-[#130d38] border border-[#2d1f85] hover:border-sky-400/60 rounded-xl transition flex flex-col justify-between group shadow-sm">
           <div class="flex items-center justify-between mb-1">
-            <span class="font-display font-bold text-white group-hover:text-emerald-300 truncate">Jusepín</span>
-            <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-slate-500 group-hover:text-emerald-400 transition"></i>
+            <span class="font-display font-bold text-white group-hover:text-sky-300 truncate">Jusepín</span>
+            <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-blue-300 group-hover:text-sky-400 transition"></i>
           </div>
           <span class="text-[11px] text-emerald-400 font-semibold tabular-nums">9.056 Votantes</span>
         </a>
 
-        <a href="earth-monagas/?v=128&p=el-furrial" data-name="el furrial" class="parroquia-card p-3 bg-slate-950 border border-slate-800 hover:border-emerald-500/60 rounded-xl transition flex flex-col justify-between group">
+        <a href="earth-monagas/?v=128&p=el-furrial" data-name="el furrial" class="parroquia-card p-3 bg-[#130d38] border border-[#2d1f85] hover:border-sky-400/60 rounded-xl transition flex flex-col justify-between group shadow-sm">
           <div class="flex items-center justify-between mb-1">
-            <span class="font-display font-bold text-white group-hover:text-emerald-300 truncate">El Furrial</span>
-            <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-slate-500 group-hover:text-emerald-400 transition"></i>
+            <span class="font-display font-bold text-white group-hover:text-sky-300 truncate">El Furrial</span>
+            <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-blue-300 group-hover:text-sky-400 transition"></i>
           </div>
           <span class="text-[11px] text-emerald-400 font-semibold tabular-nums">8.966 Votantes</span>
         </a>
 
-        <a href="earth-monagas/?v=128&p=san-vicente" data-name="san vicente" class="parroquia-card p-3 bg-slate-950 border border-slate-800 hover:border-emerald-500/60 rounded-xl transition flex flex-col justify-between group">
+        <a href="earth-monagas/?v=128&p=san-vicente" data-name="san vicente" class="parroquia-card p-3 bg-[#130d38] border border-[#2d1f85] hover:border-sky-400/60 rounded-xl transition flex flex-col justify-between group shadow-sm">
           <div class="flex items-center justify-between mb-1">
-            <span class="font-display font-bold text-white group-hover:text-emerald-300 truncate">San Vicente</span>
-            <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-slate-500 group-hover:text-emerald-400 transition"></i>
+            <span class="font-display font-bold text-white group-hover:text-sky-300 truncate">San Vicente</span>
+            <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-blue-300 group-hover:text-sky-400 transition"></i>
           </div>
           <span class="text-[11px] text-emerald-400 font-semibold tabular-nums">7.425 Votantes</span>
         </a>
 
-        <a href="earth-monagas/?v=128&p=el-corozo" data-name="el corozo" class="parroquia-card p-3 bg-slate-950 border border-slate-800 hover:border-emerald-500/60 rounded-xl transition flex flex-col justify-between group">
+        <a href="earth-monagas/?v=128&p=el-corozo" data-name="el corozo" class="parroquia-card p-3 bg-[#130d38] border border-[#2d1f85] hover:border-sky-400/60 rounded-xl transition flex flex-col justify-between group shadow-sm">
           <div class="flex items-center justify-between mb-1">
-            <span class="font-display font-bold text-white group-hover:text-emerald-300 truncate">El Corozo</span>
-            <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-slate-500 group-hover:text-emerald-400 transition"></i>
+            <span class="font-display font-bold text-white group-hover:text-sky-300 truncate">El Corozo</span>
+            <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-blue-300 group-hover:text-sky-400 transition"></i>
           </div>
           <span class="text-[11px] text-emerald-400 font-semibold tabular-nums">2.484 Votantes</span>
         </a>
@@ -527,11 +537,11 @@
     <!-- ============================================================== -->
     <!-- 6. PROTOCOLO DE SEGURIDAD Y SEGMENTACIÓN DE ROLES              -->
     <!-- ============================================================== -->
-    <section aria-label="Protocolo de Seguridad Territorial" class="bg-slate-900 border border-slate-800 rounded-2xl p-5 sm:p-7 space-y-6">
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-4">
+    <section aria-label="Protocolo de Seguridad Territorial" class="bg-[#140e40]/90 border border-[#2d1f85] rounded-2xl p-5 sm:p-7 space-y-6 shadow-xl">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#2d1f85] pb-4">
         <div>
           <span class="text-[11px] font-mono font-bold text-sky-400 uppercase tracking-wider block">Arquitectura Operativa Segura</span>
-          <h3 class="font-display text-xl sm:text-2xl font-bold text-white">Segmentación de Roles y Protección Comunal</h3>
+          <h3 class="font-display text-xl sm:text-2xl font-bold text-white">Segmentación de Roles y Protección Territorial</h3>
         </div>
         <div class="inline-flex items-center gap-1.5 bg-emerald-950/80 border border-emerald-700/60 px-3 py-1 rounded-xl text-emerald-300 text-xs font-semibold self-start sm:self-auto">
           <i data-lucide="shield-check" class="w-4 h-4 text-emerald-400"></i>
@@ -542,7 +552,7 @@
       <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
 
         <!-- ROL MILITANCIA -->
-        <div class="bg-slate-950 border border-slate-800/90 rounded-xl p-5 space-y-3">
+        <div class="bg-[#18114a] border border-[#2d1f85] rounded-xl p-5 space-y-3 shadow-md">
           <div class="flex items-center justify-between">
             <div class="flex items-center gap-2">
               <div class="w-8 h-8 rounded-lg bg-sky-950 border border-sky-600/40 flex items-center justify-center text-sky-400">
@@ -576,7 +586,7 @@
         </div>
 
         <!-- ROL DIRECCIÓN GENERAL -->
-        <div class="bg-slate-950 border border-slate-800/90 rounded-xl p-5 space-y-3">
+        <div class="bg-[#18114a] border border-[#2d1f85] rounded-xl p-5 space-y-3 shadow-md">
           <div class="flex items-center justify-between">
             <div class="flex items-center gap-2">
               <div class="w-8 h-8 rounded-lg bg-indigo-950 border border-indigo-600/40 flex items-center justify-center text-indigo-400">
@@ -590,17 +600,17 @@
           </div>
 
           <p class="text-xs text-slate-300 leading-relaxed">
-            Consola administrativa con credenciales maestras para el comando de campaña del Gobernador y equipo SIG.
+            Acceso sin restricciones a nivel municipal y estadal para monitoreo satelital, descarga de cartografía y cruce con CNE.
           </p>
 
           <ul class="space-y-2 text-xs text-slate-300">
             <li class="flex items-start gap-2">
               <i data-lucide="check" class="w-4 h-4 text-indigo-400 shrink-0 mt-0.5"></i>
-              <span><strong>Control Monagas 100%:</strong> Visualización y supervisión de los 13 municipios y 44 parroquias.</span>
+              <span><strong>Visualización Consolidada:</strong> 10 Parroquias, 560+ sectores y métricas globales de Monagas.</span>
             </li>
             <li class="flex items-start gap-2">
               <i data-lucide="check" class="w-4 h-4 text-indigo-400 shrink-0 mt-0.5"></i>
-              <span><strong>Herramientas SIG Avanzadas:</strong> Trazado satelital, ajuste de polígonos, sub-parroquias y sectores.</span>
+              <span><strong>Cruce con Registro CNE:</strong> Análisis geoespacial de centros de votación y densidad electoral.</span>
             </li>
             <li class="flex items-start gap-2">
               <i data-lucide="check" class="w-4 h-4 text-indigo-400 shrink-0 mt-0.5"></i>
@@ -617,7 +627,7 @@
   <!-- ============================================================== -->
   <!-- 7. FOOTER INSTITUCIONAL                                        -->
   <!-- ============================================================== -->
-  <footer class="border-t border-slate-800 bg-slate-950 py-6 sm:py-8 text-xs text-slate-400">
+  <footer class="border-t border-[#2d1f85] bg-[#100b33] py-6 sm:py-8 text-xs text-slate-300">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
       
       <div class="flex items-center gap-2.5">
@@ -707,5 +717,7 @@
       });
     })();
   </script>
+  <script src="config.js"></script>
+  <script src="js/auth.js"></script>
 </body>
 </html>

@@ -217,10 +217,6 @@
         <button onclick="showWhitelistModal()" class="btn-excel bg-[#1e293b] hover:bg-[#334155] text-slate-300 border border-slate-600 font-black text-xs uppercase rounded" title="Ver enlaces autorizados">
           LÍNEAS WHITELIST
         </button>
-
-        <button onclick="showToolsModal()" class="btn-excel bg-[#1e293b] hover:bg-[#334155] text-amber-300 border border-amber-500/60 font-black text-xs uppercase rounded" title="Herramientas de diagnóstico y prueba de alta escala">
-          HERRAMIENTAS ESCALA
-        </button>
       </div>
 
     </div>
@@ -507,84 +503,6 @@
     </div>
   </div>
 
-  <!-- MODAL DE HERRAMIENTAS DE ESCALA Y PRUEBA DE ESTRÉS -->
-  <div id="modal-tools" class="fixed inset-0 z-50 bg-black/85 hidden items-center justify-center p-4 overflow-y-auto backdrop-blur-sm">
-    <div class="bg-[#0f172a] border-2 border-[#1e293b] max-w-2xl w-full p-5 rounded shadow-2xl space-y-4">
-      
-      <div class="flex items-center justify-between border-b border-[#1e293b] pb-2">
-        <div>
-          <h2 class="text-base font-black uppercase text-amber-400 flex items-center gap-2">
-            <i data-lucide="cpu" class="w-5 h-5"></i>
-            <span>HERRAMIENTAS DE RENDIMIENTO Y ALTA ESCALA</span>
-          </h2>
-          <p class="text-xs font-bold text-slate-400">
-            Diagnóstico de latencia y simulación de carga masiva para la Sala Situacional
-          </p>
-        </div>
-        <button onclick="closeToolsModal()" class="btn-excel bg-slate-800 text-slate-200 text-xs h-7 px-3">
-          ✕
-        </button>
-      </div>
-
-      <!-- Tarjetas de Métricas de Rendimiento en Tiempo Real -->
-      <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
-        <div class="bg-[#080e18] border border-[#1e293b] p-2.5 rounded">
-          <span class="text-[10px] font-black uppercase text-slate-400 block">PLANILLAS TOTAL</span>
-          <strong id="diag-total-planillas" class="text-base font-black font-mono text-white">0</strong>
-        </div>
-        <div class="bg-[#080e18] border border-[#1e293b] p-2.5 rounded">
-          <span class="text-[10px] font-black uppercase text-slate-400 block">ELECTORES INDEX</span>
-          <strong id="diag-total-electores" class="text-base font-black font-mono text-emerald-400">0</strong>
-        </div>
-        <div class="bg-[#080e18] border border-[#1e293b] p-2.5 rounded">
-          <span class="text-[10px] font-black uppercase text-slate-400 block">TIEMPO RENDER</span>
-          <strong id="diag-render-time" class="text-base font-black font-mono text-sky-400">< 2 ms</strong>
-        </div>
-        <div class="bg-[#080e18] border border-[#1e293b] p-2.5 rounded">
-          <span class="text-[10px] font-black uppercase text-slate-400 block">MEMORIA DOM</span>
-          <strong class="text-base font-black font-mono text-amber-400">25 Filas (Fijo)</strong>
-        </div>
-      </div>
-
-      <!-- Explicación Técnica para el Despacho -->
-      <div class="bg-[#0b1322] border border-slate-700/60 p-3 rounded text-xs font-bold text-slate-300 space-y-1">
-        <p class="text-amber-300 font-black uppercase text-[11px]">Protección contra congelamiento activa:</p>
-        <p>1. <strong>Paginación Fija:</strong> El navegador solo dibuja 25 filas en pantalla sin importar si hay 50 o 50.000 expedientes.</p>
-        <p>2. <strong>Búsqueda Indexada:</strong> Índice en memoria O(1) con 200ms de retardo (debounce) para no sobrecargar el procesador al escribir.</p>
-        <p>3. <strong>Liberación de Memoria de Fotos:</strong> Las fotos solo se descargan al pulsar [MOSTRAR COMPROBANTE] y se destruyen de la RAM al cerrar el expediente.</p>
-      </div>
-
-      <!-- Acciones de Prueba de Estrés -->
-      <div class="space-y-2 pt-1">
-        <span class="text-[11px] font-black uppercase text-slate-400 block">SIMULACIÓN DE CARGA MASIVA:</span>
-        
-        <div class="flex flex-wrap gap-2">
-          <button onclick="runStressTest(500)" class="btn-excel bg-[#0369a1] hover:bg-[#0284c7] text-white border-sky-400 text-xs">
-            <i data-lucide="zap" class="w-4 h-4"></i>
-            <span>GENERAR 500 PLANILLAS (12.500 ELECTORES)</span>
-          </button>
-
-          <button onclick="runStressTest(1000)" class="btn-excel bg-[#1e293b] hover:bg-[#334155] text-sky-200 border-sky-600 text-xs">
-            <span>GENERAR 1.000 PLANILLAS (25.000 ELECTORES)</span>
-          </button>
-        </div>
-
-        <div class="flex flex-wrap gap-2 pt-2 border-t border-[#1e293b]">
-          <button onclick="runResetSeed()" class="btn-excel bg-[#881337] hover:bg-[#9f1239] text-rose-100 border-rose-700 text-xs">
-            <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
-            <span>RESTABLECER A DATOS ORIGINALES (5 EXPEDIENTES)</span>
-          </button>
-
-          <button onclick="exportFullJsonBackup()" class="btn-excel bg-[#1e293b] hover:bg-[#334155] text-slate-200 border-slate-600 text-xs">
-            <i data-lucide="download" class="w-4 h-4"></i>
-            <span>DESCARGAR COPIA JSON</span>
-          </button>
-        </div>
-      </div>
-
-    </div>
-  </div>
-
   <!-- Toast -->
   <div id="toast" class="fixed bottom-6 right-6 z-50 transform transition-all duration-150 translate-y-20 opacity-0 pointer-events-none bg-[#090f1d] text-white px-5 py-3 border-2 border-emerald-500 text-sm font-black flex items-center gap-2 rounded shadow-2xl">
     <span id="toast-icon">ℹ</span>
@@ -750,13 +668,32 @@
       });
 
       if (pageReports.length === 0) {
-        tbody.innerHTML = `
-          <tr>
-            <td colspan="7" class="text-center py-10 text-slate-400 font-black text-base bg-[#0f172a]">
-              No se encontraron expedientes con los filtros seleccionados.
-            </td>
-          </tr>
-        `;
+        if (allReports.length === 0) {
+          tbody.innerHTML = `
+            <tr>
+              <td colspan="7" class="text-center py-14 text-slate-400 font-bold bg-[#0f172a]">
+                <div class="max-w-md mx-auto space-y-2.5">
+                  <div class="w-12 h-12 rounded-full bg-slate-800/80 border border-slate-700 mx-auto flex items-center justify-center text-slate-400">
+                    <i data-lucide="inbox" class="w-6 h-6"></i>
+                  </div>
+                  <h4 class="text-white text-base font-black uppercase tracking-tight">Sin expedientes en cola</h4>
+                  <p class="text-xs text-slate-400 leading-relaxed font-normal">
+                    Los reportes y planillas de caracterización enviados por los enlaces parroquiales vía WhatsApp o Buzón Territorial aparecerán aquí automáticamente para su auditoría y certificación oficial.
+                  </p>
+                </div>
+              </td>
+            </tr>
+          `;
+        } else {
+          tbody.innerHTML = `
+            <tr>
+              <td colspan="7" class="text-center py-10 text-slate-400 font-bold text-sm bg-[#0f172a]">
+                No se encontraron expedientes con los filtros seleccionados.
+              </td>
+            </tr>
+          `;
+        }
+        if (window.lucide) lucide.createIcons();
         return;
       }
 
@@ -804,7 +741,6 @@
 
       const t1 = performance.now();
       lastRenderDurationMs = Math.round(t1 - t0);
-      updateDiagCounters();
     }
 
     // Funciones de control de paginación
@@ -1108,57 +1044,7 @@
       isPhotoVisible = false;
     }
 
-    function showToolsModal() {
-      updateDiagCounters();
-      document.getElementById('modal-tools').classList.remove('hidden');
-      document.getElementById('modal-tools').classList.add('flex');
-    }
 
-    function closeToolsModal() {
-      document.getElementById('modal-tools').classList.add('hidden');
-      document.getElementById('modal-tools').classList.remove('flex');
-    }
-
-    function updateDiagCounters() {
-      const allReports = MIGATO_AUDIT.getReports();
-      let totalElectores = 0;
-      for (let i = 0; i < allReports.length; i++) {
-        if (Array.isArray(allReports[i].electores)) {
-          totalElectores += allReports[i].electores.length;
-        }
-      }
-
-      const pCount = document.getElementById('diag-total-planillas');
-      const eCount = document.getElementById('diag-total-electores');
-      const rTime = document.getElementById('diag-render-time');
-
-      if (pCount) pCount.innerText = allReports.length.toLocaleString();
-      if (eCount) eCount.innerText = totalElectores.toLocaleString();
-      if (rTime) rTime.innerText = `${lastRenderDurationMs} ms`;
-    }
-
-    function runStressTest(count = 500) {
-      showToast(`Generando ${count} expedientes (${(count * 25).toLocaleString()} electores)...`);
-      setTimeout(() => {
-        const t0 = performance.now();
-        MIGATO_AUDIT.generateStressTestData(count);
-        currentPage = 1;
-        renderStats();
-        renderSimpleTable();
-        const t1 = performance.now();
-        showToast(`Carga masiva completada en ${Math.round(t1 - t0)}ms. Rendimiento óptimo.`);
-        updateDiagCounters();
-      }, 40);
-    }
-
-    function runResetSeed() {
-      MIGATO_AUDIT.resetToSeedData();
-      currentPage = 1;
-      renderStats();
-      renderSimpleTable();
-      showToast("Padrón restablecido a los 5 expedientes base.");
-      updateDiagCounters();
-    }
 
     function exportFullJsonBackup() {
       const reports = MIGATO_AUDIT.getReports();

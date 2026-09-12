@@ -226,9 +226,9 @@ class VotoApp {
         if (btn) {
           filtroVoto.querySelectorAll("button").forEach(b => {
             b.classList.remove("bg-sky-600", "text-white", "font-black");
-            b.classList.add("bg-slate-800", "text-slate-400");
+            b.classList.add("bg-[#140e40]", "text-blue-200", "border", "border-[#2d1f85]");
           });
-          btn.classList.remove("bg-slate-800", "text-slate-400");
+          btn.classList.remove("bg-[#140e40]", "text-blue-200", "border", "border-[#2d1f85]");
           btn.classList.add("bg-sky-600", "text-white", "font-black");
           this.filtroClasificacion = btn.getAttribute("data-filter-voto");
           this.renderTablaSabana();
@@ -316,23 +316,23 @@ class VotoApp {
     [tabBtnCaptura, tabBtnSabana, tabBtnImpresion].forEach(b => {
       if (b) {
         b.classList.remove("border-amber-400", "text-amber-400", "bg-[#23176d]");
-        b.classList.add("border-transparent", "text-slate-400", "hover:text-slate-200");
+        b.classList.add("border-transparent", "text-blue-200", "hover:text-white", "hover:bg-[#1d1554]");
       }
     });
 
     if (tabName === "captura" && vistaCaptura && tabBtnCaptura) {
       vistaCaptura.classList.remove("hidden");
       tabBtnCaptura.classList.add("border-amber-400", "text-amber-400", "bg-[#23176d]");
-      tabBtnCaptura.classList.remove("border-transparent", "text-slate-400");
+      tabBtnCaptura.classList.remove("border-transparent", "text-blue-200");
     } else if (tabName === "sabana" && vistaSabana && tabBtnSabana) {
       vistaSabana.classList.remove("hidden");
       tabBtnSabana.classList.add("border-amber-400", "text-amber-400", "bg-[#23176d]");
-      tabBtnSabana.classList.remove("border-transparent", "text-slate-400");
+      tabBtnSabana.classList.remove("border-transparent", "text-blue-200");
       this.renderTablaSabana();
     } else if (tabName === "impresion" && vistaImpresion && tabBtnImpresion) {
       vistaImpresion.classList.remove("hidden");
       tabBtnImpresion.classList.add("border-amber-400", "text-amber-400", "bg-[#23176d]");
-      tabBtnImpresion.classList.remove("border-transparent", "text-slate-400");
+      tabBtnImpresion.classList.remove("border-transparent", "text-blue-200");
       this.renderPlanillaImprimible();
     }
 
@@ -463,14 +463,30 @@ class VotoApp {
       countFiltrados.textContent = `${lista.length} de ${this.store.electores.length} electores`;
     }
 
+    if (this.store.electores.length === 0) {
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="10" class="py-14 text-center text-blue-200 bg-[#140e40]/60">
+            <div class="max-w-md mx-auto space-y-2">
+              <i data-lucide="users" class="w-8 h-8 text-amber-400 mx-auto"></i>
+              <p class="text-sm font-bold text-white">No hay electores registrados aún</p>
+              <p class="text-xs text-blue-300/70">Utilice el formulario superior para registrar al primer elector de campo con su clasificación oficial (Duro, Blando o Nuevo).</p>
+            </div>
+          </td>
+        </tr>
+      `;
+      if (window.lucide) window.lucide.createIcons();
+      return;
+    }
+
     if (lista.length === 0) {
       tbody.innerHTML = `
         <tr>
-          <td colspan="10" class="py-12 text-center text-slate-400 bg-slate-900/40">
+          <td colspan="10" class="py-12 text-center text-blue-200 bg-[#140e40]/60">
             <div class="max-w-sm mx-auto space-y-2">
-              <i data-lucide="search-x" class="w-8 h-8 text-slate-500 mx-auto"></i>
-              <p class="text-sm font-bold text-slate-300">No se encontraron electores</p>
-              <p class="text-xs text-slate-500">Prueba ajustando los filtros de búsqueda o cambia el tipo de voto.</p>
+              <i data-lucide="search-x" class="w-8 h-8 text-blue-400 mx-auto"></i>
+              <p class="text-sm font-bold text-white">No se encontraron electores</p>
+              <p class="text-xs text-blue-300/70">Prueba ajustando los filtros de búsqueda o cambia el tipo de voto.</p>
             </div>
           </td>
         </tr>
@@ -496,9 +512,9 @@ class VotoApp {
       }
 
       return `
-        <tr class="border-b border-slate-800/80 hover:bg-[#1d1554]/30 transition group text-xs">
+        <tr class="border-b border-[#2d1f85]/60 hover:bg-[#1d1554]/50 transition group text-xs">
           <!-- 1. N° Correlativo -->
-          <td class="py-3 px-3 font-mono font-black text-amber-400 text-center bg-slate-950/40">
+          <td class="py-3 px-3 font-mono font-black text-amber-400 text-center bg-[#140e40]/70">
             ${index + 1}
           </td>
 
@@ -520,19 +536,19 @@ class VotoApp {
           </td>
 
           <!-- 4. Teléfono -->
-          <td class="py-3 px-3 font-mono text-slate-300 whitespace-nowrap">
-            ${e.telefono || '<span class="text-slate-600">--</span>'}
+          <td class="py-3 px-3 font-mono text-blue-200 whitespace-nowrap">
+            ${e.telefono || '<span class="text-blue-300/40">--</span>'}
           </td>
 
           <!-- 5. Sub-Parroquia -->
-          <td class="py-3 px-3 text-slate-300">
-            <span class="px-2 py-0.5 rounded-md bg-slate-900 border border-slate-700 text-[11px] font-semibold block truncate max-w-[180px]" title="${e.subParroquia}">
+          <td class="py-3 px-3 text-blue-200">
+            <span class="px-2 py-0.5 rounded-md bg-[#140e40] border border-[#2d1f85] text-[11px] font-semibold block truncate max-w-[180px]" title="${e.subParroquia}">
               ${e.subParroquia.replace("Sub-Parroquia ", "SP ")}
             </span>
           </td>
 
           <!-- 6. Centro Electoral CNE -->
-          <td class="py-3 px-3 text-slate-200">
+          <td class="py-3 px-3 text-blue-100">
             <span class="block truncate max-w-[200px] font-medium" title="${e.centroElectoral}">
               ${e.centroElectoral}
             </span>
@@ -540,17 +556,17 @@ class VotoApp {
 
           <!-- 7. Sector -->
           <td class="py-3 px-3 font-semibold text-amber-300 whitespace-nowrap">
-            ${e.sector || '<span class="text-slate-600">--</span>'}
+            ${e.sector || '<span class="text-blue-300/40">--</span>'}
           </td>
 
           <!-- 8. Edad -->
-          <td class="py-3 px-3 font-mono text-center font-bold text-slate-200">
-            ${e.edad || '<span class="text-slate-600">--</span>'}
+          <td class="py-3 px-3 font-mono text-center font-bold text-white">
+            ${e.edad || '<span class="text-blue-300/40">--</span>'}
           </td>
 
           <!-- 9. Profesión -->
-          <td class="py-3 px-3 text-slate-300 truncate max-w-[150px]" title="${e.profesion}">
-            ${e.profesion || '<span class="text-slate-600">--</span>'}
+          <td class="py-3 px-3 text-blue-200 truncate max-w-[150px]" title="${e.profesion}">
+            ${e.profesion || '<span class="text-blue-300/40">--</span>'}
           </td>
 
           <!-- 10. Clasificación del Voto (Subdividido en Duro, Blando, Nuevo) -->
@@ -559,8 +575,8 @@ class VotoApp {
               <!-- Duro -->
               <span class="w-7 h-7 rounded-lg font-black font-mono flex items-center justify-center text-[11px] transition ${
                 esDuro 
-                  ? "bg-emerald-500 text-slate-950 shadow-md shadow-emerald-500/30 font-extrabold" 
-                  : "bg-slate-900/60 text-slate-700 border border-slate-800"
+                  ? "bg-emerald-500 text-[#0e092e] shadow-md shadow-emerald-500/30 font-extrabold" 
+                  : "bg-[#140e40] text-blue-400/40 border border-[#2d1f85]"
               }" title="Voto Duro">
                 ${esDuro ? "✓" : "·"}
               </span>
@@ -568,8 +584,8 @@ class VotoApp {
               <!-- Blando -->
               <span class="w-7 h-7 rounded-lg font-black font-mono flex items-center justify-center text-[11px] transition ${
                 esBlando 
-                  ? "bg-amber-500 text-slate-950 shadow-md shadow-amber-500/30 font-extrabold" 
-                  : "bg-slate-900/60 text-slate-700 border border-slate-800"
+                  ? "bg-amber-500 text-[#0e092e] shadow-md shadow-amber-500/30 font-extrabold" 
+                  : "bg-[#140e40] text-blue-400/40 border border-[#2d1f85]"
               }" title="Voto Blando (Persuasión)">
                 ${esBlando ? "✓" : "·"}
               </span>
@@ -577,14 +593,14 @@ class VotoApp {
               <!-- Nuevo -->
               <span class="w-7 h-7 rounded-lg font-black font-mono flex items-center justify-center text-[11px] transition ${
                 esNuevo 
-                  ? "bg-sky-400 text-slate-950 shadow-md shadow-sky-400/30 font-extrabold" 
-                  : "bg-slate-900/60 text-slate-700 border border-slate-800"
+                  ? "bg-sky-400 text-[#0e092e] shadow-md shadow-sky-400/30 font-extrabold" 
+                  : "bg-[#140e40] text-blue-400/40 border border-[#2d1f85]"
               }" title="Voto Nuevo (Juventud)">
                 ${esNuevo ? "✓" : "·"}
               </span>
 
               <!-- Botón Eliminar -->
-              <button type="button" class="ml-2 text-slate-600 hover:text-rose-400 transition p-1 cursor-pointer" title="Eliminar registro" onclick="window.votoApp.eliminarRegistro('${e.id}')">
+              <button type="button" class="ml-2 text-blue-400/50 hover:text-rose-400 transition p-1 cursor-pointer" title="Eliminar registro" onclick="window.votoApp.eliminarRegistro('${e.id}')">
                 <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
               </button>
             </div>

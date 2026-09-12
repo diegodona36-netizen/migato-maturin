@@ -135,9 +135,9 @@ export class DemoStatsApp {
     document.querySelectorAll(".demo-tab-btn").forEach(btn => {
       const isCurrent = btn.dataset.tab === this.activeTab;
       if (isCurrent) {
-        btn.className = "demo-tab-btn px-4 py-2.5 rounded-xl bg-amber-500 text-slate-950 font-black text-xs shadow-lg shadow-amber-500/20 flex items-center gap-2 transition cursor-pointer";
+        btn.className = "demo-tab-btn px-4 py-2.5 rounded-xl bg-amber-500 text-[#0e092e] font-black text-xs shadow-lg shadow-amber-500/20 flex items-center gap-2 transition cursor-pointer";
       } else {
-        btn.className = "demo-tab-btn px-4 py-2.5 rounded-xl bg-slate-900/90 hover:bg-slate-800 text-slate-400 hover:text-white font-bold text-xs border border-slate-800 flex items-center gap-2 transition cursor-pointer";
+        btn.className = "demo-tab-btn px-4 py-2.5 rounded-xl bg-[#140e40] hover:bg-[#18114a] text-slate-300 hover:text-white font-bold text-xs border border-[#2d1f85] flex items-center gap-2 transition cursor-pointer";
       }
     });
 
@@ -181,7 +181,7 @@ export class DemoStatsApp {
     }
 
     const allPill = `
-      <button type="button" data-parish="todas" class="px-3 py-1.5 rounded-xl text-xs font-bold shrink-0 transition cursor-pointer ${this.selectedParishId === 'todas' ? 'bg-amber-500 text-slate-950 font-black shadow-md' : 'bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800'}">
+      <button type="button" data-parish="todas" class="px-3 py-1.5 rounded-xl text-xs font-bold shrink-0 transition cursor-pointer ${this.selectedParishId === 'todas' ? 'bg-amber-500 text-[#0e092e] font-black shadow-md' : 'bg-[#140e40] hover:bg-[#18114a] text-slate-200 border border-[#2d1f85]'}">
         🌐 Todas las Parroquias (${parishes.length})
       </button>
     `;
@@ -189,7 +189,7 @@ export class DemoStatsApp {
     const parishesPills = parishes.map(p => {
       const isSelected = p.id === this.selectedParishId;
       return `
-        <button type="button" data-parish="${p.id}" class="px-3 py-1.5 rounded-xl text-xs font-semibold shrink-0 transition cursor-pointer ${isSelected ? 'bg-amber-500 text-slate-950 font-black shadow-md' : 'bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800'}">
+        <button type="button" data-parish="${p.id}" class="px-3 py-1.5 rounded-xl text-xs font-semibold shrink-0 transition cursor-pointer ${isSelected ? 'bg-amber-500 text-[#0e092e] font-black shadow-md' : 'bg-[#140e40] hover:bg-[#18114a] text-slate-200 border border-[#2d1f85]'}">
           📍 ${p.nombre}
         </button>
       `;
@@ -234,7 +234,7 @@ export class DemoStatsApp {
     if (elHabitantes) elHabitantes.textContent = this.nf.format(agg.habitantes);
     if (elVotantes) elVotantes.textContent = this.nf.format(agg.votantes);
     if (elSectores) elSectores.textContent = this.nf.format(agg.totalSectores);
-    if (elEjes) elEjes.textContent = `${agg.uniqueSubparroquias} Ejes Comunales`;
+    if (elEjes) elEjes.textContent = `${agg.uniqueSubparroquias} Ejes Territoriales`;
     if (elCentros) elCentros.textContent = `${agg.uniqueCentros} Centros CNE`;
     if (elHabCasa) elHabCasa.textContent = `${agg.avgHabCasa} hab/casa`;
     if (elPadronPct) elPadronPct.textContent = `${agg.pctVotantes}% Padrón`;
@@ -409,7 +409,7 @@ export class DemoStatsApp {
       });
       items = Object.entries(pMap).map(([label, value]) => ({ label, value })).sort((a, b) => b.value - a.value);
     } else {
-      subtitleText = "Ejes Comunales";
+      subtitleText = "Ejes Territoriales";
       const spMap = {};
       agg.filteredSectors.forEach(s => {
         spMap[s.subParroquiaNombre] = (spMap[s.subParroquiaNombre] || 0) + s.votantes;
@@ -448,7 +448,7 @@ export class DemoStatsApp {
           datasets: [{
             data,
             backgroundColor: colors.slice(0, labels.length),
-            borderColor: "#060913",
+            borderColor: "#18114a",
             borderWidth: 2,
             hoverOffset: 6
           }]
@@ -530,7 +530,7 @@ export class DemoStatsApp {
           datasets: [{
             data,
             backgroundColor: colors,
-            borderColor: "#060913",
+            borderColor: "#18114a",
             borderWidth: 2,
             hoverOffset: 6
           }]
@@ -622,7 +622,7 @@ export class DemoStatsApp {
           datasets: [{
             data,
             backgroundColor: colors,
-            borderColor: "#060913",
+            borderColor: "#18114a",
             borderWidth: 2,
             hoverOffset: 6
           }]
@@ -737,7 +737,7 @@ export class DemoStatsApp {
     const tfoot = document.getElementById("demo-matrix-tfoot");
     if (tfoot) {
       tfoot.innerHTML = `
-        <tr class="bg-slate-900 font-mono text-xs font-black text-amber-400 border-t-2 border-amber-500/50">
+        <tr class="bg-[#100b33] font-mono text-xs font-black text-amber-400 border-t-2 border-amber-500/50">
           <td class="px-3 py-3">TOTAL ESTADO MONAGAS (13)</td>
           <td class="px-3 py-3 text-center">44</td>
           <td class="px-3 py-3 text-center text-purple-300">120+</td>
@@ -795,24 +795,24 @@ export class DemoStatsApp {
     container.innerHTML = top.map((s, i) => {
       const pctBar = ((s.votantes / maxVot) * 100).toFixed(0);
       return `
-        <div class="p-3 bg-slate-950/80 border border-slate-800/80 hover:border-amber-500/50 rounded-2xl transition space-y-2">
+        <div class="p-3 bg-[#18114a] border border-[#2d1f85] hover:border-amber-500/50 rounded-2xl transition space-y-2">
           <div class="flex items-start justify-between gap-2">
             <div class="min-w-0">
-              <span class="text-[10px] font-mono text-slate-500 block">#${i + 1} • ${s.id}</span>
+              <span class="text-[10px] font-mono text-slate-400 block">#${i + 1} • ${s.id}</span>
               <h4 class="text-xs font-black text-white truncate" title="${s.nombre}">${s.nombre}</h4>
               <span class="text-[10px] text-amber-400 font-semibold truncate block">${s.munNombre} ➔ ${s.parishNombre}</span>
             </div>
             <div class="text-right shrink-0">
               <span class="text-sm font-black font-mono text-amber-400">${this.nf.format(s.votantes)}</span>
-              <span class="text-[9px] text-slate-400 block">votantes</span>
+              <span class="text-[9px] text-slate-300 block">votantes</span>
             </div>
           </div>
           
-          <div class="w-full bg-slate-900 h-1.5 rounded-full overflow-hidden">
+          <div class="w-full bg-[#0e092e] h-1.5 rounded-full overflow-hidden">
             <div class="bg-gradient-to-r from-amber-500 to-orange-400 h-full rounded-full" style="width: ${pctBar}%"></div>
           </div>
 
-          <div class="flex items-center justify-between text-[10px] font-mono text-slate-400 pt-0.5 border-t border-slate-800/50">
+          <div class="flex items-center justify-between text-[10px] font-mono text-slate-300 pt-0.5 border-t border-[#2d1f85]/50">
             <span>🏠 ${s.casas} casas</span>
             <span>👥 ${s.habitantes} hab</span>
             <span class="text-emerald-400 font-bold">✓ ${s.cobertura}%</span>
@@ -955,7 +955,7 @@ export class DemoStatsApp {
           const sectorsListHtml = sp.sectores.map(rawS => {
             const s = sectorMap.get(rawS.id) || rawS;
             return `
-            <div class="p-2.5 bg-slate-950/70 border border-slate-800/80 rounded-xl hover:border-amber-500/40 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs transition">
+            <div class="p-2.5 bg-[#18114a] border border-[#2d1f85] rounded-xl hover:border-amber-500/40 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs transition">
               <div class="flex items-center gap-2 min-w-0">
                 <span class="w-2 h-2 rounded-full bg-amber-400 shrink-0"></span>
                 <span class="font-mono text-amber-400 font-bold text-[11px]">${s.id}</span>
@@ -1004,8 +1004,8 @@ export class DemoStatsApp {
         const totalParishVot = p.subparroquias.reduce((acc, sp) => acc + sp.sectores.reduce((s, x) => s + x.votantes, 0), 0);
 
         return `
-          <div class="border border-slate-800 bg-slate-900/90 rounded-2xl p-3.5 space-y-3">
-            <div class="flex items-center justify-between cursor-pointer border-b border-slate-800 pb-2.5" onclick="window.demoApp.toggleParish('${p.id}')">
+          <div class="border border-[#2d1f85] bg-[#18114a] rounded-2xl p-3.5 space-y-3">
+            <div class="flex items-center justify-between cursor-pointer border-b border-[#2d1f85] pb-2.5" onclick="window.demoApp.toggleParish('${p.id}')">
               <div class="flex items-center gap-2 min-w-0">
                 <span class="text-amber-400 text-sm">${isParishExpanded ? '▾' : '▸'}</span>
                 <span class="w-6 h-6 rounded-lg bg-amber-500/20 border border-amber-500/50 flex items-center justify-center text-amber-300 text-[10px] font-bold shrink-0">L3</span>
@@ -1029,10 +1029,10 @@ export class DemoStatsApp {
       }).join("");
 
       return `
-        <div class="bg-slate-900/95 border-2 border-amber-500/40 rounded-3xl p-4 sm:p-5 shadow-2xl space-y-4">
-          <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <div class="bg-[#140e40]/95 border-2 border-amber-500/40 rounded-3xl p-4 sm:p-5 shadow-2xl space-y-4">
+          <div class="flex items-center justify-between border-b border-[#2d1f85] pb-3">
             <div class="flex items-center gap-2.5">
-              <span class="w-7 h-7 rounded-xl bg-amber-500 text-slate-950 font-black flex items-center justify-center text-xs shadow-md">L2</span>
+              <span class="w-7 h-7 rounded-xl bg-amber-500 text-[#0e092e] font-black flex items-center justify-center text-xs shadow-md">L2</span>
               <div>
                 <h3 class="text-sm sm:text-base font-black text-white uppercase tracking-tight">${m.nombre}</h3>
                 <span class="text-[10px] text-slate-400 font-mono">Capital: ${m.capital} • ${m.parroquias.length} Parroquias</span>
@@ -1080,8 +1080,8 @@ export class DemoStatsApp {
 
     const headers = [
       "ID Poligono",
-      "Sector Comunal",
-      "Eje Comunal (Subparroquia)",
+      "Sector Vecinal",
+      "Eje Territorial (Subparroquia)",
       "Parroquia",
       "Municipio",
       "Casas Censadas",
@@ -1184,30 +1184,30 @@ export class DemoStatsApp {
 
     content.innerHTML = `
       <div class="space-y-4 text-xs">
-        <div class="border-b border-slate-800 pb-3">
+        <div class="border-b border-[#2d1f85] pb-3">
           <div class="flex items-center justify-between">
             <span class="text-[10px] font-mono font-bold text-amber-400 uppercase tracking-widest">SALA SITUACIONAL • INFORME EJECUTIVO</span>
             <span class="text-[10px] font-mono text-slate-400">${new Date().toLocaleString("es-VE")}</span>
           </div>
           <h3 class="text-base font-black text-white mt-1">${munName}</h3>
-          <p class="text-slate-400 text-[11px]">Consolidado para presentación ante equipos de ingeniería y dirección operativa.</p>
+          <p class="text-slate-300 text-[11px]">Consolidado para presentación ante equipos de ingeniería y dirección operativa.</p>
         </div>
 
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 font-mono">
-          <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
-            <span class="text-[10px] text-slate-400 block">Viviendas Censadas</span>
+          <div class="bg-[#0e092e] p-3 rounded-xl border border-[#2d1f85]">
+            <span class="text-[10px] text-slate-300 block">Viviendas Censadas</span>
             <span class="text-lg font-black text-amber-400">${this.nf.format(agg.casas)}</span>
           </div>
-          <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
-            <span class="text-[10px] text-slate-400 block">Familias Registradas</span>
+          <div class="bg-[#0e092e] p-3 rounded-xl border border-[#2d1f85]">
+            <span class="text-[10px] text-slate-300 block">Familias Registradas</span>
             <span class="text-lg font-black text-sky-400">${this.nf.format(agg.familias)}</span>
           </div>
-          <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
-            <span class="text-[10px] text-slate-400 block">Habitantes Totales</span>
+          <div class="bg-[#0e092e] p-3 rounded-xl border border-[#2d1f85]">
+            <span class="text-[10px] text-slate-300 block">Habitantes Totales</span>
             <span class="text-lg font-black text-emerald-400">${this.nf.format(agg.habitantes)}</span>
           </div>
-          <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
-            <span class="text-[10px] text-slate-400 block">Padrón Electoral</span>
+          <div class="bg-[#0e092e] p-3 rounded-xl border border-[#2d1f85]">
+            <span class="text-[10px] text-slate-300 block">Padrón Electoral</span>
             <span class="text-lg font-black text-white">${this.nf.format(agg.votantes)}</span>
           </div>
         </div>
@@ -1232,13 +1232,13 @@ export class DemoStatsApp {
           </div>
         </div>
 
-        <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-1.5 font-mono text-[11px]">
+        <div class="bg-[#0e092e] p-3 rounded-xl border border-[#2d1f85] space-y-1.5 font-mono text-[11px]">
           <div class="flex justify-between text-slate-300">
             <span>Sectores / Polígonos Digitalizados:</span>
             <strong class="text-amber-400">${agg.totalSectores} polígonos</strong>
           </div>
           <div class="flex justify-between text-slate-300">
-            <span>Ejes Comunales de Coordinación:</span>
+            <span>Ejes Territoriales de Coordinación:</span>
             <strong class="text-purple-300">${agg.uniqueSubparroquias} ejes</strong>
           </div>
           <div class="flex justify-between text-slate-300">
@@ -1250,7 +1250,7 @@ export class DemoStatsApp {
             <strong class="text-emerald-400">${agg.avgHabCasa} habitantes/casa</strong>
           </div>
           <div class="flex justify-between text-slate-300">
-            <span>Índice de Cobertura Comunal:</span>
+            <span>Índice de Cobertura Territorial:</span>
             <strong class="text-white font-black">${agg.avgCobertura}% COMPLETADO</strong>
           </div>
         </div>

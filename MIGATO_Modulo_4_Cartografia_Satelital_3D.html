@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>MIGATO • Módulo 4: Cartografía Satelital 3D y Velo Blanco</title>
+<style>
+  @page {
+    size: letter portrait;
+    margin: 10mm 14mm 10mm 14mm;
+  }
+  body {
+    font-family: 'Liberation Sans', Arial, Helvetica, sans-serif;
+    color: #1e293b;
+    background-color: #ffffff;
+    margin: 0;
+    padding: 0;
+    font-size: 8.8pt;
+    line-height: 1.4;
+  }
+  .page-break {
+    page-break-before: always;
+  }
+  th {
+    color: #ffffff !important;
+  }
+</style>
+</head>
+<body>
+
+  <!-- PÁGINA 1: PORTADA -->
+  <table width="100%" cellpadding="0" cellspacing="0" style="border-bottom: 2px solid #0f172a; padding-bottom: 6px; margin-bottom: 18px;">
+    <tr>
+      <td width="14%" valign="middle">
+        <img src="assets/logo-migato.png" width="50" height="50" style="display: block;">
+      </td>
+      <td width="86%" valign="middle" style="padding-left: 12px;">
+        <div style="font-size: 8pt; font-weight: 800; color: #475569; text-transform: uppercase; letter-spacing: 0.8px;">
+          REPÚBLICA BOLIVARIANA DE VENEZUELA • GOBERNACIÓN DEL ESTADO MONAGAS
+        </div>
+        <div style="font-size: 7.5pt; font-weight: 700; color: #0284c7; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 1px;">
+          SALA DE MANDO TERRITORIAL • PLATAFORMA DE INTELIGENCIA ESTRATÉGICA MIGATO
+        </div>
+      </td>
+    </tr>
+  </table>
+
+  <div style="margin-top: 10px; margin-bottom: 20px;">
+    <div style="background-color: #0f172a; color: #ffffff; display: inline-block; padding: 3px 8px; font-size: 7.5pt; font-weight: 800; letter-spacing: 1px; text-transform: uppercase;">
+      DOSSIER EJECUTIVO INSTITUCIONAL • MÓDULO IV DE IV
+    </div>
+    <div style="font-size: 18pt; font-weight: 900; color: #0f172a; margin-top: 8px; line-height: 1.2; letter-spacing: -0.4px;">
+      CARTOGRAFÍA SATELITAL TÁCTICA 3D Y FOCALIZACIÓN «VELO BLANCO»
+    </div>
+    <div style="font-size: 10pt; font-weight: 600; color: #475569; margin-top: 4px;">
+      Sala Situacional Geoespacial, Eliminación de Ruido Visual y Telemetría Territorial
+    </div>
+  </div>
+
+  <table width="100%" cellpadding="7" cellspacing="0" style="background-color: #f8fafc; border: 1px solid #cbd5e1; border-left: 5px solid #0284c7; margin-bottom: 18px;">
+    <tr>
+      <td>
+        <div style="font-size: 8.5pt; font-weight: 800; color: #0f172a; text-transform: uppercase; margin-bottom: 3px;">
+          SÍNTESIS PARA LA ALTA DIRECCIÓN DE GOBIERNO
+        </div>
+        <div style="font-size: 8.5pt; color: #334155; line-height: 1.4;">
+          Este módulo provee la consola visual suprema para la toma de decisiones del Gobernador, Alcaldes y Estado Mayor. Integra fotografía satelital tridimensional de alta resolución de todo el Estado Monagas y erradica la saturación visual mediante la innovadora tecnología del «Velo Blanco» (Spotlight): al enfocar un municipio o comunidad, el sistema cubre el resto del mapa con un velo translúcido neutro, iluminando exclusivamente el área de interés en una cascada fluida de 4 niveles.
+        </div>
+      </td>
+    </tr>
+  </table>
+
+  <table width="100%" cellpadding="6" cellspacing="0" style="border-collapse: collapse; margin-bottom: 20px; font-size: 8.2pt;">
+    <tr style="background-color: #0f172a; color: #ffffff;">
+      <th colspan="2" align="left" style="padding: 6px 8px; font-size: 8.5pt; text-transform: uppercase;">FICHA TÉCNICA DE CONTROL DOCUMENTAL</th>
+    </tr>
+    <tr>
+      <td width="30%" style="background-color: #f1f5f9; border: 1px solid #cbd5e1; font-weight: bold;">Código de Documento:</td>
+      <td width="70%" style="border: 1px solid #cbd5e1;">DOC-MIGATO-MOD4-2026-REV2</td>
+    </tr>
+    <tr>
+      <td style="background-color: #f1f5f9; border: 1px solid #cbd5e1; font-weight: bold;">Clasificación de Seguridad:</td>
+      <td style="border: 1px solid #cbd5e1; color: #b91c1c; font-weight: bold;">RESERVADO • USO EXCLUSIVO DE GOBIERNO Y PARTIDO</td>
+    </tr>
+    <tr>
+      <td style="background-color: #f1f5f9; border: 1px solid #cbd5e1; font-weight: bold;">Alcance Geoespacial:</td>
+      <td style="border: 1px solid #cbd5e1;">13 Municipios, 44 Parroquias y Polígonos de Sectores Vecinales en 3D</td>
+    </tr>
+    <tr>
+      <td style="background-color: #f1f5f9; border: 1px solid #cbd5e1; font-weight: bold;">Destinatarios Oficiales:</td>
+      <td style="border: 1px solid #cbd5e1;">Gobernador del Estado, Ministros, Alcaldes, Estado Mayor de Operaciones</td>
+    </tr>
+    <tr>
+      <td style="background-color: #f1f5f9; border: 1px solid #cbd5e1; font-weight: bold;">Ruta Web de Acceso:</td>
+      <td style="border: 1px solid #cbd5e1; font-family: monospace; font-weight: bold; color: #0284c7;">/earth-monagas/?v=128</td>
+    </tr>
+  </table>
+
+  <table width="100%" cellpadding="3" cellspacing="0" style="border-top: 1px solid #cbd5e1; font-size: 7.2pt; color: #64748b; margin-top: 35px;">
+    <tr>
+      <td>Gobernación del Estado Monagas • Sistema MIGATO 2026</td>
+      <td align="right">Página 1 de 4 • Portada y Ficha Técnica</td>
+    </tr>
+  </table>
+
+  <!-- PÁGINA 2: DIAGNÓSTICO Y VELO BLANCO -->
+  <table width="100%" cellpadding="5" cellspacing="0" style="page-break-before: always; background-color: #0f172a; color: #ffffff; margin-bottom: 10px;">
+    <tr>
+      <td width="75%">
+        <div style="font-size: 10.5pt; font-weight: 800; color: #ffffff; text-transform: uppercase;">MÓDULO 4: CARTOGRAFÍA 3D • DIAGNÓSTICO Y EFECTO VELO BLANCO</div>
+      </td>
+      <td width="25%" align="right" style="font-size: 7.2pt; color: #38bdf8; font-weight: bold;">
+        SECCIÓN 1.0 Y 2.0
+      </td>
+    </tr>
+  </table>
+
+  <div style="font-size: 10pt; font-weight: 800; color: #0f172a; border-bottom: 1.5px solid #0f172a; padding-bottom: 2px; margin-bottom: 7px;">
+    1.0 DIAGNÓSTICO DE LA VISUALIZACIÓN CARTOGRÁFICA CONVENCIONAL
+  </div>
+
+  <p style="margin-bottom: 6px; font-size: 8.5pt;">
+    En la gestión territorial y electoral del Estado Monagas, los decisores de alto nivel se han enfrentado a tres barreras cognitivas insalvables con los mapas tradicionales:
+  </p>
+
+  <table width="100%" cellpadding="5" cellspacing="0" style="border-collapse: collapse; margin-bottom: 10px; font-size: 8.2pt;">
+    <tr style="background-color: #f1f5f9;">
+      <td width="30%" style="border: 1px solid #cbd5e1; font-weight: bold; color: #991b1b;">1. Saturación Visual (Ruido):</td>
+      <td width="70%" style="border: 1px solid #cbd5e1;">
+        Los mapas digitales comunes proyectan decenas de capas encimadas (vías, nombres, iconos, límites difusos). Para un abogado, médico o gobernante ocupado, esto genera confusión y demora al identificar la zona bajo análisis.
+      </td>
+    </tr>
+    <tr>
+      <td style="border: 1px solid #cbd5e1; font-weight: bold; color: #991b1b;">2. Pérdida del Contexto 3D:</td>
+      <td style="border: 1px solid #cbd5e1;">
+        Los mapas planos en 2D no muestran la orografía real, las cañadas, los relieves ni la distribución de las viviendas, impidiendo anticipar dificultades de acceso o movilización.
+      </td>
+    </tr>
+    <tr style="background-color: #f1f5f9;">
+      <td style="border: 1px solid #cbd5e1; font-weight: bold; color: #991b1b;">3. Desconexión de Escala:</td>
+      <td width="70%" style="border: 1px solid #cbd5e1;">
+        Falta de herramientas para hacer una transición fluida desde la vista de todo el estado hasta el techo de las casas de un barrio específico sin perderse en el mapa.
+      </td>
+    </tr>
+  </table>
+
+  <div style="font-size: 10pt; font-weight: 800; color: #0f172a; border-bottom: 1.5px solid #0f172a; padding-bottom: 2px; margin-bottom: 7px; margin-top: 10px;">
+    2.0 LA INNOVACIÓN DEL «VELO BLANCO» (SPOTLIGHT EXTERIOR)
+  </div>
+
+  <p style="margin-bottom: 6px; font-size: 8.5pt;">
+    MIGATO implementa un principio de <b>Atenuación Guiada de Contexto</b>:
+  </p>
+
+  <table width="100%" cellpadding="6" cellspacing="0" style="border: 1px solid #cbd5e1; border-left: 5px solid #0284c7; background-color: #f8fafc; margin-bottom: 8px;">
+    <tr>
+      <td>
+        <div style="font-size: 8.5pt; font-weight: 800; color: #0369a1; margin-bottom: 2px;">EL PRINCIPIO DEL REFLECTOR TÁCTICO</div>
+        <div style="font-size: 8.2pt; color: #1e293b; line-height: 1.35;">
+          Cuando el decisor selecciona un territorio, el software calcula una máscara geométrica invertida que cubre todo el resto de la geografía con un velo translúcido blanco neutro. <b>Únicamente el polígono territorial activo permanece plenamente visible, iluminado y en alta resolución</b>. De esta forma, cualquier persona en la sala sabe exactamente qué territorio se está discutiendo sin posibilidad de equivocación.
+        </div>
+      </td>
+    </tr>
+  </table>
+
+  <div style="font-size: 10pt; font-weight: 800; color: #0f172a; border-bottom: 1.5px solid #0f172a; padding-bottom: 2px; margin-bottom: 5px; margin-top: 8px;">
+    3.0 RESOLUCIÓN ERGONÓMICA PARA PANTALLAS DE MANDO
+  </div>
+  <p style="margin: 0; font-size: 8.3pt;">
+    El módulo fue programado para proyectarse de manera fluida en pantallas de alta definición (4K/8K) y proyectores de salones de conferencias gubernamentales. Los contrastes cromáticos (cian, dorado, esmeralda y púrpura) garantizan legibilidad perfecta incluso a diez metros de distancia.
+  </p>
+
+  <table width="100%" cellpadding="3" cellspacing="0" style="border-top: 1px solid #cbd5e1; font-size: 7.2pt; color: #64748b; margin-top: 15px;">
+    <tr>
+      <td>Gobernación del Estado Monagas • Sistema MIGATO 2026</td>
+      <td align="right">Página 2 de 4 • Diagnóstico y Velo Blanco</td>
+    </tr>
+  </table>
+
+  <!-- PÁGINA 3: CASCADA EN 4 NIVELES Y ERGONOMÍA -->
+  <table width="100%" cellpadding="5" cellspacing="0" style="page-break-before: always; background-color: #0f172a; color: #ffffff; margin-bottom: 10px;">
+    <tr>
+      <td width="75%">
+        <div style="font-size: 10.5pt; font-weight: 800; color: #ffffff; text-transform: uppercase;">MÓDULO 4: CARTOGRAFÍA 3D • CASCADA DE ENFOQUE EN 4 NIVELES</div>
+      </td>
+      <td width="25%" align="right" style="font-size: 7.2pt; color: #38bdf8; font-weight: bold;">
+        SECCIÓN 4.0 Y 5.0
+      </td>
+    </tr>
+  </table>
+
+  <div style="font-size: 10pt; font-weight: 800; color: #0f172a; border-bottom: 1.5px solid #0f172a; padding-bottom: 2px; margin-bottom: 7px;">
+    4.0 LA PROGRESIÓN JERÁRQUICA EN CUATRO ESCALONES OPERATIVOS
+  </div>
+
+  <table width="100%" cellpadding="5" cellspacing="0" style="border-collapse: collapse; margin-bottom: 10px; font-size: 8.2pt;">
+    <tr style="background-color: #0f172a; color: #ffffff;">
+      <th width="18%" style="padding: 4px 6px;">Nivel</th>
+      <th width="30%" style="padding: 4px 6px;">Área Visible (Foco Iluminado)</th>
+      <th width="32%" style="padding: 4px 6px;">Efecto del Velo Blanco</th>
+      <th width="20%" style="padding: 4px 6px;">Capa Activa</th>
+    </tr>
+    <tr>
+      <td style="border: 1px solid #cbd5e1; font-weight: bold; color: #0284c7;">1. Municipio</td>
+      <td style="border: 1px solid #cbd5e1;">El municipio seleccionado y todas sus parroquias oficiales del INE.</td>
+      <td style="border: 1px solid #cbd5e1;">Cubre todo el exterior del municipio y resto de Venezuela.</td>
+      <td style="border: 1px solid #cbd5e1; color: #0284c7; font-weight: bold;">Parroquias clickeables.</td>
+    </tr>
+    <tr style="background-color: #f8fafc;">
+      <td style="border: 1px solid #cbd5e1; font-weight: bold; color: #059669;">2. Parroquia</td>
+      <td style="border: 1px solid #cbd5e1;">Solo la parroquia seleccionada con sus ejes territoriales y centros CNE.</td>
+      <td style="border: 1px solid #cbd5e1;">Cubre las demás parroquias del municipio con velo blanco.</td>
+      <td style="border: 1px solid #cbd5e1; color: #059669; font-weight: bold;">Ejes y Escuelas CNE.</td>
+    </tr>
+    <tr>
+      <td style="border: 1px solid #cbd5e1; font-weight: bold; color: #7c3aed;">3. Eje Territorial</td>
+      <td style="border: 1px solid #cbd5e1;">El eje territorial activo (ej. Sub-Parroquia 6 La Puente).</td>
+      <td style="border: 1px solid #cbd5e1;">Cubre el resto de la parroquia con velo blanco translúcido.</td>
+      <td style="border: 1px solid #cbd5e1; color: #7c3aed; font-weight: bold;">Sectores vecinales.</td>
+    </tr>
+    <tr style="background-color: #f8fafc;">
+      <td style="border: 1px solid #cbd5e1; font-weight: bold; color: #d97706;">4. Sector</td>
+      <td style="border: 1px solid #cbd5e1;">Polígono quirúrgico del sector (ej. Monagzal, Las Vírgenes).</td>
+      <td style="border: 1px solid #cbd5e1;">Cubre todos los sectores colindantes bajo velo dorado.</td>
+      <td style="border: 1px solid #cbd5e1; color: #d97706; font-weight: bold;">Casas 3D y Ficha Telemetría.</td>
+    </tr>
+  </table>
+
+  <div style="font-size: 10pt; font-weight: 800; color: #0f172a; border-bottom: 1.5px solid #0f172a; padding-bottom: 2px; margin-bottom: 7px; margin-top: 10px;">
+    5.0 NAVEGACIÓN INTUITIVA Y RETORNO CONTINUO
+  </div>
+
+  <table width="100%" cellpadding="6" cellspacing="0" style="border: 1px solid #cbd5e1; border-left: 5px solid #10b981; background-color: #f8fafc; margin-bottom: 10px;">
+    <tr>
+      <td>
+        <div style="font-size: 8.5pt; font-weight: 800; color: #065f46; margin-bottom: 2px;">ASCENSO EN 1 TOQUE MEDIANTE TECLA ESCAPE O HUD CENTRAL</div>
+        <div style="font-size: 8.2pt; color: #1e293b; line-height: 1.35;">
+          Para volver al nivel superior, el usuario no tiene que buscar menús complicados: simplemente presiona la tecla <b>Escape</b> en el teclado o toca el botón dinámico del panel flotante. La cámara satelital asciende suavemente un escalón a la vez:
+          <div style="margin-top: 3px; font-weight: bold; font-family: monospace; color: #0f172a;">
+            Sector Vecinal ➔ Eje Territorial ➔ Parroquia ➔ Municipio ➔ Estado Monagas Completo
+          </div>
+        </div>
+      </td>
+    </tr>
+  </table>
+
+  <div style="font-size: 10pt; font-weight: 800; color: #0f172a; border-bottom: 1.5px solid #0f172a; padding-bottom: 2px; margin-bottom: 5px; margin-top: 10px;">
+    6.0 INTEGRACIÓN CON CENTROS CNE Y DATOS TERRITORIALES
+  </div>
+  <p style="margin: 0 0 10px 0; font-size: 8.2pt;">
+    El mapa satelital no es una imagen estática: al hacer clic sobre cualquier escuela CNE o sector vecinal, se despliega una ficha técnica en vivo que enlaza directamente con el censo del Módulo 2 y la auditoría del Módulo 3, unificando todo el ecosistema de gobierno.
+  </p>
+
+  <table width="100%" cellpadding="3" cellspacing="0" style="border-top: 1px solid #cbd5e1; font-size: 7.2pt; color: #64748b;">
+    <tr>
+      <td>Gobernación del Estado Monagas • Sistema MIGATO 2026</td>
+      <td align="right">Página 3 de 4 • Cascada de Enfoque</td>
+    </tr>
+  </table>
+
+  <!-- PÁGINA 4: MATRIZ RACI Y CONCLUSIONES -->
+  <table width="100%" cellpadding="5" cellspacing="0" style="page-break-before: always; background-color: #0f172a; color: #ffffff; margin-bottom: 10px;">
+    <tr>
+      <td width="75%">
+        <div style="font-size: 10.5pt; font-weight: 800; color: #ffffff; text-transform: uppercase;">MÓDULO 4: CARTOGRAFÍA 3D • GOBERNANZA Y MATRIZ DIRECTIVA</div>
+      </td>
+      <td width="25%" align="right" style="font-size: 7.2pt; color: #38bdf8; font-weight: bold;">
+        SECCIÓN 7.0 Y 8.0
+      </td>
+    </tr>
+  </table>
+
+  <div style="font-size: 10pt; font-weight: 800; color: #0f172a; border-bottom: 1.5px solid #0f172a; padding-bottom: 2px; margin-bottom: 7px;">
+    7.0 MATRIZ RACI DE OPERACIONES DE SALA SITUACIONAL
+  </div>
+
+  <table width="100%" cellpadding="4" cellspacing="0" style="border-collapse: collapse; margin-bottom: 12px; font-size: 7.8pt;">
+    <tr style="background-color: #0f172a; color: #ffffff;">
+      <th width="35%" align="left" style="padding: 4px 6px;">Actividad Estratégica</th>
+      <th width="16%" align="center" style="padding: 4px 6px;">Gobernador</th>
+      <th width="16%" align="center" style="padding: 4px 6px;">Director Sala</th>
+      <th width="16%" align="center" style="padding: 4px 6px;">Alcaldes</th>
+      <th width="17%" align="center" style="padding: 4px 6px;">Equipo Técnico</th>
+    </tr>
+    <tr>
+      <td style="border: 1px solid #cbd5e1; font-weight: bold;">Conducción de Sesiones de Crisis y Gabinete</td>
+      <td align="center" style="border: 1px solid #cbd5e1; font-weight: bold; color: #0284c7;">Preside (P)</td>
+      <td align="center" style="border: 1px solid #cbd5e1;">Operador (O)</td>
+      <td align="center" style="border: 1px solid #cbd5e1;">Participa (P)</td>
+      <td align="center" style="border: 1px solid #cbd5e1;">Soporte (S)</td>
+    </tr>
+    <tr style="background-color: #f8fafc;">
+      <td style="border: 1px solid #cbd5e1; font-weight: bold;">Focalización Territorial y Velo Blanco</td>
+      <td align="center" style="border: 1px solid #cbd5e1;">Instruye (I)</td>
+      <td align="center" style="border: 1px solid #cbd5e1; font-weight: bold; color: #0284c7;">Ejecutor (E)</td>
+      <td align="center" style="border: 1px solid #cbd5e1;">Observador (O)</td>
+      <td align="center" style="border: 1px solid #cbd5e1;">-</td>
+    </tr>
+    <tr>
+      <td style="border: 1px solid #cbd5e1; font-weight: bold;">Supervisión de Cobertura de Escuelas CNE</td>
+      <td align="center" style="border: 1px solid #cbd5e1;">Usuario Final</td>
+      <td align="center" style="border: 1px solid #cbd5e1; font-weight: bold; color: #0284c7;">Responsable (R)</td>
+      <td align="center" style="border: 1px solid #cbd5e1;">Supervisa (S)</td>
+      <td align="center" style="border: 1px solid #cbd5e1;">-</td>
+    </tr>
+    <tr style="background-color: #f8fafc;">
+      <td style="border: 1px solid #cbd5e1; font-weight: bold;">Actualización de Capas Satelitales y Nube</td>
+      <td align="center" style="border: 1px solid #cbd5e1;">-</td>
+      <td align="center" style="border: 1px solid #cbd5e1;">Supervisa (S)</td>
+      <td align="center" style="border: 1px solid #cbd5e1;">-</td>
+      <td align="center" style="border: 1px solid #cbd5e1; font-weight: bold; color: #059669;">Ejecutor (E)</td>
+    </tr>
+  </table>
+
+  <div style="font-size: 10pt; font-weight: 800; color: #0f172a; border-bottom: 1.5px solid #0f172a; padding-bottom: 2px; margin-bottom: 7px; margin-top: 10px;">
+    8.0 CONCLUSIONES Y RECOMENDACIONES DE LA DIRECCIÓN TÉCNICA
+  </div>
+
+  <ol style="margin: 0 0 12px 16px; padding: 0; font-size: 8.3pt; color: #1e293b;">
+    <li style="margin-bottom: 3px;"><b>Claridad Decisional Inmediata:</b> El Velo Blanco erradica discusiones geográficas innecesarias, permitiendo al Gobernador y su equipo enfocarse en el problema social de la comunidad en cuestión de segundos.</li>
+    <li style="margin-bottom: 3px;"><b>Dominio Visual del Territorio:</b> Permite planificar rutas de movilización, ubicación de centros de votación y distribución de servicios públicos sobre fotografía satelital real.</li>
+    <li style="margin-bottom: 3px;"><b>Plataforma Lista para Salón de Crisis:</b> Se encuentra en producción activa bajo la versión <b>v=128</b>, con soporte de aceleración gráfica para pantallas gigantes de gobierno.</li>
+  </ol>
+
+  <table width="100%" cellpadding="6" cellspacing="0" style="border: 1px solid #cbd5e1; background-color: #f8fafc; margin-top: 15px;">
+    <tr>
+      <td width="50%" align="center" style="border-right: 1px solid #cbd5e1;">
+        <div style="font-size: 7.2pt; color: #64748b; text-transform: uppercase;">RESPONSABLE TÉCNICO GEOESPACIAL</div>
+        <div style="font-size: 8.8pt; font-weight: bold; color: #0f172a; margin-top: 18px;">EQUIPO DE CARTOGRAFÍA MIGATO</div>
+        <div style="font-size: 7.2pt; color: #475569;">Sistemas de Información Geográfica 3D</div>
+      </td>
+      <td width="50%" align="center">
+        <div style="font-size: 7.2pt; color: #64748b; text-transform: uppercase;">CONFORMIDAD INSTITUCIONAL</div>
+        <div style="font-size: 8.8pt; font-weight: bold; color: #0f172a; margin-top: 18px;">DIRECCIÓN POLÍTICA Y DE GOBIERNO</div>
+        <div style="font-size: 7.2pt; color: #475569;">Estado Monagas • 2026</div>
+      </td>
+    </tr>
+  </table>
+
+  <table width="100%" cellpadding="3" cellspacing="0" style="border-top: 1px solid #cbd5e1; font-size: 7.2pt; color: #64748b; margin-top: 15px;">
+    <tr>
+      <td>Gobernación del Estado Monagas • Sistema MIGATO 2026</td>
+      <td align="right">Página 4 de 4 • Fin del Documento Oficial</td>
+    </tr>
+  </table>
+
+</body>
+</html>

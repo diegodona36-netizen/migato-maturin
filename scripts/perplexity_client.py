@@ -68,7 +68,7 @@ def consultar_perplexity(query: str, model: str = "sonar"):
                 "content": (
                     "Eres un asistente de investigación táctica y territorial para el Estado Monagas, Venezuela. "
                     "Proporciona respuestas precisas, con datos verificados, fechas y fuentes sobre centros electorales, "
-                    "instituciones, demografía e infraestructura comunal."
+                    "instituciones, demografía e infraestructura comunitaria."
                 )
             },
             {

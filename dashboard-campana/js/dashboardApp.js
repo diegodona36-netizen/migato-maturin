@@ -37,8 +37,8 @@ export class TerritorialDashboardApp {
     this.expandedSubparroquias = new Set(["sub-godos-lapuente"]);
     this.unsubscribeFirestore = null;
 
-    this.isDemoMode = true; // Activo para que las tablas tengan 350+ sectores precargados
-    this.demoTerritorios = this.buildDemoTerritoriosMap();
+    this.isDemoMode = false; // Modo Producción 100% Limpio (Sin datos simulados)
+    this.demoTerritorios = {};
     this.nf = new Intl.NumberFormat("es-VE");
     
     // Instancias de Gráficos
@@ -343,10 +343,8 @@ export class TerritorialDashboardApp {
         const docKey = `${mun.id}_${p.id}`;
         let tData = this.territorios[docKey] || {};
 
-        if (this.isDemoMode || !tData.poligonos || tData.poligonos.length === 0) {
-          if (this.demoTerritorios[docKey]) {
-            tData = this.demoTerritorios[docKey];
-          }
+        if (this.isDemoMode && this.demoTerritorios[docKey]) {
+          tData = this.demoTerritorios[docKey];
         }
 
         let subparroquias = tData.subparroquias || [];

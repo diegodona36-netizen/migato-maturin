@@ -5,3 +5,6 @@ backups/
 .env
 .bin/
 lumina-system/.git_backup/
+mcp/token.json
+mcp/credentials.json
+mcp/service_account.json

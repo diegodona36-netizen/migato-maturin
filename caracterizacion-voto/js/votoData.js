@@ -123,235 +123,10 @@ export const SUBPARROQUIAS_GODOS = [
   }
 ];
 
-// Semilla inicial realista de 16 electores caracterizados para Alto de Los Godos
-export const DEMO_ELECTORES_GODOS = [
-  {
-    id: "god-001",
-    correlativo: 1,
-    nombreApellido: "José Gregorio Rivas Flores",
-    cedula: "V-14.892.410",
-    telefono: "0414-7629182",
-    subParroquia: "Sub-Parroquia 6 • La Puente (Eje Central)",
-    centroElectoral: "Cruz Hernández Quijada",
-    sector: "Monagzal",
-    edad: 48,
-    profesion: "Comerciante / Bodeguero",
-    clasificacionVoto: "duro",
-    fechaRegistro: "2026-03-05T09:15:00Z"
-  },
-  {
-    id: "god-002",
-    correlativo: 2,
-    nombreApellido: "Carmen Beatriz Velásquez",
-    cedula: "V-18.450.312",
-    telefono: "0424-9123841",
-    subParroquia: "Sub-Parroquia 6 • La Puente (Eje Central)",
-    centroElectoral: "Cruz Hernández Quijada",
-    sector: "Las Vírgenes",
-    edad: 39,
-    profesion: "Docente de Primaria",
-    clasificacionVoto: "duro",
-    fechaRegistro: "2026-03-05T09:22:00Z"
-  },
-  {
-    id: "god-003",
-    correlativo: 3,
-    nombreApellido: "Yordano Jesús Marcano Gil",
-    cedula: "V-28.715.604",
-    telefono: "0412-8834190",
-    subParroquia: "Sub-Parroquia 6 • La Puente (Eje Central)",
-    centroElectoral: "Cruz Hernández Quijada",
-    sector: "Villa de los Ángeles",
-    edad: 22,
-    profesion: "Estudiante UDO / Emprendedor",
-    clasificacionVoto: "nuevo",
-    fechaRegistro: "2026-03-05T09:35:00Z"
-  },
-  {
-    id: "god-004",
-    correlativo: 4,
-    nombreApellido: "Francisco Antonio Salazar",
-    cedula: "V-12.304.819",
-    telefono: "0416-5912044",
-    subParroquia: "Sub-Parroquia 6 • La Puente (Eje Central)",
-    centroElectoral: "Cruz Hernández Quijada",
-    sector: "La Puente Sector 2 (Cancha)",
-    edad: 55,
-    profesion: "Mecánico Automotriz",
-    clasificacionVoto: "blando",
-    fechaRegistro: "2026-03-05T10:05:00Z"
-  },
-  {
-    id: "god-005",
-    correlativo: 5,
-    nombreApellido: "Génesis Coromoto Padrino",
-    cedula: "V-29.412.003",
-    telefono: "0424-9843210",
-    subParroquia: "Sub-Parroquia 6 • La Puente (Eje Central)",
-    centroElectoral: "Cruz Hernández Quijada",
-    sector: "Monagzal",
-    edad: 20,
-    profesion: "Estudiante de Enfermería",
-    clasificacionVoto: "nuevo",
-    fechaRegistro: "2026-03-05T10:18:00Z"
-  },
-  {
-    id: "god-006",
-    correlativo: 6,
-    nombreApellido: "Manuel Salvador Rondón",
-    cedula: "V-11.890.231",
-    telefono: "0414-8761234",
-    subParroquia: "Sub-Parroquia 1 • Casco Los Godos",
-    centroElectoral: "Centro De Educación Inicial Alto De Los Godos I",
-    sector: "Los Godos 1 (Plaza)",
-    edad: 61,
-    profesion: "Jubilado / Albañil",
-    clasificacionVoto: "duro",
-    fechaRegistro: "2026-03-05T10:45:00Z"
-  },
-  {
-    id: "god-007",
-    correlativo: 7,
-    nombreApellido: "Rosiris del Valle Martínez",
-    cedula: "V-16.741.590",
-    telefono: "0412-3456789",
-    subParroquia: "Sub-Parroquia 1 • Casco Los Godos",
-    centroElectoral: "Centro De Educación Inicial Alto De Los Godos I",
-    sector: "Los Godos 2",
-    edad: 44,
-    profesion: "Costurera",
-    clasificacionVoto: "blando",
-    fechaRegistro: "2026-03-05T11:00:00Z"
-  },
-  {
-    id: "god-008",
-    correlativo: 8,
-    nombreApellido: "Andrés Eloy Brito Peña",
-    cedula: "V-27.654.321",
-    telefono: "0414-9988776",
-    subParroquia: "Sub-Parroquia 2 • Morichal",
-    centroElectoral: "Centro De Votación Brisas De Venezuela",
-    sector: "Morichal Sector 1",
-    edad: 24,
-    profesion: "Técnico en Refrigeración",
-    clasificacionVoto: "nuevo",
-    fechaRegistro: "2026-03-05T11:20:00Z"
-  },
-  {
-    id: "god-009",
-    correlativo: 9,
-    nombreApellido: "Luisa Elena Cedeño",
-    cedula: "V-13.567.890",
-    telefono: "0416-1122334",
-    subParroquia: "Sub-Parroquia 2 • Morichal",
-    centroElectoral: "Centro De Votación Brisas De Venezuela",
-    sector: "Morichal Sector 2",
-    edad: 52,
-    profesion: "Secretaria",
-    clasificacionVoto: "duro",
-    fechaRegistro: "2026-03-05T11:40:00Z"
-  },
-  {
-    id: "god-010",
-    correlativo: 10,
-    nombreApellido: "Héctor Ramón Guache",
-    cedula: "V-17.890.123",
-    telefono: "0424-4455667",
-    subParroquia: "Sub-Parroquia 3 • Fundemos",
-    centroElectoral: "Centro De Formación Integral Para El Trabajo",
-    sector: "Fundemos I",
-    edad: 41,
-    profesion: "Chofer Transporte Público",
-    clasificacionVoto: "blando",
-    fechaRegistro: "2026-03-05T12:05:00Z"
-  },
-  {
-    id: "god-011",
-    correlativo: 11,
-    nombreApellido: "Patricia Carolina Figueroa",
-    cedula: "V-20.123.456",
-    telefono: "0414-2233445",
-    subParroquia: "Sub-Parroquia 3 • Fundemos",
-    centroElectoral: "Centro De Formación Integral Para El Trabajo",
-    sector: "Fundemos II",
-    edad: 35,
-    profesion: "Administradora",
-    clasificacionVoto: "duro",
-    fechaRegistro: "2026-03-05T12:30:00Z"
-  },
-  {
-    id: "god-012",
-    correlativo: 12,
-    nombreApellido: "Anthony José Malavé",
-    cedula: "V-30.145.892",
-    telefono: "0412-9988112",
-    subParroquia: "Sub-Parroquia 4 • Los Guaros",
-    centroElectoral: "Centro De Votacion San Rafael",
-    sector: "Los Guaros 1",
-    edad: 19,
-    profesion: "Estudiante de Informática",
-    clasificacionVoto: "nuevo",
-    fechaRegistro: "2026-03-05T13:00:00Z"
-  },
-  {
-    id: "god-013",
-    correlativo: 13,
-    nombreApellido: "Doris Josefina Hurtado",
-    cedula: "V-15.340.912",
-    telefono: "0416-7788990",
-    subParroquia: "Sub-Parroquia 4 • Los Guaros",
-    centroElectoral: "Centro De Votacion San Rafael",
-    sector: "Los Guaros 2",
-    edad: 46,
-    profesion: "Enfermera General",
-    clasificacionVoto: "duro",
-    fechaRegistro: "2026-03-05T13:15:00Z"
-  },
-  {
-    id: "god-014",
-    correlativo: 14,
-    nombreApellido: "Julián David Cova",
-    cedula: "V-19.876.543",
-    telefono: "0424-8899001",
-    subParroquia: "Sub-Parroquia 5 • El Silencio",
-    centroElectoral: "Centro Del Niño Y La Familia Simoncito Moscu",
-    sector: "El Silencio Campo Alegre",
-    edad: 37,
-    profesion: "Electricista Residencial",
-    clasificacionVoto: "blando",
-    fechaRegistro: "2026-03-05T13:45:00Z"
-  },
-  {
-    id: "god-015",
-    correlativo: 15,
-    nombreApellido: "Mariángel Victoria León",
-    cedula: "V-28.901.234",
-    telefono: "0414-3322114",
-    subParroquia: "Sub-Parroquia 10 • Paramaconi",
-    centroElectoral: "Centro Del Niño Y La Familia Bolivariano Nuevo Horizonte",
-    sector: "Paramaconi I",
-    edad: 21,
-    profesion: "Barbera / Estilista",
-    clasificacionVoto: "nuevo",
-    fechaRegistro: "2026-03-05T14:10:00Z"
-  },
-  {
-    id: "god-016",
-    correlativo: 16,
-    nombreApellido: "Pedro Pablo Zambrano",
-    cedula: "V-9.876.543",
-    telefono: "0416-5544332",
-    subParroquia: "Sub-Parroquia 10 • Paramaconi",
-    centroElectoral: "Centro Del Niño Y La Familia Bolivariano Nuevo Horizonte",
-    sector: "Corapal",
-    edad: 64,
-    profesion: "Agricultor Urbano",
-    clasificacionVoto: "duro",
-    fechaRegistro: "2026-03-05T14:30:00Z"
-  }
-];
+// Base nominal de electores en producción: Inicia limpio para registro real en calle
+export const DEMO_ELECTORES_GODOS = [];
 
-const STORAGE_KEY = "migato_caracterizacion_voto_v1";
+const STORAGE_KEY = "migato_caracterizacion_voto_prod_v1";
 
 /**
  * Gestor Central de Persistencia y Métricas Electorales
@@ -366,16 +141,14 @@ export class VotoStore {
       const raw = localStorage.getItem(STORAGE_KEY);
       if (raw) {
         const parsed = JSON.parse(raw);
-        if (Array.isArray(parsed) && parsed.length > 0) {
+        if (Array.isArray(parsed)) {
           return parsed;
         }
       }
     } catch (e) {
-      console.warn("Error leyendo localStorage, cargando semilla demo:", e);
+      console.warn("Error leyendo localStorage:", e);
     }
-    // Si no hay datos, inicializamos con la semilla de demo oficial
-    this.guardarEnStorage(DEMO_ELECTORES_GODOS);
-    return [...DEMO_ELECTORES_GODOS];
+    return [];
   }
 
   guardarEnStorage(lista) {

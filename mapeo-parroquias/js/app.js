@@ -143,11 +143,11 @@ class ParishMappingApp {
     densityButtons.forEach(btn => {
       btn.addEventListener("click", () => {
         densityButtons.forEach(b => {
-          b.classList.remove("bg-amber-500", "text-slate-950", "font-black");
-          b.classList.add("bg-slate-800", "text-slate-300");
+          b.classList.remove("bg-amber-500", "text-[#0e092e]", "font-black");
+          b.classList.add("bg-[#0e092e]", "text-slate-300");
         });
-        btn.classList.add("bg-amber-500", "text-slate-950", "font-black");
-        btn.classList.remove("bg-slate-800", "text-slate-300");
+        btn.classList.add("bg-amber-500", "text-[#0e092e]", "font-black");
+        btn.classList.remove("bg-[#0e092e]", "text-slate-300");
 
         this.currentRadiusM = parseInt(btn.dataset.size);
         this.regenerateHexagons();
@@ -279,7 +279,7 @@ class ParishMappingApp {
   showToast(message, isError = false) {
     const toast = document.createElement("div");
     toast.className = `fixed bottom-6 right-6 z-50 px-4 py-3 rounded-2xl shadow-2xl text-xs font-bold text-white transition-all transform duration-200 border ${
-      isError ? 'bg-red-600 border-red-500' : 'bg-slate-900 border-slate-700 text-amber-400'
+      isError ? 'bg-red-600 border-red-500' : 'bg-[#18114a] border-[#2d1f85] text-amber-400'
     }`;
     toast.textContent = message;
     document.body.appendChild(toast);

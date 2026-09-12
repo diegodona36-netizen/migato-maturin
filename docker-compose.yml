@@ -1,0 +1,60 @@
+# ==============================================================================
+# PROYECTO MIGATO - ORQUESTACIÓN DOCKER DE PRODUCCIÓN
+# Despliegue con un solo comando: docker compose up -d
+# ==============================================================================
+
+version: '3.8'
+
+services:
+  # 1. Servidor Web de Alta Velocidad (Frontend + Cartografía + Dashboards)
+  migato_web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: migato_web_prod
+    restart: always
+    ports:
+      - "80:80"
+    environment:
+      - NODE_ENV=production
+    networks:
+      - migato_network
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 2048M
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  # 2. Base de Datos Soberana PostgreSQL + PostGIS (Geoespacial)
+  migato_db:
+    image: postgis/postgis:16-3.4-alpine
+    container_name: migato_postgres_prod
+    restart: always
+    environment:
+      POSTGRES_DB: ${DB_NAME:-migato_db}
+      POSTGRES_USER: ${DB_USER:-migato_admin}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-cambiar_por_contrasena_segura_2026}
+    volumes:
+      - migato_db_data:/var/lib/postgresql/data
+    networks:
+      - migato_network
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 4096M
+    # La base de datos vive en una red interna privada (sin exponer puerto 5432 a internet)
+
+volumes:
+  migato_db_data:
+    name: migato_db_data_volume
+
+networks:
+  migato_network:
+    driver: bridge
+    name: migato_internal_network

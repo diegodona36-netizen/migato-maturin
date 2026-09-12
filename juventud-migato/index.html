@@ -22,13 +22,13 @@
   <!-- ============================================================== -->
   <!-- TOP GLOBAL HEADER -->
   <!-- ============================================================== -->
-  <header class="bg-slate-900 text-white border-b border-slate-800 sticky top-0 z-30 shadow-md">
+  <header class="bg-[#140e40] text-white border-b border-[#2d1f85] sticky top-0 z-30 shadow-md">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3">
       <div class="flex flex-col md:flex-row md:items-center justify-between gap-3">
         
         <!-- Logo & Titulo -->
         <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-500 to-amber-600 text-slate-950 flex items-center justify-center font-black shadow-md shrink-0">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-500 to-amber-600 text-[#0e092e] flex items-center justify-center font-black shadow-md shrink-0">
             <i data-lucide="sparkles" class="w-6 h-6"></i>
           </div>
           <div>
@@ -43,17 +43,17 @@
         <!-- Acciones: Botón Nuevo Reporte & Exportar -->
         <div class="flex flex-wrap items-center gap-2">
           
-          <a href="formulario.html" class="px-4 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 text-xs font-black shadow-md transition flex items-center gap-1.5">
+          <a href="formulario.html" class="px-4 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-[#0e092e] text-xs font-black shadow-md transition flex items-center gap-1.5">
             <i data-lucide="plus-circle" class="w-4 h-4"></i>
             <span>+ Cargar Informe Semanal</span>
           </a>
 
-          <button id="btn-export-youth-csv" class="px-3 py-2 text-xs font-bold text-slate-300 hover:text-white bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-xl transition flex items-center gap-1.5">
+          <button id="btn-export-youth-csv" class="px-3 py-2 text-xs font-bold text-slate-300 hover:text-white bg-[#0e092e] hover:bg-[#23176d] border border-[#2d1f85] rounded-xl transition flex items-center gap-1.5">
             <i data-lucide="download" class="w-4 h-4 text-emerald-400"></i>
             <span>Exportar (CSV)</span>
           </button>
 
-          <button id="btn-print-summary" class="p-2 text-slate-300 hover:text-white bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-xl transition" title="Imprimir Informe de los Lunes">
+          <button id="btn-print-summary" class="p-2 text-slate-300 hover:text-white bg-[#0e092e] hover:bg-[#23176d] border border-[#2d1f85] rounded-xl transition" title="Imprimir Informe de los Lunes">
             <i data-lucide="printer" class="w-4 h-4 text-sky-400"></i>
           </button>
         </div>
@@ -62,19 +62,19 @@
     </div>
 
     <!-- Navigation Tabs Bar -->
-    <div class="bg-slate-950 border-t border-slate-800 px-4 sm:px-6">
+    <div class="bg-[#100b33] border-t border-[#2d1f85] px-4 sm:px-6">
       <div class="max-w-7xl mx-auto flex items-center overflow-x-auto no-scrollbar gap-1.5 py-1.5">
-        <button data-tab="tab-consolidado" class="nav-tab-btn px-3.5 py-2 text-xs sm:text-sm font-bold rounded-lg bg-amber-500 text-slate-950 transition flex items-center gap-1.5 shrink-0 shadow-sm">
+        <button data-tab="tab-consolidado" class="nav-tab-btn px-3.5 py-2 text-xs sm:text-sm font-bold rounded-lg bg-amber-500 text-[#0e092e] transition flex items-center gap-1.5 shrink-0 shadow-sm">
           <i data-lucide="layout-grid" class="w-4 h-4"></i>
           <span>Fichas Municipales & Fotos</span>
         </button>
 
-        <button data-tab="tab-graficos" class="nav-tab-btn px-3.5 py-2 text-xs sm:text-sm font-medium rounded-lg text-slate-400 hover:bg-slate-800 transition flex items-center gap-1.5 shrink-0">
+        <button data-tab="tab-graficos" class="nav-tab-btn px-3.5 py-2 text-xs sm:text-sm font-medium rounded-lg text-slate-400 hover:bg-[#23176d] transition flex items-center gap-1.5 shrink-0">
           <i data-lucide="bar-chart-3" class="w-4 h-4"></i>
           <span>Comparativo por Ejes</span>
         </button>
 
-        <button data-tab="tab-ranking" class="nav-tab-btn px-3.5 py-2 text-xs sm:text-sm font-medium rounded-lg text-slate-400 hover:bg-slate-800 transition flex items-center gap-1.5 shrink-0">
+        <button data-tab="tab-ranking" class="nav-tab-btn px-3.5 py-2 text-xs sm:text-sm font-medium rounded-lg text-slate-400 hover:bg-[#23176d] transition flex items-center gap-1.5 shrink-0">
           <i data-lucide="trophy" class="w-4 h-4"></i>
           <span>Ranking Territorial</span>
         </button>
@@ -278,7 +278,7 @@
     <!-- ------------------------------------------------------------ -->
     <div id="tab-imprimir" class="tab-content hidden space-y-4">
       <div class="flex justify-end no-print">
-        <button onclick="window.print()" class="px-4 py-2 bg-slate-900 text-white font-bold text-xs rounded-xl shadow hover:bg-slate-800 transition flex items-center gap-1.5">
+        <button onclick="window.print()" class="px-4 py-2 bg-[#140e40] hover:bg-[#1d1554] border border-[#2d1f85] text-white font-bold text-xs rounded-xl shadow transition flex items-center gap-1.5">
           <i data-lucide="printer" class="w-4 h-4 text-amber-400"></i>
           <span>Imprimir / Guardar como PDF</span>
         </button>
@@ -292,9 +292,9 @@
   </main>
 
   <!-- MODAL VISOR DE FOTOS FULLSCREEN -->
-  <div id="photo-modal" class="fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-md hidden items-center justify-center p-4">
-    <div class="relative max-w-3xl w-full bg-slate-900 rounded-3xl overflow-hidden shadow-2xl border border-slate-800 animate-in fade-in zoom-in-95 duration-150 flex flex-col">
-      <div class="p-4 bg-slate-950 border-b border-slate-800 flex items-center justify-between text-white">
+  <div id="photo-modal" class="fixed inset-0 z-50 bg-[#0c0828]/90 backdrop-blur-md hidden items-center justify-center p-4">
+    <div class="relative max-w-3xl w-full bg-[#140e40] rounded-3xl overflow-hidden shadow-2xl border border-[#2d1f85] animate-in fade-in zoom-in-95 duration-150 flex flex-col">
+      <div class="p-4 bg-[#18114a] border-b border-[#2d1f85] flex items-center justify-between text-white">
         <div>
           <h3 id="photo-modal-title" class="text-sm font-bold">Foto de Evidencia</h3>
           <p id="photo-modal-mun" class="text-[11px] text-amber-400 font-mono">Municipio</p>
@@ -303,14 +303,14 @@
           <i data-lucide="x" class="w-5 h-5"></i>
         </button>
       </div>
-      <div class="p-2 flex items-center justify-center bg-black max-h-[75vh]">
+      <div class="p-2 flex items-center justify-center bg-[#0e092e] max-h-[75vh]">
         <img id="photo-modal-img" src="" class="max-w-full max-h-[70vh] object-contain rounded-xl">
       </div>
     </div>
   </div>
 
   <!-- FOOTER -->
-  <footer class="bg-slate-900 text-slate-500 border-t border-slate-800 py-4 text-center text-xs">
+  <footer class="bg-[#100b33] text-slate-400 border-t border-[#2d1f85] py-4 text-center text-xs">
     <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
       <p>Secretaría Regional Juvenil MIGATO • Monagas</p>
       <p class="font-mono text-[11px] text-slate-400">Sistema de Evaluación y Despliegue Territorial</p>

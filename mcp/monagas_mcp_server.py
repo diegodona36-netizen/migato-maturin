@@ -345,7 +345,7 @@ RESOURCES_DEFINITIONS = [
     {
         "uri": "monagas://sectores-lapuente",
         "name": "Sectores Oficiales de La Puente",
-        "description": "11 sectores de La Puente, centros electorales y censos comunales",
+        "description": "11 sectores de La Puente, centros electorales y censos sectoriales",
         "mimeType": "application/json"
     },
     {

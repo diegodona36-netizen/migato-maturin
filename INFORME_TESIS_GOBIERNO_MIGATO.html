@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>DICTAMEN TÉCNICO • PLATAFORMA TERRITORIAL MIGATO 2026</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="assets/logo-migato.png">
+  <style>
+    @page {
+      size: letter;
+      margin: 25mm 20mm 25mm 25mm;
+      @top-left {
+        content: "REPÚBLICA BOLIVARIANA DE VENEZUELA • ESTADO MONAGAS";
+        font-family: Arial, sans-serif;
+        font-size: 8pt;
+        font-weight: bold;
+        color: #1e3a8a;
+      }
+      @top-right {
+        content: "SISTEMA TERRITORIAL MIGATO 2026";
+        font-family: Arial, sans-serif;
+        font-size: 8pt;
+        font-weight: bold;
+        color: #0f172a;
+      }
+      @bottom-left {
+        content: "Dictamen Técnico y Operativo • Sala de Mando Territorial (Confidencial)";
+        font-family: Arial, sans-serif;
+        font-size: 8pt;
+        font-style: italic;
+        color: #64748b;
+      }
+      @bottom-right {
+        content: "Página " counter(page);
+        font-family: Arial, sans-serif;
+        font-size: 8pt;
+        font-weight: bold;
+        color: #0f172a;
+      }
+    }
+
+    @page :first {
+      @top-left { content: normal; }
+      @top-right { content: normal; }
+      @bottom-left { content: normal; }
+      @bottom-right { content: normal; }
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+      font-size: 12pt;
+      line-height: 1.5;
+      color: #0f172a;
+      background-color: #f1f5f9;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    .no-print-bar {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: #0f172a;
+      color: white;
+      padding: 14px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    }
+    .no-print-bar button {
+      background: #2563eb;
+      color: white;
+      border: none;
+      padding: 9px 20px;
+      font-weight: bold;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 13px;
+    }
+    .no-print-bar button:hover {
+      background: #1d4ed8;
+    }
+
+    .paper-container {
+      max-width: 216mm;
+      margin: 30px auto;
+      background: white;
+      padding: 25mm 20mm 25mm 25mm;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      border-radius: 4px;
+    }
+
+    /* ENCABEZADO Y PIE DE PÁGINA EN PANTALLA */
+    .running-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid #1e3a8a;
+      padding-bottom: 6px;
+      margin-bottom: 28px;
+      font-size: 8.5pt;
+      color: #1e3a8a;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+    .running-header span:last-child {
+      color: #0f172a;
+    }
+
+    .running-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid #cbd5e1;
+      padding-top: 8px;
+      margin-top: 35px;
+      font-size: 8.5pt;
+      color: #64748b;
+      font-style: italic;
+    }
+
+    .portada {
+      text-align: center;
+      min-height: 85vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding-bottom: 40px;
+      page-break-after: always;
+    }
+
+    .portada-header {
+      font-weight: 700;
+      font-size: 13pt;
+      line-height: 1.4;
+      color: #0f172a;
+      text-transform: uppercase;
+      border-bottom: 2px solid #1e3a8a;
+      padding-bottom: 15px;
+    }
+
+    .logo-container {
+      margin: 35px auto;
+    }
+    .logo-container img {
+      width: 145px;
+      height: 145px;
+      object-fit: contain;
+    }
+
+    .portada-title {
+      font-size: 17pt;
+      font-weight: 800;
+      color: #0f172a;
+      line-height: 1.35;
+      margin: 20px 0;
+      text-transform: uppercase;
+    }
+    .portada-subtitle {
+      font-size: 13pt;
+      color: #1e3a8a;
+      font-weight: 600;
+      font-style: italic;
+      margin-bottom: 25px;
+    }
+
+    .portada-footer {
+      font-size: 11pt;
+      color: #475569;
+      line-height: 1.6;
+      border-top: 1px solid #cbd5e1;
+      padding-top: 15px;
+    }
+
+    h1 {
+      font-size: 15pt;
+      font-weight: 700;
+      color: #0f172a;
+      text-transform: uppercase;
+      border-bottom: 2px solid #1e3a8a;
+      padding-bottom: 6px;
+      margin-top: 32px;
+      margin-bottom: 16px;
+      page-break-after: avoid;
+    }
+
+    h2 {
+      font-size: 13pt;
+      font-weight: 700;
+      color: #1e3a8a;
+      margin-top: 24px;
+      margin-bottom: 12px;
+      page-break-after: avoid;
+    }
+
+    p {
+      text-align: justify;
+      margin-bottom: 14px;
+      text-indent: 0;
+    }
+
+    .callout {
+      background: #f8fafc;
+      border-left: 4px solid #1e3a8a;
+      padding: 14px 18px;
+      margin: 18px 0;
+      font-style: italic;
+      color: #1e293b;
+    }
+
+    .example-box {
+      background: #f0f9ff;
+      border: 1px solid #bae6fd;
+      border-left: 5px solid #0284c7;
+      padding: 16px 20px;
+      margin: 20px 0;
+      border-radius: 4px;
+    }
+    .example-title {
+      font-weight: 700;
+      color: #0369a1;
+      font-size: 11pt;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 22px 0;
+      font-size: 10pt;
+    }
+    th, td {
+      border: 1px solid #cbd5e1;
+      padding: 10px 12px;
+      text-align: left;
+    }
+    th {
+      background: #0f172a;
+      color: white;
+      font-weight: 700;
+      text-transform: uppercase;
+      font-size: 9.5pt;
+    }
+    tr:nth-child(even) {
+      background: #f8fafc;
+    }
+
+    .footnote {
+      margin-top: 40px;
+      padding-top: 15px;
+      border-top: 1px solid #94a3b8;
+      font-size: 9pt;
+      color: #64748b;
+      line-height: 1.4;
+    }
+
+    @media print {
+      body {
+        background: white;
+        font-size: 11.5pt;
+      }
+      .no-print-bar, .running-header, .running-footer {
+        display: none !important;
+      }
+      .paper-container {
+        box-shadow: none;
+        margin: 0;
+        padding: 0;
+        max-width: 100%;
+      }
+      .page-break {
+        page-break-before: always;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="no-print-bar">
+    <div>
+      <b>DICTAMEN TÉCNICO OFICIAL • FORMATO GOBIERNO / TESIS (ARIAL 12)</b>
+      <span style="opacity: 0.7; margin-left: 12px;">Estado Monagas 2026</span>
+    </div>
+    <div>
+      <button onclick="window.print()">🖨️ IMPRIMIR / GUARDAR COMO PDF</button>
+    </div>
+  </div>
+
+  <div class="paper-container">
+
+    <!-- PORTADA FORMAL (COMPLETAMENTE LIMPIA DE CABECERA/PIE) -->
+    <div class="portada">
+      <div class="portada-header">
+        REPÚBLICA BOLIVARIANA DE VENEZUELA<br>
+        MOVIMIENTO INDEPENDIENTE GANAMOS TODOS (MIGATO)<br>
+        DIRECCIÓN GENERAL DE ESTRATEGIA Y SALA SITUACIONAL REGIONAL
+      </div>
+
+      <div class="logo-container">
+        <img src="assets/logo-migato.png" alt="Emblema Oficial MIGATO">
+      </div>
+
+      <div>
+        <div class="portada-title">
+          DICTAMEN TÉCNICO Y OPERATIVO: ARQUITECTURA DE INTELIGENCIA TERRITORIAL, SISTEMAS DE INFORMACIÓN GEOGRÁFICA Y DEFENSA DEL VOTO
+        </div>
+        <div class="portada-subtitle">
+          Manual Doctrinal y Casos Prácticos de los Cuatro Módulos de Mando Táctico para el Estado Monagas
+        </div>
+      </div>
+
+      <div class="portada-footer">
+        <b>Comando de Campaña y Coordinación General</b><br>
+        Bajo el Liderazgo Histórico de José Gregorio "El Gato" Briceño<br>
+        Maturín, Estado Monagas • Septiembre de 2026
+      </div>
+    </div>
+
+    <!-- PÁGINA 2: CONTENIDO CON CABECERA Y PIE FORMAL -->
+    <div class="running-header">
+      <span>REPÚBLICA BOLIVARIANA DE VENEZUELA • ESTADO MONAGAS</span>
+      <span>SISTEMA TERRITORIAL MIGATO 2026</span>
+    </div>
+
+    <!-- RESUMEN EJECUTIVO -->
+    <h1>Resumen Ejecutivo (Abstract Institucional)</h1>
+    <p>El presente dictamen técnico y estratégico formaliza la estructura operativa de la Plataforma Territorial MIGATO en el Estado Monagas. Diseñada bajo rigurosos criterios de soberanía de datos, descentralización y eficiencia institucional, la plataforma constituye el núcleo tecnológico del Movimiento Independiente Ganamos Todos para articular la maquinaria de campo, levantar el censo sectorial de necesidades ciudadanas y blindar de forma inexpugnable los 175 centros de votación y 361 mesas del Municipio Maturín.</p>
+    <p>Frente a los modelos de control social estatista y centralismo asfixiante, este sistema se fundamenta en principios republicanos, defensa de la propiedad privada y libertad individual. Mediante cuatro módulos autónomos pero estrechamente integrados (Despacho Celular, Censo Sectorial en Cascada, Auditoría Electoral CNE con Actas QR y Cartografía Satelital 3D), la organización política pasa de una conducción reactiva a una conducción científica del territorio.</p>
+
+    <div class="callout">
+      «La defensa del territorio y la recuperación de Monagas no se logran con consignas huecas, sino con orden, datos verificables en el terreno, respeto a las comunidades y control milimétrico de cada acta electoral.» — Dirección Política Regional.
+    </div>
+
+    <!-- CAPÍTULO I -->
+    <h1>Capítulo I: Marco Doctrinal y Gobernanza Territorial</h1>
+    <p>Durante las últimas décadas, la administración pública regional en el Estado Monagas fue desmantelada por estructuras burocráticas ineficientes y clientelares que destruyeron los servicios básicos: acueductos colapsados, apagones sistemáticos, vialidad agrícola abandonada y ambulatorios inoperativos. Dicho deterioro vino acompañado del uso de censos con fines de extorsión política y persecución ciudadana.</p>
+    <p>El Movimiento MIGATO, respaldado en la trayectoria de orden, obras tangibles y probada capacidad de gobierno del liderazgo de José Gregorio "El Gato" Briceño, establece a través de esta plataforma una ruptura definitiva con ese esquema: sustituye la retórica ideológica por ingeniería de datos, protección irrestricta a la identidad del ciudadano y planificación rigurosa para la reconstrucción económica de Monagas.</p>
+
+    <div class="running-footer">
+      <span>Dictamen Técnico y Operativo • Sala de Mando Territorial (Confidencial)</span>
+      <span>Página 2</span>
+    </div>
+
+    <!-- PÁGINA 3 -->
+    <div class="page-break"></div>
+    <div class="running-header">
+      <span>REPÚBLICA BOLIVARIANA DE VENEZUELA • ESTADO MONAGAS</span>
+      <span>SISTEMA TERRITORIAL MIGATO 2026</span>
+    </div>
+
+    <!-- CAPÍTULO II: MÓDULO 1 -->
+    <h1>Capítulo II: Módulo 1 — Despacho de Enlaces Parroquiales</h1>
+    <h2>1. Fundamentación Técnica y Arquitectura de Mando</h2>
+    <p>El Módulo de Despacho de Enlaces Parroquiales (WhatsApp Dispatch Console) resuelve el principal cuello de botella de las organizaciones políticas: la dispersión y distorsión de las directrices a través de cadenas informales de mensajería. El sistema actúa como un despachador unificado que genera enlaces encriptados y mensajes de acreditación oficial para cada coordinador territorial.</p>
+    <p>El enlace no requiere instalar aplicaciones pesadas ni configuraciones complejas que comprometan la memoria o seguridad de su teléfono. Al pulsar el enlace, se abre de inmediato su consola de trabajo en el navegador móvil y su canal directo con la Sala de Mando Central.</p>
+
+    <div class="example-box">
+      <div class="example-title">📌 Ejemplo Práctico de Aplicación Operativa (Caso San Simón y Alto de Los Godos)</div>
+      <p><b>Escenario de Despliegue Inmediato:</b> Viernes, 08:30 hrs. Se reporta la paralización de las bombas de la Planta Potabilizadora del Bajo Guarapiche, dejando sin suministro de agua potable al 70% de la Parroquia San Simón y sectores críticos de Alto de Los Godos. La Sala Situacional requiere en menos de 15 minutos conocer los puntos de mayor vulnerabilidad comunitaria para coordinar apoyo y fijar posición pública.</p>
+      <p><b>Acción en el Sistema:</b> El Director Operativo ingresa al Módulo 1 (<code>/despacho/</code>), selecciona simultáneamente 'San Simón' y 'Alto de Los Godos', y hace clic en 'Despachar a Coordinadores'. De manera instantánea, los 2 enlaces parroquiales reciben en sus teléfonos móviles su comunicado oficial con enlace seguro a la consola móvil.</p>
+      <p><b>Resultado en Tiempo:</b> A las 08:42 hrs (12 minutos después), ambos enlaces cargaron los reportes consolidados: 14 centros de salud afectados, 6 escuelas sin reservorio y 4 pozos profundos inoperativos en el Eje La Puente. El comando regional cuenta con el diagnóstico en mano antes de que el oficialismo emita un boletín.</p>
+    </div>
+
+    <!-- CAPÍTULO III: MÓDULO 2 -->
+    <h1>Capítulo III: Módulo 2 — Censo Sectorial y Buzón Ciego</h1>
+    <h2>1. Metodología de Censo y Protección Contra Persecución</h2>
+    <p>El Censo Sectorial es la columna de inteligencia social del sistema. A diferencia de los registros estatales que fichan al ciudadano para amenazarlo con programas de alimentos o despidos, la plataforma MIGATO implementa el Protocolo de Buzón Ciego. Toda la información de campo se procesa a nivel cuantitativo agregado por sector, resguardando la identidad individual de las familias encuestadas.</p>
+    <p>El sistema cuenta con un motor de almacenamiento local (Local Offline Cache) que garantiza operatividad continua: si el coordinador está en una comunidad sin cobertura celular o en medio de un apagón, los datos se almacenan localmente en el dispositivo y se sincronizan de forma transparente apenas detecta señal.</p>
+
+    <div class="example-box">
+      <div class="example-title">📌 Ejemplo Práctico de Campo (Caso Eje La Puente, Parroquia Alto de Los Godos)</div>
+      <p><b>Levantamiento Territorial:</b> El equipo territorial de MIGATO se despliega en los sectores 'La Puente Sector Central', 'Rómulo Gallegos', 'Valle Real' y 'El Rosillo'. Cada encuestador accede a su consola (<code>/carga/?p=alto-de-los-godos</code>). A medida que recorren las calles, registran: 1.250 viviendas censadas, 4.800 habitantes, 2.920 electores potenciales, 3 transformadores eléctricos quemados y 1 pozo de agua fuera de servicio.</p>
+      <p><b>Blindaje de Privacidad:</b> Ningún nombre propio de votante vulnerable queda registrado en listas públicas. Los datos alimentan en tiempo real el Tablero de Campaña (<code>/dashboard-campana/</code>), generando una alerta roja por 'Colapso Crítico de Agua y Electricidad en Sub-Parroquia 6'. Con base en esta cifra exacta, el plan de reconstrucción regional asigna el presupuesto exacto para reactivar la estación de bombeo de La Puente.</p>
+    </div>
+
+    <div class="running-footer">
+      <span>Dictamen Técnico y Operativo • Sala de Mando Territorial (Confidencial)</span>
+      <span>Página 3</span>
+    </div>
+
+    <!-- PÁGINA 4 -->
+    <div class="page-break"></div>
+    <div class="running-header">
+      <span>REPÚBLICA BOLIVARIANA DE VENEZUELA • ESTADO MONAGAS</span>
+      <span>SISTEMA TERRITORIAL MIGATO 2026</span>
+    </div>
+
+    <!-- CAPÍTULO IV: MÓDULO 3 -->
+    <h1>Capítulo IV: Módulo 3 — Tablilla Electoral y Actas QR del CNE</h1>
+    <h2>1. Blindaje Electoral de los 175 Centros de Maturín</h2>
+    <p>El Módulo 3 constituye el escudo legal y matemático para asegurar la victoria electoral. Contiene el universo georreferenciado de los 175 centros de votación y 361 mesas del Municipio Maturín (con 318.601 electores registrados), asignando a cada centro sus coordinadores, testigos principales, suplentes y movilizadores.</p>
+    <p>La herramienta integra el Protocolo de Validación Rápida de Actas QR: las máquinas electorales del CNE imprimen al cierre de mesa un comprobante físico con un código QR que codifica la totalización de votos. El testigo de MIGATO escanea y fotografía el código desde su teléfono, transmitiendo los datos al servidor en menos de 4 minutos, antes de que el acta física sea retirada del aula de votación.</p>
+
+    <div class="example-box">
+      <div class="example-title">📌 Ejemplo Práctico de Cómputo (Caso E.B. "Alberto Ravell", Código CNE 160101004)</div>
+      <p><b>Escrutinio y Transmisión:</b> Domingo de elección, 18:00 hrs. Concluye el acto de votación en la Mesa 1 de la E.B. Alberto Ravell (Parroquia San Simón, 785 electores en mesa, 590 votantes efectivos). La máquina electoral emite el acta de escrutinio impresa. A las 18:04 hrs, el testigo acreditado de MIGATO abre <code>/centros-maturin/</code>, pulsa 'Escanear Acta QR', captura la imagen y el sistema decodifica matemáticamente los votos de la mesa.</p>
+      <p><b>Consolidación Inmediata:</b> A las 18:06 hrs, la Sala Situacional Central de MIGATO ya tiene totalizada la Mesa 1 en su Tablilla Electoral en vivo: 442 votos para la candidatura de la unidad democrática frente a 138 de la opción oficialista. El resultado queda blindado con respaldo criptográfico y fotográfico antes de que se desconecte la máquina o se intente cualquier alteración en el traslado físico.</p>
+    </div>
+
+    <!-- CAPÍTULO V: MÓDULO 4 -->
+    <h1>Capítulo V: Módulo 4 — Cartografía Satelital Táctica 3D</h1>
+    <h2>1. Visor Geoespacial y Análisis de Redes Viales</h2>
+    <p>El Módulo 4 traslada la inteligencia electoral a la dimensión espacial tridimensional. Construido sobre un motor geoespacial de alta definición (disponible en <code>/earth-monagas/</code>), permite visualizar la geografía monaguense con capas de densidad poblacional, ubicación milimétrica de centros de votación, infraestructura de servicios y vías de comunicación.</p>
+    <p>Permite eliminar la improvisación logística el día de los comicios: calcula rutas de acceso, distancias kilométricas, tiempos de traslado y corredores viales para la movilización de testigos y asistencia logística.</p>
+
+    <div class="example-box">
+      <div class="example-title">📌 Ejemplo Práctico de Rutas (Caso Eje Suburbano El Furrial - Jusepín)</div>
+      <p><b>Planificación de Despliegue:</b> Para cubrir los 14 centros electorales dispersos entre El Furrial y Jusepín, la Sala de Transporte activa en el satélite la capa de centros y cuadrantes viales. El sistema calcula que el tiempo de respuesta desde la base de apoyo en Maturín es de 42 minutos por la Carretera Nacional, pero identifica un punto de contingencia por fallas de drenaje en el Puente de Guanipa.</p>
+      <p><b>Optimización Logística:</b> El comando reasigna las unidades motorizadas por la vía alterna de La Toscana, asegurando la entrega de alimentos y refrigerios a los 32 testigos acreditados antes de las 12:00 hrs y garantizando la presencia ininterrumpida en las mesas hasta el conteo final.</p>
+    </div>
+
+    <div class="running-footer">
+      <span>Dictamen Técnico y Operativo • Sala de Mando Territorial (Confidencial)</span>
+      <span>Página 4</span>
+    </div>
+
+    <!-- PÁGINA 5 -->
+    <div class="page-break"></div>
+    <div class="running-header">
+      <span>REPÚBLICA BOLIVARIANA DE VENEZUELA • ESTADO MONAGAS</span>
+      <span>SISTEMA TERRITORIAL MIGATO 2026</span>
+    </div>
+
+    <!-- CAPÍTULO VI: MATRIZ -->
+    <h1>Capítulo VI: Matriz Comparativa de los Cuatro Módulos</h1>
+    <p>La siguiente tabla resume los atributos funcionales, entradas, salidas y tiempos de respuesta de cada herramienta del sistema:</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Módulo</th>
+          <th>Propósito Central</th>
+          <th>Entrada de Datos</th>
+          <th>Salida Estratégica</th>
+          <th>Tiempo de Respuesta</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><b>Módulo 1: Despacho WhatsApp</b></td>
+          <td>Línea de mando directa sin intermediarios</td>
+          <td>Directorio territorial y credenciales</td>
+          <td>Enlaces de acceso WhatsApp directos</td>
+          <td>&lt; 2 minutos</td>
+        </tr>
+        <tr>
+          <td><b>Módulo 2: Censo Sectorial</b></td>
+          <td>Levantamiento de necesidades ciudadanas</td>
+          <td>Reportes de campo (Casas, Votos, Servicios)</td>
+          <td>Buzón ciego y métricas de sector</td>
+          <td>Tiempo real / Offline</td>
+        </tr>
+        <tr>
+          <td><b>Módulo 3: Tablilla y Actas QR</b></td>
+          <td>Defensa y auditoría del voto CNE</td>
+          <td>175 Centros y fotos/códigos de actas</td>
+          <td>Totalización paralela inexpugnable</td>
+          <td>&lt; 4 minutos por mesa</td>
+        </tr>
+        <tr>
+          <td><b>Módulo 4: Cartografía Satelital</b></td>
+          <td>Vista geoespacial 3D y logística</td>
+          <td>Coordenadas GPS y capas de servicios</td>
+          <td>Rutas críticas y análisis de cobertura</td>
+          <td>Instantáneo (GPU)</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- CAPÍTULO VII -->
+    <h1>Capítulo VII: Conclusiones y Dictamen Final</h1>
+    <p><b>1. Soberanía y Blindaje Tecnológico:</b> La arquitectura MIGATO demostró que es posible construir una plataforma de nivel estatal con recursos propios, sin depender de software privativo costoso ni de infraestructuras vulnerables al bloqueo estatal.</p>
+    <p><b>2. Enfoque Humano y Sin Clientelismo:</b> El censo sectorial recupera la dignidad del ciudadano monaguense, sustituyendo el chantaje social por un diagnóstico real de los servicios para la reconstrucción económica.</p>
+    <p><b>3. Garantía Irrefutable de la Victoria:</b> La combinación de los 175 centros auditados, la digitalización instantánea de actas QR y el despacho disciplinado de enlaces aseguran que la voluntad del pueblo de Monagas se defenderá y se proclamará con actas en mano.</p>
+
+    <div class="footnote">
+      <b>Referencias Técnicas Institucionales:</b><br>
+      ¹ Protocolo CNE-V26: Registro Electoral Definitivo del Municipio Maturín (318.601 electores distribuidos en 10 parroquias y 175 centros de votación).<br>
+      ² Modelo Criptográfico de Buzón Ciego: Esquema de agregación probabilística que disocia identificadores personales de las variables censadas.<br>
+      ³ Cartografía Geoespacial OGC: Estándar WGS84 para delimitación de cuadrantes y polígonos de sectores territoriales.
+    </div>
+
+    <div class="running-footer">
+      <span>Dictamen Técnico y Operativo • Sala de Mando Territorial (Confidencial)</span>
+      <span>Página 5</span>
+    </div>
+
+  </div>
+
+</body>
+</html>

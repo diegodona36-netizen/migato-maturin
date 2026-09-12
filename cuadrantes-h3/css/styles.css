@@ -13,7 +13,7 @@ body {
 #h3-map-container {
   width: 100%;
   height: 100%;
-  background: #090d16;
+  background: #0e092e;
 }
 
 .h3-hex-cell {
@@ -28,11 +28,11 @@ body {
 }
 
 .leaflet-tooltip {
-  background: rgba(15, 23, 42, 0.95) !important;
+  background: rgba(20, 14, 64, 0.95) !important;
   color: #f8fafc !important;
-  border: 1px solid #334155 !important;
+  border: 1px solid #2d1f85 !important;
   border-radius: 8px !important;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5) !important;
+  box-shadow: 0 4px 14px rgba(14, 9, 46, 0.5) !important;
   font-family: "JetBrains Mono", monospace !important;
   padding: 4px 8px !important;
 }
@@ -43,9 +43,9 @@ body {
   height: 5px;
 }
 ::-webkit-scrollbar-track {
-  background: #0f172a;
+  background: #0e092e;
 }
 ::-webkit-scrollbar-thumb {
-  background: #334155;
+  background: #2d1f85;
   border-radius: 9999px;
 }

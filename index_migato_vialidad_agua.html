@@ -125,7 +125,7 @@
           <button id="btn-sync-google" class="relative inline-flex items-center justify-center w-8 h-8 sm:w-auto sm:h-auto sm:px-2.5 sm:py-2 text-xs sm:text-sm font-semibold rounded-lg bg-migato-900 hover:bg-migato-800 text-slate-200 border border-migato-700 transition shadow-sm" title="Sincronizar encuestas">
             <i data-lucide="refresh-cw" id="icon-sync-spin" class="w-4 h-4 text-sky-400"></i>
             <span class="hidden sm:inline ml-1.5">Sincronizar</span>
-            <span id="badge-pending-sync-count" class="hidden absolute -top-1 -right-1 bg-amber-500 text-slate-950 font-black text-[9px] px-1 rounded-full border border-slate-900 shadow-sm animate-pulse">0</span>
+            <span id="badge-pending-sync-count" class="hidden absolute -top-1 -right-1 bg-amber-500 text-[#0e092e] font-black text-[9px] px-1 rounded-full border border-[#2d1f85] shadow-sm animate-pulse">0</span>
           </button>
 
           <!-- Botón Encuesta Directa -->
@@ -332,7 +332,7 @@
             <p class="text-xs sm:text-sm text-sky-200 font-medium">Pozos, bombeo, suministro continuo y calidad del agua</p>
           </div>
         </div>
-        <div class="flex items-center gap-2 bg-black/20 backdrop-blur px-3 py-1.5 rounded-lg border border-white/10 text-xs font-semibold">
+        <div class="flex items-center gap-2 bg-[#0e092e]/60 backdrop-blur px-3 py-1.5 rounded-lg border border-white/10 text-xs font-semibold">
           <span class="w-2 h-2 rounded-full bg-red-400 animate-pulse"></span>
           <span id="badge-sectores-sin-agua">0 sectores en Alerta Roja</span>
         </div>
@@ -426,7 +426,7 @@
             <p class="text-xs sm:text-sm text-amber-200 font-medium">Huecos, asfalto, drenajes pluviales, cloacas y alumbrado público</p>
           </div>
         </div>
-        <div class="flex items-center gap-2 bg-black/20 backdrop-blur px-3 py-1.5 rounded-lg border border-white/10 text-xs font-semibold">
+        <div class="flex items-center gap-2 bg-[#0e092e]/60 backdrop-blur px-3 py-1.5 rounded-lg border border-white/10 text-xs font-semibold">
           <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
           <span id="badge-sectores-vialidad-mala">0 sectores con vías críticas</span>
         </div>
@@ -741,7 +741,7 @@
               En tu Google Sheet ve a <strong>Extensiones &gt; Apps Script</strong>, pega este código y publica como <em>Web App</em>:
             </p>
 
-            <pre class="p-3 rounded-xl bg-slate-950 text-[10px] text-sky-300 font-mono overflow-x-auto max-h-48"><code>function doPost(e) {
+            <pre class="p-3 rounded-xl bg-[#0e092e] border border-[#2d1f85] text-[10px] text-sky-300 font-mono overflow-x-auto max-h-48"><code>function doPost(e) {
   var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
   var data = JSON.parse(e.postData.contents);
   if (data.surveys && data.surveys.length > 0) {
@@ -792,7 +792,7 @@
   <!-- ============================================================== -->
   <!-- MODAL: CÓDIGO QR PARA ENCUESTADORES (📲) -->
   <!-- ============================================================== -->
-  <div id="modal-qr-share" class="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm hidden items-center justify-center p-4">
+  <div id="modal-qr-share" class="fixed inset-0 z-50 bg-[#0c0828]/80 backdrop-blur-sm hidden items-center justify-center p-4">
     <div class="bg-white w-full max-w-sm rounded-3xl shadow-2xl border border-slate-100 overflow-hidden text-center p-6 space-y-4">
       <div class="flex items-center justify-between border-b pb-3">
         <h3 class="font-bold text-base text-slate-900 flex items-center gap-2">
@@ -820,7 +820,7 @@
         <p>3. ¡Pueden irse al campo y funcionará <strong>sin internet</strong>!</p>
       </div>
 
-      <button id="btn-copy-app-link" class="w-full py-2.5 text-xs font-bold text-white bg-slate-900 hover:bg-slate-800 rounded-xl transition flex items-center justify-center gap-2">
+      <button id="btn-copy-app-link" class="w-full py-2.5 text-xs font-bold text-white bg-[#140e40] hover:bg-[#23176d] rounded-xl transition flex items-center justify-center gap-2 shadow">
         <i data-lucide="copy" class="w-4 h-4"></i>
         <span>Copiar Enlace para WhatsApp</span>
       </button>
@@ -830,7 +830,7 @@
   <!-- ============================================================== -->
   <!-- MODAL: PERFIL DE ENCUESTADOR / CÉDULA (👤) -->
   <!-- ============================================================== -->
-  <div id="modal-user-profile" class="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm hidden items-center justify-center p-4">
+  <div id="modal-user-profile" class="fixed inset-0 z-50 bg-[#0c0828]/80 backdrop-blur-sm hidden items-center justify-center p-4">
     <div class="bg-white w-full max-w-md rounded-3xl shadow-2xl border border-slate-100 overflow-hidden p-6 space-y-4">
       <div class="flex items-center justify-between border-b pb-3">
         <div class="flex items-center gap-2">
@@ -877,11 +877,11 @@
   <!-- ============================================================== -->
   <!-- MODAL: REGISTRAR NUEVA ENCUESTA DIRECTA (📱) -->
   <!-- ============================================================== -->
-  <div id="modal-new-survey" class="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm hidden items-center justify-center p-4 overflow-y-auto">
+  <div id="modal-new-survey" class="fixed inset-0 z-50 bg-[#0c0828]/80 backdrop-blur-sm hidden items-center justify-center p-4 overflow-y-auto">
     <div class="bg-white w-full max-w-xl rounded-3xl shadow-2xl border border-slate-100 overflow-hidden my-8 animate-in fade-in zoom-in-95 duration-200">
       
       <!-- Header Modal -->
-      <div class="bg-slate-900 text-white px-6 py-4 flex items-center justify-between border-b border-slate-800">
+      <div class="bg-[#140e40] text-white px-6 py-4 flex items-center justify-between border-b border-[#2d1f85]">
         <div class="flex items-center gap-2.5">
           <div class="w-8 h-8 rounded-lg bg-sky-500/20 text-sky-400 flex items-center justify-center">
             <i data-lucide="clipboard-plus" class="w-5 h-5"></i>

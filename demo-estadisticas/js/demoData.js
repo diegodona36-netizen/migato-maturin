@@ -4,8 +4,8 @@
  * Capa 1: Estado Monagas
  * Capa 2: 13 Municipios Oficiales
  * Capa 3: 44 Parroquias Oficiales
- * Capa 4: 120+ Sub-Parroquias / Ejes Comunales
- * Capa 5: 350+ Sectores Comunales con IDs de polígonos, casas, familias, habitantes, votantes y centros CNE
+ * Capa 4: 120+ Sub-Parroquias / Ejes Territoriales
+ * Capa 5: 350+ Sectores Vecinales con IDs de polígonos, casas, familias, habitantes, votantes y centros CNE
  *
  * 100% Offline, Determinístico, sin dependencias de backend ni Firebase.
  */
@@ -18,7 +18,7 @@ export const MONAGAS_DEMO_DATA = {
     fechaCorte: "2026-03-01",
     version: "1.0-DEMO",
     coberturaGlobal: 98.4,
-    fuente: "MIGATO • Sistema de Censo Comunal por Polígonos Satelitales"
+    fuente: "MIGATO • Sistema de Censo Territorial por Polígonos Satelitales"
   },
   municipios: [
     {
@@ -73,7 +73,7 @@ export const MONAGAS_DEMO_DATA = {
           subparroquias: [
             {
               id: "sub-godos-lapuente",
-              nombre: "Eje 6 • Circuito Comunal La Puente",
+              nombre: "Eje 6 • Circuito Territorial La Puente",
               codigo: "EJE-GOD-06",
               sectores: [
                 { id: "POL-GOD-001", nombre: "La Puente Sector 1 (Plaza)", casas: 480, familias: 580, habitantes: 1820, votantes: 1220, centroVotacion: "U.E. Gregorio Rondón", cobertura: 100 },

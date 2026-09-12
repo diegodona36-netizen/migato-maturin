@@ -138,7 +138,7 @@ El sistema ahora cuenta con el módulo `earth-monagas/js/imageOptimizer.js`:
 
 1. **Para Trazar Polígonos y Crear Sectores (Hoy):**
    - Las capas 4 y 5 están 100% limpias en la base de datos (0 sectores de prueba).
-   - Pueden ingresar a cualquier parroquia y registrar los polígonos y sectores comunales reales de campo.
+   - Pueden ingresar a cualquier parroquia y registrar los polígonos y sectores territoriales reales de campo.
 
 2. **Para Subir Planos y Fotos al Satélite:**
    - La herramienta de plano superpuesto (`Plano / Imagen`) ahora comprime automáticamente cualquier plano o foto antes de proyectarlo en el mapa.

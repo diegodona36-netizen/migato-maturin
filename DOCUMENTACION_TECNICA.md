@@ -9,7 +9,7 @@
 
 ## 1. INTRODUCCIÓN Y PRINCIPIOS DE DISEÑO
 
-La **Plataforma de Inteligencia Territorial Monagas** es un ecosistema digital concebido para la dirección estratégica, visualización cartográfica en 3D y recolección de métricas comunales en los 13 municipios y 44 parroquias del Estado Monagas.
+La **Plataforma de Inteligencia Territorial Monagas** es un ecosistema digital concebido para la dirección estratégica, visualización cartográfica en 3D y recolección de métricas territoriales y sectoriales en los 13 municipios y 44 parroquias del Estado Monagas.
 
 ### Principios Fundamentales
 1. **Compartimentación Celular y Seguridad Operacional:**  
@@ -17,7 +17,7 @@ La **Plataforma de Inteligencia Territorial Monagas** es un ecosistema digital c
 2. **Buzón Ciego en Terreno (`/carga/`):**  
    Para proteger al operador en caso de inspección, pérdida o extravío del teléfono móvil, el formulario de carga funciona como un buzón ciego: permite ingresar datos pero **no almacena ni expone historiales ni acumulados en el dispositivo**. Al confirmar el envío, la pantalla se limpia por completo.
 3. **Protección Estricta de Identidad:**  
-   Se prohíbe el levantamiento de nombres, cédulas de identidad o números de teléfono. Todas las métricas son estrictamente cuantitativas comunales: 🏠 **Casas**, 👥 **Habitantes**, 🗳️ **Votantes** y ✊ **Militantes**.
+   Se prohíbe el levantamiento de nombres, cédulas de identidad o números de teléfono. Todas las métricas son estrictamente cuantitativas sectoriales: 🏠 **Casas**, 👥 **Habitantes**, 🗳️ **Votantes** y ✊ **Militantes**.
 4. **Resiliencia Offline y Cero Dependencias Pesadas:**  
    El frontend está construido sobre arquitectura Vanilla (HTML5, ES Modules nativos, CSS/Tailwind) sin frameworks con transpilación pesada, garantizando compatibilidad con navegadores móviles de gama baja y carga ultrarrápida.
 
@@ -83,7 +83,7 @@ La **Plataforma de Inteligencia Territorial Monagas** es un ecosistema digital c
   - **Selector en Cascada**: El operador selecciona primero la **Sub-Parroquia** (ej. *Sub-Parroquia 6 La Puente*), lo cual filtra dinámicamente el selector de **Sector** para evitar menús saturados de 50+ opciones.
   - **4 Campos Numéricos Oficiales:**
     1. 🏠 **Casas:** Total de viviendas censadas en el sector.
-    2. 👥 **Habitantes:** Población comunal residente.
+    2. 👥 **Habitantes:** Población sectorial residente.
     3. 🗳️ **Votantes:** Intención de voto / Voto seguro estimado.
     4. ✊ **Militantes:** Fuerza militante activa y movilizada.
   - **Limpieza Instantánea:** Al pulsar «Enviar Reporte», se transmite a Firestore y todos los campos del formulario se vacían de inmediato, evitando que terceros vean datos acumulados en caso de revisión del móvil.
@@ -99,7 +99,7 @@ La **Plataforma de Inteligencia Territorial Monagas** es un ecosistema digital c
 
 ## 4. ESQUEMA DE DATOS (CLOUD FIRESTORE)
 
-Toda la recolección comunal se almacena en la colección central `territorios_monagas`:
+Toda la recolección sectorial se almacena en la colección central `territorios_monagas`:
 
 ```json
 {

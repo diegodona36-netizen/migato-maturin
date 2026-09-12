@@ -4,10 +4,8 @@
  * Almacenamiento Central en GitHub Cloud (Sin límites de 50 peticiones/día)
  */
 
-const _k1 = "ghp_2vWn2UW4FFyb";
-const _k2 = "YfW9zcky9hVkI01JIy2RQLBB";
-const GITHUB_TOKEN = process.env.GITHUB_TOKEN || (_k1 + _k2);
-const GITHUB_REPO = "diegodona36-netizen/migato-maturin";
+const GITHUB_TOKEN = process.env.GITHUB_TOKEN || "";
+const GITHUB_REPO = process.env.GITHUB_REPO || "diegodona36-netizen/migato-maturin";
 const GITHUB_FILE_PATH = "data/places.json";
 const GITHUB_API_URL = `https://api.github.com/repos/${GITHUB_REPO}/contents/${GITHUB_FILE_PATH}`;
 const RAW_URL = `https://raw.githubusercontent.com/${GITHUB_REPO}/main/${GITHUB_FILE_PATH}`;

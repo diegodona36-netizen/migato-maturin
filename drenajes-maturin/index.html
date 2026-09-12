@@ -26,7 +26,7 @@
   <!-- ============================================================== -->
   <!-- TOP GLOBAL HEADER -->
   <!-- ============================================================== -->
-  <header class="bg-slate-900 text-white border-b border-slate-800 sticky top-0 z-30 shadow-md">
+  <header class="bg-[#140e40] text-white border-b border-[#2d1f85] sticky top-0 z-30 shadow-md">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3">
       <div class="flex flex-col md:flex-row md:items-center justify-between gap-3">
         
@@ -48,14 +48,14 @@
         <div class="flex flex-wrap items-center gap-2">
           
           <!-- Selector de Lluvia / Tormenta -->
-          <div class="inline-flex rounded-xl border border-slate-700 p-0.5 bg-slate-800 shadow-inner">
-            <button data-intensity="20" class="storm-btn px-2.5 sm:px-3 py-1.5 text-xs font-semibold rounded-lg text-slate-300 hover:bg-slate-700 transition" title="Lluvia Moderada 20 mm/h">
+          <div class="inline-flex rounded-xl border border-[#2d1f85] p-0.5 bg-[#0e092e] shadow-inner">
+            <button data-intensity="20" class="storm-btn px-2.5 sm:px-3 py-1.5 text-xs font-semibold rounded-lg text-slate-300 hover:bg-[#23176d] transition" title="Lluvia Moderada 20 mm/h">
               🟢 20 mm/h
             </button>
             <button data-intensity="50" class="storm-btn px-2.5 sm:px-3 py-1.5 text-xs font-bold rounded-lg bg-sky-600 text-white transition shadow-sm" title="Tormenta 5 Años 50 mm/h">
               🟡 50 mm/h
             </button>
-            <button data-intensity="90" class="storm-btn px-2.5 sm:px-3 py-1.5 text-xs font-bold rounded-lg text-slate-300 hover:bg-slate-700 transition" title="Vaguada Torrencial 90 mm/h">
+            <button data-intensity="90" class="storm-btn px-2.5 sm:px-3 py-1.5 text-xs font-bold rounded-lg text-slate-300 hover:bg-[#23176d] transition" title="Vaguada Torrencial 90 mm/h">
               🔴 90 mm/h
             </button>
           </div>
@@ -67,7 +67,7 @@
           </button>
 
           <!-- Exportar GeoJSON para QGIS -->
-          <button id="btn-export-qgis-geojson" class="p-2 text-slate-300 hover:text-white bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-xl transition" title="Exportar Capas GeoJSON para QGIS">
+          <button id="btn-export-qgis-geojson" class="p-2 text-slate-300 hover:text-white bg-[#0e092e] hover:bg-[#23176d] border border-[#2d1f85] rounded-xl transition" title="Exportar Capas GeoJSON para QGIS">
             <i data-lucide="map" class="w-4 h-4 text-sky-400"></i>
           </button>
         </div>
@@ -76,24 +76,24 @@
     </div>
 
     <!-- Navigation Tabs Bar -->
-    <div class="bg-slate-950 border-t border-slate-800 px-4 sm:px-6">
+    <div class="bg-[#100b33] border-t border-[#2d1f85] px-4 sm:px-6">
       <div class="max-w-7xl mx-auto flex items-center overflow-x-auto no-scrollbar gap-1.5 py-1.5">
         <button data-tab="tab-visor" class="nav-tab-btn px-3.5 py-2 text-xs sm:text-sm font-bold rounded-lg bg-sky-600 text-white transition flex items-center gap-1.5 shrink-0 shadow-sm">
           <i data-lucide="map-pin" class="w-4 h-4"></i>
           <span>Visor de Caños y Cuencas (68)</span>
         </button>
 
-        <button data-tab="tab-simulador" class="nav-tab-btn px-3.5 py-2 text-xs sm:text-sm font-medium rounded-lg text-slate-400 hover:bg-slate-800 transition flex items-center gap-1.5 shrink-0">
+        <button data-tab="tab-simulador" class="nav-tab-btn px-3.5 py-2 text-xs sm:text-sm font-medium rounded-lg text-slate-400 hover:bg-[#23176d] transition flex items-center gap-1.5 shrink-0">
           <i data-lucide="gauge" class="w-4 h-4"></i>
           <span>Simulador HEC-RAS 2D</span>
         </button>
 
-        <button data-tab="tab-puntos" class="nav-tab-btn px-3.5 py-2 text-xs sm:text-sm font-medium rounded-lg text-slate-400 hover:bg-slate-800 transition flex items-center gap-1.5 shrink-0">
+        <button data-tab="tab-puntos" class="nav-tab-btn px-3.5 py-2 text-xs sm:text-sm font-medium rounded-lg text-slate-400 hover:bg-[#23176d] transition flex items-center gap-1.5 shrink-0">
           <i data-lucide="alert-triangle" class="w-4 h-4"></i>
           <span>Puntos Críticos y Alcantarillas</span>
         </button>
 
-        <button data-tab="tab-obras" class="nav-tab-btn px-3.5 py-2 text-xs sm:text-sm font-medium rounded-lg text-slate-400 hover:bg-slate-800 transition flex items-center gap-1.5 shrink-0">
+        <button data-tab="tab-obras" class="nav-tab-btn px-3.5 py-2 text-xs sm:text-sm font-medium rounded-lg text-slate-400 hover:bg-[#23176d] transition flex items-center gap-1.5 shrink-0">
           <i data-lucide="truck" class="w-4 h-4"></i>
           <span>Plan de Obras y Dragado</span>
         </button>
@@ -365,11 +365,11 @@
   <!-- ============================================================== -->
   <!-- MODAL: FICHA TÉCNICA DE INSPECCIÓN (CON PIN DE BRIGADA) -->
   <!-- ============================================================== -->
-  <div id="modal-inspection" class="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm hidden items-center justify-center p-3 sm:p-4 overflow-y-auto">
+  <div id="modal-inspection" class="fixed inset-0 z-50 bg-[#0c0828]/80 backdrop-blur-sm hidden items-center justify-center p-3 sm:p-4 overflow-y-auto">
     <div class="bg-white w-full max-w-xl rounded-2xl sm:rounded-3xl shadow-2xl border border-slate-100 overflow-hidden my-6 animate-in fade-in zoom-in-95 duration-200 max-h-[92vh] flex flex-col">
       
       <!-- Header Modal -->
-      <div class="bg-slate-900 text-white px-5 py-3.5 flex items-center justify-between border-b border-slate-800 shrink-0">
+      <div class="bg-[#140e40] text-white px-5 py-3.5 flex items-center justify-between border-b border-[#2d1f85] shrink-0">
         <div class="flex items-center gap-2">
           <div class="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center">
             <i data-lucide="shield-check" class="w-5 h-5"></i>
@@ -508,7 +508,7 @@
   </div>
 
   <!-- FOOTER -->
-  <footer class="bg-slate-900 text-slate-500 border-t border-slate-800 py-4 text-center text-xs">
+  <footer class="bg-[#100b33] text-slate-400 border-t border-[#2d1f85] py-4 text-center text-xs">
     <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
       <p>Sistema Oficial de Diagnóstico Hidráulico y Drenajes de Maturín • 68 Caños Priorizados</p>
       <p class="font-mono text-[11px] text-slate-400">Modelado HEC-RAS 2D • QGIS Open Source</p>

@@ -103,8 +103,8 @@ class TrazadorVialApp {
 
     if (this.tramos.length === 0) {
       container.innerHTML = `
-        <div class="p-6 text-center border border-dashed border-slate-800 rounded-2xl text-slate-500 space-y-2">
-          <i data-lucide="edit-3" class="w-8 h-8 mx-auto text-slate-600"></i>
+        <div class="p-6 text-center border border-dashed border-[#2d1f85]/70 rounded-2xl text-slate-500 space-y-2">
+          <i data-lucide="edit-3" class="w-8 h-8 mx-auto text-slate-500"></i>
           <p class="text-xs font-bold text-slate-400">Aún no has trazado tramos en La Puente.</p>
           <p class="text-[10px]">Toca "+ Trazar Nuevo Tramo" para empezar cuadra por cuadra.</p>
         </div>
@@ -121,7 +121,7 @@ class TrazadorVialApp {
     };
 
     container.innerHTML = this.tramos.map((t, idx) => `
-      <div class="p-3 rounded-xl border border-slate-800 bg-slate-950/80 hover:bg-slate-900 cursor-pointer transition flex items-center justify-between gap-2 group" onclick="window.trazadorApp.focusAndEdit('${t.id}')">
+      <div class="p-3 rounded-xl border border-[#2d1f85] bg-[#18114a] hover:bg-[#23176d] cursor-pointer transition flex items-center justify-between gap-2 group" onclick="window.trazadorApp.focusAndEdit('${t.id}')">
         <div class="flex items-center gap-2.5 overflow-hidden">
           <span class="w-3.5 h-3.5 rounded-full shrink-0 shadow ${colorBadge[t.color] || 'bg-slate-500'}"></span>
           <div class="overflow-hidden">

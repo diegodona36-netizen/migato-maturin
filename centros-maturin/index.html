@@ -23,7 +23,7 @@
             venSky: '#0284c7',
             migato: {
               DEFAULT: '#23176d',
-              surface: '#0e1122',
+              surface: '#0e092e',
               light: '#35249c'
             }
           }
@@ -63,7 +63,7 @@
       max-width: 100vw;
       overflow-x: hidden !important;
       box-sizing: border-box;
-      background-color: #030712;
+      background-color: #0e092e;
       color: #f8fafc;
     }
     *, *::before, *::after {
@@ -71,6 +71,8 @@
     }
     body {
       font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background-image: radial-gradient(circle at 50% 10%, #201763 0%, #140e40 50%, #0c0828 100%);
+      background-attachment: fixed;
     }
     .font-mono {
       font-family: 'JetBrains Mono', monospace;
@@ -81,29 +83,29 @@
       height: 6px;
     }
     ::-webkit-scrollbar-track {
-      background: #030712;
+      background: #0e092e;
     }
     ::-webkit-scrollbar-thumb {
-      background: #334155;
+      background: #2d1f85;
       border-radius: 9999px;
     }
     ::-webkit-scrollbar-thumb:hover {
-      background: #475569;
+      background: #35249c;
     }
     .leaflet-container {
-      background-color: #0b1120 !important;
-      background-image: radial-gradient(#1e293b 1px, transparent 1px) !important;
+      background-color: #0e092e !important;
+      background-image: radial-gradient(#2d1f85 1px, transparent 1px) !important;
       background-size: 20px 20px !important;
     }
     .leaflet-popup-content-wrapper {
-      background: #0f172a !important;
+      background: #140e40 !important;
       color: #f8fafc !important;
       border: 1px solid #38bdf8 !important;
       border-radius: 1rem !important;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.8) !important;
+      box-shadow: 0 20px 40px rgba(14, 9, 46, 0.8) !important;
     }
     .leaflet-popup-tip {
-      background: #0f172a !important;
+      background: #140e40 !important;
     }
     /* Estilos de Impresión Oficial para la Tablilla */
     @media print {
@@ -131,20 +133,20 @@
     }
   </style>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col antialiased selection:bg-sky-500 selection:text-white max-w-full overflow-x-hidden">
+<body class="bg-[#0e092e] text-slate-100 min-h-screen flex flex-col antialiased selection:bg-sky-500 selection:text-white max-w-full overflow-x-hidden">
 
   <!-- ============================================================== -->
   <!-- 1. BARRA DE NAVEGACIÓN SUPERIOR ESTILO TABLERO ELECTORAL       -->
   <!-- ============================================================== -->
-  <header class="sticky top-0 z-50 bg-slate-900/95 backdrop-blur-md border-b border-slate-800 shadow-xl no-print">
+  <header class="sticky top-0 z-50 bg-[#140e40]/95 backdrop-blur-md border-b border-[#2d1f85] shadow-xl no-print">
     <div class="max-w-7xl mx-auto px-3 sm:px-6 py-2.5 flex items-center justify-between gap-3">
       
       <!-- Logo e Identidad -->
       <div class="flex items-center gap-2 min-w-0">
-        <a href="../" class="p-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 transition flex items-center gap-1 text-xs font-bold shrink-0" title="Volver al Portal Central">
+        <a href="../" class="p-1.5 rounded-xl bg-[#18114a] hover:bg-[#1d1554] text-blue-200 hover:text-white border border-[#2d1f85] transition flex items-center gap-1 text-xs font-bold shrink-0" title="Volver al Portal Central">
           <i data-lucide="home" class="w-4 h-4"></i>
         </a>
-        <a href="../earth-monagas/?v=122" class="p-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-sky-400 border border-slate-700 transition flex items-center gap-1 text-xs font-bold shrink-0" title="Volver al Mapa Satelital 3D">
+        <a href="../earth-monagas/?v=122" class="p-1.5 rounded-xl bg-[#18114a] hover:bg-[#1d1554] text-sky-300 border border-[#2d1f85] transition flex items-center gap-1 text-xs font-bold shrink-0" title="Volver al Mapa Satelital 3D">
           <i data-lucide="globe" class="w-4 h-4"></i>
           <span class="hidden sm:inline">Mapa Satelital</span>
         </a>
@@ -175,7 +177,7 @@
           <span class="hidden sm:inline">Exportar CSV</span>
         </button>
 
-        <button onclick="window.print()" class="px-2.5 sm:px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-bold transition flex items-center gap-1.5 active:scale-95" title="Imprimir Tablilla Oficial">
+        <button onclick="window.print()" class="px-2.5 sm:px-3 py-1.5 rounded-xl bg-[#18114a] hover:bg-[#1d1554] text-blue-200 border border-[#2d1f85] text-xs font-bold transition flex items-center gap-1.5 active:scale-95" title="Imprimir Tablilla Oficial">
           <i data-lucide="printer" class="w-4 h-4"></i>
           <span class="hidden sm:inline">Imprimir</span>
         </button>
@@ -192,51 +194,51 @@
   <!-- ============================================================== -->
   <!-- 2. BANNER DE MÉTRICAS GLOBALES (KPIs OFICIALES CNE)           -->
   <!-- ============================================================== -->
-  <section class="bg-gradient-to-b from-slate-900 to-slate-950 border-b border-slate-800/80 py-3.5 px-3 sm:px-6 no-print">
+  <section class="bg-[#100b33]/90 border-b border-[#2d1f85] py-3.5 px-3 sm:px-6 no-print">
     <div class="max-w-7xl mx-auto">
       
       <div class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
         
         <!-- Total Centros -->
-        <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-3 sm:p-3.5 shadow-lg flex items-center gap-3">
-          <div class="w-10 h-10 rounded-xl bg-blue-950/80 border border-blue-500/40 text-sky-400 flex items-center justify-center shrink-0">
+        <div class="bg-[#18114a]/90 border border-[#2d1f85] rounded-2xl p-3 sm:p-3.5 shadow-lg flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-[#140e40] border border-blue-500/40 text-sky-400 flex items-center justify-center shrink-0">
             <i data-lucide="school" class="w-5 h-5"></i>
           </div>
           <div>
-            <span class="text-[10px] sm:text-xs font-bold uppercase text-slate-400 tracking-wider block">Centros en Maturín</span>
+            <span class="text-[10px] sm:text-xs font-bold uppercase text-blue-200/70 tracking-wider block">Centros en Maturín</span>
             <span class="text-xl sm:text-2xl font-black text-white font-mono" id="stat-total-centros">175</span>
           </div>
         </div>
 
         <!-- Total Mesas -->
-        <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-3 sm:p-3.5 shadow-lg flex items-center gap-3">
-          <div class="w-10 h-10 rounded-xl bg-purple-950/80 border border-purple-500/40 text-purple-400 flex items-center justify-center shrink-0">
+        <div class="bg-[#18114a]/90 border border-[#2d1f85] rounded-2xl p-3 sm:p-3.5 shadow-lg flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-[#201763] border border-purple-500/40 text-purple-300 flex items-center justify-center shrink-0">
             <i data-lucide="box" class="w-5 h-5"></i>
           </div>
           <div>
-            <span class="text-[10px] sm:text-xs font-bold uppercase text-slate-400 tracking-wider block">Mesas Electorales</span>
+            <span class="text-[10px] sm:text-xs font-bold uppercase text-blue-200/70 tracking-wider block">Mesas Electorales</span>
             <span class="text-xl sm:text-2xl font-black text-white font-mono" id="stat-total-mesas">361</span>
           </div>
         </div>
 
         <!-- Padrón de Electores -->
-        <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-3 sm:p-3.5 shadow-lg flex items-center gap-3">
+        <div class="bg-[#18114a]/90 border border-[#2d1f85] rounded-2xl p-3 sm:p-3.5 shadow-lg flex items-center gap-3">
           <div class="w-10 h-10 rounded-xl bg-emerald-950/80 border border-emerald-500/40 text-emerald-400 flex items-center justify-center shrink-0">
             <i data-lucide="users" class="w-5 h-5"></i>
           </div>
           <div>
-            <span class="text-[10px] sm:text-xs font-bold uppercase text-slate-400 tracking-wider block">Padrón Electoral</span>
+            <span class="text-[10px] sm:text-xs font-bold uppercase text-blue-200/70 tracking-wider block">Padrón Electoral</span>
             <span class="text-xl sm:text-2xl font-black text-emerald-400 font-mono" id="stat-total-electores">318.601</span>
           </div>
         </div>
 
         <!-- Cobertura de Testigos -->
-        <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-3 sm:p-3.5 shadow-lg flex items-center gap-3">
+        <div class="bg-[#18114a]/90 border border-[#2d1f85] rounded-2xl p-3 sm:p-3.5 shadow-lg flex items-center gap-3">
           <div class="w-10 h-10 rounded-xl bg-amber-950/80 border border-amber-500/40 text-amber-400 flex items-center justify-center shrink-0">
             <i data-lucide="shield-check" class="w-5 h-5"></i>
           </div>
           <div>
-            <span class="text-[10px] sm:text-xs font-bold uppercase text-slate-400 tracking-wider block">Cobertura de Testigos</span>
+            <span class="text-[10px] sm:text-xs font-bold uppercase text-blue-200/70 tracking-wider block">Cobertura de Testigos</span>
             <div class="flex items-baseline gap-1.5">
               <span class="text-xl sm:text-2xl font-black text-amber-400 font-mono">100%</span>
               <span class="text-[10px] text-emerald-400 font-bold">361/361 Mesas</span>
@@ -253,9 +255,9 @@
   <!-- 2.5 BANNER DE TRANSMISIÓN ELECTORAL SIMULADA (API CNE EN VIVO) -->
   <!-- ============================================================== -->
   <section class="max-w-7xl mx-auto px-3 sm:px-6 pt-3 w-full no-print">
-    <div class="bg-gradient-to-r from-slate-900 via-indigo-950/40 to-slate-900 border border-indigo-500/40 rounded-2xl p-4 sm:p-5 shadow-2xl space-y-4">
+    <div class="bg-[#18114a] border border-[#2d1f85] rounded-2xl p-4 sm:p-5 shadow-2xl space-y-4">
       
-      <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-3 border-b border-slate-800 pb-3">
+      <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-3 border-b border-[#2d1f85] pb-3">
         <div class="flex items-center gap-2.5">
           <div class="relative flex h-3.5 w-3.5">
             <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
@@ -264,27 +266,20 @@
           <div>
             <h2 class="text-sm sm:text-base font-black text-white uppercase tracking-tight flex items-center gap-2">
               <span>Transmisión y Escrutinio Electoral CNE</span>
-              <span class="px-2 py-0.5 rounded-md bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-[10px] font-mono font-bold">SIMULADOR ACTIVO</span>
+              <span class="px-2 py-0.5 rounded-md bg-sky-500/20 text-sky-300 border border-sky-500/40 text-[10px] font-mono font-bold">RED EN ESPERA</span>
             </h2>
-            <p class="text-[11px] text-slate-400">Totalización de Actas CNE con validación de código QR y firma de testigos • Modo Local/Offline</p>
+            <p class="text-[11px] text-blue-200/70">Totalización de Actas CNE con validación criptográfica QR y firma de testigos • Conexión Sala Central</p>
           </div>
         </div>
 
-        <!-- Botones de Control de Simulación -->
+        <!-- Controles de Estado de Red -->
         <div class="flex items-center gap-2 flex-wrap">
-          <select id="select-preset-escrutinio" onchange="cambiarPresetEscrutinio(this.value)" class="bg-slate-950 border border-indigo-500/50 text-indigo-200 text-xs rounded-xl px-2.5 py-1.5 font-mono font-bold focus:outline-none cursor-pointer">
-            <option value="100">100% Actas (Totalizado)</option>
-            <option value="80">80% Transmitido (2do Boletín)</option>
-            <option value="50">50% Transmitido (1er Boletín)</option>
-            <option value="25">25% Transmisión Inicial</option>
-          </select>
-
-          <button onclick="simularTransmisionEnVivo()" class="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-black text-xs shadow-lg shadow-emerald-600/30 transition flex items-center gap-1.5 active:scale-95 cursor-pointer" title="Ejecutar animación de recepción de actas">
+          <button onclick="actualizarEscrutinioReal()" class="px-3 py-1.5 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-bold text-xs shadow transition flex items-center gap-1.5 active:scale-95 cursor-pointer" title="Refrescar recepción de actas">
             <i data-lucide="refresh-cw" class="w-4 h-4"></i>
-            <span>⚡ Simular Transmisión</span>
+            <span>Actualizar Escrutinio</span>
           </button>
 
-          <button id="btn-toggle-escrutinio" onclick="toggleEscrutinioPanel()" class="px-3 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs shadow transition flex items-center gap-1.5 active:scale-95 cursor-pointer">
+          <button id="btn-toggle-escrutinio" onclick="toggleEscrutinioPanel()" class="px-3 py-1.5 rounded-xl bg-[#23176d] hover:bg-[#35249c] border border-sky-400/30 text-white font-bold text-xs shadow transition flex items-center gap-1.5 active:scale-95 cursor-pointer">
             <i data-lucide="bar-chart-2" class="w-4 h-4"></i>
             <span id="txt-toggle-escrutinio">Ocultar Resultados</span>
           </button>
@@ -294,27 +289,27 @@
       <!-- Barra de Progreso de Transmisión -->
       <div class="space-y-1.5">
         <div class="flex items-center justify-between text-xs font-mono">
-          <span class="text-slate-300 font-bold flex items-center gap-1.5">
+          <span class="text-blue-200 font-bold flex items-center gap-1.5">
             <span>Centros Transmitidos:</span>
-            <strong class="text-emerald-400 font-black" id="sim-centros-count">175 / 175</strong>
-            <span class="text-[10px] text-slate-500" id="sim-centros-pct">(100%)</span>
+            <strong class="text-emerald-400 font-black" id="sim-centros-count">0 / 175</strong>
+            <span class="text-[10px] text-blue-300/60" id="sim-centros-pct">(0%)</span>
           </span>
-          <span class="text-slate-300 font-bold flex items-center gap-1.5">
+          <span class="text-blue-200 font-bold flex items-center gap-1.5">
             <span>Mesas Escrutadas:</span>
-            <strong class="text-sky-400 font-black" id="sim-mesas-count">361 / 361</strong>
+            <strong class="text-sky-300 font-black" id="sim-mesas-count">0 / 361</strong>
           </span>
-          <span class="text-slate-300 font-bold hidden sm:flex items-center gap-1.5">
+          <span class="text-blue-200 font-bold hidden sm:flex items-center gap-1.5">
             <span>Actas QR Digitalizadas:</span>
-            <strong class="text-amber-400 font-black" id="sim-actas-count">361</strong>
+            <strong class="text-amber-400 font-black" id="sim-actas-count">0</strong>
           </span>
         </div>
-        <div class="w-full h-2.5 bg-slate-950 rounded-full overflow-hidden border border-slate-800 p-0.5">
-          <div id="sim-progress-bar" class="h-full bg-gradient-to-r from-sky-500 via-indigo-500 to-emerald-400 rounded-full transition-all duration-700 w-full"></div>
+        <div class="w-full h-2.5 bg-[#0e092e] rounded-full overflow-hidden border border-[#2d1f85] p-0.5">
+          <div id="sim-progress-bar" class="h-full bg-gradient-to-r from-sky-400 via-blue-500 to-emerald-400 rounded-full transition-all duration-700" style="width: 0%;"></div>
         </div>
       </div>
 
       <!-- Panel Expandible de Escrutinio Global Maturín -->
-      <div id="escrutinio-global-panel" class="pt-3 border-t border-slate-800/80 space-y-3">
+      <div id="escrutinio-global-panel" class="pt-3 border-t border-[#2d1f85]/80 space-y-3">
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
           
           <!-- Bloque Opción Cambio / ConVzla / MIGATO -->
@@ -324,13 +319,13 @@
                 <span class="w-2.5 h-2.5 rounded-full bg-blue-500"></span>
                 <span>Fuerza del Cambio / MIGATO</span>
               </span>
-              <span class="text-sm font-black text-blue-400 font-mono" id="sim-pct-op">74.6%</span>
+              <span class="text-sm font-black text-blue-400 font-mono" id="sim-pct-op">0.0%</span>
             </div>
-            <div class="text-xl font-black text-white font-mono" id="sim-votos-op">181.650 votos</div>
-            <div class="w-full h-2 bg-slate-900 rounded-full overflow-hidden">
-              <div id="sim-bar-op" class="h-full bg-blue-500 rounded-full transition-all duration-500" style="width: 74.6%;"></div>
+            <div class="text-xl font-black text-white font-mono" id="sim-votos-op">0 votos</div>
+            <div class="w-full h-2 bg-[#0e092e] rounded-full overflow-hidden">
+              <div id="sim-bar-op" class="h-full bg-blue-500 rounded-full transition-all duration-500" style="width: 0%;"></div>
             </div>
-            <span class="text-[10px] text-blue-400/80 font-mono block">Candidatura Unitaria • Edmundo González</span>
+            <span class="text-[10px] text-blue-300/80 font-mono block">Candidatura Unitaria</span>
           </div>
 
           <!-- Bloque Oficialismo -->
@@ -340,39 +335,39 @@
                 <span class="w-2.5 h-2.5 rounded-full bg-red-500"></span>
                 <span>Oficialismo / PSUV</span>
               </span>
-              <span class="text-sm font-black text-red-400 font-mono" id="sim-pct-of">22.4%</span>
+              <span class="text-sm font-black text-red-400 font-mono" id="sim-pct-of">0.0%</span>
             </div>
-            <div class="text-xl font-black text-white font-mono" id="sim-votos-of">54.550 votos</div>
-            <div class="w-full h-2 bg-slate-900 rounded-full overflow-hidden">
-              <div id="sim-bar-of" class="h-full bg-red-500 rounded-full transition-all duration-500" style="width: 22.4%;"></div>
+            <div class="text-xl font-black text-white font-mono" id="sim-votos-of">0 votos</div>
+            <div class="w-full h-2 bg-[#0e092e] rounded-full overflow-hidden">
+              <div id="sim-bar-of" class="h-full bg-red-500 rounded-full transition-all duration-500" style="width: 0%;"></div>
             </div>
-            <span class="text-[10px] text-red-400/80 font-mono block">Gran Polo Patriótico • Nicolás Maduro</span>
+            <span class="text-[10px] text-red-300/80 font-mono block">Gran Polo Patriótico</span>
           </div>
 
           <!-- Bloque Otros y Nulos -->
-          <div class="bg-slate-950 border border-slate-800 rounded-xl p-3 space-y-1 shadow-md">
+          <div class="bg-[#140e40] border border-[#2d1f85] rounded-xl p-3 space-y-1 shadow-md">
             <div class="flex items-center justify-between">
-              <span class="text-[11px] font-black text-slate-400 uppercase flex items-center gap-1.5">
-                <span class="w-2.5 h-2.5 rounded-full bg-slate-600"></span>
+              <span class="text-[11px] font-black text-blue-200/80 uppercase flex items-center gap-1.5">
+                <span class="w-2.5 h-2.5 rounded-full bg-blue-400/60"></span>
                 <span>Otros y Nulos</span>
               </span>
-              <span class="text-sm font-black text-slate-300 font-mono" id="sim-pct-ot">3.0%</span>
+              <span class="text-sm font-black text-blue-200 font-mono" id="sim-pct-ot">0.0%</span>
             </div>
-            <div class="text-xl font-black text-slate-300 font-mono" id="sim-votos-ot">7.300 votos</div>
-            <div class="w-full h-2 bg-slate-900 rounded-full overflow-hidden">
-              <div id="sim-bar-ot" class="h-full bg-slate-600 rounded-full transition-all duration-500" style="width: 3.0%;"></div>
+            <div class="text-xl font-black text-blue-200 font-mono" id="sim-votos-ot">0 votos</div>
+            <div class="w-full h-2 bg-[#0e092e] rounded-full overflow-hidden">
+              <div id="sim-bar-ot" class="h-full bg-blue-400/50 rounded-full transition-all duration-500" style="width: 0%;"></div>
             </div>
-            <span class="text-[10px] text-slate-500 font-mono block">Otras Alianzas y Votos No Válidos</span>
+            <span class="text-[10px] text-blue-300/60 font-mono block">Otras Alianzas y Votos No Válidos</span>
           </div>
 
         </div>
 
-        <div class="text-center text-[11px] text-slate-400 font-mono flex flex-wrap items-center justify-center gap-3 pt-1">
+        <div class="text-center text-[11px] text-blue-200/70 font-mono flex flex-wrap items-center justify-center gap-3 pt-1">
           <span>Participación Estimada: <strong class="text-emerald-400" id="sim-part-total">76.4% (243.500 Votantes)</strong></span>
           <span>•</span>
-          <span>Margen Promedio: <strong class="text-blue-400 font-bold" id="sim-margen-total">+52.2 pts a favor</strong></span>
+          <span>Margen Promedio: <strong class="text-sky-400 font-bold" id="sim-margen-total">+52.2 pts a favor</strong></span>
           <span>•</span>
-          <span>Estatus CNE: <strong class="text-sky-400">Totalización Concluida</strong></span>
+          <span>Estatus CNE: <strong class="text-sky-300">Totalización Concluida</strong></span>
         </div>
       </div>
 
@@ -385,26 +380,26 @@
   <section class="max-w-7xl mx-auto px-3 sm:px-6 py-4 w-full space-y-3 no-print">
     
     <!-- Selector de Vistas: Tablilla vs Tarjetas vs Estadísticas vs Mapa -->
-    <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-slate-900/80 p-2 rounded-2xl border border-slate-800">
+    <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-[#140e40]/90 p-2 rounded-2xl border border-[#2d1f85]">
       
       <!-- Pestañas de Vista -->
       <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar">
-        <button onclick="switchView('tablilla')" id="tab-tablilla" class="px-3.5 py-2 rounded-xl text-xs font-black transition flex items-center gap-2 cursor-pointer bg-sky-600 text-white shadow-md shadow-sky-600/30">
+        <button onclick="switchView('tablilla')" id="tab-tablilla" class="px-3.5 py-2 rounded-xl text-xs font-black transition flex items-center gap-2 cursor-pointer bg-[#23176d] text-white shadow-md shadow-sky-600/30 border border-sky-400/50">
           <i data-lucide="table" class="w-4 h-4"></i>
           <span>📋 Tablilla Electoral</span>
         </button>
 
-        <button onclick="switchView('cards')" id="tab-cards" class="px-3.5 py-2 rounded-xl text-xs font-black transition flex items-center gap-2 cursor-pointer bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white">
+        <button onclick="switchView('cards')" id="tab-cards" class="px-3.5 py-2 rounded-xl text-xs font-black transition flex items-center gap-2 cursor-pointer bg-[#140e40] hover:bg-[#1d1554] text-blue-200 hover:text-white border border-[#2d1f85]">
           <i data-lucide="grid" class="w-4 h-4"></i>
           <span>📇 Tarjetas de Centros</span>
         </button>
 
-        <button onclick="switchView('parroquia-stats')" id="tab-parroquia-stats" class="px-3.5 py-2 rounded-xl text-xs font-black transition flex items-center gap-2 cursor-pointer bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white">
+        <button onclick="switchView('parroquia-stats')" id="tab-parroquia-stats" class="px-3.5 py-2 rounded-xl text-xs font-black transition flex items-center gap-2 cursor-pointer bg-[#140e40] hover:bg-[#1d1554] text-blue-200 hover:text-white border border-[#2d1f85]">
           <i data-lucide="pie-chart" class="w-4 h-4"></i>
           <span>📊 Por Parroquia</span>
         </button>
 
-        <button onclick="switchView('map')" id="tab-map" class="px-3.5 py-2 rounded-xl text-xs font-black transition flex items-center gap-2 cursor-pointer bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white">
+        <button onclick="switchView('map')" id="tab-map" class="px-3.5 py-2 rounded-xl text-xs font-black transition flex items-center gap-2 cursor-pointer bg-[#140e40] hover:bg-[#1d1554] text-blue-200 hover:text-white border border-[#2d1f85]">
           <i data-lucide="map" class="w-4 h-4"></i>
           <span>🗺️ Mapa Satelital</span>
         </button>
@@ -412,7 +407,7 @@
 
       <!-- Filtro de Estatus / Acta -->
       <div class="flex items-center gap-2 shrink-0">
-        <select id="status-filter" onchange="applyFilters()" class="bg-slate-950 border border-slate-700 text-slate-200 text-xs rounded-xl px-3 py-2 focus:outline-none focus:border-sky-500 font-bold cursor-pointer">
+        <select id="status-filter" onchange="applyFilters()" class="bg-[#0e092e] border border-[#2d1f85] text-blue-200 text-xs rounded-xl px-3 py-2 focus:outline-none focus:border-sky-400 font-bold cursor-pointer">
           <option value="todos">Todos los Estatus de Acta</option>
           <option value="transmitido">✅ Solo Actas Transmitidas</option>
           <option value="prioritario">🚨 Centros Prioritarios / Grandes</option>
@@ -424,15 +419,15 @@
 
     <!-- Fila del Buscador -->
     <div class="relative w-full">
-      <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none"></i>
+      <i data-lucide="search" class="w-4 h-4 text-blue-300/60 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none"></i>
       <input 
         type="text" 
         id="search-input" 
         placeholder="Buscar en la tablilla por nombre de colegio, liceo, código CNE, sector o dirección..." 
-        class="w-full pl-10 pr-10 py-2.5 bg-slate-900 border border-slate-800 focus:border-sky-500 rounded-xl text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none transition shadow-inner font-mono"
+        class="w-full pl-10 pr-10 py-2.5 bg-[#0e092e] border border-[#2d1f85] focus:border-sky-400 rounded-xl text-xs sm:text-sm text-white placeholder-blue-300/50 focus:outline-none transition shadow-inner font-mono"
         oninput="applyFilters()"
       >
-      <button id="btn-clear-search" onclick="clearSearch()" class="hidden absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white p-1">
+      <button id="btn-clear-search" onclick="clearSearch()" class="hidden absolute right-3 top-1/2 -translate-y-1/2 text-blue-300 hover:text-white p-1">
         <i data-lucide="x" class="w-3.5 h-3.5"></i>
       </button>
     </div>
@@ -450,12 +445,12 @@
   <main class="max-w-7xl mx-auto px-3 sm:px-6 py-2 flex-1 w-full space-y-4">
 
     <!-- Indicador de Resultados Activos -->
-    <div class="flex items-center justify-between text-xs text-slate-400 px-1 font-mono no-print">
+    <div class="flex items-center justify-between text-xs text-blue-200/70 px-1 font-mono no-print">
       <span>Mostrando <strong class="text-sky-400 font-bold" id="showing-count">175</strong> centros electorales</span>
       <div class="flex items-center gap-2">
-        <span id="active-parish-name" class="font-bold text-slate-300">Todas las Parroquias</span>
-        <span class="text-slate-600">•</span>
-        <span id="active-sort-indicator" class="text-slate-400">Orden: CNE</span>
+        <span id="active-parish-name" class="font-bold text-blue-200">Todas las Parroquias</span>
+        <span class="text-blue-400/60">•</span>
+        <span id="active-sort-indicator" class="text-blue-300/70">Orden: CNE</span>
       </div>
     </div>
 
@@ -465,12 +460,12 @@
     <div id="view-tablilla" class="space-y-3">
       
       <!-- Contenedor con Scroll Horizontal para la Tabla -->
-      <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-2xl">
+      <div class="bg-[#18114a] border border-[#2d1f85] rounded-2xl overflow-hidden shadow-2xl">
         <div class="overflow-x-auto max-h-[700px] overflow-y-auto">
           <table class="w-full text-left border-collapse font-mono text-xs" id="tablilla-table">
             
             <!-- Cabecera de la Tablilla -->
-            <thead class="sticky top-0 z-20 bg-slate-950 text-slate-300 border-b border-slate-800 uppercase tracking-wider text-[11px] shadow-sm">
+            <thead class="sticky top-0 z-20 bg-[#140e40] text-blue-200 border-b border-[#2d1f85] uppercase tracking-wider text-[11px] shadow-sm">
               <tr>
                 <th class="py-3 px-3 cursor-pointer hover:text-sky-400 transition" onclick="sortTablilla('id')" title="Ordenar por Código CNE">
                   <div class="flex items-center gap-1">
@@ -526,14 +521,14 @@
             </thead>
 
             <!-- Cuerpo Dinámico de la Tablilla -->
-            <tbody id="tablilla-tbody" class="divide-y divide-slate-800/80">
+            <tbody id="tablilla-tbody" class="divide-y divide-[#2d1f85]/80">
               <!-- Inyectado con JS -->
             </tbody>
 
             <!-- Pie de Totales Consolidado -->
-            <tfoot class="sticky bottom-0 z-20 bg-slate-950 text-white font-black border-t-2 border-slate-700 text-xs shadow-lg">
+            <tfoot class="sticky bottom-0 z-20 bg-[#140e40] text-white font-black border-t-2 border-[#2d1f85] text-xs shadow-lg">
               <tr id="tablilla-tfoot-row">
-                <td colspan="3" class="py-3 px-3 text-right uppercase tracking-wider text-slate-300 font-bold">
+                <td colspan="3" class="py-3 px-3 text-right uppercase tracking-wider text-blue-200 font-bold">
                   Total Consolidado en Vista:
                 </td>
                 <td class="py-3 px-2 text-center text-white" id="foot-total-mesas">361</td>
@@ -542,7 +537,7 @@
                 <td class="py-3 px-3 text-right text-red-400 bg-red-950/30" id="foot-total-of">54.550 (22.4%)</td>
                 <td class="py-3 px-2 text-right text-emerald-400" id="foot-total-margen">+52.2%</td>
                 <td class="py-3 px-3 text-center text-emerald-400" id="foot-total-actas">361/361 (100%)</td>
-                <td class="py-3 px-3 text-center text-slate-500 no-print">—</td>
+                <td class="py-3 px-3 text-center text-blue-300/50 no-print">—</td>
               </tr>
             </tfoot>
 
@@ -566,15 +561,15 @@
     <!-- ============================================================ -->
     <div id="view-parroquia-stats" class="hidden space-y-4">
       
-      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-xl">
-        <div class="flex items-center justify-between border-b border-slate-800 pb-3 mb-4">
+      <div class="bg-[#18114a] border border-[#2d1f85] rounded-2xl p-4 shadow-xl">
+        <div class="flex items-center justify-between border-b border-[#2d1f85] pb-3 mb-4">
           <div class="flex items-center gap-2">
-            <div class="w-8 h-8 rounded-lg bg-indigo-950 border border-indigo-500/40 flex items-center justify-center text-indigo-400">
+            <div class="w-8 h-8 rounded-lg bg-[#201763] border border-indigo-500/40 flex items-center justify-center text-indigo-300">
               <i data-lucide="pie-chart" class="w-4 h-4"></i>
             </div>
             <div>
               <h3 class="text-sm font-black text-white uppercase tracking-tight">Desglose Estadístico por las 10 Parroquias de Maturín</h3>
-              <p class="text-[11px] text-slate-400">Comparativa de centros, mesas, participación y votos por circuito</p>
+              <p class="text-[11px] text-blue-200/70">Comparativa de centros, mesas, participación y votos por circuito</p>
             </div>
           </div>
           <span class="text-xs font-mono font-bold text-sky-400">10 / 10 Parroquias Totalizadas</span>
@@ -591,29 +586,29 @@
     <!-- ============================================================ -->
     <!-- 4.4 VISTA 4: CONTENEDOR DEL MAPA SATELITAL (LEAFLET)          -->
     <!-- ============================================================ -->
-    <div id="view-map" class="hidden w-full h-[520px] rounded-2xl overflow-hidden border border-slate-800 shadow-2xl relative">
+    <div id="view-map" class="hidden w-full h-[520px] rounded-2xl overflow-hidden border border-[#2d1f85] shadow-2xl relative">
       <div id="map" class="w-full h-full"></div>
       
       <!-- Leyenda flotante sobre el mapa -->
-      <div class="absolute bottom-3 left-3 z-[1000] bg-slate-950/90 backdrop-blur-md border border-slate-800 p-2.5 rounded-xl text-[11px] font-mono space-y-1 shadow-lg">
+      <div class="absolute bottom-3 left-3 z-[1000] bg-[#140e40]/90 backdrop-blur-md border border-[#2d1f85] p-2.5 rounded-xl text-[11px] font-mono space-y-1 shadow-lg">
         <div class="flex items-center gap-2">
           <span class="w-3 h-3 rounded-full bg-emerald-400"></span>
-          <span>Acta Transmitida y Verificada</span>
+          <span class="text-blue-100">Acta Transmitida y Verificada</span>
         </div>
         <div class="flex items-center gap-2">
           <span class="w-3 h-3 rounded-full bg-amber-400"></span>
-          <span>Centro Prioritario / Gran Volumen</span>
+          <span class="text-blue-100">Centro Prioritario / Gran Volumen</span>
         </div>
       </div>
     </div>
 
     <!-- Mensaje de no resultados -->
     <div id="no-results" class="hidden py-16 text-center space-y-2">
-      <div class="w-12 h-12 rounded-full bg-slate-900 border border-slate-800 text-slate-500 flex items-center justify-center mx-auto">
+      <div class="w-12 h-12 rounded-full bg-[#140e40] border border-[#2d1f85] text-blue-300/60 flex items-center justify-center mx-auto">
         <i data-lucide="search-x" class="w-6 h-6"></i>
       </div>
-      <h3 class="text-sm font-bold text-slate-300">No se encontraron centros electorales</h3>
-      <p class="text-xs text-slate-500">Prueba ajustando el término de búsqueda o seleccionando otra parroquia.</p>
+      <h3 class="text-sm font-bold text-blue-200">No se encontraron centros electorales</h3>
+      <p class="text-xs text-blue-300/60">Prueba ajustando el término de búsqueda o seleccionando otra parroquia.</p>
     </div>
 
   </main>
@@ -621,13 +616,13 @@
   <!-- ============================================================== -->
   <!-- 5. MODAL DE FICHA TÉCNICA DEL CENTRO ELECTORAL                -->
   <!-- ============================================================== -->
-  <div id="modal-ficha-centro" style="display: none; z-index: 99999;" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md items-center justify-center p-3 sm:p-4 overflow-y-auto">
-    <div class="bg-slate-900 border border-sky-500/50 w-full max-w-xl rounded-3xl shadow-[0_25px_60px_rgba(0,0,0,0.95)] p-5 sm:p-6 space-y-4 my-auto animate-in fade-in zoom-in-95 duration-200">
+  <div id="modal-ficha-centro" style="display: none; z-index: 99999;" class="fixed inset-0 bg-[#0e092e]/90 backdrop-blur-md items-center justify-center p-3 sm:p-4 overflow-y-auto">
+    <div class="bg-[#18114a] border border-[#2d1f85] w-full max-w-xl rounded-3xl shadow-[0_25px_60px_rgba(14,9,46,0.95)] p-5 sm:p-6 space-y-4 my-auto animate-in fade-in zoom-in-95 duration-200">
       
       <!-- Cabecera de la Ficha -->
-      <div class="flex items-start justify-between border-b border-slate-800 pb-3 gap-2">
+      <div class="flex items-start justify-between border-b border-[#2d1f85] pb-3 gap-2">
         <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-2xl bg-blue-950 border border-sky-500/50 flex items-center justify-center text-sky-400 shrink-0 shadow-inner">
+          <div class="w-10 h-10 rounded-2xl bg-[#140e40] border border-sky-500/50 flex items-center justify-center text-sky-400 shrink-0 shadow-inner">
             <i data-lucide="vote" class="w-5 h-5"></i>
           </div>
           <div>
@@ -635,7 +630,7 @@
             <h3 class="text-base font-black text-white leading-snug" id="modal-center-name">Nombre del Centro</h3>
           </div>
         </div>
-        <button onclick="closeFichaModal()" class="p-1 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition cursor-pointer">
+        <button onclick="closeFichaModal()" class="p-1 rounded-lg text-blue-300 hover:text-white hover:bg-[#1d1554] transition cursor-pointer">
           <i data-lucide="x" class="w-5 h-5"></i>
         </button>
       </div>
@@ -644,55 +639,55 @@
       <div class="space-y-3.5 text-xs">
         
         <!-- Parroquia y Dirección -->
-        <div class="bg-slate-950 p-3 rounded-2xl border border-slate-800 space-y-1.5">
+        <div class="bg-[#0e092e] p-3 rounded-2xl border border-[#2d1f85] space-y-1.5">
           <div class="flex items-center justify-between">
-            <span class="text-slate-400">Parroquia:</span>
+            <span class="text-blue-200/70">Parroquia:</span>
             <span class="font-bold text-white" id="modal-parish">Alto de Los Godos</span>
           </div>
           <div class="flex items-center justify-between">
-            <span class="text-slate-400">Sector / Eje:</span>
+            <span class="text-blue-200/70">Sector / Eje:</span>
             <span class="font-bold text-purple-300" id="modal-sector">La Puente</span>
           </div>
-          <div class="flex items-start justify-between gap-2 pt-1 border-t border-slate-900">
-            <span class="text-slate-400 shrink-0">Dirección:</span>
-            <span class="font-medium text-slate-300 text-right" id="modal-address">Av. Principal con Calle 3</span>
+          <div class="flex items-start justify-between gap-2 pt-1 border-t border-[#2d1f85]">
+            <span class="text-blue-200/70 shrink-0">Dirección:</span>
+            <span class="font-medium text-blue-100 text-right" id="modal-address">Av. Principal con Calle 3</span>
           </div>
         </div>
 
         <!-- Estadísticas de Mesas y Electores -->
         <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5 text-center font-mono">
-          <div class="bg-slate-950 p-2.5 rounded-xl border border-slate-800">
-            <span class="text-[10px] text-slate-400 uppercase block font-bold">Mesas</span>
+          <div class="bg-[#0e092e] p-2.5 rounded-xl border border-[#2d1f85]">
+            <span class="text-[10px] text-blue-200/70 uppercase block font-bold">Mesas</span>
             <span class="text-lg font-black text-white" id="modal-mesas">2</span>
           </div>
-          <div class="bg-slate-950 p-2.5 rounded-xl border border-slate-800">
-            <span class="text-[10px] text-slate-400 uppercase block font-bold">Padrón Total</span>
+          <div class="bg-[#0e092e] p-2.5 rounded-xl border border-[#2d1f85]">
+            <span class="text-[10px] text-blue-200/70 uppercase block font-bold">Padrón Total</span>
             <span class="text-lg font-black text-emerald-400" id="modal-electores">1.043</span>
           </div>
-          <div class="col-span-2 sm:col-span-1 bg-slate-950 p-2.5 rounded-xl border border-slate-800">
-            <span class="text-[10px] text-slate-400 uppercase block font-bold">Promedio/Mesa</span>
+          <div class="col-span-2 sm:col-span-1 bg-[#0e092e] p-2.5 rounded-xl border border-[#2d1f85]">
+            <span class="text-[10px] text-blue-200/70 uppercase block font-bold">Promedio/Mesa</span>
             <span class="text-lg font-black text-sky-400" id="modal-promedio">522</span>
           </div>
         </div>
 
         <!-- Estructura de Testigos / Comanditos -->
-        <div class="bg-blue-950/30 border border-blue-900/60 rounded-2xl p-3.5 space-y-2">
+        <div class="bg-[#140e40]/70 border border-[#2d1f85] rounded-2xl p-3.5 space-y-2">
           <div class="flex items-center justify-between">
-            <span class="text-[10px] font-black uppercase text-blue-400 tracking-wider flex items-center gap-1">
-              <i data-lucide="shield" class="w-3.5 h-3.5"></i>
+            <span class="text-[10px] font-black uppercase text-blue-300 tracking-wider flex items-center gap-1">
+              <i data-lucide="shield" class="w-3.5 h-3.5 text-sky-400"></i>
               <span>Comandito / Testigos Asignados</span>
             </span>
-            <span class="px-2 py-0.5 rounded-full bg-emerald-950 text-emerald-300 font-black text-[10px] border border-emerald-500/50">
+            <span class="px-2 py-0.5 rounded-full bg-emerald-950/80 text-emerald-300 font-black text-[10px] border border-emerald-500/60">
               100% Acreditados
             </span>
           </div>
           <div class="grid grid-cols-2 gap-2 text-[11px]">
             <div>
-              <span class="text-slate-400 block text-[10px]">Testigo Principal:</span>
+              <span class="text-blue-200/70 block text-[10px]">Testigo Principal:</span>
               <strong class="text-white font-mono" id="modal-testigo-1">Prof. Carmen Salazar</strong>
             </div>
             <div>
-              <span class="text-slate-400 block text-[10px]">Coordinador de Centro:</span>
+              <span class="text-blue-200/70 block text-[10px]">Coordinador de Centro:</span>
               <strong class="text-white font-mono" id="modal-coordinador">Ing. Pedro Luis Figuera</strong>
             </div>
           </div>
@@ -701,14 +696,14 @@
       </div>
 
       <!-- Botonera Modal -->
-      <div class="pt-2 border-t border-slate-800 flex items-center justify-between gap-2">
+      <div class="pt-2 border-t border-[#2d1f85] flex items-center justify-between gap-2">
         <button onclick="openActaModalFromFicha()" class="px-3.5 py-2 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 font-bold text-xs transition flex items-center gap-1.5 cursor-pointer">
           <i data-lucide="file-check" class="w-3.5 h-3.5"></i>
           <span>Ver Acta CNE QR</span>
         </button>
 
         <div class="flex items-center gap-2">
-          <button onclick="closeFichaModal()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs transition cursor-pointer">
+          <button onclick="closeFichaModal()" class="px-4 py-2 rounded-xl bg-[#140e40] hover:bg-[#1d1554] text-blue-200 border border-[#2d1f85] font-bold text-xs transition cursor-pointer">
             Cerrar
           </button>
           <button onclick="focusInMapFromModal()" class="px-4 py-2 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-black text-xs shadow-lg shadow-sky-600/30 flex items-center gap-1.5 transition cursor-pointer">
@@ -724,11 +719,11 @@
   <!-- ============================================================== -->
   <!-- 6. MODAL DE ACTA DE ESCRUTINIO CNE DIGITALIZADA CON QR         -->
   <!-- ============================================================== -->
-  <div id="modal-acta-cne" style="display: none; z-index: 100000;" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md items-center justify-center p-3 sm:p-4 overflow-y-auto">
-    <div class="bg-white text-slate-950 w-full max-w-lg rounded-2xl shadow-[0_25px_70px_rgba(0,0,0,0.95)] p-5 sm:p-6 space-y-3.5 my-auto border-4 border-slate-300 font-mono">
+  <div id="modal-acta-cne" style="display: none; z-index: 100000;" class="fixed inset-0 bg-[#0e092e]/95 backdrop-blur-md items-center justify-center p-3 sm:p-4 overflow-y-auto">
+    <div class="bg-white text-[#0e092e] w-full max-w-lg rounded-2xl shadow-[0_25px_70px_rgba(14,9,46,0.95)] p-5 sm:p-6 space-y-3.5 my-auto border-4 border-slate-300 font-mono">
       
       <!-- Membrete Oficial CNE -->
-      <div class="text-center border-b-2 border-slate-900 pb-2.5 space-y-1">
+      <div class="text-center border-b-2 border-[#140e40] pb-2.5 space-y-1">
         <div class="text-[10px] font-black uppercase tracking-widest text-slate-700">REPÚBLICA BOLIVARIANA DE VENEZUELA</div>
         <div class="text-xs font-black uppercase tracking-wider text-slate-900">CONSEJO NACIONAL ELECTORAL</div>
         <div class="text-sm font-black uppercase text-blue-900 bg-blue-50 py-1 border border-blue-200 rounded tracking-tight">
@@ -760,8 +755,8 @@
       </div>
 
       <!-- Tabla de Escrutinio -->
-      <div class="border border-slate-900 rounded overflow-hidden text-xs">
-        <div class="bg-slate-900 text-white font-bold px-2 py-1 flex justify-between text-[10px] uppercase">
+      <div class="border border-[#140e40] rounded overflow-hidden text-xs">
+        <div class="bg-[#140e40] text-white font-bold px-2 py-1 flex justify-between text-[10px] uppercase">
           <span>CANDIDATO / ORGANIZACIÓN POLÍTICA</span>
           <span>TOTAL VOTOS</span>
         </div>
@@ -803,7 +798,7 @@
       <div class="flex items-center justify-between gap-3 pt-2 border-t-2 border-dashed border-slate-300">
         
         <!-- Código QR Visual Matriz SVG -->
-        <div class="p-1 border-2 border-slate-900 rounded bg-white shrink-0 shadow-sm">
+        <div class="p-1 border-2 border-[#140e40] rounded bg-white shrink-0 shadow-sm">
           <svg class="w-16 h-16" viewBox="0 0 100 100" fill="currentColor">
             <!-- Posicionadores Esquinas -->
             <rect x="5" y="5" width="26" height="26" fill="#000" />
@@ -870,7 +865,7 @@
             <i data-lucide="printer" class="w-3.5 h-3.5"></i>
             <span>Imprimir</span>
           </button>
-          <button onclick="closeActaModal()" class="px-4 py-1.5 rounded bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs cursor-pointer">
+          <button onclick="closeActaModal()" class="px-4 py-1.5 rounded bg-[#140e40] hover:bg-[#1d1554] text-white font-bold text-xs cursor-pointer border border-[#2d1f85]">
             Cerrar
           </button>
         </div>
@@ -882,10 +877,10 @@
   <!-- ============================================================== -->
   <!-- 7. FOOTER INFORMATIVO                                          -->
   <!-- ============================================================== -->
-  <footer class="mt-auto border-t border-slate-900 bg-slate-950/80 py-4 px-3 sm:px-6 text-center text-xs text-slate-500 no-print">
+  <footer class="mt-auto border-t border-[#2d1f85] bg-[#100b33]/90 py-4 px-3 sm:px-6 text-center text-xs text-blue-300/60 no-print">
     <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
       <span>Plataforma Ciudadana de Monitoreo Territorial • Municipio Maturín (10 Parroquias)</span>
-      <span class="font-mono text-slate-400">Edición Especial ConVzla • CNE 2024</span>
+      <span class="font-mono text-blue-300/50">Edición Especial ConVzla • CNE 2024</span>
     </div>
   </footer>
 
@@ -952,6 +947,7 @@
       centrosList = getCentrosData();
       try { renderParishPills(); } catch(e) { console.warn(e); }
       try { updateGlobalStats(); } catch(e) { console.warn(e); }
+      try { actualizarEscrutinioReal(); } catch(e) { console.warn(e); }
       try { applyFilters(); } catch(e) { console.warn(e); }
       try { renderParroquiaStats(); } catch(e) { console.warn(e); }
       try { if (window.lucide) lucide.createIcons(); } catch(e) { console.warn(e); }
@@ -987,14 +983,14 @@
       Object.keys(views).forEach(key => {
         if (views[key]) views[key].classList.add("hidden");
         if (tabs[key]) {
-          tabs[key].className = "px-3.5 py-2 rounded-xl text-xs font-black transition flex items-center gap-2 cursor-pointer bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white";
+          tabs[key].className = "px-3.5 py-2 rounded-xl text-xs font-black transition flex items-center gap-2 cursor-pointer bg-[#140e40] hover:bg-[#1d1554] text-blue-200 hover:text-white border border-[#2d1f85]";
         }
       });
 
       // Activar vista seleccionada
       if (views[mode]) views[mode].classList.remove("hidden");
       if (tabs[mode]) {
-        tabs[mode].className = "px-3.5 py-2 rounded-xl text-xs font-black transition flex items-center gap-2 cursor-pointer bg-sky-600 text-white shadow-md shadow-sky-600/30";
+        tabs[mode].className = "px-3.5 py-2 rounded-xl text-xs font-black transition flex items-center gap-2 cursor-pointer bg-[#23176d] text-white shadow-md shadow-sky-600/30 border border-sky-400/50";
       }
 
       // Si se selecciona el mapa, inicializar o redimensionar
@@ -1026,12 +1022,12 @@
             onclick="setParishFilter('${p.id}')"
             class="px-3 py-1.5 rounded-xl border transition shrink-0 flex items-center gap-1.5 cursor-pointer ${
               isActive 
-                ? 'bg-sky-600 border-sky-400 text-white shadow-md shadow-sky-600/30' 
-                : 'bg-slate-900 border-slate-800 text-slate-400 hover:text-white hover:border-slate-700'
+                ? 'bg-[#23176d] border-sky-400 text-white shadow-md shadow-sky-600/30' 
+                : 'bg-[#140e40] border-[#2d1f85] text-blue-200 hover:text-white hover:border-sky-400'
             }"
           >
             <span>${p.nombre}</span>
-            <span class="px-1.5 py-0.2 text-[10px] rounded-md ${isActive ? 'bg-sky-800 text-white' : 'bg-slate-800 text-slate-300'} font-mono">${count}</span>
+            <span class="px-1.5 py-0.2 text-[10px] rounded-md ${isActive ? 'bg-[#35249c] text-white' : 'bg-[#0e092e] text-blue-200 border border-[#2d1f85]'} font-mono">${count}</span>
           </button>
         `;
       }).join("");
@@ -1114,15 +1110,32 @@
     // CÁLCULO DE ESCRUTINIO SEGURO POR CENTRO
     // ==============================================================
     function getEscrutinioCentro(c) {
-      const padron = c.electores || 500;
-      const participacionPct = c.escrutinio?.participacionPct || 76.4;
-      const emitidos = c.escrutinio?.votosEmitidos || Math.round(padron * (participacionPct / 100));
-      const op = c.escrutinio?.votosOposicion || Math.round(emitidos * 0.746);
-      const of = c.escrutinio?.votosOficialismo || Math.round(emitidos * 0.224);
-      const otros = emitidos - op - of;
+      const padron = c.electores || 0;
+      const isTransmitido = Boolean(c.escrutinio && c.escrutinio.transmitido);
+
+      if (!isTransmitido) {
+        return {
+          votosEmitidos: 0,
+          votosOposicion: 0,
+          votosOficialismo: 0,
+          votosOtros: 0,
+          pctOposicion: 0.0,
+          pctOficialismo: 0.0,
+          margen: 0.0,
+          participacionPct: 0.0,
+          hora: "--:--",
+          transmitido: false
+        };
+      }
+
+      const emitidos = c.escrutinio?.votosEmitidos || 0;
+      const op = c.escrutinio?.votosOposicion || 0;
+      const of = c.escrutinio?.votosOficialismo || 0;
+      const otros = c.escrutinio?.votosOtros || Math.max(0, emitidos - op - of);
       const pctOp = emitidos > 0 ? ((op / emitidos) * 100).toFixed(1) : "0.0";
       const pctOf = emitidos > 0 ? ((of / emitidos) * 100).toFixed(1) : "0.0";
       const margen = (parseFloat(pctOp) - parseFloat(pctOf)).toFixed(1);
+      const participacionPct = padron > 0 ? ((emitidos / padron) * 100).toFixed(1) : 0.0;
 
       return {
         votosEmitidos: emitidos,
@@ -1132,9 +1145,9 @@
         pctOposicion: parseFloat(pctOp),
         pctOficialismo: parseFloat(pctOf),
         margen: parseFloat(margen),
-        participacionPct: participacionPct,
-        hora: c.escrutinio?.hora || "19:42",
-        transmitido: c.escrutinio?.transmitido !== false
+        participacionPct: parseFloat(participacionPct),
+        hora: c.escrutinio?.hora || "--:--",
+        transmitido: true
       };
     }
 
@@ -1173,11 +1186,11 @@
         const isOdd = index % 2 === 1;
 
         return `
-          <tr class="${isOdd ? 'bg-slate-900/40' : 'bg-slate-900/90'} hover:bg-slate-800/80 transition-colors border-b border-slate-800/60 group">
+          <tr class="${isOdd ? 'bg-[#140e40]/50' : 'bg-[#18114a]/90'} hover:bg-[#1d1554] transition-colors border-b border-[#2d1f85]/60 group">
             
             <!-- Código CNE -->
             <td class="py-2.5 px-3 font-mono font-bold text-sky-400 whitespace-nowrap">
-              <span class="bg-slate-950 px-2 py-0.5 rounded border border-slate-800 group-hover:border-sky-500/40">
+              <span class="bg-[#0e092e] px-2 py-0.5 rounded border border-[#2d1f85] group-hover:border-sky-500/40">
                 ${c.id}
               </span>
             </td>
@@ -1187,21 +1200,21 @@
               <strong class="text-white block font-bold text-xs leading-tight group-hover:text-sky-300 transition">
                 ${c.nombre}
               </strong>
-              <span class="text-[10px] text-slate-400 block truncate max-w-xs mt-0.5">
+              <span class="text-[10px] text-blue-300/60 block truncate max-w-xs mt-0.5">
                 📍 ${c.sector || 'Casco Central'} • ${c.direccion || ''}
               </span>
             </td>
 
             <!-- Parroquia -->
             <td class="py-2.5 px-2 whitespace-nowrap">
-              <span class="px-2 py-0.5 rounded-md bg-slate-950 text-slate-300 border border-slate-800 text-[10px] font-semibold">
+              <span class="px-2 py-0.5 rounded-md bg-[#0e092e] text-blue-200 border border-[#2d1f85] text-[10px] font-semibold">
                 ${parishName.replace("Parroquia ", "")}
               </span>
             </td>
 
             <!-- Mesas -->
-            <td class="py-2.5 px-2 text-center font-bold text-slate-200">
-              <span class="w-6 h-6 inline-flex items-center justify-center rounded-lg bg-slate-950 border border-slate-800 text-xs">
+            <td class="py-2.5 px-2 text-center font-bold text-blue-200">
+              <span class="w-6 h-6 inline-flex items-center justify-center rounded-lg bg-[#0e092e] border border-[#2d1f85] text-xs">
                 ${c.mesas}
               </span>
             </td>
@@ -1213,32 +1226,36 @@
 
             <!-- Votos ConVzla / MIGATO -->
             <td class="py-2.5 px-3 text-right bg-blue-950/20">
-              <div class="font-black text-blue-300">
-                ${esc.votosOposicion.toLocaleString()}
-                <span class="text-[10px] text-blue-400 font-bold ml-1">(${esc.pctOposicion}%)</span>
-              </div>
-              <div class="w-full h-1 bg-slate-900 rounded-full overflow-hidden mt-1">
-                <div class="h-full bg-blue-500 rounded-full" style="width: ${esc.pctOposicion}%;"></div>
-              </div>
+              ${esc.transmitido ? `
+                <div class="font-black text-blue-300">
+                  ${esc.votosOposicion.toLocaleString()}
+                  <span class="text-[10px] text-blue-400 font-bold ml-1">(${esc.pctOposicion}%)</span>
+                </div>
+                <div class="w-full h-1 bg-[#0e092e] rounded-full overflow-hidden mt-1">
+                  <div class="h-full bg-blue-500 rounded-full" style="width: ${esc.pctOposicion}%;"></div>
+                </div>
+              ` : `<span class="text-xs text-slate-500 font-mono">--</span>`}
             </td>
 
             <!-- Votos Oficialismo -->
             <td class="py-2.5 px-3 text-right bg-red-950/20 font-bold text-red-300">
-              ${esc.votosOficialismo.toLocaleString()}
-              <span class="text-[10px] text-red-400 ml-1">(${esc.pctOficialismo}%)</span>
+              ${esc.transmitido ? `
+                ${esc.votosOficialismo.toLocaleString()}
+                <span class="text-[10px] text-red-400 ml-1">(${esc.pctOficialismo}%)</span>
+              ` : `<span class="text-xs text-slate-500 font-mono">--</span>`}
             </td>
 
             <!-- Margen -->
             <td class="py-2.5 px-2 text-right font-black text-emerald-400">
-              +${esc.margen}%
+              ${esc.transmitido ? `+${esc.margen}%` : `<span class="text-xs text-slate-500 font-mono">--</span>`}
             </td>
 
             <!-- Estatus Acta -->
             <td class="py-2.5 px-3 text-center whitespace-nowrap">
               <span class="px-2 py-0.5 rounded-full text-[10px] font-black border inline-flex items-center gap-1 ${
                 esc.transmitido 
-                  ? 'bg-emerald-950 text-emerald-300 border-emerald-500/50' 
-                  : 'bg-amber-950 text-amber-300 border-amber-500/50'
+                  ? 'bg-emerald-950/80 text-emerald-300 border-emerald-500/60' 
+                  : 'bg-amber-950/80 text-amber-300 border-amber-500/60'
               }">
                 <span class="w-1.5 h-1.5 rounded-full ${esc.transmitido ? 'bg-emerald-400' : 'bg-amber-400 animate-ping'}"></span>
                 <span>${esc.transmitido ? 'OK (' + esc.hora + ')' : 'En Espera'}</span>
@@ -1259,7 +1276,7 @@
 
                 <button 
                   onclick="openFichaModal('${c.id}')"
-                  class="px-2 py-1 rounded-lg bg-slate-800 hover:bg-sky-600 text-slate-300 hover:text-white border border-slate-700 text-[11px] font-bold flex items-center gap-1 cursor-pointer transition"
+                  class="px-2 py-1 rounded-lg bg-[#140e40] hover:bg-sky-600 text-blue-200 hover:text-white border border-[#2d1f85] text-[11px] font-bold flex items-center gap-1 cursor-pointer transition"
                   title="Ver Ficha Técnica y Testigos"
                 >
                   <i data-lucide="info" class="w-3 h-3"></i>
@@ -1349,15 +1366,15 @@
         const esc = getEscrutinioCentro(c);
 
         return `
-          <div class="bg-slate-900 border border-slate-800 hover:border-sky-500/60 rounded-2xl p-4 shadow-lg hover:shadow-sky-500/10 transition-all flex flex-col justify-between group">
+          <div class="bg-[#18114a] border border-[#2d1f85] hover:border-sky-400 rounded-2xl p-4 shadow-lg hover:shadow-sky-500/10 transition-all flex flex-col justify-between group">
             
             <div class="space-y-2.5">
               <!-- Fila 1: Código CNE + Badge de Estatus -->
               <div class="flex items-center justify-between gap-2">
-                <span class="font-mono text-[10px] text-slate-400 font-bold bg-slate-950 px-2 py-0.5 rounded-md border border-slate-800">
+                <span class="font-mono text-[10px] text-blue-200 font-bold bg-[#0e092e] px-2 py-0.5 rounded-md border border-[#2d1f85]">
                   CNE #${c.id}
                 </span>
-                <span class="px-2 py-0.5 text-[9px] font-black uppercase tracking-wider rounded-md border bg-emerald-950/80 text-emerald-300 border-emerald-500/50 flex items-center gap-1">
+                <span class="px-2 py-0.5 text-[9px] font-black uppercase tracking-wider rounded-md border bg-emerald-950/80 text-emerald-300 border-emerald-500/60 flex items-center gap-1">
                   <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
                   <span>Acta OK (${esc.hora})</span>
                 </span>
@@ -1374,20 +1391,20 @@
               </div>
 
               <!-- Dirección -->
-              <p class="text-[11px] text-slate-400 line-clamp-1">
+              <p class="text-[11px] text-blue-300/60 line-clamp-1">
                 ${c.direccion || 'Av. Principal, Maturín'}
               </p>
 
               <!-- Mini Escrutinio Simulado de la Escuela -->
-              <div class="bg-slate-950 p-2.5 rounded-xl border border-slate-800/80 space-y-1.5 text-[11px] font-mono">
+              <div class="bg-[#0e092e] p-2.5 rounded-xl border border-[#2d1f85] space-y-1.5 text-[11px] font-mono">
                 <div class="flex items-center justify-between">
                   <span class="text-blue-400 font-bold">MIGATO / Cambio:</span>
                   <span class="text-white font-black">${esc.votosOposicion.toLocaleString()} (${esc.pctOposicion}%)</span>
                 </div>
-                <div class="w-full h-1.5 bg-slate-900 rounded-full overflow-hidden">
+                <div class="w-full h-1.5 bg-[#140e40] rounded-full overflow-hidden">
                   <div class="h-full bg-blue-500 rounded-full" style="width: ${esc.pctOposicion}%;"></div>
                 </div>
-                <div class="flex items-center justify-between text-[10px] text-slate-400 pt-0.5">
+                <div class="flex items-center justify-between text-[10px] text-blue-300/60 pt-0.5">
                   <span>Oficialismo: ${esc.votosOficialismo.toLocaleString()} (${esc.pctOficialismo}%)</span>
                   <span class="text-emerald-400 font-bold">Part: ${esc.participacionPct}%</span>
                 </div>
@@ -1395,15 +1412,15 @@
             </div>
 
             <!-- Fila Inferior: Métricas y Botón -->
-            <div class="pt-3 mt-3 border-t border-slate-800/80 flex items-center justify-between gap-2">
+            <div class="pt-3 mt-3 border-t border-[#2d1f85] flex items-center justify-between gap-2">
               <div class="flex items-center gap-3 font-mono text-xs">
                 <div>
-                  <span class="text-[9px] uppercase text-slate-500 block font-bold">Mesas</span>
+                  <span class="text-[9px] uppercase text-blue-300/60 block font-bold">Mesas</span>
                   <span class="font-black text-white">${c.mesas}</span>
                 </div>
-                <div class="h-4 w-[1px] bg-slate-800"></div>
+                <div class="h-4 w-[1px] bg-[#2d1f85]"></div>
                 <div>
-                  <span class="text-[9px] uppercase text-slate-500 block font-bold">Padrón</span>
+                  <span class="text-[9px] uppercase text-blue-300/60 block font-bold">Padrón</span>
                   <span class="font-black text-emerald-400">${(c.electores || 0).toLocaleString()}</span>
                 </div>
               </div>
@@ -1419,7 +1436,7 @@
                 </button>
                 <button 
                   onclick="openFichaModal('${c.id}')"
-                  class="px-2.5 py-1.5 rounded-xl bg-slate-800 hover:bg-sky-600 text-slate-200 hover:text-white border border-slate-700 hover:border-sky-500 font-bold text-xs transition flex items-center gap-1 cursor-pointer"
+                  class="px-2.5 py-1.5 rounded-xl bg-[#140e40] hover:bg-sky-600 text-blue-200 hover:text-white border border-[#2d1f85] hover:border-sky-500 font-bold text-xs transition flex items-center gap-1 cursor-pointer"
                 >
                   <span>Ficha</span>
                   <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
@@ -1464,8 +1481,8 @@
         const participacion = totalElectores > 0 ? ((sumEmitidos / totalElectores) * 100).toFixed(1) : "76.4";
 
         return `
-          <div class="bg-slate-950 border border-slate-800 hover:border-indigo-500/50 rounded-2xl p-4 space-y-3 shadow-lg transition">
-            <div class="flex items-center justify-between border-b border-slate-800/80 pb-2">
+          <div class="bg-[#18114a] border border-[#2d1f85] hover:border-sky-400 rounded-2xl p-4 space-y-3 shadow-lg transition">
+            <div class="flex items-center justify-between border-b border-[#2d1f85] pb-2">
               <h4 class="font-black text-sm text-white">${p.nombre}</h4>
               <span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-[10px] font-mono font-bold">
                 ${pCentros.length} Centros
@@ -1473,16 +1490,16 @@
             </div>
 
             <div class="grid grid-cols-3 gap-2 text-center font-mono text-xs">
-              <div class="bg-slate-900 p-2 rounded-xl border border-slate-800/60">
-                <span class="text-[9px] uppercase text-slate-500 block">Mesas</span>
+              <div class="bg-[#0e092e] p-2 rounded-xl border border-[#2d1f85]">
+                <span class="text-[9px] uppercase text-blue-300/60 block">Mesas</span>
                 <span class="font-black text-white">${totalMesas}</span>
               </div>
-              <div class="bg-slate-900 p-2 rounded-xl border border-slate-800/60">
-                <span class="text-[9px] uppercase text-slate-500 block">Padrón</span>
+              <div class="bg-[#0e092e] p-2 rounded-xl border border-[#2d1f85]">
+                <span class="text-[9px] uppercase text-blue-300/60 block">Padrón</span>
                 <span class="font-black text-emerald-400">${totalElectores.toLocaleString()}</span>
               </div>
-              <div class="bg-slate-900 p-2 rounded-xl border border-slate-800/60">
-                <span class="text-[9px] uppercase text-slate-500 block">Participación</span>
+              <div class="bg-[#0e092e] p-2 rounded-xl border border-[#2d1f85]">
+                <span class="text-[9px] uppercase text-blue-300/60 block">Participación</span>
                 <span class="font-black text-sky-400">${participacion}%</span>
               </div>
             </div>
@@ -1493,22 +1510,22 @@
                 <span class="text-blue-400 font-bold">MIGATO / Cambio:</span>
                 <span class="text-white font-black">${sumOp.toLocaleString()} (${pctOp}%)</span>
               </div>
-              <div class="w-full h-2 bg-slate-900 rounded-full overflow-hidden">
+              <div class="w-full h-2 bg-[#0e092e] rounded-full overflow-hidden">
                 <div class="h-full bg-blue-500 rounded-full" style="width: ${pctOp}%;"></div>
               </div>
 
               <div class="flex justify-between items-center text-[11px] pt-1">
                 <span class="text-red-400 font-bold">Oficialismo:</span>
-                <span class="text-slate-300 font-bold">${sumOf.toLocaleString()} (${pctOf}%)</span>
+                <span class="text-blue-200 font-bold">${sumOf.toLocaleString()} (${pctOf}%)</span>
               </div>
-              <div class="w-full h-1.5 bg-slate-900 rounded-full overflow-hidden">
+              <div class="w-full h-1.5 bg-[#0e092e] rounded-full overflow-hidden">
                 <div class="h-full bg-red-500 rounded-full" style="width: ${pctOf}%;"></div>
               </div>
             </div>
 
             <button 
               onclick="filtrarPorParroquiaEnTablilla('${p.id}')"
-              class="w-full py-1.5 px-3 rounded-xl bg-slate-800 hover:bg-sky-600 text-slate-300 hover:text-white text-xs font-bold transition flex items-center justify-center gap-1 cursor-pointer"
+              class="w-full py-1.5 px-3 rounded-xl bg-[#140e40] hover:bg-sky-600 text-blue-200 hover:text-white border border-[#2d1f85] text-xs font-bold transition flex items-center justify-center gap-1 cursor-pointer"
             >
               <span>Ver en Tablilla Oficial</span>
               <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
@@ -1543,64 +1560,72 @@
     }
 
     // ==============================================================
-    // CONTROL DEL SIMULADOR DE TRANSMISIÓN CNE
+    // TOTALIZACIÓN Y AUDITORÍA DE TRANSMISIÓN CNE EN TIEMPO REAL
     // ==============================================================
-    function cambiarPresetEscrutinio(pct) {
-      simulatedTransmissionPct = parseInt(pct) || 100;
-      actualizarEscrutinioVisual(simulatedTransmissionPct);
-    }
-
-    function actualizarEscrutinioVisual(pct) {
+    function actualizarEscrutinioReal() {
       const progressBar = document.getElementById("sim-progress-bar");
       const centrosCount = document.getElementById("sim-centros-count");
       const centrosPct = document.getElementById("sim-centros-pct");
       const mesasCount = document.getElementById("sim-mesas-count");
       const actasCount = document.getElementById("sim-actas-count");
 
-      if (progressBar) progressBar.style.width = pct + "%";
-
       const totalCentros = centrosList.length || 175;
       const totalMesas = centrosList.reduce((acc, c) => acc + (c.mesas || 0), 0) || 361;
 
-      const cVal = Math.round((pct / 100) * totalCentros);
-      const mVal = Math.round((pct / 100) * totalMesas);
+      let cTransmitidos = 0;
+      let mEscrutadas = 0;
+      let actasQR = 0;
+      let opGlobal = 0;
+      let ofGlobal = 0;
+      let otGlobal = 0;
+      let totalEmitidos = 0;
 
-      if (centrosCount) centrosCount.textContent = `${cVal} / ${totalCentros}`;
+      centrosList.forEach(c => {
+        if (c.escrutinio && c.escrutinio.transmitido) {
+          cTransmitidos++;
+          mEscrutadas += (c.escrutinio.actasVerificadas || c.mesas || 1);
+          actasQR += (c.escrutinio.actasVerificadas || 1);
+          opGlobal += (c.escrutinio.votosOposicion || 0);
+          ofGlobal += (c.escrutinio.votosOficialismo || 0);
+          otGlobal += (c.escrutinio.votosOtros || 0);
+          totalEmitidos += (c.escrutinio.votosEmitidos || 0);
+        }
+      });
+
+      const pctNum = totalCentros > 0 ? (cTransmitidos / totalCentros) * 100 : 0;
+      const pct = pctNum.toFixed(1);
+
+      if (progressBar) progressBar.style.width = pct + "%";
+      if (centrosCount) centrosCount.textContent = `${cTransmitidos} / ${totalCentros}`;
       if (centrosPct) centrosPct.textContent = `(${pct}%)`;
-      if (mesasCount) mesasCount.textContent = `${mVal} / ${totalMesas}`;
-      if (actasCount) actasCount.textContent = `${mVal}`;
-
-      // Recalcular Votos en base al % transmitido
-      const totalEmitidosGlobal = Math.round(318601 * 0.764 * (pct / 100));
-      const opGlobal = Math.round(totalEmitidosGlobal * 0.746);
-      const ofGlobal = Math.round(totalEmitidosGlobal * 0.224);
-      const otGlobal = totalEmitidosGlobal - opGlobal - ofGlobal;
+      if (mesasCount) mesasCount.textContent = `${mEscrutadas} / ${totalMesas}`;
+      if (actasCount) actasCount.textContent = `${actasQR}`;
 
       const vOpElem = document.getElementById("sim-votos-op");
       const vOfElem = document.getElementById("sim-votos-of");
       const vOtElem = document.getElementById("sim-votos-ot");
+      const pctOpElem = document.getElementById("sim-pct-op");
+      const pctOfElem = document.getElementById("sim-pct-of");
+      const pctOtElem = document.getElementById("sim-pct-ot");
+      const barOp = document.getElementById("sim-bar-op");
+      const barOf = document.getElementById("sim-bar-of");
+      const barOt = document.getElementById("sim-bar-ot");
 
       if (vOpElem) vOpElem.textContent = `${opGlobal.toLocaleString()} votos`;
       if (vOfElem) vOfElem.textContent = `${ofGlobal.toLocaleString()} votos`;
       if (vOtElem) vOtElem.textContent = `${otGlobal.toLocaleString()} votos`;
-    }
 
-    function simularTransmisionEnVivo() {
-      const progressBar = document.getElementById("sim-progress-bar");
-      if (progressBar) progressBar.style.width = "0%";
-      let current = 0;
+      const pctOp = totalEmitidos > 0 ? ((opGlobal / totalEmitidos) * 100).toFixed(1) : "0.0";
+      const pctOf = totalEmitidos > 0 ? ((ofGlobal / totalEmitidos) * 100).toFixed(1) : "0.0";
+      const pctOt = totalEmitidos > 0 ? ((otGlobal / totalEmitidos) * 100).toFixed(1) : "0.0";
 
-      const interval = setInterval(() => {
-        current += 5;
-        if (current > 100) current = 100;
-        actualizarEscrutinioVisual(current);
+      if (pctOpElem) pctOpElem.textContent = `${pctOp}%`;
+      if (pctOfElem) pctOfElem.textContent = `${pctOf}%`;
+      if (pctOtElem) pctOtElem.textContent = `${pctOt}%`;
 
-        if (current >= 100) {
-          clearInterval(interval);
-          const select = document.getElementById("select-preset-escrutinio");
-          if (select) select.value = "100";
-        }
-      }, 60);
+      if (barOp) barOp.style.width = `${pctOp}%`;
+      if (barOf) barOf.style.width = `${pctOf}%`;
+      if (barOt) barOt.style.width = `${pctOt}%`;
     }
 
     function toggleEscrutinioPanel() {
@@ -1637,8 +1662,9 @@
       document.getElementById("modal-electores").textContent = (c.electores || 0).toLocaleString();
       document.getElementById("modal-promedio").textContent = Math.round(c.electores / c.mesas);
 
-      document.getElementById("modal-testigo-1").textContent = c.testigoPrincipal || "Prof. Carmen Salazar";
-      document.getElementById("modal-coordinador").textContent = `${c.coordinador || 'Ing. Pedro Figuera'} (${c.telefono || '+58 414-7821430'})`;
+      document.getElementById("modal-testigo-1").textContent = c.testigoPrincipal || "Por asignar";
+      const tlfStr = c.telefono ? ` (${c.telefono})` : "";
+      document.getElementById("modal-coordinador").textContent = `${c.coordinador || 'Por asignar'}${tlfStr}`;
 
       const modal = document.getElementById("modal-ficha-centro");
       if (modal) modal.style.display = "flex";
@@ -1746,7 +1772,7 @@
         const pinColor = isPrio ? "#f59e0b" : "#10b981";
 
         const iconHtml = `
-          <div style="background-color: ${pinColor}; box-shadow: 0 0 12px ${pinColor};" class="w-6 h-6 rounded-full border-2 border-slate-900 flex items-center justify-center text-slate-950 font-black text-[9px]">
+          <div style="background-color: ${pinColor}; box-shadow: 0 0 12px ${pinColor};" class="w-6 h-6 rounded-full border-2 border-[#140e40] flex items-center justify-center text-[#0e092e] font-black text-[9px]">
             ${c.mesas}
           </div>
         `;
@@ -1767,7 +1793,7 @@
             <span class="text-[10px] text-slate-300 block mt-1">👥 ${(c.electores || 0).toLocaleString()} Electores • ${c.mesas} Mesas</span>
             <span class="text-[10px] text-slate-400 block">${c.direccion || ''}</span>
             <div class="flex gap-1 mt-2">
-              <button onclick="openActaModal('${c.id}')" class="flex-1 py-1 px-2 rounded-lg bg-amber-600 hover:bg-amber-500 text-slate-950 font-black text-[10px] text-center cursor-pointer">
+              <button onclick="openActaModal('${c.id}')" class="flex-1 py-1 px-2 rounded-lg bg-amber-600 hover:bg-amber-500 text-[#0e092e] font-black text-[10px] text-center cursor-pointer">
                 Acta QR
               </button>
               <button onclick="openFichaModal('${c.id}')" class="flex-1 py-1 px-2 rounded-lg bg-sky-600 hover:bg-sky-500 text-white font-bold text-[10px] text-center cursor-pointer">

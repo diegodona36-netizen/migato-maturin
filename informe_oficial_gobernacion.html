@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>INFORME TÉCNICO OFICIAL • SISTEMA MIGATO 2026</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="assets/logo-migato.png">
+  
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap');
+
+    :root {
+      --primary: #0f172a;       /* Azul marino institucional profundo */
+      --secondary: #1e3a8a;     /* Azul de estado */
+      --accent: #b45309;        /* Dorado/ámbar de presidencia/gobernación */
+      --border: #cbd5e1;        /* Borde fino y elegante */
+      --bg-soft: #f8fafc;       /* Fondo sutil */
+      --text: #0f172a;          /* Texto de alta legibilidad */
+      --muted: #475569;         /* Texto secundario */
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', Arial, Helvetica, sans-serif;
+      color: var(--text);
+      background-color: #e2e8f0;
+      font-size: 9.5pt;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .font-mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* BARRA SUPERIOR DE ACCIONES (NO SALE AL IMPRIMIR) */
+    .no-print-bar {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: #0f172a;
+      color: white;
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.25);
+    }
+    .no-print-bar button {
+      background: #2563eb;
+      color: white;
+      border: none;
+      padding: 8px 18px;
+      font-weight: 700;
+      font-size: 13px;
+      border-radius: 8px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+    .no-print-bar button:hover {
+      background: #1d4ed8;
+      transform: translateY(-1px);
+    }
+    .no-print-bar a {
+      color: #94a3b8;
+      text-decoration: none;
+      font-size: 12px;
+      font-weight: 600;
+      margin-left: 15px;
+    }
+    .no-print-bar a:hover {
+      color: white;
+    }
+
+    /* CONTENEDOR DE PÁGINAS TIPO CARTA / LETTER */
+    .page-wrapper {
+      max-width: 216mm; /* Ancho carta */
+      margin: 25px auto;
+      background: #ffffff;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    }
+
+    .page {
+      width: 216mm;
+      min-height: 279mm; /* Alto carta */
+      padding: 16mm 20mm 16mm 20mm;
+      position: relative;
+      background: #ffffff;
+      page-break-after: always;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    /* ENCABEZADO INSTITUCIONAL */
+    .gov-header {
+      border-bottom: 2px solid var(--primary);
+      padding-bottom: 12px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .gov-header-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .gov-header-logo {
+      width: 52px;
+      height: 52px;
+      object-contain: contain;
+    }
+    .gov-header-titles h4 {
+      font-size: 10pt;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--primary);
+    }
+    .gov-header-titles p {
+      font-size: 8pt;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+    .gov-header-badge {
+      text-align: right;
+    }
+    .badge-code {
+      display: inline-block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 8pt;
+      font-weight: 700;
+      background: var(--bg-soft);
+      border: 1px solid var(--border);
+      padding: 3px 8px;
+      border-radius: 4px;
+      color: var(--secondary);
+    }
+    .badge-status {
+      display: block;
+      font-size: 7.5pt;
+      font-weight: 800;
+      color: #b45309;
+      margin-top: 3px;
+      text-transform: uppercase;
+    }
+
+    /* PIE DE PÁGINA */
+    .gov-footer {
+      border-top: 1px solid var(--border);
+      padding-top: 8px;
+      margin-top: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 7.5pt;
+      color: var(--muted);
+    }
+
+    /* TITULOS Y SECCIONES */
+    h1.doc-title {
+      font-size: 17pt;
+      font-weight: 800;
+      color: var(--primary);
+      line-height: 1.2;
+      margin-bottom: 6px;
+      letter-spacing: -0.3px;
+    }
+    p.doc-subtitle {
+      font-size: 9pt;
+      color: var(--muted);
+      margin-bottom: 14px;
+      font-weight: 500;
+    }
+
+    .section-title {
+      font-size: 11pt;
+      font-weight: 800;
+      color: var(--secondary);
+      border-bottom: 1.5px solid var(--border);
+      padding-bottom: 4px;
+      margin-top: 12px;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* TABLAS EJECUTIVAS */
+    table.gov-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 8px 0 12px 0;
+      font-size: 8.5pt;
+    }
+    table.gov-table th {
+      background: var(--primary);
+      color: #ffffff;
+      font-weight: 700;
+      text-align: left;
+      padding: 6px 10px;
+      font-size: 8pt;
+      letter-spacing: 0.3px;
+    }
+    table.gov-table td {
+      padding: 6px 10px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: middle;
+    }
+    table.gov-table tr:nth-child(even) td {
+      background-color: var(--bg-soft);
+    }
+
+    /* TARJETAS EJECUTIVAS */
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin: 10px 0;
+    }
+    .exec-card {
+      border: 1px solid var(--border);
+      background: #ffffff;
+      border-radius: 6px;
+      padding: 10px 12px;
+      border-left: 3.5px solid var(--secondary);
+    }
+    .exec-card.gold { border-left-color: var(--accent); }
+    .exec-card.emerald { border-left-color: #059669; }
+    .exec-card.purple { border-left-color: #7c3aed; }
+    
+    .exec-card h4 {
+      font-size: 8.5pt;
+      font-weight: 800;
+      color: var(--primary);
+      margin-bottom: 3px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .exec-card p {
+      font-size: 8pt;
+      color: var(--muted);
+      line-height: 1.35;
+    }
+
+    /* ALERTAS / CALLOUTS */
+    .callout {
+      background: var(--bg-soft);
+      border: 1px solid #cbd5e1;
+      border-left: 4px solid var(--primary);
+      padding: 8px 12px;
+      border-radius: 4px;
+      font-size: 8.2pt;
+      color: #334155;
+      margin: 8px 0;
+      line-height: 1.4;
+    }
+
+    /* CUADRO DE FIRMAS */
+    .signature-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+      margin-top: 20px;
+    }
+    .sig-box {
+      border: 1px dashed var(--border);
+      border-radius: 6px;
+      padding: 10px;
+      text-align: center;
+      min-height: 90px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .sig-line {
+      border-top: 1px solid var(--primary);
+      margin-top: 45px;
+      padding-top: 4px;
+      font-size: 7.5pt;
+      font-weight: 700;
+      color: var(--primary);
+    }
+    .sig-role {
+      font-size: 7pt;
+      color: var(--muted);
+    }
+
+    /* REGLAS ESTRICTAS DE IMPRESIÓN */
+    @media print {
+      body {
+        background: transparent !important;
+        color: #000000 !important;
+      }
+      .no-print-bar {
+        display: none !important;
+      }
+      .page-wrapper {
+        margin: 0 !important;
+        box-shadow: none !important;
+        max-width: none !important;
+      }
+      .page {
+        width: 100% !important;
+        min-height: 100vh !important;
+        padding: 12mm 15mm !important;
+        margin: 0 !important;
+        box-shadow: none !important;
+        page-break-after: always !important;
+      }
+      @page {
+        size: letter portrait;
+        margin: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- BARRA DE ACCIÓN DIRECTA -->
+  <div class="no-print-bar">
+    <div style="display: flex; align-items: center; gap: 10px;">
+      <span style="background: #10b981; width: 8px; height: 8px; border-radius: 50%; display: inline-block;"></span>
+      <span style="font-weight: 800; font-size: 13px;">Dossier Oficial de Gobierno • Estado Monagas 2026</span>
+    </div>
+    <div>
+      <button onclick="window.print()">
+        <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M2.5 8a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1z"/><path d="M5 1a2 2 0 0 0-2 2v2H2a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h1v1a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-1h1a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1V3a2 2 0 0 0-2-2H5zM4 3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2H4V3zm1 5a2 2 0 0 0-2 2v1H2a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v-1a2 2 0 0 0-2-2H5zm7 2v3a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1z"/></svg>
+        Guardar como PDF (Calidad Editorial Chrome)
+      </button>
+      <a href="dossiers.html">Ver en Web</a>
+      <a href="presentacion.html">Ver Diapositivas</a>
+    </div>
+  </div>
+
+  <div class="page-wrapper">
+
+    <!-- =========================================================
+         PÁGINA 1: PORTADA INSTITUCIONAL Y SÍNTESIS DE ESTADO
+    ========================================================= -->
+    <div class="page">
+      <div>
+        <div class="gov-header">
+          <div class="gov-header-left">
+            <img src="assets/logo-migato.png" class="gov-header-logo" alt="Logo MIGATO">
+            <div class="gov-header-titles">
+              <h4>Gobernación del Estado Monagas</h4>
+              <p>Despacho del Gobernador • Puesto de Comando Estratégico</p>
+            </div>
+          </div>
+          <div class="gov-header-badge">
+            <span class="badge-code">DOC-GOB-MIGATO-2026-REV2</span>
+            <span class="badge-status">Documento Reservado de Estado</span>
+          </div>
+        </div>
+
+        <h1 class="doc-title">Plataforma Tecnológica MIGATO: Control Territorial, Despacho y Auditoría Electoral</h1>
+        <p class="doc-subtitle">Informe Ejecutivo de Arquitectura de Sistemas presentado al Gobernador del Estado Monagas y Gabinete Directivo.</p>
+
+        <div class="callout">
+          <strong>Síntesis Ejecutiva de Despacho:</strong> El sistema MIGATO dota al Poder Ejecutivo del Estado Monagas de una infraestructura propia, auditable y de máxima seguridad para la conducción territorial. Suprime la dependencia de métodos informales, elimina el riesgo de filtración de datos de campo y garantiza la soberanía informativa en tiempo real sobre los 13 municipios y 44 parroquias.
+        </div>
+
+        <div class="section-title">1. Ficha de Control y Marco Institucional</div>
+        <table class="gov-table">
+          <tr>
+            <th width="25%">Parámetro</th>
+            <th width="35%">Especificación Oficial</th>
+            <th width="40%">Impacto en la Gobernanza</th>
+          </tr>
+          <tr>
+            <td><strong>Jurisdicción</strong></td>
+            <td>Estado Monagas (13 Municipios / 44 Parroquias)</td>
+            <td>Cobertura del 100% de los centros poblados y sectores.</td>
+          </tr>
+          <tr>
+            <td><strong>Padrón Electoral CNE</strong></td>
+            <td>419.000 Electores en 175 Centros Electorales</td>
+            <td>Georreferenciación y caracterización política individual.</td>
+          </tr>
+          <tr>
+            <td><strong>Seguridad de Campo</strong></td>
+            <td>Protocolo «Buzón Ciego» (0 bytes en móvil)</td>
+            <td>Inmunidad de los brigadistas ante revisiones o decomisos.</td>
+          </tr>
+          <tr>
+            <td><strong>Soberanía de Datos</strong></td>
+            <td>Arquitectura Offline-Ready y Servidor Local</td>
+            <td>Operación garantizada incluso con corte total de Internet.</td>
+          </tr>
+        </table>
+
+        <div class="section-title">2. Diagnóstico: De la Vulnerabilidad a la Soberanía</div>
+        <div class="card-grid">
+          <div class="exec-card">
+            <h4>Problemática Histórica Resuelta</h4>
+            <p>Contraseñas compartidas en WhatsApp, cuadernos de papel vulnerables en calle, dispersión de datos electorales e imposibilidad de contrastar actas CNE en tiempo real.</p>
+          </div>
+          <div class="exec-card emerald">
+            <h4>Respuesta Institucional MIGATO</h4>
+            <p>Token criptográfico por enlace parroquial, borrado forense local en calle, radiografía de los 175 centros y gemelo digital 3D con foco de atención exclusivo.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="gov-footer">
+        <span>Gobernación del Estado Monagas • Dirección de Estrategia</span>
+        <span class="font-mono">Página 1 de 4</span>
+      </div>
+    </div>
+
+    <!-- =========================================================
+         PÁGINA 2: MÓDULOS 1 Y 2 (DESPACHO Y CENSO SECTORIAL)
+    ========================================================= -->
+    <div class="page">
+      <div>
+        <div class="gov-header">
+          <div class="gov-header-left">
+            <img src="assets/logo-migato.png" class="gov-header-logo" alt="Logo MIGATO">
+            <div class="gov-header-titles">
+              <h4>Módulos Operativos I y II</h4>
+              <p>Despacho Seguro y Levantamiento Socio-Territorial</p>
+            </div>
+          </div>
+          <div class="gov-header-badge">
+            <span class="badge-code">MOD-01 & MOD-02</span>
+            <span class="badge-status">Protocolos de Seguridad</span>
+          </div>
+        </div>
+
+        <div class="section-title">3. Módulo 1: Despacho Celular por WhatsApp (/despacho/)</div>
+        <p style="font-size: 8.5pt; color: var(--muted); margin-bottom: 6px;">
+          Diseñado para distribuir de forma blindada los accesos a los <strong>44 enlaces parroquiales</strong> del estado directamente a su teléfono personal sin instalar aplicaciones invasivas ni compartir contraseñas de administrador.
+        </p>
+
+        <table class="gov-table">
+          <tr>
+            <th width="30%">Característica</th>
+            <th width="40%">Mecanismo Técnico</th>
+            <th width="30%">Garantía de Estado</th>
+          </tr>
+          <tr>
+            <td><strong>Despacho en 1 Toque</strong></td>
+            <td>Apertura de WhatsApp con mensaje y enlace seguro precargado.</td>
+            <td>Envío a los 44 enlaces en menos de 3 minutos.</td>
+          </tr>
+          <tr>
+            <td><strong>Aislamiento Parroquial</strong></td>
+            <td>Token de territorio único por enlace (ej: <code>?p=las-cocuizas</code>).</td>
+            <td>Imposible ver o alterar datos de otra parroquia.</td>
+          </tr>
+          <tr>
+            <td><strong>Rotación de Enlaces</strong></td>
+            <td>Regeneración de token en 2 segundos desde el puesto de mando.</td>
+            <td>Anulación inmediata de accesos a cuadros removidos.</td>
+          </tr>
+        </table>
+
+        <div class="section-title" style="margin-top: 18px;">4. Módulo 2: Censo Sectorial y Protocolo «Buzón Ciego» (/carga/)</div>
+        <p style="font-size: 8.5pt; color: var(--muted); margin-bottom: 6px;">
+          Herramienta de campo para el registro de familias, requerimientos de salud, CLAP y servicios públicos, dotada del protocolo de seguridad más estricto del país.
+        </p>
+
+        <div class="card-grid">
+          <div class="exec-card gold">
+            <h4>Protocolo «Buzón Ciego» (Blind Submission)</h4>
+            <p>Al pulsar «Registrar Familia», el formulario transmite los datos cifrados al servidor central y <strong>borra inmediatamente la memoria y caché del celular</strong>. La pantalla queda en blanco. Si a un brigadista le revisan el teléfono en la calle, el aparato <strong>no contiene ningún archivo ni registro</strong>.</p>
+          </div>
+          <div class="exec-card purple">
+            <h4>Consolidación de Sala Situacional</h4>
+            <p>Los datos ingresan instantáneamente al Puesto de Mando sin intermediarios. El Director de Sala visualiza el avance por calle y parroquia, con opción de <strong>descarga ejecutiva a Excel</strong> con un solo clic para reportes al Gobernador.</p>
+          </div>
+        </div>
+
+        <div class="callout">
+          <strong>Indicador Clave de Desempeño (KPI):</strong> 0 Bytes de residuo forense en los teléfonos móviles de los equipos territoriales de Monagas.
+        </div>
+      </div>
+
+      <div class="gov-footer">
+        <span>Gobernación del Estado Monagas • Módulos 1 y 2</span>
+        <span class="font-mono">Página 2 de 4</span>
+      </div>
+    </div>
+
+    <!-- =========================================================
+         PÁGINA 3: MÓDULOS 3 Y 4 (CNE Y CARTOGRAFÍA 3D)
+    ========================================================= -->
+    <div class="page">
+      <div>
+        <div class="gov-header">
+          <div class="gov-header-left">
+            <img src="assets/logo-migato.png" class="gov-header-logo" alt="Logo MIGATO">
+            <div class="gov-header-titles">
+              <h4>Módulos Operativos III y IV</h4>
+              <p>Auditoría Electoral y Cartografía Táctica Satelital</p>
+            </div>
+          </div>
+          <div class="gov-header-badge">
+            <span class="badge-code">MOD-03 & MOD-04</span>
+            <span class="badge-status">Inteligencia y Mando</span>
+          </div>
+        </div>
+
+        <div class="section-title">5. Módulo 3: Auditoría Electoral CNE y Verificación QR (/centros-maturin/)</div>
+        <p style="font-size: 8.5pt; color: var(--muted); margin-bottom: 6px;">
+          Tablilla de mando electoral georreferenciada con la totalidad de los <strong>175 centros de votación</strong> del municipio Maturín y <strong>419.000 electores</strong> caracterizados.
+        </p>
+
+        <table class="gov-table">
+          <tr>
+            <th width="28%">Componente</th>
+            <th width="42%">Funcionamiento Operativo</th>
+            <th width="30%">Ventaja para la Dirección</th>
+          </tr>
+          <tr>
+            <td><strong>Semáforo Político</strong></td>
+            <td>Clasificación en Voto Duro (Leal), Voto Blando (Atención prioritaria) y Nuevos Votantes.</td>
+            <td>Focalización exacta de la movilización el día de la elección.</td>
+          </tr>
+          <tr>
+            <td><strong>Directorio de Testigos</strong></td>
+            <td>Teléfono y datos de contacto de cada jefe de centro y testigo de mesa electoral.</td>
+            <td>Comunicación directa en caso de contingencia en cualquier mesa.</td>
+          </tr>
+          <tr>
+            <td><strong>Auditor QR de Actas</strong></td>
+            <td>Lector y simulador criptográfico de actas emitidas por la máquina CNE en 2 segundos.</td>
+            <td>Certificación inmediata de resultados con respaldo físico irrebatible.</td>
+          </tr>
+        </table>
+
+        <div class="section-title" style="margin-top: 18px;">6. Módulo 4: Cartografía Táctica 3D y Efecto «Velo Blanco» (/earth-monagas/)</div>
+        <p style="font-size: 8.5pt; color: var(--muted); margin-bottom: 6px;">
+          Gemelo digital tridimensional del Estado Monagas sobre tecnología MapLibre, optimizado para eliminar la sobrecarga cognitiva del Gobernador y Estado Mayor.
+        </p>
+
+        <div class="card-grid">
+          <div class="exec-card emerald">
+            <h4>Efecto Reflector «Velo Blanco»</h4>
+            <p>Al seleccionar una parroquia o sector, una máscara semitransparente blanca atenúa toda la periferia del estado, alumbrando exclusivamente la zona de trabajo. El líder de gobierno no se distrae con información irrelevante.</p>
+          </div>
+          <div class="exec-card">
+            <h4>Cascada de Desagregación 3D</h4>
+            <p>Navegación fluida en 4 niveles de detalle: <strong>Municipio ➔ Parroquia ➔ Subparroquia ➔ Sector Vecinal</strong> con renderizado tridimensional de manzanas, viviendas y techos.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="gov-footer">
+        <span>Gobernación del Estado Monagas • Módulos 3 y 4</span>
+        <span class="font-mono">Página 3 de 4</span>
+      </div>
+    </div>
+
+    <!-- =========================================================
+         PÁGINA 4: MATRIZ RACI, CONCLUSIÓN Y FIRMAS DE ESTADO
+    ========================================================= -->
+    <div class="page">
+      <div>
+        <div class="gov-header">
+          <div class="gov-header-left">
+            <img src="assets/logo-migato.png" class="gov-header-logo" alt="Logo MIGATO">
+            <div class="gov-header-titles">
+              <h4>Gobernanza y Cuadro de Aprobación</h4>
+              <p>Matriz de Responsabilidades y Conclusiones de Mando</p>
+            </div>
+          </div>
+          <div class="gov-header-badge">
+            <span class="badge-code">RESOLUCIÓN FINAL</span>
+            <span class="badge-status">Aprobación Oficial</span>
+          </div>
+        </div>
+
+        <div class="section-title">7. Matriz RACI de Responsabilidades Institucionales</div>
+        <table class="gov-table">
+          <tr>
+            <th width="30%">Rol de Estado</th>
+            <th width="40%">Atribución Principal</th>
+            <th width="30%">Módulos Bajo su Mando</th>
+          </tr>
+          <tr>
+            <td><strong>Gobernador del Estado</strong></td>
+            <td>Toma de decisiones estratégicas, despliegue de recursos y movilización general.</td>
+            <td>Módulo 3 (CNE) y Módulo 4 (Satélite 3D)</td>
+          </tr>
+          <tr>
+            <td><strong>Director Sala Situacional</strong></td>
+            <td>Despacho de tokens por WhatsApp, monitoreo de consolidación y soporte técnico.</td>
+            <td>Módulo 1 (Despacho) y Módulo 2 (Censo)</td>
+          </tr>
+          <tr>
+            <td><strong>Enlaces Parroquiales</strong></td>
+            <td>Coordinación de brigadas de calle y asignación de cuadrantes en su jurisdicción.</td>
+            <td>Módulo 1 y Módulo 2 (Recepción)</td>
+          </tr>
+          <tr>
+            <td><strong>Testigos y Jefes de Centro</strong></td>
+            <td>Carga de familias en buzón ciego y custodia y validación de actas QR en escuelas.</td>
+            <td>Módulo 2 (Calle) y Módulo 3 (QR)</td>
+          </tr>
+        </table>
+
+        <div class="section-title" style="margin-top: 14px;">8. Dictamen y Conclusiones Técnicas</div>
+        <p style="font-size: 8.2pt; color: var(--text); line-height: 1.45;">
+          La plataforma MIGATO 2026 representa un salto cualitativo histórico para la gobernabilidad del Estado Monagas. Cumple con los más altos estándares de <strong>soberanía tecnológica nacional</strong>, opera con independencia total de servidores foráneos, neutraliza cualquier vulnerabilidad de seguridad física en calle y garantiza una capacidad de respuesta inmediata para la Alta Dirección. Se recomienda su despliegue y validación formal en sala.
+        </p>
+
+        <div class="section-title" style="margin-top: 14px;">9. Cuadro Solemne de Conformidad y Firmas</div>
+        <div class="signature-grid">
+          <div class="sig-box">
+            <span style="font-size: 7pt; font-weight: 700; color: var(--muted);">ELABORADO POR:</span>
+            <div>
+              <div class="sig-line">Equipo de Desarrollo MIGATO</div>
+              <span class="sig-role">Dirección Técnica y de Sistemas</span>
+            </div>
+          </div>
+          <div class="sig-box">
+            <span style="font-size: 7pt; font-weight: 700; color: var(--muted);">REVISADO POR:</span>
+            <div>
+              <div class="sig-line">Dirección de Sala Situacional</div>
+              <span class="sig-role">Estado Mayor de Mando y Control</span>
+            </div>
+          </div>
+          <div class="sig-box">
+            <span style="font-size: 7pt; font-weight: 700; color: var(--muted);">APROBADO POR:</span>
+            <div>
+              <div class="sig-line">Gobernación del Estado Monagas</div>
+              <span class="sig-role">Despacho del Gobernador</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="gov-footer">
+        <span>Gobernación del Estado Monagas • Documento Oficial Certificado</span>
+        <span class="font-mono">Página 4 de 4</span>
+      </div>
+    </div>
+
+  </div>
+
+</body>
+</html>

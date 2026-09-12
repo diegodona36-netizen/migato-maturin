@@ -118,7 +118,7 @@ class CuadrantesH3App {
     if (badge) badge.textContent = `${this.currentParish.municipio} • ${this.currentParish.tipo}`;
     if (sectoresEl) {
       sectoresEl.innerHTML = this.currentParish.sectores
-        .map(s => `<span class="px-2 py-0.5 rounded-full bg-slate-800 text-slate-300 text-[10px] font-medium">${s}</span>`)
+        .map(s => `<span class="px-2 py-0.5 rounded-full bg-[#18114a] border border-[#2d1f85] text-slate-300 text-[10px] font-medium">${s}</span>`)
         .join("");
     }
 
@@ -253,11 +253,11 @@ class CuadrantesH3App {
     btnSizes.forEach(btn => {
       btn.addEventListener("click", () => {
         btnSizes.forEach(b => {
-          b.classList.remove("bg-amber-500", "text-slate-950", "font-black");
-          b.classList.add("bg-slate-800", "text-slate-300");
+          b.classList.remove("bg-amber-500", "text-[#0e092e]", "font-black");
+          b.classList.add("bg-[#0e092e]", "text-slate-300");
         });
-        btn.classList.add("bg-amber-500", "text-slate-950", "font-black");
-        btn.classList.remove("bg-slate-800", "text-slate-300");
+        btn.classList.add("bg-amber-500", "text-[#0e092e]", "font-black");
+        btn.classList.remove("bg-[#0e092e]", "text-slate-300");
 
         this.currentRadiusM = parseInt(btn.dataset.radius);
         this.generateH3Grid();

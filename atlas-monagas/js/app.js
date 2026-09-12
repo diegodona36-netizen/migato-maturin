@@ -64,7 +64,7 @@ class AtlasMonagasApp {
 
     filtered.forEach(mun => {
       const card = document.createElement("div");
-      card.className = "bg-slate-900 border border-slate-800 hover:border-amber-500/50 rounded-2xl p-5 shadow-lg hover:shadow-2xl transition group cursor-pointer flex flex-col justify-between";
+      card.className = "bg-[#18114a] border border-[#2d1f85] hover:border-amber-500/50 rounded-2xl p-5 shadow-lg hover:shadow-2xl transition group cursor-pointer flex flex-col justify-between";
       card.onclick = () => this.openMunicipalityParroquias(mun);
 
       card.innerHTML = `
@@ -73,7 +73,7 @@ class AtlasMonagasApp {
             <span class="w-10 h-10 rounded-xl flex items-center justify-center font-bold text-white shadow" style="background-color: ${mun.color}">
               <i data-lucide="${mun.icon || 'map-pin'}" class="w-5 h-5"></i>
             </span>
-            <span class="text-[11px] font-mono font-bold px-2.5 py-1 rounded-full bg-slate-800 text-amber-400 border border-slate-700">
+            <span class="text-[11px] font-mono font-bold px-2.5 py-1 rounded-full bg-[#0e092e] text-amber-400 border border-[#2d1f85]">
               ${mun.parroquias.length} Parroquias
             </span>
           </div>
@@ -81,7 +81,7 @@ class AtlasMonagasApp {
           <p class="text-xs text-slate-400 mt-0.5">Capital: <span class="text-slate-200 font-semibold">${mun.capital}</span></p>
         </div>
 
-        <div class="mt-4 pt-3 border-t border-slate-800 flex items-center justify-between text-xs text-slate-400">
+        <div class="mt-4 pt-3 border-t border-[#2d1f85] flex items-center justify-between text-xs text-slate-400">
           <span class="text-[11px] font-medium">Trazar calles y cargar planos</span>
           <i data-lucide="arrow-right" class="w-4 h-4 text-amber-400 group-hover:translate-x-1 transition"></i>
         </div>
@@ -108,13 +108,13 @@ class AtlasMonagasApp {
 
     if (list) {
       list.innerHTML = mun.parroquias.map(p => `
-        <div onclick="window.atlasApp.launchParishMap('${mun.id}', '${p.id}')" class="p-3.5 rounded-2xl border border-slate-800 bg-slate-950/90 hover:bg-slate-800 hover:border-amber-500/50 active:scale-[0.98] cursor-pointer transition-all flex items-center justify-between gap-3 group shadow-sm">
+        <div onclick="window.atlasApp.launchParishMap('${mun.id}', '${p.id}')" class="p-3.5 rounded-2xl border border-[#2d1f85] bg-[#18114a] hover:bg-[#23176d] hover:border-amber-500/50 active:scale-[0.98] cursor-pointer transition-all flex items-center justify-between gap-3 group shadow-sm">
           <div class="min-w-0 flex-1">
             <h4 class="text-sm font-black text-white group-hover:text-amber-300 transition truncate">${p.nombre}</h4>
             <p class="text-[11px] text-slate-400 font-mono">${p.tipo} • <span class="text-amber-400/80">${p.codigo}</span></p>
             <p class="text-[10px] text-slate-500 mt-0.5 truncate">${p.sectores.join(", ")}</p>
           </div>
-          <div class="shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-500/15 text-amber-400 border border-amber-500/30 text-xs font-black group-hover:bg-amber-500 group-hover:text-slate-950 transition whitespace-nowrap shadow">
+          <div class="shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-500/15 text-amber-400 border border-amber-500/30 text-xs font-black group-hover:bg-amber-500 group-hover:text-[#0e092e] transition whitespace-nowrap shadow">
             <span>Trazar</span>
             <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
           </div>
@@ -229,8 +229,8 @@ class AtlasMonagasApp {
 
     if (this.parishLines.length === 0) {
       container.innerHTML = `
-        <div class="p-6 text-center border border-dashed border-slate-800 rounded-2xl text-slate-500 space-y-2">
-          <i data-lucide="pencil" class="w-7 h-7 mx-auto text-slate-600"></i>
+        <div class="p-6 text-center border border-dashed border-[#2d1f85]/70 rounded-2xl text-slate-500 space-y-2">
+          <i data-lucide="pencil" class="w-7 h-7 mx-auto text-slate-500"></i>
           <p class="text-xs font-bold text-slate-400">Sin calles trazadas en esta parroquia.</p>
           <p class="text-[10px]">Toca "+ Trazar Nueva Calle" o "Cargar Plano" para importar KML/KMZ.</p>
         </div>
@@ -247,7 +247,7 @@ class AtlasMonagasApp {
     };
 
     container.innerHTML = this.parishLines.map((l, idx) => `
-      <div class="p-3 rounded-xl border border-slate-800 bg-slate-950/80 hover:bg-slate-900 cursor-pointer transition flex items-center justify-between gap-2 group" onclick="window.atlasApp.focusAndEditLine('${l.id}')">
+      <div class="p-3 rounded-xl border border-[#2d1f85] bg-[#18114a] hover:bg-[#23176d] cursor-pointer transition flex items-center justify-between gap-2 group" onclick="window.atlasApp.focusAndEditLine('${l.id}')">
         <div class="flex items-center gap-2.5 overflow-hidden">
           <span class="w-3.5 h-3.5 rounded-full shrink-0 shadow ${colorBadge[l.color] || 'bg-slate-500'}"></span>
           <div class="overflow-hidden">
@@ -255,7 +255,7 @@ class AtlasMonagasApp {
             <p class="text-[10px] text-slate-400 font-mono">${l.longitudM} m • <span class="capitalize text-slate-300 font-bold">${l.color}</span></p>
           </div>
         </div>
-        <button type="button" onclick="event.stopPropagation(); window.atlasApp.deleteLine('${l.id}')" class="p-1 text-slate-500 hover:text-red-400 rounded opacity-70 group-hover:opacity-100 transition" title="Borrar línea">
+        <button type="button" onclick="event.stopPropagation(); window.atlasApp.deleteLine('${l.id}')" class="p-1 text-slate-400 hover:text-red-400 rounded opacity-70 group-hover:opacity-100 transition" title="Borrar línea">
           <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
         </button>
       </div>
@@ -332,76 +332,6 @@ class AtlasMonagasApp {
       btn.classList.toggle("ring-4", isSelected);
       btn.classList.toggle("ring-white/90", isSelected);
     });
-  }
-
-
-  loadSampleParishLines() {
-    if (!this.currentParish) return;
-    const [cLat, cLng] = this.currentParish.centro;
-
-    const sampleLines = [
-      {
-        id: "DEMO-" + Date.now() + "-1",
-        nombre: "Av. Principal (Tramo Óptimo)",
-        color: "verde",
-        longitudM: 520,
-        detalle: "Capa asfáltica en excelente estado",
-        puntos: [
-          [cLat - 0.0025, cLng - 0.0035],
-          [cLat - 0.0010, cLng - 0.0015],
-          [cLat + 0.0005, cLng + 0.0008]
-        ],
-        fecha: new Date().toISOString()
-      },
-      {
-        id: "DEMO-" + Date.now() + "-2",
-        nombre: "Av. Principal (Continuación con Baches)",
-        color: "amarillo",
-        longitudM: 340,
-        detalle: "Desgaste superficial y baches menores",
-        puntos: [
-          [cLat + 0.0005, cLng + 0.0008],
-          [cLat + 0.0020, cLng + 0.0025],
-          [cLat + 0.0032, cLng + 0.0038]
-        ],
-        fecha: new Date().toISOString()
-      },
-      {
-        id: "DEMO-" + Date.now() + "-3",
-        nombre: "Calle Transversal 1 (Sector Centro)",
-        color: "naranja",
-        longitudM: 280,
-        detalle: "Huecos profundos, bacheo prioritario",
-        puntos: [
-          [cLat - 0.0010, cLng - 0.0015],
-          [cLat + 0.0012, cLng - 0.0028],
-          [cLat + 0.0025, cLng - 0.0038]
-        ],
-        fecha: new Date().toISOString()
-      },
-      {
-        id: "DEMO-" + Date.now() + "-4",
-        nombre: "Callejón Sur (Punto Crítico)",
-        color: "rojo",
-        longitudM: 210,
-        detalle: "Falla de borde severa e intransitable",
-        puntos: [
-          [cLat + 0.0020, cLng + 0.0025],
-          [cLat + 0.0035, cLng + 0.0012],
-          [cLat + 0.0042, cLng + 0.0002]
-        ],
-        fecha: new Date().toISOString()
-      }
-    ];
-
-    this.parishLines = sampleLines;
-    this.saveParishLines();
-    this.refreshParishView();
-
-    const allCoords = sampleLines.flatMap(l => l.puntos);
-    if (allCoords.length > 0) {
-      this.mapEngine.map.fitBounds(L.polyline(allCoords).getBounds(), { padding: [60, 60] });
-    }
   }
 
   deleteLine(lineId) {
@@ -699,14 +629,6 @@ class AtlasMonagasApp {
         );
         const fileName = `${this.currentParish.codigo}_${this.currentParish.nombre.replace(/\s+/g, '_')}_Vias.kml`;
         AtlasStorage.downloadText(kmlContent, fileName, "application/vnd.google-earth.kml+xml");
-      });
-    }
-
-    // Botón Ver Ejemplo / Demo de Calles
-    const btnDemo = document.getElementById('btn-load-sample-lines');
-    if (btnDemo) {
-      btnDemo.addEventListener('click', () => {
-        this.loadSampleParishLines();
       });
     }
 

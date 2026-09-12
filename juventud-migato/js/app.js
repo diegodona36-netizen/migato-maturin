@@ -214,6 +214,11 @@ class JuventudDashboardApp {
 
     tbody.innerHTML = "";
     
+    if (this.reportes.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="7" class="px-4 py-8 text-center text-slate-400 italic">No hay reportes municipales registrados aún para el periodo activo.</td></tr>`;
+      return;
+    }
+
     const rankingData = this.reportes.map(r => {
       const score = ((r.captacion?.totalJovenes || 0) * 2) + ((r.conversatorios?.totalAsistentes || 0)) + ((r.caminatas?.casasVisitadas || 0) * 0.5);
       return { ...r, scoreCalculado: Math.round(score) };
@@ -262,13 +267,13 @@ class JuventudDashboardApp {
 
     todasLasFotos.forEach(f => {
       const card = document.createElement("div");
-      card.className = "group relative rounded-2xl overflow-hidden aspect-video bg-slate-900 cursor-pointer shadow-sm hover:shadow-lg transition duration-200 border border-slate-200";
+      card.className = "group relative rounded-2xl overflow-hidden aspect-video bg-[#140e40] cursor-pointer shadow-sm hover:shadow-lg transition duration-200 border border-[#2d1f85]";
       card.onclick = () => this.openPhotoModal(f.url, f.titulo, f.municipio);
 
       card.innerHTML = `
         <img src="${f.url}" alt="${f.titulo}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
         <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex flex-col justify-end p-3 text-white">
-          <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-500 text-slate-950 w-fit mb-1">${f.eje || "Evidencia"}</span>
+          <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-500 text-[#0e092e] w-fit mb-1">${f.eje || "Evidencia"}</span>
           <h4 class="font-bold text-xs leading-tight">${f.titulo}</h4>
           <p class="text-[10px] text-slate-300 mt-0.5">${f.municipio} • ${f.parroquia}</p>
         </div>
@@ -287,14 +292,14 @@ class JuventudDashboardApp {
     container.innerHTML = `
       <div class="p-8 bg-white max-w-4xl mx-auto space-y-6 text-slate-900 border border-slate-200 rounded-2xl shadow-sm print:border-0 print:shadow-none">
         
-        <div class="flex items-center justify-between border-b-2 border-slate-900 pb-4">
+        <div class="flex items-center justify-between border-b-2 border-[#140e40] pb-4">
           <div>
             <span class="text-xs font-black tracking-widest uppercase text-amber-600">SECRETARÍA REGIONAL JUVENIL MIGATO</span>
             <h2 class="text-2xl font-black text-slate-900">Informe Ejecutivo de Despliegue Semanal</h2>
             <p class="text-xs text-slate-500 font-medium">Reunión Ordinaria de los Lunes • Monagas • ${hoy}</p>
           </div>
           <div class="text-right">
-            <span class="px-3 py-1 bg-slate-900 text-white font-mono font-bold text-xs rounded-lg">DESPLIEGUE MONAGAS</span>
+            <span class="px-3 py-1 bg-[#140e40] text-white font-mono font-bold text-xs rounded-lg">DESPLIEGUE MONAGAS</span>
           </div>
         </div>
 
@@ -368,10 +373,10 @@ class JuventudDashboardApp {
         navButtons.forEach(b => {
           const isCurrent = b.dataset.tab === target;
           b.classList.toggle("bg-amber-500", isCurrent);
-          b.classList.toggle("text-slate-950", isCurrent);
+          b.classList.toggle("text-[#0e092e]", isCurrent);
           b.classList.toggle("font-bold", isCurrent);
           b.classList.toggle("text-slate-400", !isCurrent);
-          b.classList.toggle("hover:bg-slate-800", !isCurrent);
+          b.classList.toggle("hover:bg-[#23176d]", !isCurrent);
         });
 
         document.querySelectorAll(".tab-content").forEach(content => {

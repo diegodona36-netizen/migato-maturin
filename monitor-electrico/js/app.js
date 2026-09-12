@@ -479,7 +479,7 @@ class AppController {
           b.classList.toggle("bg-sky-600", isCurrent && target !== "tab-monagas");
           b.classList.toggle("bg-amber-500", isCurrent && target === "tab-monagas");
           b.classList.toggle("text-white", isCurrent && target !== "tab-monagas");
-          b.classList.toggle("text-slate-950", isCurrent && target === "tab-monagas");
+          b.classList.toggle("text-[#0e092e]", isCurrent && target === "tab-monagas");
           b.classList.toggle("text-slate-700", !isCurrent);
           b.classList.toggle("hover:bg-slate-200", !isCurrent);
         });
