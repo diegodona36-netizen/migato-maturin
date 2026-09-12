@@ -22,7 +22,7 @@
   </script>
 
   <style>
-    /* Estilo Sala Situacional Oscura: Cero fatiga visual, alto contraste y letras gruesas */
+    /* Estilo Sala Situacional Oscura: Alto contraste, letras gruesas y cero fatiga */
     body {
       font-family: Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       background-color: #0a111d;
@@ -37,7 +37,7 @@
       display: none !important;
     }
 
-    /* Tabla de Control Oscura de Alta Definición */
+    /* Tabla de Control Oscura */
     .dark-table {
       width: 100%;
       border-collapse: collapse;
@@ -68,11 +68,12 @@
       background-color: #1a2c47;
     }
 
-    /* Botones de Acción Fuertes */
-    .btn-dark {
+    /* Botones de Cabecera Uniformes y Alineados */
+    .header-btn {
+      height: 40px;
+      padding: 0 16px;
       font-size: 13px;
       font-weight: 900;
-      padding: 10px 18px;
       border-radius: 4px;
       cursor: pointer;
       display: inline-flex;
@@ -83,23 +84,40 @@
       letter-spacing: 0.02em;
       border: 1px solid transparent;
       text-decoration: none;
+      white-space: nowrap;
+      flex-shrink: 0;
       transition: all 0.15s ease-in-out;
     }
-    .btn-dark:hover {
+    .header-btn:hover {
       filter: brightness(1.15);
       transform: translateY(-1px);
+    }
+
+    /* Barra de desplazamiento cómoda para la matriz de 30 personas */
+    .matrix-scroll::-webkit-scrollbar {
+      width: 8px;
+    }
+    .matrix-scroll::-webkit-scrollbar-track {
+      background: #09101a;
+    }
+    .matrix-scroll::-webkit-scrollbar-thumb {
+      background: #254164;
+      border-radius: 4px;
+    }
+    .matrix-scroll::-webkit-scrollbar-thumb:hover {
+      background: #3b669e;
     }
   </style>
 </head>
 <body class="min-h-screen flex flex-col antialiased">
 
   <!-- ============================================================== -->
-  <!-- 1. ENCABEZADO DE SALA SITUACIONAL OSCURA                       -->
+  <!-- 1. ENCABEZADO CON BOTONES PERFECTAMENTE ALINEADOS              -->
   <!-- ============================================================== -->
   <header class="bg-[#0e1726] text-white border-b-2 border-[#1e2f4a] py-3.5 px-4 sm:px-8">
-    <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+    <div class="max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-between gap-4">
       
-      <!-- Título de Mando -->
+      <!-- Identificación de la Sala Situacional -->
       <div class="flex items-center gap-3.5">
         <div class="w-12 h-12 bg-white p-1 rounded border-2 border-slate-700 flex items-center justify-center shrink-0">
           <img src="../assets/logo-migato.png" alt="MIGATO" class="w-full h-full object-contain">
@@ -119,25 +137,25 @@
         </div>
       </div>
 
-      <!-- Alerta Urgente de Pendientes y Botones -->
-      <div class="flex items-center gap-3 flex-wrap justify-center">
-        <!-- Badge de Cola de Auditoría -->
-        <div class="bg-amber-500/20 border-2 border-amber-500 text-amber-300 px-3.5 py-1.5 rounded flex items-center gap-2">
+      <!-- Botones de Acción (Todo en un solo renglón horizontal, sin envolverse raro) -->
+      <div class="flex items-center gap-2.5 shrink-0 flex-nowrap">
+        <!-- Badge de Alerta -->
+        <div class="h-10 px-3.5 bg-amber-500/20 border-2 border-amber-500 text-amber-300 rounded flex items-center gap-2 shrink-0">
           <span class="text-xs font-black uppercase tracking-wide">POR AUDITAR:</span>
-          <span id="kpi-pendientes" class="text-2xl font-black font-mono text-amber-400">0</span>
+          <span id="kpi-pendientes" class="text-xl font-black font-mono text-amber-400">0</span>
         </div>
 
-        <button onclick="exportToExcel()" class="btn-dark bg-emerald-700 hover:bg-emerald-600 text-white border-emerald-600">
+        <button onclick="exportToExcel()" class="header-btn bg-emerald-700 hover:bg-emerald-600 text-white border-emerald-600 shadow-sm">
           <i data-lucide="file-spreadsheet" class="w-4 h-4"></i>
           <span>DESCARGAR EXCEL</span>
         </button>
 
-        <button onclick="window.location.reload()" class="btn-dark bg-slate-800 hover:bg-slate-700 text-slate-200 border-slate-600">
+        <button onclick="window.location.reload()" class="header-btn bg-slate-800 hover:bg-slate-700 text-slate-200 border-slate-600 shadow-sm">
           <i data-lucide="refresh-cw" class="w-4 h-4"></i>
           <span>ACTUALIZAR</span>
         </button>
 
-        <a href="../login.html" class="btn-dark bg-rose-900/80 hover:bg-rose-800 text-rose-200 border-rose-700">
+        <a href="../login.html" class="header-btn bg-rose-900/90 hover:bg-rose-800 text-rose-200 border-rose-700 shadow-sm">
           <i data-lucide="log-out" class="w-4 h-4"></i>
           <span>SALIR</span>
         </a>
@@ -147,7 +165,7 @@
   </header>
 
   <!-- ============================================================== -->
-  <!-- 2. FRANJA COMPACTA DE TOTALES (SOBRIA Y SIN FATIGA VISUAL)     -->
+  <!-- 2. FRANJA DE TOTALES (SOBRIA Y DE ALTO CONTRASTE)              -->
   <!-- ============================================================== -->
   <div class="bg-[#09101a] border-b border-[#1e2f4a] py-2 px-4 sm:px-8">
     <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3 text-xs sm:text-sm font-black text-slate-300">
@@ -177,11 +195,11 @@
   </div>
 
   <!-- ============================================================== -->
-  <!-- 3. CUERPO PRINCIPAL: FILTROS Y LISTADO DE AUDITORÍA            -->
+  <!-- 3. CUERPO PRINCIPAL: FILTROS Y TABLA                           -->
   <!-- ============================================================== -->
   <main class="max-w-7xl mx-auto w-full px-4 sm:px-8 py-5 flex-1 space-y-4">
     
-    <!-- Barra de Búsqueda y Filtros Oscura -->
+    <!-- Barra de Búsqueda y Filtros con Botones Limpios -->
     <div class="bg-[#111c2e] border-2 border-[#1e2f4a] p-3 rounded flex flex-col md:flex-row items-center justify-between gap-3">
       
       <!-- Búsqueda Grande -->
@@ -191,19 +209,19 @@
                class="w-full bg-[#0a111d] border-2 border-[#243958] px-3.5 py-2.5 text-base font-bold text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 rounded">
       </div>
 
-      <!-- Filtros Rápidos -->
+      <!-- Filtros de Estado -->
       <div class="flex items-center gap-2 w-full md:w-auto flex-wrap">
         <span class="text-xs font-black text-slate-400 uppercase">Ver:</span>
-        <button onclick="setFilterStatus('todos')" id="filter-btn-todos" class="btn-dark bg-blue-600 text-white text-xs py-2 px-3.5 border-blue-500">
-          TODAS
+        <button onclick="setFilterStatus('todos')" id="filter-btn-todos" class="h-9 px-4 bg-blue-600 text-white font-black text-xs uppercase rounded cursor-pointer">
+          TODAS (5)
         </button>
-        <button onclick="setFilterStatus('pendiente')" id="filter-btn-pendiente" class="btn-dark bg-[#1a293e] hover:bg-[#223652] text-amber-300 text-xs py-2 px-3.5 border-amber-500/50">
+        <button onclick="setFilterStatus('pendiente')" id="filter-btn-pendiente" class="h-9 px-4 bg-[#16263d] hover:bg-[#203450] text-amber-300 border border-amber-500/40 font-black text-xs uppercase rounded cursor-pointer">
           ⏳ SOLO PENDIENTES
         </button>
-        <button onclick="setFilterStatus('certificado')" id="filter-btn-certificado" class="btn-dark bg-[#1a293e] hover:bg-[#223652] text-emerald-300 text-xs py-2 px-3.5 border-emerald-500/50">
+        <button onclick="setFilterStatus('certificado')" id="filter-btn-certificado" class="h-9 px-4 bg-[#16263d] hover:bg-[#203450] text-emerald-300 border border-emerald-500/40 font-black text-xs uppercase rounded cursor-pointer">
           ✅ SOLO APROBADAS
         </button>
-        <button onclick="showWhitelistModal()" class="btn-dark bg-[#1a293e] hover:bg-[#223652] text-slate-300 text-xs py-2 px-3 border-slate-600" title="Ver líneas telefónicas acreditadas">
+        <button onclick="showWhitelistModal()" class="h-9 px-4 bg-[#16263d] hover:bg-[#203450] text-slate-300 border border-slate-600 font-black text-xs uppercase rounded cursor-pointer" title="Ver líneas telefónicas acreditadas">
           📞 WHITELIST
         </button>
       </div>
@@ -237,89 +255,113 @@
   </main>
 
   <!-- ============================================================== -->
-  <!-- MODAL DE AUDITORÍA REDISEÑADO (SIN ERRORES NI TEXTO CORTADO)   -->
+  <!-- MODAL DE AUDITORÍA: EXPEDIENTE AMPLIO (CAPACIDAD 25-30 DATOS)  -->
   <!-- ============================================================== -->
-  <div id="modal-audit" class="fixed inset-0 z-50 bg-black/85 hidden items-center justify-center p-3 sm:p-6 overflow-y-auto backdrop-blur-sm">
-    <div class="bg-[#111c2e] border-2 border-[#254164] max-w-5xl w-full max-h-[96vh] flex flex-col rounded-md shadow-2xl overflow-hidden">
+  <div id="modal-audit" class="fixed inset-0 z-50 bg-black/90 hidden items-center justify-center p-2 sm:p-4 overflow-hidden backdrop-blur-sm">
+    <div class="bg-[#111c2e] border-2 border-[#254164] max-w-[96vw] w-[1420px] h-[93vh] flex flex-col rounded-md shadow-2xl overflow-hidden">
       
-      <!-- Encabezado del Modal -->
-      <div class="bg-[#09101a] text-white px-5 py-3.5 flex items-center justify-between border-b-2 border-[#1e2f4a]">
-        <div>
-          <span class="text-xs text-amber-400 font-black uppercase font-mono tracking-wider">EXPEDIENTE DE AUDITORÍA:</span>
-          <h2 id="modal-report-id" class="text-2xl font-black text-white font-mono leading-none">REP-2026-000</h2>
-          <p id="modal-report-title" class="text-sm text-slate-300 font-bold mt-1">Parroquia</p>
+      <!-- Encabezado del Expediente -->
+      <div class="bg-[#09101a] text-white px-5 py-3 flex items-center justify-between border-b-2 border-[#1e2f4a] shrink-0">
+        <div class="flex items-center gap-3">
+          <span class="text-xs bg-amber-500 text-black font-black uppercase font-mono px-2 py-0.5 rounded">
+            EXPEDIENTE OFICIAL
+          </span>
+          <h2 id="modal-report-id" class="text-xl sm:text-2xl font-black text-white font-mono leading-none">
+            REP-2026-001
+          </h2>
+          <span class="text-slate-500">|</span>
+          <p id="modal-report-title" class="text-sm text-slate-200 font-bold truncate">
+            ALTO DE LOS GODOS (Maturín) • Sector Morichal
+          </p>
         </div>
-        <button onclick="closeAuditModal()" class="bg-rose-900/80 hover:bg-rose-800 text-rose-200 border border-rose-700 font-black text-xs px-3.5 py-1.5 rounded cursor-pointer">
-          CERRAR [ ✕ ]
+        <button onclick="closeAuditModal()" class="h-9 px-4 bg-rose-900/90 hover:bg-rose-800 text-rose-200 border border-rose-700 font-black text-xs rounded cursor-pointer flex items-center gap-1.5">
+          <span>CERRAR</span> [ ✕ ]
         </button>
       </div>
 
-      <!-- Datos del Coordinador -->
-      <div class="bg-[#0d1624] border-b border-[#1e2f4a] px-5 py-2.5 text-xs sm:text-sm font-bold text-slate-300 flex flex-wrap items-center justify-between gap-3">
+      <!-- Ficha de Campo del Coordinador -->
+      <div class="bg-[#0d1624] border-b border-[#1e2f4a] px-5 py-2 text-xs sm:text-sm font-bold text-slate-300 flex flex-wrap items-center justify-between gap-3 shrink-0">
         <div>COORDINADOR: <strong id="modal-sender" class="text-white font-black">Carlos Gómez</strong></div>
-        <div>TELÉFONO: <strong id="modal-phone" class="text-sky-400 font-mono font-black">+58 414-XXXXXXX</strong></div>
-        <div>SECTOR: <strong id="modal-location" class="text-white font-bold">Sector</strong></div>
+        <div>TELÉFONO DE ENVÍO: <strong id="modal-phone" class="text-sky-400 font-mono font-black">+58 414-XXXXXXX</strong></div>
+        <div>UBICACIÓN: <strong id="modal-location" class="text-white font-bold">Alto de Los Godos • Eje 3</strong></div>
+        <div class="text-amber-400 font-mono font-bold flex items-center gap-1">
+          <i data-lucide="layers" class="w-4 h-4"></i>
+          <span id="modal-total-renglones">25 PERSONAS EN ESTA HOJA</span>
+        </div>
       </div>
 
-      <!-- Dos Paneles Amplios y Perfectamente Alineados -->
-      <div class="flex-1 overflow-y-auto p-4 grid grid-cols-1 lg:grid-cols-2 gap-4 bg-[#0a111d]">
+      <!-- Dos Paneles Amplios: 40% Foto / 60% Matriz de 25-30 Datos -->
+      <div class="flex-1 overflow-hidden p-3 grid grid-cols-1 lg:grid-cols-12 gap-3 bg-[#0a111d]">
         
-        <!-- Panel Izquierdo: Comprobante Físico -->
-        <div class="bg-[#111c2e] border-2 border-[#1e2f4a] p-4 flex flex-col justify-between rounded">
-          <div>
-            <div class="border-b border-[#1e2f4a] pb-2 mb-3 flex items-center justify-between">
-              <span class="text-xs font-black uppercase text-amber-400 tracking-wide">
-                1. COMPROBANTE ORIGINAL (FOTO WHATSAPP)
-              </span>
-              <span id="modal-img-caption" class="text-xs font-mono font-bold text-slate-400">foto.jpg</span>
-            </div>
-            <div class="bg-[#09101a] border border-[#1e2f4a] p-2 flex items-center justify-center min-h-[320px] rounded">
-              <img id="modal-img-preview" src="../assets/logo-migato.png" alt="Planilla Original" class="max-h-[330px] w-auto object-contain bg-white rounded p-1">
-            </div>
+        <!-- Panel Izquierdo: Visualizador de la Planilla Original (5 columnas de 12 = 41%) -->
+        <div class="lg:col-span-5 bg-[#111c2e] border-2 border-[#1e2f4a] p-3 flex flex-col justify-between rounded overflow-hidden">
+          <div class="border-b border-[#1e2f4a] pb-2 mb-2 flex items-center justify-between shrink-0">
+            <span class="text-xs font-black uppercase text-amber-400 tracking-wide flex items-center gap-1.5">
+              <i data-lucide="file-text" class="w-4 h-4"></i>
+              <span>1. COMPROBANTE ORIGINAL DIGITALIZADO</span>
+            </span>
+            <span id="modal-img-caption" class="text-xs font-mono font-bold text-slate-400">foto.jpg</span>
           </div>
-          <p class="text-xs font-bold text-slate-400 mt-2 text-center">
-            Coteje los datos manuscritos con la lista transcrita al lado
+
+          <!-- Marco del Documento con Scroll Suave si es largo -->
+          <div class="flex-1 bg-[#09101a] border border-[#1e2f4a] p-2 flex items-center justify-center rounded overflow-auto matrix-scroll min-h-[300px]">
+            <img id="modal-img-preview" src="../assets/logo-migato.png" alt="Planilla Original" class="max-h-[100%] w-auto object-contain bg-white rounded p-1 shadow">
+          </div>
+
+          <p class="text-xs font-bold text-slate-400 mt-2 text-center shrink-0">
+            Coteje los renglones manuscritos contra los datos transcritos a la derecha
           </p>
         </div>
 
-        <!-- Panel Derecho: Malla de Personas (Sin barras horizontales raras) -->
-        <div class="bg-[#111c2e] border-2 border-[#1e2f4a] p-4 flex flex-col justify-between rounded">
-          <div>
-            <div class="border-b border-[#1e2f4a] pb-2 mb-3">
-              <span class="text-xs font-black uppercase text-emerald-400 tracking-wide">
-                2. ELECTORES EXTRAÍDOS (CORRIJA SI HAY ERROR)
-              </span>
-            </div>
-
-            <!-- Tabla de personas con ancho 100% y sin scroll horizontal -->
-            <div class="border border-[#1e2f4a] rounded overflow-hidden max-h-[320px] overflow-y-auto">
-              <table class="w-full text-left font-bold text-xs border-collapse">
-                <thead>
-                  <tr class="bg-[#09101a] text-slate-300 text-[11px] uppercase border-b border-[#1e2f4a]">
-                    <th class="w-8 text-center p-2.5">#</th>
-                    <th class="p-2.5">NOMBRE Y APELLIDO</th>
-                    <th class="w-32 p-2.5">CÉDULA</th>
-                    <th class="w-32 p-2.5">TELÉFONO</th>
-                  </tr>
-                </thead>
-                <tbody id="modal-electores-body" class="divide-y divide-[#1e2f4a]">
-                  <!-- Celdas -->
-                </tbody>
-              </table>
-            </div>
+        <!-- Panel Derecho: Matriz de 25 a 30 Electores (7 columnas de 12 = 59%) -->
+        <div class="lg:col-span-7 bg-[#111c2e] border-2 border-[#1e2f4a] p-3 flex flex-col justify-between rounded overflow-hidden">
+          
+          <!-- Encabezado de la Matriz con Botón de Agregar Fila -->
+          <div class="border-b border-[#1e2f4a] pb-2 mb-2 flex items-center justify-between shrink-0">
+            <span class="text-xs font-black uppercase text-emerald-400 tracking-wide flex items-center gap-1.5">
+              <i data-lucide="check-square" class="w-4 h-4"></i>
+              <span>2. COTEJO EN PADRÓN (EDITE O CORRIJA DIRECTAMENTE)</span>
+            </span>
+            <button onclick="addElectorRow()" class="h-7 px-3 bg-[#1e3a5f] hover:bg-[#284e80] text-sky-200 border border-sky-600 text-xs font-black rounded flex items-center gap-1 cursor-pointer">
+              <span>+ AGREGAR FILA</span>
+            </button>
           </div>
 
-          <!-- Botones de Decisión Grandes y Claros -->
-          <div class="pt-4 border-t border-[#1e2f4a] grid grid-cols-2 gap-3 mt-3">
-            <button onclick="handleRejectModal()" class="btn-dark bg-rose-900/90 hover:bg-rose-800 text-white py-3 text-xs border-rose-700">
-              <i data-lucide="x-circle" class="w-5 h-5 text-rose-300"></i>
-              <span>RECHAZAR PLANILLA</span>
-            </button>
+          <!-- Tabla Scrollable con Header Fijo para 25 a 30 Personas (CERO texto cortado) -->
+          <div class="flex-1 border border-[#1e2f4a] rounded overflow-y-auto matrix-scroll bg-[#0a111d]">
+            <table class="w-full text-left font-bold text-xs border-collapse">
+              <thead class="sticky top-0 bg-[#09101a] z-20 shadow-md">
+                <tr class="text-slate-300 text-[11px] uppercase border-b-2 border-[#1e2f4a]">
+                  <th class="w-10 text-center p-2.5">#</th>
+                  <th class="p-2.5 min-w-[260px]">NOMBRES Y APELLIDOS</th>
+                  <th class="w-36 p-2.5">CÉDULA</th>
+                  <th class="w-36 p-2.5">TELÉFONO</th>
+                  <th class="w-10 text-center p-2.5"></th>
+                </tr>
+              </thead>
+              <tbody id="modal-electores-body" class="divide-y divide-[#1e2f4a]">
+                <!-- Celdas con espacio amplio -->
+              </tbody>
+            </table>
+          </div>
 
-            <button onclick="handleCertifyModal()" class="btn-dark bg-emerald-700 hover:bg-emerald-600 text-white py-3 text-xs border-emerald-500">
-              <i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-200"></i>
-              <span>APROBAR Y GUARDAR</span>
-            </button>
+          <!-- Barra Inferior de Decisión del Expediente (Fija y Sólida) -->
+          <div class="pt-3 border-t-2 border-[#1e2f4a] flex flex-col sm:flex-row items-center justify-between gap-3 mt-2 shrink-0">
+            <div class="text-xs font-bold text-slate-300">
+              <span id="modal-status-summary" class="text-emerald-400 font-black text-sm">25 electores listos</span> para certificación.
+            </div>
+
+            <div class="flex items-center gap-3 w-full sm:w-auto">
+              <button onclick="handleRejectModal()" class="flex-1 sm:flex-none h-11 px-5 bg-rose-900/90 hover:bg-rose-800 text-white font-black text-xs uppercase rounded border border-rose-700 cursor-pointer flex items-center justify-center gap-2">
+                <i data-lucide="x-circle" class="w-4 h-4 text-rose-300"></i>
+                <span>RECHAZAR PLANILLA</span>
+              </button>
+
+              <button onclick="handleCertifyModal()" class="flex-1 sm:flex-none h-11 px-6 bg-emerald-700 hover:bg-emerald-600 text-white font-black text-xs uppercase rounded border border-emerald-500 shadow-lg cursor-pointer flex items-center justify-center gap-2">
+                <i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-200"></i>
+                <span id="btn-certify-text">APROBAR Y CERTIFICAR (25)</span>
+              </button>
+            </div>
           </div>
 
         </div>
@@ -336,15 +378,15 @@
         <h2 class="text-base font-black uppercase text-white">
           LÍNEAS DE WHATSAPP AUTORIZADAS (WHITELIST)
         </h2>
-        <button onclick="closeWhitelistModal()" class="bg-slate-800 text-slate-200 font-bold text-xs px-3 py-1 rounded">
+        <button onclick="closeWhitelistModal()" class="bg-slate-800 text-slate-200 font-bold text-xs px-3 py-1 rounded cursor-pointer">
           ✕
         </button>
       </div>
       <p class="text-xs font-bold text-slate-400">
-        Solo estos coordinadores pueden enviar reportes al sistema central.
+        Solo los reportes procedentes de estos números acreditados son procesados por el Bot.
       </p>
 
-      <div class="border border-[#1e2f4a] max-h-[350px] overflow-y-auto rounded bg-[#0a111d]">
+      <div class="border border-[#1e2f4a] max-h-[350px] overflow-y-auto rounded bg-[#0a111d] matrix-scroll">
         <table class="w-full text-xs font-bold border-collapse">
           <thead>
             <tr class="bg-[#09101a] text-slate-300">
@@ -414,9 +456,9 @@
       ['todos', 'pendiente', 'certificado'].forEach(s => {
         const btn = document.getElementById(`filter-btn-${s}`);
         if (s === status) {
-          btn.className = "btn-dark bg-blue-600 text-white text-xs py-2 px-3.5 border-blue-500";
+          btn.className = "h-9 px-4 bg-blue-600 text-white font-black text-xs uppercase rounded cursor-pointer shadow";
         } else {
-          btn.className = "btn-dark bg-[#1a293e] hover:bg-[#223652] text-slate-300 text-xs py-2 px-3.5 border-slate-600";
+          btn.className = "h-9 px-4 bg-[#16263d] hover:bg-[#203450] text-slate-300 border border-slate-600 font-black text-xs uppercase rounded cursor-pointer";
         }
       });
       renderSimpleTable();
@@ -486,7 +528,7 @@
             </td>
             <td class="text-center">${statusBadge}</td>
             <td class="text-center">
-              <button onclick="openAuditModal('${r.id}')" class="btn-dark bg-blue-700 hover:bg-blue-600 text-white text-xs py-2.5 px-4 border-blue-500 shadow-md">
+              <button onclick="openAuditModal('${r.id}')" class="header-btn bg-blue-700 hover:bg-blue-600 text-white text-xs border-blue-500 shadow-md">
                 REVISAR PLANILLA →
               </button>
             </td>
@@ -500,31 +542,73 @@
       activeAuditReport = reports.find(r => r.id === reportId);
       if (!activeAuditReport) return;
 
+      const totalCount = activeAuditReport.electores ? activeAuditReport.electores.length : 0;
+
       document.getElementById('modal-report-id').innerText = activeAuditReport.id;
       document.getElementById('modal-report-title').innerText = `${activeAuditReport.parroquiaNombre.toUpperCase()} (${activeAuditReport.munNombre}) • ${activeAuditReport.sector}`;
       document.getElementById('modal-sender').innerText = activeAuditReport.remitenteNombre;
       document.getElementById('modal-phone').innerText = activeAuditReport.remitenteTlf;
       document.getElementById('modal-location').innerText = `${activeAuditReport.parroquiaNombre} • ${activeAuditReport.sector}`;
       document.getElementById('modal-img-caption').innerText = activeAuditReport.archivoNombre || 'planilla.jpg';
+      document.getElementById('modal-total-renglones').innerText = `${totalCount} PERSONAS EN ESTA HOJA`;
+      document.getElementById('modal-status-summary').innerText = `${totalCount} electores listos`;
+      document.getElementById('btn-certify-text').innerText = `APROBAR Y CERTIFICAR (${totalCount})`;
 
-      const tbody = document.getElementById('modal-electores-body');
-      tbody.innerHTML = (activeAuditReport.electores || []).map((e, idx) => `
-        <tr class="bg-[#111c2e] hover:bg-[#16263d]">
-          <td class="text-center font-black text-slate-400 p-2.5 text-sm">${idx + 1}</td>
-          <td class="p-1.5">
-            <input type="text" value="${e.nombre || ''}" class="w-full bg-[#0a111d] border border-[#243958] p-2 text-sm font-bold text-white rounded focus:border-sky-400 focus:outline-none elector-field-nombre">
-          </td>
-          <td class="p-1.5">
-            <input type="text" value="${e.cedula || ''}" class="w-full bg-[#0a111d] border border-[#243958] p-2 text-sm font-black font-mono text-sky-300 rounded focus:border-sky-400 focus:outline-none elector-field-cedula">
-          </td>
-          <td class="p-1.5">
-            <input type="text" value="${e.telefono || ''}" class="w-full bg-[#0a111d] border border-[#243958] p-2 text-sm font-bold font-mono text-slate-200 rounded focus:border-sky-400 focus:outline-none elector-field-telefono">
-          </td>
-        </tr>
-      `).join('');
+      renderModalElectoresRows();
 
       document.getElementById('modal-audit').classList.remove('hidden');
       document.getElementById('modal-audit').classList.add('flex');
+    }
+
+    function renderModalElectoresRows() {
+      if (!activeAuditReport) return;
+      const tbody = document.getElementById('modal-electores-body');
+      tbody.innerHTML = (activeAuditReport.electores || []).map((e, idx) => `
+        <tr class="bg-[#111c2e] hover:bg-[#16263d] row-elector" data-idx="${idx}">
+          <td class="text-center font-black text-slate-400 p-2 text-sm">${idx + 1}</td>
+          <td class="p-1.5">
+            <input type="text" value="${e.nombre || ''}" placeholder="Nombre y Apellido" class="w-full bg-[#0a111d] border border-[#243958] p-2 text-sm font-bold text-white rounded focus:border-sky-400 focus:outline-none elector-field-nombre">
+          </td>
+          <td class="p-1.5">
+            <input type="text" value="${e.cedula || ''}" placeholder="V-00.000.000" class="w-full bg-[#0a111d] border border-[#243958] p-2 text-sm font-black font-mono text-sky-300 rounded focus:border-sky-400 focus:outline-none elector-field-cedula">
+          </td>
+          <td class="p-1.5">
+            <input type="text" value="${e.telefono || ''}" placeholder="0414-0000000" class="w-full bg-[#0a111d] border border-[#243958] p-2 text-sm font-bold font-mono text-slate-200 rounded focus:border-sky-400 focus:outline-none elector-field-telefono">
+          </td>
+          <td class="p-1 text-center">
+            <button onclick="removeElectorRow(${idx})" class="text-slate-500 hover:text-rose-400 font-bold text-xs p-1" title="Eliminar este renglón">
+              ✕
+            </button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function addElectorRow() {
+      if (!activeAuditReport) return;
+      if (!Array.isArray(activeAuditReport.electores)) activeAuditReport.electores = [];
+      activeAuditReport.electores.push({
+        nombre: "",
+        cedula: "V-",
+        telefono: "04",
+        intencion: "Voto Favorable"
+      });
+      renderModalElectoresRows();
+      updateModalCounters();
+    }
+
+    function removeElectorRow(idx) {
+      if (!activeAuditReport || !activeAuditReport.electores) return;
+      activeAuditReport.electores.splice(idx, 1);
+      renderModalElectoresRows();
+      updateModalCounters();
+    }
+
+    function updateModalCounters() {
+      const count = activeAuditReport.electores.length;
+      document.getElementById('modal-total-renglones').innerText = `${count} PERSONAS EN ESTA HOJA`;
+      document.getElementById('modal-status-summary').innerText = `${count} electores listos`;
+      document.getElementById('btn-certify-text').innerText = `APROBAR Y CERTIFICAR (${count})`;
     }
 
     function closeAuditModal() {
@@ -552,7 +636,7 @@
         const nombre = f.querySelector('.elector-field-nombre').value.trim();
         const cedula = f.querySelector('.elector-field-cedula').value.trim();
         const telefono = f.querySelector('.elector-field-telefono').value.trim();
-        if (nombre || cedula) {
+        if (nombre || (cedula && cedula !== "V-")) {
           updatedElectores.push({ nombre, cedula, telefono, intencion: "Voto Favorable" });
         }
       });
@@ -561,7 +645,7 @@
       closeAuditModal();
       renderStats();
       renderSimpleTable();
-      showToast(`Planilla ${activeAuditReport.id} aprobada e integrada al padrón.`);
+      showToast(`Planilla ${activeAuditReport.id} certificada con ${updatedElectores.length} electores.`);
     }
 
     function handleRejectModal() {

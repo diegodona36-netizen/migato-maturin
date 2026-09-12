@@ -5,7 +5,7 @@
  */
 
 const MIGATO_AUDIT = (function() {
-  const STORAGE_REPORTS_KEY = "migato_audit_reports_v1";
+  const STORAGE_REPORTS_KEY = "migato_audit_reports_v4";
   const STORAGE_WHITELIST_KEY = "migato_audit_whitelist_v1";
 
   // Reportes semilla realistas de Monagas para la demostración y puesta en marcha
@@ -29,11 +29,31 @@ const MIGATO_AUDIT = (function() {
       auditadoPor: "",
       auditadoEn: "",
       electores: [
-        { nombre: "Pedro José Salazar", cedula: "V-14.234.567", telefono: "0414-1234567", sector: "Calle 4, Casa 12", intencion: "Voto Favorable" },
-        { nombre: "María Elena Rivas", cedula: "V-16.890.123", telefono: "0424-9876543", sector: "Vereda 2, Casa 8", intencion: "Voto Favorable" },
-        { nombre: "José Gregorio Rondón", cedula: "V-12.456.789", telefono: "0412-5554321", sector: "Av. Principal 45", intencion: "Voto Favorable" },
-        { nombre: "Carmen Luisa Morales", cedula: "V-19.112.334", telefono: "0416-8889900", sector: "Calle Bolívar 3", intencion: "Voto Favorable" },
-        { nombre: "Andrés Eloy Blanco", cedula: "V-15.678.901", telefono: "0414-3332211", sector: "Calle Sucre 14", intencion: "Por Contactar" }
+        { nombre: "Pedro José Salazar Hernández", cedula: "V-14.234.567", telefono: "0414-1234567", sector: "Calle 4, Casa 12", intencion: "Voto Favorable" },
+        { nombre: "María Elena Rivas Guilarte", cedula: "V-16.890.123", telefono: "0424-9876543", sector: "Vereda 2, Casa 8", intencion: "Voto Favorable" },
+        { nombre: "José Gregorio Rondón Cedeño", cedula: "V-12.456.789", telefono: "0412-5554321", sector: "Av. Principal 45", intencion: "Voto Favorable" },
+        { nombre: "Carmen Luisa Morales Padrón", cedula: "V-19.112.334", telefono: "0416-8889900", sector: "Calle Bolívar 3", intencion: "Voto Favorable" },
+        { nombre: "Andrés Eloy Blanco Fuentes", cedula: "V-15.678.901", telefono: "0414-3332211", sector: "Calle Sucre 14", intencion: "Voto Favorable" },
+        { nombre: "Francisco Javier Cova Ramos", cedula: "V-13.456.123", telefono: "0414-7654321", sector: "Calle 2, Casa 19", intencion: "Voto Favorable" },
+        { nombre: "Rosa Margarita Febres Luces", cedula: "V-18.901.234", telefono: "0424-1122334", sector: "Vereda 5, Casa 3", intencion: "Voto Favorable" },
+        { nombre: "Luis Manuel Carrión Soto", cedula: "V-17.234.567", telefono: "0416-9988776", sector: "Calle Mariño 11", intencion: "Voto Favorable" },
+        { nombre: "Ana Teresa Villarroel Gómez", cedula: "V-20.123.456", telefono: "0412-3344556", sector: "Av. Universidad 4", intencion: "Voto Favorable" },
+        { nombre: "Carlos Eduardo Malavé Rondón", cedula: "V-11.890.456", telefono: "0424-5566778", sector: "Calle 1, Casa 8", intencion: "Voto Favorable" },
+        { nombre: "Yelitza Coromoto Díaz Gil", cedula: "V-16.345.678", telefono: "0414-8899001", sector: "Calle Boyacá 15", intencion: "Voto Favorable" },
+        { nombre: "Ramón Antonio Marcano Siso", cedula: "V-10.789.012", telefono: "0416-2233445", sector: "Vereda 1 Casa 2", intencion: "Voto Favorable" },
+        { nombre: "Gladys Josefina Aguilera Ruiz", cedula: "V-14.567.890", telefono: "0412-6677889", sector: "Calle 6, Casa 22", intencion: "Voto Favorable" },
+        { nombre: "Domingo Alberto Sifontes Paz", cedula: "V-13.901.234", telefono: "0424-4455667", sector: "Calle Miranda 8", intencion: "Voto Favorable" },
+        { nombre: "Beatriz Elena Peñalver Ríos", cedula: "V-19.456.789", telefono: "0414-1100223", sector: "Calle Sucre 30", intencion: "Voto Favorable" },
+        { nombre: "Héctor Rafael Llovera Silva", cedula: "V-12.890.123", telefono: "0416-7788990", sector: "Av. 3, Casa 14", intencion: "Voto Favorable" },
+        { nombre: "Zuleima del Valle Gil Rojas", cedula: "V-17.678.901", telefono: "0412-9900112", sector: "Calle Bolívar 50", intencion: "Voto Favorable" },
+        { nombre: "Marcos Tulio Centeno Mata", cedula: "V-15.123.456", telefono: "0424-3322114", sector: "Vereda 3, Casa 7", intencion: "Voto Favorable" },
+        { nombre: "Coromoto Josefina Brito Leon", cedula: "V-18.234.567", telefono: "0414-5544332", sector: "Calle 4, Casa 18", intencion: "Voto Favorable" },
+        { nombre: "Jesús Enrique Bastardo Mora", cedula: "V-11.456.789", telefono: "0416-1122446", sector: "Calle Principal 2", intencion: "Voto Favorable" },
+        { nombre: "Luisa Amanda Velásquez Bello", cedula: "V-16.789.012", telefono: "0412-8877665", sector: "Calle 7, Casa 9", intencion: "Voto Favorable" },
+        { nombre: "Oscar Daniel Subero Guerra", cedula: "V-14.901.234", telefono: "0424-6655443", sector: "Vereda 4, Casa 1", intencion: "Voto Favorable" },
+        { nombre: "Miriam Carolina Zerpa Nuñez", cedula: "V-19.789.012", telefono: "0414-2211335", sector: "Calle 5, Casa 11", intencion: "Voto Favorable" },
+        { nombre: "Nelson José Meneses Bravo", cedula: "V-13.234.567", telefono: "0416-4433221", sector: "Calle Piar 16", intencion: "Voto Favorable" },
+        { nombre: "Patricia del Carmen Ordaz Sol", cedula: "V-21.345.678", telefono: "0412-7766554", sector: "Calle 8, Casa 25", intencion: "Voto Favorable" }
       ]
     },
     {
