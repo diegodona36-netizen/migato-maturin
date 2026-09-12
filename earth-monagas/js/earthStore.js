@@ -1,9 +1,9 @@
 /**
  * Gestor de Estado y Árbol de Lugares (Places) — Google Earth Pro Web (Monagas)
  */
-import { SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=134";
-import { getEjesByParish, getSectoresByParish } from "./monagasSectoresCatalog.js?v=134";
-import { PARISH_ALIAS_MAP, resolveParishId } from "./catalogoMonagas.js?v=134";
+import { SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=135";
+import { getEjesByParish, getSectoresByParish } from "./monagasSectoresCatalog.js?v=135";
+import { PARISH_ALIAS_MAP, resolveParishId } from "./catalogoMonagas.js?v=135";
 import { 
   getSavedFirebaseConfig, 
   saveFirebaseConfig, 
@@ -141,19 +141,79 @@ export class EarthStore {
           }
         });
       });
+
+      // Asegurar integridad absoluta de Alto de Los Godos
+      this.ensureGodosParishIntegrity(state);
     } catch (e) {
       console.warn("Error asegurando integridad de parroquias:", e);
     }
   }
 
+  ensureGodosParishIntegrity(state) {
+    try {
+      if (!state || !state.municipios || !state.municipios.maturin) return false;
+      const maturin = state.municipios.maturin;
+      if (!maturin.parroquias) return false;
+
+      const godos = maturin.parroquias["alto-de-los-godos"] || maturin.parroquias["godos"];
+      if (!godos) return false;
+
+      let changed = false;
+      if (!Array.isArray(godos.poligonos)) godos.poligonos = [];
+      if (!Array.isArray(godos.subparroquias)) godos.subparroquias = [];
+
+      // Limpiar deletedIds de cualquier id oficial de La Puente o Godos
+      if (Array.isArray(godos.deletedIds)) {
+        const prevLen = godos.deletedIds.length;
+        godos.deletedIds = godos.deletedIds.filter(id => {
+          const s = String(id);
+          return !s.startsWith("sec-lp-") && !s.startsWith("sub-godos-") && !s.startsWith("POL-") && !s.startsWith("EJE-");
+        });
+        if (godos.deletedIds.length !== prevLen) changed = true;
+      }
+
+      // Asegurar Ejes territoriales (SUBPARROQUIAS_GODOS)
+      const existingSub = new Set(godos.subparroquias.map(s => String(s.id)));
+      SUBPARROQUIAS_GODOS.forEach(sp => {
+        if (!existingSub.has(String(sp.id))) {
+          godos.subparroquias.push(JSON.parse(JSON.stringify(sp)));
+          changed = true;
+        }
+      });
+
+      // Asegurar los 11 Sectores Oficiales de La Puente (SECTORES_LAPUENTE)
+      const existingPoly = new Set(godos.poligonos.map(p => String(p.id)));
+      SECTORES_LAPUENTE.forEach(sec => {
+        if (!existingPoly.has(String(sec.id))) {
+          godos.poligonos.push(JSON.parse(JSON.stringify(sec)));
+          changed = true;
+        }
+      });
+
+      // Si existe el alias 'godos', mantenerlo sincronizado
+      if (maturin.parroquias["godos"] && maturin.parroquias["alto-de-los-godos"]) {
+        maturin.parroquias["godos"] = maturin.parroquias["alto-de-los-godos"];
+      }
+
+      if (changed) {
+        godos.updatedAt = Date.now();
+      }
+      return changed;
+    } catch (err) {
+      console.warn("Error en ensureGodosParishIntegrity:", err);
+      return false;
+    }
+  }
+
   purgeDummySectors(state) {
-    // Purgar polígonos, subparroquias y cajas de prueba ficticias en toda la entidad
+    // Purgar polígonos y cajas de prueba ficticias antiguas (NUNCA datos reales ni sectores oficiales)
     let anyPurged = false;
     try {
       if (!state || !state.municipios) return false;
       const dummyIds = new Set([
         "sec-ss-1", "sec-ss-2", "sec-ss-3", "sec-ss-4", "sec-ss-5",
-        "sec-cor-1", "sec-cor-2", "poly-corozo-centro", "poly-amana-centro"
+        "sec-cor-1", "sec-cor-2", "poly-corozo-centro", "poly-amana-centro",
+        "test-dummy-poly", "dummy-poly"
       ]);
       Object.entries(state.municipios).forEach(([munId, mun]) => {
         if (mun.parroquias) {
@@ -163,9 +223,10 @@ export class EarthStore {
               p.poligonos = p.poligonos.filter(sec => {
                 if (!sec || !sec.id) return false;
                 const idStr = String(sec.id);
-                if (idStr.startsWith("sec-lp-")) return false; // Eliminar datos de prueba previos
+                // NUNCA purgar sectores oficiales de La Puente ni del catálogo ni trazados por el usuario
+                if (idStr.startsWith("sec-lp-") || idStr.startsWith("POL-") || idStr.startsWith("POLY-")) return true;
                 if (dummyIds.has(idStr)) return false;
-                if (idStr.startsWith("sec-ss-") || idStr.startsWith("sec-cor-") || idStr.startsWith("POL-")) return false;
+                if (idStr.startsWith("sec-ss-") || idStr.startsWith("sec-cor-")) return false;
                 return true;
               });
               if (p.poligonos.length !== beforeCount) {
@@ -178,7 +239,10 @@ export class EarthStore {
               p.subparroquias = p.subparroquias.filter(sp => {
                 if (!sp || !sp.id) return false;
                 const idStr = String(sp.id);
-                if (idStr.startsWith("sub-ss-") || idStr.startsWith("sub-corozo-") || idStr.startsWith("EJE-") || idStr.startsWith("sub-pic-") || idStr.startsWith("sub-godos-")) return false;
+                // NUNCA purgar ejes oficiales de Alto de Los Godos ni del catálogo
+                if (idStr.startsWith("sub-godos-") || idStr.startsWith("EJE-") || idStr.startsWith("SUBPAR-")) return true;
+                if (dummyIds.has(idStr)) return false;
+                if (idStr.startsWith("sub-ss-") || idStr.startsWith("sub-corozo-")) return false;
                 return true;
               });
               if (p.subparroquias.length !== beforeSub) {
@@ -234,6 +298,7 @@ export class EarthStore {
       };
 
       mun.parroquias.forEach(p => {
+        const isGodos = (mun.id === "maturin" && (p.id === "alto-de-los-godos" || p.id === "godos"));
         root.municipios[mun.id].parroquias[p.id] = {
           id: p.id,
           nombre: p.nombre,
@@ -243,8 +308,8 @@ export class EarthStore {
           zoom: p.zoom,
           limite: p.limite,
           visible: true,
-          subparroquias: [],
-          poligonos: [],
+          subparroquias: isGodos ? JSON.parse(JSON.stringify(SUBPARROQUIAS_GODOS)) : [],
+          poligonos: isGodos ? JSON.parse(JSON.stringify(SECTORES_LAPUENTE)) : [],
           rutas: [],
           marcas: [],
           superposiciones: []
@@ -404,6 +469,11 @@ export class EarthStore {
     });
 
     this.purgeDummySectors(this.state);
+    const godosHealed = this.ensureGodosParishIntegrity(this.state);
+    if (godosHealed) {
+      changesApplied = true;
+      this.syncToCloud("maturin", "alto-de-los-godos");
+    }
 
     if (changesApplied) {
       this.saveToStorage();
@@ -519,6 +589,11 @@ export class EarthStore {
       });
 
       this.purgeDummySectors(this.state);
+      const godosHealed = this.ensureGodosParishIntegrity(this.state);
+      if (godosHealed) {
+        changesApplied = true;
+        this.syncToCloud("maturin", "alto-de-los-godos");
+      }
 
       if (changesApplied) {
         this.saveToStorage();

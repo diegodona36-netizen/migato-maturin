@@ -2,8 +2,8 @@
  * Motor Cartográfico Acelerado por GPU — Google Earth Pro Web (Monagas)
  * Integrado con Capas Jerárquicas Oficiales (INE 2021) y Edición de Vértices
  */
-import { GEO_ESTADO_OFICIAL, GEO_MUNICIPIOS_OFICIAL, GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=134";
-import { CATALOGO_MONAGAS, PARISH_ALIAS_MAP, resolveParishId } from "./catalogoMonagas.js?v=134";
+import { GEO_ESTADO_OFICIAL, GEO_MUNICIPIOS_OFICIAL, GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=135";
+import { CATALOGO_MONAGAS, PARISH_ALIAS_MAP, resolveParishId } from "./catalogoMonagas.js?v=135";
 
 export class EarthMapEngine {
   constructor(containerId, onCoordUpdate) {
@@ -1244,22 +1244,14 @@ export class EarthMapEngine {
         this.hierarchicalVisibility.l4 = false;
         this.hierarchicalVisibility.l5 = false;
         lodName = "L3 • 44 Parroquias Oficiales";
-      } else if (currentZoom >= 13 && currentZoom < 15) {
-        // Zoom de eje territorial / sub-parroquias: parroquias cerradas, ejes territoriales abiertos
+      } else {
+        // Zoom de nivel parroquial, ejes y sectores (>= 13): NUNCA ocultar sectores ni ejes
         this.hierarchicalVisibility.l1 = false;
         this.hierarchicalVisibility.l2 = false;
         this.hierarchicalVisibility.l3 = false;
         this.hierarchicalVisibility.l4 = true;
-        this.hierarchicalVisibility.l5 = false;
-        lodName = "L4 • Ejes Territoriales";
-      } else {
-        // Zoom territorial y catastral (>= 15): se abren todos los sectores vecinales
-        this.hierarchicalVisibility.l1 = false;
-        this.hierarchicalVisibility.l2 = false;
-        this.hierarchicalVisibility.l3 = false;
-        this.hierarchicalVisibility.l4 = false;
         this.hierarchicalVisibility.l5 = true;
-        lodName = "L5 • Sectores Vecinales";
+        lodName = currentZoom < 15 ? "L4/L5 • Ejes y Sectores" : "L5 • Sectores Vecinales";
       }
 
       this.syncCheckboxesUI(lodName);

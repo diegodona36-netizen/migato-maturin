@@ -2,16 +2,16 @@
  * Controlador Principal — Google Earth Pro Web (Edición Estado Monagas)
  * Robusto, 100% Operativo y Totalmente Individualizado
  */
-import { CATALOGO_MONAGAS, findParishInCatalog, PARISH_ALIAS_MAP, resolveParishId } from "./catalogoMonagas.js?v=134";
-import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=134";
-import { getAllParishesForSelector } from "./usersCatalog.js?v=134";
-import { EarthStore } from "./earthStore.js?v=134";
-import { EarthMapEngine } from "./mapEngine.js?v=134";
-import { PropertiesDialog } from "./propertiesDialog.js?v=134";
-import { ToolsManager } from "./toolsManager.js?v=134";
-import { detectParishFromGeometry, SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=134";
-import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=134";
-import { getParishDemographics } from "./monagasDemographics.js?v=134";
+import { CATALOGO_MONAGAS, findParishInCatalog, PARISH_ALIAS_MAP, resolveParishId } from "./catalogoMonagas.js?v=135";
+import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=135";
+import { getAllParishesForSelector } from "./usersCatalog.js?v=135";
+import { EarthStore } from "./earthStore.js?v=135";
+import { EarthMapEngine } from "./mapEngine.js?v=135";
+import { PropertiesDialog } from "./propertiesDialog.js?v=135";
+import { ToolsManager } from "./toolsManager.js?v=135";
+import { detectParishFromGeometry, SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=135";
+import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=135";
+import { getParishDemographics } from "./monagasDemographics.js?v=135";
 import { 
   getMunicipios, 
   getParroquiasByMun, 
@@ -21,13 +21,13 @@ import {
   findSectorById, 
   searchSectores, 
   ALL_SECTORES_FLAT 
-} from "./monagasSectoresCatalog.js?v=134";
+} from "./monagasSectoresCatalog.js?v=135";
 import { 
   getSavedFirebaseConfig, 
   saveFirebaseConfig, 
   isFirebaseConfigured, 
   initFirebase 
-} from "./firebaseConfig.js?v=134";
+} from "./firebaseConfig.js?v=135";
 
 // Controladores globales infalibles accesibles en cualquier contexto
 window.closeParishSelectorModal = function() {
@@ -408,8 +408,50 @@ class EarthMonagasApp {
       // Actualizar indicador de parroquia en banner de dibujo si está activo
       this.updateDrawingBannerParishText();
 
+      // Blindaje de datos territoriales de Alto de Los Godos
+      if ((parishId === "alto-de-los-godos" || resolvedParishId === "alto-de-los-godos") && parish) {
+        if (!parish.poligonos) parish.poligonos = [];
+        if (!parish.subparroquias) parish.subparroquias = [];
+
+        const existingPIds = new Set(parish.poligonos.map(x => String(x.id)));
+        let needSave = false;
+        SECTORES_LAPUENTE.forEach(sec => {
+          if (!existingPIds.has(String(sec.id))) {
+            parish.poligonos.push(JSON.parse(JSON.stringify(sec)));
+            needSave = true;
+          }
+        });
+
+        const existingSIds = new Set(parish.subparroquias.map(x => String(x.id)));
+        SUBPARROQUIAS_GODOS.forEach(sp => {
+          if (!existingSIds.has(String(sp.id))) {
+            parish.subparroquias.push(JSON.parse(JSON.stringify(sp)));
+            needSave = true;
+          }
+        });
+
+        if (needSave) {
+          parish.updatedAt = Date.now();
+          if (this.store) {
+            this.store.saveToStorage();
+            this.store.syncToCloud(munId, parishId);
+          }
+        }
+      }
+
       // Mostrar perímetro con máscara foco y elementos de esta parroquia
       if (this.mapEngine) {
+        if (!this.mapEngine.hierarchicalVisibility.l4) {
+          this.mapEngine.toggleHierarchicalLayer("l4", true, false);
+          const chk4 = document.getElementById("chk-layer-l4");
+          if (chk4) chk4.checked = true;
+        }
+        if (!this.mapEngine.hierarchicalVisibility.l5) {
+          this.mapEngine.toggleHierarchicalLayer("l5", true, false);
+          const chk5 = document.getElementById("chk-layer-l5");
+          if (chk5) chk5.checked = true;
+        }
+
         this.mapEngine.showParishBoundary(parish.limite, parish.id, flyCamera);
         this.mapEngine.renderParishItems(parish, (type, item) => {
           this.handleMapItemSelection(type, item);
