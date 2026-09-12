@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="es" class="h-full bg-[#0e092e]">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MIGATO • Acceso Institucional al Sistema</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .bg-grid-pattern {
+      background-size: 30px 30px;
+      background-image: 
+        linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    }
+  </style>
+</head>
+<body class="h-full flex items-center justify-center p-4 bg-gradient-to-br from-[#0c0826] via-[#140e40] to-[#1c1458] text-slate-100 bg-grid-pattern relative overflow-x-hidden">
+  
+  <!-- Auras de luz azul partidista -->
+  <div class="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-blue-600/25 rounded-full blur-3xl pointer-events-none"></div>
+  <div class="absolute bottom-10 right-10 w-80 h-80 bg-indigo-500/20 rounded-full blur-3xl pointer-events-none"></div>
+
+  <main class="w-full max-w-md relative z-10">
+    
+    <!-- Tarjeta Principal de Login con Azul MIGATO -->
+    <div class="bg-[#18114a]/95 backdrop-blur-xl border border-[#2e2084] rounded-3xl shadow-2xl shadow-indigo-950/80 p-6 sm:p-8">
+      
+      <!-- Membrete Oficial con Logo Oficial MIGATO -->
+      <div class="text-center mb-6">
+        <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-[#23176d] shadow-xl shadow-blue-900/50 mb-3 border-2 border-white/20 p-1.5">
+          <img src="assets/logo-migato.png" alt="MIGATO" class="w-full h-full object-contain">
+        </div>
+        <p class="text-[11px] font-semibold tracking-wider text-blue-200 uppercase">Movimiento Independiente Ganamos Todos</p>
+        <p class="text-xs font-bold text-amber-400 tracking-wide">COMANDO REGIONAL MONAGAS • SALA SITUACIONAL</p>
+        <h1 class="text-2xl font-black tracking-tight text-white mt-1">SISTEMA MIGATO</h1>
+        <p class="text-xs text-blue-200 mt-0.5 font-medium font-mono">Sala de Mando y Auditoría Territorial • Uso Confidencial Interno</p>
+      </div>
+
+      <!-- Formulario Clásico -->
+      <form id="login-form" class="space-y-4">
+        <div>
+          <label class="block text-xs font-medium text-slate-300 mb-1">Cédula o Usuario Institucional</label>
+          <div class="relative">
+            <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-blue-300 text-sm">
+              <i class="fa-solid fa-id-card"></i>
+            </span>
+            <input type="text" id="username" value="V-18450123" required 
+                   class="w-full pl-9 pr-3 py-2.5 bg-[#0d0928]/80 border border-[#2e2084] rounded-xl text-sm text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-400 transition">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-medium text-blue-200 mb-1">Contraseña de Acceso</label>
+          <div class="relative">
+            <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-blue-300 text-sm">
+              <i class="fa-solid fa-lock"></i>
+            </span>
+            <input type="password" id="password" value="migato2026" placeholder="Ingresa tu contraseña" required 
+                   class="w-full pl-9 pr-10 py-2.5 bg-[#0d0928]/80 border border-[#2e2084] rounded-xl text-sm text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-400 transition">
+            <button type="button" onclick="togglePasswordVisibility()" class="absolute inset-y-0 right-0 flex items-center pr-3 text-blue-300 hover:text-white cursor-pointer text-sm" title="Mostrar/Ocultar contraseña">
+              <i id="eye-icon" class="fa-solid fa-eye"></i>
+            </button>
+          </div>
+          <p class="text-[10px] text-amber-300/90 mt-1 font-mono flex items-center gap-1">
+            <i class="fa-solid fa-key text-[9px]"></i>
+            <span>Clave de Acceso: <strong class="select-all text-amber-300">migato2026</strong></span>
+          </p>
+        </div>
+
+        <button type="submit" 
+                class="w-full py-2.5 px-4 rounded-xl font-bold text-sm bg-gradient-to-r from-blue-600 via-indigo-600 to-[#23176d] hover:from-blue-500 hover:to-indigo-500 text-white shadow-lg shadow-blue-900/40 border border-blue-400/40 transition transform active:scale-[0.99] flex items-center justify-center gap-2 cursor-pointer">
+          <i class="fa-solid fa-arrow-right-to-bracket"></i>
+          Ingresar al Sistema
+        </button>
+      </form>
+
+      <!-- Divisor -->
+      <div class="relative my-6">
+        <div class="absolute inset-0 flex items-center"><div class="w-full border-t border-[#2e2084]"></div></div>
+        <div class="relative flex justify-center text-[10px] uppercase font-bold tracking-wider">
+          <span class="bg-[#18114a] px-3 text-blue-300">Perfiles de Demostración</span>
+        </div>
+      </div>
+
+      <!-- Selector Rápido de Roles para Demostración -->
+      <div class="space-y-2">
+        <!-- ROL 1: COMANDO REGIONAL -->
+        <button onclick="loginAs('gobernador', 'Comando de Dirección Regional')" 
+                class="w-full text-left p-2.5 rounded-xl border border-amber-400/40 bg-amber-500/10 hover:bg-amber-500/20 transition flex items-center justify-between group cursor-pointer">
+          <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-lg bg-amber-500/20 text-amber-300 flex items-center justify-center text-sm border border-amber-400/30 shrink-0">
+              <i class="fa-solid fa-shield-halved"></i>
+            </div>
+            <div>
+              <div class="flex items-center gap-1.5">
+                <p class="text-xs font-bold text-white group-hover:text-amber-300 transition">Comando Regional (Máxima Autoridad)</p>
+                <span class="text-[9px] font-mono px-1 rounded bg-amber-500/30 text-amber-200 border border-amber-400/40">Módulo 4 Activo</span>
+              </div>
+              <p class="text-[10px] text-blue-200">Control Total 13 Mun / 44 Parr • Cartografía 3D Completa</p>
+              <p class="text-[9px] font-mono text-amber-300/80 mt-0.5">👤 V-18450123 • 🔑 migato2026</p>
+            </div>
+          </div>
+          <i class="fa-solid fa-chevron-right text-xs text-blue-300 group-hover:text-amber-400 group-hover:translate-x-0.5 transition"></i>
+        </button>
+
+        <!-- ROL 2: COMANDO MUNICIPAL -->
+        <button onclick="loginAs('municipal', 'Comando Municipal Maturín')" 
+                class="w-full text-left p-2.5 rounded-xl border border-blue-400/40 bg-blue-600/15 hover:bg-blue-600/25 transition flex items-center justify-between group cursor-pointer">
+          <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-lg bg-blue-500/30 text-blue-300 flex items-center justify-center text-sm border border-blue-400/30 shrink-0">
+              <i class="fa-solid fa-landmark"></i>
+            </div>
+            <div>
+              <div class="flex items-center gap-1.5">
+                <p class="text-xs font-bold text-white group-hover:text-blue-300 transition">Comando Municipal (13 Municipios)</p>
+                <span class="text-[9px] font-mono px-1 rounded bg-red-500/20 text-red-300 border border-red-500/30">Módulo 4 Bloqueado</span>
+              </div>
+              <p class="text-[10px] text-blue-200">Filtro y Auditoría Territorial de su Municipio</p>
+              <p class="text-[9px] font-mono text-sky-300/80 mt-0.5">👤 V-15222333 • 🔑 mun2026</p>
+            </div>
+          </div>
+          <i class="fa-solid fa-chevron-right text-xs text-blue-300 group-hover:text-blue-400 group-hover:translate-x-0.5 transition"></i>
+        </button>
+
+        <!-- ROL 3: COMANDO PARROQUIAL -->
+        <button onclick="loginAs('parroquial', 'Enlace Parroquial Los Godos')" 
+                class="w-full text-left p-2.5 rounded-xl border border-teal-400/40 bg-teal-500/15 hover:bg-teal-500/25 transition flex items-center justify-between group cursor-pointer">
+          <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-lg bg-teal-500/25 text-teal-300 flex items-center justify-center text-sm border border-teal-400/30 shrink-0">
+              <i class="fa-solid fa-map-pin"></i>
+            </div>
+            <div>
+              <div class="flex items-center gap-1.5">
+                <p class="text-xs font-bold text-white group-hover:text-teal-300 transition">Comando Parroquial (44 Parroquias)</p>
+                <span class="text-[9px] font-mono px-1 rounded bg-red-500/20 text-red-300 border border-red-500/30">Módulo 4 Bloqueado</span>
+              </div>
+              <p class="text-[10px] text-blue-200">Enlace de Carga de Campo y Monitoreo Local</p>
+              <p class="text-[9px] font-mono text-teal-300/80 mt-0.5">👤 V-20111222 • 🔑 par2026</p>
+            </div>
+          </div>
+          <i class="fa-solid fa-chevron-right text-xs text-blue-300 group-hover:text-teal-400 group-hover:translate-x-0.5 transition"></i>
+        </button>
+      </div>
+
+      <!-- Pie de Seguridad -->
+      <div class="mt-6 pt-4 border-t border-[#2e2084]/80 text-center">
+        <p class="text-[10px] text-blue-300 flex items-center justify-center gap-1.5 font-medium">
+          <i class="fa-solid fa-lock text-amber-400"></i>
+          Sesión cifrada con protocolo institucional MIGATO 2026
+        </p>
+      </div>
+
+    </div>
+
+    <!-- Volver al portal -->
+    <div class="text-center mt-4">
+      <a href="dossiers.html" class="text-xs text-slate-400 hover:text-white transition flex items-center justify-center gap-1.5">
+        <i class="fa-solid fa-arrow-left text-[10px]"></i>
+        Volver a los Dossiers del Sistema
+      </a>
+    </div>
+
+  </main>
+
+  <script src="config.js"></script>
+  <script src="js/auth.js"></script>
+  <script>
+    function togglePasswordVisibility() {
+      const pwd = document.getElementById('password');
+      const icon = document.getElementById('eye-icon');
+      if (pwd.type === 'password') {
+        pwd.type = 'text';
+        icon.classList.remove('fa-eye');
+        icon.classList.add('fa-eye-slash');
+      } else {
+        pwd.type = 'password';
+        icon.classList.remove('fa-eye-slash');
+        icon.classList.add('fa-eye');
+      }
+    }
+
+    function loginAs(role, name) {
+      MIGATO_AUTH.setSession(role, name);
+      // Animación de feedback
+      const btn = window.event ? window.event.currentTarget : null;
+      if (btn) btn.classList.add('ring-2', 'ring-amber-400');
+      setTimeout(() => {
+        window.location.href = "dossiers.html";
+      }, 300);
+    }
+
+    document.getElementById('login-form').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value.trim();
+      const submitBtn = e.target.querySelector('button[type="submit"]');
+
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Verificando credenciales...';
+
+      try {
+        const resp = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password })
+        });
+
+        if (resp.ok) {
+          const data = await resp.json();
+          MIGATO_AUTH.setSession(data.user.rol, data.user.nombre);
+          submitBtn.innerHTML = '<i class="fa-solid fa-check"></i> Acceso Concedido';
+          setTimeout(() => { window.location.href = "dossiers.html"; }, 300);
+          return;
+        } else {
+          const errData = await resp.json().catch(() => ({}));
+          alert(errData.error || "Cédula o contraseña incorrecta.");
+        }
+        // Modo offline / fallback inteligente por credencial
+        console.warn("Backend no respondió, usando sesión local:", err);
+        if (username.startsWith("V-15") || username.toLowerCase().includes("mun") || password === "mun2026") {
+          loginAs('municipal', 'Comando Municipal Maturín');
+        } else if (username.startsWith("V-20") || username.toLowerCase().includes("par") || password === "par2026") {
+          loginAs('parroquial', 'Enlace Parroquial Los Godos');
+        } else {
+          loginAs('gobernador', 'Comando de Dirección Regional');
+        }
+        return;
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<i class="fa-solid fa-arrow-right-to-bracket"></i> Ingresar al Despacho';
+      }
+    });
+  </script>
+</body>
+</html>
