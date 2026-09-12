@@ -2,16 +2,16 @@
  * Controlador Principal — Google Earth Pro Web (Edición Estado Monagas)
  * Robusto, 100% Operativo y Totalmente Individualizado
  */
-import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=130";
-import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=130";
-import { getAllParishesForSelector } from "./usersCatalog.js?v=130";
-import { EarthStore } from "./earthStore.js?v=130";
-import { EarthMapEngine } from "./mapEngine.js?v=130";
-import { PropertiesDialog } from "./propertiesDialog.js?v=130";
-import { ToolsManager } from "./toolsManager.js?v=130";
-import { detectParishFromGeometry, SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=130";
-import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=130";
-import { getParishDemographics } from "./monagasDemographics.js?v=130";
+import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=131";
+import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=131";
+import { getAllParishesForSelector } from "./usersCatalog.js?v=131";
+import { EarthStore } from "./earthStore.js?v=131";
+import { EarthMapEngine } from "./mapEngine.js?v=131";
+import { PropertiesDialog } from "./propertiesDialog.js?v=131";
+import { ToolsManager } from "./toolsManager.js?v=131";
+import { detectParishFromGeometry, SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=131";
+import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=131";
+import { getParishDemographics } from "./monagasDemographics.js?v=131";
 import { 
   getMunicipios, 
   getParroquiasByMun, 
@@ -305,6 +305,9 @@ class EarthMonagasApp {
     try {
       this.activeSubParroquiaId = null;
       this.activeSectorId = null;
+      if (this.mapEngine) {
+        this.mapEngine.activeFocusLevel = "parroquia";
+      }
 
       // Navegación territorial abierta para todos los funcionarios y usuarios
       if (window.history && window.history.replaceState) {
@@ -627,7 +630,7 @@ class EarthMonagasApp {
     const parishCount = munObj?.parroquias?.length || 1;
     const focusLevel = this.mapEngine?.activeFocusLevel || (this.activeSectorId ? "sector" : (this.activeSubParroquiaId ? "subparroquia" : "parroquia"));
 
-    // 1. Nivel Sector Vecinal
+    // 1. Nivel Sector Vecinal (Solo cuando se selecciona un sector específico)
     if (this.activeSectorId && parish) {
       const sec = (parish.poligonos || []).find(p => String(p.id) === String(this.activeSectorId));
       const secName = sec?.nombre || "Sector Vecinal";
@@ -638,215 +641,55 @@ class EarthMonagasApp {
 
       if (hud && hudContent) {
         hud.style.display = "block";
-        hudContent.className = "flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#140e40]/95 border border-amber-500/70 shadow-2xl backdrop-blur-md text-xs flex-wrap justify-center";
+        hudContent.className = "flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#140e40]/95 border border-amber-500/70 shadow-2xl backdrop-blur-md text-xs";
         hudContent.innerHTML = `
           <span class="inline-flex items-center gap-1.5 font-bold text-amber-300">
             <span class="w-2.5 h-2.5 rounded-full bg-amber-400 shrink-0 animate-pulse"></span>
-            <span class="text-[10px] text-amber-400 uppercase tracking-wider hidden sm:inline">Sector:</span>
-            <span class="text-white font-extrabold max-w-[140px] sm:max-w-[200px] truncate">${secName}</span>
+            <span class="text-white font-extrabold max-w-[200px] truncate">${secName}</span>
           </span>
           <div class="h-3 w-px bg-amber-500/40"></div>
           ${sp ? `
             <button type="button" onclick="window.earthApp?.clearSectorFocus(true)"
-              class="px-2.5 py-1 rounded-full bg-purple-900/90 hover:bg-purple-800 text-purple-100 font-bold text-[11px] flex items-center gap-1 border border-purple-400/50 shadow transition active:scale-95 cursor-pointer"
+              class="px-2 py-0.5 rounded-full bg-purple-900/80 hover:bg-purple-800 text-purple-100 font-bold text-[10px] flex items-center gap-1 border border-purple-400/50 transition active:scale-95 cursor-pointer"
               title="Volver al eje ${sp.nombre}">
               <span>↩ Eje: ${sp.nombre}</span>
             </button>
           ` : ''}
           <button type="button" onclick="window.earthApp?.clearSectorFocus(false)"
-            class="px-2.5 py-1 rounded-full bg-sky-900/90 hover:bg-sky-800 text-sky-100 font-bold text-[11px] flex items-center gap-1 border border-sky-400/50 shadow transition active:scale-95 cursor-pointer"
+            class="px-2.5 py-0.5 rounded-full bg-amber-500/20 hover:bg-amber-500/40 text-amber-200 hover:text-white font-bold text-[11px] flex items-center gap-1 border border-amber-500/40 transition active:scale-95 cursor-pointer"
             title="Volver a toda la parroquia ${parish.nombre}">
-            <span>↩ Parroquia</span>
-          </button>
-          <button type="button" onclick="window.earthApp?.focusMunicipio('${this.selectedMunId}')"
-            class="px-2.5 py-1 rounded-full bg-[#23176d] hover:bg-[#35249c] text-slate-200 hover:text-white font-bold text-[10px] hidden md:flex items-center gap-1 transition cursor-pointer border border-[#2d1f85]"
-            title="Ver todo el municipio ${munNom}">
-            <span>🏛️ Municipio</span>
+            <span>✕ Salir del Sector</span>
           </button>
         `;
-      }
-
-      if (btnReturnParish) {
-        btnReturnParish.style.display = "flex";
-        btnReturnParish.title = `Volver a la parroquia (${parish.nombre})`;
-        btnReturnParish.className = "px-2.5 py-1.5 rounded-xl bg-amber-900/90 hover:bg-amber-800 border border-amber-400/60 text-xs font-black text-amber-100 transition flex items-center gap-1.5 active:scale-95 shadow-lg cursor-pointer shrink-0";
-        btnReturnParish.innerHTML = '<i data-lucide="arrow-left-circle" class="w-3.5 h-3.5 text-amber-300 shrink-0"></i><span class="whitespace-nowrap font-bold text-xs">Volver a Parroquia</span>';
-        btnReturnParish.onclick = () => this.clearSectorFocus(false);
-      }
-
-      if (window.lucide && typeof window.lucide.createIcons === "function") {
-        try { window.lucide.createIcons(); } catch(e) {}
       }
       return;
     }
 
-    // 2. Nivel Sub-Parroquia / Eje Territorial
+    // 2. Nivel Sub-Parroquia / Eje Territorial (Solo cuando se selecciona un eje específico)
     if (this.activeSubParroquiaId && parish) {
       const sp = (parish.subparroquias || []).find(s => String(s.id) === String(this.activeSubParroquiaId));
       const spName = sp?.nombre || "Eje Territorial";
 
       if (hud && hudContent) {
         hud.style.display = "block";
-        hudContent.className = "flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#140e40]/95 border border-purple-500/70 shadow-2xl backdrop-blur-md text-xs flex-wrap justify-center";
+        hudContent.className = "flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#140e40]/95 border border-purple-500/70 shadow-2xl backdrop-blur-md text-xs";
         hudContent.innerHTML = `
           <span class="inline-flex items-center gap-1.5 font-bold text-purple-300">
-            <i data-lucide="shield" class="w-3.5 h-3.5 text-purple-400 shrink-0"></i>
-            <span class="text-[10px] text-purple-300 uppercase tracking-wider hidden sm:inline">Eje Territorial:</span>
-            <span class="text-white font-extrabold max-w-[150px] sm:max-w-xs truncate">${spName}</span>
+            <span class="w-2.5 h-2.5 rounded-full bg-purple-400 shrink-0 animate-pulse"></span>
+            <span class="text-white font-extrabold max-w-[200px] truncate">${spName}</span>
           </span>
           <div class="h-3 w-px bg-purple-500/40"></div>
           <button type="button" onclick="window.earthApp?.clearSubParishFocus()"
-            class="px-2.5 py-1 rounded-full bg-purple-600 hover:bg-purple-500 text-white font-black text-[11px] flex items-center gap-1 shadow transition active:scale-95 cursor-pointer"
-            title="Devolver vista y velo a toda la parroquia ${parish.nombre}">
-            <i data-lucide="arrow-left-circle" class="w-3.5 h-3.5 shrink-0"></i>
-            <span>Volver a Parroquia</span>
-          </button>
-          <button type="button" onclick="window.earthApp?.focusMunicipio('${this.selectedMunId}')"
-            class="px-2.5 py-1 rounded-full bg-[#23176d] hover:bg-[#35249c] text-slate-200 hover:text-white font-bold text-[10px] hidden md:flex items-center gap-1 transition cursor-pointer border border-[#2d1f85]"
-            title="Ver todo el municipio ${munNom}">
-            <span>🏛️ Municipio</span>
+            class="px-2.5 py-0.5 rounded-full bg-purple-500/20 hover:bg-purple-500/40 text-purple-200 hover:text-white font-bold text-[11px] flex items-center gap-1 border border-purple-500/40 transition active:scale-95 cursor-pointer"
+            title="Volver a toda la parroquia ${parish.nombre}">
+            <span>✕ Salir del Eje</span>
           </button>
         `;
-      }
-
-      if (btnReturnParish) {
-        btnReturnParish.style.display = "flex";
-        btnReturnParish.title = `Devolver velo y cámara a toda la parroquia (${parish.nombre})`;
-        btnReturnParish.className = "px-2.5 py-1.5 rounded-xl bg-purple-900/90 hover:bg-purple-800 border border-purple-400/60 text-xs font-black text-purple-100 transition flex items-center gap-1.5 active:scale-95 shadow-lg cursor-pointer shrink-0";
-        btnReturnParish.innerHTML = '<i data-lucide="arrow-left-circle" class="w-3.5 h-3.5 text-purple-300 shrink-0"></i><span class="whitespace-nowrap font-bold text-xs">Volver a Parroquia</span>';
-        btnReturnParish.onclick = () => this.clearSubParishFocus();
-      }
-
-      if (window.lucide && typeof window.lucide.createIcons === "function") {
-        try { window.lucide.createIcons(); } catch(e) {}
       }
       return;
     }
 
-    // 3. Nivel Municipio
-    if (focusLevel === "municipio") {
-      if (hud && hudContent) {
-        hud.style.display = "block";
-        hudContent.className = "flex flex-col items-center gap-1.5 px-4 py-2 rounded-2xl bg-[#140e40]/95 border border-cyan-500/70 shadow-2xl backdrop-blur-md text-xs max-w-[95vw]";
-        
-        const parishButtons = (munObj?.parroquias || []).map(p => `
-          <button type="button" onclick="window.earthApp?.selectParish('${this.selectedMunId}', '${p.id}', true)"
-            class="px-2.5 py-1 rounded-full font-bold text-[11px] transition active:scale-95 cursor-pointer border shadow-sm ${this.selectedParishId === p.id ? 'bg-sky-600 text-white border-sky-300 ring-2 ring-sky-400/50' : 'bg-[#1e1458] text-sky-200 border-sky-500/30 hover:bg-[#2e1f88] hover:text-white hover:border-amber-400'}"
-            title="Entrar a Parroquia ${p.nombre}">
-            <span>📍 ${p.nombre}</span>
-          </button>
-        `).join("");
-
-        hudContent.innerHTML = `
-          <div class="flex items-center gap-2 flex-wrap justify-center">
-            <span class="inline-flex items-center gap-1.5 font-bold text-cyan-300">
-              <span class="w-2.5 h-2.5 rounded-full bg-cyan-400 shrink-0 animate-pulse"></span>
-              <span class="text-[10px] text-cyan-300 uppercase tracking-wider hidden sm:inline">Municipio:</span>
-              <span class="text-white font-extrabold text-sm">${munNom}</span>
-              <span class="text-[10px] text-cyan-300 font-bold">(${parishCount} Parroquias)</span>
-            </span>
-            <div class="h-3 w-px bg-cyan-500/40 hidden sm:block"></div>
-            <button type="button" onclick="window.earthApp?.focusEstado()"
-              class="px-2.5 py-1 rounded-full bg-amber-600 hover:bg-amber-500 text-[#0e092e] font-black text-[11px] flex items-center gap-1 shadow transition active:scale-95 cursor-pointer ml-1"
-              title="Ver todo el Estado Monagas">
-              <i data-lucide="map" class="w-3.5 h-3.5 shrink-0"></i>
-              <span>Ver Estado Monagas</span>
-            </button>
-          </div>
-          <div class="flex items-center gap-1.5 flex-wrap justify-center pt-1.5 border-t border-cyan-500/30 w-full max-h-[85px] overflow-y-auto custom-scrollbar">
-            ${parishButtons}
-          </div>
-        `;
-      }
-
-      if (btnReturnParish) {
-        btnReturnParish.style.display = "flex";
-        btnReturnParish.title = "Ver todo el Estado Monagas";
-        btnReturnParish.className = "px-2.5 py-1.5 rounded-xl bg-cyan-900/90 hover:bg-cyan-800 border border-cyan-400/60 text-xs font-black text-cyan-100 transition flex items-center gap-1.5 active:scale-95 shadow-lg cursor-pointer shrink-0";
-        btnReturnParish.innerHTML = '<i data-lucide="map" class="w-3.5 h-3.5 text-cyan-300 shrink-0"></i><span class="whitespace-nowrap font-bold text-xs">Ver Estado</span>';
-        btnReturnParish.onclick = () => this.focusEstado();
-      }
-
-      if (window.lucide && typeof window.lucide.createIcons === "function") {
-        try { window.lucide.createIcons(); } catch(e) {}
-      }
-      return;
-    }
-
-    // 4. Nivel Estado
-    if (focusLevel === "estado") {
-      if (hud && hudContent) {
-        hud.style.display = "block";
-        hudContent.className = "flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#140e40]/95 border border-amber-500/70 shadow-2xl backdrop-blur-md text-xs flex-wrap justify-center";
-        hudContent.innerHTML = `
-          <span class="inline-flex items-center gap-1.5 font-bold text-amber-300">
-            <span class="w-2.5 h-2.5 rounded-full bg-amber-400 shrink-0 animate-pulse"></span>
-            <span class="text-white font-extrabold">Estado Monagas (13 Municipios)</span>
-          </span>
-          <div class="h-3 w-px bg-amber-500/40"></div>
-          <button type="button" onclick="window.earthApp?.focusMunicipio('${this.selectedMunId || "maturin"}')"
-            class="px-2.5 py-1 rounded-full bg-sky-600 hover:bg-sky-500 text-white font-black text-[11px] flex items-center gap-1 shadow transition active:scale-95 cursor-pointer"
-            title="Volver a enfocar el municipio ${munNom}">
-            <i data-lucide="landmark" class="w-3.5 h-3.5 shrink-0"></i>
-            <span>Volver a Municipio</span>
-          </button>
-        `;
-      }
-
-      if (btnReturnParish) {
-        btnReturnParish.style.display = "flex";
-        btnReturnParish.title = "Volver al municipio";
-        btnReturnParish.className = "px-2.5 py-1.5 rounded-xl bg-sky-900/90 hover:bg-sky-800 border border-sky-400/60 text-xs font-black text-sky-100 transition flex items-center gap-1.5 active:scale-95 shadow-lg cursor-pointer shrink-0";
-        btnReturnParish.innerHTML = '<i data-lucide="landmark" class="w-3.5 h-3.5 text-sky-300 shrink-0"></i><span class="whitespace-nowrap font-bold text-xs">Volver a Municipio</span>';
-        btnReturnParish.onclick = () => this.focusMunicipio();
-      }
-
-      if (window.lucide && typeof window.lucide.createIcons === "function") {
-        try { window.lucide.createIcons(); } catch(e) {}
-      }
-      return;
-    }
-
-    // 5. Nivel Parroquia (Predeterminado)
-    if (parish) {
-      if (hud && hudContent) {
-        hud.style.display = "block";
-        hudContent.className = "flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#140e40]/95 border border-sky-500/60 shadow-2xl backdrop-blur-md text-xs flex-wrap justify-center";
-        hudContent.innerHTML = `
-          <span class="inline-flex items-center gap-1.5 font-bold text-sky-300">
-            <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 shrink-0"></span>
-            <span class="text-[10px] text-sky-300 uppercase tracking-wider hidden sm:inline">Parroquia:</span>
-            <span class="text-white font-extrabold max-w-[150px] sm:max-w-xs truncate">${parish.nombre}</span>
-          </span>
-          <div class="h-3 w-px bg-sky-500/40"></div>
-          <button type="button" onclick="window.earthApp?.focusMunicipio('${this.selectedMunId}')"
-            class="px-2.5 py-1 rounded-full bg-sky-700 hover:bg-sky-600 text-white font-black text-[11px] flex items-center gap-1 shadow transition active:scale-95 cursor-pointer"
-            title="Ver todo el municipio ${munNom} con sus ${parishCount} parroquias">
-            <i data-lucide="landmark" class="w-3.5 h-3.5 shrink-0"></i>
-            <span>Ver Todo el Municipio (${munNom})</span>
-          </button>
-          <button type="button" onclick="window.earthApp?.focusEstado()"
-            class="px-2 py-1 rounded-full bg-[#23176d] hover:bg-[#35249c] text-amber-300 hover:text-amber-200 font-bold text-[10px] hidden md:flex items-center gap-1 transition cursor-pointer border border-[#2d1f85]"
-            title="Ver todo el Estado Monagas">
-            <span>🗺️ Estado</span>
-          </button>
-        `;
-      }
-
-      if (btnReturnParish) {
-        btnReturnParish.style.display = "flex";
-        btnReturnParish.title = `Ver todo el municipio ${munNom}`;
-        btnReturnParish.className = "px-2.5 py-1.5 rounded-xl bg-sky-900/90 hover:bg-sky-800 border border-sky-400/60 text-xs font-black text-sky-100 transition flex items-center gap-1.5 active:scale-95 shadow-lg cursor-pointer shrink-0";
-        btnReturnParish.innerHTML = '<i data-lucide="landmark" class="w-3.5 h-3.5 text-sky-300 shrink-0"></i><span class="whitespace-nowrap font-bold text-xs">Ver Municipio</span>';
-        btnReturnParish.onclick = () => this.focusMunicipio();
-      }
-
-      if (window.lucide && typeof window.lucide.createIcons === "function") {
-        try { window.lucide.createIcons(); } catch(e) {}
-      }
-      return;
-    }
-
+    // Para Parroquia, Municipio y Estado: El satélite debe permanecer 100% LIMPIO Y DESPEJADO
     if (hud) hud.style.display = "none";
     if (btnReturnParish) btnReturnParish.style.display = "none";
   }
