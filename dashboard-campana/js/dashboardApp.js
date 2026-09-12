@@ -1,6 +1,6 @@
 /**
- * Dashboard de Censo y Control Territorial en Cascada • Monagas
- * Sector (Capa 5) ➔ Eje Comunal (Capa 4) ➔ Parroquia (Capa 3) ➔ Municipio (Capa 2) ➔ Estado (Capa 1)
+ * MÓDULO 2 • Dashboard de Censo y Control Territorial • Monagas
+ * Sector (Capa 5) ➔ Eje Territorial (Capa 4) ➔ Parroquia (Capa 3) ➔ Municipio (Capa 2) ➔ Estado (Capa 1)
  */
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
@@ -30,22 +30,32 @@ export class TerritorialDashboardApp {
   constructor() {
     this.db = null;
     this.territorios = {};
-    this.selectedMunId = "todos";
+    this.selectedMunId = "maturin"; // Maturín capital por defecto para foco inmediato
     this.selectedParishId = "todas";
     this.searchQuery = "";
-    this.expandedParishes = new Set(["alto-de-los-godos", "san-simon", "punta-de-mata"]);
-    this.expandedSubparroquias = new Set(["sub-godos-lapuente", "sub-ss-casco"]);
+    this.expandedParishes = new Set(["alto-de-los-godos", "san-simon"]);
+    this.expandedSubparroquias = new Set(["sub-godos-lapuente"]);
     this.unsubscribeFirestore = null;
 
-    this.isDemoMode = true; // Activo por defecto para que las tablas tengan 350+ sectores precargados
+    this.isDemoMode = true; // Activo para que las tablas tengan 350+ sectores precargados
     this.demoTerritorios = this.buildDemoTerritoriosMap();
     this.nf = new Intl.NumberFormat("es-VE");
+    
+    // Instancias de Gráficos
+    this.barsChartInstance = null;
     this.electoralChartInstance = null;
     this.politicalChartInstance = null;
     this.coverageChartInstance = null;
 
+    // Estado de la tabla plana paginada
+    this.flatPage = 1;
+    this.flatPerPage = 20;
+    this.currentFlatSectors = [];
+    this.activeView = "flat"; // "flat" o "cascade"
+
     this.initFirebase();
     this.bindEvents();
+    this.updateParishSelect();
     this.render();
   }
 
@@ -82,7 +92,7 @@ export class TerritorialDashboardApp {
         });
         this.territorios = cloudData;
         this.render();
-        this.updateCloudStatus(true, "En Vivo");
+        this.updateCloudStatus(true, "En Línea");
       }, (err) => {
         console.warn("Aviso Firestore:", err);
         this.fallbackToLocalStorage();
@@ -129,42 +139,130 @@ export class TerritorialDashboardApp {
   }
 
   bindEvents() {
+    // 1. Selector de Municipio
     const selectMun = document.getElementById("filter-municipio");
     if (selectMun) {
+      selectMun.value = this.selectedMunId;
       selectMun.addEventListener("change", (e) => {
         this.selectedMunId = e.target.value;
         this.selectedParishId = "todas";
+        this.flatPage = 1;
+        this.updateParishSelect();
         this.render();
       });
     }
 
+    // 2. Selector de Parroquia
+    const selectParish = document.getElementById("filter-parroquia");
+    if (selectParish) {
+      selectParish.addEventListener("change", (e) => {
+        this.selectedParishId = e.target.value;
+        this.flatPage = 1;
+        this.render();
+      });
+    }
+
+    // 3. Buscador de Texto
     const inputSearch = document.getElementById("filter-search");
     if (inputSearch) {
       inputSearch.addEventListener("input", (e) => {
         this.searchQuery = e.target.value.trim().toLowerCase();
+        this.flatPage = 1;
         this.render();
       });
     }
 
+    // 4. Botón Limpiar Filtros
+    const btnReset = document.getElementById("btn-reset-filters");
+    if (btnReset) {
+      btnReset.addEventListener("click", () => {
+        this.selectedMunId = "maturin";
+        this.selectedParishId = "todas";
+        this.searchQuery = "";
+        this.flatPage = 1;
+        if (selectMun) selectMun.value = "maturin";
+        if (inputSearch) inputSearch.value = "";
+        this.updateParishSelect();
+        this.render();
+      });
+    }
+
+    // 5. Botones Conmutadores de Vista: Tabla Plana vs Cascada
+    const btnViewFlat = document.getElementById("btn-view-flat");
+    const btnViewCascade = document.getElementById("btn-view-cascade");
+    const viewFlatCont = document.getElementById("view-flat-container");
+    const viewCascadeCont = document.getElementById("view-cascade-container");
+
+    if (btnViewFlat && btnViewCascade && viewFlatCont && viewCascadeCont) {
+      btnViewFlat.addEventListener("click", () => {
+        this.activeView = "flat";
+        btnViewFlat.className = "px-3 py-1.5 rounded-xl bg-sky-500 text-white font-black shadow-md transition flex items-center gap-1.5 cursor-pointer";
+        btnViewCascade.className = "px-3 py-1.5 rounded-xl text-slate-300 hover:text-white hover:bg-[#18114a] transition flex items-center gap-1.5 cursor-pointer";
+        viewFlatCont.classList.remove("hidden");
+        viewCascadeCont.classList.add("hidden");
+      });
+
+      btnViewCascade.addEventListener("click", () => {
+        this.activeView = "cascade";
+        btnViewCascade.className = "px-3 py-1.5 rounded-xl bg-sky-500 text-white font-black shadow-md transition flex items-center gap-1.5 cursor-pointer";
+        btnViewFlat.className = "px-3 py-1.5 rounded-xl text-slate-300 hover:text-white hover:bg-[#18114a] transition flex items-center gap-1.5 cursor-pointer";
+        viewCascadeCont.classList.remove("hidden");
+        viewFlatCont.classList.add("hidden");
+      });
+    }
+
+    // 6. Paginador de Tabla Plana
+    const btnPrev = document.getElementById("btn-flat-prev");
+    const btnNext = document.getElementById("btn-flat-next");
+    if (btnPrev) {
+      btnPrev.addEventListener("click", () => {
+        if (this.flatPage > 1) {
+          this.flatPage--;
+          this.renderFlatTableOnly();
+        }
+      });
+    }
+    if (btnNext) {
+      btnNext.addEventListener("click", () => {
+        const totalPages = Math.ceil(this.currentFlatSectors.length / this.flatPerPage) || 1;
+        if (this.flatPage < totalPages) {
+          this.flatPage++;
+          this.renderFlatTableOnly();
+        }
+      });
+    }
+
+    // 7. Botón Exportar CSV
     const btnExport = document.getElementById("btn-export-csv");
     if (btnExport) {
       btnExport.addEventListener("click", () => this.exportCSV());
     }
+  }
 
-    const btnToggleDemo = document.getElementById("btn-toggle-demo-mode");
-    if (btnToggleDemo) {
-      btnToggleDemo.addEventListener("click", () => {
-        this.isDemoMode = !this.isDemoMode;
-        const lbl = document.getElementById("label-demo-mode");
-        const banner = document.getElementById("banner-demo-notice");
-        if (lbl) lbl.textContent = this.isDemoMode ? "Modo Demo Activo" : "Modo En Vivo (Firebase)";
-        if (banner) banner.style.display = this.isDemoMode ? "flex" : "none";
-        btnToggleDemo.className = this.isDemoMode 
-          ? "px-2.5 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs transition flex items-center gap-1.5 shadow-md shadow-amber-500/20 active:scale-95 cursor-pointer"
-          : "px-2.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs transition flex items-center gap-1.5 active:scale-95 cursor-pointer";
-        this.render();
+  updateParishSelect() {
+    const sel = document.getElementById("filter-parroquia");
+    if (!sel) return;
+
+    let parishes = [];
+    if (this.selectedMunId === "todos") {
+      CATALOGO_MONAGAS.forEach(m => {
+        m.parroquias.forEach(p => parishes.push({ ...p, munNombre: m.nombre }));
       });
+    } else {
+      const mObj = CATALOGO_MONAGAS.find(m => m.id === this.selectedMunId);
+      if (mObj) {
+        parishes = mObj.parroquias.map(p => ({ ...p, munNombre: mObj.nombre }));
+      }
     }
+
+    let html = `<option value="todas" ${this.selectedParishId === 'todas' ? 'selected' : ''}>-- Todas las Parroquias (${parishes.length}) --</option>`;
+    parishes.forEach(p => {
+      const isSel = this.selectedParishId === p.id ? 'selected' : '';
+      const label = this.selectedMunId === "todos" ? `${p.nombre} (${p.munNombre})` : p.nombre;
+      html += `<option value="${p.id}" ${isSel}>${label}</option>`;
+    });
+
+    sel.innerHTML = html;
   }
 
   buildDemoTerritoriosMap() {
@@ -215,49 +313,6 @@ export class TerritorialDashboardApp {
     return map;
   }
 
-  updateParishPills() {
-    const container = document.getElementById("parish-pills-container");
-    if (!container) return;
-
-    let parishes = [];
-    if (this.selectedMunId === "todos") {
-      CATALOGO_MONAGAS.forEach(m => {
-        m.parroquias.forEach(p => parishes.push({ ...p, munId: m.id, munNombre: m.nombre }));
-      });
-    } else {
-      const mObj = CATALOGO_MONAGAS.find(m => m.id === this.selectedMunId);
-      if (mObj) {
-        parishes = mObj.parroquias.map(p => ({ ...p, munId: mObj.id, munNombre: mObj.nombre }));
-      }
-    }
-
-    let html = `
-      <button type="button" data-parish="todas" class="px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${this.selectedParishId === 'todas' ? 'bg-sky-600 text-white shadow-md' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'}">
-        <i data-lucide="layers" class="w-3.5 h-3.5"></i>
-        <span>Todas (${parishes.length})</span>
-      </button>
-    `;
-
-    parishes.forEach(p => {
-      const isSel = this.selectedParishId === p.id;
-      html += `
-        <button type="button" data-parish="${p.id}" class="px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${isSel ? 'bg-sky-600 text-white shadow-md' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'}">
-          <i data-lucide="map-pin" class="w-3.5 h-3.5"></i>
-          <span>${p.nombre}</span>
-        </button>
-      `;
-    });
-
-    container.innerHTML = html;
-
-    container.querySelectorAll("button[data-parish]").forEach(btn => {
-      btn.addEventListener("click", () => {
-        this.selectedParishId = btn.dataset.parish;
-        this.render();
-      });
-    });
-  }
-
   buildCascadeModel() {
     const q = this.searchQuery;
     const nominalElectores = this.loadNominalElectores();
@@ -288,14 +343,12 @@ export class TerritorialDashboardApp {
         const docKey = `${mun.id}_${p.id}`;
         let tData = this.territorios[docKey] || {};
 
-        // Si estamos en modo demo o no hay datos guardados en la nube, usamos la maqueta demo completa
         if (this.isDemoMode || !tData.poligonos || tData.poligonos.length === 0) {
           if (this.demoTerritorios[docKey]) {
             tData = this.demoTerritorios[docKey];
           }
         }
 
-        // Precarga de datos predeterminados si sigue vacío
         let subparroquias = tData.subparroquias || [];
         let poligonos = tData.poligonos || [];
 
@@ -325,7 +378,6 @@ export class TerritorialDashboardApp {
           totSectores: 0
         };
 
-        // Si no hay ejes creados, colocar un eje general para agrupar
         let ejesList = subparroquias.length > 0 
           ? subparroquias 
           : [{ id: `eje-gen-${p.id}`, nombre: `Eje Central • ${p.nombre}`, casas: 0, militantes: 0 }];
@@ -372,7 +424,6 @@ export class TerritorialDashboardApp {
             ejeNominales += secInLocal.length;
           });
 
-          // Fallback a los datos del propio eje si no tiene sectores desglosados
           if (secInSp.length === 0) {
             ejeCasas = parseInt(sp.casas || 0) || 0;
             ejeFam = parseInt(sp.familias || sp.casas || 0) || 0;
@@ -383,7 +434,6 @@ export class TerritorialDashboardApp {
             ejeNuevo = sp.votoNuevo !== undefined ? parseInt(sp.votoNuevo) || 0 : Math.max(0, ejeVot - ejeDuro - ejeBlando);
           }
 
-          // Filtro de búsqueda por texto
           const matchQ = !q || 
             sp.nombre.toLowerCase().includes(q) || 
             secInSp.some(s => s.nombre.toLowerCase().includes(q)) ||
@@ -457,7 +507,7 @@ export class TerritorialDashboardApp {
           });
           parishNode.ejes.push({
             id: `eje-otros-${p.id}`,
-            nombre: "Otros Sectores Comunales",
+            nombre: "Otros Sectores Vecinales",
             casas: orphCasas,
             familias: orphFam,
             habitantes: orphHab,
@@ -503,7 +553,6 @@ export class TerritorialDashboardApp {
   }
 
   render() {
-    this.updateParishPills();
     const cascadeModel = this.buildCascadeModel();
 
     // 1. Totales Macro
@@ -547,7 +596,7 @@ export class TerritorialDashboardApp {
     if (elHab) elHab.textContent = this.nf.format(grandHab);
     if (elVot) elVot.textContent = this.nf.format(grandVot);
     if (elSec) elSec.textContent = this.nf.format(grandSectores);
-    if (elEjes) elEjes.textContent = `${grandEjes} Ejes Comunales`;
+    if (elEjes) elEjes.textContent = `${grandEjes} Ejes Territoriales`;
     if (elBadge) elBadge.textContent = `${grandParroquias} Parroquias en Vista`;
 
     if (elDuro) elDuro.textContent = this.nf.format(grandDuro);
@@ -558,15 +607,244 @@ export class TerritorialDashboardApp {
     if (elNuevoPct) elNuevoPct.textContent = `${((grandNuevo / grandPolTot) * 100).toFixed(1)}%`;
     if (elNominales) elNominales.textContent = this.nf.format(grandNominales);
 
-    // 2. Renderizar Centro de Decisión (Gráficos de Torta y Cockpit)
-    this.renderDecisionCenter(cascadeModel);
+    // 2. Gráfico Principal de Barras (Habitantes vs Votantes)
+    this.renderTerritorialBarsChart(cascadeModel);
 
-    // 3. Renderizar Árbol en Cascada
+    // 3. Tabla Plana Paginada (Excel Style)
+    this.prepareFlatSectorsList(cascadeModel);
+    this.renderFlatTableOnly();
+
+    // 4. Árbol en Cascada
     this.renderCascadeTree(cascadeModel);
+
+    // 5. Herramientas Avanzadas dentro de <details> (Tortas y Pareto)
+    this.renderDecisionCenter(cascadeModel);
 
     if (window.lucide && typeof window.lucide.createIcons === "function") {
       try { window.lucide.createIcons(); } catch(e){}
     }
+  }
+
+  renderTerritorialBarsChart(cascadeModel) {
+    const canvas = document.getElementById("chart-territorial-bars");
+    if (!canvas) return;
+
+    let items = [];
+    if (this.selectedMunId === "todos") {
+      // Comparativa por los 13 Municipios
+      items = cascadeModel.map(m => ({
+        label: m.nombre,
+        habitantes: m.totHab,
+        votantes: m.totVot
+      })).sort((a, b) => b.habitantes - a.habitantes);
+    } else if (this.selectedParishId === "todas" && cascadeModel.length > 0) {
+      // Comparativa por Parroquias del Municipio
+      items = cascadeModel[0].parroquias.map(p => ({
+        label: p.nombre,
+        habitantes: p.totHab,
+        votantes: p.totVot
+      })).sort((a, b) => b.habitantes - a.habitantes);
+    } else if (cascadeModel.length > 0 && cascadeModel[0].parroquias.length > 0) {
+      // Comparativa por Ejes o Sectores Principales
+      const p = cascadeModel[0].parroquias[0];
+      items = p.ejes.map(e => ({
+        label: e.nombre,
+        habitantes: e.habitantes,
+        votantes: e.votantes
+      })).sort((a, b) => b.habitantes - a.habitantes).slice(0, 10);
+    }
+
+    if (items.length === 0) return;
+
+    const labels = items.map(it => it.label);
+    const dataHab = items.map(it => it.habitantes);
+    const dataVot = items.map(it => it.votantes);
+
+    if (typeof Chart === "undefined") {
+      return;
+    }
+
+    if (this.barsChartInstance) {
+      this.barsChartInstance.destroy();
+      this.barsChartInstance = null;
+    }
+
+    const ctx = canvas.getContext("2d");
+    this.barsChartInstance = new Chart(ctx, {
+      type: "bar",
+      data: {
+        labels: labels,
+        datasets: [
+          {
+            label: "Habitantes (Población)",
+            data: dataHab,
+            backgroundColor: "#10b981",
+            borderRadius: 6,
+            borderSkipped: false,
+            barPercentage: 0.7,
+            categoryPercentage: 0.8
+          },
+          {
+            label: "Votantes Registrados",
+            data: dataVot,
+            backgroundColor: "#c084fc",
+            borderRadius: 6,
+            borderSkipped: false,
+            barPercentage: 0.7,
+            categoryPercentage: 0.8
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        interaction: {
+          mode: "index",
+          intersect: false
+        },
+        plugins: {
+          legend: {
+            display: false // Ya está en la cabecera
+          },
+          tooltip: {
+            backgroundColor: "#140e40",
+            titleColor: "#f8fafc",
+            titleFont: { family: "Inter", weight: "bold", size: 12 },
+            bodyFont: { family: "JetBrains Mono", size: 11 },
+            borderColor: "#2d1f85",
+            borderWidth: 1,
+            padding: 10,
+            callbacks: {
+              label: (context) => {
+                const val = context.parsed.y;
+                return ` ${context.dataset.label}: ${this.nf.format(val)}`;
+              }
+            }
+          }
+        },
+        scales: {
+          x: {
+            grid: { display: false },
+            ticks: {
+              color: "#94a3b8",
+              font: { family: "Inter", size: 11, weight: "bold" },
+              maxRotation: 35,
+              minRotation: 0
+            }
+          },
+          y: {
+            grid: { color: "rgba(45, 31, 133, 0.35)" },
+            ticks: {
+              color: "#94a3b8",
+              font: { family: "JetBrains Mono", size: 10 },
+              callback: (val) => this.nf.format(val)
+            }
+          }
+        }
+      }
+    });
+  }
+
+  prepareFlatSectorsList(cascadeModel) {
+    const list = [];
+    cascadeModel.forEach(mun => {
+      mun.parroquias.forEach(p => {
+        p.ejes.forEach(e => {
+          e.sectores.forEach(s => {
+            list.push({
+              munId: mun.id,
+              munNombre: mun.nombre,
+              parishId: p.id,
+              parishNombre: p.nombre,
+              ejeNombre: e.nombre,
+              id: s.id,
+              nombre: s.nombre,
+              casas: parseInt(s.casas || 0),
+              familias: parseInt(s.familias || s.casas || 0),
+              habitantes: parseInt(s.habitantes || s.militantes || 0),
+              votantes: parseInt(s.militantes !== undefined ? s.militantes : (s.votantes || s.habitantes || 0)),
+              votoDuro: parseInt(s.votoDuro || 0),
+              votoBlando: parseInt(s.votoBlando || 0),
+              votoNuevo: parseInt(s.votoNuevo || 0),
+              centroVotacion: s.centroVotacion || ""
+            });
+          });
+        });
+      });
+    });
+
+    // Ordenar de mayor a menor votantes
+    list.sort((a, b) => b.votantes - a.votantes);
+    this.currentFlatSectors = list;
+  }
+
+  renderFlatTableOnly() {
+    const tbody = document.getElementById("flat-table-body");
+    const countBadge = document.getElementById("flat-table-count");
+    const pageLbl = document.getElementById("lbl-flat-page");
+    const btnPrev = document.getElementById("btn-flat-prev");
+    const btnNext = document.getElementById("btn-flat-next");
+
+    if (!tbody) return;
+
+    const total = this.currentFlatSectors.length;
+    if (total === 0) {
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="9" class="py-8 text-center text-slate-400 italic">
+            No se encontraron sectores para este filtro territorial o búsqueda.
+          </td>
+        </tr>
+      `;
+      if (countBadge) countBadge.textContent = "0 sectores encontrados";
+      if (pageLbl) pageLbl.textContent = "Página 1 de 1";
+      if (btnPrev) btnPrev.disabled = true;
+      if (btnNext) btnNext.disabled = true;
+      return;
+    }
+
+    const totalPages = Math.ceil(total / this.flatPerPage) || 1;
+    if (this.flatPage > totalPages) this.flatPage = totalPages;
+    if (this.flatPage < 1) this.flatPage = 1;
+
+    const startIdx = (this.flatPage - 1) * this.flatPerPage;
+    const endIdx = Math.min(startIdx + this.flatPerPage, total);
+    const slice = this.currentFlatSectors.slice(startIdx, endIdx);
+
+    if (countBadge) {
+      countBadge.textContent = `Mostrando ${startIdx + 1} - ${endIdx} de ${total} sectores territoriales`;
+    }
+    if (pageLbl) {
+      pageLbl.textContent = `Página ${this.flatPage} de ${totalPages}`;
+    }
+    if (btnPrev) btnPrev.disabled = this.flatPage <= 1;
+    if (btnNext) btnNext.disabled = this.flatPage >= totalPages;
+
+    let html = "";
+    slice.forEach((s, idx) => {
+      const rowNum = startIdx + idx + 1;
+      html += `
+        <tr class="hover:bg-[#18114a] transition border-b border-[#2d1f85]/40">
+          <td class="py-2.5 px-3 text-slate-400 font-mono">${rowNum}</td>
+          <td class="py-2.5 px-3 text-sky-300 font-bold whitespace-nowrap">
+            ${s.parishNombre}
+          </td>
+          <td class="py-2.5 px-3 font-bold text-white whitespace-nowrap">
+            ${s.nombre}
+          </td>
+          <td class="py-2.5 px-3 text-right text-amber-400 font-black font-mono">${this.nf.format(s.casas)}</td>
+          <td class="py-2.5 px-3 text-right text-sky-300 font-bold font-mono">${this.nf.format(s.familias)}</td>
+          <td class="py-2.5 px-3 text-right text-emerald-400 font-black font-mono">${this.nf.format(s.habitantes)}</td>
+          <td class="py-2.5 px-3 text-right text-purple-300 font-black font-mono">${this.nf.format(s.votantes)}</td>
+          <td class="py-2.5 px-3 text-right text-emerald-400 font-bold font-mono">${this.nf.format(s.votoDuro)}</td>
+          <td class="py-2.5 px-3 text-slate-300 truncate max-w-[220px] font-sans text-[11px]" title="${s.centroVotacion}">
+            ${s.centroVotacion ? '🏫 ' + s.centroVotacion : '<span class="text-slate-600">Sin asignar</span>'}
+          </td>
+        </tr>
+      `;
+    });
+
+    tbody.innerHTML = html;
   }
 
   renderDecisionCenter(cascadeModel) {
@@ -596,10 +874,10 @@ export class TerritorialDashboardApp {
     const totNuevo = cascadeModel.reduce((sum, m) => sum + m.totNuevo, 0);
     const uniqueCentros = new Set(allSectors.map(s => s.centroVotacion).filter(Boolean)).size || 1;
 
-    // 1. Métricas de Decisión
+    // Métricas de Decisión
     this.renderDecisionCockpit(cascadeModel, allSectors, totVotantes, totCasas, totFam, totSectores, uniqueCentros);
 
-    // 2. Gráficos de Torta (3 Gráficos: Distribución, Composición Voto Duro/Blando/Nuevo, y Riesgo)
+    // Gráficos de Torta Avanzados
     this.renderElectoralShareChart(cascadeModel, allSectors, totVotantes);
     this.renderPoliticalVoteChart(totDuro, totBlando, totNuevo);
     this.renderCoverageTrafficChart(allSectors, totSectores);
@@ -642,7 +920,7 @@ export class TerritorialDashboardApp {
     const elCohabitDesc = document.getElementById("decision-cohabit-desc");
     if (elCohabit) elCohabit.textContent = famCasa;
     if (elCohabitDesc) {
-      elCohabitDesc.innerHTML = `Déficit de <strong class="text-sky-300 font-bold">${deficitPct}%</strong> en viviendas (cohabitación familiar múltiple detectada).`;
+      elCohabitDesc.innerHTML = `Carga de <strong class="text-sky-300 font-bold">${famCasa}</strong> familias/vivienda (${deficitPct}% de cohabitación familiar múltiple).`;
     }
 
     const schoolLoad = uniqueCentros > 0 ? Math.round(totVot / uniqueCentros) : 0;
@@ -654,53 +932,6 @@ export class TerritorialDashboardApp {
     }
   }
 
-  renderSVGDoughnutFallback(canvas, labels, data, colors, centerTitle, centerValue) {
-    canvas.style.display = "none";
-    let container = canvas.parentElement.querySelector(".svg-doughnut-fallback");
-    if (!container) {
-      container = document.createElement("div");
-      container.className = "svg-doughnut-fallback flex flex-col items-center justify-center w-full py-2";
-      canvas.parentElement.appendChild(container);
-    }
-
-    const total = data.reduce((a, b) => a + b, 0) || 1;
-    const circumference = 2 * Math.PI * 40;
-    let offset = 0;
-
-    const circles = data.map((val, idx) => {
-      const pct = val / total;
-      const dashArray = `${pct * circumference} ${circumference}`;
-      const circleSvg = `<circle cx="50" cy="50" r="40" fill="transparent" stroke="${colors[idx % colors.length]}" stroke-width="15" stroke-dasharray="${dashArray}" stroke-dashoffset="${-offset}" transform="rotate(-90 50 50)"></circle>`;
-      offset += pct * circumference;
-      return circleSvg;
-    }).join("");
-
-    const topLabel = centerTitle || labels[0] || "";
-    const topPct = centerValue || ((data[0] / total) * 100).toFixed(0) + "%";
-
-    container.innerHTML = `
-      <div class="relative w-44 h-44">
-        <svg viewBox="0 0 100 100" class="w-full h-full">
-          <circle cx="50" cy="50" r="40" fill="transparent" stroke="#1e293b" stroke-width="15"></circle>
-          ${circles}
-        </svg>
-        <div class="absolute inset-0 flex flex-col items-center justify-center text-center pointer-events-none">
-          <span class="text-[10px] text-slate-400 font-mono">LÍDER</span>
-          <span class="text-xs font-black text-amber-400 truncate max-w-[90px]">${topLabel}</span>
-          <span class="text-sm font-black text-white">${topPct}</span>
-        </div>
-      </div>
-      <div class="flex flex-wrap items-center justify-center gap-2 mt-2 text-[10px] text-slate-300 font-mono">
-        ${labels.slice(0, 5).map((l, i) => `
-          <span class="flex items-center gap-1">
-            <span class="w-2 h-2 rounded-full" style="background-color:${colors[i % colors.length]}"></span>
-            ${l} (${((data[i]/total)*100).toFixed(0)}%)
-          </span>
-        `).join("")}
-      </div>
-    `;
-  }
-
   renderElectoralShareChart(cascadeModel, allSectors, totVot) {
     const canvas = document.getElementById("chart-electoral-share");
     if (!canvas) return;
@@ -709,7 +940,7 @@ export class TerritorialDashboardApp {
     let subtitleText = "13 Municipios";
 
     if (this.selectedMunId === "todos") {
-      subtitleText = "13 Municipios del Estado";
+      subtitleText = "13 Municipios";
       items = [...cascadeModel].sort((a, b) => b.totVot - a.totVot).map(m => ({
         label: m.nombre,
         value: m.totVot
@@ -721,7 +952,7 @@ export class TerritorialDashboardApp {
         value: p.totVot
       }));
     } else if (cascadeModel.length > 0 && cascadeModel[0].parroquias.length > 0) {
-      subtitleText = "Ejes Comunales";
+      subtitleText = "Ejes Territoriales";
       items = [...cascadeModel[0].parroquias[0].ejes].sort((a, b) => b.votantes - a.votantes).map(e => ({
         label: e.nombre,
         value: e.votantes
@@ -740,70 +971,57 @@ export class TerritorialDashboardApp {
     const labels = items.map(it => it.label);
     const data = items.map(it => it.value);
 
-    if (typeof Chart === "undefined") {
-      this.renderSVGDoughnutFallback(canvas, labels, data, colors, labels[0], null);
-    } else {
-      if (this.electoralChartInstance) {
-        this.electoralChartInstance.destroy();
-        this.electoralChartInstance = null;
-      }
-      canvas.style.display = "block";
-      const svgOld = canvas.parentElement.querySelector(".svg-doughnut-fallback");
-      if (svgOld) svgOld.remove();
+    if (typeof Chart === "undefined") return;
 
-      const ctx = canvas.getContext("2d");
-      this.electoralChartInstance = new Chart(ctx, {
-        type: "doughnut",
-        data: {
-          labels,
-          datasets: [{
-            data,
-            backgroundColor: colors.slice(0, labels.length),
-            borderColor: "#060913",
-            borderWidth: 2,
-            hoverOffset: 6
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          cutout: "62%",
-          plugins: {
-            legend: {
-              position: window.innerWidth < 640 ? "bottom" : "right",
-              labels: {
-                color: "#cbd5e1",
-                boxWidth: 10,
-                font: { family: "Inter", size: 10 }
-              }
-            },
-            tooltip: {
-              backgroundColor: "#0f172a",
-              titleColor: "#f59e0b",
-              bodyColor: "#f8fafc",
-              borderColor: "rgba(245, 158, 11, 0.4)",
-              borderWidth: 1,
-              padding: 10,
-              callbacks: {
-                label: (context) => {
-                  const val = context.parsed;
-                  const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                  const pct = total > 0 ? ((val / total) * 100).toFixed(1) : 0;
-                  return ` ${context.label}: ${this.nf.format(val)} votantes (${pct}%)`;
-                }
+    if (this.electoralChartInstance) {
+      this.electoralChartInstance.destroy();
+      this.electoralChartInstance = null;
+    }
+
+    const ctx = canvas.getContext("2d");
+    this.electoralChartInstance = new Chart(ctx, {
+      type: "doughnut",
+      data: {
+        labels,
+        datasets: [{
+          data,
+          backgroundColor: colors.slice(0, labels.length),
+          borderColor: "#0e092e",
+          borderWidth: 2,
+          hoverOffset: 4
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        cutout: "65%",
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            backgroundColor: "#0e092e",
+            titleColor: "#f59e0b",
+            bodyColor: "#f8fafc",
+            borderColor: "rgba(245, 158, 11, 0.4)",
+            borderWidth: 1,
+            callbacks: {
+              label: (context) => {
+                const val = context.parsed;
+                const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                const pct = total > 0 ? ((val / total) * 100).toFixed(1) : 0;
+                return ` ${context.label}: ${this.nf.format(val)} (${pct}%)`;
               }
             }
           }
         }
-      });
-    }
+      }
+    });
 
     const summaryEl = document.getElementById("chart-electoral-summary");
     if (summaryEl && items.length > 0) {
       const topItem = items[0];
       const topPct = totVot > 0 ? ((topItem.value / totVot) * 100).toFixed(1) : 0;
       summaryEl.innerHTML = `
-        <span class="truncate">Líder: <strong class="text-amber-400 font-bold">${topItem.label}</strong> (${this.nf.format(topItem.value)} • ${topPct}%)</span>
+        <span class="truncate">Líder: <strong class="text-amber-400 font-bold">${topItem.label}</strong> (${topPct}%)</span>
         <span class="shrink-0 text-slate-400">Total: <strong class="text-white">${this.nf.format(totVot)}</strong></span>
       `;
     }
@@ -818,80 +1036,67 @@ export class TerritorialDashboardApp {
     const data = [duro, blando, nuevo];
     const colors = ["#10b981", "#f59e0b", "#38bdf8"];
 
-    if (typeof Chart === "undefined") {
-      this.renderSVGDoughnutFallback(canvas, labels, data, colors, "VOTO DURO", `${((duro / total) * 100).toFixed(0)}%`);
-    } else {
-      if (this.politicalChartInstance) {
-        this.politicalChartInstance.destroy();
-        this.politicalChartInstance = null;
-      }
-      canvas.style.display = "block";
-      const svgOld = canvas.parentElement.querySelector(".svg-doughnut-fallback");
-      if (svgOld) svgOld.remove();
+    if (typeof Chart === "undefined") return;
 
-      const ctx = canvas.getContext("2d");
-      this.politicalChartInstance = new Chart(ctx, {
-        type: "doughnut",
-        data: {
-          labels,
-          datasets: [{
-            data,
-            backgroundColor: colors,
-            borderColor: "#060913",
-            borderWidth: 2,
-            hoverOffset: 6
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          cutout: "62%",
-          plugins: {
-            legend: {
-              position: "bottom",
-              labels: {
-                color: "#cbd5e1",
-                boxWidth: 10,
-                font: { family: "Inter", size: 10 }
-              }
-            },
-            tooltip: {
-              backgroundColor: "#0f172a",
-              titleColor: "#10b981",
-              bodyColor: "#f8fafc",
-              borderColor: "rgba(16, 185, 129, 0.4)",
-              borderWidth: 1,
-              padding: 10,
-              callbacks: {
-                label: (context) => {
-                  const val = context.parsed;
-                  const pct = ((val / total) * 100).toFixed(1);
-                  return ` ${context.label}: ${this.nf.format(val)} (${pct}%)`;
-                }
+    if (this.politicalChartInstance) {
+      this.politicalChartInstance.destroy();
+      this.politicalChartInstance = null;
+    }
+
+    const ctx = canvas.getContext("2d");
+    this.politicalChartInstance = new Chart(ctx, {
+      type: "doughnut",
+      data: {
+        labels,
+        datasets: [{
+          data,
+          backgroundColor: colors,
+          borderColor: "#0e092e",
+          borderWidth: 2,
+          hoverOffset: 4
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        cutout: "65%",
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            backgroundColor: "#0e092e",
+            titleColor: "#10b981",
+            bodyColor: "#f8fafc",
+            borderColor: "rgba(16, 185, 129, 0.4)",
+            borderWidth: 1,
+            callbacks: {
+              label: (context) => {
+                const val = context.parsed;
+                const pct = total > 0 ? ((val / total) * 100).toFixed(1) : 0;
+                return ` ${context.label}: ${this.nf.format(val)} (${pct}%)`;
               }
             }
           }
         }
-      });
-    }
+      }
+    });
 
     const summaryEl = document.getElementById("chart-political-summary");
     if (summaryEl) {
+      const dPct = ((duro / total) * 100).toFixed(0);
+      const bPct = ((blando / total) * 100).toFixed(0);
+      const nPct = ((nuevo / total) * 100).toFixed(0);
       summaryEl.innerHTML = `
         <div class="p-1.5 rounded-xl bg-emerald-950/40 border border-emerald-500/30 text-emerald-300">
           <span class="block text-[9px] text-slate-400">🟢 Duro</span>
-          <strong class="text-xs font-black">${this.nf.format(duro)}</strong>
-          <span class="text-[9px] text-slate-400 block">${((duro / total) * 100).toFixed(0)}%</span>
+          <strong class="text-xs font-black">${dPct}%</strong>
         </div>
         <div class="p-1.5 rounded-xl bg-amber-950/40 border border-amber-500/30 text-amber-300">
           <span class="block text-[9px] text-slate-400">🟡 Blando</span>
-          <strong class="text-xs font-black">${this.nf.format(blando)}</strong>
-          <span class="text-[9px] text-slate-400 block">${((blando / total) * 100).toFixed(0)}%</span>
+          <strong class="text-xs font-black">${bPct}%</strong>
         </div>
         <div class="p-1.5 rounded-xl bg-sky-950/40 border border-sky-500/30 text-sky-300">
           <span class="block text-[9px] text-slate-400">🔵 Nuevo</span>
-          <strong class="text-xs font-black">${this.nf.format(nuevo)}</strong>
-          <span class="text-[9px] text-slate-400 block">${((nuevo / total) * 100).toFixed(0)}%</span>
+          <strong class="text-xs font-black">${nPct}%</strong>
         </div>
       `;
     }
@@ -901,70 +1106,57 @@ export class TerritorialDashboardApp {
     const canvas = document.getElementById("chart-coverage-traffic");
     if (!canvas) return;
 
-    const high = allSectors.filter(s => (s.cobertura || 0) >= 80);
-    const mid = allSectors.filter(s => (s.cobertura || 0) >= 50 && (s.cobertura || 0) < 80);
+    const high = allSectors.filter(s => (s.cobertura || 0) >= 75);
+    const mid = allSectors.filter(s => (s.cobertura || 0) >= 50 && (s.cobertura || 0) < 75);
     const low = allSectors.filter(s => (s.cobertura || 0) < 50);
 
+    const labels = ["🟢 Consolidado", "🟡 En Progreso", "🔴 Crítico"];
     const data = [high.length, mid.length, low.length];
-    const labels = ["Alta (≥80%)", "Media (50-79%)", "Crítica (<50%)"];
-    const colors = ["#10b981", "#f59e0b", "#ef4444"];
+    const colors = ["#10b981", "#f59e0b", "#f43f5e"];
 
-    if (typeof Chart === "undefined") {
-      this.renderSVGDoughnutFallback(canvas, labels, data, colors, "ÓPTIMO", totSec > 0 ? ((high.length/totSec)*100).toFixed(0) + "%" : "0%");
-    } else {
-      if (this.coverageChartInstance) {
-        this.coverageChartInstance.destroy();
-        this.coverageChartInstance = null;
-      }
-      canvas.style.display = "block";
-      const svgOld = canvas.parentElement.querySelector(".svg-doughnut-fallback");
-      if (svgOld) svgOld.remove();
+    if (typeof Chart === "undefined") return;
 
-      const ctx = canvas.getContext("2d");
-      this.coverageChartInstance = new Chart(ctx, {
-        type: "doughnut",
-        data: {
-          labels,
-          datasets: [{
-            data,
-            backgroundColor: colors,
-            borderColor: "#060913",
-            borderWidth: 2,
-            hoverOffset: 6
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          cutout: "62%",
-          plugins: {
-            legend: {
-              position: "bottom",
-              labels: {
-                color: "#cbd5e1",
-                boxWidth: 12,
-                font: { family: "Inter", size: 11 }
-              }
-            },
-            tooltip: {
-              backgroundColor: "#0f172a",
-              titleColor: "#34d399",
-              bodyColor: "#f8fafc",
-              borderColor: "rgba(52, 211, 153, 0.4)",
-              borderWidth: 1,
-              padding: 10,
-              callbacks: {
-                label: (context) => {
-                  const val = context.parsed;
-                  const pct = totSec > 0 ? ((val / totSec) * 100).toFixed(1) : 0;
-                  return ` ${context.label}: ${val} sectores (${pct}%)`;
-                }
+    if (this.coverageChartInstance) {
+      this.coverageChartInstance.destroy();
+      this.coverageChartInstance = null;
+    }
+
+    const ctx = canvas.getContext("2d");
+    this.coverageChartInstance = new Chart(ctx, {
+      type: "doughnut",
+      data: {
+        labels,
+        datasets: [{
+          data,
+          backgroundColor: colors,
+          borderColor: "#0e092e",
+          borderWidth: 2,
+          hoverOffset: 4
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        cutout: "65%",
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            backgroundColor: "#0e092e",
+            titleColor: "#34d399",
+            bodyColor: "#f8fafc",
+            borderColor: "rgba(52, 211, 153, 0.4)",
+            borderWidth: 1,
+            callbacks: {
+              label: (context) => {
+                const val = context.parsed;
+                const pct = totSec > 0 ? ((val / totSec) * 100).toFixed(1) : 0;
+                return ` ${context.label}: ${val} sectores (${pct}%)`;
               }
             }
           }
         }
-      });
-    }
+      }
+    });
 
     const summaryEl = document.getElementById("chart-coverage-summary");
     if (summaryEl) {
@@ -973,17 +1165,17 @@ export class TerritorialDashboardApp {
       const lowPct = totSec > 0 ? ((low.length / totSec) * 100).toFixed(0) : 0;
 
       summaryEl.innerHTML = `
-        <div class="p-2 rounded-xl bg-emerald-950/40 border border-emerald-500/30 text-emerald-300">
-          <span class="block text-[10px] text-slate-400">🟢 Óptimo</span>
-          <strong class="text-sm font-black">${high.length}</strong> <span class="text-[10px] text-slate-400">(${highPct}%)</span>
+        <div class="p-1.5 rounded-xl bg-emerald-950/40 border border-emerald-500/30 text-emerald-300">
+          <span class="block text-[9px] text-slate-400">🟢 Óptimo</span>
+          <strong class="text-xs font-black">${high.length}</strong> <span class="text-[9px] text-slate-400">(${highPct}%)</span>
         </div>
-        <div class="p-2 rounded-xl bg-amber-950/40 border border-amber-500/30 text-amber-300">
-          <span class="block text-[10px] text-slate-400">🟡 En Progreso</span>
-          <strong class="text-sm font-black">${mid.length}</strong> <span class="text-[10px] text-slate-400">(${midPct}%)</span>
+        <div class="p-1.5 rounded-xl bg-amber-950/40 border border-amber-500/30 text-amber-300">
+          <span class="block text-[9px] text-slate-400">🟡 Medio</span>
+          <strong class="text-xs font-black">${mid.length}</strong> <span class="text-[9px] text-slate-400">(${midPct}%)</span>
         </div>
-        <div class="p-2 rounded-xl bg-rose-950/40 border border-rose-500/30 text-rose-300">
-          <span class="block text-[10px] text-slate-400">🔴 Crítico</span>
-          <strong class="text-sm font-black">${low.length}</strong> <span class="text-[10px] text-slate-400">(${lowPct}%)</span>
+        <div class="p-1.5 rounded-xl bg-rose-950/40 border border-rose-500/30 text-rose-300">
+          <span class="block text-[9px] text-slate-400">🔴 Crítico</span>
+          <strong class="text-xs font-black">${low.length}</strong> <span class="text-[9px] text-slate-400">(${lowPct}%)</span>
         </div>
       `;
     }
@@ -995,9 +1187,8 @@ export class TerritorialDashboardApp {
 
     if (cascadeModel.length === 0) {
       container.innerHTML = `
-        <div class="py-12 text-center text-slate-500 bg-slate-950/60 rounded-3xl border border-slate-800">
-          <i data-lucide="map-pin-off" class="w-8 h-8 mx-auto mb-2 text-slate-600"></i>
-          <p class="font-bold text-sm text-slate-400">No se encontraron sectores ni ejes con el filtro actual.</p>
+        <div class="py-10 text-center text-slate-400 bg-[#18114a]/90 rounded-3xl border border-[#2d1f85]">
+          <p class="font-bold text-sm text-slate-200">No se encontraron sectores ni ejes con el filtro actual.</p>
         </div>
       `;
       return;
@@ -1010,10 +1201,9 @@ export class TerritorialDashboardApp {
         const isParishExpanded = this.expandedParishes.has(p.id);
 
         html += `
-          <div class="bg-slate-950/90 border border-slate-800 rounded-3xl overflow-hidden shadow-lg transition">
+          <div class="bg-[#140e40] border border-[#2d1f85] rounded-3xl overflow-hidden shadow-lg transition">
             
-            <!-- CABECERA DE PARROQUIA (NIVEL 3) -->
-            <div class="p-4 sm:p-5 flex flex-col md:flex-row md:items-center justify-between gap-3 hover:bg-slate-900/60 transition cursor-pointer" onclick="window.dashboardApp.toggleParish('${p.id}')">
+            <div class="p-4 flex flex-col md:flex-row md:items-center justify-between gap-3 hover:bg-[#23176d]/40 transition cursor-pointer" onclick="window.dashboardApp.toggleParish('${p.id}')">
               <div class="flex items-center gap-3 min-w-0">
                 <button type="button" class="text-sky-400 hover:text-white text-xs font-mono font-bold p-1 shrink-0">
                   ${isParishExpanded ? '▼' : '▶'}
@@ -1021,105 +1211,81 @@ export class TerritorialDashboardApp {
                 <div class="truncate">
                   <div class="flex items-center gap-2">
                     <span class="text-[10px] font-mono font-bold uppercase text-sky-400">Municipio ${p.munNombre}</span>
-                    <span class="text-[9px] font-mono bg-sky-950 text-sky-300 px-2 py-0.5 rounded border border-sky-800/50">Capa 3</span>
                   </div>
-                  <h3 class="text-base sm:text-lg font-black text-white mt-0.5 truncate">${p.nombre}</h3>
+                  <h3 class="text-base font-black text-white mt-0.5 truncate">${p.nombre}</h3>
                 </div>
               </div>
 
-              <!-- Cifras Sumadas de la Parroquia -->
               <div class="flex flex-wrap items-center gap-2 text-xs font-mono shrink-0">
-                <div class="bg-slate-900/80 px-2.5 py-1.5 rounded-xl border border-slate-800 text-center">
+                <div class="bg-[#0e092e] px-2.5 py-1.5 rounded-xl border border-[#2d1f85] text-center">
                   <span class="text-[9px] text-slate-400 block uppercase">Casas</span>
-                  <strong class="text-amber-400 font-black">${p.totCasas.toLocaleString()}</strong>
+                  <strong class="text-amber-400 font-black">${this.nf.format(p.totCasas)}</strong>
                 </div>
-                <div class="bg-slate-900/80 px-2.5 py-1.5 rounded-xl border border-slate-800 text-center">
+                <div class="bg-[#0e092e] px-2.5 py-1.5 rounded-xl border border-[#2d1f85] text-center">
                   <span class="text-[9px] text-slate-400 block uppercase">Habitantes</span>
-                  <strong class="text-emerald-400 font-black">${p.totHab.toLocaleString()}</strong>
+                  <strong class="text-emerald-400 font-black">${this.nf.format(p.totHab)}</strong>
                 </div>
-                <div class="bg-slate-900/80 px-2.5 py-1.5 rounded-xl border border-purple-900/50 text-center">
+                <div class="bg-[#0e092e] px-2.5 py-1.5 rounded-xl border border-[#2d1f85] text-center">
                   <span class="text-[9px] text-purple-300 block uppercase font-bold">Votantes</span>
-                  <strong class="text-purple-300 font-black">${p.totVot.toLocaleString()}</strong>
+                  <strong class="text-purple-300 font-black">${this.nf.format(p.totVot)}</strong>
                 </div>
                 <div class="bg-emerald-950/60 px-2 py-1.5 rounded-xl border border-emerald-500/30 text-center">
                   <span class="text-[9px] text-emerald-400 block uppercase font-bold">🟢 Duro</span>
-                  <strong class="text-emerald-300 font-black">${(p.totDuro || 0).toLocaleString()}</strong>
-                </div>
-                <div class="bg-amber-950/60 px-2 py-1.5 rounded-xl border border-amber-500/30 text-center">
-                  <span class="text-[9px] text-amber-400 block uppercase font-bold">🟡 Blando</span>
-                  <strong class="text-amber-300 font-black">${(p.totBlando || 0).toLocaleString()}</strong>
-                </div>
-                <div class="bg-sky-950/60 px-2 py-1.5 rounded-xl border border-sky-500/30 text-center">
-                  <span class="text-[9px] text-sky-400 block uppercase font-bold">🔵 Nuevo</span>
-                  <strong class="text-sky-300 font-black">${(p.totNuevo || 0).toLocaleString()}</strong>
+                  <strong class="text-emerald-300 font-black">${this.nf.format(p.totDuro || 0)}</strong>
                 </div>
               </div>
             </div>
 
-            <!-- CONTENIDO DESPLEGADO DE LA PARROQUIA: SUB-PARROQUIAS / EJES (NIVEL 4) -->
             ${isParishExpanded ? `
-              <div class="px-3 sm:px-5 pb-4 pt-1 space-y-3 border-t border-slate-800/80 bg-slate-950/40">
+              <div class="px-3 sm:px-5 pb-4 pt-1 space-y-3 border-t border-[#2d1f85]/80 bg-[#100b33]/90">
                 ${p.ejes.map(eje => {
                   const isEjeExpanded = this.expandedSubparroquias.has(eje.id);
 
                   return `
-                    <div class="bg-slate-900/90 border border-purple-900/40 rounded-2xl overflow-hidden shadow-sm">
+                    <div class="bg-[#140e40]/90 border border-[#2d1f85] rounded-2xl overflow-hidden shadow-sm">
                       
-                      <!-- Cabecera del Eje Comunal -->
-                      <div class="p-3 sm:p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2 hover:bg-purple-950/30 transition cursor-pointer" onclick="window.dashboardApp.toggleSubparroquia('${eje.id}')">
+                      <div class="p-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2 hover:bg-[#23176d]/40 transition cursor-pointer" onclick="window.dashboardApp.toggleSubparroquia('${eje.id}')">
                         <div class="flex items-center gap-2.5 min-w-0">
                           <button type="button" class="text-purple-400 hover:text-white text-xs font-mono font-bold p-0.5 shrink-0">
                             ${isEjeExpanded ? '▼' : '▶'}
                           </button>
                           <span class="text-base select-none shrink-0">${isEjeExpanded ? '📂' : '📁'}</span>
                           <div class="truncate">
-                            <div class="flex items-center gap-1.5">
-                              <span class="text-[9px] font-mono bg-purple-950 text-purple-300 px-1.5 py-0.5 rounded border border-purple-800/60 font-bold">Nivel 4</span>
-                              <span class="text-xs font-black text-white truncate">${eje.nombre}</span>
-                            </div>
-                            <span class="text-[10px] text-slate-400 font-mono">${eje.sectores.length} sectores comunales</span>
+                            <span class="text-xs font-black text-white truncate block">${eje.nombre}</span>
+                            <span class="text-[10px] text-slate-400 font-mono">${eje.sectores.length} sectores</span>
                           </div>
                         </div>
 
-                        <!-- Cifras Sumadas del Eje -->
                         <div class="flex flex-wrap items-center gap-2 text-xs font-mono shrink-0">
                           <span class="text-amber-400 font-bold text-[11px]">🏠 ${eje.casas}</span>
                           <span class="text-slate-500">•</span>
                           <span class="text-emerald-400 font-bold text-[11px]">👥 ${eje.habitantes}</span>
                           <span class="text-slate-500">•</span>
-                          <span class="text-purple-300 font-black text-[11px] bg-purple-950/60 px-1.5 py-0.5 rounded border border-purple-800/40">🗳️ ${eje.votantes}</span>
-                          <span class="text-slate-500">•</span>
-                          <span class="text-emerald-400 font-bold text-[11px] bg-emerald-950/60 px-1.5 py-0.5 rounded border border-emerald-800/40">🟢 ${eje.votoDuro || 0}</span>
-                          <span class="text-amber-400 font-bold text-[11px] bg-amber-950/60 px-1.5 py-0.5 rounded border border-amber-800/40">🟡 ${eje.votoBlando || 0}</span>
-                          <span class="text-sky-300 font-bold text-[11px] bg-sky-950/60 px-1.5 py-0.5 rounded border border-sky-800/40">🔵 ${eje.votoNuevo || 0}</span>
+                          <span class="text-purple-300 font-black text-[11px]">🗳️ ${eje.votantes}</span>
                         </div>
                       </div>
 
-                      <!-- TABLA DE SECTORES (NIVEL 5) -->
                       ${isEjeExpanded ? `
-                        <div class="px-3 pb-3 pt-1 border-t border-purple-950/80 overflow-x-auto">
+                        <div class="px-3 pb-3 pt-1 border-t border-[#2d1f85]/80 overflow-x-auto">
                           ${eje.sectores.length === 0 ? `
-                            <p class="text-xs text-slate-500 italic py-2 text-center">
+                            <p class="text-xs text-slate-400 italic py-2 text-center">
                               No hay sectores trazados aún dentro de este eje.
                             </p>
                           ` : `
                             <table class="w-full text-left border-collapse text-xs font-mono">
                               <thead>
-                                <tr class="text-[10px] uppercase text-slate-400 border-b border-slate-800/80">
-                                  <th class="py-2 px-2">Sector Comunal (Capa 5)</th>
+                                <tr class="text-[10px] uppercase text-slate-400 border-b border-[#2d1f85]/80">
+                                  <th class="py-2 px-2">Sector</th>
                                   <th class="py-2 px-2 text-right">Casas</th>
                                   <th class="py-2 px-2 text-right">Habitantes</th>
                                   <th class="py-2 px-2 text-right text-purple-300">Votantes</th>
                                   <th class="py-2 px-2 text-right text-emerald-400">🟢 Duro</th>
-                                  <th class="py-2 px-2 text-right text-amber-400">🟡 Blando</th>
-                                  <th class="py-2 px-2 text-right text-sky-400">🔵 Nuevo</th>
-                                  <th class="py-2 px-2 text-center text-purple-300">📋 Nom.</th>
-                                  <th class="py-2 px-2">Centro de Votación CNE</th>
+                                  <th class="py-2 px-2">Centro CNE</th>
                                 </tr>
                               </thead>
-                              <tbody class="divide-y divide-slate-800/40">
+                              <tbody class="divide-y divide-[#2d1f85]/40">
                                 ${eje.sectores.map(sec => `
-                                  <tr class="hover:bg-slate-800/40 transition">
+                                  <tr class="hover:bg-[#23176d]/40 transition">
                                     <td class="py-2 px-2 font-bold text-slate-200 flex items-center gap-1.5">
                                       <span class="w-2.5 h-2.5 rounded-sm shrink-0" style="background-color: ${sec.colorRelleno || '#38bdf8'}"></span>
                                       <span class="truncate">${sec.nombre}</span>
@@ -1128,11 +1294,8 @@ export class TerritorialDashboardApp {
                                     <td class="py-2 px-2 text-right text-emerald-400 font-bold">${sec.habitantes || sec.militantes || 0}</td>
                                     <td class="py-2 px-2 text-right text-purple-300 font-black">${sec.militantes !== undefined ? sec.militantes : (sec.habitantes || 0)}</td>
                                     <td class="py-2 px-2 text-right text-emerald-400 font-bold">${sec.votoDuro || 0}</td>
-                                    <td class="py-2 px-2 text-right text-amber-400 font-bold">${sec.votoBlando || 0}</td>
-                                    <td class="py-2 px-2 text-right text-sky-300 font-bold">${sec.votoNuevo || 0}</td>
-                                    <td class="py-2 px-2 text-center text-purple-300 font-bold">${sec.electoresNominales ? `✅ ${sec.electoresNominales}` : '<span class="text-slate-600">-</span>'}</td>
                                     <td class="py-2 px-2 text-slate-400 truncate max-w-[200px]" title="${sec.centroVotacion || ''}">
-                                      ${sec.centroVotacion ? `🏫 ${sec.centroVotacion}` : '<span class="text-slate-600">Sin asignar</span>'}
+                                      ${sec.centroVotacion ? '🏫 ' + sec.centroVotacion : '<span class="text-slate-600">Sin asignar</span>'}
                                     </td>
                                   </tr>
                                 `).join("")}
@@ -1177,7 +1340,7 @@ export class TerritorialDashboardApp {
   exportCSV() {
     const cascadeModel = this.buildCascadeModel();
     let csv = "\uFEFF"; // UTF-8 BOM para Excel
-    csv += "Municipio,Parroquia,Eje Comunal,Sector,Casas,Familias,Habitantes,Votantes,Voto Duro,Voto Blando,Voto Nuevo,Electores Nominales,Centro de Votacion\n";
+    csv += "Municipio,Parroquia,Eje Territorial,Sector,Casas,Familias,Habitantes,Votantes,Voto Duro,Voto Blando,Voto Nuevo,Electores Nominales,Centro de Votacion\n";
 
     cascadeModel.forEach(mun => {
       mun.parroquias.forEach(p => {
@@ -1204,7 +1367,6 @@ export class TerritorialDashboardApp {
   }
 }
 
-// Inicialización global indestructible (funciona incluso si DOMContentLoaded ya ocurrió)
 function bootTerritorialDashboardApp() {
   if (!window.dashboardApp) {
     try {
@@ -1222,10 +1384,10 @@ if (document.readyState === "loading") {
   bootTerritorialDashboardApp();
 }
 
-// Respaldo para cuando Chart.js termine de cargar desde CDN
 window.addEventListener("load", () => {
   if (window.dashboardApp && typeof Chart !== "undefined") {
     const cascadeModel = window.dashboardApp.buildCascadeModel();
+    window.dashboardApp.renderTerritorialBarsChart(cascadeModel);
     window.dashboardApp.renderDecisionCenter(cascadeModel);
   }
 });

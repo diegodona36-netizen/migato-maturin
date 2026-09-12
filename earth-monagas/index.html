@@ -68,53 +68,8 @@
   <script>
     (function() {
       try {
-        var sp = new URLSearchParams(window.location.search);
-        var u = (sp.get('u') || sp.get('user') || '').toLowerCase();
-        var rawAuth = localStorage.getItem("migato_user_session");
-        var authSession = rawAuth ? JSON.parse(rawAuth) : null;
-        var role = authSession ? authSession.role : null;
-
-        var isRegionalAdmin = (role === 'gobernador' || role === 'admin' || role === 'sala' || u === 'admin' || u === 'jefe' || u === 'admin-militancia');
-        
-        // REGLA INSTITUCIONAL: Si el usuario es Municipal, Parroquial o Censista, se inhabilita el mapa y polígonos 3D
-        if (!isRegionalAdmin && (role === 'municipal' || role === 'parroquial' || role === 'censista')) {
-          document.addEventListener('DOMContentLoaded', function() {
-            var body = document.body;
-            if (body) {
-              body.innerHTML = `
-                <div class="fixed inset-0 z-[99999] bg-[#0c0826] text-white flex items-center justify-center p-4 sm:p-6 bg-grid-pattern">
-                  <div class="max-w-md w-full bg-[#18114a] border-2 border-amber-500/60 rounded-3xl p-6 sm:p-8 text-center shadow-2xl space-y-5">
-                    <div class="w-16 h-16 rounded-2xl bg-amber-500/20 text-amber-400 border border-amber-500/40 mx-auto flex items-center justify-center text-3xl shadow-lg shadow-amber-500/10">
-                      🔒
-                    </div>
-                    <div class="space-y-1">
-                      <span class="text-[10px] uppercase font-mono tracking-wider text-amber-400 font-bold bg-amber-950/80 px-2.5 py-1 rounded border border-amber-500/40">
-                        Acceso Restringido • Módulo 04
-                      </span>
-                      <h2 class="text-xl font-black text-white mt-2">Exclusivo Sala de Mando Regional</h2>
-                      <p class="text-xs text-blue-200/90 leading-relaxed">
-                        La Cartografía Satelital 3D y los polígonos territoriales están reservados exclusivamente para la Dirección Regional de MIGATO.
-                      </p>
-                    </div>
-                    <div class="p-3 bg-[#0e092e] rounded-xl border border-[#2d1f85] text-left text-xs font-mono space-y-1.5 text-slate-300">
-                      <div class="flex justify-between"><span class="text-slate-400">Usuario Activo:</span> <span class="text-white font-bold">${authSession ? authSession.name : 'Usuario Territorial'}</span></div>
-                      <div class="flex justify-between"><span class="text-slate-400">Nivel Asignado:</span> <span class="text-amber-300 font-bold">${authSession ? authSession.role.toUpperCase() : 'NO AUTORIZADO'}</span></div>
-                      <div class="flex justify-between"><span class="text-slate-400">Polígonos 3D:</span> <span class="text-red-400 font-bold">Inhabilitados para este rol</span></div>
-                    </div>
-                    <div class="pt-2 flex flex-col gap-2">
-                      <a href="../despacho/" class="w-full py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold rounded-xl text-xs transition flex items-center justify-center gap-2 shadow-md">
-                        <span>← Volver al Despacho de Enlaces</span>
-                      </a>
-                      <a href="../login.html" class="w-full py-2 bg-[#0e092e] hover:bg-[#1d1554] border border-[#2d1f85] text-blue-200 font-bold rounded-xl text-xs transition flex items-center justify-center gap-2">
-                        Cambiar a Cuenta de la Central
-                      </a>
-                    </div>
-                  </div>
-                </div>
-              `;
-            }
-          });
-        }
+        // Acceso institucional universal al Módulo 4: cualquier funcionario, arquitecto o abogado puede explorar el mapa
+        window.isRegionalAdmin = true;
       } catch(e) {
         console.warn("Seguridad Módulo 4:", e);
       }
@@ -266,6 +221,24 @@
       body.classList.toggle("hidden");
       if (window.lucide && typeof window.lucide.createIcons === 'function') {
         window.lucide.createIcons();
+      }
+    };
+
+    // 0.2 Alternar visibilidad de la barra técnica de trazado
+    window.toggleEditingToolbar = function() {
+      const bar = document.getElementById("toolbar-tools-row");
+      const label = document.getElementById("label-chip-editor");
+      const chip = document.getElementById("chip-toggle-editor");
+      if (!bar) return;
+      const isHidden = bar.classList.contains("hidden");
+      if (isHidden) {
+        bar.classList.remove("hidden");
+        if (label) label.textContent = "Cerrar Edición";
+        if (chip) chip.className = "px-3.5 py-1.5 rounded-full bg-purple-600 border border-purple-300 text-white text-xs font-black shadow-xl backdrop-blur-md transition flex items-center gap-1.5 cursor-pointer whitespace-nowrap active:scale-95 select-none";
+      } else {
+        bar.classList.add("hidden");
+        if (label) label.textContent = "Modo Trazado";
+        if (chip) chip.className = "px-3.5 py-1.5 rounded-full bg-[#140e40]/95 hover:bg-[#23176d] border border-purple-500/50 text-purple-300 hover:text-white text-xs font-bold shadow-xl backdrop-blur-md transition flex items-center gap-1.5 cursor-pointer whitespace-nowrap active:scale-95 select-none";
       }
     };
 
@@ -433,12 +406,12 @@
       
       <!-- LADO IZQUIERDO: Identidad MIGATO + Selector Territorial -->
       <div class="flex items-center gap-2 shrink min-w-0">
-        <a href="./" class="flex items-center gap-2 shrink-0 group focus:outline-none" title="MIGATO • Sala de Mando">
+        <a href="./" class="flex items-center gap-2 shrink-0 group focus:outline-none" title="MIGATO • Módulo 4">
           <div class="w-8 h-8 rounded-lg bg-[#23176d] p-0.5 border border-white/20 flex items-center justify-center shrink-0 shadow-sm">
             <img src="../assets/logo-migato.png" alt="MIGATO" class="w-full h-full object-contain">
           </div>
           <span class="font-display text-xs sm:text-sm font-black text-white tracking-wide whitespace-nowrap hidden sm:inline">
-            MIGATO <span class="text-sky-400 font-semibold text-[11px]">• SALA DE MANDO</span>
+            MÓDULO 4 <span class="text-sky-400 font-bold text-[11px]">• MAPA TERRITORIAL</span>
           </span>
         </a>
 
@@ -451,10 +424,10 @@
           <i id="nav-arrow-icon" data-lucide="chevron-down" class="w-3 h-3 text-slate-400 shrink-0 pointer-events-none"></i>
         </button>
 
-        <!-- Botón Directo a Formulario de Carga de Campo -->
-        <a id="btn-header-form-link" href="../carga/?p=alto-de-los-godos" target="_blank" class="px-2.5 py-1.5 rounded-xl bg-emerald-700/80 hover:bg-emerald-600 border border-emerald-400/50 text-emerald-100 hover:text-white text-xs font-black flex items-center gap-1.5 transition active:scale-95 cursor-pointer shadow-sm shrink-0" title="Abrir Formulario Oficial de Carga de Campo (Alto de Los Godos)">
-          <i data-lucide="clipboard-list" class="w-3.5 h-3.5 text-emerald-300"></i>
-          <span class="hidden md:inline font-black">Formulario Carga</span>
+        <!-- Enlace a Tablero Estadístico (Módulo 2) -->
+        <a href="../dashboard-campana/" class="px-2.5 py-1.5 rounded-xl bg-[#18114a] hover:bg-[#23176d] border border-emerald-500/50 text-emerald-300 hover:text-white text-xs font-black flex items-center gap-1.5 transition active:scale-95 cursor-pointer shadow-sm shrink-0" title="Ir al Tablero de Estadísticas y Censo (Módulo 2)">
+          <i data-lucide="bar-chart-2" class="w-3.5 h-3.5 text-emerald-400"></i>
+          <span class="hidden md:inline font-bold">Tablero Censo</span>
         </a>
 
         <!-- Indicador de Censo / Casas sutil en pantallas grandes -->
@@ -547,9 +520,9 @@
   </header>
 
   <!-- ============================================================== -->
-  <!-- 1.1. LA BARRA TERRITORIAL (SUB-PARROQUIA Y SECTORES)            -->
+  <!-- 1.1. LA BARRA TERRITORIAL (SUB-PARROQUIA Y SECTORES - OCULTA POR DEFECTO PARA USUARIOS COMUNES) -->
   <!-- ============================================================== -->
-  <div id="toolbar-tools-row" style="z-index: 1990;" class="bg-[#100b33] border-b border-[#2d1f85] shadow-md shrink-0 w-full h-[44px] px-2 sm:px-4 flex items-center justify-between gap-2 overflow-x-auto no-scrollbar">
+  <div id="toolbar-tools-row" style="z-index: 1990;" class="hidden bg-[#100b33] border-b border-[#2d1f85] shadow-md shrink-0 w-full h-[44px] px-2 sm:px-4 flex items-center justify-between gap-2 overflow-x-auto no-scrollbar transition-all duration-200">
     
     <!-- HERRAMIENTAS PRINCIPALES: SUB-PARROQUIA Y SECTORES -->
     <div class="flex items-center gap-1.5 sm:gap-2.5 shrink-0 min-w-0">
@@ -806,6 +779,51 @@
         </div>
       </div>
 
+      <!-- BARRA DE CHIPS FLOTANTES RÁPIDOS Y HUMANOS (1 SOLO CLIC) -->
+      <div id="quick-map-chips-bar" style="z-index: 1000;" class="absolute top-3 left-1/2 -translate-x-1/2 pointer-events-auto flex items-center gap-2 max-w-[96vw] overflow-x-auto no-scrollbar p-1">
+        
+        <!-- Chip 1: Centros Electorales CNE -->
+        <button type="button" id="chip-toggle-cne" onclick="window.earthApp?.toggleCneLayer?.()"
+          class="px-3.5 py-1.5 rounded-full bg-[#140e40]/95 hover:bg-[#23176d] border border-amber-500/60 text-amber-300 hover:text-white text-xs font-black shadow-xl backdrop-blur-md transition flex items-center gap-1.5 cursor-pointer whitespace-nowrap active:scale-95 select-none"
+          title="Mostrar u Ocultar los 175 Centros Electorales CNE en el Mapa">
+          <span>🏫</span>
+          <span id="label-chip-cne">Centros CNE (175)</span>
+        </button>
+
+        <!-- Chip 2: Sectores y Comunidades -->
+        <button type="button" id="chip-toggle-sectors" onclick="window.earthApp?.toggleSectorsLayer?.()"
+          class="px-3.5 py-1.5 rounded-full bg-sky-600/95 hover:bg-sky-500 border border-sky-300/60 text-white text-xs font-black shadow-xl backdrop-blur-md transition flex items-center gap-1.5 cursor-pointer whitespace-nowrap active:scale-95 select-none"
+          title="Mostrar u Ocultar Polígonos de Sectores Vecinales">
+          <span>🏡</span>
+          <span id="label-chip-sectors">Sectores: ON</span>
+        </button>
+
+        <!-- Chip 3: Satélite vs Callejero -->
+        <button type="button" id="chip-toggle-basemap" onclick="window.earthApp?.toggleBaseMapType?.()"
+          class="px-3.5 py-1.5 rounded-full bg-[#140e40]/95 hover:bg-[#23176d] border border-[#2d1f85] text-slate-200 hover:text-white text-xs font-bold shadow-xl backdrop-blur-md transition flex items-center gap-1.5 cursor-pointer whitespace-nowrap active:scale-95 select-none"
+          title="Cambiar entre Vista Satelital y Mapa Callejero">
+          <span>🛰️</span>
+          <span id="label-chip-basemap">Satélite HD</span>
+        </button>
+
+        <!-- Chip 4: Modo Edición y Trazado (Opcional) -->
+        <button type="button" id="chip-toggle-editor" onclick="window.toggleEditingToolbar?.()"
+          class="px-3.5 py-1.5 rounded-full bg-[#140e40]/95 hover:bg-[#23176d] border border-purple-500/50 text-purple-300 hover:text-white text-xs font-bold shadow-xl backdrop-blur-md transition flex items-center gap-1.5 cursor-pointer whitespace-nowrap active:scale-95 select-none"
+          title="Abrir u Ocultar Herramientas de Trazado para Expertos">
+          <span>📐</span>
+          <span id="label-chip-editor">Modo Trazado</span>
+        </button>
+
+        <!-- Chip 5: Tablero Estadístico -->
+        <a href="../dashboard-campana/"
+          class="px-3.5 py-1.5 rounded-full bg-[#18114a]/95 hover:bg-[#23176d] border border-emerald-500/50 text-emerald-300 hover:text-white text-xs font-black shadow-xl backdrop-blur-md transition flex items-center gap-1.5 cursor-pointer whitespace-nowrap active:scale-95 select-none"
+          title="Ir al Tablero Estadístico del Censo (Módulo 2)">
+          <span>📊</span>
+          <span>Tablero Censo</span>
+        </a>
+
+      </div>
+
       <div id="earth-canvas"></div>
 
       <!-- BARRA FLOTANTE MÓVIL OBSOLETA (OCULTA PERMANENTEMENTE PARA NO DUPLICAR BOTONES) -->
@@ -931,6 +949,10 @@
 
       <!-- Barra de Acciones de la Ficha -->
       <div class="flex items-center gap-2 pt-0.5">
+        <a id="btn-quick-stats-dashboard-link" href="../dashboard-campana/" class="py-2 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-black text-xs flex items-center justify-center gap-1.5 shadow-lg active:scale-95 transition cursor-pointer" title="Abrir en Tablero Estadístico del Censo">
+          <i data-lucide="bar-chart-2" class="w-3.5 h-3.5"></i>
+          <span>Estadísticas 📊</span>
+        </a>
         <button type="button" id="btn-quick-stats-action-sector" style="display: none;" class="py-2 px-3 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-black text-xs flex items-center justify-center gap-1.5 shadow-lg active:scale-95 transition cursor-pointer">
           <i data-lucide="plus-circle" class="w-3.5 h-3.5"></i>
           <span>+ Trazar Sector</span>

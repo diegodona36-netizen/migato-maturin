@@ -3,6 +3,7 @@
  * Integrado con Capas Jerárquicas Oficiales (INE 2021) y Edición de Vértices
  */
 import { GEO_ESTADO_OFICIAL, GEO_MUNICIPIOS_OFICIAL, GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=128";
+import { CENTROS_MATURIN } from "./centrosData.js?v=128";
 
 export class EarthMapEngine {
   constructor(containerId, onCoordUpdate) {
@@ -70,6 +71,9 @@ export class EarthMapEngine {
       { maxZoom: 20, maxNativeZoom: 19, attribution: "OpenStreetMap" }
     );
 
+    this.baseLayers = { googleHybrid, esriSatellite, osmStreets };
+    this.currentBaseLayer = "googleHybrid";
+
     const isTouchDevice = typeof window !== "undefined" && (
       "ontouchstart" in window ||
       (navigator && navigator.maxTouchPoints > 0) ||
@@ -123,7 +127,7 @@ export class EarthMapEngine {
     this.overlayLayer = L.layerGroup().addTo(this.map);
     this.tempDrawingLayer = L.layerGroup().addTo(this.map);
 
-    this.spotlightEnabled = false; // Modo Foco / Velo Blanco desactivado por defecto
+    this.spotlightEnabled = true; // Modo Foco / Velo Blanco activo por defecto
     this.currentParishLimite = null;
     this.currentParishId = null;
     this.currentSubParishVertices = null;
@@ -134,6 +138,9 @@ export class EarthMapEngine {
 
     // Inicializar Capas Jerárquicas Oficiales (LOD 1 a 5)
     this.initHierarchicalLayers();
+
+    // Inicializar Capa de Centros Electorales CNE
+    this.initCentrosLayer();
 
     // Seguimiento de coordenadas optimizado:
     // En escritorio: mousemove
@@ -171,13 +178,90 @@ export class EarthMapEngine {
     });
   }
 
+  initCentrosLayer() {
+    this.layerCentros = L.layerGroup();
+    if (typeof CENTROS_MATURIN !== "undefined" && Array.isArray(CENTROS_MATURIN)) {
+      CENTROS_MATURIN.forEach(c => {
+        if (!c.lat || !c.lng) return;
+        const icon = L.divIcon({
+          className: "cne-school-icon",
+          html: `<div style="background:#1e3a8a; border:2px solid #fbbf24; color:#fff; border-radius:50%; width:28px; height:28px; display:flex; align-items:center; justify-content:center; font-size:13px; box-shadow:0 3px 8px rgba(0,0,0,0.6); cursor:pointer;">🏫</div>`,
+          iconSize: [28, 28],
+          iconAnchor: [14, 14]
+        });
+        const m = L.marker([c.lat, c.lng], { icon });
+        const popHtml = `
+          <div style="background:#0e092e; color:#fff; padding:12px; border-radius:14px; border:1px solid #2d1f85; font-family:'Inter',sans-serif; min-width:220px; box-shadow:0 10px 25px rgba(0,0,0,0.7);">
+            <div style="display:flex; align-items:center; gap:6px; margin-bottom:6px;">
+              <span style="background:#f59e0b; color:#0e092e; font-size:9px; font-weight:900; padding:2px 6px; border-radius:6px; text-transform:uppercase;">Centro CNE</span>
+              <span style="font-size:10px; color:#94a3b8; font-family:monospace;">${c.id}</span>
+            </div>
+            <h4 style="font-size:13px; font-weight:900; color:#fff; margin:0 0 6px 0; line-height:1.2;">${c.nombre}</h4>
+            <div style="font-size:11px; color:#cbd5e1; border-top:1px solid #2d1f85; padding-top:6px; margin-top:6px; font-family:monospace;">
+              <div style="margin-bottom:2px;"><strong style="color:#94a3b8;">Parroquia:</strong> <span style="color:#38bdf8;">${c.parroquiaNombre || c.parroquia}</span></div>
+              <div style="margin-bottom:2px;"><strong style="color:#94a3b8;">Electores:</strong> <span style="color:#c084fc; font-weight:900;">${c.electores}</span></div>
+              <div><strong style="color:#94a3b8;">Mesas:</strong> <span style="color:#34d399; font-weight:bold;">${c.mesas}</span></div>
+            </div>
+            <a href="../dashboard-campana/?p=${c.parroquia}&search=${encodeURIComponent(c.nombre)}" style="display:block; text-align:center; margin-top:8px; padding:6px; background:#23176d; color:#38bdf8; border-radius:8px; font-size:11px; font-weight:bold; text-decoration:none; border:1px solid #2d1f85;">
+              Ver en Tablero Estadístico ➔
+            </a>
+          </div>
+        `;
+        m.bindPopup(popHtml);
+        this.layerCentros.addLayer(m);
+      });
+    }
+    this.layerCentros.addTo(this.map);
+  }
+
+  toggleCentrosLayer() {
+    if (!this.layerCentros) {
+      this.initCentrosLayer();
+      return true;
+    }
+    if (this.map.hasLayer(this.layerCentros)) {
+      this.map.removeLayer(this.layerCentros);
+      return false;
+    } else {
+      this.layerCentros.addTo(this.map);
+      return true;
+    }
+  }
+
+  toggleSectorsLayer() {
+    const isVis = this.map.hasLayer(this.polygonsLayer);
+    if (isVis) {
+      this.map.removeLayer(this.polygonsLayer);
+      if (this.sectorLabelsLayer) this.map.removeLayer(this.sectorLabelsLayer);
+      return false;
+    } else {
+      this.polygonsLayer.addTo(this.map);
+      if (this.sectorLabelsLayer) this.sectorLabelsLayer.addTo(this.map);
+      return true;
+    }
+  }
+
+  toggleBaseMapType() {
+    if (this.currentBaseLayer === "googleHybrid") {
+      this.map.removeLayer(this.baseLayers.googleHybrid);
+      this.baseLayers.osmStreets.addTo(this.map);
+      this.currentBaseLayer = "osmStreets";
+      return "Callejero OSM";
+    } else {
+      this.map.removeLayer(this.baseLayers.osmStreets);
+      this.baseLayers.googleHybrid.addTo(this.map);
+      this.currentBaseLayer = "googleHybrid";
+      return "Satélite HD";
+    }
+  }
+
   /**
    * Construye las capas oficiales de los 5 niveles jerárquicos
    */
   initHierarchicalLayers() {
     const isIsolated = typeof document !== "undefined" && document.documentElement.classList.contains("isolated-parish-view");
     if (isIsolated) {
-      // MODO AISLAMIENTO PARROQUIAL (Operador móvil comunal):
+      // MODO AISLAMIENTO PARROQUIAL (Operador móvil territorial):
       // NO instanciar los 13 municipios ni las 44 parroquias ajenas.
       // El teléfono móvil vuela inmediatamente a 60 FPS con mínimo consumo de RAM.
       this.layerL1_Estado = L.layerGroup();
@@ -203,7 +287,7 @@ export class EarthMapEngine {
       onEachFeature: (feature, layer) => {
         if (!this.isTouchDevice) {
           layer.bindTooltip(`
-            <div class="p-2 font-mono text-xs max-w-[240px] bg-[#08061a] rounded-xl border border-amber-500/50 shadow-2xl">
+            <div class="p-2 font-mono text-xs max-w-[240px] bg-[#140e40]/95 rounded-xl border border-amber-500/50 shadow-2xl">
               <div class="flex items-center justify-between border-b border-amber-800/60 pb-1 mb-1">
                 <span class="text-[9px] uppercase tracking-wider text-amber-400 font-black">Nivel 1 • Macro</span>
                 <span class="text-[9px] font-bold text-amber-200 bg-amber-950 px-1.5 py-0.5 rounded border border-amber-700">Estado</span>
@@ -366,10 +450,10 @@ export class EarthMapEngine {
       const maskPoly = L.polygon([worldBox, coords], {
         pane: "spotlightMaskPane",
         fillColor: "#ffffff",
-        fillOpacity: 0.78,
+        fillOpacity: 1.0,
         color: "#ffffff",
         weight: 2,
-        opacity: 0.9,
+        opacity: 1.0,
         fillRule: "evenodd",
         interactive: false,
         renderer: this.spotlightSvgRenderer || this.svgRenderer
@@ -536,7 +620,7 @@ export class EarthMapEngine {
           const labelMarker = L.marker(center, {
             icon: L.divIcon({
               className: "parish-municipal-label",
-              html: `<div class="px-2.5 py-1 rounded-full text-[11px] font-black border shadow-xl cursor-pointer whitespace-nowrap transition transform hover:scale-110 flex items-center gap-1.5 bg-[#08061a]/95 text-sky-200 border-sky-400 hover:border-amber-400 hover:text-white" style="backdrop-filter: blur(4px);">
+              html: `<div class="px-2.5 py-1 rounded-full text-[11px] font-black border shadow-xl cursor-pointer whitespace-nowrap transition transform hover:scale-110 flex items-center gap-1.5 bg-[#140e40]/95 text-sky-200 border-sky-400 hover:border-amber-400 hover:text-white" style="backdrop-filter: blur(4px);">
                 <span class="w-2 h-2 rounded-full bg-sky-400 shrink-0"></span>
                 <span>${pName}</span>
               </div>`,
@@ -636,7 +720,7 @@ export class EarthMapEngine {
     }
 
     // Re-renderizar de inmediato el velo blanco según el nivel territorial activo en cascada:
-    // Nivel 4: Sector Comunal
+    // Nivel 4: Sector Vecinal
     if (this.activeFocusLevel === "sector" && this.currentSectorVertices) {
       this.showSectorBoundary(this.currentSectorVertices, false);
       return this.spotlightEnabled;
@@ -650,7 +734,7 @@ export class EarthMapEngine {
       }
     }
 
-    // Nivel 3: Sub-Parroquia / Eje Comunal
+    // Nivel 3: Sub-Parroquia / Eje Territorial
     if (this.activeFocusLevel === "subparroquia" && this.currentSubParishVertices) {
       this.showSubParishBoundary(this.currentSubParishVertices, false);
       return this.spotlightEnabled;
@@ -701,12 +785,12 @@ export class EarthMapEngine {
         } catch(e) {}
       }
 
-      // Mantener la máscara de los alrededores translúcida durante el trazado para enlazar polígonos
+      // Mantener la máscara de los alrededores completamente blanca
       if (this.boundaryLayer) {
         this.boundaryLayer.eachLayer(l => {
           try {
             if (l.options && (l.options.fillColor === "#020617" || l.options.fillColor === "#000000" || l.options.fillColor === "#ffffff")) {
-              l.setStyle({ fillOpacity: 0.78 });
+              l.setStyle({ fillOpacity: 1.0, opacity: 1.0 });
             }
           } catch(e) {}
         });
@@ -793,7 +877,7 @@ export class EarthMapEngine {
       if (!pData) return;
       const isActiveParish = true;
 
-      // 0. Sub-Parroquias / Ejes Comunales (Nivel 4)
+      // 0. Sub-Parroquias / Ejes Territoriales (Nivel 4)
       (pData.subparroquias || []).forEach(sp => {
         try {
           if (sp.visible === false || !sp.vertices || sp.vertices.length < 3) return;
@@ -817,7 +901,7 @@ export class EarthMapEngine {
           }
 
           if (!isDrawing && !this.isTouchDevice) {
-            // Calcular consolidado suma viva de sectores dentro de este Eje Comunal
+            // Calcular consolidado suma viva de sectores dentro de este Eje Territorial
             const childSecs = (pData.poligonos || []).filter(p => String(p.subParroquiaId) === String(sp.id));
             let totCasas = 0, totFam = 0, totHab = 0, totVot = 0, totDuro = 0, totBlando = 0, totNuevo = 0;
             childSecs.forEach(c => {
@@ -836,11 +920,11 @@ export class EarthMapEngine {
             const polNuevo = totNuevo || Math.max(0, totVot - polDuro - polBlando);
 
             spLayer.bindTooltip(`
-              <div class="p-2 font-mono text-xs max-w-[260px] bg-[#08061a] rounded-xl border border-purple-500/50 shadow-2xl">
+              <div class="p-2 font-mono text-xs max-w-[260px] bg-[#140e40]/95 rounded-xl border border-purple-500/50 shadow-2xl">
                 <div class="flex items-center justify-between gap-2 border-b border-purple-800/60 pb-1.5 mb-1.5">
                   <span class="text-[9px] uppercase tracking-wider text-purple-400 font-black flex items-center gap-1">
                     <span class="w-2 h-2 rounded-full bg-purple-400"></span>
-                    <span>Nivel 4 • Eje Comunal</span>
+                    <span>Nivel 4 • Eje Territorial</span>
                   </span>
                   <span class="text-[9px] font-bold text-purple-200 bg-purple-900/80 px-1.5 py-0.5 rounded border border-purple-700">
                     ${childSecs.length} Sectores
@@ -849,26 +933,26 @@ export class EarthMapEngine {
                 <strong class="text-white block font-black text-sm mb-0.5">${sp.nombre}</strong>
                 <span class="text-[10px] text-purple-200 block mb-2">📍 Parroquia ${pData.nombre || parishId}</span>
                 
-                <div class="grid grid-cols-2 gap-1.5 text-center text-[10px] font-mono bg-[#140e40]/90 p-1.5 rounded-lg border border-purple-900/50 mb-1.5">
-                  <div class="bg-[#08061a]/90 p-1 rounded border border-amber-500/30">
+                <div class="grid grid-cols-2 gap-1.5 text-center text-[10px] font-mono bg-[#18114a]/90 p-1.5 rounded-lg border border-purple-900/50 mb-1.5">
+                  <div class="bg-[#0e092e]/90 p-1 rounded border border-amber-500/30">
                     <span class="text-[9px] text-amber-400 font-bold block uppercase">Casas</span>
                     <strong class="text-amber-200 text-xs">${totCasas.toLocaleString()}</strong>
                   </div>
-                  <div class="bg-[#08061a]/90 p-1 rounded border border-sky-500/30">
+                  <div class="bg-[#0e092e]/90 p-1 rounded border border-sky-500/30">
                     <span class="text-[9px] text-sky-400 font-bold block uppercase">Familias</span>
                     <strong class="text-sky-200 text-xs">${totFam.toLocaleString()}</strong>
                   </div>
-                  <div class="bg-[#08061a]/90 p-1 rounded border border-emerald-500/30">
+                  <div class="bg-[#0e092e]/90 p-1 rounded border border-emerald-500/30">
                     <span class="text-[9px] text-emerald-400 font-bold block uppercase">Habitantes</span>
                     <strong class="text-emerald-200 text-xs">${totHab.toLocaleString()}</strong>
                   </div>
-                  <div class="bg-[#08061a]/90 p-1 rounded border border-purple-500/30">
+                  <div class="bg-[#0e092e]/90 p-1 rounded border border-purple-500/30">
                     <span class="text-[9px] text-purple-400 font-bold block uppercase">Votantes</span>
                     <strong class="text-purple-200 text-xs">${totVot.toLocaleString()}</strong>
                   </div>
                 </div>
 
-                <div class="grid grid-cols-3 gap-1 text-center font-mono text-[9px] mb-1.5 p-1 rounded-lg bg-slate-950/90 border border-purple-800/60">
+                <div class="grid grid-cols-3 gap-1 text-center font-mono text-[9px] mb-1.5 p-1 rounded-lg bg-[#0e092e]/90 border border-[#2d1f85]">
                   <span class="text-emerald-300 font-bold" title="Voto Duro">🟢 ${polDuro.toLocaleString()}</span>
                   <span class="text-amber-300 font-bold" title="Voto Blando">🟡 ${polBlando.toLocaleString()}</span>
                   <span class="text-sky-300 font-bold" title="Voto Nuevo">🔵 ${polNuevo.toLocaleString()}</span>
@@ -929,7 +1013,7 @@ export class EarthMapEngine {
         }
       });
 
-      // 1. Polígonos de Sectores Comunales (Nivel 5)
+      // 1. Polígonos de Sectores Vecinales (Nivel 5)
       (pData.poligonos || []).forEach(poly => {
         try {
           const rawCoords = poly.vertices || poly.poligono || [];
@@ -964,11 +1048,11 @@ export class EarthMapEngine {
 
           if (!isDrawing && !this.isTouchDevice) {
             pLayer.bindTooltip(`
-              <div class="p-2 font-mono text-xs max-w-[260px] bg-[#08061a] rounded-xl border border-sky-500/50 shadow-2xl">
+              <div class="p-2 font-mono text-xs max-w-[260px] bg-[#140e40]/95 rounded-xl border border-sky-500/50 shadow-2xl">
                 <div class="flex items-center justify-between gap-2 border-b border-sky-800/60 pb-1.5 mb-1.5">
                   <span class="text-[9px] uppercase tracking-wider text-sky-400 font-black flex items-center gap-1 truncate">
                     <span class="w-2 h-2 rounded-full bg-sky-400"></span>
-                    <span class="truncate">Sector Comunal${spTag}</span>
+                    <span class="truncate">Sector Vecinal${spTag}</span>
                   </span>
                   <span class="text-[9px] font-bold text-emerald-300 bg-emerald-950/80 px-1.5 py-0.5 rounded border border-emerald-700 shrink-0">
                     Base
@@ -977,26 +1061,26 @@ export class EarthMapEngine {
                 <strong class="text-white block font-black text-sm mb-0.5 truncate">${poly.nombre}</strong>
                 <span class="text-[10px] text-slate-300 block mb-2 truncate">📍 Parroquia ${pData.nombre || parishId}</span>
                 
-                <div class="grid grid-cols-2 gap-1.5 text-center text-[10px] font-mono bg-[#140e40]/90 p-1.5 rounded-lg border border-sky-900/50 mb-1.5">
-                  <div class="bg-[#08061a]/90 p-1 rounded border border-amber-500/30">
+                <div class="grid grid-cols-2 gap-1.5 text-center text-[10px] font-mono bg-[#18114a]/90 p-1.5 rounded-lg border border-sky-900/50 mb-1.5">
+                  <div class="bg-[#0e092e]/90 p-1 rounded border border-amber-500/30">
                     <span class="text-[9px] text-amber-400 font-bold block uppercase">Casas</span>
                     <strong class="text-amber-200 text-xs">${casasCount.toLocaleString()}</strong>
                   </div>
-                  <div class="bg-[#08061a]/90 p-1 rounded border border-sky-500/30">
+                  <div class="bg-[#0e092e]/90 p-1 rounded border border-sky-500/30">
                     <span class="text-[9px] text-sky-400 font-bold block uppercase">Familias</span>
                     <strong class="text-sky-200 text-xs">${famCount.toLocaleString()}</strong>
                   </div>
-                  <div class="bg-[#08061a]/90 p-1 rounded border border-emerald-500/30">
+                  <div class="bg-[#0e092e]/90 p-1 rounded border border-emerald-500/30">
                     <span class="text-[9px] text-emerald-400 font-bold block uppercase">Habitantes</span>
                     <strong class="text-emerald-200 text-xs">${habCount.toLocaleString()}</strong>
                   </div>
-                  <div class="bg-[#08061a]/90 p-1 rounded border border-purple-500/30">
+                  <div class="bg-[#0e092e]/90 p-1 rounded border border-purple-500/30">
                     <span class="text-[9px] text-purple-400 font-bold block uppercase">Votantes</span>
                     <strong class="text-purple-200 text-xs">${milCount.toLocaleString()}</strong>
                   </div>
                 </div>
 
-                <div class="grid grid-cols-3 gap-1 text-center font-mono text-[9px] mb-1.5 p-1 rounded-lg bg-slate-950/90 border border-sky-800/60">
+                <div class="grid grid-cols-3 gap-1 text-center font-mono text-[9px] mb-1.5 p-1 rounded-lg bg-[#0e092e]/90 border border-[#2d1f85]">
                   <span class="text-emerald-300 font-bold" title="Voto Duro">🟢 ${duroCount.toLocaleString()}</span>
                   <span class="text-amber-300 font-bold" title="Voto Blando">🟡 ${blandoCount.toLocaleString()}</span>
                   <span class="text-sky-300 font-bold" title="Voto Nuevo">🔵 ${nuevoCount.toLocaleString()}</span>
@@ -1035,7 +1119,7 @@ export class EarthMapEngine {
           if (centroid && this.sectorLabelsLayer) {
             const badgeIcon = L.divIcon({
               className: "custom-sector-pin",
-              html: `<div class="px-2 py-0.5 rounded-full text-[10px] font-black border shadow-lg cursor-pointer whitespace-nowrap transition transform hover:scale-110 flex items-center gap-1 ${isActiveParish ? 'bg-sky-950/90 text-sky-200 border-sky-400' : 'bg-slate-900/90 text-slate-200 border-slate-600'}" style="backdrop-filter: blur(4px);">
+              html: `<div class="px-2 py-0.5 rounded-full text-[10px] font-black border shadow-lg cursor-pointer whitespace-nowrap transition transform hover:scale-110 flex items-center gap-1 ${isActiveParish ? 'bg-[#18114a]/95 text-sky-200 border-sky-400' : 'bg-[#140e40]/90 text-slate-200 border-[#2d1f85]'}" style="backdrop-filter: blur(4px);">
                 <span class="w-1.5 h-1.5 rounded-full bg-sky-400 shrink-0 animate-pulse"></span>
                 <span>${poly.nombre}</span>
                 ${milCount > 0 ? `<span class="text-[9px] text-sky-300 ml-0.5 font-mono">(${milCount})</span>` : ''}
@@ -1051,7 +1135,7 @@ export class EarthMapEngine {
             this.sectorLabelsLayer.addLayer(badgeMarker);
           }
         } catch (err) {
-          console.warn("[MapEngine] Error renderizando sector comunal:", poly, err);
+          console.warn("[MapEngine] Error renderizando sector vecinal:", poly, err);
         }
       });
 
@@ -1204,7 +1288,7 @@ export class EarthMapEngine {
       }
     }
 
-    // L4: Sub-Parroquias (Ejes Comunales)
+    // L4: Sub-Parroquias (Ejes Territoriales)
     const showSpLabels = z >= 13;
     if (this.subParroquiasLayer) {
       if (this.hierarchicalVisibility.l4) {
@@ -1219,7 +1303,7 @@ export class EarthMapEngine {
       }
     }
 
-    // L5: Sectores Comunales (Base)
+    // L5: Sectores Vecinales (Base)
     const isMobileScreen = typeof window !== "undefined" && window.innerWidth < 640;
     const showSecLabels = isMobileScreen ? z >= 13 : z >= 12;
     if (this.polygonsLayer) {
@@ -1265,21 +1349,21 @@ export class EarthMapEngine {
         this.hierarchicalVisibility.l5 = false;
         lodName = "L3 • 44 Parroquias Oficiales";
       } else if (currentZoom >= 13 && currentZoom < 15) {
-        // Zoom de eje comunal / sub-parroquias: parroquias cerradas, ejes comunales abiertos
+        // Zoom de eje territorial / sub-parroquias: parroquias cerradas, ejes territoriales abiertos
         this.hierarchicalVisibility.l1 = false;
         this.hierarchicalVisibility.l2 = false;
         this.hierarchicalVisibility.l3 = false;
         this.hierarchicalVisibility.l4 = true;
         this.hierarchicalVisibility.l5 = false;
-        lodName = "L4 • Ejes Comunales";
+        lodName = "L4 • Ejes Territoriales";
       } else {
-        // Zoom comunal y catastral (>= 15): se abren todos los sectores comunales
+        // Zoom territorial y catastral (>= 15): se abren todos los sectores vecinales
         this.hierarchicalVisibility.l1 = false;
         this.hierarchicalVisibility.l2 = false;
         this.hierarchicalVisibility.l3 = false;
         this.hierarchicalVisibility.l4 = false;
         this.hierarchicalVisibility.l5 = true;
-        lodName = "L5 • Sectores Comunales";
+        lodName = "L5 • Sectores Vecinales";
       }
 
       this.syncCheckboxesUI(lodName);
@@ -1311,7 +1395,7 @@ export class EarthMapEngine {
 
     const vertexIcon = L.divIcon({
       className: "earth-vertex-marker-wrapper",
-      html: `<div class="w-4 h-4 bg-amber-400 border-2 border-slate-950 rounded-full shadow-lg cursor-move hover:scale-125 active:scale-95 transition"></div>`,
+      html: `<div class="w-4 h-4 bg-amber-400 border-2 border-[#0e092e] rounded-full shadow-lg cursor-move hover:scale-125 active:scale-95 transition"></div>`,
       iconSize: [16, 16],
       iconAnchor: [8, 8]
     });
