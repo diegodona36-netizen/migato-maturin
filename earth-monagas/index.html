@@ -61,7 +61,7 @@
   <meta http-equiv="Expires" content="0" />
 
   <!-- Custom Styles -->
-  <link rel="stylesheet" href="css/styles.css?v=131">
+  <link rel="stylesheet" href="css/styles.css?v=132">
 
   <!-- Script de Autenticación Rápida y Control de Acceso Estricto (Exclusivo Regional) -->
   <script src="../js/auth.js"></script>
@@ -149,7 +149,7 @@
       }
     };
 
-    // Auto-actualización a la versión más reciente v=131
+    // Auto-actualización a la versión más reciente v=132
     (function() {
       try {
         var p = new URLSearchParams(window.location.search);
@@ -157,7 +157,7 @@
         var isReset = p.get('reset') === '1';
         var paramP = p.get('p') || p.get('parroquia') || p.get('parish');
 
-        if (isReset || !curV || parseInt(curV) < 131) {
+        if (isReset || !curV || parseInt(curV) < 132) {
           if (isReset) {
             try {
               localStorage.removeItem("migato_last_parish");
@@ -166,7 +166,7 @@
             p.delete('reset');
           }
 
-          p.set('v', '131');
+          p.set('v', '132');
           if (!p.get('u')) p.set('u', 'admin-militancia');
           if (paramP) {
             p.set('p', paramP);
@@ -1426,15 +1426,15 @@
   <!-- 5. MODAL SELECTOR RÁPIDO: MUNICIPIO ➔ PARROQUIA ➔ SECTORES       -->
   <!-- ============================================================== -->
   <div id="modal-select-parish" style="z-index: 100050; display: none;" class="fixed inset-0 bg-[#0e092e]/85 backdrop-blur-md hidden items-center justify-center p-2.5 sm:p-4" onclick="if(event.target === this) { if (window.earthApp?.closeParishSelector) window.earthApp.closeParishSelector(); else { this.style.display = 'none'; this.classList.add('hidden'); } }">
-    <div class="bg-[#18114a] border border-[#2d1f85] w-full max-w-2xl sm:max-w-4xl lg:max-w-5xl xl:max-w-6xl 2xl:max-w-7xl rounded-2xl shadow-2xl p-3.5 sm:p-5 space-y-3 max-h-[92vh] flex flex-col pointer-events-auto">
+    <div class="bg-[#18114a] border border-[#2d1f85] w-full max-w-2xl sm:max-w-3xl md:max-w-4xl lg:max-w-5xl rounded-2xl shadow-2xl p-3.5 sm:p-5 space-y-3 max-h-[92vh] flex flex-col pointer-events-auto">
       <div class="flex items-center justify-between border-b border-[#2d1f85] pb-2.5">
         <div class="flex items-center gap-2.5">
           <div class="w-8 h-8 rounded-xl bg-[#23176d] border border-sky-400/50 flex items-center justify-center text-amber-400 shrink-0 shadow-sm">
             <i data-lucide="map-pin" class="w-4 h-4"></i>
           </div>
           <div>
-            <span class="text-[10px] font-black text-amber-400 uppercase tracking-wider">Territorio de Monagas • Navegador Oficial</span>
-            <h3 class="text-sm sm:text-base font-black text-white">Navegador Territorial: Municipios ➔ Parroquias ➔ Sectores</h3>
+            <span class="text-[10px] font-black text-amber-400 uppercase tracking-wider">Estado Monagas • Navegador Oficial</span>
+            <h3 class="text-sm sm:text-base font-black text-white">Navegador Territorial: Municipios ➔ Parroquias</h3>
           </div>
         </div>
         <button type="button" id="btn-close-parish-modal" data-action="close-parish-modal" onclick="if(window.earthApp?.closeParishSelector) window.earthApp.closeParishSelector(); else { const m = document.getElementById('modal-select-parish'); if (m) { m.style.display = 'none'; m.classList.add('hidden'); } }" class="p-1.5 rounded-lg text-slate-400 hover:text-white bg-[#140e40] hover:bg-[#23176d] border border-[#2d1f85] transition cursor-pointer" title="Cerrar ventana">
@@ -1445,32 +1445,14 @@
       <!-- Buscador en tiempo real interno -->
       <div class="relative shrink-0">
         <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none"></i>
-        <input type="text" id="input-filter-parish-modal" placeholder="🔍 Buscar municipio, parroquia o sector (ej. La Puente, Caripe, Caripito, Punta de Mata, Guanaguanay, Casco)..." autocomplete="off"
+        <input type="text" id="input-filter-parish-modal" placeholder="🔍 Buscar municipio, parroquia o sector vecinal (ej. La Puente, Caripe, Caripito, Punta de Mata, Casco)..." autocomplete="off"
           class="w-full bg-[#0e092e] border border-[#2d1f85] focus:border-sky-400 text-xs text-white rounded-xl pl-9 pr-3 py-2.5 focus:outline-none placeholder-slate-400 font-medium transition shadow-inner">
       </div>
 
       <div id="modal-parishes-catalog" class="space-y-3 overflow-y-auto pr-1 flex-1">
-        <!-- Barra rápida de 13 Municipios y estado inicial antes de hidratación -->
-        <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-1 shrink-0 border-b border-[#2d1f85]/60 pb-2">
-          <button type="button" onclick="if(window.earthApp?.setTerritoryModalFilter) window.earthApp.setTerritoryModalFilter('all')" class="px-3 py-1.5 rounded-xl text-xs font-black transition shrink-0 cursor-pointer bg-amber-500 text-[#0e092e] shadow-md">
-            <span>⭐ Todos los 13 Municipios</span>
-          </button>
-          <button type="button" onclick="if(window.earthApp?.selectParish) window.earthApp.selectParish('maturin','alto-de-los-godos',true)" class="px-3 py-1.5 rounded-xl text-xs font-bold transition shrink-0 cursor-pointer bg-[#140e40] text-slate-300 hover:text-white border border-[#2d1f85]">Maturín</button>
-          <button type="button" onclick="if(window.earthApp?.selectParish) window.earthApp.selectParish('caripe','caripe',true)" class="px-3 py-1.5 rounded-xl text-xs font-bold transition shrink-0 cursor-pointer bg-[#140e40] text-slate-300 hover:text-white border border-[#2d1f85]">Caripe</button>
-          <button type="button" onclick="if(window.earthApp?.selectParish) window.earthApp.selectParish('ezequiel-zamora','punta-de-mata',true)" class="px-3 py-1.5 rounded-xl text-xs font-bold transition shrink-0 cursor-pointer bg-[#140e40] text-slate-300 hover:text-white border border-[#2d1f85]">Ezequiel Zamora</button>
-          <button type="button" onclick="if(window.earthApp?.selectParish) window.earthApp.selectParish('bolivar','caripito',true)" class="px-3 py-1.5 rounded-xl text-xs font-bold transition shrink-0 cursor-pointer bg-[#140e40] text-slate-300 hover:text-white border border-[#2d1f85]">Bolívar</button>
-          <button type="button" onclick="if(window.earthApp?.selectParish) window.earthApp.selectParish('cedeno','caicara',true)" class="px-3 py-1.5 rounded-xl text-xs font-bold transition shrink-0 cursor-pointer bg-[#140e40] text-slate-300 hover:text-white border border-[#2d1f85]">Cedeño</button>
-          <button type="button" onclick="if(window.earthApp?.selectParish) window.earthApp.selectParish('acosta','san-antonio',true)" class="px-3 py-1.5 rounded-xl text-xs font-bold transition shrink-0 cursor-pointer bg-[#140e40] text-slate-300 hover:text-white border border-[#2d1f85]">Acosta</button>
-          <button type="button" onclick="if(window.earthApp?.selectParish) window.earthApp.selectParish('aguasay','aguasay',true)" class="px-3 py-1.5 rounded-xl text-xs font-bold transition shrink-0 cursor-pointer bg-[#140e40] text-slate-300 hover:text-white border border-[#2d1f85]">Aguasay</button>
-          <button type="button" onclick="if(window.earthApp?.selectParish) window.earthApp.selectParish('piar','aragua',true)" class="px-3 py-1.5 rounded-xl text-xs font-bold transition shrink-0 cursor-pointer bg-[#140e40] text-slate-300 hover:text-white border border-[#2d1f85]">Piar</button>
-          <button type="button" onclick="if(window.earthApp?.selectParish) window.earthApp.selectParish('punceres','quiriquire',true)" class="px-3 py-1.5 rounded-xl text-xs font-bold transition shrink-0 cursor-pointer bg-[#140e40] text-slate-300 hover:text-white border border-[#2d1f85]">Punceres</button>
-          <button type="button" onclick="if(window.earthApp?.selectParish) window.earthApp.selectParish('santa-barbara','santa-barbara',true)" class="px-3 py-1.5 rounded-xl text-xs font-bold transition shrink-0 cursor-pointer bg-[#140e40] text-slate-300 hover:text-white border border-[#2d1f85]">Santa Bárbara</button>
-          <button type="button" onclick="if(window.earthApp?.selectParish) window.earthApp.selectParish('sotillo','barrancas',true)" class="px-3 py-1.5 rounded-xl text-xs font-bold transition shrink-0 cursor-pointer bg-[#140e40] text-slate-300 hover:text-white border border-[#2d1f85]">Sotillo</button>
-          <button type="button" onclick="if(window.earthApp?.selectParish) window.earthApp.selectParish('uracoa','uracoa',true)" class="px-3 py-1.5 rounded-xl text-xs font-bold transition shrink-0 cursor-pointer bg-[#140e40] text-slate-300 hover:text-white border border-[#2d1f85]">Uracoa</button>
-          <button type="button" onclick="if(window.earthApp?.selectParish) window.earthApp.selectParish('libertador','temblador',true)" class="px-3 py-1.5 rounded-xl text-xs font-bold transition shrink-0 cursor-pointer bg-[#140e40] text-slate-300 hover:text-white border border-[#2d1f85]">Libertador</button>
-        </div>
-        <div class="p-3 text-center text-xs text-sky-400 font-bold bg-[#0e092e] rounded-xl border border-[#2d1f85]/50">
-          Cargando catálogo oficial de sectores y parroquias...
+        <div class="p-8 text-center text-xs text-sky-400 font-bold bg-[#0e092e] rounded-xl border border-[#2d1f85]/50 flex items-center justify-center gap-2.5">
+          <span class="w-2 h-2 rounded-full bg-sky-400 animate-ping"></span>
+          <span>Cargando catálogo territorial oficial (13 Municipios)...</span>
         </div>
       </div>
     </div>
@@ -1758,7 +1740,7 @@
   </div>
 
   <!-- SCRIPT -->
-  <script type="module" src="js/app.js?v=131"></script>
+  <script type="module" src="js/app.js?v=132"></script>
   <script>
     if (window.lucide && typeof window.lucide.createIcons === 'function') {
       window.lucide.createIcons();
