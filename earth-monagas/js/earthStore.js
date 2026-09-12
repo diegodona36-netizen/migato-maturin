@@ -1,9 +1,9 @@
 /**
  * Gestor de Estado y Árbol de Lugares (Places) — Google Earth Pro Web (Monagas)
  */
-import { SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=135";
-import { getEjesByParish, getSectoresByParish } from "./monagasSectoresCatalog.js?v=135";
-import { PARISH_ALIAS_MAP, resolveParishId } from "./catalogoMonagas.js?v=135";
+import { SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=136";
+import { getEjesByParish, getSectoresByParish } from "./monagasSectoresCatalog.js?v=136";
+import { PARISH_ALIAS_MAP, resolveParishId } from "./catalogoMonagas.js?v=136";
 import { 
   getSavedFirebaseConfig, 
   saveFirebaseConfig, 
@@ -162,33 +162,36 @@ export class EarthStore {
       if (!Array.isArray(godos.poligonos)) godos.poligonos = [];
       if (!Array.isArray(godos.subparroquias)) godos.subparroquias = [];
 
-      // Limpiar deletedIds de cualquier id oficial de La Puente o Godos
+      // 1. Eliminar cualquier sector o eje sintético residual (sec-lp-* o sub-godos-*)
+      const prevPolyLen = godos.poligonos.length;
+      godos.poligonos = godos.poligonos.filter(p => (p && p.id) ? !String(p.id).startsWith("sec-lp-") : false);
+      if (godos.poligonos.length !== prevPolyLen) changed = true;
+
+      const prevSubLen = godos.subparroquias.length;
+      godos.subparroquias = godos.subparroquias.filter(s => (s && s.id) ? !String(s.id).startsWith("sub-godos-") : false);
+      if (godos.subparroquias.length !== prevSubLen) changed = true;
+
+      // 2. Limpiar deletedIds de cualquier id del usuario para evitar bloqueos
       if (Array.isArray(godos.deletedIds)) {
         const prevLen = godos.deletedIds.length;
         godos.deletedIds = godos.deletedIds.filter(id => {
           const s = String(id);
-          return !s.startsWith("sec-lp-") && !s.startsWith("sub-godos-") && !s.startsWith("POL-") && !s.startsWith("EJE-");
+          return !s.startsWith("POLY-") && !s.startsWith("SUBPAR-");
         });
         if (godos.deletedIds.length !== prevLen) changed = true;
       }
 
-      // Asegurar Ejes territoriales (SUBPARROQUIAS_GODOS)
-      const existingSub = new Set(godos.subparroquias.map(s => String(s.id)));
-      SUBPARROQUIAS_GODOS.forEach(sp => {
-        if (!existingSub.has(String(sp.id))) {
-          godos.subparroquias.push(JSON.parse(JSON.stringify(sp)));
-          changed = true;
-        }
-      });
+      // 3. Si no tiene polígonos, poblar con los 12 polígonos reales del usuario (SECTORES_LAPUENTE)
+      if (godos.poligonos.length === 0) {
+        godos.poligonos = JSON.parse(JSON.stringify(SECTORES_LAPUENTE));
+        changed = true;
+      }
 
-      // Asegurar los 11 Sectores Oficiales de La Puente (SECTORES_LAPUENTE)
-      const existingPoly = new Set(godos.poligonos.map(p => String(p.id)));
-      SECTORES_LAPUENTE.forEach(sec => {
-        if (!existingPoly.has(String(sec.id))) {
-          godos.poligonos.push(JSON.parse(JSON.stringify(sec)));
-          changed = true;
-        }
-      });
+      // 4. Si no tiene subparroquias, poblar con el eje comunal real del usuario (SUBPARROQUIAS_GODOS)
+      if (godos.subparroquias.length === 0) {
+        godos.subparroquias = JSON.parse(JSON.stringify(SUBPARROQUIAS_GODOS));
+        changed = true;
+      }
 
       // Si existe el alias 'godos', mantenerlo sincronizado
       if (maturin.parroquias["godos"] && maturin.parroquias["alto-de-los-godos"]) {
@@ -206,7 +209,7 @@ export class EarthStore {
   }
 
   purgeDummySectors(state) {
-    // Purgar polígonos y cajas de prueba ficticias antiguas (NUNCA datos reales ni sectores oficiales)
+    // Purgar cajas sintéticas antiguas y de prueba (NUNCA los polígonos trazados por el usuario)
     let anyPurged = false;
     try {
       if (!state || !state.municipios) return false;
@@ -223,10 +226,12 @@ export class EarthStore {
               p.poligonos = p.poligonos.filter(sec => {
                 if (!sec || !sec.id) return false;
                 const idStr = String(sec.id);
-                // NUNCA purgar sectores oficiales de La Puente ni del catálogo ni trazados por el usuario
-                if (idStr.startsWith("sec-lp-") || idStr.startsWith("POL-") || idStr.startsWith("POLY-")) return true;
+                // Purgar cajas sintéticas de prueba (sec-lp-*) para no estorbar los polígonos del usuario
+                if (idStr.startsWith("sec-lp-")) return false;
                 if (dummyIds.has(idStr)) return false;
                 if (idStr.startsWith("sec-ss-") || idStr.startsWith("sec-cor-")) return false;
+                // Conservar siempre polígonos del usuario y oficiales
+                if (idStr.startsWith("POLY-") || idStr.startsWith("POL-")) return true;
                 return true;
               });
               if (p.poligonos.length !== beforeCount) {
@@ -239,10 +244,12 @@ export class EarthStore {
               p.subparroquias = p.subparroquias.filter(sp => {
                 if (!sp || !sp.id) return false;
                 const idStr = String(sp.id);
-                // NUNCA purgar ejes oficiales de Alto de Los Godos ni del catálogo
-                if (idStr.startsWith("sub-godos-") || idStr.startsWith("EJE-") || idStr.startsWith("SUBPAR-")) return true;
+                // Purgar ejes sintéticos ficticios (sub-godos-*)
+                if (idStr.startsWith("sub-godos-")) return false;
                 if (dummyIds.has(idStr)) return false;
                 if (idStr.startsWith("sub-ss-") || idStr.startsWith("sub-corozo-")) return false;
+                // Conservar siempre ejes del usuario y oficiales
+                if (idStr.startsWith("SUBPAR-") || idStr.startsWith("EJE-")) return true;
                 return true;
               });
               if (p.subparroquias.length !== beforeSub) {

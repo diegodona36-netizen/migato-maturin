@@ -455,8 +455,8 @@
       enableIndexedDbPersistence 
     } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-    import { CATALOGO_MONAGAS } from "../earth-monagas/js/catalogoMonagas.js?v=135";
-    import { SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "../earth-monagas/js/geoMonagas.js?v=135";
+    import { CATALOGO_MONAGAS } from "../earth-monagas/js/catalogoMonagas.js?v=136";
+    import { SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "../earth-monagas/js/geoMonagas.js?v=136";
 
     const FIREBASE_CONFIG = {
       apiKey: "AIzaSyCK8DBZWsVflfMoA_z-9XupX0BvLE4iJjc",
@@ -581,7 +581,7 @@
       }
 
       mergeWithOfficialSectors(existingList = []) {
-        let list = existingList ? [...existingList] : [];
+        let list = existingList ? existingList.filter(s => s && s.id && !String(s.id).startsWith("sec-lp-")) : [];
         if (this.parishId === "alto-de-los-godos" || this.parishId === "godos") {
           const ids = new Set(list.map(s => String(s.id)));
           (SECTORES_LAPUENTE || []).forEach(sec => {

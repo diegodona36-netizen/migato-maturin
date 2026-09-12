@@ -2,16 +2,16 @@
  * Controlador Principal — Google Earth Pro Web (Edición Estado Monagas)
  * Robusto, 100% Operativo y Totalmente Individualizado
  */
-import { CATALOGO_MONAGAS, findParishInCatalog, PARISH_ALIAS_MAP, resolveParishId } from "./catalogoMonagas.js?v=135";
-import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=135";
-import { getAllParishesForSelector } from "./usersCatalog.js?v=135";
-import { EarthStore } from "./earthStore.js?v=135";
-import { EarthMapEngine } from "./mapEngine.js?v=135";
-import { PropertiesDialog } from "./propertiesDialog.js?v=135";
-import { ToolsManager } from "./toolsManager.js?v=135";
-import { detectParishFromGeometry, SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=135";
-import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=135";
-import { getParishDemographics } from "./monagasDemographics.js?v=135";
+import { CATALOGO_MONAGAS, findParishInCatalog, PARISH_ALIAS_MAP, resolveParishId } from "./catalogoMonagas.js?v=136";
+import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=136";
+import { getAllParishesForSelector } from "./usersCatalog.js?v=136";
+import { EarthStore } from "./earthStore.js?v=136";
+import { EarthMapEngine } from "./mapEngine.js?v=136";
+import { PropertiesDialog } from "./propertiesDialog.js?v=136";
+import { ToolsManager } from "./toolsManager.js?v=136";
+import { detectParishFromGeometry, SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=136";
+import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=136";
+import { getParishDemographics } from "./monagasDemographics.js?v=136";
 import { 
   getMunicipios, 
   getParroquiasByMun, 
@@ -21,13 +21,13 @@ import {
   findSectorById, 
   searchSectores, 
   ALL_SECTORES_FLAT 
-} from "./monagasSectoresCatalog.js?v=135";
+} from "./monagasSectoresCatalog.js?v=136";
 import { 
   getSavedFirebaseConfig, 
   saveFirebaseConfig, 
   isFirebaseConfigured, 
   initFirebase 
-} from "./firebaseConfig.js?v=135";
+} from "./firebaseConfig.js?v=136";
 
 // Controladores globales infalibles accesibles en cualquier contexto
 window.closeParishSelectorModal = function() {
@@ -413,22 +413,23 @@ class EarthMonagasApp {
         if (!parish.poligonos) parish.poligonos = [];
         if (!parish.subparroquias) parish.subparroquias = [];
 
-        const existingPIds = new Set(parish.poligonos.map(x => String(x.id)));
-        let needSave = false;
-        SECTORES_LAPUENTE.forEach(sec => {
-          if (!existingPIds.has(String(sec.id))) {
-            parish.poligonos.push(JSON.parse(JSON.stringify(sec)));
-            needSave = true;
-          }
-        });
+        // Limpiar cualquier residuo de cajas sintéticas viejas (sec-lp-* y sub-godos-*)
+        const prevPolyCount = parish.poligonos.length;
+        parish.poligonos = parish.poligonos.filter(p => (p && p.id) ? !String(p.id).startsWith("sec-lp-") : false);
+        const prevSubCount = parish.subparroquias.length;
+        parish.subparroquias = parish.subparroquias.filter(s => (s && s.id) ? !String(s.id).startsWith("sub-godos-") : false);
 
-        const existingSIds = new Set(parish.subparroquias.map(x => String(x.id)));
-        SUBPARROQUIAS_GODOS.forEach(sp => {
-          if (!existingSIds.has(String(sp.id))) {
-            parish.subparroquias.push(JSON.parse(JSON.stringify(sp)));
-            needSave = true;
-          }
-        });
+        let needSave = (parish.poligonos.length !== prevPolyCount) || (parish.subparroquias.length !== prevSubCount);
+
+        // Si está vacía, poblar con los 12 sectores reales del usuario (SECTORES_LAPUENTE)
+        if (parish.poligonos.length === 0) {
+          parish.poligonos = JSON.parse(JSON.stringify(SECTORES_LAPUENTE));
+          needSave = true;
+        }
+        if (parish.subparroquias.length === 0) {
+          parish.subparroquias = JSON.parse(JSON.stringify(SUBPARROQUIAS_GODOS));
+          needSave = true;
+        }
 
         if (needSave) {
           parish.updatedAt = Date.now();

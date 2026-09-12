@@ -420,1986 +420,3028 @@
     "parishId": "alto-de-los-godos",
     "subparroquias": [
       {
-        "id": "sub-godos-1",
-        "parroquiaId": "alto-de-los-godos",
-        "nombre": "Sub-Parroquia 1 • Casco Los Godos",
-        "alias": "Los Godos I y II",
-        "colorBorde": "#c084fc",
-        "anchoBorde": 2.5,
+        "id": "SUBPAR-1788965549962",
+        "nombre": "sub-parroquia 6",
+        "descripcion": "Eje o Circuito Comunal",
+        "militantes": 0,
+        "casas": 0,
+        "habitantes": 0,
+        "familias": 0,
+        "colorBorde": "#a855f7",
+        "anchoBorde": 2,
         "colorRelleno": "#a855f7",
-        "opacidad": 0.18,
-        "visible": true,
+        "opacidad": 0.45,
         "vertices": [
           [
-            9.744,
-            -63.21
+            9.717109926257494,
+            -63.208653255045384
           ],
           [
-            9.746,
-            -63.2
+            9.717236825160974,
+            -63.20803634697196
           ],
           [
-            9.736,
-            -63.197
+            9.717665108604923,
+            -63.20773593956228
           ],
           [
-            9.732,
-            -63.207
+            9.718172703087838,
+            -63.20738725239035
           ],
           [
-            9.744,
-            -63.21
+            9.71664988364502,
+            -63.20600852119918
+          ],
+          [
+            9.716025962478378,
+            -63.20675953972335
+          ],
+          [
+            9.715275140549117,
+            -63.20635184395309
+          ],
+          [
+            9.714238859388619,
+            -63.206148147583015
+          ],
+          [
+            9.713297682944543,
+            -63.20597648620606
+          ],
+          [
+            9.712377653975071,
+            -63.20575118064881
+          ],
+          [
+            9.711700849440762,
+            -63.20569753646851
+          ],
+          [
+            9.710770240972014,
+            -63.20534348487855
+          ],
+          [
+            9.709850205056823,
+            -63.20480704307557
+          ],
+          [
+            9.708179328769734,
+            -63.204388618469245
+          ],
+          [
+            9.704922153563775,
+            -63.20922732353211
+          ],
+          [
+            9.70485870178423,
+            -63.21143746376038
+          ],
+          [
+            9.704805825292109,
+            -63.21607232093812
+          ],
+          [
+            9.705926805138326,
+            -63.217145204544074
+          ],
+          [
+            9.705567245973626,
+            -63.22032094001771
+          ],
+          [
+            9.705747025604213,
+            -63.22276711463929
+          ],
+          [
+            9.706222912395942,
+            -63.22700500488282
+          ],
+          [
+            9.709400761305597,
+            -63.22803497314454
+          ],
+          [
+            9.709739166068507,
+            -63.22704792022706
+          ],
+          [
+            9.710225622316036,
+            -63.2262808084488
+          ],
+          [
+            9.710833691631594,
+            -63.22571754455567
+          ],
+          [
+            9.711362446660507,
+            -63.22521328926087
+          ],
+          [
+            9.711944076227779,
+            -63.22447836399079
+          ],
+          [
+            9.712895831521777,
+            -63.22295486927033
+          ],
+          [
+            9.713958621735346,
+            -63.22096467018128
+          ],
+          [
+            9.714883933849773,
+            -63.21904420852662
+          ],
+          [
+            9.715449694853708,
+            -63.21793913841248
+          ],
+          [
+            9.71778146609236,
+            -63.21830928325654
+          ],
+          [
+            9.717998251254917,
+            -63.21800351142884
+          ],
+          [
+            9.717977101489144,
+            -63.21722567081452
+          ],
+          [
+            9.717474794159077,
+            -63.21656584739686
+          ],
+          [
+            9.717326745538957,
+            -63.21605622768403
+          ],
+          [
+            9.717548818444572,
+            -63.2153481245041
+          ],
+          [
+            9.717633417607935,
+            -63.214902877807624
+          ],
+          [
+            9.717004210818313,
+            -63.21474194526673
+          ],
+          [
+            9.717072947752058,
+            -63.21420013904572
+          ],
+          [
+            9.716967198617356,
+            -63.21278929710389
+          ],
+          [
+            9.716924898954119,
+            -63.21205437183381
+          ],
+          [
+            9.716856161989954,
+            -63.21107804775239
+          ],
+          [
+            9.716766275169357,
+            -63.210638165473945
+          ],
+          [
+            9.71695133624427,
+            -63.20950627326966
           ]
-        ]
-      },
-      {
-        "id": "sub-godos-2",
-        "parroquiaId": "alto-de-los-godos",
-        "nombre": "Sub-Parroquia 2 • Morichal",
-        "alias": "Morichal",
-        "colorBorde": "#c084fc",
-        "anchoBorde": 2.5,
-        "colorRelleno": "#a855f7",
-        "opacidad": 0.18,
+        ],
+        "areaHa": 259,
+        "perimetroM": 7097,
         "visible": true,
-        "vertices": [
-          [
-            9.738,
-            -63.218
-          ],
-          [
-            9.74,
-            -63.208
-          ],
-          [
-            9.728,
-            -63.205
-          ],
-          [
-            9.725,
-            -63.216
-          ],
-          [
-            9.738,
-            -63.218
-          ]
-        ]
-      },
-      {
-        "id": "sub-godos-3",
-        "parroquiaId": "alto-de-los-godos",
-        "nombre": "Sub-Parroquia 3 • Fundemos",
-        "alias": "Fundemos I, II y III",
-        "colorBorde": "#c084fc",
-        "anchoBorde": 2.5,
-        "colorRelleno": "#a855f7",
-        "opacidad": 0.18,
-        "visible": true,
-        "vertices": [
-          [
-            9.747,
-            -63.201
-          ],
-          [
-            9.748,
-            -63.192
-          ],
-          [
-            9.736,
-            -63.19
-          ],
-          [
-            9.735,
-            -63.198
-          ],
-          [
-            9.747,
-            -63.201
-          ]
-        ]
-      },
-      {
-        "id": "sub-godos-4",
-        "parroquiaId": "alto-de-los-godos",
-        "nombre": "Sub-Parroquia 4 • Los Guaros",
-        "alias": "Los Guaros",
-        "colorBorde": "#c084fc",
-        "anchoBorde": 2.5,
-        "colorRelleno": "#a855f7",
-        "opacidad": 0.18,
-        "visible": true,
-        "vertices": [
-          [
-            9.734,
-            -63.201
-          ],
-          [
-            9.733,
-            -63.191
-          ],
-          [
-            9.722,
-            -63.193
-          ],
-          [
-            9.723,
-            -63.202
-          ],
-          [
-            9.734,
-            -63.201
-          ]
-        ]
-      },
-      {
-        "id": "sub-godos-5",
-        "parroquiaId": "alto-de-los-godos",
-        "nombre": "Sub-Parroquia 5 • El Silencio",
-        "alias": "El Silencio de Campo Alegre",
-        "colorBorde": "#c084fc",
-        "anchoBorde": 2.5,
-        "colorRelleno": "#a855f7",
-        "opacidad": 0.18,
-        "visible": true,
-        "vertices": [
-          [
-            9.724,
-            -63.212
-          ],
-          [
-            9.723,
-            -63.197
-          ],
-          [
-            9.712,
-            -63.198
-          ],
-          [
-            9.711,
-            -63.214
-          ],
-          [
-            9.724,
-            -63.212
-          ]
-        ]
-      },
-      {
-        "id": "sub-godos-6",
-        "parroquiaId": "alto-de-los-godos",
-        "nombre": "Sub-Parroquia 6 • Alto De Los Godos \"La Puente\"",
-        "alias": "La Puente",
-        "colorBorde": "#c084fc",
-        "anchoBorde": 2.5,
-        "colorRelleno": "#a855f7",
-        "opacidad": 0.18,
-        "visible": true,
-        "vertices": [
-          [
-            9.739,
-            -63.228
-          ],
-          [
-            9.742,
-            -63.214
-          ],
-          [
-            9.73,
-            -63.21
-          ],
-          [
-            9.718,
-            -63.212
-          ],
-          [
-            9.712,
-            -63.226
-          ],
-          [
-            9.725,
-            -63.232
-          ],
-          [
-            9.739,
-            -63.228
-          ]
-        ]
-      },
-      {
-        "id": "sub-godos-7",
-        "parroquiaId": "alto-de-los-godos",
-        "nombre": "Sub-Parroquia 7 • 19 de Abril",
-        "alias": "19 de Abril",
-        "colorBorde": "#c084fc",
-        "anchoBorde": 2.5,
-        "colorRelleno": "#a855f7",
-        "opacidad": 0.18,
-        "visible": true,
-        "vertices": [
-          [
-            9.72,
-            -63.23
-          ],
-          [
-            9.719,
-            -63.218
-          ],
-          [
-            9.709,
-            -63.219
-          ],
-          [
-            9.71,
-            -63.231
-          ],
-          [
-            9.72,
-            -63.23
-          ]
-        ]
-      },
-      {
-        "id": "sub-godos-8",
-        "parroquiaId": "alto-de-los-godos",
-        "nombre": "Sub-Parroquia 8 • Las Brisas",
-        "alias": "Alberto Ravell",
-        "colorBorde": "#c084fc",
-        "anchoBorde": 2.5,
-        "colorRelleno": "#a855f7",
-        "opacidad": 0.18,
-        "visible": true,
-        "vertices": [
-          [
-            9.744,
-            -63.195
-          ],
-          [
-            9.743,
-            -63.187
-          ],
-          [
-            9.732,
-            -63.189
-          ],
-          [
-            9.733,
-            -63.196
-          ],
-          [
-            9.744,
-            -63.195
-          ]
-        ]
-      },
-      {
-        "id": "sub-godos-9",
-        "parroquiaId": "alto-de-los-godos",
-        "nombre": "Sub-Parroquia 9 • San Rafael",
-        "alias": "San Rafael",
-        "colorBorde": "#c084fc",
-        "anchoBorde": 2.5,
-        "colorRelleno": "#a855f7",
-        "opacidad": 0.18,
-        "visible": true,
-        "vertices": [
-          [
-            9.728,
-            -63.195
-          ],
-          [
-            9.727,
-            -63.188
-          ],
-          [
-            9.716,
-            -63.189
-          ],
-          [
-            9.717,
-            -63.196
-          ],
-          [
-            9.728,
-            -63.195
-          ]
-        ]
-      },
-      {
-        "id": "sub-godos-10",
-        "parroquiaId": "alto-de-los-godos",
-        "nombre": "Sub-Parroquia 10 • Paramaconi",
-        "alias": "Paramaconi / Corapal",
-        "colorBorde": "#c084fc",
-        "anchoBorde": 2.5,
-        "colorRelleno": "#a855f7",
-        "opacidad": 0.18,
-        "visible": true,
-        "vertices": [
-          [
-            9.742,
-            -63.236
-          ],
-          [
-            9.739,
-            -63.227
-          ],
-          [
-            9.724,
-            -63.23
-          ],
-          [
-            9.726,
-            -63.239
-          ],
-          [
-            9.742,
-            -63.236
-          ]
-        ]
+        "fecha": "2026-09-09T14:52:29.962Z",
+        "munId": "maturin",
+        "parishId": "alto-de-los-godos",
+        "color": "#a855f7",
+        "ancho": 2,
+        "centroVotacion": "",
+        "votoDuro": 0,
+        "votoBlando": 0,
+        "votoNuevo": 0,
+        "subParroquiaId": null,
+        "isNew": false
       }
     ],
     "poligonos": [
       {
-        "id": "sec-lp-1",
-        "subParroquiaId": "sub-godos-6",
-        "nombre": "1. Monagzal",
-        "casas": 450,
-        "familias": 455,
-        "habitantes": 1550,
-        "militantes": 1550,
-        "colorBorde": "#38bdf8",
-        "anchoBorde": 2,
-        "colorRelleno": "#38bdf8",
-        "opacidad": 0.38,
-        "visible": true,
-        "vertices": [
-          [
-            9.736,
-            -63.232
-          ],
-          [
-            9.742,
-            -63.23
-          ],
-          [
-            9.74,
-            -63.223
-          ],
-          [
-            9.734,
-            -63.224
-          ],
-          [
-            9.736,
-            -63.232
-          ]
-        ],
-        "numero": 1,
-        "rawNombre": "Monagzal",
-        "centroVotacion": "Cruz Hernández Quijada",
-        "comitesVotacion": 3,
-        "descripcion": "Sector 1: Monagzal • 450 casas • 1550 hab. Centro: Cruz Hernández Quijada",
-        "areaHa": 12.5,
-        "perimetroM": 1540,
-        "esOficial": true
-      },
-      {
-        "id": "sec-lp-2",
-        "subParroquiaId": "sub-godos-6",
-        "nombre": "2. Las Vírgenes",
-        "casas": 1040,
-        "familias": 1087,
-        "habitantes": 3053,
-        "militantes": 3053,
-        "colorBorde": "#10b981",
-        "anchoBorde": 2,
-        "colorRelleno": "#10b981",
-        "opacidad": 0.38,
-        "visible": true,
-        "vertices": [
-          [
-            9.735,
-            -63.223
-          ],
-          [
-            9.741,
-            -63.222
-          ],
-          [
-            9.739,
-            -63.215
-          ],
-          [
-            9.733,
-            -63.216
-          ],
-          [
-            9.735,
-            -63.223
-          ]
-        ],
-        "numero": 2,
-        "rawNombre": "Las Vírgenes",
-        "centroVotacion": "Cruz Hernández Quijada",
-        "comitesVotacion": 1,
-        "descripcion": "Sector 2: Las Vírgenes • 1040 casas • 3053 hab. Centro: Cruz Hernández Quijada",
-        "areaHa": 12.5,
-        "perimetroM": 1540,
-        "esOficial": true
-      },
-      {
-        "id": "sec-lp-3",
-        "subParroquiaId": "sub-godos-6",
-        "nombre": "3. Villa de los Ángeles",
-        "casas": 446,
-        "familias": 443,
-        "habitantes": 1254,
-        "militantes": 1254,
-        "colorBorde": "#f59e0b",
-        "anchoBorde": 2,
-        "colorRelleno": "#f59e0b",
-        "opacidad": 0.38,
-        "visible": true,
-        "vertices": [
-          [
-            9.728,
-            -63.231
-          ],
-          [
-            9.735,
-            -63.23
-          ],
-          [
-            9.733,
-            -63.223
-          ],
-          [
-            9.727,
-            -63.224
-          ],
-          [
-            9.728,
-            -63.231
-          ]
-        ],
-        "numero": 3,
-        "rawNombre": "Villa de los Ángeles",
-        "centroVotacion": "Francisco Verde",
-        "comitesVotacion": 1,
-        "descripcion": "Sector 3: Villa de los Ángeles • 446 casas • 1254 hab. Centro: Francisco Verde",
-        "areaHa": 12.5,
-        "perimetroM": 1540,
-        "esOficial": true
-      },
-      {
-        "id": "sec-lp-4",
-        "subParroquiaId": "sub-godos-6",
-        "nombre": "4. Canadá",
-        "casas": 546,
-        "familias": 580,
-        "habitantes": 1513,
-        "militantes": 1513,
-        "colorBorde": "#ef4444",
-        "anchoBorde": 2,
-        "colorRelleno": "#ef4444",
-        "opacidad": 0.38,
-        "visible": true,
-        "vertices": [
-          [
-            9.727,
-            -63.223
-          ],
-          [
-            9.733,
-            -63.222
-          ],
-          [
-            9.732,
-            -63.216
-          ],
-          [
-            9.726,
-            -63.217
-          ],
-          [
-            9.727,
-            -63.223
-          ]
-        ],
-        "numero": 4,
-        "rawNombre": "Canadá",
-        "centroVotacion": "Francisco Verde",
-        "comitesVotacion": 1,
-        "descripcion": "Sector 4: Canadá • 546 casas • 1513 hab. Centro: Francisco Verde",
-        "areaHa": 12.5,
-        "perimetroM": 1540,
-        "esOficial": true
-      },
-      {
-        "id": "sec-lp-5",
-        "subParroquiaId": "sub-godos-6",
-        "nombre": "5. Sector II",
-        "casas": 551,
-        "familias": 701,
-        "habitantes": 1939,
-        "militantes": 1939,
-        "colorBorde": "#a855f7",
-        "anchoBorde": 2,
-        "colorRelleno": "#a855f7",
-        "opacidad": 0.38,
-        "visible": true,
-        "vertices": [
-          [
-            9.726,
-            -63.216
-          ],
-          [
-            9.732,
-            -63.215
-          ],
-          [
-            9.73,
-            -63.21
-          ],
-          [
-            9.724,
-            -63.211
-          ],
-          [
-            9.726,
-            -63.216
-          ]
-        ],
-        "numero": 5,
-        "rawNombre": "Sector II",
-        "centroVotacion": "Apolinar Cantor",
-        "comitesVotacion": 2,
-        "descripcion": "Sector 5: Sector II • 551 casas • 1939 hab. Centro: Apolinar Cantor",
-        "areaHa": 12.5,
-        "perimetroM": 1540,
-        "esOficial": true
-      },
-      {
-        "id": "sec-lp-6",
-        "subParroquiaId": "sub-godos-6",
-        "nombre": "6. Sector I",
-        "casas": 312,
-        "familias": 370,
-        "habitantes": 850,
-        "militantes": 850,
-        "colorBorde": "#06b6d4",
-        "anchoBorde": 2,
-        "colorRelleno": "#06b6d4",
-        "opacidad": 0.38,
-        "visible": true,
-        "vertices": [
-          [
-            9.72,
-            -63.23
-          ],
-          [
-            9.727,
-            -63.229
-          ],
-          [
-            9.725,
-            -63.223
-          ],
-          [
-            9.718,
-            -63.224
-          ],
-          [
-            9.72,
-            -63.23
-          ]
-        ],
-        "numero": 6,
-        "rawNombre": "Sector I",
-        "centroVotacion": "Apolinar Cantor",
-        "comitesVotacion": 1,
-        "descripcion": "Sector 6: Sector I • 312 casas • 850 hab. Centro: Apolinar Cantor",
-        "areaHa": 12.5,
-        "perimetroM": 1540,
-        "esOficial": true
-      },
-      {
-        "id": "sec-lp-7",
-        "subParroquiaId": "sub-godos-6",
-        "nombre": "7. Sector IA",
-        "casas": 332,
-        "familias": 357,
-        "habitantes": 996,
-        "militantes": 996,
-        "colorBorde": "#84cc16",
-        "anchoBorde": 2,
-        "colorRelleno": "#84cc16",
-        "opacidad": 0.38,
-        "visible": true,
-        "vertices": [
-          [
-            9.724,
-            -63.21
-          ],
-          [
-            9.73,
-            -63.209
-          ],
-          [
-            9.728,
-            -63.205
-          ],
-          [
-            9.722,
-            -63.206
-          ],
-          [
-            9.724,
-            -63.21
-          ]
-        ],
-        "numero": 7,
-        "rawNombre": "Sector IA",
-        "centroVotacion": "Cruz Figuera Rondón",
-        "comitesVotacion": 1,
-        "descripcion": "Sector 7: Sector IA • 332 casas • 996 hab. Centro: Cruz Figuera Rondón",
-        "areaHa": 12.5,
-        "perimetroM": 1540,
-        "esOficial": true
-      },
-      {
-        "id": "sec-lp-8",
-        "subParroquiaId": "sub-godos-6",
-        "nombre": "8. El Caro",
-        "casas": 692,
-        "familias": 1032,
-        "habitantes": 1832,
-        "militantes": 1832,
+        "id": "POLY-1788966016501",
+        "nombre": "villa de los angeles",
+        "descripcion": "Comunidad / Consejo Comunal",
+        "militantes": 0,
+        "casas": 0,
+        "habitantes": 0,
+        "familias": 0,
         "colorBorde": "#f97316",
         "anchoBorde": 2,
         "colorRelleno": "#f97316",
-        "opacidad": 0.38,
-        "visible": true,
+        "opacidad": 0.35,
         "vertices": [
           [
-            9.718,
-            -63.216
+            9.711339974588768,
+            -63.225268274545684
           ],
           [
-            9.724,
-            -63.215
+            9.70970744063652,
+            -63.2250201702118
           ],
           [
-            9.722,
-            -63.208
+            9.709678358987876,
+            -63.22496786713601
           ],
           [
-            9.715,
-            -63.209
+            9.70964134597687,
+            -63.22489812970163
           ],
           [
-            9.718,
-            -63.216
+            9.709612264322502,
+            -63.224747925996795
+          ],
+          [
+            9.709589792133285,
+            -63.22458565235139
+          ],
+          [
+            9.709567319942579,
+            -63.224371075630195
+          ],
+          [
+            9.709490650104092,
+            -63.22424232959748
+          ],
+          [
+            9.709437774343193,
+            -63.22416052222253
+          ],
+          [
+            9.709361104475063,
+            -63.22403982281686
+          ],
+          [
+            9.708920913340663,
+            -63.22335049510003
+          ],
+          [
+            9.708852174732915,
+            -63.22320297360422
+          ],
+          [
+            9.708813839733999,
+            -63.22310641407967
+          ],
+          [
+            9.70876889524693,
+            -63.223000466823585
+          ],
+          [
+            9.708726594547697,
+            -63.222899883985534
+          ],
+          [
+            9.708680328151798,
+            -63.22279661893845
+          ],
+          [
+            9.708607623802477,
+            -63.22261825203896
+          ],
+          [
+            9.708374969778566,
+            -63.22248011827469
+          ],
+          [
+            9.708464858852434,
+            -63.2209861278534
+          ],
+          [
+            9.708920913340663,
+            -63.22102904319764
+          ],
+          [
+            9.709441740025559,
+            -63.22107866406442
+          ],
+          [
+            9.70996653157651,
+            -63.22113230824471
+          ],
+          [
+            9.710486034745074,
+            -63.22119668126107
+          ],
+          [
+            9.71093812081599,
+            -63.22125971317292
+          ],
+          [
+            9.711441759842826,
+            -63.22129592299462
+          ],
+          [
+            9.71191102912035,
+            -63.22134822607041
+          ],
+          [
+            9.713567346128801,
+            -63.22150111198426
+          ],
+          [
+            9.712541567367397,
+            -63.223443031311035
           ]
         ],
-        "numero": 8,
-        "rawNombre": "El Caro",
-        "centroVotacion": "Cruz Figuera Rondón",
-        "comitesVotacion": 1,
-        "descripcion": "Sector 8: El Caro • 692 casas • 1832 hab. Centro: Cruz Figuera Rondón",
-        "areaHa": 12.5,
-        "perimetroM": 1540,
-        "esOficial": true
+        "areaHa": 17.4,
+        "perimetroM": 1483,
+        "visible": true,
+        "fecha": "2026-09-09T15:00:16.501Z",
+        "munId": "maturin",
+        "parishId": "alto-de-los-godos",
+        "subParroquiaId": "SUBPAR-1788965549962",
+        "color": "#f97316",
+        "ancho": 2,
+        "centroVotacion": "",
+        "votoDuro": 0,
+        "votoBlando": 0,
+        "votoNuevo": 0,
+        "isNew": false
       },
       {
-        "id": "sec-lp-9",
-        "subParroquiaId": "sub-godos-6",
-        "nombre": "9. La Lucha",
-        "casas": 306,
-        "familias": 470,
-        "habitantes": 1237,
-        "militantes": 1237,
-        "colorBorde": "#ec4899",
+        "id": "POLY-1788967024859",
+        "nombre": "el mangozal",
+        "descripcion": "Comunidad / Consejo Comunal",
+        "militantes": 0,
+        "casas": 0,
+        "habitantes": 0,
+        "familias": 0,
+        "colorBorde": "#a855f7",
         "anchoBorde": 2,
-        "colorRelleno": "#ec4899",
-        "opacidad": 0.38,
-        "visible": true,
+        "colorRelleno": "#a855f7",
+        "opacidad": 0.45,
         "vertices": [
           [
-            9.719,
-            -63.223
+            9.708459571260516,
+            -63.22099685668945
           ],
           [
-            9.726,
-            -63.222
+            9.706460855538273,
+            -63.22079300880433
           ],
           [
-            9.724,
-            -63.216
+            9.706444992667391,
+            -63.22083055973054
           ],
           [
-            9.717,
-            -63.217
+            9.706164748490993,
+            -63.22075545787812
           ],
           [
-            9.719,
-            -63.223
+            9.705963818559841,
+            -63.22092175483704
+          ],
+          [
+            9.705762888508158,
+            -63.2211846113205
+          ],
+          [
+            9.705662423437134,
+            -63.22168350219727
+          ],
+          [
+            9.705752313238941,
+            -63.22200536727906
+          ],
+          [
+            9.705815764849241,
+            -63.222160935401924
+          ],
+          [
+            9.705900366977593,
+            -63.22229504585267
+          ],
+          [
+            9.706016694869207,
+            -63.22242379188538
+          ],
+          [
+            9.70619118663086,
+            -63.222595453262336
+          ],
+          [
+            9.70641326692334,
+            -63.22279930114747
+          ],
+          [
+            9.70670937375092,
+            -63.22302997112275
+          ],
+          [
+            9.70693674131589,
+            -63.223384022712715
+          ],
+          [
+            9.70688915276855,
+            -63.22421550750733
+          ],
+          [
+            9.706989617471661,
+            -63.22478950023652
+          ],
+          [
+            9.707005480316766,
+            -63.226152062416084
+          ],
+          [
+            9.70700019270182,
+            -63.22669386863709
+          ],
+          [
+            9.706973754625793,
+            -63.22701573371888
+          ],
+          [
+            9.706957891779199,
+            -63.22724103927613
+          ],
+          [
+            9.709400761305597,
+            -63.22803497314454
+          ],
+          [
+            9.709733878496715,
+            -63.22706401348115
+          ],
+          [
+            9.710130446149305,
+            -63.22644174098969
+          ],
+          [
+            9.71021504718773,
+            -63.22630226612092
+          ],
+          [
+            9.711309571195196,
+            -63.2252722978592
+          ],
+          [
+            9.709696865491853,
+            -63.22503089904786
+          ],
+          [
+            9.709617551896203,
+            -63.224880695343025
+          ],
+          [
+            9.709564676155342,
+            -63.224381804466255
+          ],
+          [
+            9.708930166613714,
+            -63.223351836204536
+          ],
+          [
+            9.708607623802477,
+            -63.222622275352485
+          ],
+          [
+            9.708369682185248,
+            -63.22246670722962
+          ],
+          [
+            9.708380257371822,
+            -63.22206974029542
           ]
         ],
-        "numero": 9,
-        "rawNombre": "La Lucha",
-        "centroVotacion": "República de Venezuela",
-        "comitesVotacion": 1,
-        "descripcion": "Sector 9: La Lucha • 306 casas • 1237 hab. Centro: República de Venezuela",
-        "areaHa": 12.5,
-        "perimetroM": 1540,
-        "esOficial": true
+        "areaHa": 22.8,
+        "perimetroM": 2259,
+        "visible": true,
+        "fecha": "2026-09-09T15:17:04.859Z",
+        "munId": "maturin",
+        "parishId": "alto-de-los-godos",
+        "subParroquiaId": "SUBPAR-1788965549962",
+        "color": "#a855f7",
+        "ancho": 2,
+        "centroVotacion": "",
+        "votoDuro": 0,
+        "votoBlando": 0,
+        "votoNuevo": 0,
+        "isNew": false
       },
       {
-        "id": "sec-lp-10",
-        "subParroquiaId": "sub-godos-6",
-        "nombre": "10. Las Flores",
-        "casas": 337,
-        "familias": 368,
-        "habitantes": 885,
-        "militantes": 885,
-        "colorBorde": "#14b8a6",
+        "id": "POLY-1788967978671",
+        "nombre": "las vigenes",
+        "descripcion": "Comunidad / Consejo Comunal",
+        "militantes": 0,
+        "casas": 0,
+        "habitantes": 0,
+        "familias": 0,
+        "colorBorde": "#38bdf8",
         "anchoBorde": 2,
-        "colorRelleno": "#14b8a6",
-        "opacidad": 0.38,
-        "visible": true,
+        "colorRelleno": "#38bdf8",
+        "opacidad": 0.35,
         "vertices": [
           [
-            9.733,
-            -63.215
+            9.715581881866317,
+            -63.217349052429206
           ],
           [
-            9.74,
-            -63.214
+            9.713731258938564,
+            -63.22144746780396
           ],
           [
-            9.738,
-            -63.208
+            9.706450280291104,
+            -63.22079837322236
           ],
           [
-            9.732,
-            -63.209
-          ],
-          [
-            9.733,
-            -63.215
+            9.706994905086772,
+            -63.21725249290467
           ]
         ],
-        "numero": 10,
-        "rawNombre": "Las Flores",
-        "centroVotacion": "República de Venezuela",
-        "comitesVotacion": 1,
-        "descripcion": "Sector 10: Las Flores • 337 casas • 885 hab. Centro: República de Venezuela",
-        "areaHa": 12.5,
-        "perimetroM": 1540,
-        "esOficial": true
+        "areaHa": 15.6,
+        "perimetroM": 1192,
+        "visible": true,
+        "fecha": "2026-09-09T15:32:58.671Z",
+        "munId": "maturin",
+        "parishId": "alto-de-los-godos",
+        "subParroquiaId": "SUBPAR-1788965549962"
       },
       {
-        "id": "sec-lp-11",
-        "subParroquiaId": "sub-godos-6",
-        "nombre": "11. La Laguna",
-        "casas": 283,
-        "familias": 347,
-        "habitantes": 1050,
-        "militantes": 1050,
-        "colorBorde": "#3b82f6",
+        "id": "POLY-1788968547771",
+        "nombre": "hugo chavez ll",
+        "descripcion": "Comunidad / Consejo Comunal",
+        "militantes": 0,
+        "casas": 0,
+        "habitantes": 0,
+        "familias": 0,
+        "colorBorde": "#10b981",
         "anchoBorde": 2,
-        "colorRelleno": "#3b82f6",
-        "opacidad": 0.38,
-        "visible": true,
+        "colorRelleno": "#10b981",
+        "opacidad": 0.6,
         "vertices": [
           [
-            9.712,
-            -63.223
+            9.715439119890435,
+            -63.21794450283051
           ],
           [
-            9.718,
-            -63.222
+            9.71778146609236,
+            -63.21830928325654
           ],
           [
-            9.716,
-            -63.214
+            9.718008826137302,
+            -63.2180142402649
           ],
           [
-            9.71,
-            -63.215
+            9.717971814047486,
+            -63.21723103523255
           ],
           [
-            9.712,
-            -63.223
+            9.71746421925981,
+            -63.21654975414277
+          ],
+          [
+            9.717326745538957,
+            -63.21604549884797
+          ],
+          [
+            9.717538243547645,
+            -63.215396404266365
+          ],
+          [
+            9.717622842713693,
+            -63.214897513389595
+          ],
+          [
+            9.717004210818313,
+            -63.21474194526673
+          ],
+          [
+            9.716956623702059,
+            -63.21502089500428
+          ],
+          [
+            9.71682443723251,
+            -63.21545541286469
+          ],
+          [
+            9.716589145187504,
+            -63.216010630130775
+          ],
+          [
+            9.716438452442572,
+            -63.21635931730271
+          ],
+          [
+            9.716332703107355,
+            -63.21656048297883
+          ],
+          [
+            9.716166147836608,
+            -63.21680992841721
           ]
         ],
-        "numero": 11,
-        "rawNombre": "La Laguna",
-        "centroVotacion": "República de Venezuela",
-        "comitesVotacion": 1,
-        "descripcion": "Sector 11: La Laguna • 283 casas • 1050 hab. Centro: República de Venezuela",
-        "areaHa": 12.5,
-        "perimetroM": 1540,
-        "esOficial": true
+        "areaHa": 5.5,
+        "perimetroM": 990,
+        "visible": true,
+        "fecha": "2026-09-09T15:42:27.771Z",
+        "munId": "maturin",
+        "parishId": "alto-de-los-godos",
+        "subParroquiaId": "SUBPAR-1788965549962",
+        "color": "#10b981",
+        "ancho": 2,
+        "centroVotacion": "",
+        "votoDuro": 0,
+        "votoBlando": 0,
+        "votoNuevo": 0,
+        "isNew": false
+      },
+      {
+        "id": "POLY-1788968986348",
+        "nombre": "la lucha",
+        "descripcion": "Comunidad / Consejo Comunal",
+        "militantes": 0,
+        "casas": 0,
+        "habitantes": 0,
+        "familias": 0,
+        "colorBorde": "#ef4444",
+        "anchoBorde": 2,
+        "colorRelleno": "#ef4444",
+        "opacidad": 0.5,
+        "vertices": [
+          [
+            9.708327381435597,
+            -63.21480631828309
+          ],
+          [
+            9.707142958276206,
+            -63.214398622512824
+          ],
+          [
+            9.706656497550915,
+            -63.21422696113587
+          ],
+          [
+            9.706275788664406,
+            -63.21407675743104
+          ],
+          [
+            9.705937380402034,
+            -63.21393728256226
+          ],
+          [
+            9.705355740402354,
+            -63.21373343467713
+          ],
+          [
+            9.705577821248681,
+            -63.21317553520203
+          ],
+          [
+            9.705884504080162,
+            -63.212617635726936
+          ],
+          [
+            9.705895079345192,
+            -63.21175932884217
+          ],
+          [
+            9.705503794316266,
+            -63.21172714233399
+          ],
+          [
+            9.704863989432992,
+            -63.211668133735664
+          ],
+          [
+            9.704863989432992,
+            -63.21139186620713
+          ],
+          [
+            9.70513365940879,
+            -63.21144551038743
+          ],
+          [
+            9.705331946017218,
+            -63.211499154567726
+          ],
+          [
+            9.705543451603528,
+            -63.21144819259644
+          ],
+          [
+            9.706003475792638,
+            -63.21097075939179
+          ],
+          [
+            9.706320733486033,
+            -63.21072131395341
+          ],
+          [
+            9.706894440385252,
+            -63.21056842803956
+          ],
+          [
+            9.707661143923835,
+            -63.210479915142066
+          ],
+          [
+            9.708578542058328,
+            -63.21007758378983
+          ],
+          [
+            9.709078218947628,
+            -63.20980936288834
+          ],
+          [
+            9.709086150320806,
+            -63.21070790290833
+          ],
+          [
+            9.709070287574248,
+            -63.2113328576088
+          ],
+          [
+            9.709072931365391,
+            -63.211861252784736
+          ],
+          [
+            9.708985686246594,
+            -63.212413787841804
+          ]
+        ],
+        "areaHa": 15.2,
+        "perimetroM": 1534,
+        "visible": true,
+        "fecha": "2026-09-09T15:49:46.348Z",
+        "munId": "maturin",
+        "parishId": "alto-de-los-godos",
+        "subParroquiaId": "SUBPAR-1788965549962",
+        "color": "#ef4444",
+        "ancho": 2,
+        "centroVotacion": "",
+        "votoDuro": 0,
+        "votoBlando": 0,
+        "votoNuevo": 0,
+        "isNew": false
+      },
+      {
+        "id": "POLY-1788969435080",
+        "nombre": "sector ll",
+        "descripcion": "Comunidad / Consejo Comunal",
+        "militantes": 0,
+        "casas": 0,
+        "habitantes": 0,
+        "familias": 0,
+        "colorBorde": "#f97316",
+        "anchoBorde": 2,
+        "colorRelleno": "#f97316",
+        "opacidad": 0.35,
+        "vertices": [
+          [
+            9.708827058699642,
+            -63.212995827198036
+          ],
+          [
+            9.710096076971336,
+            -63.21325063705445
+          ],
+          [
+            9.710363098953561,
+            -63.213395476341255
+          ],
+          [
+            9.71113772587526,
+            -63.21409821510316
+          ],
+          [
+            9.711647974028885,
+            -63.214634656906135
+          ],
+          [
+            9.712131783736087,
+            -63.21514159440995
+          ],
+          [
+            9.71287996895572,
+            -63.21526229381562
+          ],
+          [
+            9.712689618104381,
+            -63.216147422790534
+          ],
+          [
+            9.71240937915404,
+            -63.21709960699082
+          ],
+          [
+            9.711227614207447,
+            -63.21701109409333
+          ],
+          [
+            9.71041068700724,
+            -63.21693867444993
+          ],
+          [
+            9.709197189525666,
+            -63.216850161552436
+          ],
+          [
+            9.708686937637317,
+            -63.216914534568794
+          ],
+          [
+            9.708464858852434,
+            -63.217265903949745
+          ],
+          [
+            9.70748929673158,
+            -63.217233717441566
+          ],
+          [
+            9.7069763984335,
+            -63.21725249290467
+          ],
+          [
+            9.70673845565738,
+            -63.218851089477546
+          ],
+          [
+            9.706492581277821,
+            -63.220522105693824
+          ],
+          [
+            9.706688223271925,
+            -63.218816220760345
+          ],
+          [
+            9.706823057552699,
+            -63.21760386228562
+          ],
+          [
+            9.707053068847566,
+            -63.21681261062622
+          ],
+          [
+            9.705662423437134,
+            -63.2162868976593
+          ],
+          [
+            9.705419192087753,
+            -63.2159972190857
+          ],
+          [
+            9.70523941228123,
+            -63.215600252151496
+          ],
+          [
+            9.705197111136261,
+            -63.21517109870911
+          ],
+          [
+            9.705228836995488,
+            -63.21467757225037
+          ],
+          [
+            9.705366315684088,
+            -63.21372270584107
+          ],
+          [
+            9.708353819404746,
+            -63.21482241153718
+          ]
+        ],
+        "areaHa": 25.6,
+        "perimetroM": 2961,
+        "visible": true,
+        "fecha": "2026-09-09T15:57:15.080Z",
+        "munId": "maturin",
+        "parishId": "alto-de-los-godos",
+        "subParroquiaId": "SUBPAR-1788965549962",
+        "color": "#f97316",
+        "ancho": 2,
+        "centroVotacion": "",
+        "votoDuro": 0,
+        "votoBlando": 0,
+        "votoNuevo": 0,
+        "isNew": false
+      },
+      {
+        "id": "POLY-1788969661840",
+        "nombre": "la canada",
+        "descripcion": "Comunidad / Consejo Comunal",
+        "militantes": 0,
+        "casas": 0,
+        "habitantes": 0,
+        "familias": 0,
+        "colorBorde": "#a855f7",
+        "anchoBorde": 2,
+        "colorRelleno": "#a855f7",
+        "opacidad": 0.45,
+        "vertices": [
+          [
+            9.71345102086028,
+            -63.21250498294831
+          ],
+          [
+            9.713300326702317,
+            -63.21329355239869
+          ],
+          [
+            9.713160207512106,
+            -63.2139265537262
+          ],
+          [
+            9.712996294422696,
+            -63.21467757225037
+          ],
+          [
+            9.712890543999842,
+            -63.215270340442665
+          ],
+          [
+            9.712694905629483,
+            -63.216142058372505
+          ],
+          [
+            9.712412022918812,
+            -63.21710497140885
+          ],
+          [
+            9.715589813085403,
+            -63.21734637022019
+          ],
+          [
+            9.714878646359239,
+            -63.21892619132996
+          ],
+          [
+            9.715552800728013,
+            -63.217743337154396
+          ],
+          [
+            9.715788093501724,
+            -63.217408061027534
+          ],
+          [
+            9.716369715378475,
+            -63.216493427753456
+          ],
+          [
+            9.716819149772636,
+            -63.21545541286469
+          ],
+          [
+            9.716959267430914,
+            -63.21502625942231
+          ],
+          [
+            9.717070304024093,
+            -63.21420818567277
+          ],
+          [
+            9.7170015670898,
+            -63.2132774591446
+          ]
+        ],
+        "areaHa": 20.5,
+        "perimetroM": 1743,
+        "visible": true,
+        "fecha": "2026-09-09T16:01:01.840Z",
+        "munId": "maturin",
+        "parishId": "alto-de-los-godos",
+        "subParroquiaId": "SUBPAR-1788965549962",
+        "color": "#a855f7",
+        "ancho": 2,
+        "centroVotacion": "",
+        "votoDuro": 0,
+        "votoBlando": 0,
+        "votoNuevo": 0,
+        "isNew": false
+      },
+      {
+        "id": "POLY-1788969880668",
+        "nombre": "la laguna",
+        "descripcion": "Comunidad / Consejo Comunal",
+        "militantes": 0,
+        "casas": 0,
+        "habitantes": 0,
+        "familias": 0,
+        "colorBorde": "#ef4444",
+        "anchoBorde": 2,
+        "colorRelleno": "#ef4444",
+        "opacidad": 0.35,
+        "vertices": [
+          [
+            9.713456308373372,
+            -63.20900201797486
+          ],
+          [
+            9.713456308373372,
+            -63.21249961853028
+          ],
+          [
+            9.715708781349306,
+            -63.21300387382508
+          ],
+          [
+            9.717009498275237,
+            -63.21327209472657
+          ],
+          [
+            9.71687202436757,
+            -63.21121215820313
+          ],
+          [
+            9.716776850090685,
+            -63.210643529891975
+          ],
+          [
+            9.71722099648448,
+            -63.208132982254035
+          ],
+          [
+            9.715359807655311,
+            -63.208615779876716
+          ],
+          [
+            9.714587834251493,
+            -63.20883035659791
+          ]
+        ],
+        "areaHa": 18,
+        "perimetroM": 1659,
+        "visible": true,
+        "fecha": "2026-09-09T16:04:40.668Z",
+        "munId": "maturin",
+        "parishId": "alto-de-los-godos",
+        "subParroquiaId": "SUBPAR-1788965549962",
+        "color": "#ef4444",
+        "ancho": 2,
+        "centroVotacion": "",
+        "votoDuro": 0,
+        "votoBlando": 0,
+        "votoNuevo": 0,
+        "isNew": false
+      },
+      {
+        "id": "POLY-1788970000212",
+        "nombre": "las flores",
+        "descripcion": "Comunidad / Consejo Comunal",
+        "militantes": 0,
+        "casas": 0,
+        "habitantes": 0,
+        "familias": 0,
+        "colorBorde": "#10b981",
+        "anchoBorde": 2,
+        "colorRelleno": "#10b981",
+        "opacidad": 0.65,
+        "vertices": [
+          [
+            9.712441104330008,
+            -63.20906639099122
+          ],
+          [
+            9.713466883399276,
+            -63.20900201797486
+          ],
+          [
+            9.71464070919897,
+            -63.20884108543397
+          ],
+          [
+            9.71719984666957,
+            -63.208143711090095
+          ],
+          [
+            9.718151587016782,
+            -63.207360506057746
+          ],
+          [
+            9.71666052593775,
+            -63.20604085922242
+          ],
+          [
+            9.71603660479094,
+            -63.20675969123841
+          ],
+          [
+            9.715285782885559,
+            -63.206373453140266
+          ],
+          [
+            9.71368895886632,
+            -63.20606231689454
+          ],
+          [
+            9.713329408036326,
+            -63.206652402877815
+          ],
+          [
+            9.712874681433531,
+            -63.20730686187745
+          ],
+          [
+            9.712694905629483,
+            -63.20805788040162
+          ]
+        ],
+        "areaHa": 13.3,
+        "perimetroM": 1525,
+        "visible": true,
+        "fecha": "2026-09-09T16:06:40.212Z",
+        "munId": "maturin",
+        "parishId": "alto-de-los-godos",
+        "subParroquiaId": "SUBPAR-1788965549962",
+        "color": "#10b981",
+        "ancho": 2,
+        "centroVotacion": "",
+        "votoDuro": 0,
+        "votoBlando": 0,
+        "votoNuevo": 0,
+        "isNew": false
+      },
+      {
+        "id": "POLY-1788970154079",
+        "nombre": "Sector 1 A",
+        "descripcion": "Comunidad / Consejo Comunal",
+        "militantes": 0,
+        "casas": 0,
+        "habitantes": 0,
+        "familias": 0,
+        "colorBorde": "#38bdf8",
+        "anchoBorde": 2,
+        "colorRelleno": "#38bdf8",
+        "opacidad": 0.55,
+        "vertices": [
+          [
+            9.713456308373372,
+            -63.211362361907966
+          ],
+          [
+            9.713445733347124,
+            -63.210922479629524
+          ],
+          [
+            9.713466883399276,
+            -63.20903420448304
+          ],
+          [
+            9.712462254445644,
+            -63.20907711982728
+          ],
+          [
+            9.71084426674036,
+            -63.209109306335456
+          ],
+          [
+            9.709818479635343,
+            -63.209398984909065
+          ],
+          [
+            9.7090993692757,
+            -63.20978522300721
+          ],
+          [
+            9.709088794111823,
+            -63.211877346038825
+          ],
+          [
+            9.709025343121604,
+            -63.212360143661506
+          ],
+          [
+            9.709681002774225,
+            -63.21245670318604
+          ],
+          [
+            9.709792041781814,
+            -63.21180760860444
+          ],
+          [
+            9.710897142279153,
+            -63.21200609207154
+          ],
+          [
+            9.71105576884545,
+            -63.21127116680146
+          ]
+        ],
+        "areaHa": 12.9,
+        "perimetroM": 1392,
+        "visible": true,
+        "fecha": "2026-09-09T16:09:14.079Z",
+        "munId": "maturin",
+        "parishId": "alto-de-los-godos",
+        "subParroquiaId": "SUBPAR-1788965549962",
+        "color": "#38bdf8",
+        "ancho": 2,
+        "centroVotacion": "",
+        "votoDuro": 0,
+        "votoBlando": 0,
+        "votoNuevo": 0,
+        "isNew": false
+      },
+      {
+        "id": "POLY-1788970445669",
+        "nombre": "el caro",
+        "descripcion": "Comunidad / Consejo Comunal",
+        "militantes": 0,
+        "casas": 0,
+        "habitantes": 0,
+        "familias": 0,
+        "colorBorde": "#a855f7",
+        "anchoBorde": 2,
+        "colorRelleno": "#a855f7",
+        "opacidad": 0.65,
+        "vertices": [
+          [
+            9.712441104330008,
+            -63.20908248424531
+          ],
+          [
+            9.712864106388913,
+            -63.20731759071351
+          ],
+          [
+            9.71333998306625,
+            -63.206641674041755
+          ],
+          [
+            9.71368895886632,
+            -63.20606231689454
+          ],
+          [
+            9.713017444503256,
+            -63.205917477607734
+          ],
+          [
+            9.712372366444946,
+            -63.20575118064881
+          ],
+          [
+            9.711700849440762,
+            -63.20570290088654
+          ],
+          [
+            9.71080725385824,
+            -63.205370306968696
+          ],
+          [
+            9.709823767205812,
+            -63.2048124074936
+          ],
+          [
+            9.70974445364021,
+            -63.204876780509956
+          ],
+          [
+            9.709390186151236,
+            -63.2047587633133
+          ],
+          [
+            9.709025343121604,
+            -63.204903602600105
+          ],
+          [
+            9.708639349338661,
+            -63.20526838302613
+          ],
+          [
+            9.708385544964987,
+            -63.2057672739029
+          ],
+          [
+            9.707840922430591,
+            -63.206689953804016
+          ],
+          [
+            9.707026630775736,
+            -63.20781648159028
+          ],
+          [
+            9.706899728001865,
+            -63.20825636386872
+          ],
+          [
+            9.70666178517128,
+            -63.208674788475044
+          ],
+          [
+            9.706513731769181,
+            -63.20977449417115
+          ],
+          [
+            9.706444992667391,
+            -63.21003198623658
+          ],
+          [
+            9.706037845390606,
+            -63.210160732269294
+          ],
+          [
+            9.705662423437134,
+            -63.21044504642487
+          ],
+          [
+            9.705202398779681,
+            -63.210858106613166
+          ],
+          [
+            9.704874564730249,
+            -63.21087956428528
+          ],
+          [
+            9.704879852378756,
+            -63.211389183998115
+          ],
+          [
+            9.705345165120287,
+            -63.21149110794068
+          ],
+          [
+            9.705546095422509,
+            -63.21143746376038
+          ],
+          [
+            9.705932092770231,
+            -63.21104586124421
+          ],
+          [
+            9.70631280204736,
+            -63.21072936058045
+          ],
+          [
+            9.706963179394819,
+            -63.2105576992035
+          ],
+          [
+            9.707650568714552,
+            -63.21049332618714
+          ],
+          [
+            9.70829036827527,
+            -63.21019291877747
+          ],
+          [
+            9.709072931365391,
+            -63.20980668067933
+          ],
+          [
+            9.709665140055845,
+            -63.20948481559754
+          ],
+          [
+            9.709829054776167,
+            -63.209393620491035
+          ],
+          [
+            9.710437124811929,
+            -63.20922195911408
+          ],
+          [
+            9.710696215187308,
+            -63.209157586097724
+          ],
+          [
+            9.710923580045433,
+            -63.209109306335456
+          ],
+          [
+            9.711425897207853,
+            -63.20910394191743
+          ]
+        ],
+        "areaHa": 30.7,
+        "perimetroM": 2618,
+        "visible": true,
+        "fecha": "2026-09-09T16:14:05.669Z",
+        "munId": "maturin",
+        "parishId": "alto-de-los-godos",
+        "subParroquiaId": "SUBPAR-1788965549962",
+        "color": "#a855f7",
+        "ancho": 2,
+        "centroVotacion": "",
+        "votoDuro": 0,
+        "votoBlando": 0,
+        "votoNuevo": 0,
+        "isNew": false
+      },
+      {
+        "id": "POLY-1789054804245",
+        "nombre": "Sector l",
+        "descripcion": "Comunidad / Consejo Comunal",
+        "militantes": 0,
+        "casas": 0,
+        "habitantes": 0,
+        "familias": 0,
+        "colorBorde": "#eab308",
+        "anchoBorde": 2,
+        "colorRelleno": "#eab308",
+        "opacidad": 0.55,
+        "vertices": [
+          [
+            9.712134427503047,
+            -63.215144276618965
+          ],
+          [
+            9.71288790023885,
+            -63.21526229381562
+          ],
+          [
+            9.713072963458373,
+            -63.21432352066041
+          ],
+          [
+            9.713342626823682,
+            -63.213060200214386
+          ],
+          [
+            9.71345102086028,
+            -63.21249961853028
+          ],
+          [
+            9.71345102086028,
+            -63.21136504411698
+          ],
+          [
+            9.71105576884545,
+            -63.211273849010475
+          ],
+          [
+            9.710899786055883,
+            -63.21200609207154
+          ],
+          [
+            9.709794685567271,
+            -63.21181029081345
+          ],
+          [
+            9.709683646560547,
+            -63.21245670318604
+          ],
+          [
+            9.709004192788852,
+            -63.212354779243476
+          ],
+          [
+            9.708834990078774,
+            -63.212995827198036
+          ],
+          [
+            9.710101364537403,
+            -63.213247954845436
+          ],
+          [
+            9.710355167610624,
+            -63.21339279413224
+          ],
+          [
+            9.710920936268895,
+            -63.21390241384507
+          ],
+          [
+            9.71118795759328,
+            -63.214146494865425
+          ]
+        ],
+        "areaHa": 12.8,
+        "perimetroM": 1513,
+        "visible": true,
+        "fecha": "2026-09-10T15:40:04.245Z",
+        "munId": "maturin",
+        "parishId": "alto-de-los-godos",
+        "subParroquiaId": "SUBPAR-1788965549962",
+        "color": "#eab308",
+        "ancho": 2,
+        "centroVotacion": "",
+        "votoDuro": 0,
+        "votoBlando": 0,
+        "votoNuevo": 0,
+        "isNew": false
       }
     ],
     "rutas": [],
-    "marcas": [
-      {
-        "id": "c1",
-        "nombre": "🗳️ Cruz Hernández Quijada",
-        "descripcion": "Centro Electoral • 1056 electores • 2 mesas",
-        "lat": 9.734,
-        "lng": -63.221,
-        "color": "#f59e0b",
-        "visible": true,
-        "tipo": "centro_electoral",
-        "electores": 1056,
-        "mesas": 2
-      },
-      {
-        "id": "c2",
-        "nombre": "🗳️ Francisco Verde",
-        "descripcion": "Centro Electoral • 3230 electores • 5 mesas",
-        "lat": 9.737,
-        "lng": -63.226,
-        "color": "#f59e0b",
-        "visible": true,
-        "tipo": "centro_electoral",
-        "electores": 3230,
-        "mesas": 5
-      },
-      {
-        "id": "c3",
-        "nombre": "🗳️ Apolinar Cantor",
-        "descripcion": "Centro Electoral • 2481 electores • 4 mesas",
-        "lat": 9.731,
-        "lng": -63.217,
-        "color": "#f59e0b",
-        "visible": true,
-        "tipo": "centro_electoral",
-        "electores": 2481,
-        "mesas": 4
-      },
-      {
-        "id": "c4",
-        "nombre": "🗳️ Cruz Figuera Rondón",
-        "descripcion": "Centro Electoral • 2961 electores • 4 mesas",
-        "lat": 9.725,
-        "lng": -63.216,
-        "color": "#f59e0b",
-        "visible": true,
-        "tipo": "centro_electoral",
-        "electores": 2961,
-        "mesas": 4
-      },
-      {
-        "id": "c5",
-        "nombre": "🗳️ República de Venezuela",
-        "descripcion": "Centro Electoral • 500 electores • 1 mesas",
-        "lat": 9.717,
-        "lng": -63.227,
-        "color": "#f59e0b",
-        "visible": true,
-        "tipo": "centro_electoral",
-        "electores": 500,
-        "mesas": 1
-      },
-      {
-        "id": "ref-sub-godos-1",
-        "nombre": "📍 Sub-Parroquia 1 • Casco Los Godos",
-        "descripcion": "Eje / Sub-Parroquia undefined • Punto de referencia para mapeo comunal",
-        "lat": 9.739,
-        "lng": -63.204,
-        "color": "#a855f7",
-        "visible": true,
-        "tipo": "subparroquia_referencia",
-        "subParroquiaId": "sub-godos-1"
-      },
-      {
-        "id": "ref-sub-godos-2",
-        "nombre": "📍 Sub-Parroquia 2 • Morichal",
-        "descripcion": "Eje / Sub-Parroquia undefined • Punto de referencia para mapeo comunal",
-        "lat": 9.734,
-        "lng": -63.212,
-        "color": "#a855f7",
-        "visible": true,
-        "tipo": "subparroquia_referencia",
-        "subParroquiaId": "sub-godos-2"
-      },
-      {
-        "id": "ref-sub-godos-3",
-        "nombre": "📍 Sub-Parroquia 3 • Fundemos",
-        "descripcion": "Eje / Sub-Parroquia undefined • Punto de referencia para mapeo comunal",
-        "lat": 9.742,
-        "lng": -63.196,
-        "color": "#a855f7",
-        "visible": true,
-        "tipo": "subparroquia_referencia",
-        "subParroquiaId": "sub-godos-3"
-      },
-      {
-        "id": "ref-sub-godos-4",
-        "nombre": "📍 Sub-Parroquia 4 • Los Guaros",
-        "descripcion": "Eje / Sub-Parroquia undefined • Punto de referencia para mapeo comunal",
-        "lat": 9.728,
-        "lng": -63.196,
-        "color": "#a855f7",
-        "visible": true,
-        "tipo": "subparroquia_referencia",
-        "subParroquiaId": "sub-godos-4"
-      },
-      {
-        "id": "ref-sub-godos-5",
-        "nombre": "📍 Sub-Parroquia 5 • El Silencio",
-        "descripcion": "Eje / Sub-Parroquia undefined • Punto de referencia para mapeo comunal",
-        "lat": 9.718,
-        "lng": -63.204,
-        "color": "#a855f7",
-        "visible": true,
-        "tipo": "subparroquia_referencia",
-        "subParroquiaId": "sub-godos-5"
-      },
-      {
-        "id": "ref-sub-godos-7",
-        "nombre": "📍 Sub-Parroquia 7 • 19 de Abril",
-        "descripcion": "Eje / Sub-Parroquia undefined • Punto de referencia para mapeo comunal",
-        "lat": 9.715,
-        "lng": -63.224,
-        "color": "#a855f7",
-        "visible": true,
-        "tipo": "subparroquia_referencia",
-        "subParroquiaId": "sub-godos-7"
-      },
-      {
-        "id": "ref-sub-godos-8",
-        "nombre": "📍 Sub-Parroquia 8 • Las Brisas",
-        "descripcion": "Eje / Sub-Parroquia undefined • Punto de referencia para mapeo comunal",
-        "lat": 9.738,
-        "lng": -63.192,
-        "color": "#a855f7",
-        "visible": true,
-        "tipo": "subparroquia_referencia",
-        "subParroquiaId": "sub-godos-8"
-      },
-      {
-        "id": "ref-sub-godos-9",
-        "nombre": "📍 Sub-Parroquia 9 • San Rafael",
-        "descripcion": "Eje / Sub-Parroquia undefined • Punto de referencia para mapeo comunal",
-        "lat": 9.722,
-        "lng": -63.191,
-        "color": "#a855f7",
-        "visible": true,
-        "tipo": "subparroquia_referencia",
-        "subParroquiaId": "sub-godos-9"
-      },
-      {
-        "id": "ref-sub-godos-10",
-        "nombre": "📍 Sub-Parroquia 10 • Paramaconi",
-        "descripcion": "Eje / Sub-Parroquia undefined • Punto de referencia para mapeo comunal",
-        "lat": 9.732,
-        "lng": -63.232,
-        "color": "#a855f7",
-        "visible": true,
-        "tipo": "subparroquia_referencia",
-        "subParroquiaId": "sub-godos-10"
-      }
-    ],
-    "updatedAt": 1788581749345
+    "marcas": [],
+    "deletedIds": [],
+    "updatedAt": 1789054832498
   },
   "alto-de-los-godos": {
     "munId": "maturin",
     "parishId": "alto-de-los-godos",
     "subparroquias": [
       {
-        "id": "sub-godos-1",
-        "parroquiaId": "alto-de-los-godos",
-        "nombre": "Sub-Parroquia 1 • Casco Los Godos",
-        "alias": "Los Godos I y II",
-        "colorBorde": "#c084fc",
-        "anchoBorde": 2.5,
+        "id": "SUBPAR-1788965549962",
+        "nombre": "sub-parroquia 6",
+        "descripcion": "Eje o Circuito Comunal",
+        "militantes": 0,
+        "casas": 0,
+        "habitantes": 0,
+        "familias": 0,
+        "colorBorde": "#a855f7",
+        "anchoBorde": 2,
         "colorRelleno": "#a855f7",
-        "opacidad": 0.18,
-        "visible": true,
+        "opacidad": 0.45,
         "vertices": [
           [
-            9.744,
-            -63.21
+            9.717109926257494,
+            -63.208653255045384
           ],
           [
-            9.746,
-            -63.2
+            9.717236825160974,
+            -63.20803634697196
           ],
           [
-            9.736,
-            -63.197
+            9.717665108604923,
+            -63.20773593956228
           ],
           [
-            9.732,
-            -63.207
+            9.718172703087838,
+            -63.20738725239035
           ],
           [
-            9.744,
-            -63.21
+            9.71664988364502,
+            -63.20600852119918
+          ],
+          [
+            9.716025962478378,
+            -63.20675953972335
+          ],
+          [
+            9.715275140549117,
+            -63.20635184395309
+          ],
+          [
+            9.714238859388619,
+            -63.206148147583015
+          ],
+          [
+            9.713297682944543,
+            -63.20597648620606
+          ],
+          [
+            9.712377653975071,
+            -63.20575118064881
+          ],
+          [
+            9.711700849440762,
+            -63.20569753646851
+          ],
+          [
+            9.710770240972014,
+            -63.20534348487855
+          ],
+          [
+            9.709850205056823,
+            -63.20480704307557
+          ],
+          [
+            9.708179328769734,
+            -63.204388618469245
+          ],
+          [
+            9.704922153563775,
+            -63.20922732353211
+          ],
+          [
+            9.70485870178423,
+            -63.21143746376038
+          ],
+          [
+            9.704805825292109,
+            -63.21607232093812
+          ],
+          [
+            9.705926805138326,
+            -63.217145204544074
+          ],
+          [
+            9.705567245973626,
+            -63.22032094001771
+          ],
+          [
+            9.705747025604213,
+            -63.22276711463929
+          ],
+          [
+            9.706222912395942,
+            -63.22700500488282
+          ],
+          [
+            9.709400761305597,
+            -63.22803497314454
+          ],
+          [
+            9.709739166068507,
+            -63.22704792022706
+          ],
+          [
+            9.710225622316036,
+            -63.2262808084488
+          ],
+          [
+            9.710833691631594,
+            -63.22571754455567
+          ],
+          [
+            9.711362446660507,
+            -63.22521328926087
+          ],
+          [
+            9.711944076227779,
+            -63.22447836399079
+          ],
+          [
+            9.712895831521777,
+            -63.22295486927033
+          ],
+          [
+            9.713958621735346,
+            -63.22096467018128
+          ],
+          [
+            9.714883933849773,
+            -63.21904420852662
+          ],
+          [
+            9.715449694853708,
+            -63.21793913841248
+          ],
+          [
+            9.71778146609236,
+            -63.21830928325654
+          ],
+          [
+            9.717998251254917,
+            -63.21800351142884
+          ],
+          [
+            9.717977101489144,
+            -63.21722567081452
+          ],
+          [
+            9.717474794159077,
+            -63.21656584739686
+          ],
+          [
+            9.717326745538957,
+            -63.21605622768403
+          ],
+          [
+            9.717548818444572,
+            -63.2153481245041
+          ],
+          [
+            9.717633417607935,
+            -63.214902877807624
+          ],
+          [
+            9.717004210818313,
+            -63.21474194526673
+          ],
+          [
+            9.717072947752058,
+            -63.21420013904572
+          ],
+          [
+            9.716967198617356,
+            -63.21278929710389
+          ],
+          [
+            9.716924898954119,
+            -63.21205437183381
+          ],
+          [
+            9.716856161989954,
+            -63.21107804775239
+          ],
+          [
+            9.716766275169357,
+            -63.210638165473945
+          ],
+          [
+            9.71695133624427,
+            -63.20950627326966
           ]
-        ]
-      },
-      {
-        "id": "sub-godos-2",
-        "parroquiaId": "alto-de-los-godos",
-        "nombre": "Sub-Parroquia 2 • Morichal",
-        "alias": "Morichal",
-        "colorBorde": "#c084fc",
-        "anchoBorde": 2.5,
-        "colorRelleno": "#a855f7",
-        "opacidad": 0.18,
+        ],
+        "areaHa": 259,
+        "perimetroM": 7097,
         "visible": true,
-        "vertices": [
-          [
-            9.738,
-            -63.218
-          ],
-          [
-            9.74,
-            -63.208
-          ],
-          [
-            9.728,
-            -63.205
-          ],
-          [
-            9.725,
-            -63.216
-          ],
-          [
-            9.738,
-            -63.218
-          ]
-        ]
-      },
-      {
-        "id": "sub-godos-3",
-        "parroquiaId": "alto-de-los-godos",
-        "nombre": "Sub-Parroquia 3 • Fundemos",
-        "alias": "Fundemos I, II y III",
-        "colorBorde": "#c084fc",
-        "anchoBorde": 2.5,
-        "colorRelleno": "#a855f7",
-        "opacidad": 0.18,
-        "visible": true,
-        "vertices": [
-          [
-            9.747,
-            -63.201
-          ],
-          [
-            9.748,
-            -63.192
-          ],
-          [
-            9.736,
-            -63.19
-          ],
-          [
-            9.735,
-            -63.198
-          ],
-          [
-            9.747,
-            -63.201
-          ]
-        ]
-      },
-      {
-        "id": "sub-godos-4",
-        "parroquiaId": "alto-de-los-godos",
-        "nombre": "Sub-Parroquia 4 • Los Guaros",
-        "alias": "Los Guaros",
-        "colorBorde": "#c084fc",
-        "anchoBorde": 2.5,
-        "colorRelleno": "#a855f7",
-        "opacidad": 0.18,
-        "visible": true,
-        "vertices": [
-          [
-            9.734,
-            -63.201
-          ],
-          [
-            9.733,
-            -63.191
-          ],
-          [
-            9.722,
-            -63.193
-          ],
-          [
-            9.723,
-            -63.202
-          ],
-          [
-            9.734,
-            -63.201
-          ]
-        ]
-      },
-      {
-        "id": "sub-godos-5",
-        "parroquiaId": "alto-de-los-godos",
-        "nombre": "Sub-Parroquia 5 • El Silencio",
-        "alias": "El Silencio de Campo Alegre",
-        "colorBorde": "#c084fc",
-        "anchoBorde": 2.5,
-        "colorRelleno": "#a855f7",
-        "opacidad": 0.18,
-        "visible": true,
-        "vertices": [
-          [
-            9.724,
-            -63.212
-          ],
-          [
-            9.723,
-            -63.197
-          ],
-          [
-            9.712,
-            -63.198
-          ],
-          [
-            9.711,
-            -63.214
-          ],
-          [
-            9.724,
-            -63.212
-          ]
-        ]
-      },
-      {
-        "id": "sub-godos-6",
-        "parroquiaId": "alto-de-los-godos",
-        "nombre": "Sub-Parroquia 6 • Alto De Los Godos \"La Puente\"",
-        "alias": "La Puente",
-        "colorBorde": "#c084fc",
-        "anchoBorde": 2.5,
-        "colorRelleno": "#a855f7",
-        "opacidad": 0.18,
-        "visible": true,
-        "vertices": [
-          [
-            9.739,
-            -63.228
-          ],
-          [
-            9.742,
-            -63.214
-          ],
-          [
-            9.73,
-            -63.21
-          ],
-          [
-            9.718,
-            -63.212
-          ],
-          [
-            9.712,
-            -63.226
-          ],
-          [
-            9.725,
-            -63.232
-          ],
-          [
-            9.739,
-            -63.228
-          ]
-        ]
-      },
-      {
-        "id": "sub-godos-7",
-        "parroquiaId": "alto-de-los-godos",
-        "nombre": "Sub-Parroquia 7 • 19 de Abril",
-        "alias": "19 de Abril",
-        "colorBorde": "#c084fc",
-        "anchoBorde": 2.5,
-        "colorRelleno": "#a855f7",
-        "opacidad": 0.18,
-        "visible": true,
-        "vertices": [
-          [
-            9.72,
-            -63.23
-          ],
-          [
-            9.719,
-            -63.218
-          ],
-          [
-            9.709,
-            -63.219
-          ],
-          [
-            9.71,
-            -63.231
-          ],
-          [
-            9.72,
-            -63.23
-          ]
-        ]
-      },
-      {
-        "id": "sub-godos-8",
-        "parroquiaId": "alto-de-los-godos",
-        "nombre": "Sub-Parroquia 8 • Las Brisas",
-        "alias": "Alberto Ravell",
-        "colorBorde": "#c084fc",
-        "anchoBorde": 2.5,
-        "colorRelleno": "#a855f7",
-        "opacidad": 0.18,
-        "visible": true,
-        "vertices": [
-          [
-            9.744,
-            -63.195
-          ],
-          [
-            9.743,
-            -63.187
-          ],
-          [
-            9.732,
-            -63.189
-          ],
-          [
-            9.733,
-            -63.196
-          ],
-          [
-            9.744,
-            -63.195
-          ]
-        ]
-      },
-      {
-        "id": "sub-godos-9",
-        "parroquiaId": "alto-de-los-godos",
-        "nombre": "Sub-Parroquia 9 • San Rafael",
-        "alias": "San Rafael",
-        "colorBorde": "#c084fc",
-        "anchoBorde": 2.5,
-        "colorRelleno": "#a855f7",
-        "opacidad": 0.18,
-        "visible": true,
-        "vertices": [
-          [
-            9.728,
-            -63.195
-          ],
-          [
-            9.727,
-            -63.188
-          ],
-          [
-            9.716,
-            -63.189
-          ],
-          [
-            9.717,
-            -63.196
-          ],
-          [
-            9.728,
-            -63.195
-          ]
-        ]
-      },
-      {
-        "id": "sub-godos-10",
-        "parroquiaId": "alto-de-los-godos",
-        "nombre": "Sub-Parroquia 10 • Paramaconi",
-        "alias": "Paramaconi / Corapal",
-        "colorBorde": "#c084fc",
-        "anchoBorde": 2.5,
-        "colorRelleno": "#a855f7",
-        "opacidad": 0.18,
-        "visible": true,
-        "vertices": [
-          [
-            9.742,
-            -63.236
-          ],
-          [
-            9.739,
-            -63.227
-          ],
-          [
-            9.724,
-            -63.23
-          ],
-          [
-            9.726,
-            -63.239
-          ],
-          [
-            9.742,
-            -63.236
-          ]
-        ]
+        "fecha": "2026-09-09T14:52:29.962Z",
+        "munId": "maturin",
+        "parishId": "alto-de-los-godos",
+        "color": "#a855f7",
+        "ancho": 2,
+        "centroVotacion": "",
+        "votoDuro": 0,
+        "votoBlando": 0,
+        "votoNuevo": 0,
+        "subParroquiaId": null,
+        "isNew": false
       }
     ],
     "poligonos": [
       {
-        "id": "sec-lp-1",
-        "subParroquiaId": "sub-godos-6",
-        "nombre": "1. Monagzal",
-        "casas": 450,
-        "familias": 455,
-        "habitantes": 1550,
-        "militantes": 1550,
-        "colorBorde": "#38bdf8",
-        "anchoBorde": 2,
-        "colorRelleno": "#38bdf8",
-        "opacidad": 0.38,
-        "visible": true,
-        "vertices": [
-          [
-            9.736,
-            -63.232
-          ],
-          [
-            9.742,
-            -63.23
-          ],
-          [
-            9.74,
-            -63.223
-          ],
-          [
-            9.734,
-            -63.224
-          ],
-          [
-            9.736,
-            -63.232
-          ]
-        ],
-        "numero": 1,
-        "rawNombre": "Monagzal",
-        "centroVotacion": "Cruz Hernández Quijada",
-        "comitesVotacion": 3,
-        "descripcion": "Sector 1: Monagzal • 450 casas • 1550 hab. Centro: Cruz Hernández Quijada",
-        "areaHa": 12.5,
-        "perimetroM": 1540,
-        "esOficial": true
-      },
-      {
-        "id": "sec-lp-2",
-        "subParroquiaId": "sub-godos-6",
-        "nombre": "2. Las Vírgenes",
-        "casas": 1040,
-        "familias": 1087,
-        "habitantes": 3053,
-        "militantes": 3053,
-        "colorBorde": "#10b981",
-        "anchoBorde": 2,
-        "colorRelleno": "#10b981",
-        "opacidad": 0.38,
-        "visible": true,
-        "vertices": [
-          [
-            9.735,
-            -63.223
-          ],
-          [
-            9.741,
-            -63.222
-          ],
-          [
-            9.739,
-            -63.215
-          ],
-          [
-            9.733,
-            -63.216
-          ],
-          [
-            9.735,
-            -63.223
-          ]
-        ],
-        "numero": 2,
-        "rawNombre": "Las Vírgenes",
-        "centroVotacion": "Cruz Hernández Quijada",
-        "comitesVotacion": 1,
-        "descripcion": "Sector 2: Las Vírgenes • 1040 casas • 3053 hab. Centro: Cruz Hernández Quijada",
-        "areaHa": 12.5,
-        "perimetroM": 1540,
-        "esOficial": true
-      },
-      {
-        "id": "sec-lp-3",
-        "subParroquiaId": "sub-godos-6",
-        "nombre": "3. Villa de los Ángeles",
-        "casas": 446,
-        "familias": 443,
-        "habitantes": 1254,
-        "militantes": 1254,
-        "colorBorde": "#f59e0b",
-        "anchoBorde": 2,
-        "colorRelleno": "#f59e0b",
-        "opacidad": 0.38,
-        "visible": true,
-        "vertices": [
-          [
-            9.728,
-            -63.231
-          ],
-          [
-            9.735,
-            -63.23
-          ],
-          [
-            9.733,
-            -63.223
-          ],
-          [
-            9.727,
-            -63.224
-          ],
-          [
-            9.728,
-            -63.231
-          ]
-        ],
-        "numero": 3,
-        "rawNombre": "Villa de los Ángeles",
-        "centroVotacion": "Francisco Verde",
-        "comitesVotacion": 1,
-        "descripcion": "Sector 3: Villa de los Ángeles • 446 casas • 1254 hab. Centro: Francisco Verde",
-        "areaHa": 12.5,
-        "perimetroM": 1540,
-        "esOficial": true
-      },
-      {
-        "id": "sec-lp-4",
-        "subParroquiaId": "sub-godos-6",
-        "nombre": "4. Canadá",
-        "casas": 546,
-        "familias": 580,
-        "habitantes": 1513,
-        "militantes": 1513,
-        "colorBorde": "#ef4444",
-        "anchoBorde": 2,
-        "colorRelleno": "#ef4444",
-        "opacidad": 0.38,
-        "visible": true,
-        "vertices": [
-          [
-            9.727,
-            -63.223
-          ],
-          [
-            9.733,
-            -63.222
-          ],
-          [
-            9.732,
-            -63.216
-          ],
-          [
-            9.726,
-            -63.217
-          ],
-          [
-            9.727,
-            -63.223
-          ]
-        ],
-        "numero": 4,
-        "rawNombre": "Canadá",
-        "centroVotacion": "Francisco Verde",
-        "comitesVotacion": 1,
-        "descripcion": "Sector 4: Canadá • 546 casas • 1513 hab. Centro: Francisco Verde",
-        "areaHa": 12.5,
-        "perimetroM": 1540,
-        "esOficial": true
-      },
-      {
-        "id": "sec-lp-5",
-        "subParroquiaId": "sub-godos-6",
-        "nombre": "5. Sector II",
-        "casas": 551,
-        "familias": 701,
-        "habitantes": 1939,
-        "militantes": 1939,
-        "colorBorde": "#a855f7",
-        "anchoBorde": 2,
-        "colorRelleno": "#a855f7",
-        "opacidad": 0.38,
-        "visible": true,
-        "vertices": [
-          [
-            9.726,
-            -63.216
-          ],
-          [
-            9.732,
-            -63.215
-          ],
-          [
-            9.73,
-            -63.21
-          ],
-          [
-            9.724,
-            -63.211
-          ],
-          [
-            9.726,
-            -63.216
-          ]
-        ],
-        "numero": 5,
-        "rawNombre": "Sector II",
-        "centroVotacion": "Apolinar Cantor",
-        "comitesVotacion": 2,
-        "descripcion": "Sector 5: Sector II • 551 casas • 1939 hab. Centro: Apolinar Cantor",
-        "areaHa": 12.5,
-        "perimetroM": 1540,
-        "esOficial": true
-      },
-      {
-        "id": "sec-lp-6",
-        "subParroquiaId": "sub-godos-6",
-        "nombre": "6. Sector I",
-        "casas": 312,
-        "familias": 370,
-        "habitantes": 850,
-        "militantes": 850,
-        "colorBorde": "#06b6d4",
-        "anchoBorde": 2,
-        "colorRelleno": "#06b6d4",
-        "opacidad": 0.38,
-        "visible": true,
-        "vertices": [
-          [
-            9.72,
-            -63.23
-          ],
-          [
-            9.727,
-            -63.229
-          ],
-          [
-            9.725,
-            -63.223
-          ],
-          [
-            9.718,
-            -63.224
-          ],
-          [
-            9.72,
-            -63.23
-          ]
-        ],
-        "numero": 6,
-        "rawNombre": "Sector I",
-        "centroVotacion": "Apolinar Cantor",
-        "comitesVotacion": 1,
-        "descripcion": "Sector 6: Sector I • 312 casas • 850 hab. Centro: Apolinar Cantor",
-        "areaHa": 12.5,
-        "perimetroM": 1540,
-        "esOficial": true
-      },
-      {
-        "id": "sec-lp-7",
-        "subParroquiaId": "sub-godos-6",
-        "nombre": "7. Sector IA",
-        "casas": 332,
-        "familias": 357,
-        "habitantes": 996,
-        "militantes": 996,
-        "colorBorde": "#84cc16",
-        "anchoBorde": 2,
-        "colorRelleno": "#84cc16",
-        "opacidad": 0.38,
-        "visible": true,
-        "vertices": [
-          [
-            9.724,
-            -63.21
-          ],
-          [
-            9.73,
-            -63.209
-          ],
-          [
-            9.728,
-            -63.205
-          ],
-          [
-            9.722,
-            -63.206
-          ],
-          [
-            9.724,
-            -63.21
-          ]
-        ],
-        "numero": 7,
-        "rawNombre": "Sector IA",
-        "centroVotacion": "Cruz Figuera Rondón",
-        "comitesVotacion": 1,
-        "descripcion": "Sector 7: Sector IA • 332 casas • 996 hab. Centro: Cruz Figuera Rondón",
-        "areaHa": 12.5,
-        "perimetroM": 1540,
-        "esOficial": true
-      },
-      {
-        "id": "sec-lp-8",
-        "subParroquiaId": "sub-godos-6",
-        "nombre": "8. El Caro",
-        "casas": 692,
-        "familias": 1032,
-        "habitantes": 1832,
-        "militantes": 1832,
+        "id": "POLY-1788966016501",
+        "nombre": "villa de los angeles",
+        "descripcion": "Comunidad / Consejo Comunal",
+        "militantes": 0,
+        "casas": 0,
+        "habitantes": 0,
+        "familias": 0,
         "colorBorde": "#f97316",
         "anchoBorde": 2,
         "colorRelleno": "#f97316",
-        "opacidad": 0.38,
-        "visible": true,
+        "opacidad": 0.35,
         "vertices": [
           [
-            9.718,
-            -63.216
+            9.711339974588768,
+            -63.225268274545684
           ],
           [
-            9.724,
-            -63.215
+            9.70970744063652,
+            -63.2250201702118
           ],
           [
-            9.722,
-            -63.208
+            9.709678358987876,
+            -63.22496786713601
           ],
           [
-            9.715,
-            -63.209
+            9.70964134597687,
+            -63.22489812970163
           ],
           [
-            9.718,
-            -63.216
+            9.709612264322502,
+            -63.224747925996795
+          ],
+          [
+            9.709589792133285,
+            -63.22458565235139
+          ],
+          [
+            9.709567319942579,
+            -63.224371075630195
+          ],
+          [
+            9.709490650104092,
+            -63.22424232959748
+          ],
+          [
+            9.709437774343193,
+            -63.22416052222253
+          ],
+          [
+            9.709361104475063,
+            -63.22403982281686
+          ],
+          [
+            9.708920913340663,
+            -63.22335049510003
+          ],
+          [
+            9.708852174732915,
+            -63.22320297360422
+          ],
+          [
+            9.708813839733999,
+            -63.22310641407967
+          ],
+          [
+            9.70876889524693,
+            -63.223000466823585
+          ],
+          [
+            9.708726594547697,
+            -63.222899883985534
+          ],
+          [
+            9.708680328151798,
+            -63.22279661893845
+          ],
+          [
+            9.708607623802477,
+            -63.22261825203896
+          ],
+          [
+            9.708374969778566,
+            -63.22248011827469
+          ],
+          [
+            9.708464858852434,
+            -63.2209861278534
+          ],
+          [
+            9.708920913340663,
+            -63.22102904319764
+          ],
+          [
+            9.709441740025559,
+            -63.22107866406442
+          ],
+          [
+            9.70996653157651,
+            -63.22113230824471
+          ],
+          [
+            9.710486034745074,
+            -63.22119668126107
+          ],
+          [
+            9.71093812081599,
+            -63.22125971317292
+          ],
+          [
+            9.711441759842826,
+            -63.22129592299462
+          ],
+          [
+            9.71191102912035,
+            -63.22134822607041
+          ],
+          [
+            9.713567346128801,
+            -63.22150111198426
+          ],
+          [
+            9.712541567367397,
+            -63.223443031311035
           ]
         ],
-        "numero": 8,
-        "rawNombre": "El Caro",
-        "centroVotacion": "Cruz Figuera Rondón",
-        "comitesVotacion": 1,
-        "descripcion": "Sector 8: El Caro • 692 casas • 1832 hab. Centro: Cruz Figuera Rondón",
-        "areaHa": 12.5,
-        "perimetroM": 1540,
-        "esOficial": true
+        "areaHa": 17.4,
+        "perimetroM": 1483,
+        "visible": true,
+        "fecha": "2026-09-09T15:00:16.501Z",
+        "munId": "maturin",
+        "parishId": "alto-de-los-godos",
+        "subParroquiaId": "SUBPAR-1788965549962",
+        "color": "#f97316",
+        "ancho": 2,
+        "centroVotacion": "",
+        "votoDuro": 0,
+        "votoBlando": 0,
+        "votoNuevo": 0,
+        "isNew": false
       },
       {
-        "id": "sec-lp-9",
-        "subParroquiaId": "sub-godos-6",
-        "nombre": "9. La Lucha",
-        "casas": 306,
-        "familias": 470,
-        "habitantes": 1237,
-        "militantes": 1237,
-        "colorBorde": "#ec4899",
+        "id": "POLY-1788967024859",
+        "nombre": "el mangozal",
+        "descripcion": "Comunidad / Consejo Comunal",
+        "militantes": 0,
+        "casas": 0,
+        "habitantes": 0,
+        "familias": 0,
+        "colorBorde": "#a855f7",
         "anchoBorde": 2,
-        "colorRelleno": "#ec4899",
-        "opacidad": 0.38,
-        "visible": true,
+        "colorRelleno": "#a855f7",
+        "opacidad": 0.45,
         "vertices": [
           [
-            9.719,
-            -63.223
+            9.708459571260516,
+            -63.22099685668945
           ],
           [
-            9.726,
-            -63.222
+            9.706460855538273,
+            -63.22079300880433
           ],
           [
-            9.724,
-            -63.216
+            9.706444992667391,
+            -63.22083055973054
           ],
           [
-            9.717,
-            -63.217
+            9.706164748490993,
+            -63.22075545787812
           ],
           [
-            9.719,
-            -63.223
+            9.705963818559841,
+            -63.22092175483704
+          ],
+          [
+            9.705762888508158,
+            -63.2211846113205
+          ],
+          [
+            9.705662423437134,
+            -63.22168350219727
+          ],
+          [
+            9.705752313238941,
+            -63.22200536727906
+          ],
+          [
+            9.705815764849241,
+            -63.222160935401924
+          ],
+          [
+            9.705900366977593,
+            -63.22229504585267
+          ],
+          [
+            9.706016694869207,
+            -63.22242379188538
+          ],
+          [
+            9.70619118663086,
+            -63.222595453262336
+          ],
+          [
+            9.70641326692334,
+            -63.22279930114747
+          ],
+          [
+            9.70670937375092,
+            -63.22302997112275
+          ],
+          [
+            9.70693674131589,
+            -63.223384022712715
+          ],
+          [
+            9.70688915276855,
+            -63.22421550750733
+          ],
+          [
+            9.706989617471661,
+            -63.22478950023652
+          ],
+          [
+            9.707005480316766,
+            -63.226152062416084
+          ],
+          [
+            9.70700019270182,
+            -63.22669386863709
+          ],
+          [
+            9.706973754625793,
+            -63.22701573371888
+          ],
+          [
+            9.706957891779199,
+            -63.22724103927613
+          ],
+          [
+            9.709400761305597,
+            -63.22803497314454
+          ],
+          [
+            9.709733878496715,
+            -63.22706401348115
+          ],
+          [
+            9.710130446149305,
+            -63.22644174098969
+          ],
+          [
+            9.71021504718773,
+            -63.22630226612092
+          ],
+          [
+            9.711309571195196,
+            -63.2252722978592
+          ],
+          [
+            9.709696865491853,
+            -63.22503089904786
+          ],
+          [
+            9.709617551896203,
+            -63.224880695343025
+          ],
+          [
+            9.709564676155342,
+            -63.224381804466255
+          ],
+          [
+            9.708930166613714,
+            -63.223351836204536
+          ],
+          [
+            9.708607623802477,
+            -63.222622275352485
+          ],
+          [
+            9.708369682185248,
+            -63.22246670722962
+          ],
+          [
+            9.708380257371822,
+            -63.22206974029542
           ]
         ],
-        "numero": 9,
-        "rawNombre": "La Lucha",
-        "centroVotacion": "República de Venezuela",
-        "comitesVotacion": 1,
-        "descripcion": "Sector 9: La Lucha • 306 casas • 1237 hab. Centro: República de Venezuela",
-        "areaHa": 12.5,
-        "perimetroM": 1540,
-        "esOficial": true
+        "areaHa": 22.8,
+        "perimetroM": 2259,
+        "visible": true,
+        "fecha": "2026-09-09T15:17:04.859Z",
+        "munId": "maturin",
+        "parishId": "alto-de-los-godos",
+        "subParroquiaId": "SUBPAR-1788965549962",
+        "color": "#a855f7",
+        "ancho": 2,
+        "centroVotacion": "",
+        "votoDuro": 0,
+        "votoBlando": 0,
+        "votoNuevo": 0,
+        "isNew": false
       },
       {
-        "id": "sec-lp-10",
-        "subParroquiaId": "sub-godos-6",
-        "nombre": "10. Las Flores",
-        "casas": 337,
-        "familias": 368,
-        "habitantes": 885,
-        "militantes": 885,
-        "colorBorde": "#14b8a6",
+        "id": "POLY-1788967978671",
+        "nombre": "las vigenes",
+        "descripcion": "Comunidad / Consejo Comunal",
+        "militantes": 0,
+        "casas": 0,
+        "habitantes": 0,
+        "familias": 0,
+        "colorBorde": "#38bdf8",
         "anchoBorde": 2,
-        "colorRelleno": "#14b8a6",
-        "opacidad": 0.38,
-        "visible": true,
+        "colorRelleno": "#38bdf8",
+        "opacidad": 0.35,
         "vertices": [
           [
-            9.733,
-            -63.215
+            9.715581881866317,
+            -63.217349052429206
           ],
           [
-            9.74,
-            -63.214
+            9.713731258938564,
+            -63.22144746780396
           ],
           [
-            9.738,
-            -63.208
+            9.706450280291104,
+            -63.22079837322236
           ],
           [
-            9.732,
-            -63.209
-          ],
-          [
-            9.733,
-            -63.215
+            9.706994905086772,
+            -63.21725249290467
           ]
         ],
-        "numero": 10,
-        "rawNombre": "Las Flores",
-        "centroVotacion": "República de Venezuela",
-        "comitesVotacion": 1,
-        "descripcion": "Sector 10: Las Flores • 337 casas • 885 hab. Centro: República de Venezuela",
-        "areaHa": 12.5,
-        "perimetroM": 1540,
-        "esOficial": true
+        "areaHa": 15.6,
+        "perimetroM": 1192,
+        "visible": true,
+        "fecha": "2026-09-09T15:32:58.671Z",
+        "munId": "maturin",
+        "parishId": "alto-de-los-godos",
+        "subParroquiaId": "SUBPAR-1788965549962"
       },
       {
-        "id": "sec-lp-11",
-        "subParroquiaId": "sub-godos-6",
-        "nombre": "11. La Laguna",
-        "casas": 283,
-        "familias": 347,
-        "habitantes": 1050,
-        "militantes": 1050,
-        "colorBorde": "#3b82f6",
+        "id": "POLY-1788968547771",
+        "nombre": "hugo chavez ll",
+        "descripcion": "Comunidad / Consejo Comunal",
+        "militantes": 0,
+        "casas": 0,
+        "habitantes": 0,
+        "familias": 0,
+        "colorBorde": "#10b981",
         "anchoBorde": 2,
-        "colorRelleno": "#3b82f6",
-        "opacidad": 0.38,
-        "visible": true,
+        "colorRelleno": "#10b981",
+        "opacidad": 0.6,
         "vertices": [
           [
-            9.712,
-            -63.223
+            9.715439119890435,
+            -63.21794450283051
           ],
           [
-            9.718,
-            -63.222
+            9.71778146609236,
+            -63.21830928325654
           ],
           [
-            9.716,
-            -63.214
+            9.718008826137302,
+            -63.2180142402649
           ],
           [
-            9.71,
-            -63.215
+            9.717971814047486,
+            -63.21723103523255
           ],
           [
-            9.712,
-            -63.223
+            9.71746421925981,
+            -63.21654975414277
+          ],
+          [
+            9.717326745538957,
+            -63.21604549884797
+          ],
+          [
+            9.717538243547645,
+            -63.215396404266365
+          ],
+          [
+            9.717622842713693,
+            -63.214897513389595
+          ],
+          [
+            9.717004210818313,
+            -63.21474194526673
+          ],
+          [
+            9.716956623702059,
+            -63.21502089500428
+          ],
+          [
+            9.71682443723251,
+            -63.21545541286469
+          ],
+          [
+            9.716589145187504,
+            -63.216010630130775
+          ],
+          [
+            9.716438452442572,
+            -63.21635931730271
+          ],
+          [
+            9.716332703107355,
+            -63.21656048297883
+          ],
+          [
+            9.716166147836608,
+            -63.21680992841721
           ]
         ],
-        "numero": 11,
-        "rawNombre": "La Laguna",
-        "centroVotacion": "República de Venezuela",
-        "comitesVotacion": 1,
-        "descripcion": "Sector 11: La Laguna • 283 casas • 1050 hab. Centro: República de Venezuela",
-        "areaHa": 12.5,
-        "perimetroM": 1540,
-        "esOficial": true
+        "areaHa": 5.5,
+        "perimetroM": 990,
+        "visible": true,
+        "fecha": "2026-09-09T15:42:27.771Z",
+        "munId": "maturin",
+        "parishId": "alto-de-los-godos",
+        "subParroquiaId": "SUBPAR-1788965549962",
+        "color": "#10b981",
+        "ancho": 2,
+        "centroVotacion": "",
+        "votoDuro": 0,
+        "votoBlando": 0,
+        "votoNuevo": 0,
+        "isNew": false
+      },
+      {
+        "id": "POLY-1788968986348",
+        "nombre": "la lucha",
+        "descripcion": "Comunidad / Consejo Comunal",
+        "militantes": 0,
+        "casas": 0,
+        "habitantes": 0,
+        "familias": 0,
+        "colorBorde": "#ef4444",
+        "anchoBorde": 2,
+        "colorRelleno": "#ef4444",
+        "opacidad": 0.5,
+        "vertices": [
+          [
+            9.708327381435597,
+            -63.21480631828309
+          ],
+          [
+            9.707142958276206,
+            -63.214398622512824
+          ],
+          [
+            9.706656497550915,
+            -63.21422696113587
+          ],
+          [
+            9.706275788664406,
+            -63.21407675743104
+          ],
+          [
+            9.705937380402034,
+            -63.21393728256226
+          ],
+          [
+            9.705355740402354,
+            -63.21373343467713
+          ],
+          [
+            9.705577821248681,
+            -63.21317553520203
+          ],
+          [
+            9.705884504080162,
+            -63.212617635726936
+          ],
+          [
+            9.705895079345192,
+            -63.21175932884217
+          ],
+          [
+            9.705503794316266,
+            -63.21172714233399
+          ],
+          [
+            9.704863989432992,
+            -63.211668133735664
+          ],
+          [
+            9.704863989432992,
+            -63.21139186620713
+          ],
+          [
+            9.70513365940879,
+            -63.21144551038743
+          ],
+          [
+            9.705331946017218,
+            -63.211499154567726
+          ],
+          [
+            9.705543451603528,
+            -63.21144819259644
+          ],
+          [
+            9.706003475792638,
+            -63.21097075939179
+          ],
+          [
+            9.706320733486033,
+            -63.21072131395341
+          ],
+          [
+            9.706894440385252,
+            -63.21056842803956
+          ],
+          [
+            9.707661143923835,
+            -63.210479915142066
+          ],
+          [
+            9.708578542058328,
+            -63.21007758378983
+          ],
+          [
+            9.709078218947628,
+            -63.20980936288834
+          ],
+          [
+            9.709086150320806,
+            -63.21070790290833
+          ],
+          [
+            9.709070287574248,
+            -63.2113328576088
+          ],
+          [
+            9.709072931365391,
+            -63.211861252784736
+          ],
+          [
+            9.708985686246594,
+            -63.212413787841804
+          ]
+        ],
+        "areaHa": 15.2,
+        "perimetroM": 1534,
+        "visible": true,
+        "fecha": "2026-09-09T15:49:46.348Z",
+        "munId": "maturin",
+        "parishId": "alto-de-los-godos",
+        "subParroquiaId": "SUBPAR-1788965549962",
+        "color": "#ef4444",
+        "ancho": 2,
+        "centroVotacion": "",
+        "votoDuro": 0,
+        "votoBlando": 0,
+        "votoNuevo": 0,
+        "isNew": false
+      },
+      {
+        "id": "POLY-1788969435080",
+        "nombre": "sector ll",
+        "descripcion": "Comunidad / Consejo Comunal",
+        "militantes": 0,
+        "casas": 0,
+        "habitantes": 0,
+        "familias": 0,
+        "colorBorde": "#f97316",
+        "anchoBorde": 2,
+        "colorRelleno": "#f97316",
+        "opacidad": 0.35,
+        "vertices": [
+          [
+            9.708827058699642,
+            -63.212995827198036
+          ],
+          [
+            9.710096076971336,
+            -63.21325063705445
+          ],
+          [
+            9.710363098953561,
+            -63.213395476341255
+          ],
+          [
+            9.71113772587526,
+            -63.21409821510316
+          ],
+          [
+            9.711647974028885,
+            -63.214634656906135
+          ],
+          [
+            9.712131783736087,
+            -63.21514159440995
+          ],
+          [
+            9.71287996895572,
+            -63.21526229381562
+          ],
+          [
+            9.712689618104381,
+            -63.216147422790534
+          ],
+          [
+            9.71240937915404,
+            -63.21709960699082
+          ],
+          [
+            9.711227614207447,
+            -63.21701109409333
+          ],
+          [
+            9.71041068700724,
+            -63.21693867444993
+          ],
+          [
+            9.709197189525666,
+            -63.216850161552436
+          ],
+          [
+            9.708686937637317,
+            -63.216914534568794
+          ],
+          [
+            9.708464858852434,
+            -63.217265903949745
+          ],
+          [
+            9.70748929673158,
+            -63.217233717441566
+          ],
+          [
+            9.7069763984335,
+            -63.21725249290467
+          ],
+          [
+            9.70673845565738,
+            -63.218851089477546
+          ],
+          [
+            9.706492581277821,
+            -63.220522105693824
+          ],
+          [
+            9.706688223271925,
+            -63.218816220760345
+          ],
+          [
+            9.706823057552699,
+            -63.21760386228562
+          ],
+          [
+            9.707053068847566,
+            -63.21681261062622
+          ],
+          [
+            9.705662423437134,
+            -63.2162868976593
+          ],
+          [
+            9.705419192087753,
+            -63.2159972190857
+          ],
+          [
+            9.70523941228123,
+            -63.215600252151496
+          ],
+          [
+            9.705197111136261,
+            -63.21517109870911
+          ],
+          [
+            9.705228836995488,
+            -63.21467757225037
+          ],
+          [
+            9.705366315684088,
+            -63.21372270584107
+          ],
+          [
+            9.708353819404746,
+            -63.21482241153718
+          ]
+        ],
+        "areaHa": 25.6,
+        "perimetroM": 2961,
+        "visible": true,
+        "fecha": "2026-09-09T15:57:15.080Z",
+        "munId": "maturin",
+        "parishId": "alto-de-los-godos",
+        "subParroquiaId": "SUBPAR-1788965549962",
+        "color": "#f97316",
+        "ancho": 2,
+        "centroVotacion": "",
+        "votoDuro": 0,
+        "votoBlando": 0,
+        "votoNuevo": 0,
+        "isNew": false
+      },
+      {
+        "id": "POLY-1788969661840",
+        "nombre": "la canada",
+        "descripcion": "Comunidad / Consejo Comunal",
+        "militantes": 0,
+        "casas": 0,
+        "habitantes": 0,
+        "familias": 0,
+        "colorBorde": "#a855f7",
+        "anchoBorde": 2,
+        "colorRelleno": "#a855f7",
+        "opacidad": 0.45,
+        "vertices": [
+          [
+            9.71345102086028,
+            -63.21250498294831
+          ],
+          [
+            9.713300326702317,
+            -63.21329355239869
+          ],
+          [
+            9.713160207512106,
+            -63.2139265537262
+          ],
+          [
+            9.712996294422696,
+            -63.21467757225037
+          ],
+          [
+            9.712890543999842,
+            -63.215270340442665
+          ],
+          [
+            9.712694905629483,
+            -63.216142058372505
+          ],
+          [
+            9.712412022918812,
+            -63.21710497140885
+          ],
+          [
+            9.715589813085403,
+            -63.21734637022019
+          ],
+          [
+            9.714878646359239,
+            -63.21892619132996
+          ],
+          [
+            9.715552800728013,
+            -63.217743337154396
+          ],
+          [
+            9.715788093501724,
+            -63.217408061027534
+          ],
+          [
+            9.716369715378475,
+            -63.216493427753456
+          ],
+          [
+            9.716819149772636,
+            -63.21545541286469
+          ],
+          [
+            9.716959267430914,
+            -63.21502625942231
+          ],
+          [
+            9.717070304024093,
+            -63.21420818567277
+          ],
+          [
+            9.7170015670898,
+            -63.2132774591446
+          ]
+        ],
+        "areaHa": 20.5,
+        "perimetroM": 1743,
+        "visible": true,
+        "fecha": "2026-09-09T16:01:01.840Z",
+        "munId": "maturin",
+        "parishId": "alto-de-los-godos",
+        "subParroquiaId": "SUBPAR-1788965549962",
+        "color": "#a855f7",
+        "ancho": 2,
+        "centroVotacion": "",
+        "votoDuro": 0,
+        "votoBlando": 0,
+        "votoNuevo": 0,
+        "isNew": false
+      },
+      {
+        "id": "POLY-1788969880668",
+        "nombre": "la laguna",
+        "descripcion": "Comunidad / Consejo Comunal",
+        "militantes": 0,
+        "casas": 0,
+        "habitantes": 0,
+        "familias": 0,
+        "colorBorde": "#ef4444",
+        "anchoBorde": 2,
+        "colorRelleno": "#ef4444",
+        "opacidad": 0.35,
+        "vertices": [
+          [
+            9.713456308373372,
+            -63.20900201797486
+          ],
+          [
+            9.713456308373372,
+            -63.21249961853028
+          ],
+          [
+            9.715708781349306,
+            -63.21300387382508
+          ],
+          [
+            9.717009498275237,
+            -63.21327209472657
+          ],
+          [
+            9.71687202436757,
+            -63.21121215820313
+          ],
+          [
+            9.716776850090685,
+            -63.210643529891975
+          ],
+          [
+            9.71722099648448,
+            -63.208132982254035
+          ],
+          [
+            9.715359807655311,
+            -63.208615779876716
+          ],
+          [
+            9.714587834251493,
+            -63.20883035659791
+          ]
+        ],
+        "areaHa": 18,
+        "perimetroM": 1659,
+        "visible": true,
+        "fecha": "2026-09-09T16:04:40.668Z",
+        "munId": "maturin",
+        "parishId": "alto-de-los-godos",
+        "subParroquiaId": "SUBPAR-1788965549962",
+        "color": "#ef4444",
+        "ancho": 2,
+        "centroVotacion": "",
+        "votoDuro": 0,
+        "votoBlando": 0,
+        "votoNuevo": 0,
+        "isNew": false
+      },
+      {
+        "id": "POLY-1788970000212",
+        "nombre": "las flores",
+        "descripcion": "Comunidad / Consejo Comunal",
+        "militantes": 0,
+        "casas": 0,
+        "habitantes": 0,
+        "familias": 0,
+        "colorBorde": "#10b981",
+        "anchoBorde": 2,
+        "colorRelleno": "#10b981",
+        "opacidad": 0.65,
+        "vertices": [
+          [
+            9.712441104330008,
+            -63.20906639099122
+          ],
+          [
+            9.713466883399276,
+            -63.20900201797486
+          ],
+          [
+            9.71464070919897,
+            -63.20884108543397
+          ],
+          [
+            9.71719984666957,
+            -63.208143711090095
+          ],
+          [
+            9.718151587016782,
+            -63.207360506057746
+          ],
+          [
+            9.71666052593775,
+            -63.20604085922242
+          ],
+          [
+            9.71603660479094,
+            -63.20675969123841
+          ],
+          [
+            9.715285782885559,
+            -63.206373453140266
+          ],
+          [
+            9.71368895886632,
+            -63.20606231689454
+          ],
+          [
+            9.713329408036326,
+            -63.206652402877815
+          ],
+          [
+            9.712874681433531,
+            -63.20730686187745
+          ],
+          [
+            9.712694905629483,
+            -63.20805788040162
+          ]
+        ],
+        "areaHa": 13.3,
+        "perimetroM": 1525,
+        "visible": true,
+        "fecha": "2026-09-09T16:06:40.212Z",
+        "munId": "maturin",
+        "parishId": "alto-de-los-godos",
+        "subParroquiaId": "SUBPAR-1788965549962",
+        "color": "#10b981",
+        "ancho": 2,
+        "centroVotacion": "",
+        "votoDuro": 0,
+        "votoBlando": 0,
+        "votoNuevo": 0,
+        "isNew": false
+      },
+      {
+        "id": "POLY-1788970154079",
+        "nombre": "Sector 1 A",
+        "descripcion": "Comunidad / Consejo Comunal",
+        "militantes": 0,
+        "casas": 0,
+        "habitantes": 0,
+        "familias": 0,
+        "colorBorde": "#38bdf8",
+        "anchoBorde": 2,
+        "colorRelleno": "#38bdf8",
+        "opacidad": 0.55,
+        "vertices": [
+          [
+            9.713456308373372,
+            -63.211362361907966
+          ],
+          [
+            9.713445733347124,
+            -63.210922479629524
+          ],
+          [
+            9.713466883399276,
+            -63.20903420448304
+          ],
+          [
+            9.712462254445644,
+            -63.20907711982728
+          ],
+          [
+            9.71084426674036,
+            -63.209109306335456
+          ],
+          [
+            9.709818479635343,
+            -63.209398984909065
+          ],
+          [
+            9.7090993692757,
+            -63.20978522300721
+          ],
+          [
+            9.709088794111823,
+            -63.211877346038825
+          ],
+          [
+            9.709025343121604,
+            -63.212360143661506
+          ],
+          [
+            9.709681002774225,
+            -63.21245670318604
+          ],
+          [
+            9.709792041781814,
+            -63.21180760860444
+          ],
+          [
+            9.710897142279153,
+            -63.21200609207154
+          ],
+          [
+            9.71105576884545,
+            -63.21127116680146
+          ]
+        ],
+        "areaHa": 12.9,
+        "perimetroM": 1392,
+        "visible": true,
+        "fecha": "2026-09-09T16:09:14.079Z",
+        "munId": "maturin",
+        "parishId": "alto-de-los-godos",
+        "subParroquiaId": "SUBPAR-1788965549962",
+        "color": "#38bdf8",
+        "ancho": 2,
+        "centroVotacion": "",
+        "votoDuro": 0,
+        "votoBlando": 0,
+        "votoNuevo": 0,
+        "isNew": false
+      },
+      {
+        "id": "POLY-1788970445669",
+        "nombre": "el caro",
+        "descripcion": "Comunidad / Consejo Comunal",
+        "militantes": 0,
+        "casas": 0,
+        "habitantes": 0,
+        "familias": 0,
+        "colorBorde": "#a855f7",
+        "anchoBorde": 2,
+        "colorRelleno": "#a855f7",
+        "opacidad": 0.65,
+        "vertices": [
+          [
+            9.712441104330008,
+            -63.20908248424531
+          ],
+          [
+            9.712864106388913,
+            -63.20731759071351
+          ],
+          [
+            9.71333998306625,
+            -63.206641674041755
+          ],
+          [
+            9.71368895886632,
+            -63.20606231689454
+          ],
+          [
+            9.713017444503256,
+            -63.205917477607734
+          ],
+          [
+            9.712372366444946,
+            -63.20575118064881
+          ],
+          [
+            9.711700849440762,
+            -63.20570290088654
+          ],
+          [
+            9.71080725385824,
+            -63.205370306968696
+          ],
+          [
+            9.709823767205812,
+            -63.2048124074936
+          ],
+          [
+            9.70974445364021,
+            -63.204876780509956
+          ],
+          [
+            9.709390186151236,
+            -63.2047587633133
+          ],
+          [
+            9.709025343121604,
+            -63.204903602600105
+          ],
+          [
+            9.708639349338661,
+            -63.20526838302613
+          ],
+          [
+            9.708385544964987,
+            -63.2057672739029
+          ],
+          [
+            9.707840922430591,
+            -63.206689953804016
+          ],
+          [
+            9.707026630775736,
+            -63.20781648159028
+          ],
+          [
+            9.706899728001865,
+            -63.20825636386872
+          ],
+          [
+            9.70666178517128,
+            -63.208674788475044
+          ],
+          [
+            9.706513731769181,
+            -63.20977449417115
+          ],
+          [
+            9.706444992667391,
+            -63.21003198623658
+          ],
+          [
+            9.706037845390606,
+            -63.210160732269294
+          ],
+          [
+            9.705662423437134,
+            -63.21044504642487
+          ],
+          [
+            9.705202398779681,
+            -63.210858106613166
+          ],
+          [
+            9.704874564730249,
+            -63.21087956428528
+          ],
+          [
+            9.704879852378756,
+            -63.211389183998115
+          ],
+          [
+            9.705345165120287,
+            -63.21149110794068
+          ],
+          [
+            9.705546095422509,
+            -63.21143746376038
+          ],
+          [
+            9.705932092770231,
+            -63.21104586124421
+          ],
+          [
+            9.70631280204736,
+            -63.21072936058045
+          ],
+          [
+            9.706963179394819,
+            -63.2105576992035
+          ],
+          [
+            9.707650568714552,
+            -63.21049332618714
+          ],
+          [
+            9.70829036827527,
+            -63.21019291877747
+          ],
+          [
+            9.709072931365391,
+            -63.20980668067933
+          ],
+          [
+            9.709665140055845,
+            -63.20948481559754
+          ],
+          [
+            9.709829054776167,
+            -63.209393620491035
+          ],
+          [
+            9.710437124811929,
+            -63.20922195911408
+          ],
+          [
+            9.710696215187308,
+            -63.209157586097724
+          ],
+          [
+            9.710923580045433,
+            -63.209109306335456
+          ],
+          [
+            9.711425897207853,
+            -63.20910394191743
+          ]
+        ],
+        "areaHa": 30.7,
+        "perimetroM": 2618,
+        "visible": true,
+        "fecha": "2026-09-09T16:14:05.669Z",
+        "munId": "maturin",
+        "parishId": "alto-de-los-godos",
+        "subParroquiaId": "SUBPAR-1788965549962",
+        "color": "#a855f7",
+        "ancho": 2,
+        "centroVotacion": "",
+        "votoDuro": 0,
+        "votoBlando": 0,
+        "votoNuevo": 0,
+        "isNew": false
+      },
+      {
+        "id": "POLY-1789054804245",
+        "nombre": "Sector l",
+        "descripcion": "Comunidad / Consejo Comunal",
+        "militantes": 0,
+        "casas": 0,
+        "habitantes": 0,
+        "familias": 0,
+        "colorBorde": "#eab308",
+        "anchoBorde": 2,
+        "colorRelleno": "#eab308",
+        "opacidad": 0.55,
+        "vertices": [
+          [
+            9.712134427503047,
+            -63.215144276618965
+          ],
+          [
+            9.71288790023885,
+            -63.21526229381562
+          ],
+          [
+            9.713072963458373,
+            -63.21432352066041
+          ],
+          [
+            9.713342626823682,
+            -63.213060200214386
+          ],
+          [
+            9.71345102086028,
+            -63.21249961853028
+          ],
+          [
+            9.71345102086028,
+            -63.21136504411698
+          ],
+          [
+            9.71105576884545,
+            -63.211273849010475
+          ],
+          [
+            9.710899786055883,
+            -63.21200609207154
+          ],
+          [
+            9.709794685567271,
+            -63.21181029081345
+          ],
+          [
+            9.709683646560547,
+            -63.21245670318604
+          ],
+          [
+            9.709004192788852,
+            -63.212354779243476
+          ],
+          [
+            9.708834990078774,
+            -63.212995827198036
+          ],
+          [
+            9.710101364537403,
+            -63.213247954845436
+          ],
+          [
+            9.710355167610624,
+            -63.21339279413224
+          ],
+          [
+            9.710920936268895,
+            -63.21390241384507
+          ],
+          [
+            9.71118795759328,
+            -63.214146494865425
+          ]
+        ],
+        "areaHa": 12.8,
+        "perimetroM": 1513,
+        "visible": true,
+        "fecha": "2026-09-10T15:40:04.245Z",
+        "munId": "maturin",
+        "parishId": "alto-de-los-godos",
+        "subParroquiaId": "SUBPAR-1788965549962",
+        "color": "#eab308",
+        "ancho": 2,
+        "centroVotacion": "",
+        "votoDuro": 0,
+        "votoBlando": 0,
+        "votoNuevo": 0,
+        "isNew": false
       }
     ],
     "rutas": [],
-    "marcas": [
-      {
-        "id": "c1",
-        "nombre": "🗳️ Cruz Hernández Quijada",
-        "descripcion": "Centro Electoral • 1056 electores • 2 mesas",
-        "lat": 9.734,
-        "lng": -63.221,
-        "color": "#f59e0b",
-        "visible": true,
-        "tipo": "centro_electoral",
-        "electores": 1056,
-        "mesas": 2
-      },
-      {
-        "id": "c2",
-        "nombre": "🗳️ Francisco Verde",
-        "descripcion": "Centro Electoral • 3230 electores • 5 mesas",
-        "lat": 9.737,
-        "lng": -63.226,
-        "color": "#f59e0b",
-        "visible": true,
-        "tipo": "centro_electoral",
-        "electores": 3230,
-        "mesas": 5
-      },
-      {
-        "id": "c3",
-        "nombre": "🗳️ Apolinar Cantor",
-        "descripcion": "Centro Electoral • 2481 electores • 4 mesas",
-        "lat": 9.731,
-        "lng": -63.217,
-        "color": "#f59e0b",
-        "visible": true,
-        "tipo": "centro_electoral",
-        "electores": 2481,
-        "mesas": 4
-      },
-      {
-        "id": "c4",
-        "nombre": "🗳️ Cruz Figuera Rondón",
-        "descripcion": "Centro Electoral • 2961 electores • 4 mesas",
-        "lat": 9.725,
-        "lng": -63.216,
-        "color": "#f59e0b",
-        "visible": true,
-        "tipo": "centro_electoral",
-        "electores": 2961,
-        "mesas": 4
-      },
-      {
-        "id": "c5",
-        "nombre": "🗳️ República de Venezuela",
-        "descripcion": "Centro Electoral • 500 electores • 1 mesas",
-        "lat": 9.717,
-        "lng": -63.227,
-        "color": "#f59e0b",
-        "visible": true,
-        "tipo": "centro_electoral",
-        "electores": 500,
-        "mesas": 1
-      },
-      {
-        "id": "ref-sub-godos-1",
-        "nombre": "📍 Sub-Parroquia 1 • Casco Los Godos",
-        "descripcion": "Eje / Sub-Parroquia undefined • Punto de referencia para mapeo comunal",
-        "lat": 9.739,
-        "lng": -63.204,
-        "color": "#a855f7",
-        "visible": true,
-        "tipo": "subparroquia_referencia",
-        "subParroquiaId": "sub-godos-1"
-      },
-      {
-        "id": "ref-sub-godos-2",
-        "nombre": "📍 Sub-Parroquia 2 • Morichal",
-        "descripcion": "Eje / Sub-Parroquia undefined • Punto de referencia para mapeo comunal",
-        "lat": 9.734,
-        "lng": -63.212,
-        "color": "#a855f7",
-        "visible": true,
-        "tipo": "subparroquia_referencia",
-        "subParroquiaId": "sub-godos-2"
-      },
-      {
-        "id": "ref-sub-godos-3",
-        "nombre": "📍 Sub-Parroquia 3 • Fundemos",
-        "descripcion": "Eje / Sub-Parroquia undefined • Punto de referencia para mapeo comunal",
-        "lat": 9.742,
-        "lng": -63.196,
-        "color": "#a855f7",
-        "visible": true,
-        "tipo": "subparroquia_referencia",
-        "subParroquiaId": "sub-godos-3"
-      },
-      {
-        "id": "ref-sub-godos-4",
-        "nombre": "📍 Sub-Parroquia 4 • Los Guaros",
-        "descripcion": "Eje / Sub-Parroquia undefined • Punto de referencia para mapeo comunal",
-        "lat": 9.728,
-        "lng": -63.196,
-        "color": "#a855f7",
-        "visible": true,
-        "tipo": "subparroquia_referencia",
-        "subParroquiaId": "sub-godos-4"
-      },
-      {
-        "id": "ref-sub-godos-5",
-        "nombre": "📍 Sub-Parroquia 5 • El Silencio",
-        "descripcion": "Eje / Sub-Parroquia undefined • Punto de referencia para mapeo comunal",
-        "lat": 9.718,
-        "lng": -63.204,
-        "color": "#a855f7",
-        "visible": true,
-        "tipo": "subparroquia_referencia",
-        "subParroquiaId": "sub-godos-5"
-      },
-      {
-        "id": "ref-sub-godos-7",
-        "nombre": "📍 Sub-Parroquia 7 • 19 de Abril",
-        "descripcion": "Eje / Sub-Parroquia undefined • Punto de referencia para mapeo comunal",
-        "lat": 9.715,
-        "lng": -63.224,
-        "color": "#a855f7",
-        "visible": true,
-        "tipo": "subparroquia_referencia",
-        "subParroquiaId": "sub-godos-7"
-      },
-      {
-        "id": "ref-sub-godos-8",
-        "nombre": "📍 Sub-Parroquia 8 • Las Brisas",
-        "descripcion": "Eje / Sub-Parroquia undefined • Punto de referencia para mapeo comunal",
-        "lat": 9.738,
-        "lng": -63.192,
-        "color": "#a855f7",
-        "visible": true,
-        "tipo": "subparroquia_referencia",
-        "subParroquiaId": "sub-godos-8"
-      },
-      {
-        "id": "ref-sub-godos-9",
-        "nombre": "📍 Sub-Parroquia 9 • San Rafael",
-        "descripcion": "Eje / Sub-Parroquia undefined • Punto de referencia para mapeo comunal",
-        "lat": 9.722,
-        "lng": -63.191,
-        "color": "#a855f7",
-        "visible": true,
-        "tipo": "subparroquia_referencia",
-        "subParroquiaId": "sub-godos-9"
-      },
-      {
-        "id": "ref-sub-godos-10",
-        "nombre": "📍 Sub-Parroquia 10 • Paramaconi",
-        "descripcion": "Eje / Sub-Parroquia undefined • Punto de referencia para mapeo comunal",
-        "lat": 9.732,
-        "lng": -63.232,
-        "color": "#a855f7",
-        "visible": true,
-        "tipo": "subparroquia_referencia",
-        "subParroquiaId": "sub-godos-10"
-      }
-    ],
-    "updatedAt": 1788581749345
+    "marcas": [],
+    "deletedIds": [],
+    "updatedAt": 1789054832498
   },
   "maturin_el-corozo": {
     "munId": "maturin",
@@ -2609,8 +3651,8 @@
       },
       {
         "id": "SUBPAR-1788581339563",
-        "nombre": "Eje Comunal 2",
-        "descripcion": "Eje o Circuito Comunal",
+        "nombre": "Eje Territorial 2",
+        "descripcion": "Eje o Circuito Territorial",
         "militantes": 0,
         "casas": 0,
         "habitantes": 0,
@@ -2683,8 +3725,8 @@
       },
       {
         "id": "POLY-1788581345030",
-        "nombre": "Sector Comunal 2",
-        "descripcion": "Comunidad / Consejo Comunal",
+        "nombre": "Sector Vecinal 2",
+        "descripcion": "Comunidad / Sector Vecinal",
         "militantes": 0,
         "casas": 0,
         "habitantes": 0,
@@ -2760,8 +3802,8 @@
       },
       {
         "id": "SUBPAR-1788581339563",
-        "nombre": "Eje Comunal 2",
-        "descripcion": "Eje o Circuito Comunal",
+        "nombre": "Eje Territorial 2",
+        "descripcion": "Eje o Circuito Territorial",
         "militantes": 0,
         "casas": 0,
         "habitantes": 0,
@@ -2834,8 +3876,8 @@
       },
       {
         "id": "POLY-1788581345030",
-        "nombre": "Sector Comunal 2",
-        "descripcion": "Comunidad / Consejo Comunal",
+        "nombre": "Sector Vecinal 2",
+        "descripcion": "Comunidad / Sector Vecinal",
         "militantes": 0,
         "casas": 0,
         "habitantes": 0,
