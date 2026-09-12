@@ -6,7 +6,7 @@ import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=12
 import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=128";
 import { getAllParishesForSelector } from "./usersCatalog.js?v=128";
 import { EarthStore } from "./earthStore.js?v=128";
-import { EarthMapEngine } from "./mapEngine.js?v=128";
+import { EarthMapEngine } from "./mapEngine.js?v=129";
 import { PropertiesDialog } from "./propertiesDialog.js?v=128";
 import { ToolsManager } from "./toolsManager.js?v=128";
 import { detectParishFromGeometry, SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=128";
@@ -170,34 +170,11 @@ class EarthMonagasApp {
       this.updateStatusBar(lat, lng, eyeAlt);
     });
 
-    window.earthApp.toggleCneLayer = () => {
-      const active = this.mapEngine.toggleCentrosLayer();
-      const chip = document.getElementById("chip-toggle-cne");
-      const lbl = document.getElementById("label-chip-cne");
-      if (chip) {
-        chip.className = active 
-          ? "px-3.5 py-1.5 rounded-full bg-amber-500 border border-amber-300 text-[#0e092e] text-xs font-black shadow-xl backdrop-blur-md transition flex items-center gap-1.5 cursor-pointer whitespace-nowrap active:scale-95 select-none"
-          : "px-3.5 py-1.5 rounded-full bg-[#140e40]/95 hover:bg-[#23176d] border border-amber-500/60 text-amber-300 hover:text-white text-xs font-bold shadow-xl backdrop-blur-md transition flex items-center gap-1.5 cursor-pointer whitespace-nowrap active:scale-95 select-none";
-      }
-      if (lbl) lbl.textContent = active ? "Centros CNE (175)" : "Centros CNE: OFF";
-    };
-
-    window.earthApp.toggleSectorsLayer = () => {
-      const active = this.mapEngine.toggleSectorsLayer();
-      const chip = document.getElementById("chip-toggle-sectors");
-      const lbl = document.getElementById("label-chip-sectors");
-      if (chip) {
-        chip.className = active 
-          ? "px-3.5 py-1.5 rounded-full bg-sky-600 border border-sky-300 text-white text-xs font-black shadow-xl backdrop-blur-md transition flex items-center gap-1.5 cursor-pointer whitespace-nowrap active:scale-95 select-none"
-          : "px-3.5 py-1.5 rounded-full bg-[#140e40]/95 hover:bg-[#23176d] border border-sky-500/60 text-sky-300 hover:text-white text-xs font-bold shadow-xl backdrop-blur-md transition flex items-center gap-1.5 cursor-pointer whitespace-nowrap active:scale-95 select-none";
-      }
-      if (lbl) lbl.textContent = active ? "Sectores: ON" : "Sectores: OFF";
-    };
-
     window.earthApp.toggleBaseMapType = () => {
       const label = this.mapEngine.toggleBaseMapType();
-      const lbl = document.getElementById("label-chip-basemap");
+      const lbl = document.getElementById("text-toggle-basemap");
       if (lbl) lbl.textContent = label;
+      this.showToast(`🗺️ Capa base cambiada a: <strong>${label}</strong>`, "sky");
     };
 
     this.propDialog = new PropertiesDialog(

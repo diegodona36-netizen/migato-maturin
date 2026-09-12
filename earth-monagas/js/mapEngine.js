@@ -3,7 +3,6 @@
  * Integrado con Capas Jerárquicas Oficiales (INE 2021) y Edición de Vértices
  */
 import { GEO_ESTADO_OFICIAL, GEO_MUNICIPIOS_OFICIAL, GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=128";
-import { CENTROS_MATURIN } from "./centrosData.js?v=128";
 
 export class EarthMapEngine {
   constructor(containerId, onCoordUpdate) {
@@ -30,7 +29,6 @@ export class EarthMapEngine {
     this.layerL2_Municipios = null;
     this.layerL3_Parroquias = null;
     this.layerL4_SubParroquias = null;
-    this.layerCentros = null;
 
     // Estado explícito de visibilidad para filtros de capas (LOD 1 a 5)
     // Sectores y Ejes SIEMPRE activos y visibles por defecto para que el usuario no tenga que habilitarlos manualmente
@@ -127,7 +125,7 @@ export class EarthMapEngine {
     this.overlayLayer = L.layerGroup().addTo(this.map);
     this.tempDrawingLayer = L.layerGroup().addTo(this.map);
 
-    this.spotlightEnabled = true; // Modo Foco / Velo Blanco activo por defecto
+    this.spotlightEnabled = false; // Modo Foco / Velo Blanco desactivado por defecto (satélite limpio)
     this.currentParishLimite = null;
     this.currentParishId = null;
     this.currentSubParishVertices = null;
@@ -138,9 +136,6 @@ export class EarthMapEngine {
 
     // Inicializar Capas Jerárquicas Oficiales (LOD 1 a 5)
     this.initHierarchicalLayers();
-
-    // Inicializar Capa de Centros Electorales CNE
-    this.initCentrosLayer();
 
     // Seguimiento de coordenadas optimizado:
     // En escritorio: mousemove
@@ -176,56 +171,6 @@ export class EarthMapEngine {
         }
       }
     });
-  }
-
-  initCentrosLayer() {
-    this.layerCentros = L.layerGroup();
-    if (typeof CENTROS_MATURIN !== "undefined" && Array.isArray(CENTROS_MATURIN)) {
-      CENTROS_MATURIN.forEach(c => {
-        if (!c.lat || !c.lng) return;
-        const icon = L.divIcon({
-          className: "cne-school-icon",
-          html: `<div style="background:#1e3a8a; border:2px solid #fbbf24; color:#fff; border-radius:50%; width:28px; height:28px; display:flex; align-items:center; justify-content:center; font-size:13px; box-shadow:0 3px 8px rgba(0,0,0,0.6); cursor:pointer;">🏫</div>`,
-          iconSize: [28, 28],
-          iconAnchor: [14, 14]
-        });
-        const m = L.marker([c.lat, c.lng], { icon });
-        const popHtml = `
-          <div style="background:#0e092e; color:#fff; padding:12px; border-radius:14px; border:1px solid #2d1f85; font-family:'Inter',sans-serif; min-width:220px; box-shadow:0 10px 25px rgba(0,0,0,0.7);">
-            <div style="display:flex; align-items:center; gap:6px; margin-bottom:6px;">
-              <span style="background:#f59e0b; color:#0e092e; font-size:9px; font-weight:900; padding:2px 6px; border-radius:6px; text-transform:uppercase;">Centro CNE</span>
-              <span style="font-size:10px; color:#94a3b8; font-family:monospace;">${c.id}</span>
-            </div>
-            <h4 style="font-size:13px; font-weight:900; color:#fff; margin:0 0 6px 0; line-height:1.2;">${c.nombre}</h4>
-            <div style="font-size:11px; color:#cbd5e1; border-top:1px solid #2d1f85; padding-top:6px; margin-top:6px; font-family:monospace;">
-              <div style="margin-bottom:2px;"><strong style="color:#94a3b8;">Parroquia:</strong> <span style="color:#38bdf8;">${c.parroquiaNombre || c.parroquia}</span></div>
-              <div style="margin-bottom:2px;"><strong style="color:#94a3b8;">Electores:</strong> <span style="color:#c084fc; font-weight:900;">${c.electores}</span></div>
-              <div><strong style="color:#94a3b8;">Mesas:</strong> <span style="color:#34d399; font-weight:bold;">${c.mesas}</span></div>
-            </div>
-            <a href="../dashboard-campana/?p=${c.parroquia}&search=${encodeURIComponent(c.nombre)}" style="display:block; text-align:center; margin-top:8px; padding:6px; background:#23176d; color:#38bdf8; border-radius:8px; font-size:11px; font-weight:bold; text-decoration:none; border:1px solid #2d1f85;">
-              Ver en Tablero Estadístico ➔
-            </a>
-          </div>
-        `;
-        m.bindPopup(popHtml);
-        this.layerCentros.addLayer(m);
-      });
-    }
-    this.layerCentros.addTo(this.map);
-  }
-
-  toggleCentrosLayer() {
-    if (!this.layerCentros) {
-      this.initCentrosLayer();
-      return true;
-    }
-    if (this.map.hasLayer(this.layerCentros)) {
-      this.map.removeLayer(this.layerCentros);
-      return false;
-    } else {
-      this.layerCentros.addTo(this.map);
-      return true;
-    }
   }
 
   toggleSectorsLayer() {

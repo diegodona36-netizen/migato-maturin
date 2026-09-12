@@ -224,24 +224,6 @@
       }
     };
 
-    // 0.2 Alternar visibilidad de la barra técnica de trazado
-    window.toggleEditingToolbar = function() {
-      const bar = document.getElementById("toolbar-tools-row");
-      const label = document.getElementById("label-chip-editor");
-      const chip = document.getElementById("chip-toggle-editor");
-      if (!bar) return;
-      const isHidden = bar.classList.contains("hidden");
-      if (isHidden) {
-        bar.classList.remove("hidden");
-        if (label) label.textContent = "Cerrar Edición";
-        if (chip) chip.className = "px-3.5 py-1.5 rounded-full bg-purple-600 border border-purple-300 text-white text-xs font-black shadow-xl backdrop-blur-md transition flex items-center gap-1.5 cursor-pointer whitespace-nowrap active:scale-95 select-none";
-      } else {
-        bar.classList.add("hidden");
-        if (label) label.textContent = "Modo Trazado";
-        if (chip) chip.className = "px-3.5 py-1.5 rounded-full bg-[#140e40]/95 hover:bg-[#23176d] border border-purple-500/50 text-purple-300 hover:text-white text-xs font-bold shadow-xl backdrop-blur-md transition flex items-center gap-1.5 cursor-pointer whitespace-nowrap active:scale-95 select-none";
-      }
-    };
-
     // 1. Desregistrar cualquier Service Worker residual del dominio
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.getRegistrations().then(function(regs) {
@@ -520,9 +502,9 @@
   </header>
 
   <!-- ============================================================== -->
-  <!-- 1.1. LA BARRA TERRITORIAL (SUB-PARROQUIA Y SECTORES - OCULTA POR DEFECTO PARA USUARIOS COMUNES) -->
+  <!-- 1.1. LA BARRA TERRITORIAL (SUB-PARROQUIA Y SECTORES)            -->
   <!-- ============================================================== -->
-  <div id="toolbar-tools-row" style="z-index: 1990;" class="hidden bg-[#100b33] border-b border-[#2d1f85] shadow-md shrink-0 w-full h-[44px] px-2 sm:px-4 flex items-center justify-between gap-2 overflow-x-auto no-scrollbar transition-all duration-200">
+  <div id="toolbar-tools-row" style="z-index: 1990;" class="bg-[#100b33] border-b border-[#2d1f85] shadow-md shrink-0 w-full h-[44px] px-2 sm:px-4 flex items-center justify-between gap-2 overflow-x-auto no-scrollbar transition-all duration-200">
     
     <!-- HERRAMIENTAS PRINCIPALES: SUB-PARROQUIA Y SECTORES -->
     <div class="flex items-center gap-1.5 sm:gap-2.5 shrink-0 min-w-0">
@@ -558,6 +540,14 @@
     <!-- ACCIONES DE ORIENTACIÓN Y VISTA TERRITORIAL -->
     <div class="flex items-center gap-1.5 shrink-0">
       
+      <!-- 🗺️ Alternar Vista: Satélite HD vs Callejero -->
+      <button type="button" id="btn-toggle-basemap" onclick="window.earthApp?.toggleBaseMapType?.()"
+        class="px-2.5 py-1.5 rounded-xl bg-[#18114a] hover:bg-[#23176d] border border-[#2d1f85] text-xs font-bold text-slate-200 transition flex items-center gap-1.5 active:scale-95 shadow-sm cursor-pointer shrink-0"
+        title="Alternar entre Satélite HD y Callejero">
+        <i data-lucide="map" class="w-3.5 h-3.5 text-sky-400 shrink-0"></i>
+        <span id="text-toggle-basemap" class="whitespace-nowrap font-bold text-xs">Satélite HD</span>
+      </button>
+
       <!-- 👁️ Velo Blanco Exterior (Botón para Sombrear/Enfocar la Parroquia) -->
       <button type="button" id="btn-toggle-spotlight"
         class="px-2.5 py-1.5 rounded-xl bg-[#18114a] hover:bg-[#23176d] border border-[#2d1f85] text-xs font-bold text-slate-200 transition flex items-center gap-1.5 active:scale-95 shadow-sm cursor-pointer shrink-0"
@@ -777,51 +767,6 @@
         <div id="hud-territorial-content" class="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#140e40]/95 border border-sky-500/60 shadow-2xl backdrop-blur-md text-xs flex-wrap justify-center">
           <!-- Contenido dinámico inyectado por updateTerritorialFocusUI() -->
         </div>
-      </div>
-
-      <!-- BARRA DE CHIPS FLOTANTES RÁPIDOS Y HUMANOS (1 SOLO CLIC) -->
-      <div id="quick-map-chips-bar" style="z-index: 1000;" class="absolute top-3 left-1/2 -translate-x-1/2 pointer-events-auto flex items-center gap-2 max-w-[96vw] overflow-x-auto no-scrollbar p-1">
-        
-        <!-- Chip 1: Centros Electorales CNE -->
-        <button type="button" id="chip-toggle-cne" onclick="window.earthApp?.toggleCneLayer?.()"
-          class="px-3.5 py-1.5 rounded-full bg-[#140e40]/95 hover:bg-[#23176d] border border-amber-500/60 text-amber-300 hover:text-white text-xs font-black shadow-xl backdrop-blur-md transition flex items-center gap-1.5 cursor-pointer whitespace-nowrap active:scale-95 select-none"
-          title="Mostrar u Ocultar los 175 Centros Electorales CNE en el Mapa">
-          <span>🏫</span>
-          <span id="label-chip-cne">Centros CNE (175)</span>
-        </button>
-
-        <!-- Chip 2: Sectores y Comunidades -->
-        <button type="button" id="chip-toggle-sectors" onclick="window.earthApp?.toggleSectorsLayer?.()"
-          class="px-3.5 py-1.5 rounded-full bg-sky-600/95 hover:bg-sky-500 border border-sky-300/60 text-white text-xs font-black shadow-xl backdrop-blur-md transition flex items-center gap-1.5 cursor-pointer whitespace-nowrap active:scale-95 select-none"
-          title="Mostrar u Ocultar Polígonos de Sectores Vecinales">
-          <span>🏡</span>
-          <span id="label-chip-sectors">Sectores: ON</span>
-        </button>
-
-        <!-- Chip 3: Satélite vs Callejero -->
-        <button type="button" id="chip-toggle-basemap" onclick="window.earthApp?.toggleBaseMapType?.()"
-          class="px-3.5 py-1.5 rounded-full bg-[#140e40]/95 hover:bg-[#23176d] border border-[#2d1f85] text-slate-200 hover:text-white text-xs font-bold shadow-xl backdrop-blur-md transition flex items-center gap-1.5 cursor-pointer whitespace-nowrap active:scale-95 select-none"
-          title="Cambiar entre Vista Satelital y Mapa Callejero">
-          <span>🛰️</span>
-          <span id="label-chip-basemap">Satélite HD</span>
-        </button>
-
-        <!-- Chip 4: Modo Edición y Trazado (Opcional) -->
-        <button type="button" id="chip-toggle-editor" onclick="window.toggleEditingToolbar?.()"
-          class="px-3.5 py-1.5 rounded-full bg-[#140e40]/95 hover:bg-[#23176d] border border-purple-500/50 text-purple-300 hover:text-white text-xs font-bold shadow-xl backdrop-blur-md transition flex items-center gap-1.5 cursor-pointer whitespace-nowrap active:scale-95 select-none"
-          title="Abrir u Ocultar Herramientas de Trazado para Expertos">
-          <span>📐</span>
-          <span id="label-chip-editor">Modo Trazado</span>
-        </button>
-
-        <!-- Chip 5: Tablero Estadístico -->
-        <a href="../dashboard-campana/"
-          class="px-3.5 py-1.5 rounded-full bg-[#18114a]/95 hover:bg-[#23176d] border border-emerald-500/50 text-emerald-300 hover:text-white text-xs font-black shadow-xl backdrop-blur-md transition flex items-center gap-1.5 cursor-pointer whitespace-nowrap active:scale-95 select-none"
-          title="Ir al Tablero Estadístico del Censo (Módulo 2)">
-          <span>📊</span>
-          <span>Tablero Censo</span>
-        </a>
-
       </div>
 
       <div id="earth-canvas"></div>
@@ -1813,7 +1758,7 @@
   </div>
 
   <!-- SCRIPT -->
-  <script type="module" src="js/app.js?v=128"></script>
+  <script type="module" src="js/app.js?v=129"></script>
   <script>
     if (window.lucide && typeof window.lucide.createIcons === 'function') {
       window.lucide.createIcons();
