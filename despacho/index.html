@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MIGATO • Sistema de Control y Auditoría Territorial (SICAT)</title>
+  <title>SISTEMA INTEGRAL DE CONTROL Y AUDITORÍA TERRITORIAL (SICAT) • ESTADO MONAGAS</title>
   
-  <!-- Tailwind CSS (Local de Alta Disponibilidad + CDN de Respaldo) -->
+  <!-- Tailwind CSS -->
   <script src="../vendor/tailwindcss.js"></script>
   <script>
     if (!window.tailwind) {
@@ -13,7 +13,7 @@
     }
   </script>
 
-  <!-- Lucide Icons (Local + CDN) -->
+  <!-- Lucide Icons -->
   <script src="../vendor/lucide.min.js"></script>
   <script>
     if (!window.lucide) {
@@ -21,360 +21,548 @@
     }
   </script>
 
-  <!-- Fuentes Clásicas Institucionales: Inter + Arial Fallback -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
-
   <style>
+    /* Tipografía Institucional Sobria estilo Sistema Administrativo / ERP / Windows */
+    * {
+      border-radius: 0px !important;
+      box-shadow: none !important;
+    }
     body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      background-color: #f1f5f9;
-      color: #0f172a;
+      font-family: 'Segoe UI', Tahoma, Arial, -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: #dbe0e6;
+      color: #1a202c;
+      margin: 0;
+      padding: 0;
+      font-size: 12px;
     }
     .font-mono {
-      font-family: 'JetBrains Mono', Consolas, Monaco, monospace;
+      font-family: 'Consolas', 'Courier New', monospace;
     }
-    /* Estilo de Hoja de Cálculo (Excel Clásico) */
-    .excel-table th {
+    
+    /* Cuadrícula / Tabla Estilo Excel Clásico de Administración Pública */
+    .excel-grid {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 11.5px;
+      background-color: #ffffff;
+    }
+    .excel-grid th.col-letter {
       background-color: #e2e8f0;
-      color: #1e293b;
+      color: #475569;
       font-weight: 700;
+      font-size: 10px;
+      text-align: center;
       border: 1px solid #cbd5e1;
-      padding: 6px 10px;
+      padding: 2px 4px;
+      user-select: none;
+    }
+    .excel-grid th.col-header {
+      background-color: #1e3a5f;
+      color: #ffffff;
+      font-weight: 700;
       font-size: 11px;
       text-transform: uppercase;
-      letter-spacing: 0.025em;
+      letter-spacing: 0.02em;
+      border: 1px solid #0f2b48;
+      padding: 5px 6px;
+      text-align: left;
     }
-    .excel-table td {
-      border: 1px solid #e2e8f0;
-      padding: 6px 10px;
-      font-size: 12px;
+    .excel-grid td {
+      border: 1px solid #cbd5e1;
+      padding: 4px 6px;
+      vertical-align: middle;
+      background-color: #ffffff;
+      color: #0f172a;
     }
-    .excel-table tr:nth-child(even) {
+    .excel-grid tr:nth-child(even) td {
       background-color: #f8fafc;
     }
-    .excel-table tr:hover {
-      background-color: #e0f2fe !important;
+    .excel-grid tr:hover td {
+      background-color: #e2e8f0;
     }
-    /* Inputs estilo celda de Excel */
+    .excel-grid td.row-number {
+      background-color: #f1f5f9;
+      color: #64748b;
+      font-weight: bold;
+      text-align: center;
+      border-right: 2px solid #94a3b8;
+      user-select: none;
+    }
+
+    /* Pestañas estilo Hoja de Cálculo Excel */
+    .excel-tab {
+      padding: 5px 14px;
+      font-size: 11.5px;
+      font-weight: 700;
+      border: 1px solid #94a3b8;
+      border-bottom: none;
+      background-color: #cbd5e1;
+      color: #334155;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-right: 2px;
+      text-decoration: none;
+    }
+    .excel-tab.active {
+      background-color: #ffffff;
+      color: #0f172a;
+      border-top: 3px solid #1e3a5f;
+      margin-bottom: -1px;
+      position: relative;
+      z-index: 10;
+    }
+    .excel-tab:hover:not(.active) {
+      background-color: #e2e8f0;
+    }
+
+    /* Botones Formales de Sistema Gubernamental */
+    .gov-btn {
+      background-color: #f1f5f9;
+      border: 1px solid #94a3b8;
+      color: #0f172a;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 8px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+    }
+    .gov-btn:hover {
+      background-color: #e2e8f0;
+      border-color: #64748b;
+    }
+    .gov-btn:active {
+      background-color: #cbd5e1;
+    }
+    .gov-btn-primary {
+      background-color: #1e3a5f;
+      border: 1px solid #0f2b48;
+      color: #ffffff;
+    }
+    .gov-btn-primary:hover {
+      background-color: #152943;
+      border-color: #0a1b2d;
+    }
+    .gov-btn-success {
+      background-color: #1e4620;
+      border: 1px solid #132e15;
+      color: #ffffff;
+    }
+    .gov-btn-success:hover {
+      background-color: #143316;
+    }
+    .gov-btn-danger {
+      background-color: #7f1d1d;
+      border: 1px solid #450a0a;
+      color: #ffffff;
+    }
+    .gov-btn-danger:hover {
+      background-color: #5d1414;
+    }
+
+    /* Barra de Menú estilo Software de Escritorio */
+    .menu-bar-item {
+      padding: 3px 8px;
+      color: #0f172a;
+      font-size: 11.5px;
+      cursor: pointer;
+      user-select: none;
+    }
+    .menu-bar-item:hover {
+      background-color: #cbd5e1;
+    }
+
+    /* Inputs de Celdas Editables */
     .excel-cell-input {
       width: 100%;
-      background: transparent;
       border: 1px solid transparent;
       padding: 2px 4px;
-      font-size: 12px;
-      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-family: 'Consolas', monospace;
       outline: none;
+      background: transparent;
+      color: #0f172a;
     }
     .excel-cell-input:focus {
-      background-color: #ffffff;
-      border-color: #0284c7;
-      box-shadow: 0 0 0 1px #0284c7;
+      background: #ffffff;
+      border: 1px solid #2563eb;
+      outline: 1px solid #2563eb;
     }
   </style>
 </head>
-<body class="min-h-screen flex flex-col bg-slate-100">
+<body class="min-h-screen flex flex-col antialiased">
 
   <!-- ============================================================== -->
-  <!-- 1. BARRAS INSTITUCIONALES DE GOBIERNO (ESTILO FORMAL)          -->
+  <!-- 1. CINTILLO OFICIAL DEL ESTADO (PROTOCOLO FORMAL VENEZUELA)    -->
   <!-- ============================================================== -->
-  
-  <!-- Cintillo Superior Oficial de la República / Estado -->
-  <div class="bg-[#0b1f3a] text-white text-[10px] font-bold tracking-wider px-4 py-1.5 flex items-center justify-between border-b border-amber-500/40">
+  <div class="bg-[#0c2340] text-slate-200 text-[11px] font-bold px-3 py-1 flex flex-wrap items-center justify-between border-b border-[#1e3a5f]">
     <div class="flex items-center gap-2">
-      <span class="text-amber-400">REPÚBLICA BOLIVARIANA DE VENEZUELA</span>
-      <span class="text-slate-400">•</span>
-      <span class="text-slate-200">ESTADO MONAGAS</span>
-      <span class="text-slate-400">•</span>
-      <span class="text-amber-300">SISTEMA TERRITORIAL MIGATO</span>
+      <span class="text-amber-300">REPÚBLICA BOLIVARIANA DE VENEZUELA</span>
+      <span class="text-slate-500">|</span>
+      <span>ESTADO MONAGAS</span>
+      <span class="text-slate-500">|</span>
+      <span class="text-slate-300">SISTEMA TERRITORIAL DE AUDITORÍA Y CONTROL ELECTORAL (SICAT)</span>
     </div>
-    <div class="flex items-center gap-3 font-mono text-[10px]">
-      <span class="text-emerald-400 flex items-center gap-1">
-        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-        BOT WHATSAPP: EN LÍNEA
+    <div class="flex items-center gap-3 font-mono text-[10px] text-slate-300">
+      <span class="text-emerald-400 font-bold flex items-center gap-1">
+        <span class="w-2 h-2 bg-emerald-500 inline-block"></span>
+        RECEPTOR WHATSAPP: EN LÍNEA
       </span>
-      <span class="text-slate-300">|</span>
-      <span class="text-slate-300">NIVEL: SALA SITUACIONAL CENTRAL</span>
+      <span class="text-slate-500">|</span>
+      <span>ESTACIÓN: SALA_CENTRAL_01</span>
+      <span class="text-slate-500">|</span>
+      <span class="text-amber-300">CONFIDENCIAL</span>
     </div>
   </div>
 
-  <!-- Cabecera Principal Institucional -->
-  <header class="bg-[#102a4e] text-white border-b-2 border-[#0b1f3a] shadow-md sticky top-0 z-40">
-    <div class="max-w-[98%] mx-auto px-2 sm:px-4 py-2.5 flex items-center justify-between gap-4">
+  <!-- Barra de Título Institucional / Header de Sistema -->
+  <header class="bg-[#1e3a5f] text-white border-b border-[#0f2b48]">
+    <div class="px-3 py-1.5 flex flex-wrap items-center justify-between gap-2">
       
-      <!-- Logo e Identificación -->
-      <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-lg bg-white p-1 border border-slate-300 flex items-center justify-center shadow-sm shrink-0">
+      <div class="flex items-center gap-2.5">
+        <div class="w-8 h-8 bg-white p-0.5 border border-slate-300 flex items-center justify-center shrink-0">
           <img src="../assets/logo-migato.png" alt="MIGATO" class="w-full h-full object-contain">
         </div>
         <div>
-          <h1 class="text-base sm:text-lg font-black tracking-tight leading-tight flex items-center gap-2">
-            <span>SALA DE CONTROL Y AUDITORÍA TERRITORIAL</span>
-            <span class="text-xs bg-amber-500 text-[#0b1f3a] px-2 py-0.2 rounded font-mono font-black">SICAT-2026</span>
-          </h1>
-          <p class="text-[11px] text-blue-200 font-medium">
-            Despacho Central • Recepción de Actas y Planillas de WhatsApp • 13 Municipios / 44 Parroquias
+          <div class="flex items-center gap-2">
+            <h1 class="text-sm font-black tracking-tight uppercase leading-none">
+              SALA DE CONTROL Y AUDITORÍA TERRITORIAL
+            </h1>
+            <span class="text-[9px] bg-[#0c2340] text-amber-300 border border-slate-500 px-1 py-0.2 font-mono">
+              SICAT-v2.6.4
+            </span>
+          </div>
+          <p class="text-[10px] text-slate-300 font-medium leading-tight mt-0.5">
+            Dirección Ejecutiva de Organización • Despacho de Fiscalización de Actas, Padrón y Validación Forense
           </p>
         </div>
       </div>
 
-      <!-- Herramientas de Mando -->
-      <div class="flex items-center gap-2">
-        <button onclick="exportToExcel()" class="bg-emerald-700 hover:bg-emerald-600 text-white text-xs font-bold px-3 py-1.5 rounded border border-emerald-500 shadow-sm flex items-center gap-1.5 transition cursor-pointer" title="Exportar toda la base de datos a formato Excel">
-          <i data-lucide="file-spreadsheet" class="w-4 h-4 text-emerald-200"></i>
-          <span>Descargar Excel (.csv)</span>
+      <!-- Accesos Directos de Sistema -->
+      <div class="flex items-center gap-1 font-mono text-xs">
+        <button onclick="exportToExcel()" class="gov-btn">
+          <i data-lucide="file-spreadsheet" class="w-3.5 h-3.5 text-emerald-700"></i>
+          <span>Exportar Excel (.csv)</span>
         </button>
-        <button onclick="window.location.reload()" class="bg-slate-700 hover:bg-slate-600 text-white text-xs font-bold px-2.5 py-1.5 rounded border border-slate-500 flex items-center gap-1 transition cursor-pointer" title="Actualizar datos">
-          <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
-          <span class="hidden sm:inline">Refrescar</span>
+        <button onclick="window.print()" class="gov-btn">
+          <i data-lucide="printer" class="w-3.5 h-3.5 text-slate-700"></i>
+          <span>Imprimir Acta</span>
         </button>
-        <a href="../login.html" class="bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold px-2.5 py-1.5 rounded border border-slate-600 flex items-center gap-1 transition" title="Cambiar usuario o salir">
-          <i data-lucide="log-out" class="w-3.5 h-3.5 text-amber-400"></i>
-          <span class="hidden md:inline">Salir</span>
+        <button onclick="window.location.reload()" class="gov-btn">
+          <i data-lucide="refresh-cw" class="w-3.5 h-3.5 text-slate-700"></i>
+          <span>Actualizar</span>
+        </button>
+        <a href="../login.html" class="gov-btn bg-slate-200 hover:bg-slate-300 border-slate-400 text-slate-800">
+          <i data-lucide="log-out" class="w-3.5 h-3.5 text-red-700"></i>
+          <span>Salir</span>
         </a>
       </div>
 
     </div>
   </header>
 
-  <!-- ============================================================== -->
-  <!-- 2. RESUMEN EJECUTIVO TIPO LIBRO DE EXCEL (PANEL CONTABLE)       -->
-  <!-- ============================================================== -->
-  <div class="bg-white border-b border-slate-300 px-4 py-3 shadow-xs">
-    <div class="max-w-[98%] mx-auto grid grid-cols-2 md:grid-cols-5 gap-3">
-      
-      <!-- Bloque 1: Electores Certificados -->
-      <div class="bg-slate-50 border border-slate-300 rounded p-2.5 flex items-center justify-between">
-        <div>
-          <div class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Electores Certificados</div>
-          <div id="kpi-certificados" class="text-xl sm:text-2xl font-black text-emerald-800 font-mono">0</div>
-        </div>
-        <div class="w-8 h-8 rounded bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold text-sm">
-          ✓
-        </div>
-      </div>
+  <!-- Barra de Menú Estándar tipo Aplicación de Gestión / Windows ERP -->
+  <div class="bg-[#e2e8f0] border-b border-[#cbd5e1] px-2 py-0.5 flex items-center justify-between text-xs text-slate-800 select-none">
+    <div class="flex items-center">
+      <span class="menu-bar-item" onclick="exportToExcel()">Archivo</span>
+      <span class="menu-bar-item" onclick="applyFilters()">Edición</span>
+      <span class="menu-bar-item" onclick="switchTab('auditoria')">Ver</span>
+      <span class="menu-bar-item" onclick="switchTab('auditoria')">Auditoría</span>
+      <span class="menu-bar-item" onclick="switchTab('enlaces')">Padrón</span>
+      <span class="menu-bar-item" onclick="switchTab('parroquias')">Cómputo</span>
+      <span class="menu-bar-item" onclick="exportToExcel()">Exportar</span>
+      <span class="menu-bar-item" onclick="showHelpModal()">Ayuda</span>
+    </div>
+    <div class="font-mono text-[10px] text-slate-600 pr-2">
+      MODO: FISCALIZACIÓN OFICIAL REGIONAL
+    </div>
+  </div>
 
-      <!-- Bloque 2: Expedientes por Auditar -->
-      <div class="bg-amber-50/60 border border-amber-300 rounded p-2.5 flex items-center justify-between">
-        <div>
-          <div class="text-[10px] font-bold text-amber-800 uppercase tracking-wider flex items-center gap-1">
-            <span>En Cola de Auditoría</span>
-            <span class="w-2 h-2 rounded-full bg-amber-500 animate-ping"></span>
-          </div>
-          <div id="kpi-pendientes" class="text-xl sm:text-2xl font-black text-amber-900 font-mono">0</div>
-        </div>
-        <div class="w-8 h-8 rounded bg-amber-200 text-amber-900 flex items-center justify-center font-bold text-sm">
-          ⏳
-        </div>
-      </div>
+  <!-- Barra de Herramientas Estándar (Toolbar con Iconos Planos Clásicos) -->
+  <div class="bg-[#f1f5f9] border-b border-[#cbd5e1] px-2 py-1 flex items-center gap-1 text-xs">
+    <button onclick="exportToExcel()" class="gov-btn" title="Descargar datos en formato compatible Excel">
+      <i data-lucide="download" class="w-3 h-3 text-emerald-800"></i>
+      <span>Guardar Libro CSV</span>
+    </button>
+    <button onclick="applyFilters()" class="gov-btn" title="Refrescar lista de expedientes">
+      <i data-lucide="rotate-cw" class="w-3 h-3 text-slate-700"></i>
+      <span>Recalcular Hoja</span>
+    </button>
+    <button onclick="showQuickAudit()" class="gov-btn" title="Abrir primer expediente pendiente">
+      <i data-lucide="file-check-2" class="w-3 h-3 text-blue-800"></i>
+      <span>Auditar Primer Pendiente</span>
+    </button>
+    <div class="h-4 w-px bg-slate-300 mx-1"></div>
+    <div class="flex items-center gap-1 text-[11px] font-mono text-slate-600">
+      <span>Criterio de Validación:</span>
+      <strong class="text-slate-900 bg-slate-200 px-1 border border-slate-300">ACTA FÍSICA + FIRMA + CÉDULA</strong>
+    </div>
+  </div>
 
-      <!-- Bloque 3: Planillas Procesadas Total -->
-      <div class="bg-slate-50 border border-slate-300 rounded p-2.5 flex items-center justify-between">
-        <div>
-          <div class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Total Expedientes</div>
-          <div id="kpi-total-planillas" class="text-xl sm:text-2xl font-black text-slate-800 font-mono">0</div>
-        </div>
-        <div class="w-8 h-8 rounded bg-blue-100 text-blue-700 flex items-center justify-center font-bold text-sm">
-          📋
-        </div>
-      </div>
-
-      <!-- Bloque 4: Cobertura de Parroquias -->
-      <div class="bg-slate-50 border border-slate-300 rounded p-2.5 flex items-center justify-between">
-        <div>
-          <div class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Parroquias Reportando</div>
-          <div id="kpi-cobertura" class="text-xl sm:text-2xl font-black text-blue-900 font-mono">0 / 44</div>
-        </div>
-        <div class="w-8 h-8 rounded bg-blue-100 text-blue-800 flex items-center justify-center font-bold text-sm font-mono" id="kpi-cobertura-pct">
-          0%
-        </div>
-      </div>
-
-      <!-- Bloque 5: Estatus de la Central -->
-      <div class="bg-slate-50 border border-slate-300 rounded p-2.5 flex items-center justify-between col-span-2 md:col-span-1">
-        <div>
-          <div class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Línea Central WhatsApp</div>
-          <div class="text-xs font-bold text-slate-800 font-mono mt-1 text-emerald-700 flex items-center gap-1">
-            <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-            Recepción Automática
-          </div>
-        </div>
-        <div class="w-8 h-8 rounded bg-slate-200 text-slate-700 flex items-center justify-center font-bold text-sm">
-          📱
-        </div>
-      </div>
-
+  <!-- Barra de Fórmulas y Estado de Celda (Estilo Excel) -->
+  <div class="bg-white border-b border-[#cbd5e1] px-2 py-1 flex items-center gap-2 text-xs font-mono">
+    <div class="bg-[#f1f5f9] border border-[#cbd5e1] px-2 py-0.5 font-bold text-slate-700 text-[11px]">
+      fx
+    </div>
+    <div class="w-16 bg-[#f8fafc] border border-[#cbd5e1] px-1.5 py-0.5 text-center text-slate-600 text-[10px] font-bold">
+      A1
+    </div>
+    <div id="formula-bar-text" class="flex-1 bg-[#ffffff] border border-[#cbd5e1] px-2 py-0.5 text-[11px] text-slate-800 truncate">
+      =RESUMEN.OFICIAL(EXPEDIENTES; PADRON_2026; MONAGAS) • SALA DE AUDITORÍA CENTRAL EN VIVO
     </div>
   </div>
 
   <!-- ============================================================== -->
-  <!-- 3. BARRA DE HERRAMIENTAS TIPO EXCEL Y PESTAÑAS                 -->
+  <!-- 2. BARRA DE TOTALES TIPO TABLA EXCEL (SIN CARDS REDONDEADAS)    -->
   <!-- ============================================================== -->
-  <main class="flex-1 max-w-[98%] w-full mx-auto p-3 sm:p-4 space-y-3">
+  <div class="bg-[#e9edf2] border-b border-[#cbd5e1] px-3 py-1.5">
+    <div class="border border-[#94a3b8] bg-white overflow-x-auto">
+      <table class="w-full text-left font-mono text-xs border-collapse">
+        <thead>
+          <tr class="bg-[#2c3e50] text-white text-[10px] uppercase font-bold border-b border-slate-400">
+            <th class="p-1.5 border-r border-slate-600">TOTAL EXPEDIENTES</th>
+            <th class="p-1.5 border-r border-slate-600 text-emerald-300">ELECTORES CERTIFICADOS</th>
+            <th class="p-1.5 border-r border-slate-600 text-amber-300">EN COLA DE AUDITORÍA</th>
+            <th class="p-1.5 border-r border-slate-600">COBERTURA PARROQUIAL</th>
+            <th class="p-1.5">PROTOCOLO DE INGESTA</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="bg-white text-slate-900 font-bold text-xs">
+            <td class="p-1.5 border-r border-slate-300">
+              <span id="kpi-total-planillas" class="text-base text-slate-900 font-black">0</span>
+              <span class="text-[10px] text-slate-500 font-normal ml-1">actas recibidas</span>
+            </td>
+            <td class="p-1.5 border-r border-slate-300 bg-emerald-50/60">
+              <span id="kpi-certificados" class="text-base text-emerald-900 font-black">0</span>
+              <span class="text-[10px] text-emerald-800 font-normal ml-1">validados en padrón</span>
+            </td>
+            <td class="p-1.5 border-r border-slate-300 bg-amber-50/60">
+              <span id="kpi-pendientes" class="text-base text-amber-900 font-black">0</span>
+              <span class="text-[10px] text-amber-800 font-normal ml-1">por dictaminar</span>
+            </td>
+            <td class="p-1.5 border-r border-slate-300">
+              <span id="kpi-cobertura" class="text-base text-slate-900 font-black">0 / 44</span>
+              <span id="kpi-cobertura-pct" class="text-[10px] bg-slate-200 px-1 py-0.2 border border-slate-400 ml-1">0%</span>
+            </td>
+            <td class="p-1.5 bg-slate-50 text-[11px]">
+              <span class="text-emerald-800 font-bold">WHITELIST ESTRICTA</span>
+              <span class="text-slate-500 ml-1">(15 líneas acreditadas)</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ============================================================== -->
+  <!-- 3. CUERPO ADMINISTRATIVO: HOJAS DE EXCEL Y CUADRÍCULA          -->
+  <!-- ============================================================== -->
+  <main class="flex-1 w-full px-3 pt-2 pb-6 space-y-0">
     
-    <!-- Pestañas Institucionales Tipo Hoja de Libro (Sheet1, Sheet2, Sheet3) -->
-    <div class="flex items-center gap-1 border-b border-slate-300 bg-slate-200 p-1 rounded-t-lg">
-      <button id="tab-btn-auditoria" onclick="switchTab('auditoria')" class="px-4 py-2 rounded-t bg-white border-t-2 border-l border-r border-[#102a4e] text-[#102a4e] font-black text-xs flex items-center gap-2 shadow-xs cursor-pointer">
-        <i data-lucide="table" class="w-3.5 h-3.5 text-blue-700"></i>
-        <span>Libro 1: Bandeja de Auditoría (Entrada WhatsApp)</span>
-        <span id="badge-pendientes-tab" class="px-1.5 py-0.2 bg-amber-500 text-[#0b1f3a] text-[10px] font-bold rounded-full font-mono">0</span>
+    <!-- Pestañas Tipo Libro de Excel / Fichero Clásico -->
+    <div class="flex items-end border-b border-[#94a3b8] pt-1">
+      <button id="tab-btn-auditoria" onclick="switchTab('auditoria')" class="excel-tab active">
+        <i data-lucide="file-spreadsheet" class="w-3.5 h-3.5 text-blue-900"></i>
+        <span>Hoja 1: Recepción de Actas y Planillas (WhatsApp)</span>
+        <span id="badge-pendientes-tab" class="ml-1 bg-amber-600 text-white font-bold font-mono text-[9px] px-1 py-0.2">0</span>
       </button>
 
-      <button id="tab-btn-enlaces" onclick="switchTab('enlaces')" class="px-4 py-2 rounded-t text-slate-600 hover:text-slate-900 font-bold text-xs flex items-center gap-2 hover:bg-slate-100 transition cursor-pointer">
-        <i data-lucide="users" class="w-3.5 h-3.5 text-slate-500"></i>
-        <span>Libro 2: Padrón de Enlaces Autorizados (Whitelist)</span>
+      <button id="tab-btn-enlaces" onclick="switchTab('enlaces')" class="excel-tab">
+        <i data-lucide="shield-check" class="w-3.5 h-3.5 text-slate-700"></i>
+        <span>Hoja 2: Directorio de Enlaces Autorizados (Whitelist)</span>
       </button>
 
-      <button id="tab-btn-parroquias" onclick="switchTab('parroquias')" class="px-4 py-2 rounded-t text-slate-600 hover:text-slate-900 font-bold text-xs flex items-center gap-2 hover:bg-slate-100 transition cursor-pointer">
-        <i data-lucide="bar-chart-3" class="w-3.5 h-3.5 text-slate-500"></i>
-        <span>Libro 3: Consolidado 44 Parroquias</span>
+      <button id="tab-btn-parroquias" onclick="switchTab('parroquias')" class="excel-tab">
+        <i data-lucide="table-2" class="w-3.5 h-3.5 text-slate-700"></i>
+        <span>Hoja 3: Cómputo General 44 Parroquias</span>
       </button>
     </div>
 
-    <!-- ========================================================== -->
-    <!-- HOJA 1: BANDEJA DE AUDITORÍA EN VIVO (TABLA EXCEL)         -->
-    <!-- ========================================================== -->
-    <div id="tab-content-auditoria" class="bg-white border border-slate-300 shadow-sm rounded-b-lg p-3 space-y-3">
+    <!-- CONTENEDOR 1: BANDEJA DE AUDITORÍA (HOJA DE CÁLCULO 1) -->
+    <div id="tab-content-auditoria" class="bg-white border border-[#94a3b8] border-t-0 p-2 space-y-2">
       
-      <!-- Barra de Filtros y Búsqueda -->
-      <div class="bg-slate-50 border border-slate-200 p-2.5 rounded flex flex-col md:flex-row items-center justify-between gap-2.5 text-xs">
+      <!-- Fila de Filtros estilo Autofiltro de Excel -->
+      <div class="bg-[#f8fafc] border border-[#cbd5e1] p-1.5 flex flex-col md:flex-row items-center justify-between gap-2 text-xs">
         
-        <!-- Buscador Rápido -->
-        <div class="relative w-full md:w-80">
-          <i data-lucide="search" class="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-1/2 -translate-y-1/2"></i>
-          <input type="text" id="input-search" oninput="applyFilters()" placeholder="Buscar por cédula, nombre, parroquia..." class="w-full pl-8 pr-3 py-1.5 bg-white border border-slate-300 rounded text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-blue-600 font-medium">
+        <!-- Búsqueda Rápida de Registros -->
+        <div class="flex items-center gap-1 w-full md:w-96">
+          <label for="input-search" class="font-bold text-slate-700 text-[11px] uppercase shrink-0">Buscar Registro:</label>
+          <input type="text" id="input-search" oninput="applyFilters()" placeholder="Cédula, nombre, parroquia, sector o código..." class="w-full bg-white border border-slate-400 px-2 py-0.5 text-xs text-slate-900 focus:outline-none focus:border-blue-700 font-mono">
         </div>
 
-        <!-- Filtros Combinados -->
-        <div class="flex items-center gap-2 w-full md:w-auto flex-wrap">
+        <!-- Filtro por Jurisdicción y Estatus -->
+        <div class="flex items-center gap-3 w-full md:w-auto flex-wrap">
           
-          <!-- Filtro Municipio -->
-          <div class="flex items-center gap-1.5">
-            <span class="font-bold text-slate-600 text-[11px]">Municipio:</span>
-            <select id="select-mun-filter" onchange="applyFilters()" class="bg-white border border-slate-300 rounded px-2.5 py-1.5 text-xs text-slate-800 focus:outline-none focus:border-blue-600 font-medium">
-              <option value="all">Todos los Municipios (13)</option>
-              <option value="maturin">Maturín</option>
-              <option value="caripe">Caripe</option>
-              <option value="ezequiel-zamora">Ezequiel Zamora</option>
-              <option value="cedeno">Cedeño</option>
-              <option value="libertador">Libertador</option>
-              <option value="piar">Piar</option>
-              <option value="acosta">Acosta</option>
-              <option value="punceres">Punceres</option>
-              <option value="bolivar">Bolívar</option>
-              <option value="sotillo">Sotillo</option>
-              <option value="santa-barbara">Santa Bárbara</option>
-              <option value="uracoa">Uracoa</option>
-              <option value="aguasay">Aguasay</option>
+          <div class="flex items-center gap-1">
+            <label for="select-mun-filter" class="font-bold text-slate-700 text-[11px] uppercase">Municipio:</label>
+            <select id="select-mun-filter" onchange="applyFilters()" class="bg-white border border-slate-400 px-1.5 py-0.5 text-xs text-slate-900 focus:outline-none focus:border-blue-700 font-mono">
+              <option value="all">TODOS LOS MUNICIPIOS (13)</option>
+              <option value="maturin">MATURÍN</option>
+              <option value="caripe">CARIPE</option>
+              <option value="ezequiel-zamora">EZEQUIEL ZAMORA</option>
+              <option value="cedeno">CEDEÑO</option>
+              <option value="libertador">LIBERTADOR</option>
+              <option value="piar">PIAR</option>
+              <option value="acosta">ACOSTA</option>
+              <option value="punceres">PUNCERES</option>
+              <option value="bolivar">BOLÍVAR</option>
+              <option value="sotillo">SOTILLO</option>
+              <option value="santa-barbara">SANTA BÁRBARA</option>
+              <option value="uracoa">URACOA</option>
+              <option value="aguasay">AGUASAY</option>
             </select>
           </div>
 
-          <!-- Filtro Estado de Auditoría -->
-          <div class="flex items-center gap-1.5">
-            <span class="font-bold text-slate-600 text-[11px]">Estatus:</span>
-            <select id="select-status-filter" onchange="applyFilters()" class="bg-white border border-slate-300 rounded px-2.5 py-1.5 text-xs text-slate-800 focus:outline-none focus:border-blue-600 font-medium">
-              <option value="todos">Todos los Estados</option>
-              <option value="pendiente">🟡 Solo Pendientes (Por Auditar)</option>
-              <option value="certificado">🟢 Solo Certificados (Oficiales)</option>
-              <option value="rechazado">🔴 Solo Rechazados</option>
+          <div class="flex items-center gap-1">
+            <label for="select-status-filter" class="font-bold text-slate-700 text-[11px] uppercase">Dictamen:</label>
+            <select id="select-status-filter" onchange="applyFilters()" class="bg-white border border-slate-400 px-1.5 py-0.5 text-xs text-slate-900 focus:outline-none focus:border-blue-700 font-mono">
+              <option value="todos">TODOS LOS REGISTROS</option>
+              <option value="pendiente">SOLO PENDIENTES DE COTEJO</option>
+              <option value="certificado">SOLO CERTIFICADOS EN PADRÓN</option>
+              <option value="rechazado">SOLO RECHAZADOS</option>
             </select>
           </div>
+
+          <button onclick="resetFilters()" class="gov-btn text-[10px]">
+            Limpiar Filtros
+          </button>
 
         </div>
 
       </div>
 
-      <!-- Cuadrícula / Tabla Tipo Hoja de Cálculo -->
-      <div class="border border-slate-300 rounded overflow-x-auto shadow-xs">
-        <table class="w-full text-left excel-table">
+      <!-- Cuadrícula / Hoja de Cálculo Estilo Excel Clásico -->
+      <div class="border border-[#94a3b8] overflow-x-auto">
+        <table class="excel-grid">
           <thead>
+            <!-- Fila de Letras de Columnas de Excel -->
             <tr>
-              <th class="w-12 text-center">Fila</th>
-              <th class="w-24">Cód. Planilla</th>
-              <th class="w-28">Fecha / Hora</th>
-              <th class="w-32">Municipio</th>
-              <th class="w-36">Parroquia</th>
-              <th>Sector / Eje Reportado</th>
-              <th class="w-44">Remitente WhatsApp</th>
-              <th class="w-20 text-center">Formato</th>
-              <th class="w-24 text-center">Electores</th>
-              <th class="w-28 text-center">Estatus</th>
-              <th class="w-24 text-center">Acción</th>
+              <th class="col-letter w-8">#</th>
+              <th class="col-letter w-24">A</th>
+              <th class="col-letter w-28">B</th>
+              <th class="col-letter w-32">C</th>
+              <th class="col-letter w-36">D</th>
+              <th class="col-letter">E</th>
+              <th class="col-letter w-44">F</th>
+              <th class="col-letter w-20">G</th>
+              <th class="col-letter w-20">H</th>
+              <th class="col-letter w-28">I</th>
+              <th class="col-letter w-28 text-center">J</th>
+            </tr>
+            <!-- Encabezados de Campo Formales -->
+            <tr>
+              <th class="col-header text-center">Fila</th>
+              <th class="col-header">CÓDIGO</th>
+              <th class="col-header">FECHA / HORA</th>
+              <th class="col-header">MUNICIPIO</th>
+              <th class="col-header">PARROQUIA</th>
+              <th class="col-header">SECTOR / COMUNIDAD</th>
+              <th class="col-header">ENLACE REMITENTE</th>
+              <th class="col-header text-center">FORMATO</th>
+              <th class="col-header text-center">REGISTROS</th>
+              <th class="col-header text-center">DICTAMEN AUDITORÍA</th>
+              <th class="col-header text-center">ACCIÓN</th>
             </tr>
           </thead>
-          <tbody id="excel-table-body" class="bg-white divide-y divide-slate-200 font-sans">
-            <!-- Renderizado dinámico de filas tipo Excel -->
+          <tbody id="excel-table-body" class="font-mono text-xs">
+            <!-- Filas generadas dinámicamente -->
           </tbody>
         </table>
       </div>
 
-      <!-- Pie de Tabla Informativo -->
-      <div class="flex items-center justify-between text-[11px] text-slate-500 font-mono px-1">
-        <span id="label-table-count">Mostrando 5 de 5 registros cargados</span>
-        <span>Sistema de Validación Oficial • Formato CNE / Monagas 2026</span>
+      <!-- Barra de Estado Inferior de la Hoja -->
+      <div class="flex items-center justify-between text-[11px] text-slate-700 font-mono pt-1 border-t border-slate-300">
+        <div class="flex items-center gap-3">
+          <span id="label-table-count">Mostrando 0 de 0 expedientes</span>
+          <span class="text-slate-400">|</span>
+          <span>FILTRO ACTIVO: <span id="label-active-filter" class="font-bold text-blue-900">TODOS</span></span>
+        </div>
+        <div class="flex items-center gap-2">
+          <span>SISTEMA DE VERIFICACIÓN FORENSE MIGATO • MONAGAS 2026</span>
+        </div>
       </div>
 
     </div>
 
-    <!-- ========================================================== -->
-    <!-- HOJA 2: DIRECTO DE ENLACES (WHITELIST WHATSAPP)            -->
-    <!-- ========================================================== -->
-    <div id="tab-content-enlaces" class="bg-white border border-slate-300 shadow-sm rounded-b-lg p-4 space-y-3 hidden">
-      <div class="flex items-center justify-between border-b border-slate-200 pb-2">
+    <!-- CONTENEDOR 2: WHITELIST (PADRÓN DE ENLACES AUTORIZADOS) -->
+    <div id="tab-content-enlaces" class="bg-white border border-[#94a3b8] border-t-0 p-2 space-y-2 hidden">
+      <div class="flex items-center justify-between border-b border-slate-300 pb-1.5 text-xs">
         <div>
-          <h3 class="text-sm font-bold text-slate-800">Padrón Oficial de Coordinadores Autorizados (Filtro del Bot de WhatsApp)</h3>
-          <p class="text-xs text-slate-500">Números telefónicos reconocidos por el sistema para la recepción de actas y censos.</p>
+          <h2 class="font-bold text-slate-800 uppercase text-xs">PADRÓN DE COORDINADORES Y ENLACES TERRITORIALES ACREDITADOS</h2>
+          <p class="text-[11px] text-slate-600">Directorio institucional de líneas telefónicas autorizadas para remitir planillas al Bot de WhatsApp.</p>
         </div>
-        <span class="text-xs bg-slate-100 text-slate-700 px-2.5 py-1 rounded border border-slate-300 font-mono font-bold">
-          Total Autorizados: 15
+        <span class="text-[11px] font-mono font-bold bg-[#f1f5f9] border border-slate-400 px-2 py-0.5">
+          LÍNEAS ACREDITADAS: 15
         </span>
       </div>
 
-      <div class="border border-slate-300 rounded overflow-x-auto">
-        <table class="w-full text-left excel-table">
+      <div class="border border-[#94a3b8] overflow-x-auto">
+        <table class="excel-grid font-mono">
           <thead>
             <tr>
-              <th class="w-10 text-center">#</th>
-              <th>Municipio</th>
-              <th>Parroquia</th>
-              <th>Coordinador / Responsable</th>
-              <th>Teléfono Registrado</th>
-              <th class="text-center">Estatus</th>
+              <th class="col-letter w-8">#</th>
+              <th class="col-letter w-32">A</th>
+              <th class="col-letter w-40">B</th>
+              <th class="col-letter">C</th>
+              <th class="col-letter w-36">D</th>
+              <th class="col-letter w-28 text-center">E</th>
+            </tr>
+            <tr>
+              <th class="col-header text-center">Fila</th>
+              <th class="col-header">MUNICIPIO</th>
+              <th class="col-header">PARROQUIA</th>
+              <th class="col-header">RESPONSABLE ACREDITADO</th>
+              <th class="col-header">TELÉFONO DE RECEPCIÓN</th>
+              <th class="col-header text-center">ESTADO ACREDITACIÓN</th>
             </tr>
           </thead>
-          <tbody id="whitelist-table-body" class="bg-white divide-y divide-slate-200 font-sans">
-            <!-- Renderizado dinámico -->
+          <tbody id="whitelist-table-body">
+            <!-- Filas dinámicas -->
           </tbody>
         </table>
       </div>
     </div>
 
-    <!-- ========================================================== -->
-    <!-- HOJA 3: CONSOLIDADO 44 PARROQUIAS                          -->
-    <!-- ========================================================== -->
-    <div id="tab-content-parroquias" class="bg-white border border-slate-300 shadow-sm rounded-b-lg p-4 space-y-3 hidden">
-      <div class="border-b border-slate-200 pb-2 flex items-center justify-between">
+    <!-- CONTENEDOR 3: CONSOLIDADO 44 PARROQUIAS -->
+    <div id="tab-content-parroquias" class="bg-white border border-[#94a3b8] border-t-0 p-2 space-y-2 hidden">
+      <div class="border-b border-slate-300 pb-1.5 flex items-center justify-between text-xs">
         <div>
-          <h3 class="text-sm font-bold text-slate-800">Cómputo General por Parroquia (Estado Monagas)</h3>
-          <p class="text-xs text-slate-500">Distribución de electores auditados en las 44 parroquias del estado.</p>
+          <h2 class="font-bold text-slate-800 uppercase text-xs">CÓMPUTO Y CONSOLIDADO OFICIAL POR PARROQUIA</h2>
+          <p class="text-[11px] text-slate-600">Resumen del padrón certificado en las 44 parroquias del Estado Monagas.</p>
         </div>
+        <button onclick="exportToExcel()" class="gov-btn text-[10px]">
+          Exportar Cómputo Parroquial (.csv)
+        </button>
       </div>
 
-      <div class="border border-slate-300 rounded overflow-x-auto">
-        <table class="w-full text-left excel-table">
+      <div class="border border-[#94a3b8] overflow-x-auto">
+        <table class="excel-grid font-mono">
           <thead>
             <tr>
-              <th class="w-10 text-center">#</th>
-              <th>Municipio</th>
-              <th>Parroquia</th>
-              <th>Responsable Oficial</th>
-              <th class="text-right">Electores Validados</th>
-              <th class="text-center">Estado de Reporte</th>
+              <th class="col-letter w-8">#</th>
+              <th class="col-letter w-32">A</th>
+              <th class="col-letter w-40">B</th>
+              <th class="col-letter">C</th>
+              <th class="col-letter w-36 text-right">D</th>
+              <th class="col-letter w-36 text-center">E</th>
+            </tr>
+            <tr>
+              <th class="col-header text-center">Fila</th>
+              <th class="col-header">MUNICIPIO</th>
+              <th class="col-header">PARROQUIA</th>
+              <th class="col-header">COORDINADOR PARROQUIAL</th>
+              <th class="col-header text-right">ELECTORES VALIDADOS</th>
+              <th class="col-header text-center">CONDICIÓN DE REPORTE</th>
             </tr>
           </thead>
-          <tbody id="parish-summary-body" class="bg-white divide-y divide-slate-200 font-sans">
-            <!-- Renderizado dinámico -->
+          <tbody id="parish-summary-body">
+            <!-- Filas dinámicas -->
           </tbody>
         </table>
       </div>
@@ -383,102 +571,94 @@
   </main>
 
   <!-- ============================================================== -->
-  <!-- MODAL: EXPEDIENTE DE AUDITORÍA (ESTILO GUBERNAMENTAL FORENSE)  -->
+  <!-- MODAL DE AUDITORÍA FORENSE: EXPEDIENTE OFICIAL DE VERIFICACIÓN -->
   <!-- ============================================================== -->
-  <div id="modal-audit" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs hidden items-center justify-center p-3 sm:p-5 overflow-y-auto">
-    <div class="bg-white border-2 border-slate-400 rounded-lg max-w-5xl w-full max-h-[94vh] flex flex-col shadow-2xl overflow-hidden">
+  <div id="modal-audit" class="fixed inset-0 z-50 bg-slate-900/60 hidden items-center justify-center p-2 sm:p-4 overflow-y-auto">
+    <div class="bg-white border-2 border-[#1e3a5f] max-w-5xl w-full max-h-[96vh] flex flex-col">
       
-      <!-- Cabecera del Expediente -->
-      <div class="bg-[#0b1f3a] text-white px-4 py-3 flex items-center justify-between border-b border-amber-500">
+      <!-- Encabezado de la Ventana Oficial -->
+      <div class="bg-[#1e3a5f] text-white px-3 py-1.5 flex items-center justify-between border-b border-[#0f2b48]">
         <div class="flex items-center gap-2">
-          <div class="w-6 h-6 rounded bg-amber-500 text-[#0b1f3a] flex items-center justify-center font-black text-xs">
-            §
-          </div>
-          <div>
-            <h2 id="modal-report-id" class="text-sm font-bold font-mono text-amber-300">EXPEDIENTE N° REP-2026-000</h2>
-            <p id="modal-report-title" class="text-xs text-slate-300 font-sans">Auditoría Electoral • Parroquia</p>
-          </div>
+          <span class="text-amber-300 font-mono font-bold text-xs">[ EXPEDIENTE OFICIAL ]</span>
+          <h2 id="modal-report-id" class="text-xs font-bold font-mono text-white">REP-2026-000</h2>
+          <span class="text-slate-400 text-xs">•</span>
+          <span id="modal-report-title" class="text-xs text-slate-200">Parroquia</span>
         </div>
 
-        <div class="flex items-center gap-3">
-          <span id="modal-report-status" class="text-xs font-bold font-mono px-2 py-0.5 rounded bg-amber-400 text-slate-900">
-            🟡 POR AUDITAR
+        <div class="flex items-center gap-2">
+          <span id="modal-report-status" class="text-[10px] font-bold font-mono px-2 py-0.5 border border-slate-400 bg-slate-800 text-amber-300">
+            PENDIENTE
           </span>
-          <button onclick="closeAuditModal()" class="text-slate-400 hover:text-white transition p-1 cursor-pointer font-bold text-sm" title="Cerrar ventana">
+          <button onclick="closeAuditModal()" class="bg-[#0f2b48] hover:bg-red-800 text-white font-bold text-xs px-2 py-0.5 cursor-pointer" title="Cerrar ventana">
             ✕
           </button>
         </div>
       </div>
 
-      <!-- Sub-Barra con Datos del Remitente -->
-      <div class="bg-slate-100 border-b border-slate-300 px-4 py-2 text-xs font-sans text-slate-700 grid grid-cols-1 sm:grid-cols-3 gap-2">
-        <div><strong>Remitente:</strong> <span id="modal-sender" class="font-mono">Carlos Gómez</span></div>
-        <div><strong>Teléfono:</strong> <span id="modal-phone" class="font-mono text-blue-800">+58 414-XXXXXXX</span></div>
-        <div><strong>Sector / Eje:</strong> <span id="modal-location" class="font-mono">Los Godos • Eje 3</span></div>
+      <!-- Ficha Técnica del Expediente -->
+      <div class="bg-[#f1f5f9] border-b border-slate-300 px-3 py-1.5 text-xs font-mono text-slate-800 grid grid-cols-1 sm:grid-cols-3 gap-2">
+        <div><span class="text-slate-600 font-bold">REMITENTE:</span> <strong id="modal-sender">Carlos Gómez</strong></div>
+        <div><span class="text-slate-600 font-bold">LÍNEA TELEFÓNICA:</span> <span id="modal-phone" class="text-blue-900 font-bold">+58 414-XXXXXXX</span></div>
+        <div><span class="text-slate-600 font-bold">UBICACIÓN:</span> <span id="modal-location">Los Godos • Eje 3</span></div>
       </div>
 
-      <!-- Cuerpo Dividido: Documento Físico vs Tabla de Extracción IA -->
-      <div class="flex-1 overflow-y-auto p-4 grid grid-cols-1 lg:grid-cols-2 gap-4 bg-slate-50">
+      <!-- Cuerpo Dividido en Dos Paneles de Cotejo Forense -->
+      <div class="flex-1 overflow-y-auto p-2.5 grid grid-cols-1 lg:grid-cols-2 gap-2.5 bg-[#e2e8f0]">
         
-        <!-- Columna 1: Documento Original Digitalizado -->
-        <div class="border border-slate-300 bg-white rounded p-3 space-y-2 flex flex-col">
-          <div class="flex items-center justify-between border-b border-slate-200 pb-1.5 text-xs font-bold text-slate-700">
-            <span class="flex items-center gap-1.5">
-              <i data-lucide="file-text" class="w-3.5 h-3.5 text-blue-700"></i>
-              <span>DOCUMENTO FÍSICO ORIGINAL (WHATSAPP)</span>
-            </span>
-            <span id="modal-img-caption" class="text-[10px] text-slate-500 font-mono">captura.jpg</span>
+        <!-- Panel 1: Documento Físico Escaneado -->
+        <div class="bg-white border border-slate-400 p-2 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between border-b border-slate-300 pb-1 text-xs font-bold text-slate-800 mb-1.5">
+              <span class="uppercase">1. COMPROBANTE FÍSICO DIGITALIZADO (ANEXO A)</span>
+              <span id="modal-img-caption" class="text-[10px] font-mono text-slate-500">captura.jpg</span>
+            </div>
+            <div class="bg-slate-100 border border-slate-300 p-1 flex items-center justify-center min-h-[300px] overflow-hidden">
+              <img id="modal-img-preview" src="../assets/logo-migato.png" alt="Documento Original" class="max-h-[300px] w-auto object-contain border border-slate-300 bg-white">
+            </div>
           </div>
-
-          <div class="flex-1 min-h-[300px] bg-slate-100 border border-slate-200 rounded flex items-center justify-center p-2 overflow-hidden">
-            <img id="modal-img-preview" src="../assets/logo-migato.png" alt="Documento Original" class="max-h-[340px] w-auto object-contain shadow-xs border border-slate-300 rounded bg-white">
-          </div>
-          <p class="text-[11px] text-slate-500 italic">
-            * Inspeccione que las firmas, números de cédula y nombres manuscritos coincidan fielmente.
+          <p class="text-[10px] text-slate-600 font-mono mt-2 pt-1 border-t border-slate-200">
+            INSPECCIÓN: Coteje las firmas manuscritas y la legibilidad de las cédulas contra la transcripción.
           </p>
         </div>
 
-        <!-- Columna 2: Cuadrícula Editable (Extracción por IA) -->
-        <div class="border border-slate-300 bg-white rounded p-3 space-y-2 flex flex-col justify-between">
-          <div class="space-y-2">
-            <div class="flex items-center justify-between border-b border-slate-200 pb-1.5 text-xs font-bold text-slate-700">
-              <span class="flex items-center gap-1.5">
-                <i data-lucide="cpu" class="w-3.5 h-3.5 text-emerald-700"></i>
-                <span>DATOS EXTRAÍDOS (IA GEMINI OCR)</span>
-              </span>
-              <span class="text-[10px] text-emerald-700 font-mono font-bold">Celdas Editables</span>
+        <!-- Panel 2: Cuadrícula de Transcripción (Datos del Padrón) -->
+        <div class="bg-white border border-slate-400 p-2 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between border-b border-slate-300 pb-1 text-xs font-bold text-slate-800 mb-1.5">
+              <span class="uppercase">2. PADRÓN DE ELECTORES EXTRAÍDO (EDITABLE)</span>
+              <span class="text-[10px] text-blue-900 font-mono font-bold">Malla de Celdas</span>
             </div>
 
-            <!-- Tabla Editable de Celdas -->
-            <div class="border border-slate-300 rounded overflow-x-auto max-h-[300px]">
-              <table class="w-full text-left excel-table">
+            <!-- Tabla de Celdas Editables -->
+            <div class="border border-slate-300 overflow-x-auto max-h-[290px]">
+              <table class="excel-grid font-mono">
                 <thead>
                   <tr>
-                    <th class="w-8 text-center">#</th>
-                    <th>Nombres y Apellidos</th>
-                    <th class="w-28">Cédula</th>
-                    <th class="w-28">Teléfono</th>
+                    <th class="col-header w-8 text-center">N°</th>
+                    <th class="col-header">NOMBRES Y APELLIDOS</th>
+                    <th class="col-header w-28">CÉDULA</th>
+                    <th class="col-header w-28">TELÉFONO</th>
                   </tr>
                 </thead>
-                <tbody id="modal-electores-body" class="bg-white divide-y divide-slate-200 font-sans">
-                  <!-- Filas editables -->
+                <tbody id="modal-electores-body">
+                  <!-- Celdas -->
                 </tbody>
               </table>
             </div>
 
-            <p class="text-[11px] text-slate-500">
-              💡 <strong>Instrucción al Auditor:</strong> Si un dígito fue mal interpretado por la IA, haga clic directo sobre la celda para corregirlo antes de estampar la certificación.
+            <p class="text-[10px] text-slate-600 mt-1.5 font-mono">
+              <strong>Procedimiento:</strong> Edite cualquier carácter erróneo directamente en la celda antes de dictaminar.
             </p>
           </div>
 
-          <!-- Botones Institucionales de Decisión -->
-          <div class="pt-3 border-t border-slate-300 flex items-center justify-between gap-3 bg-white">
-            <button onclick="handleRejectModal()" class="bg-red-700 hover:bg-red-800 text-white text-xs font-bold px-3.5 py-2 rounded border border-red-900 transition flex items-center gap-1.5 cursor-pointer shadow-xs">
-              <span>✕ Rechazar Expediente</span>
+          <!-- Dictamen y Acciones Institucionales -->
+          <div class="pt-2 border-t border-slate-300 flex items-center justify-between gap-2 mt-2">
+            <button onclick="handleRejectModal()" class="gov-btn-danger px-3 py-1.5 text-xs font-bold">
+              RECHAZAR EXPEDIENTE
             </button>
 
-            <button onclick="handleCertifyModal()" class="bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-black px-4 py-2 rounded border border-emerald-900 transition flex items-center gap-1.5 cursor-pointer shadow-sm">
-              <span>✔ Aprobar y Foliar en Base de Datos</span>
+            <button onclick="handleCertifyModal()" class="gov-btn-success px-4 py-1.5 text-xs font-bold">
+              APROBAR Y CERTIFICAR EN PADRÓN
             </button>
           </div>
 
@@ -489,18 +669,51 @@
     </div>
   </div>
 
-  <!-- Toast Notificación Gubernamental -->
-  <div id="toast" class="fixed bottom-4 right-4 z-50 transform transition-all duration-300 translate-y-20 opacity-0 pointer-events-none bg-[#0b1f3a] text-white px-4 py-2.5 rounded border border-amber-400 shadow-lg text-xs font-medium font-sans flex items-center gap-2">
-    <span id="toast-icon">ℹ️</span>
-    <span id="toast-text">Acción completada</span>
+  <!-- Modal de Ayuda / Procedimientos Institucionales -->
+  <div id="modal-help" class="fixed inset-0 z-50 bg-slate-900/60 hidden items-center justify-center p-4">
+    <div class="bg-white border-2 border-[#1e3a5f] max-w-lg w-full p-4 space-y-3 font-mono text-xs">
+      <div class="flex items-center justify-between border-b border-slate-300 pb-1">
+        <strong class="text-slate-900 uppercase">MANUAL DE PROCEDIMIENTO • SALA SITUACIONAL</strong>
+        <button onclick="closeHelpModal()" class="font-bold text-slate-600 hover:text-black">✕</button>
+      </div>
+      <div class="space-y-2 text-slate-700 leading-relaxed text-[11px]">
+        <p><strong>1. Recepción de Actas:</strong> Los reportes ingresan desde las líneas de WhatsApp autorizadas en la Whitelist.</p>
+        <p><strong>2. Ingesta Automática:</strong> El sistema extrae la imagen o texto y procesa el listado de electores.</p>
+        <p><strong>3. Auditoría Forense:</strong> El funcionario compara la imagen física con los datos transcritos y realiza correcciones si es necesario.</p>
+        <p><strong>4. Certificación:</strong> Al pulsar "Aprobar", los electores se incorporan formalmente al Padrón Regional.</p>
+      </div>
+      <div class="pt-2 border-t border-slate-300 text-right">
+        <button onclick="closeHelpModal()" class="gov-btn">Entendido</button>
+      </div>
+    </div>
   </div>
 
-  <!-- Pie de Página Institucional -->
-  <footer class="bg-slate-200 border-t border-slate-300 px-4 py-2 text-center text-[11px] text-slate-600 font-sans">
-    SALA SITUACIONAL Y AUDITORÍA TERRITORIAL • COMANDO REGIONAL MONAGAS 2026 • USO EXCLUSIVO INTERNO
+  <!-- Notificación Oficial -->
+  <div id="toast" class="fixed bottom-6 right-3 z-50 transform transition-all duration-150 translate-y-20 opacity-0 pointer-events-none bg-[#0c2340] text-white px-3 py-1.5 border border-slate-400 text-xs font-mono flex items-center gap-2">
+    <span id="toast-icon">ℹ</span>
+    <span id="toast-text">Acción registrada en el sistema.</span>
+  </div>
+
+  <!-- Barra de Estado Inferior estilo Excel / Windows Clásico -->
+  <footer class="bg-[#cbd5e1] border-t border-[#94a3b8] py-0.5 px-3 flex items-center justify-between text-[10px] text-slate-800 font-mono select-none">
+    <div class="flex items-center gap-3">
+      <span class="font-bold text-slate-900">LISTO</span>
+      <span class="text-slate-400">|</span>
+      <span>EXPEDIENTES: <span id="status-total-exp">5</span></span>
+      <span class="text-slate-400">|</span>
+      <span>ELECTORES AUDITADOS: <span id="status-total-elect">0</span></span>
+      <span class="text-slate-400">|</span>
+      <span>SERVIDOR: SICAT-MONAGAS-SALA-01</span>
+    </div>
+    <div class="flex items-center gap-3 text-slate-600">
+      <span>INGESTA OCR: ACTIVA</span>
+      <span class="text-slate-400">|</span>
+      <span>MAYÚS</span>
+      <span>NUM</span>
+    </div>
   </footer>
 
-  <!-- Scripts -->
+  <!-- Scripts del Motor de Auditoría -->
   <script src="../config.js"></script>
   <script src="../js/auth.js"></script>
   <script src="../js/audit-engine.js"></script>
@@ -520,13 +733,13 @@
       const toastText = document.getElementById('toast-text');
       const toastIcon = document.getElementById('toast-icon');
       toastText.innerText = text;
-      toastIcon.innerText = isError ? '⚠️' : '✅';
+      toastIcon.innerText = isError ? '!' : '✓';
       toast.classList.remove('translate-y-20', 'opacity-0', 'pointer-events-none');
       toast.classList.add('translate-y-0', 'opacity-100');
       setTimeout(() => {
         toast.classList.add('translate-y-20', 'opacity-0', 'pointer-events-none');
         toast.classList.remove('translate-y-0', 'opacity-100');
-      }, 3000);
+      }, 2500);
     }
 
     function switchTab(tabName) {
@@ -535,12 +748,20 @@
         const btn = document.getElementById(`tab-btn-${t}`);
         if (t === tabName) {
           content.classList.remove('hidden');
-          btn.className = "px-4 py-2 rounded-t bg-white border-t-2 border-l border-r border-[#102a4e] text-[#102a4e] font-black text-xs flex items-center gap-2 shadow-xs cursor-pointer";
+          btn.classList.add('active');
         } else {
           content.classList.add('hidden');
-          btn.className = "px-4 py-2 rounded-t text-slate-600 hover:text-slate-900 font-bold text-xs flex items-center gap-2 hover:bg-slate-100 transition cursor-pointer";
+          btn.classList.remove('active');
         }
       });
+      const formula = document.getElementById('formula-bar-text');
+      if (tabName === 'auditoria') {
+        formula.innerText = '=HOJA1: BANDEJA DE EXPEDIENTES Y COTEJO FORENSE ELECTORAL';
+      } else if (tabName === 'enlaces') {
+        formula.innerText = '=HOJA2: DIRECTIVAS Y ENLACES TERRITORIALES ACREDITADOS (15 LÍNEAS AUTORIZADAS)';
+      } else if (tabName === 'parroquias') {
+        formula.innerText = '=HOJA3: MATRIZ CONSOLIDADA DE VOTOS Y ELECTORES POR LAS 44 PARROQUIAS';
+      }
       if (window.lucide) lucide.createIcons();
     }
 
@@ -550,10 +771,19 @@
       document.getElementById('kpi-pendientes').innerText = stats.pendientesCount;
       document.getElementById('kpi-total-planillas').innerText = stats.totalPlanillas;
       document.getElementById('badge-pendientes-tab').innerText = stats.pendientesCount;
+      document.getElementById('status-total-exp').innerText = stats.totalPlanillas;
+      document.getElementById('status-total-elect').innerText = stats.totalElectoresCertificados.toLocaleString();
 
       const pct = Math.round((stats.parroquiasActivas / stats.totalParroquiasMonagas) * 100);
       document.getElementById('kpi-cobertura').innerText = `${stats.parroquiasActivas} / ${stats.totalParroquiasMonagas}`;
       document.getElementById('kpi-cobertura-pct').innerText = `${pct}%`;
+    }
+
+    function resetFilters() {
+      document.getElementById('input-search').value = '';
+      document.getElementById('select-mun-filter').value = 'all';
+      document.getElementById('select-status-filter').value = 'todos';
+      applyFilters();
     }
 
     function applyFilters() {
@@ -581,13 +811,14 @@
         return matchMun && matchStatus && matchSearch;
       });
 
-      document.getElementById('label-table-count').innerText = `Mostrando ${filtered.length} de ${allReports.length} registros cargados`;
+      document.getElementById('label-table-count').innerText = `Mostrando ${filtered.length} de ${allReports.length} expedientes`;
+      document.getElementById('label-active-filter').innerText = `${munFilter.toUpperCase()} | ${statusFilter.toUpperCase()}`;
 
       if (filtered.length === 0) {
         tbody.innerHTML = `
           <tr>
-            <td colspan="11" class="text-center py-8 text-slate-500 italic bg-slate-50">
-              No se encontraron registros con los filtros seleccionados.
+            <td colspan="11" class="text-center py-6 text-slate-500 italic bg-slate-50 font-sans">
+              No se hallaron expedientes coincidentes con los criterios de filtrado seleccionados.
             </td>
           </tr>
         `;
@@ -599,37 +830,32 @@
         const isCertificado = r.estado === 'certificado';
         
         const statusBadge = isPendiente 
-          ? `<span class="px-2 py-0.5 rounded bg-amber-100 text-amber-800 border border-amber-300 font-bold font-mono text-[10px]">🟡 PENDIENTE</span>`
+          ? `<span class="px-1.5 py-0.5 bg-amber-100 text-amber-900 border border-amber-400 font-bold font-mono text-[10px]">PENDIENTE</span>`
           : isCertificado 
-            ? `<span class="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 border border-emerald-300 font-bold font-mono text-[10px]">🟢 CERTIFICADO</span>`
-            : `<span class="px-2 py-0.5 rounded bg-red-100 text-red-800 border border-red-300 font-bold font-mono text-[10px]">🔴 RECHAZADO</span>`;
+            ? `<span class="px-1.5 py-0.5 bg-emerald-100 text-emerald-900 border border-emerald-400 font-bold font-mono text-[10px]">CERTIFICADO</span>`
+            : `<span class="px-1.5 py-0.5 bg-red-100 text-red-900 border border-red-400 font-bold font-mono text-[10px]">RECHAZADO</span>`;
 
-        const typeBadge = r.tipoArchivo === 'excel' 
-          ? '<span class="font-mono text-emerald-700 font-bold text-[11px]">.XLS</span>' 
-          : r.tipoArchivo === 'texto' 
-            ? '<span class="font-mono text-blue-700 font-bold text-[11px]">.TXT</span>' 
-            : '<span class="font-mono text-slate-700 font-bold text-[11px]">.JPG</span>';
-
+        const typeLabel = r.tipoArchivo === 'excel' ? 'EXCEL' : r.tipoArchivo === 'texto' ? 'TEXTO' : 'FOTO';
         const countElectores = Array.isArray(r.electores) ? r.electores.length : 0;
 
         return `
-          <tr class="transition">
-            <td class="text-center text-slate-400 font-mono text-[11px]">${index + 1}</td>
-            <td class="font-mono font-bold text-blue-900">${r.id}</td>
-            <td class="text-slate-600 font-mono text-[11px]">${r.fechaEnvio}</td>
-            <td class="font-semibold text-slate-800">${r.munNombre}</td>
-            <td class="font-semibold text-blue-950">${r.parroquiaNombre}</td>
-            <td class="text-slate-700">${r.sector}</td>
-            <td class="text-slate-700">
-              <span class="font-medium">${r.remitenteNombre}</span>
+          <tr>
+            <td class="row-number">${index + 1}</td>
+            <td class="font-bold text-blue-900">${r.id}</td>
+            <td class="text-slate-700 text-[11px]">${r.fechaEnvio}</td>
+            <td class="font-bold text-slate-800">${r.munNombre.toUpperCase()}</td>
+            <td class="font-bold text-slate-900">${r.parroquiaNombre.toUpperCase()}</td>
+            <td class="text-slate-800 font-sans">${r.sector}</td>
+            <td class="text-slate-800">
+              <span class="font-sans font-medium text-xs">${r.remitenteNombre}</span>
               <span class="block text-[10px] text-slate-500 font-mono">${r.remitenteTlf}</span>
             </td>
-            <td class="text-center">${typeBadge}</td>
-            <td class="text-center font-mono font-bold text-slate-900">${countElectores}</td>
+            <td class="text-center font-bold text-slate-600 text-[10px]">${typeLabel}</td>
+            <td class="text-center font-bold text-slate-900">${countElectores}</td>
             <td class="text-center">${statusBadge}</td>
             <td class="text-center">
-              <button onclick="openAuditModal('${r.id}')" class="bg-blue-700 hover:bg-blue-800 text-white font-bold text-[11px] px-2.5 py-1 rounded shadow-xs transition cursor-pointer">
-                Auditar
+              <button onclick="openAuditModal('${r.id}')" class="gov-btn text-[10px] border-slate-400 hover:bg-slate-200">
+                AUDITAR
               </button>
             </td>
           </tr>
@@ -637,31 +863,35 @@
       }).join('');
     }
 
+    function showQuickAudit() {
+      const reports = MIGATO_AUDIT.getReports();
+      const pendiente = reports.find(r => r.estado === 'pendiente');
+      if (pendiente) {
+        openAuditModal(pendiente.id);
+      } else {
+        showToast("No hay expedientes pendientes de auditoría.");
+      }
+    }
+
     function openAuditModal(reportId) {
       const reports = MIGATO_AUDIT.getReports();
       activeAuditReport = reports.find(r => r.id === reportId);
       if (!activeAuditReport) return;
 
-      document.getElementById('modal-report-id').innerText = `EXPEDIENTE N° ${activeAuditReport.id}`;
-      document.getElementById('modal-report-status').innerHTML = activeAuditReport.estado === 'pendiente' 
-        ? '🟡 POR AUDITAR' 
-        : activeAuditReport.estado === 'certificado' 
-          ? '🟢 CERTIFICADO OFICIAL' 
-          : '🔴 RECHAZADO';
-      
-      document.getElementById('modal-report-title').innerText = `Auditoría Electoral • Parroquia ${activeAuditReport.parroquiaNombre} (${activeAuditReport.munNombre})`;
+      document.getElementById('modal-report-id').innerText = `EXPEDIENTE ${activeAuditReport.id}`;
+      document.getElementById('modal-report-status').innerText = activeAuditReport.estado.toUpperCase();
+      document.getElementById('modal-report-title').innerText = `${activeAuditReport.parroquiaNombre} (${activeAuditReport.munNombre})`;
       document.getElementById('modal-sender').innerText = activeAuditReport.remitenteNombre;
       document.getElementById('modal-phone').innerText = activeAuditReport.remitenteTlf;
       document.getElementById('modal-location').innerText = `${activeAuditReport.parroquiaNombre} • ${activeAuditReport.sector}`;
-      document.getElementById('modal-img-caption').innerText = activeAuditReport.archivoNombre || 'documento.jpg';
+      document.getElementById('modal-img-caption').innerText = activeAuditReport.archivoNombre || 'comprobante.jpg';
 
-      // Render celdas editables estilo Excel
       const tbody = document.getElementById('modal-electores-body');
       tbody.innerHTML = (activeAuditReport.electores || []).map((e, idx) => `
         <tr>
-          <td class="text-center font-mono text-slate-400 font-bold">${idx + 1}</td>
+          <td class="row-number text-[10px]">${idx + 1}</td>
           <td>
-            <input type="text" value="${e.nombre || ''}" class="excel-cell-input elector-field-nombre font-sans text-slate-900 font-medium">
+            <input type="text" value="${e.nombre || ''}" class="excel-cell-input elector-field-nombre font-sans text-slate-900">
           </td>
           <td>
             <input type="text" value="${e.cedula || ''}" class="excel-cell-input elector-field-cedula font-bold text-blue-900">
@@ -682,6 +912,16 @@
       activeAuditReport = null;
     }
 
+    function showHelpModal() {
+      document.getElementById('modal-help').classList.remove('hidden');
+      document.getElementById('modal-help').classList.add('flex');
+    }
+
+    function closeHelpModal() {
+      document.getElementById('modal-help').classList.add('hidden');
+      document.getElementById('modal-help').classList.remove('flex');
+    }
+
     function handleCertifyModal() {
       if (!activeAuditReport) return;
       
@@ -696,24 +936,24 @@
         }
       });
 
-      MIGATO_AUDIT.certifyReport(activeAuditReport.id, updatedElectores, "Comando Central");
+      MIGATO_AUDIT.certifyReport(activeAuditReport.id, updatedElectores, "Comando Regional Monagas");
       closeAuditModal();
       renderStats();
       renderExcelTable();
       renderParishSummary();
-      showToast(`Expediente ${activeAuditReport.id} foliado y certificado en Base de Datos Oficial.`);
+      showToast(`Expediente ${activeAuditReport.id} certificado en padrón.`);
     }
 
     function handleRejectModal() {
       if (!activeAuditReport) return;
-      const motivo = prompt("Indique la causal institucional de rechazo:", "Documento ilegible o firmas incompletas");
+      const motivo = prompt("Motivo institucional del rechazo:", "Documento ilegible o inconsistente");
       if (motivo) {
-        MIGATO_AUDIT.rejectReport(activeAuditReport.id, motivo, "Comando Central");
+        MIGATO_AUDIT.rejectReport(activeAuditReport.id, motivo, "Comando Regional Monagas");
         closeAuditModal();
         renderStats();
         renderExcelTable();
         renderParishSummary();
-        showToast(`Expediente ${activeAuditReport.id} archivado como rechazado.`, true);
+        showToast(`Expediente ${activeAuditReport.id} rechazado.`, true);
       }
     }
 
@@ -722,16 +962,12 @@
       const list = MIGATO_AUDIT.getWhitelist();
       tbody.innerHTML = list.map((item, idx) => `
         <tr>
-          <td class="text-center font-mono text-slate-400 font-bold">${idx + 1}</td>
-          <td class="font-bold text-slate-800">${item.mun}</td>
-          <td class="font-semibold text-blue-900">${item.parroquia}</td>
-          <td class="text-slate-800">${item.responsable}</td>
-          <td class="font-mono text-emerald-800 font-bold">${item.telefono}</td>
-          <td class="text-center">
-            <span class="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 border border-emerald-300 font-bold text-[10px] font-mono">
-              ACTIVO
-            </span>
-          </td>
+          <td class="row-number">${idx + 1}</td>
+          <td class="font-bold text-slate-800">${item.mun.toUpperCase()}</td>
+          <td class="font-bold text-blue-950">${item.parroquia.toUpperCase()}</td>
+          <td class="font-sans text-slate-800">${item.responsable}</td>
+          <td class="font-mono text-slate-900">${item.telefono}</td>
+          <td class="text-center font-bold text-emerald-800 text-[10px]">HABILITADO</td>
         </tr>
       `).join('');
     }
@@ -748,18 +984,18 @@
         const hasPending = parishReports.some(r => r.estado === 'pendiente');
 
         const statusLabel = hasPending 
-          ? '<span class="px-2 py-0.5 rounded bg-amber-100 text-amber-800 border border-amber-300 font-bold font-mono text-[10px]">🟡 REPORTE PENDIENTE</span>'
+          ? '<span class="px-1.5 py-0.5 bg-amber-100 text-amber-900 border border-amber-300 font-bold text-[10px]">EN AUDITORÍA</span>'
           : count > 0 
-            ? '<span class="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 border border-emerald-300 font-bold font-mono text-[10px]">🟢 AL DÍA</span>'
-            : '<span class="px-2 py-0.5 rounded bg-slate-100 text-slate-600 border border-slate-300 font-mono text-[10px]">⚪ SIN REPORTES</span>';
+            ? '<span class="px-1.5 py-0.5 bg-emerald-100 text-emerald-900 border border-emerald-300 font-bold text-[10px]">CON REGISTROS</span>'
+            : '<span class="px-1.5 py-0.5 bg-slate-100 text-slate-500 border border-slate-300 text-[10px]">SIN REPORTES</span>';
 
         return `
           <tr>
-            <td class="text-center font-mono text-slate-400 font-bold">${idx + 1}</td>
-            <td class="font-bold text-slate-800">${w.mun}</td>
-            <td class="font-semibold text-blue-900">${w.parroquia}</td>
-            <td class="text-slate-700">${w.responsable}</td>
-            <td class="text-right font-mono font-bold text-slate-900 text-sm">${count.toLocaleString()}</td>
+            <td class="row-number">${idx + 1}</td>
+            <td class="font-bold text-slate-800">${w.mun.toUpperCase()}</td>
+            <td class="font-bold text-blue-950">${w.parroquia.toUpperCase()}</td>
+            <td class="font-sans text-slate-700">${w.responsable}</td>
+            <td class="text-right font-mono font-bold text-slate-900">${count.toLocaleString()}</td>
             <td class="text-center">${statusLabel}</td>
           </tr>
         `;
@@ -769,7 +1005,7 @@
     function exportToExcel() {
       const reports = MIGATO_AUDIT.getReports();
       let csvContent = "data:text/csv;charset=utf-8,";
-      csvContent += "ID,Fecha,Municipio,Parroquia,Sector,Remitente,Telefono,Estatus,Electores_Registrados\n";
+      csvContent += "EXPEDIENTE,FECHA_HORA,MUNICIPIO,PARROQUIA,SECTOR,RESPONSABLE,TELEFONO,ESTATUS,TOTAL_ELECTORES\n";
       
       reports.forEach(r => {
         const count = r.electores ? r.electores.length : 0;
@@ -779,11 +1015,11 @@
       const encodedUri = encodeURI(csvContent);
       const link = document.createElement("a");
       link.setAttribute("href", encodedUri);
-      link.setAttribute("download", `AUDITORIA_MIGATO_MONAGAS_${new Date().toISOString().slice(0,10)}.csv`);
+      link.setAttribute("download", `PADRON_OFICIAL_MONAGAS_${new Date().toISOString().slice(0,10)}.csv`);
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
-      showToast("Descargando archivo oficial .CSV compatible con Microsoft Excel");
+      showToast("Libro Excel (.CSV) generado satisfactoriamente.");
     }
   </script>
 </body>
