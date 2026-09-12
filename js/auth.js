@@ -93,6 +93,7 @@ const MIGATO_AUTH = (function() {
   function renderUserBadge() {
     const session = getSession();
     const roleDef = ROLES[session.role] || ROLES.gobernador;
+    const loginUrl = (window.location.pathname.includes("/despacho/") || window.location.pathname.includes("/earth-monagas/")) ? "../login.html" : "login.html";
     
     // Buscar contenedor o inyectar flotante si no existe
     let badgeEl = document.getElementById("migato-user-badge");
@@ -109,14 +110,14 @@ const MIGATO_AUTH = (function() {
           <span class="animate-ping absolute inline-flex h-full w-full rounded-full ${roleDef.dotColor} opacity-75"></span>
           <span class="relative inline-flex rounded-full h-2.5 w-2.5 ${roleDef.dotColor}"></span>
         </span>
-        <span class="text-slate-400 font-mono hidden sm:inline">${roleDef.level}:</span>
-        <span class="font-semibold text-white">${session.name}</span>
+        <span class="text-slate-300 font-mono hidden sm:inline">${roleDef.level}:</span>
+        <span class="font-bold text-white">${session.name}</span>
       </div>
-      <span class="px-2 py-0.5 rounded-full border text-[11px] ${roleDef.badgeColor}">
+      <span class="px-2 py-0.5 border text-[11px] font-mono ${roleDef.badgeColor}">
         ${roleDef.title}
       </span>
-      <a href="login.html" title="Cambiar rol o usuario" class="text-slate-400 hover:text-white transition px-1.5 py-0.5 rounded hover:bg-slate-800">
-        🔄 Cambiar
+      <a href="${loginUrl}" title="Cambiar rol o usuario" class="text-slate-300 hover:text-white transition px-1.5 py-0.5 border border-slate-600 bg-slate-800">
+        Cambiar
       </a>
     `;
   }
