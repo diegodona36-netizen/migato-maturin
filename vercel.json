@@ -1,4 +1,8 @@
 {
+  "redirects": [
+    { "source": "/dossiers.html", "destination": "/index.html", "permanent": false },
+    { "source": "/dossiers", "destination": "/index.html", "permanent": false }
+  ],
   "headers": [
     {
       "source": "/(.*)",
