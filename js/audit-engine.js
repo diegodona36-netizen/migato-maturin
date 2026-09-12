@@ -253,19 +253,162 @@ const MIGATO_AUDIT = (function() {
     { parroquiaId: "aragua-de-maturin", parroquia: "Aragua de Maturín", mun: "Piar", responsable: "Luis Alfredo Salazar", telefono: "+58 414-6677881", estado: "activo" }
   ];
 
-  function getReports() {
+  let cachedReports = null;
+  let cachedCertifiedCedulasMap = null;
+
+  function invalidateCaches() {
+    cachedReports = null;
+    cachedCertifiedCedulasMap = null;
+  }
+
+  function getReports(forceReload = false) {
+    if (cachedReports && !forceReload) return cachedReports;
     try {
       const raw = localStorage.getItem(STORAGE_REPORTS_KEY);
-      if (raw) return JSON.parse(raw);
+      if (raw) {
+        cachedReports = JSON.parse(raw);
+        return cachedReports;
+      }
     } catch (e) {
       console.warn("Error leyendo reportes de auditoría:", e);
     }
-    localStorage.setItem(STORAGE_REPORTS_KEY, JSON.stringify(SEED_REPORTS));
-    return SEED_REPORTS;
+    cachedReports = SEED_REPORTS.slice();
+    try {
+      localStorage.setItem(STORAGE_REPORTS_KEY, JSON.stringify(cachedReports));
+    } catch (e) {}
+    return cachedReports;
   }
 
   function saveReports(reports) {
-    localStorage.setItem(STORAGE_REPORTS_KEY, JSON.stringify(reports));
+    cachedReports = reports;
+    cachedCertifiedCedulasMap = null; // Invalida el mapa de duplicados
+    try {
+      localStorage.setItem(STORAGE_REPORTS_KEY, JSON.stringify(reports));
+    } catch (e) {
+      console.warn("[MIGATO AUDIT] LocalStorage saturado (>5MB). Los datos se mantienen en memoria ultrarrápida:", e);
+    }
+  }
+
+  function getCertifiedCedulasMap() {
+    if (cachedCertifiedCedulasMap) return cachedCertifiedCedulasMap;
+    const map = new Map();
+    const reports = getReports();
+    for (let i = 0; i < reports.length; i++) {
+      const r = reports[i];
+      if (r.estado === "certificado" && Array.isArray(r.electores)) {
+        for (let j = 0; j < r.electores.length; j++) {
+          const e = r.electores[j];
+          if (e.cedula) {
+            const clean = e.cedula.replace(/[^0-9]/g, "");
+            if (clean) map.set(clean, r.id);
+          }
+        }
+      }
+    }
+    cachedCertifiedCedulasMap = map;
+    return cachedCertifiedCedulasMap;
+  }
+
+  function ensureSearchIndex(report) {
+    if (report._searchIndex) return report._searchIndex;
+    const electoresTokens = [];
+    if (Array.isArray(report.electores)) {
+      for (let i = 0; i < report.electores.length; i++) {
+        const el = report.electores[i];
+        if (el.cedula) electoresTokens.push(el.cedula.replace(/[^0-9]/g, ""));
+        if (el.nombre) electoresTokens.push(el.nombre);
+      }
+    }
+    report._searchIndex = [
+      report.id,
+      report.parroquiaNombre,
+      report.munNombre,
+      report.subparroquia || "",
+      report.sector || "",
+      report.centroElectoral || "",
+      report.remitenteNombre,
+      report.remitenteTlf,
+      electoresTokens.join(" ")
+    ].join(" ").toLowerCase();
+    return report._searchIndex;
+  }
+
+  function generateStressTestData(count = 500) {
+    const nombres = ["Carlos", "María", "José", "Ana", "Pedro", "Carmen", "Luis", "Elena", "Francisco", "Rosa", "Jesús", "Gladys", "Andrés", "Zuleima", "Marcos"];
+    const apellidos = ["González", "Rodríguez", "Pérez", "Hernández", "García", "Martínez", "López", "Rondón", "Cedeño", "Morales", "Blanco", "Gómez"];
+    const profesiones = ["Docente", "Comerciante", "Mecánico", "Enfermera", "Agricultor", "Albañil", "Costurera", "Estudiante", "Contador", "Chofer"];
+    const parroquiasKeys = Object.keys(PARROQUIAS_CATALOG);
+    
+    const newReports = [];
+    let cedulaBase = 15000000;
+
+    for (let i = 1; i <= count; i++) {
+      const pKey = parroquiasKeys[i % parroquiasKeys.length];
+      const pData = PARROQUIAS_CATALOG[pKey];
+      const subP = pData.subparroquias[i % pData.subparroquias.length];
+      const electores = [];
+      const numElectores = 25; // 25 electores por hoja física de campo
+      
+      for (let j = 0; j < numElectores; j++) {
+        cedulaBase += Math.floor(Math.random() * 5) + 1;
+        const nom = nombres[(i + j) % nombres.length] + " " + apellidos[(i * 2 + j) % apellidos.length];
+        const voto = j % 4 === 0 ? "blando" : j % 7 === 0 ? "nuevo" : "duro";
+        electores.push({
+          nombre: nom,
+          cedula: "V-" + cedulaBase.toLocaleString("de-DE"),
+          telefono: "0414-" + (1000000 + ((i * 30 + j) % 8999999)),
+          subparroquia: subP,
+          sector: "Sector " + ((i % 15) + 1),
+          centroElectoral: "Centro Electoral #" + ((i % 20) + 1),
+          edad: 18 + ((i + j) % 65),
+          profesion: profesiones[(i + j) % profesiones.length],
+          clasificacionVoto: voto
+        });
+      }
+
+      newReports.push({
+        id: `REP-MASIVO-${String(i).padStart(4, '0')}`,
+        parroquiaId: pKey,
+        parroquiaNombre: pData.nombre,
+        munId: pData.mun.toLowerCase().replace(/\s+/g, '-'),
+        munNombre: pData.mun,
+        subparroquia: subP,
+        sector: "Sector " + ((i % 15) + 1),
+        centroElectoral: "Centro Electoral #" + ((i % 20) + 1),
+        codigoCentroCne: "14070" + String(1000 + (i % 500)),
+        fechaPlanilla: "12/09/2026",
+        remitenteNombre: "Coordinador Eje " + ((i % 10) + 1),
+        remitenteTlf: "+58 414-" + (7000000 + i),
+        tipoArchivo: "foto",
+        archivoNombre: `planilla_campo_${i}.jpg`,
+        archivoUrl: "../assets/logo-migato.png",
+        fechaEnvio: "Hoy, 10:00",
+        timestamp: Date.now() - (i * 60000),
+        estado: i % 3 === 0 ? "certificado" : "pendiente",
+        motivoRechazo: "",
+        auditadoPor: i % 3 === 0 ? "Comando Regional" : "",
+        auditadoEn: i % 3 === 0 ? "Hoy, 10:15" : "",
+        electores
+      });
+    }
+
+    cachedReports = newReports;
+    cachedCertifiedCedulasMap = null;
+    try {
+      localStorage.setItem(STORAGE_REPORTS_KEY, JSON.stringify(newReports));
+    } catch (e) {
+      console.warn("[MIGATO AUDIT] Set masivo excede límite de LocalStorage. Procesando en memoria ultrarrápida:", e);
+    }
+    return newReports;
+  }
+
+  function resetToSeedData() {
+    cachedReports = SEED_REPORTS.slice();
+    cachedCertifiedCedulasMap = null;
+    try {
+      localStorage.setItem(STORAGE_REPORTS_KEY, JSON.stringify(cachedReports));
+    } catch (e) {}
+    return cachedReports;
   }
 
   function getWhitelist() {
@@ -342,19 +485,7 @@ const MIGATO_AUDIT = (function() {
     let sumaEdades = 0;
     let conEdad = 0;
 
-    const allReports = getReports();
-    const cedulasEnOtros = new Map();
-    allReports.forEach(r => {
-      if (r.id !== report.id && r.estado === "certificado" && Array.isArray(r.electores)) {
-        r.electores.forEach(e => {
-          if (e.cedula) {
-            const clean = e.cedula.replace(/[^0-9]/g, "");
-            if (clean) cedulasEnOtros.set(clean, r.id);
-          }
-        });
-      }
-    });
-
+    const allCertifiedMap = getCertifiedCedulasMap();
     const cedulasVistasEnHoja = new Map();
 
     const electoresAuditados = electores.map((e, idx) => {
@@ -366,9 +497,9 @@ const MIGATO_AUDIT = (function() {
       if (!cleanCi || cleanCi.length < 5) {
         valido = false;
         alertMsg = "Cédula incompleta";
-      } else if (cedulasEnOtros.has(cleanCi)) {
+      } else if (allCertifiedMap.has(cleanCi) && allCertifiedMap.get(cleanCi) !== report.id) {
         valido = false;
-        alertMsg = "YA CERTIFICADA en " + cedulasEnOtros.get(cleanCi);
+        alertMsg = "YA CERTIFICADA en " + allCertifiedMap.get(cleanCi);
       } else if (cedulasVistasEnHoja.has(cleanCi)) {
         valido = false;
         alertMsg = "REPETIDA (renglón #" + (cedulasVistasEnHoja.get(cleanCi) + 1) + ")";
@@ -505,12 +636,17 @@ const MIGATO_AUDIT = (function() {
 
   return {
     getReports,
+    saveReports,
     getWhitelist,
     getParroquiasCatalog,
     validarCorrespondencia,
     certifyReport,
     rejectReport,
-    getStats
+    getStats,
+    ensureSearchIndex,
+    generateStressTestData,
+    resetToSeedData,
+    invalidateCaches
   };
 })();
 
