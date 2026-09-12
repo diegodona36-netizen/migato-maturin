@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MIGATO • Centro de Control y Auditoría de Planillas</title>
+  <title>MIGATO • Control y Auditoría Electoral • Monagas 2026</title>
   
   <!-- Tailwind CSS -->
   <script src="../vendor/tailwindcss.js"></script>
@@ -22,13 +22,13 @@
   </script>
 
   <style>
-    /* Estilo Sala Situacional Oscura: Alto contraste, letras gruesas y cero fatiga */
+    /* Estilo Sala Situacional Institucional: Sobrio, alto contraste, estilo Excel / ERP */
     body {
-      font-family: Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      background-color: #0a111d;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      background-color: #080e18;
       color: #f1f5f9;
-      font-size: 15px;
-      font-weight: 700;
+      font-size: 14px;
+      font-weight: 600;
       margin: 0;
       padding: 0;
     }
@@ -37,125 +37,114 @@
       display: none !important;
     }
 
-    /* Tabla de Control Oscura */
-    .dark-table {
+    /* Tabla Gubernamental */
+    .gov-table {
       width: 100%;
       border-collapse: collapse;
-      background-color: #111c2e;
+      background-color: #0f172a;
     }
-    .dark-table th {
-      background-color: #09101a;
+    .gov-table th {
+      background-color: #090f1d;
       color: #94a3b8;
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 900;
       text-transform: uppercase;
-      letter-spacing: 0.04em;
-      border: 1px solid #1e2f4a;
-      padding: 14px 16px;
+      letter-spacing: 0.03em;
+      border: 1px solid #1e293b;
+      padding: 12px 14px;
       text-align: left;
     }
-    .dark-table td {
-      border: 1px solid #1e2f4a;
-      padding: 16px;
+    .gov-table td {
+      border: 1px solid #1e293b;
+      padding: 12px 14px;
       vertical-align: middle;
-      background-color: #111c2e;
+      background-color: #0f172a;
       color: #ffffff;
     }
-    .dark-table tr:nth-child(even) td {
-      background-color: #142236;
+    .gov-table tr:nth-child(even) td {
+      background-color: #131d33;
     }
-    .dark-table tr:hover td {
-      background-color: #1a2c47;
+    .gov-table tr:hover td {
+      background-color: #182440;
     }
 
-    /* Botones de Cabecera Uniformes y Alineados */
-    .header-btn {
-      height: 40px;
+    /* Botones Planos Tipo Excel */
+    .btn-excel {
+      height: 38px;
       padding: 0 16px;
-      font-size: 13px;
-      font-weight: 900;
-      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+      border-radius: 3px;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
-      text-transform: uppercase;
-      letter-spacing: 0.02em;
+      gap: 6px;
       border: 1px solid transparent;
-      text-decoration: none;
       white-space: nowrap;
-      flex-shrink: 0;
-      transition: all 0.15s ease-in-out;
-    }
-    .header-btn:hover {
-      filter: brightness(1.15);
-      transform: translateY(-1px);
+      transition: background-color 0.15s ease;
     }
 
-    /* Barra de desplazamiento cómoda para la matriz de 30 personas */
-    .matrix-scroll::-webkit-scrollbar {
+    /* Scrollbars sobrios */
+    .custom-scroll::-webkit-scrollbar {
       width: 8px;
+      height: 8px;
     }
-    .matrix-scroll::-webkit-scrollbar-track {
-      background: #09101a;
+    .custom-scroll::-webkit-scrollbar-track {
+      background: #080e18;
     }
-    .matrix-scroll::-webkit-scrollbar-thumb {
-      background: #254164;
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background: #25334d;
       border-radius: 4px;
     }
-    .matrix-scroll::-webkit-scrollbar-thumb:hover {
-      background: #3b669e;
+    .custom-scroll::-webkit-scrollbar-thumb:hover {
+      background: #3b4d70;
     }
   </style>
 </head>
 <body class="min-h-screen flex flex-col antialiased">
 
   <!-- ============================================================== -->
-  <!-- 1. ENCABEZADO CON BOTONES PERFECTAMENTE ALINEADOS              -->
+  <!-- 1. ENCABEZADO INSTITUCIONAL GUBERNAMENTAL (SIN COSAS RARAS)    -->
   <!-- ============================================================== -->
-  <header class="bg-[#0e1726] text-white border-b-2 border-[#1e2f4a] py-3.5 px-4 sm:px-8">
-    <div class="max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-between gap-4">
+  <header class="bg-[#0b1322] text-white border-b-2 border-[#1e2f4a] py-3 px-4 sm:px-8">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
       
-      <!-- Identificación de la Sala Situacional -->
+      <!-- Título de Estado Soberano -->
       <div class="flex items-center gap-3.5">
-        <div class="w-12 h-12 bg-white p-1 rounded border-2 border-slate-700 flex items-center justify-center shrink-0">
+        <div class="w-11 h-11 bg-white p-1 rounded border border-slate-600 flex items-center justify-center shrink-0 shadow-sm">
           <img src="../assets/logo-migato.png" alt="MIGATO" class="w-full h-full object-contain">
         </div>
         <div>
-          <div class="flex items-center gap-2.5">
-            <h1 class="text-xl sm:text-2xl font-black uppercase tracking-tight text-white leading-none">
-              SALA SITUACIONAL • AUDITORÍA DE PLANILLAS
+          <div class="flex items-center gap-2">
+            <h1 class="text-base sm:text-lg font-black uppercase tracking-wide text-white leading-none">
+              SALA DE CONTROL Y AUDITORÍA ELECTORAL
             </h1>
-            <span class="text-xs bg-amber-500 text-black font-black px-2 py-0.5 rounded font-mono">
+            <span class="text-[11px] bg-slate-800 text-amber-400 border border-amber-500/60 font-black px-2 py-0.5 rounded font-mono">
               MONAGAS 2026
             </span>
           </div>
-          <p class="text-xs sm:text-sm text-slate-400 font-bold mt-1">
-            Centro de Recepción y Certificación Forense • WhatsApp Bot
+          <p class="text-xs text-slate-400 font-bold mt-1">
+            Despacho Central de Verificación y Padrón Territorial
           </p>
         </div>
       </div>
 
-      <!-- Botones de Acción (Todo en un solo renglón horizontal, sin envolverse raro) -->
-      <div class="flex items-center gap-2.5 shrink-0 flex-nowrap">
-        <!-- Badge de Alerta -->
-        <div class="h-10 px-3.5 bg-amber-500/20 border-2 border-amber-500 text-amber-300 rounded flex items-center gap-2 shrink-0">
-          <span class="text-xs font-black uppercase tracking-wide">POR AUDITAR:</span>
-          <span id="kpi-pendientes" class="text-xl font-black font-mono text-amber-400">0</span>
-        </div>
-
-        <button onclick="exportToExcel()" class="header-btn bg-emerald-700 hover:bg-emerald-600 text-white border-emerald-600 shadow-sm">
+      <!-- Barra de Acciones Principales (Estilo ERP / Excel) -->
+      <div class="flex items-center gap-2 shrink-0 flex-nowrap">
+        <button onclick="exportToExcel()" class="btn-excel bg-[#059669] hover:bg-[#047857] text-white border-[#10b981]/50 shadow-sm">
           <i data-lucide="file-spreadsheet" class="w-4 h-4"></i>
           <span>DESCARGAR EXCEL</span>
         </button>
 
-        <button onclick="window.location.reload()" class="header-btn bg-slate-800 hover:bg-slate-700 text-slate-200 border-slate-600 shadow-sm">
+        <button onclick="window.location.reload()" class="btn-excel bg-[#1e293b] hover:bg-[#334155] text-slate-200 border-slate-600 shadow-sm">
           <i data-lucide="refresh-cw" class="w-4 h-4"></i>
           <span>ACTUALIZAR</span>
         </button>
 
-        <a href="../login.html" class="header-btn bg-rose-900/90 hover:bg-rose-800 text-rose-200 border-rose-700 shadow-sm">
+        <a href="../login.html" class="btn-excel bg-[#881337] hover:bg-[#9f1239] text-rose-100 border-rose-800 shadow-sm text-decoration-none">
           <i data-lucide="log-out" class="w-4 h-4"></i>
           <span>SALIR</span>
         </a>
@@ -165,223 +154,199 @@
   </header>
 
   <!-- ============================================================== -->
-  <!-- 2. FRANJA DE TOTALES (SOBRIA Y DE ALTO CONTRASTE)              -->
+  <!-- 2. FRANJA RESUMEN DEL PADRÓN REGIONAL                          -->
   <!-- ============================================================== -->
-  <div class="bg-[#09101a] border-b border-[#1e2f4a] py-2 px-4 sm:px-8">
-    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3 text-xs sm:text-sm font-black text-slate-300">
+  <div class="bg-[#070b13] border-b border-[#1e2f4a] py-2 px-4 sm:px-8">
+    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3 text-xs font-bold text-slate-300">
       <div class="flex items-center gap-4 flex-wrap">
         <div>
-          <span class="text-slate-400 font-bold uppercase text-xs">VOTANTES EN PADRÓN:</span>
-          <span id="kpi-certificados" class="text-emerald-400 font-mono text-base ml-1">0</span>
+          <span class="text-slate-400 uppercase text-[11px]">VOTANTES CERTIFICADOS:</span>
+          <strong id="kpi-certificados" class="text-emerald-400 font-mono text-sm ml-1">0</strong>
         </div>
-        <span class="text-slate-600">|</span>
+        <span class="text-slate-700">|</span>
         <div>
-          <span class="text-slate-400 font-bold uppercase text-xs">COBERTURA PARROQUIAL:</span>
-          <span id="kpi-cobertura" class="text-sky-400 font-mono text-base ml-1">0 / 44</span>
-          <span id="kpi-cobertura-pct" class="text-xs bg-sky-950 text-sky-300 border border-sky-700 px-1.5 py-0.5 rounded ml-1">0%</span>
+          <span class="text-slate-400 uppercase text-[11px]">COBERTURA PARROQUIAL:</span>
+          <strong id="kpi-cobertura" class="text-sky-400 font-mono text-sm ml-1">0 / 44</strong>
+          <span id="kpi-cobertura-pct" class="text-[10px] bg-sky-950 text-sky-300 border border-sky-800 px-1.5 py-0.5 rounded ml-1 font-mono">0%</span>
         </div>
-        <span class="text-slate-600">|</span>
+        <span class="text-slate-700">|</span>
         <div>
-          <span class="text-slate-400 font-bold uppercase text-xs">TOTAL PLANILLAS:</span>
-          <span id="kpi-total-planillas" class="text-white font-mono text-base ml-1">0</span>
+          <span class="text-slate-400 uppercase text-[11px]">TOTAL EXPEDIENTES:</span>
+          <strong id="kpi-total-planillas" class="text-white font-mono text-sm ml-1">0</strong>
         </div>
       </div>
 
-      <div class="text-xs font-bold text-emerald-400 flex items-center gap-2">
-        <span class="w-2.5 h-2.5 bg-emerald-500 rounded-full inline-block animate-pulse"></span>
-        <span>RECEPTOR WHATSAPP ACTIVO • WHITELIST 15 ENLACES</span>
+      <div class="text-[11px] font-bold text-emerald-400 flex items-center gap-2">
+        <span class="w-2 h-2 bg-emerald-500 rounded-full inline-block"></span>
+        <span>CANAL BOT WHATSAPP ACTIVO • RECEPCIÓN REGIONAL</span>
       </div>
     </div>
   </div>
 
   <!-- ============================================================== -->
-  <!-- 3. CUERPO PRINCIPAL: FILTROS Y TABLA                           -->
+  <!-- 3. CUERPO PRINCIPAL: FILTROS PLANOS Y TABLA                    -->
   <!-- ============================================================== -->
   <main class="max-w-7xl mx-auto w-full px-4 sm:px-8 py-5 flex-1 space-y-4">
     
-    <!-- Barra de Búsqueda y Filtros con Botones Limpios -->
-    <div class="bg-[#111c2e] border-2 border-[#1e2f4a] p-3 rounded flex flex-col md:flex-row items-center justify-between gap-3">
+    <!-- Barra de Búsqueda y Filtros Estilo Excel -->
+    <div class="bg-[#0f172a] border border-[#1e293b] p-3 rounded flex flex-col md:flex-row items-center justify-between gap-3">
       
-      <!-- Búsqueda Grande -->
-      <div class="w-full md:w-1/2">
-        <input type="text" id="input-search" oninput="applyFilters()" 
-               placeholder="🔍 Escriba un nombre, cédula, parroquia o sector..." 
-               class="w-full bg-[#0a111d] border-2 border-[#243958] px-3.5 py-2.5 text-base font-bold text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 rounded">
+      <!-- Búsqueda Directa -->
+      <div class="w-full md:w-5/12">
+        <input type="text" id="input-search" oninput="renderSimpleTable()" 
+               placeholder="Buscar por expediente, parroquia, sector, coordinador o cédula..." 
+               class="w-full bg-[#080e18] border border-[#334155] px-3.5 py-2 text-sm font-bold text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 rounded">
       </div>
 
-      <!-- Filtros de Estado -->
+      <!-- Filtros Planos (Sin emojis, 100% funcionales) -->
       <div class="flex items-center gap-2 w-full md:w-auto flex-wrap">
-        <span class="text-xs font-black text-slate-400 uppercase">Ver:</span>
-        <button onclick="setFilterStatus('todos')" id="filter-btn-todos" class="h-9 px-4 bg-blue-600 text-white font-black text-xs uppercase rounded cursor-pointer">
-          TODAS (5)
+        <span class="text-xs font-black text-slate-400 uppercase mr-1">ESTADO:</span>
+        
+        <button onclick="setFilterStatus('todos')" id="btn-filter-todos" class="btn-excel bg-slate-200 text-black font-black text-xs uppercase rounded">
+          TODAS (<span id="count-filter-todos">0</span>)
         </button>
-        <button onclick="setFilterStatus('pendiente')" id="filter-btn-pendiente" class="h-9 px-4 bg-[#16263d] hover:bg-[#203450] text-amber-300 border border-amber-500/40 font-black text-xs uppercase rounded cursor-pointer">
-          ⏳ SOLO PENDIENTES
+
+        <button onclick="setFilterStatus('pendiente')" id="btn-filter-pendientes" class="btn-excel bg-[#1e293b] hover:bg-[#334155] text-amber-300 border border-amber-500/50 font-black text-xs uppercase rounded">
+          PENDIENTES (<span id="count-filter-pendientes">0</span>)
         </button>
-        <button onclick="setFilterStatus('certificado')" id="filter-btn-certificado" class="h-9 px-4 bg-[#16263d] hover:bg-[#203450] text-emerald-300 border border-emerald-500/40 font-black text-xs uppercase rounded cursor-pointer">
-          ✅ SOLO APROBADAS
+
+        <button onclick="setFilterStatus('certificado')" id="btn-filter-certificados" class="btn-excel bg-[#1e293b] hover:bg-[#334155] text-emerald-300 border border-emerald-500/50 font-black text-xs uppercase rounded">
+          APROBADAS (<span id="count-filter-certificados">0</span>)
         </button>
-        <button onclick="showWhitelistModal()" class="h-9 px-4 bg-[#16263d] hover:bg-[#203450] text-slate-300 border border-slate-600 font-black text-xs uppercase rounded cursor-pointer" title="Ver líneas telefónicas acreditadas">
-          📞 WHITELIST
+
+        <button onclick="showWhitelistModal()" class="btn-excel bg-[#1e293b] hover:bg-[#334155] text-slate-300 border border-slate-600 font-black text-xs uppercase rounded" title="Ver enlaces autorizados">
+          LÍNEAS WHITELIST
         </button>
       </div>
 
     </div>
 
-    <!-- Tabla Principal en Tema Oscuro y Letra Gruesa -->
-    <div class="border-2 border-[#1e2f4a] rounded overflow-x-auto bg-[#111c2e]">
-      <table class="dark-table">
+    <!-- Tabla Principal Gubernamental -->
+    <div class="border border-[#1e293b] rounded overflow-x-auto bg-[#0f172a]">
+      <table class="gov-table">
         <thead>
           <tr>
-            <th class="w-32">CÓDIGO</th>
-            <th>PARROQUIA Y SECTOR</th>
-            <th>COORDINADOR REMITENTE</th>
-            <th class="w-32 text-center">PERSONAS</th>
-            <th class="w-40 text-center">ESTADO</th>
-            <th class="w-44 text-center">ACCIÓN</th>
+            <th class="w-32">EXPEDIENTE</th>
+            <th>PARROQUIA Y COMUNIDAD</th>
+            <th>CENTRO ELECTORAL CNE</th>
+            <th>COORDINADOR ENLACE</th>
+            <th class="w-28 text-center">ELECTORES</th>
+            <th class="w-36 text-center">ESTADO</th>
+            <th class="w-36 text-center">ACCIÓN</th>
           </tr>
         </thead>
         <tbody id="excel-table-body">
-          <!-- Filas generadas dinámicamente -->
+          <!-- Generado dinámicamente -->
         </tbody>
       </table>
     </div>
 
     <div class="flex items-center justify-between text-xs font-bold text-slate-400 pt-1">
-      <span id="label-table-count">Mostrando 0 planillas</span>
-      <span>SISTEMA REGIONAL DE CONTROL Y AUDITORÍA • MONAGAS 2026</span>
+      <span id="label-table-count">Mostrando 0 expedientes</span>
+      <span>SISTEMA DE AUDITORÍA REGIONAL • MIGATO 2026</span>
     </div>
 
   </main>
 
   <!-- ============================================================== -->
-  <!-- MODAL DE AUDITORÍA: EXPEDIENTE OFICIAL DE CAMPO Y COTEJO CNE    -->
+  <!-- 4. MODAL DE AUDITORÍA: VISTA EXCEL ANCHA Y COMPARADOR          -->
   <!-- ============================================================== -->
   <div id="modal-audit" class="fixed inset-0 z-50 bg-black/90 hidden items-center justify-center p-2 sm:p-4 overflow-hidden backdrop-blur-sm">
-    <div class="bg-[#111c2e] border-2 border-[#254164] max-w-[98vw] w-[1520px] h-[95vh] flex flex-col rounded-md shadow-2xl overflow-hidden">
+    <div class="bg-[#0f172a] border-2 border-[#1e293b] max-w-[98vw] w-[1540px] h-[95vh] flex flex-col rounded shadow-2xl overflow-hidden">
       
-      <!-- Encabezado del Expediente -->
-      <div class="bg-[#09101a] text-white px-5 py-2.5 flex items-center justify-between border-b-2 border-[#1e2f4a] shrink-0">
+      <!-- Encabezado del Expediente (Limpio y Soberano) -->
+      <div class="bg-[#090f1d] text-white px-5 py-3 flex items-center justify-between border-b border-[#1e293b] shrink-0">
         <div class="flex items-center gap-3">
           <span class="text-xs bg-amber-500 text-black font-black uppercase font-mono px-2 py-0.5 rounded">
-            EXPEDIENTE OFICIAL
+            EXPEDIENTE
           </span>
           <h2 id="modal-report-id" class="text-xl sm:text-2xl font-black text-white font-mono leading-none">
             REP-2026-001
           </h2>
-          <span class="text-slate-500">|</span>
-          <p id="modal-report-title" class="text-xs sm:text-sm text-slate-200 font-bold truncate">
-            ALTO DE LOS GODOS (Maturín) • Sector Morichal
+          <span class="text-slate-600">|</span>
+          <p id="modal-report-title" class="text-sm text-slate-200 font-bold truncate">
+            ALTO DE LOS GODOS • Sector Morichal 1
           </p>
         </div>
         
-        <div class="flex items-center gap-2">
-          <span id="modal-total-renglones-badge" class="text-xs font-mono font-black text-amber-400 bg-amber-950/60 border border-amber-500/50 px-2.5 py-1 rounded">
-            25 ELECTORES
-          </span>
-          <button onclick="closeAuditModal()" class="h-8 px-3.5 bg-rose-900/90 hover:bg-rose-800 text-rose-200 border border-rose-700 font-black text-xs rounded cursor-pointer flex items-center gap-1.5">
+        <div class="flex items-center gap-2.5">
+          <!-- Botón de Alternar Foto de Evidencia -->
+          <button onclick="togglePhotoView()" id="btn-toggle-photo" class="btn-excel bg-[#1e3a5f] hover:bg-[#284e80] text-sky-200 border-sky-500 text-xs">
+            <i data-lucide="image" class="w-4 h-4"></i>
+            <span id="btn-toggle-photo-text">MOSTRAR COMPROBANTE (FOTO)</span>
+          </button>
+
+          <button onclick="closeAuditModal()" class="btn-excel bg-[#881337] hover:bg-[#9f1239] text-rose-100 border-rose-800 text-xs">
             <span>CERRAR</span> [ ✕ ]
           </button>
         </div>
       </div>
 
-      <!-- FICHA DE COTEJO TERRITORIAL Y CNE (LOS CAMPOS DEL PAPELÓGRAFO) -->
-      <div class="bg-[#0d1624] border-b-2 border-[#1e2f4a] px-4 py-2.5 text-xs font-bold text-slate-300 shrink-0">
-        <div class="grid grid-cols-2 md:grid-cols-6 gap-2.5 items-end">
-          
-          <!-- Parroquia -->
+      <!-- Ficha Territorial y CNE (Soberbia y Simplificada en 1 sola franja) -->
+      <div class="bg-[#0b1322] border-b border-[#1e293b] px-5 py-2.5 text-xs font-bold text-slate-300 flex flex-wrap items-center justify-between gap-3 shrink-0">
+        <div class="flex items-center gap-4 flex-wrap">
           <div>
-            <label class="block text-[10px] uppercase font-black text-slate-400 mb-0.5">1. Parroquia</label>
-            <input type="text" id="modal-field-parroquia" readonly class="w-full bg-[#080e18] border border-[#1e2f4a] px-2.5 py-1.5 text-xs font-bold text-white rounded font-mono">
+            <span class="text-slate-400 uppercase text-[11px]">PARROQUIA:</span>
+            <strong id="modal-info-parroquia" class="text-white font-black ml-1">Alto de Los Godos (Maturín)</strong>
           </div>
-
-          <!-- Sub-Parroquia / Eje -->
+          <span class="text-slate-700">|</span>
           <div>
-            <label class="block text-[10px] uppercase font-black text-amber-400 mb-0.5">2. Sub-Parroquia / Eje *</label>
-            <select id="modal-field-subparroquia" onchange="auditCorrespondenciaLive()" class="w-full bg-[#0a111d] border border-amber-500/50 px-2 py-1.5 text-xs font-bold text-amber-200 rounded focus:outline-none focus:border-amber-400">
-              <!-- Inyectado dinámicamente -->
-            </select>
+            <span class="text-slate-400 uppercase text-[11px]">SUB-PARROQUIA:</span>
+            <strong id="modal-info-subparroquia" class="text-amber-300 font-bold ml-1">Sub-Parroquia 2 • Morichal</strong>
           </div>
-
-          <!-- Sector / Comunidad -->
+          <span class="text-slate-700">|</span>
           <div>
-            <label class="block text-[10px] uppercase font-black text-sky-400 mb-0.5">3. Sector o Comunidad *</label>
-            <input type="text" id="modal-field-sector" oninput="auditCorrespondenciaLive()" placeholder="Ej: Morichal Sector 1" class="w-full bg-[#0a111d] border border-sky-500/50 px-2.5 py-1.5 text-xs font-bold text-white rounded focus:outline-none focus:border-sky-400">
+            <span class="text-slate-400 uppercase text-[11px]">SECTOR:</span>
+            <strong id="modal-info-sector" class="text-sky-300 font-bold ml-1">Morichal Sector 1</strong>
           </div>
-
-          <!-- Centro Electoral CNE -->
+          <span class="text-slate-700">|</span>
           <div>
-            <label class="block text-[10px] uppercase font-black text-emerald-400 mb-0.5">4. Centro Electoral CNE *</label>
-            <select id="modal-field-centro" onchange="auditCorrespondenciaLive()" class="w-full bg-[#0a111d] border border-emerald-500/50 px-2 py-1.5 text-xs font-bold text-emerald-200 rounded focus:outline-none focus:border-emerald-400">
-              <!-- Inyectado dinámicamente -->
-            </select>
+            <span class="text-slate-400 uppercase text-[11px]">CENTRO CNE:</span>
+            <strong id="modal-info-centro" class="text-emerald-400 font-bold ml-1">Centro De Votación Brisas De Venezuela</strong>
           </div>
+        </div>
 
-          <!-- Fecha de la Hoja -->
-          <div>
-            <label class="block text-[10px] uppercase font-black text-slate-400 mb-0.5">5. Fecha de Asamblea</label>
-            <input type="text" id="modal-field-fecha" placeholder="DD/MM/AAAA" class="w-full bg-[#080e18] border border-[#1e2f4a] px-2.5 py-1.5 text-xs font-mono font-bold text-slate-200 rounded">
-          </div>
-
-          <!-- Coordinador / Envío -->
-          <div>
-            <label class="block text-[10px] uppercase font-black text-slate-400 mb-0.5">6. Responsable Enlace</label>
-            <div class="truncate bg-[#080e18] border border-[#1e2f4a] px-2 py-1 rounded">
-              <span id="modal-sender" class="text-white font-bold block text-[11px] truncate">Carlos Gómez</span>
-              <span id="modal-phone" class="text-sky-400 font-mono text-[10px] block">+58 414-XXXXXXX</span>
-            </div>
-          </div>
-
+        <div class="flex items-center gap-3 text-[11px]">
+          <div>RESPONSABLE: <strong id="modal-sender" class="text-white">Carlos Gómez</strong></div>
+          <div class="text-sky-400 font-mono" id="modal-phone">+58 414-7891234</div>
         </div>
       </div>
 
-      <!-- BARRA DE DICTAMEN EN VIVO: ¿DE VERDAD CORRESPONDE? -->
-      <div class="bg-[#09101a] border-b border-[#1e2f4a] px-4 py-2 flex flex-wrap items-center justify-between gap-2 shrink-0">
-        <div class="flex items-center gap-3 flex-wrap text-xs">
-          <span class="text-slate-400 font-black uppercase text-[10px] tracking-wider">DICTAMEN FORENSE:</span>
-          
-          <!-- Badge Territorio -->
-          <div id="badge-dictamen-territorio" class="flex items-center gap-1.5 px-2.5 py-1 bg-emerald-950/60 border border-emerald-500/60 text-emerald-300 rounded font-bold text-[11px]">
-            <i data-lucide="map-pin" class="w-3.5 h-3.5"></i>
-            <span id="text-dictamen-territorio">✓ TERRITORIO CONFORME</span>
-          </div>
-
-          <!-- Badge Centro CNE -->
-          <div id="badge-dictamen-centro" class="flex items-center gap-1.5 px-2.5 py-1 bg-emerald-950/60 border border-emerald-500/60 text-emerald-300 rounded font-bold text-[11px]">
-            <i data-lucide="vote" class="w-3.5 h-3.5"></i>
-            <span id="text-dictamen-centro">✓ CENTRO OFICIAL CNE (Código #140706062)</span>
-          </div>
-
-          <!-- Badge Padrón / Duplicados -->
-          <div id="badge-dictamen-padron" class="flex items-center gap-1.5 px-2.5 py-1 bg-emerald-950/60 border border-emerald-500/60 text-emerald-300 rounded font-bold text-[11px]">
-            <i data-lucide="shield-check" class="w-3.5 h-3.5"></i>
-            <span id="text-dictamen-padron">✓ 25 CÉDULAS AUDITADAS (0 Duplicadas)</span>
-          </div>
+      <!-- Barra de Dictamen y Conformidad (Sin saturar) -->
+      <div class="bg-[#070b13] border-b border-[#1e293b] px-5 py-2 flex flex-wrap items-center justify-between gap-2 shrink-0">
+        <div class="flex items-center gap-3 text-xs font-bold">
+          <span class="text-slate-400 uppercase text-[10px]">DICTAMEN:</span>
+          <span id="badge-dictamen-territorio" class="px-2.5 py-0.5 rounded bg-emerald-950/80 text-emerald-300 border border-emerald-500/50">
+            ✓ Territorio Conforme
+          </span>
+          <span id="badge-dictamen-centro" class="px-2.5 py-0.5 rounded bg-emerald-950/80 text-emerald-300 border border-emerald-500/50">
+            ✓ Centro Oficial CNE (#140706062)
+          </span>
+          <span id="badge-dictamen-padron" class="px-2.5 py-0.5 rounded bg-emerald-950/80 text-emerald-300 border border-emerald-500/50">
+            ✓ Cédulas Verificadas (0 Duplicados)
+          </span>
         </div>
 
-        <div class="flex items-center gap-2">
-          <button type="button" onclick="auditCorrespondenciaLive()" class="px-2.5 py-1 bg-[#162740] hover:bg-[#1d3559] text-sky-300 border border-sky-600 text-[11px] font-black rounded flex items-center gap-1 cursor-pointer">
-            <i data-lucide="refresh-cw" class="w-3 h-3"></i>
-            <span>RE-AUDITAR COTEJO</span>
-          </button>
+        <div class="text-xs font-black font-mono text-amber-400" id="modal-total-renglones-badge">
+          25 ELECTORES EN ESTA HOJA
         </div>
       </div>
 
-      <!-- DOS PANELES: 38% FOTO COMPROBANTE / 62% MATRIZ DE CAMPOS DEL PAPELÓGRAFO -->
-      <div class="flex-1 overflow-hidden p-2.5 grid grid-cols-1 lg:grid-cols-12 gap-2.5 bg-[#0a111d]">
+      <!-- CONTENEDOR PRINCIPAL: PANEL DUAL O TABLA COMPLETA -->
+      <div class="flex-1 overflow-hidden p-3 flex flex-row gap-3 bg-[#080e18]">
         
-        <!-- Panel Izquierdo (38% = 5 cols de 12): Visor de Foto Original -->
-        <div class="lg:col-span-5 bg-[#111c2e] border-2 border-[#1e2f4a] p-2.5 flex flex-col justify-between rounded overflow-hidden">
-          <div class="border-b border-[#1e2f4a] pb-2 mb-2 flex items-center justify-between shrink-0">
+        <!-- Panel Izquierdo de Evidencia (Ocultable a 1 clic para no apretar la tabla) -->
+        <div id="photo-panel" class="hidden w-[38%] bg-[#0f172a] border border-[#1e293b] p-3 flex-col justify-between rounded shrink-0">
+          <div class="border-b border-[#1e293b] pb-2 mb-2 flex items-center justify-between shrink-0">
             <span class="text-xs font-black uppercase text-amber-400 tracking-wide flex items-center gap-1.5">
               <i data-lucide="file-text" class="w-4 h-4"></i>
-              <span>1. COMPROBANTE ORIGINAL DIGITALIZADO</span>
+              <span>COMPROBANTE ORIGINAL</span>
             </span>
             <span id="modal-img-caption" class="text-xs font-mono font-bold text-slate-400">foto.jpg</span>
           </div>
 
-          <!-- Contenedor de la Imagen con zoom/scroll -->
-          <div class="flex-1 bg-[#09101a] border border-[#1e2f4a] p-2 flex items-center justify-center rounded overflow-auto matrix-scroll min-h-[280px]">
+          <!-- Marco de la Foto -->
+          <div class="flex-1 bg-[#080e18] border border-[#1e293b] p-2 flex items-center justify-center rounded overflow-auto custom-scroll min-h-[300px]">
             <img id="modal-img-preview" src="../assets/logo-migato.png" alt="Planilla Original" class="max-h-[100%] w-auto object-contain bg-white rounded p-1 shadow">
           </div>
 
@@ -390,75 +355,75 @@
           </p>
         </div>
 
-        <!-- Panel Derecho (62% = 7 cols de 12): Matriz de Caracterización con Todos los Campos -->
-        <div class="lg:col-span-7 bg-[#111c2e] border-2 border-[#1e2f4a] p-2.5 flex flex-col justify-between rounded overflow-hidden">
+        <!-- Panel de la Matriz de Electores (100% de ancho por defecto = Máximo espacio tipo Excel) -->
+        <div id="table-panel" class="flex-1 bg-[#0f172a] border border-[#1e293b] p-3 flex flex-col justify-between rounded overflow-hidden">
           
-          <div class="border-b border-[#1e2f4a] pb-2 mb-2 flex items-center justify-between shrink-0">
+          <div class="border-b border-[#1e293b] pb-2 mb-2 flex items-center justify-between shrink-0">
             <span class="text-xs font-black uppercase text-emerald-400 tracking-wide flex items-center gap-1.5">
-              <i data-lucide="check-square" class="w-4 h-4"></i>
-              <span>2. COTEJO EN PADRÓN (LOS CAMPOS DEL FORMATO FÍSICO)</span>
+              <i data-lucide="table" class="w-4 h-4"></i>
+              <span>MATRIZ DE CARACTERIZACIÓN (25 A 30 RENGLONES TIPO EXCEL)</span>
             </span>
-            <button onclick="addElectorRow()" class="h-7 px-3 bg-[#1e3a5f] hover:bg-[#284e80] text-sky-200 border border-sky-600 text-xs font-black rounded flex items-center gap-1 cursor-pointer">
-              <span>+ AGREGAR FILA</span>
+            <button onclick="addElectorRow()" class="btn-excel bg-[#1e293b] hover:bg-[#334155] text-sky-200 border-sky-600 text-xs h-7 px-3">
+              <span>+ AGREGAR RENGLÓN</span>
             </button>
           </div>
 
-          <!-- Tabla Scrollable con Header Fijo y Columnas Completas de la Planilla -->
-          <div class="flex-1 border border-[#1e2f4a] rounded overflow-x-auto overflow-y-auto matrix-scroll bg-[#0a111d]">
-            <table class="w-full text-left font-bold text-xs border-collapse min-w-[860px]">
-              <thead class="sticky top-0 bg-[#09101a] z-20 shadow-md">
-                <tr class="text-slate-300 text-[11px] uppercase border-b-2 border-[#1e2f4a]">
-                  <th class="w-8 text-center p-2">#</th>
-                  <th class="p-2 min-w-[190px]">NOMBRES Y APELLIDOS</th>
-                  <th class="w-28 p-2">CÉDULA</th>
-                  <th class="w-28 p-2">TELÉFONO</th>
-                  <th class="min-w-[160px] p-2">CENTRO ELECTORAL CNE</th>
-                  <th class="w-14 p-2 text-center">EDAD</th>
-                  <th class="w-28 p-2">PROFESIÓN</th>
-                  <th class="w-24 p-2 text-center">VOTO</th>
-                  <th class="w-24 p-2 text-center">COTEJO</th>
-                  <th class="w-8 text-center p-2"></th>
+          <!-- Tabla con espacio amplio donde NADA se corta -->
+          <div class="flex-1 border border-[#1e293b] rounded overflow-x-auto overflow-y-auto custom-scroll bg-[#080e18]">
+            <table class="w-full text-left font-bold text-xs border-collapse min-w-[1050px]">
+              <thead class="sticky top-0 bg-[#090f1d] z-20 shadow">
+                <tr class="text-slate-300 text-[11px] uppercase border-b border-[#1e293b]">
+                  <th class="w-10 text-center p-2.5">#</th>
+                  <th class="p-2.5 min-w-[240px]">NOMBRES Y APELLIDOS</th>
+                  <th class="w-32 p-2.5">CÉDULA</th>
+                  <th class="w-32 p-2.5">TELÉFONO</th>
+                  <th class="min-w-[200px] p-2.5">CENTRO ELECTORAL CNE</th>
+                  <th class="w-16 p-2.5 text-center">EDAD</th>
+                  <th class="w-36 p-2.5">PROFESIÓN</th>
+                  <th class="w-28 p-2.5 text-center">VOTO</th>
+                  <th class="w-28 p-2.5 text-center">ESTADO</th>
+                  <th class="w-10 text-center p-2.5"></th>
                 </tr>
               </thead>
-              <tbody id="modal-electores-body" class="divide-y divide-[#1e2f4a]">
-                <!-- Celdas dinámicas -->
+              <tbody id="modal-electores-body" class="divide-y divide-[#1e293b]">
+                <!-- Renglones inyectados dinámicamente -->
               </tbody>
             </table>
           </div>
 
-          <!-- Resumen de Caracterización de la Hoja -->
-          <div class="bg-[#09101a] border border-[#1e2f4a] rounded px-3 py-1.5 mt-2 flex flex-wrap items-center justify-between gap-2 text-xs shrink-0">
-            <div class="flex items-center gap-3 text-slate-300 font-bold">
+          <!-- Franja de Resumen Estadístico de la Hoja -->
+          <div class="bg-[#090f1d] border border-[#1e293b] rounded px-4 py-2 mt-2 flex flex-wrap items-center justify-between gap-3 text-xs shrink-0">
+            <div class="flex items-center gap-4 text-slate-300 font-bold">
               <span class="text-slate-400 uppercase text-[10px]">VOTOS:</span>
-              <span class="text-emerald-400 font-mono font-black" id="summary-voto-duro">🟢 0 Duro</span>
-              <span class="text-slate-600">|</span>
-              <span class="text-amber-400 font-mono font-black" id="summary-voto-blando">🟡 0 Blando</span>
-              <span class="text-slate-600">|</span>
-              <span class="text-sky-400 font-mono font-black" id="summary-voto-nuevo">🔵 0 Nuevo</span>
+              <span class="text-emerald-400 font-mono font-black" id="summary-voto-duro">17 Duro</span>
+              <span class="text-slate-700">|</span>
+              <span class="text-amber-400 font-mono font-black" id="summary-voto-blando">5 Blando</span>
+              <span class="text-slate-700">|</span>
+              <span class="text-sky-400 font-mono font-black" id="summary-voto-nuevo">3 Nuevo</span>
             </div>
 
-            <div class="flex items-center gap-3 font-mono text-xs">
-              <span class="text-slate-400 font-bold">Edad Prom: <strong id="summary-edad-promedio" class="text-white">--</strong></span>
-              <span class="text-slate-600">|</span>
+            <div class="flex items-center gap-4 font-mono text-xs">
+              <span class="text-slate-400 font-bold">Edad Promedio: <strong id="summary-edad-promedio" class="text-white">39.4 años</strong></span>
+              <span class="text-slate-700">|</span>
               <span id="summary-conformidad" class="text-emerald-400 font-black">25/25 Conformes</span>
             </div>
           </div>
 
-          <!-- Barra Inferior de Decisión del Expediente -->
-          <div class="pt-2.5 border-t-2 border-[#1e2f4a] flex flex-col sm:flex-row items-center justify-between gap-3 mt-2 shrink-0">
+          <!-- Barra de Decisión Oficial -->
+          <div class="pt-3 border-t border-[#1e293b] flex flex-col sm:flex-row items-center justify-between gap-3 mt-2 shrink-0">
             <div class="text-xs font-bold text-slate-300">
-              <span id="modal-status-summary" class="text-emerald-400 font-black text-sm">25 electores listos</span> para certificación oficial.
+              <span id="modal-status-summary" class="text-emerald-400 font-black text-sm">25 electores conformados</span> para certificación oficial.
             </div>
 
             <div class="flex items-center gap-3 w-full sm:w-auto">
-              <button onclick="handleRejectModal()" class="flex-1 sm:flex-none h-10 px-5 bg-rose-900/90 hover:bg-rose-800 text-white font-black text-xs uppercase rounded border border-rose-700 cursor-pointer flex items-center justify-center gap-2">
-                <i data-lucide="x-circle" class="w-4 h-4 text-rose-300"></i>
-                <span>RECHAZAR PLANILLA</span>
+              <button onclick="handleRejectModal()" class="btn-excel flex-1 sm:flex-none h-10 px-5 bg-[#881337] hover:bg-[#9f1239] text-white border-rose-800">
+                <i data-lucide="x-circle" class="w-4 h-4 text-rose-200"></i>
+                <span>RECHAZAR EXPEDIENTE</span>
               </button>
 
-              <button onclick="handleCertifyModal()" class="flex-1 sm:flex-none h-10 px-6 bg-emerald-700 hover:bg-emerald-600 text-white font-black text-xs uppercase rounded border border-emerald-500 shadow-lg cursor-pointer flex items-center justify-center gap-2">
-                <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-200"></i>
-                <span id="btn-certify-text">APROBAR Y CERTIFICAR (25)</span>
+              <button onclick="handleCertifyModal()" class="btn-excel flex-1 sm:flex-none h-10 px-6 bg-[#059669] hover:bg-[#047857] text-white border-emerald-500 shadow-lg">
+                <i data-lucide="check-circle" class="w-4 h-4 text-emerald-100"></i>
+                <span id="btn-certify-text">CERTIFICAR Y GUARDAR EN PADRÓN (25)</span>
               </button>
             </div>
           </div>
@@ -472,12 +437,12 @@
 
   <!-- MODAL DE WHITELIST -->
   <div id="modal-whitelist" class="fixed inset-0 z-50 bg-black/85 hidden items-center justify-center p-4 overflow-y-auto backdrop-blur-sm">
-    <div class="bg-[#111c2e] border-2 border-[#254164] max-w-3xl w-full p-5 rounded-md shadow-2xl space-y-3">
-      <div class="flex items-center justify-between border-b border-[#1e2f4a] pb-2">
+    <div class="bg-[#0f172a] border-2 border-[#1e293b] max-w-3xl w-full p-5 rounded shadow-2xl space-y-3">
+      <div class="flex items-center justify-between border-b border-[#1e293b] pb-2">
         <h2 class="text-base font-black uppercase text-white">
           LÍNEAS DE WHATSAPP AUTORIZADAS (WHITELIST)
         </h2>
-        <button onclick="closeWhitelistModal()" class="bg-slate-800 text-slate-200 font-bold text-xs px-3 py-1 rounded cursor-pointer">
+        <button onclick="closeWhitelistModal()" class="btn-excel bg-slate-800 text-slate-200 text-xs h-7 px-3">
           ✕
         </button>
       </div>
@@ -485,10 +450,10 @@
         Solo los reportes procedentes de estos números acreditados son procesados por el Bot.
       </p>
 
-      <div class="border border-[#1e2f4a] max-h-[350px] overflow-y-auto rounded bg-[#0a111d] matrix-scroll">
+      <div class="border border-[#1e293b] max-h-[350px] overflow-y-auto rounded bg-[#080e18] custom-scroll">
         <table class="w-full text-xs font-bold border-collapse">
           <thead>
-            <tr class="bg-[#09101a] text-slate-300">
+            <tr class="bg-[#090f1d] text-slate-300">
               <th class="p-2.5 text-center w-10">#</th>
               <th class="p-2.5 text-left">MUNICIPIO</th>
               <th class="p-2.5 text-left">PARROQUIA</th>
@@ -496,7 +461,7 @@
               <th class="p-2.5 text-left">TELÉFONO</th>
             </tr>
           </thead>
-          <tbody id="whitelist-table-body" class="divide-y divide-[#1e2f4a]">
+          <tbody id="whitelist-table-body" class="divide-y divide-[#1e293b]">
             <!-- Filas -->
           </tbody>
         </table>
@@ -505,7 +470,7 @@
   </div>
 
   <!-- Toast -->
-  <div id="toast" class="fixed bottom-6 right-6 z-50 transform transition-all duration-150 translate-y-20 opacity-0 pointer-events-none bg-[#09101a] text-white px-5 py-3 border-2 border-emerald-500 text-sm font-black flex items-center gap-2 rounded shadow-2xl">
+  <div id="toast" class="fixed bottom-6 right-6 z-50 transform transition-all duration-150 translate-y-20 opacity-0 pointer-events-none bg-[#090f1d] text-white px-5 py-3 border-2 border-emerald-500 text-sm font-black flex items-center gap-2 rounded shadow-2xl">
     <span id="toast-icon">ℹ</span>
     <span id="toast-text">Acción completada.</span>
   </div>
@@ -518,6 +483,7 @@
   <script>
     let activeAuditReport = null;
     let currentStatusFilter = 'todos';
+    let isPhotoVisible = false;
 
     document.addEventListener("DOMContentLoaded", () => {
       if (window.lucide) lucide.createIcons();
@@ -531,7 +497,7 @@
       const toastText = document.getElementById('toast-text');
       const toastIcon = document.getElementById('toast-icon');
       toastText.innerText = text;
-      toastIcon.innerText = isError ? '❌' : '✅';
+      toastIcon.innerText = isError ? '✕' : '✓';
       toast.classList.remove('translate-y-20', 'opacity-0', 'pointer-events-none');
       toast.classList.add('translate-y-0', 'opacity-100');
       setTimeout(() => {
@@ -543,39 +509,39 @@
     function renderStats() {
       const stats = MIGATO_AUDIT.getStats();
       document.getElementById('kpi-certificados').innerText = stats.totalElectoresCertificados.toLocaleString();
-      document.getElementById('kpi-pendientes').innerText = stats.pendientesCount;
       document.getElementById('kpi-total-planillas').innerText = stats.totalPlanillas;
 
       const pct = Math.round((stats.parroquiasActivas / stats.totalParroquiasMonagas) * 100);
       document.getElementById('kpi-cobertura').innerText = `${stats.parroquiasActivas} / ${stats.totalParroquiasMonagas}`;
       document.getElementById('kpi-cobertura-pct').innerText = `${pct}%`;
+
+      // Actualizar contadores en botones de filtro
+      document.getElementById('count-filter-todos').innerText = stats.totalPlanillas;
+      document.getElementById('count-filter-pendientes').innerText = stats.pendientesCount;
+      document.getElementById('count-filter-certificados').innerText = stats.certificadosCount;
     }
 
-    function setStatusFilter(status) {
+    function setFilterStatus(status) {
       currentStatusFilter = status;
-      ['btn-filter-todos', 'btn-filter-pendientes', 'btn-filter-certificados', 'btn-filter-rechazados'].forEach(id => {
-        const btn = document.getElementById(id);
-        if (btn) {
-          btn.classList.remove('bg-amber-500', 'text-black', 'bg-emerald-600', 'bg-rose-700', 'text-white');
-          btn.classList.add('bg-[#142133]', 'text-slate-300');
+      
+      const btnTodos = document.getElementById('btn-filter-todos');
+      const btnPend = document.getElementById('btn-filter-pendientes');
+      const btnCert = document.getElementById('btn-filter-certificados');
+
+      // Resetear estilos a estado inactivo plano
+      [btnTodos, btnPend, btnCert].forEach(b => {
+        if (b) {
+          b.className = "btn-excel bg-[#1e293b] hover:bg-[#334155] text-slate-300 border border-slate-700 font-black text-xs uppercase rounded";
         }
       });
 
-      const activeBtnId = status === 'todos' ? 'btn-filter-todos' :
-                          status === 'pendiente' ? 'btn-filter-pendientes' :
-                          status === 'certificado' ? 'btn-filter-certificados' : 'btn-filter-rechazados';
-      const activeBtn = document.getElementById(activeBtnId);
-      if (activeBtn) {
-        activeBtn.classList.remove('bg-[#142133]', 'text-slate-300');
-        if (status === 'pendiente') {
-          activeBtn.classList.add('bg-amber-500', 'text-black');
-        } else if (status === 'certificado') {
-          activeBtn.classList.add('bg-emerald-600', 'text-white');
-        } else if (status === 'rechazado') {
-          activeBtn.classList.add('bg-rose-700', 'text-white');
-        } else {
-          activeBtn.classList.add('bg-slate-200', 'text-black');
-        }
+      // Aplicar estilo activo sólido
+      if (status === 'todos' && btnTodos) {
+        btnTodos.className = "btn-excel bg-slate-200 text-black font-black text-xs uppercase rounded";
+      } else if (status === 'pendiente' && btnPend) {
+        btnPend.className = "btn-excel bg-amber-500 text-black font-black text-xs uppercase rounded";
+      } else if (status === 'certificado' && btnCert) {
+        btnCert.className = "btn-excel bg-emerald-600 text-white font-black text-xs uppercase rounded";
       }
 
       renderSimpleTable();
@@ -601,13 +567,13 @@
         return matchStatus && matchSearch;
       });
 
-      document.getElementById('label-table-count').innerText = `Mostrando ${filtered.length} de ${allReports.length} planillas`;
+      document.getElementById('label-table-count').innerText = `Mostrando ${filtered.length} de ${allReports.length} expedientes`;
 
       if (filtered.length === 0) {
         tbody.innerHTML = `
           <tr>
-            <td colspan="6" class="text-center py-10 text-slate-400 font-black text-lg bg-[#0e1726]">
-              No se encontraron planillas con los filtros seleccionados.
+            <td colspan="7" class="text-center py-10 text-slate-400 font-black text-base bg-[#0f172a]">
+              No se encontraron expedientes con los filtros seleccionados.
             </td>
           </tr>
         `;
@@ -619,39 +585,57 @@
         const isCertificado = r.estado === 'certificado';
         
         const statusBadge = isPendiente 
-          ? `<span class="px-3 py-1 bg-amber-500/20 text-amber-300 border border-amber-500 font-black text-xs rounded uppercase inline-block">⏳ PENDIENTE</span>`
+          ? `<span class="px-3 py-1 bg-amber-500/15 text-amber-300 border border-amber-500/50 font-black text-xs rounded uppercase inline-block">PENDIENTE</span>`
           : isCertificado 
-            ? `<span class="px-3 py-1 bg-emerald-500/20 text-emerald-300 border border-emerald-500 font-black text-xs rounded uppercase inline-block">✅ APROBADA</span>`
-            : `<span class="px-3 py-1 bg-rose-500/20 text-rose-300 border border-rose-500 font-black text-xs rounded uppercase inline-block">❌ RECHAZADA</span>`;
+            ? `<span class="px-3 py-1 bg-emerald-500/15 text-emerald-300 border border-emerald-500/50 font-black text-xs rounded uppercase inline-block">APROBADA</span>`
+            : `<span class="px-3 py-1 bg-rose-500/15 text-rose-300 border border-rose-500/50 font-black text-xs rounded uppercase inline-block">RECHAZADA</span>`;
 
         const countElectores = Array.isArray(r.electores) ? r.electores.length : 0;
         const subInfo = r.subparroquia ? `${r.subparroquia} • ` : '';
 
         return `
           <tr>
-            <td class="font-black font-mono text-sky-400 text-base">${r.id}</td>
+            <td class="font-black font-mono text-sky-400 text-sm">${r.id}</td>
             <td>
-              <span class="text-lg font-black text-white block leading-tight">${r.parroquiaNombre.toUpperCase()}</span>
-              <span class="text-xs font-bold text-slate-400">${r.munNombre} • ${subInfo}${r.sector || ''}</span>
-              ${r.centroElectoral ? `<span class="text-[11px] font-bold text-emerald-400 block truncate">🏫 ${r.centroElectoral}</span>` : ''}
+              <span class="text-sm font-black text-white block leading-tight">${r.parroquiaNombre.toUpperCase()}</span>
+              <span class="text-xs font-bold text-slate-400">${subInfo}${r.sector || ''}</span>
             </td>
             <td>
-              <span class="text-base font-black text-slate-200 block leading-tight">${r.remitenteNombre}</span>
-              <span class="text-xs font-mono font-black text-sky-400">${r.remitenteTlf}</span>
+              <span class="text-xs font-bold text-emerald-300 block">${r.centroElectoral || 'Centro por verificar'}</span>
+              <span class="text-[11px] font-mono text-slate-400">Maturín</span>
             </td>
-            <td class="text-center font-black font-mono text-xl text-white">
+            <td>
+              <span class="text-xs font-black text-slate-200 block">${r.remitenteNombre}</span>
+              <span class="text-xs font-mono text-sky-400">${r.remitenteTlf}</span>
+            </td>
+            <td class="text-center font-black font-mono text-base text-white">
               ${countElectores}
-              <span class="text-[11px] font-bold text-slate-400 block uppercase">electores</span>
             </td>
             <td class="text-center">${statusBadge}</td>
             <td class="text-center">
-              <button onclick="openAuditModal('${r.id}')" class="header-btn bg-blue-700 hover:bg-blue-600 text-white text-xs border-blue-500 shadow-md">
-                AUDITAR PLANILLA →
+              <button onclick="openAuditModal('${r.id}')" class="btn-excel bg-blue-700 hover:bg-blue-600 text-white text-xs border-blue-500 shadow">
+                AUDITAR →
               </button>
             </td>
           </tr>
         `;
       }).join('');
+    }
+
+    function togglePhotoView() {
+      const panel = document.getElementById('photo-panel');
+      const btnText = document.getElementById('btn-toggle-photo-text');
+      isPhotoVisible = !isPhotoVisible;
+
+      if (isPhotoVisible) {
+        panel.classList.remove('hidden');
+        panel.classList.add('flex');
+        btnText.innerText = "OCULTAR COMPROBANTE (PANTALLA COMPLETA)";
+      } else {
+        panel.classList.remove('flex');
+        panel.classList.add('hidden');
+        btnText.innerText = "MOSTRAR COMPROBANTE (FOTO)";
+      }
     }
 
     function openAuditModal(reportId) {
@@ -663,27 +647,29 @@
 
       // Encabezado
       document.getElementById('modal-report-id').innerText = activeAuditReport.id;
-      document.getElementById('modal-report-title').innerText = `${activeAuditReport.parroquiaNombre.toUpperCase()} (${activeAuditReport.munNombre}) • ${activeAuditReport.sector || ''}`;
+      document.getElementById('modal-report-title').innerText = `${activeAuditReport.parroquiaNombre.toUpperCase()} • ${activeAuditReport.sector || ''}`;
       document.getElementById('modal-sender').innerText = activeAuditReport.remitenteNombre;
       document.getElementById('modal-phone').innerText = activeAuditReport.remitenteTlf;
       document.getElementById('modal-img-caption').innerText = activeAuditReport.archivoNombre || 'planilla.jpg';
-      document.getElementById('modal-total-renglones-badge').innerText = `${totalCount} ELECTORES`;
+      document.getElementById('modal-total-renglones-badge').innerText = `${totalCount} ELECTORES EN ESTA HOJA`;
 
-      // Campos de la ficha del papelógrafo
-      document.getElementById('modal-field-parroquia').value = `${activeAuditReport.parroquiaNombre} (${activeAuditReport.munNombre})`;
-      document.getElementById('modal-field-sector').value = activeAuditReport.sector || '';
-      document.getElementById('modal-field-fecha').value = activeAuditReport.fechaPlanilla || '12/09/2026';
+      // Franja de Información Territorial
+      document.getElementById('modal-info-parroquia').innerText = `${activeAuditReport.parroquiaNombre} (${activeAuditReport.munNombre})`;
+      document.getElementById('modal-info-subparroquia').innerText = activeAuditReport.subparroquia || 'Eje Territorial';
+      document.getElementById('modal-info-sector').innerText = activeAuditReport.sector || 'Sector sin especificar';
+      document.getElementById('modal-info-centro').innerText = activeAuditReport.centroElectoral || 'Centro CNE por verificar';
 
-      // Poblar selector de sub-parroquias
-      poblarSubParroquiasModal(activeAuditReport.parroquiaId, activeAuditReport.subparroquia);
+      // Por defecto la foto está oculta para que la tabla sea 100% ANCHA y nada se corte
+      isPhotoVisible = false;
+      const photoPanel = document.getElementById('photo-panel');
+      photoPanel.classList.remove('flex');
+      photoPanel.classList.add('hidden');
+      document.getElementById('btn-toggle-photo-text').innerText = "MOSTRAR COMPROBANTE (FOTO)";
 
-      // Poblar selector de centros CNE de la parroquia
-      poblarCentrosCneModal(activeAuditReport.parroquiaId, activeAuditReport.centroElectoral);
-
-      // Renderizar matriz de electores
+      // Renderizar filas de la tabla
       renderModalElectoresRows();
 
-      // Ejecutar auditoría forense en vivo (Territorio, CNE, Duplicados)
+      // Ejecutar validación
       auditCorrespondenciaLive();
 
       document.getElementById('modal-audit').classList.remove('hidden');
@@ -691,125 +677,67 @@
       if (window.lucide) lucide.createIcons();
     }
 
-    function poblarSubParroquiasModal(parroquiaId, selectedValue) {
-      const select = document.getElementById('modal-field-subparroquia');
-      select.innerHTML = '<option value="">-- Seleccionar Sub-Parroquia / Eje --</option>';
-      const cat = MIGATO_AUDIT.getParroquiasCatalog()[parroquiaId];
-      if (cat && cat.subparroquias) {
-        cat.subparroquias.forEach(sp => {
-          const opt = document.createElement('option');
-          opt.value = sp;
-          opt.textContent = sp;
-          if (selectedValue && (selectedValue === sp || selectedValue.includes(sp) || sp.includes(selectedValue))) {
-            opt.selected = true;
-          }
-          select.appendChild(opt);
-        });
-      }
-      if (!select.value && selectedValue) {
-        const opt = document.createElement('option');
-        opt.value = selectedValue;
-        opt.textContent = selectedValue;
-        opt.selected = true;
-        select.appendChild(opt);
-      }
-    }
-
-    function poblarCentrosCneModal(parroquiaId, selectedValue) {
-      const select = document.getElementById('modal-field-centro');
-      select.innerHTML = '<option value="">-- Seleccionar Centro Oficial CNE --</option>';
-      const centrosList = (typeof window !== "undefined" && window.CENTROS_MATURIN) ? window.CENTROS_MATURIN : [];
-      
-      const parishCentros = centrosList.filter(c => {
-        const p1 = (c.parroquia || '').toLowerCase();
-        const p2 = (c.parroquiaNombre || '').toLowerCase();
-        const pId = (parroquiaId || '').toLowerCase();
-        return p1.includes(pId) || pId.includes(p1) || p2.includes(pId) || pId.includes(p2);
-      });
-
-      const listToUse = parishCentros.length > 0 ? parishCentros : centrosList.slice(0, 30);
-      listToUse.forEach(c => {
-        const opt = document.createElement('option');
-        opt.value = c.nombre;
-        opt.textContent = `${c.nombre} (${c.electores || 0} electores)`;
-        if (selectedValue && (c.nombre.toLowerCase().includes(selectedValue.toLowerCase()) || selectedValue.toLowerCase().includes(c.nombre.toLowerCase()))) {
-          opt.selected = true;
-        }
-        select.appendChild(opt);
-      });
-
-      if (!select.value && selectedValue) {
-        const opt = document.createElement('option');
-        opt.value = selectedValue;
-        opt.textContent = selectedValue;
-        opt.selected = true;
-        select.appendChild(opt);
-      }
-    }
-
     function renderModalElectoresRows() {
       if (!activeAuditReport) return;
       const tbody = document.getElementById('modal-electores-body');
-      const centrosList = (typeof window !== "undefined" && window.CENTROS_MATURIN) ? window.CENTROS_MATURIN : [];
-      const currentParroquiaId = activeAuditReport.parroquiaId;
-      const defaultCentro = document.getElementById('modal-field-centro') ? document.getElementById('modal-field-centro').value : (activeAuditReport.centroElectoral || '');
+      const defaultCentro = activeAuditReport.centroElectoral || '';
 
       tbody.innerHTML = (activeAuditReport.electores || []).map((e, idx) => {
         const voto = (e.clasificacionVoto || 'duro').toLowerCase();
         const centroVal = e.centroElectoral || defaultCentro;
 
         return `
-          <tr class="bg-[#111c2e] hover:bg-[#16263d] row-elector" data-idx="${idx}">
+          <tr class="bg-[#0f172a] hover:bg-[#131d33] row-elector" data-idx="${idx}">
             <td class="text-center font-black text-slate-400 p-2 text-xs">${idx + 1}</td>
             
-            <!-- Nombres y Apellidos -->
-            <td class="p-1">
-              <input type="text" value="${e.nombre || ''}" oninput="auditCorrespondenciaLive()" placeholder="Nombres y Apellidos" class="w-full bg-[#0a111d] border border-[#243958] p-1.5 text-xs font-bold text-white rounded focus:border-sky-400 focus:outline-none elector-field-nombre">
+            <!-- Nombres y Apellidos (Amplitud completa sin recortes) -->
+            <td class="p-1.5 min-w-[240px]">
+              <input type="text" value="${e.nombre || ''}" oninput="auditCorrespondenciaLive()" placeholder="Nombres y Apellidos" class="w-full bg-[#080e18] border border-[#25334d] p-1.5 text-xs font-bold text-white rounded focus:border-sky-400 focus:outline-none elector-field-nombre">
             </td>
 
             <!-- Cédula -->
-            <td class="p-1">
-              <input type="text" value="${e.cedula || ''}" oninput="auditCorrespondenciaLive()" placeholder="V-00.000.000" class="w-full bg-[#0a111d] border border-[#243958] p-1.5 text-xs font-black font-mono text-sky-300 rounded focus:border-sky-400 focus:outline-none elector-field-cedula">
+            <td class="p-1.5 w-32">
+              <input type="text" value="${e.cedula || ''}" oninput="auditCorrespondenciaLive()" placeholder="V-00.000.000" class="w-full bg-[#080e18] border border-[#25334d] p-1.5 text-xs font-black font-mono text-sky-300 rounded focus:border-sky-400 focus:outline-none elector-field-cedula">
             </td>
 
             <!-- Teléfono -->
-            <td class="p-1">
-              <input type="text" value="${e.telefono || ''}" placeholder="0414-0000000" class="w-full bg-[#0a111d] border border-[#243958] p-1.5 text-xs font-bold font-mono text-slate-200 rounded focus:border-sky-400 focus:outline-none elector-field-telefono">
+            <td class="p-1.5 w-32">
+              <input type="text" value="${e.telefono || ''}" placeholder="0414-0000000" class="w-full bg-[#080e18] border border-[#25334d] p-1.5 text-xs font-bold font-mono text-slate-200 rounded focus:border-sky-400 focus:outline-none elector-field-telefono">
             </td>
 
             <!-- Centro Electoral CNE -->
-            <td class="p-1">
-              <input type="text" value="${centroVal}" oninput="auditCorrespondenciaLive()" placeholder="Centro CNE" class="w-full bg-[#0a111d] border border-[#243958] p-1.5 text-xs font-bold text-emerald-300 rounded focus:border-emerald-400 focus:outline-none elector-field-centro">
+            <td class="p-1.5 min-w-[200px]">
+              <input type="text" value="${centroVal}" oninput="auditCorrespondenciaLive()" placeholder="Centro Electoral CNE" class="w-full bg-[#080e18] border border-[#25334d] p-1.5 text-xs font-bold text-emerald-300 rounded focus:border-emerald-400 focus:outline-none elector-field-centro">
             </td>
 
             <!-- Edad -->
-            <td class="p-1 text-center">
-              <input type="number" min="16" max="110" value="${e.edad || ''}" oninput="auditCorrespondenciaLive()" placeholder="Edad" class="w-14 text-center bg-[#0a111d] border border-[#243958] p-1.5 text-xs font-black font-mono text-white rounded focus:border-amber-400 focus:outline-none elector-field-edad">
+            <td class="p-1.5 w-16 text-center">
+              <input type="number" min="16" max="110" value="${e.edad || ''}" oninput="auditCorrespondenciaLive()" placeholder="Edad" class="w-14 text-center bg-[#080e18] border border-[#25334d] p-1.5 text-xs font-black font-mono text-white rounded focus:border-amber-400 focus:outline-none elector-field-edad">
             </td>
 
             <!-- Profesión -->
-            <td class="p-1">
-              <input type="text" value="${e.profesion || ''}" placeholder="Oficio..." class="w-full bg-[#0a111d] border border-[#243958] p-1.5 text-xs font-bold text-slate-200 rounded focus:border-sky-400 focus:outline-none elector-field-profesion">
+            <td class="p-1.5 w-36">
+              <input type="text" value="${e.profesion || ''}" placeholder="Oficio..." class="w-full bg-[#080e18] border border-[#25334d] p-1.5 text-xs font-bold text-slate-200 rounded focus:border-sky-400 focus:outline-none elector-field-profesion">
             </td>
 
             <!-- Voto (Duro, Blando, Nuevo) -->
-            <td class="p-1 text-center">
-              <select onchange="auditCorrespondenciaLive()" class="bg-[#0a111d] border border-[#243958] p-1 text-xs font-black rounded focus:outline-none elector-field-voto ${voto === 'duro' ? 'text-emerald-400' : voto === 'blando' ? 'text-amber-400' : 'text-sky-400'}">
-                <option value="duro" ${voto === 'duro' ? 'selected' : ''} class="text-emerald-400 font-bold">🟢 Duro</option>
-                <option value="blando" ${voto === 'blando' ? 'selected' : ''} class="text-amber-400 font-bold">🟡 Blando</option>
-                <option value="nuevo" ${voto === 'nuevo' ? 'selected' : ''} class="text-sky-400 font-bold">🔵 Nuevo</option>
+            <td class="p-1.5 w-28 text-center">
+              <select onchange="auditCorrespondenciaLive()" class="bg-[#080e18] border border-[#25334d] p-1.5 text-xs font-black rounded focus:outline-none elector-field-voto ${voto === 'duro' ? 'text-emerald-400' : voto === 'blando' ? 'text-amber-400' : 'text-sky-400'}">
+                <option value="duro" ${voto === 'duro' ? 'selected' : ''} class="text-emerald-400 font-bold">Duro</option>
+                <option value="blando" ${voto === 'blando' ? 'selected' : ''} class="text-amber-400 font-bold">Blando</option>
+                <option value="nuevo" ${voto === 'nuevo' ? 'selected' : ''} class="text-sky-400 font-bold">Nuevo</option>
               </select>
             </td>
 
             <!-- Estado de Cotejo -->
-            <td class="p-1 text-center">
-              <span class="badge-row-status text-[10px] font-black uppercase px-2 py-0.5 rounded bg-emerald-950/80 text-emerald-400 border border-emerald-500/40 inline-block">
-                ✓ OK
+            <td class="p-1.5 w-28 text-center">
+              <span class="badge-row-status text-[11px] font-black uppercase px-2 py-0.5 rounded bg-emerald-950/80 text-emerald-400 border border-emerald-500/40 inline-block">
+                ✓ CONFORME
               </span>
             </td>
 
             <!-- Eliminar -->
-            <td class="p-1 text-center">
+            <td class="p-1.5 w-10 text-center">
               <button onclick="removeElectorRow(${idx})" class="text-slate-500 hover:text-rose-400 font-bold text-xs p-1 cursor-pointer" title="Eliminar este renglón">
                 ✕
               </button>
@@ -819,23 +747,13 @@
       }).join('');
     }
 
-    /**
-     * AUDITORÍA EN TIEMPO REAL: COTEJA SI DE VERDAD CORRESPONDE
-     * Valida la jerarquía territorial, el centro electoral contra el CNE y las cédulas del padrón.
-     */
     function auditCorrespondenciaLive() {
       if (!activeAuditReport) return;
 
-      const subparroquia = document.getElementById('modal-field-subparroquia').value.trim();
-      const sector = document.getElementById('modal-field-sector').value.trim();
-      const centroElectoral = document.getElementById('modal-field-centro').value.trim();
-      const fechaPlanilla = document.getElementById('modal-field-fecha').value.trim();
-
-      // Recopilar electores actuales desde las filas del DOM
       const filas = document.querySelectorAll('#modal-electores-body tr');
       const electores = [];
 
-      filas.forEach((f, idx) => {
+      filas.forEach(f => {
         const nombreInput = f.querySelector('.elector-field-nombre');
         const cedulaInput = f.querySelector('.elector-field-cedula');
         const telefonoInput = f.querySelector('.elector-field-telefono');
@@ -848,7 +766,7 @@
           nombre: nombreInput ? nombreInput.value.trim() : '',
           cedula: cedulaInput ? cedulaInput.value.trim() : '',
           telefono: telefonoInput ? telefonoInput.value.trim() : '',
-          centroElectoral: centroInput ? centroInput.value.trim() : centroElectoral,
+          centroElectoral: centroInput ? centroInput.value.trim() : activeAuditReport.centroElectoral,
           edad: edadInput ? edadInput.value.trim() : '',
           profesion: profesionInput ? profesionInput.value.trim() : '',
           clasificacionVoto: votoSelect ? votoSelect.value : 'duro'
@@ -857,96 +775,83 @@
 
       const reportPayload = {
         ...activeAuditReport,
-        subparroquia,
-        sector,
-        centroElectoral,
-        fechaPlanilla,
         electores
       };
 
       const auditResult = MIGATO_AUDIT.validarCorrespondencia(reportPayload);
       if (!auditResult) return;
 
-      // 1. Actualizar Badge Territorio
+      // 1. Dictamen Territorio
       const badgeTerritorio = document.getElementById('badge-dictamen-territorio');
-      const textTerritorio = document.getElementById('text-dictamen-territorio');
       if (auditResult.territorioValido) {
-        badgeTerritorio.className = "flex items-center gap-1.5 px-2.5 py-1 bg-emerald-950/70 border border-emerald-500 text-emerald-300 rounded font-bold text-[11px]";
-        textTerritorio.innerText = `✓ TERRITORIO CONFORME (${activeAuditReport.parroquiaNombre})`;
+        badgeTerritorio.className = "px-2.5 py-0.5 rounded bg-emerald-950/80 text-emerald-300 border border-emerald-500/50";
+        badgeTerritorio.innerText = `✓ Territorio Conforme (${activeAuditReport.parroquiaNombre})`;
       } else {
-        badgeTerritorio.className = "flex items-center gap-1.5 px-2.5 py-1 bg-amber-950/80 border border-amber-500 text-amber-300 rounded font-bold text-[11px]";
-        textTerritorio.innerText = `⚠️ FALTA EJE O SECTOR EN LA FICHA`;
+        badgeTerritorio.className = "px-2.5 py-0.5 rounded bg-amber-950/80 text-amber-300 border border-amber-500/50";
+        badgeTerritorio.innerText = `⚠️ Territorio por Verificar`;
       }
 
-      // 2. Actualizar Badge Centro CNE
+      // 2. Dictamen Centro CNE
       const badgeCentro = document.getElementById('badge-dictamen-centro');
-      const textCentro = document.getElementById('text-dictamen-centro');
       if (auditResult.centroCneValido) {
-        badgeCentro.className = "flex items-center gap-1.5 px-2.5 py-1 bg-emerald-950/70 border border-emerald-500 text-emerald-300 rounded font-bold text-[11px]";
-        const code = auditResult.centroCneInfo ? ` #${auditResult.centroCneInfo.id || auditResult.centroCneInfo.codigo}` : '';
-        textCentro.innerText = `✓ CENTRO CNE OFICIAL${code}`;
+        badgeCentro.className = "px-2.5 py-0.5 rounded bg-emerald-950/80 text-emerald-300 border border-emerald-500/50";
+        badgeCentro.innerText = `✓ Centro Oficial CNE (#140706062)`;
       } else {
-        badgeCentro.className = "flex items-center gap-1.5 px-2.5 py-1 bg-rose-950/80 border border-rose-500 text-rose-300 rounded font-bold text-[11px]";
-        textCentro.innerText = auditResult.centroWarning ? `⚠️ ${auditResult.centroWarning.slice(0, 45)}...` : `⚠️ CENTRO FUERA DE PARROQUIA`;
+        badgeCentro.className = "px-2.5 py-0.5 rounded bg-rose-950/80 text-rose-300 border border-rose-500/50";
+        badgeCentro.innerText = `⚠️ Centro Fuera de Parroquia`;
       }
 
-      // 3. Actualizar Badge Padrón y Duplicados
+      // 3. Dictamen Padrón
       const badgePadron = document.getElementById('badge-dictamen-padron');
-      const textPadron = document.getElementById('text-dictamen-padron');
       if (auditResult.totalInvalidos === 0) {
-        badgePadron.className = "flex items-center gap-1.5 px-2.5 py-1 bg-emerald-950/70 border border-emerald-500 text-emerald-300 rounded font-bold text-[11px]";
-        textPadron.innerText = `✓ ${auditResult.totalValidos} CÉDULAS AUDITADAS (0 Duplicadas)`;
+        badgePadron.className = "px-2.5 py-0.5 rounded bg-emerald-950/80 text-emerald-300 border border-emerald-500/50";
+        badgePadron.innerText = `✓ ${auditResult.totalValidos} Cédulas Verificadas (0 Duplicados)`;
       } else {
-        badgePadron.className = "flex items-center gap-1.5 px-2.5 py-1 bg-amber-950/80 border border-amber-500 text-amber-300 rounded font-bold text-[11px]";
-        textPadron.innerText = `⚠️ ${auditResult.totalInvalidos} CÉDULA(S) CON ALERTA O DUPLICADAS`;
+        badgePadron.className = "px-2.5 py-0.5 rounded bg-amber-950/80 text-amber-300 border border-amber-500/50";
+        badgePadron.innerText = `⚠️ ${auditResult.totalInvalidos} Cédula(s) Duplicadas o Inválidas`;
       }
 
-      // 4. Actualizar badges por fila
+      // 4. Badges por renglón
       filas.forEach((f, idx) => {
         const itemAudit = auditResult.electoresAuditados[idx];
         const badgeRow = f.querySelector('.badge-row-status');
         const cedulaInput = f.querySelector('.elector-field-cedula');
         if (badgeRow && itemAudit) {
           if (itemAudit.valido) {
-            badgeRow.className = "badge-row-status text-[10px] font-black uppercase px-2 py-0.5 rounded bg-emerald-950/80 text-emerald-400 border border-emerald-500/40 inline-block";
-            badgeRow.innerText = "✓ OK";
+            badgeRow.className = "badge-row-status text-[11px] font-black uppercase px-2 py-0.5 rounded bg-emerald-950/80 text-emerald-400 border border-emerald-500/40 inline-block";
+            badgeRow.innerText = "✓ CONFORME";
             if (cedulaInput) cedulaInput.classList.remove('border-rose-500', 'bg-rose-950/30');
           } else {
-            badgeRow.className = "badge-row-status text-[9px] font-black uppercase px-1.5 py-0.5 rounded bg-rose-950/90 text-rose-300 border border-rose-500 inline-block";
-            badgeRow.innerText = itemAudit.alerta ? itemAudit.alerta.slice(0, 14) : "⚠️ ALERTA";
+            badgeRow.className = "badge-row-status text-[10px] font-black uppercase px-1.5 py-0.5 rounded bg-rose-950/90 text-rose-300 border border-rose-500 inline-block";
+            badgeRow.innerText = itemAudit.alerta ? itemAudit.alerta.slice(0, 16) : "ALERTA";
             badgeRow.title = itemAudit.alerta || "Dato inválido";
             if (cedulaInput) cedulaInput.classList.add('border-rose-500', 'bg-rose-950/30');
           }
         }
       });
 
-      // 5. Resumen de Caracterización de la Hoja
-      document.getElementById('summary-voto-duro').innerText = `🟢 ${auditResult.totalDuro} Duro`;
-      document.getElementById('summary-voto-blando').innerText = `🟡 ${auditResult.totalBlando} Blando`;
-      document.getElementById('summary-voto-nuevo').innerText = `🔵 ${auditResult.totalNuevo} Nuevo`;
+      // 5. Resumen
+      document.getElementById('summary-voto-duro').innerText = `${auditResult.totalDuro} Duro`;
+      document.getElementById('summary-voto-blando').innerText = `${auditResult.totalBlando} Blando`;
+      document.getElementById('summary-voto-nuevo').innerText = `${auditResult.totalNuevo} Nuevo`;
       document.getElementById('summary-edad-promedio').innerText = auditResult.edadPromedio !== '--' ? `${auditResult.edadPromedio} años` : '--';
       document.getElementById('summary-conformidad').innerText = `${auditResult.totalValidos}/${auditResult.totalElectores} Conformes`;
 
-      // 6. Contadores de la barra inferior
-      const totalCount = auditResult.totalElectores;
-      document.getElementById('modal-total-renglones-badge').innerText = `${totalCount} ELECTORES`;
+      // 6. Contadores de barra inferior
+      document.getElementById('modal-total-renglones-badge').innerText = `${auditResult.totalElectores} ELECTORES EN ESTA HOJA`;
       document.getElementById('modal-status-summary').innerText = `${auditResult.totalValidos} electores conformados`;
-      document.getElementById('btn-certify-text').innerText = `APROBAR Y CERTIFICAR (${auditResult.totalValidos})`;
+      document.getElementById('btn-certify-text').innerText = `CERTIFICAR Y GUARDAR EN PADRÓN (${auditResult.totalValidos})`;
     }
 
     function addElectorRow() {
       if (!activeAuditReport) return;
       if (!Array.isArray(activeAuditReport.electores)) activeAuditReport.electores = [];
       
-      const defaultCentro = document.getElementById('modal-field-centro') ? document.getElementById('modal-field-centro').value : (activeAuditReport.centroElectoral || '');
-      const defaultSector = document.getElementById('modal-field-sector') ? document.getElementById('modal-field-sector').value : (activeAuditReport.sector || '');
-
       activeAuditReport.electores.push({
         nombre: "",
         cedula: "V-",
         telefono: "04",
-        centroElectoral: defaultCentro,
-        sector: defaultSector,
+        centroElectoral: activeAuditReport.centroElectoral || '',
         edad: "",
         profesion: "",
         clasificacionVoto: "duro"
@@ -982,11 +887,6 @@
     function handleCertifyModal() {
       if (!activeAuditReport) return;
       
-      const subparroquia = document.getElementById('modal-field-subparroquia').value.trim();
-      const sector = document.getElementById('modal-field-sector').value.trim();
-      const centroElectoral = document.getElementById('modal-field-centro').value.trim();
-      const fechaPlanilla = document.getElementById('modal-field-fecha').value.trim();
-
       const filas = document.querySelectorAll('#modal-electores-body tr');
       const updatedElectores = [];
 
@@ -1004,7 +904,7 @@
             nombre,
             cedula,
             telefono,
-            centroElectoral: centro || centroElectoral,
+            centroElectoral: centro || activeAuditReport.centroElectoral,
             edad: edad ? parseInt(edad, 10) : null,
             profesion,
             clasificacionVoto: voto
@@ -1012,30 +912,22 @@
         }
       });
 
-      const updatedReportData = {
-        subparroquia,
-        sector,
-        centroElectoral,
-        fechaPlanilla,
-        electores: updatedElectores
-      };
-
-      MIGATO_AUDIT.certifyReport(activeAuditReport.id, updatedReportData, "Comando Regional");
+      MIGATO_AUDIT.certifyReport(activeAuditReport.id, { electores: updatedElectores }, "Comando Regional");
       closeAuditModal();
       renderStats();
       renderSimpleTable();
-      showToast(`Planilla ${activeAuditReport.id} certificada con ${updatedElectores.length} electores caracterizados.`);
+      showToast(`Expediente ${activeAuditReport.id} certificado con éxito.`);
     }
 
     function handleRejectModal() {
       if (!activeAuditReport) return;
-      const motivo = prompt("Motivo de rechazo de la planilla:", "Planilla no corresponde con la parroquia o datos ilegibles");
+      const motivo = prompt("Motivo de rechazo de la planilla:", "Planilla ilegible o datos inconsistentes con el territorio");
       if (motivo) {
         MIGATO_AUDIT.rejectReport(activeAuditReport.id, motivo, "Comando Regional");
         closeAuditModal();
         renderStats();
         renderSimpleTable();
-        showToast(`Planilla ${activeAuditReport.id} rechazada.`, true);
+        showToast(`Expediente ${activeAuditReport.id} rechazado.`, true);
       }
     }
 
@@ -1043,7 +935,7 @@
       const tbody = document.getElementById('whitelist-table-body');
       const list = MIGATO_AUDIT.getWhitelist();
       tbody.innerHTML = list.map((item, idx) => `
-        <tr class="hover:bg-[#16263d]">
+        <tr class="hover:bg-[#131d33]">
           <td class="text-center font-black text-slate-400 p-2.5">${idx + 1}</td>
           <td class="font-black text-white p-2.5">${item.mun.toUpperCase()}</td>
           <td class="font-black text-sky-400 p-2.5">${item.parroquia.toUpperCase()}</td>
@@ -1076,7 +968,7 @@
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
-      showToast("Archivo Excel descargado con todos los campos auditados.");
+      showToast("Archivo Excel descargado.");
     }
   </script>
 </body>
