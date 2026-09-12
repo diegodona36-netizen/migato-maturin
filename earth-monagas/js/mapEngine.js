@@ -2,8 +2,8 @@
  * Motor Cartográfico Acelerado por GPU — Google Earth Pro Web (Monagas)
  * Integrado con Capas Jerárquicas Oficiales (INE 2021) y Edición de Vértices
  */
-import { GEO_ESTADO_OFICIAL, GEO_MUNICIPIOS_OFICIAL, GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=133";
-import { CATALOGO_MONAGAS } from "./catalogoMonagas.js?v=133";
+import { GEO_ESTADO_OFICIAL, GEO_MUNICIPIOS_OFICIAL, GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=134";
+import { CATALOGO_MONAGAS, PARISH_ALIAS_MAP, resolveParishId } from "./catalogoMonagas.js?v=134";
 
 export class EarthMapEngine {
   constructor(containerId, onCoordUpdate) {
@@ -101,13 +101,6 @@ export class EarthMapEngine {
     }
     this.spotlightSvgRenderer = L.svg({ pane: "spotlightMaskPane", padding: 0.5 }).addTo(this.map);
     this.svgRenderer = L.svg({ padding: 0.5 }).addTo(this.map);
-
-    // Control de capas satelitales clásico
-    L.control.layers(
-      { "Satélite Google (Híbrido)": googleHybrid, "Satélite Esri": esriSatellite, "Calles OSM": osmStreets },
-      null,
-      { position: "topright" }
-    ).addTo(this.map);
 
     // Botones de Zoom (+ y -) estilo Google Earth Pro aislados abajo a la derecha
     L.control.zoom({
@@ -543,7 +536,8 @@ export class EarthMapEngine {
           if (document.activeElement?.blur) document.activeElement.blur();
           L.DomEvent.stopPropagation(e);
           if (window.earthApp?.selectParish) {
-            window.earthApp.selectParish(cleanMunId, pId, true);
+            const resolvedParishId = PARISH_ALIAS_MAP[pId] || pId;
+            window.earthApp.selectParish(cleanMunId, resolvedParishId, true);
           }
         }
       });

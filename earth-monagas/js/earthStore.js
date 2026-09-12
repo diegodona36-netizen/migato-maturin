@@ -1,8 +1,9 @@
 /**
  * Gestor de Estado y Árbol de Lugares (Places) — Google Earth Pro Web (Monagas)
  */
-import { SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=120";
-import { getEjesByParish, getSectoresByParish } from "./monagasSectoresCatalog.js?v=120";
+import { SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=134";
+import { getEjesByParish, getSectoresByParish } from "./monagasSectoresCatalog.js?v=134";
+import { PARISH_ALIAS_MAP, resolveParishId } from "./catalogoMonagas.js?v=134";
 import { 
   getSavedFirebaseConfig, 
   saveFirebaseConfig, 
@@ -133,8 +134,11 @@ export class EarthStore {
           if (!storedP.limite && p.limite) storedP.limite = p.limite;
           if (!storedP.centro && p.centro) storedP.centro = p.centro;
 
-          // Capa 4 (Subparroquias) y Capa 5 (Polígonos/Sectores) inician limpias al 100%
-          // para registrar levantamiento real de campo sin datos ficticios de prueba.
+          // Indexar alias oficial para compatibilidad bidireccional inmediata
+          const alias = PARISH_ALIAS_MAP[p.id];
+          if (alias && !state.municipios[mun.id].parroquias[alias]) {
+            state.municipios[mun.id].parroquias[alias] = storedP;
+          }
         });
       });
     } catch (e) {
@@ -533,20 +537,46 @@ export class EarthStore {
   }
 
   findParishById(parishId) {
-    if (!this.state || !this.state.municipios) return null;
+    if (!parishId || !this.state || !this.state.municipios) return null;
+    const cleanId = String(parishId).toLowerCase().trim();
+    const resolved = PARISH_ALIAS_MAP[cleanId] || cleanId;
+
     for (const [munId, mun] of Object.entries(this.state.municipios)) {
-      if (mun.parroquias && mun.parroquias[parishId]) {
-        return { munId, parishId, parish: mun.parroquias[parishId] };
+      if (mun && mun.parroquias) {
+        if (mun.parroquias[cleanId]) {
+          return { munId, parishId: cleanId, parish: mun.parroquias[cleanId] };
+        }
+        if (mun.parroquias[resolved]) {
+          return { munId, parishId: resolved, parish: mun.parroquias[resolved] };
+        }
+        for (const [pKey, pVal] of Object.entries(mun.parroquias)) {
+          if (pKey.toLowerCase() === cleanId || pKey.toLowerCase() === resolved || (pVal.nombre && pVal.nombre.toLowerCase() === cleanId)) {
+            return { munId, parishId: pKey, parish: pVal };
+          }
+        }
       }
     }
     return null;
   }
 
   getParish(munId, parishId) {
-    if (!this.state?.municipios?.[munId]?.parroquias?.[parishId]) {
+    if (!munId || !parishId) return null;
+    const cleanMun = String(munId).toLowerCase().trim();
+    const cleanParish = String(parishId).toLowerCase().trim();
+    const resolvedParish = PARISH_ALIAS_MAP[cleanParish] || cleanParish;
+
+    let p = this.state?.municipios?.[cleanMun]?.parroquias?.[cleanParish] ||
+            this.state?.municipios?.[cleanMun]?.parroquias?.[resolvedParish];
+    if (!p) {
       this.ensureAllParishes(this.state);
+      p = this.state?.municipios?.[cleanMun]?.parroquias?.[cleanParish] ||
+          this.state?.municipios?.[cleanMun]?.parroquias?.[resolvedParish];
     }
-    return this.state?.municipios?.[munId]?.parroquias?.[parishId] || null;
+    if (!p) {
+      const found = this.findParishById(cleanParish);
+      if (found) return found.parish;
+    }
+    return p || null;
   }
 
   getAllParishesWithData() {

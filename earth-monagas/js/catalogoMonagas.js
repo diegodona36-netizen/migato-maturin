@@ -638,8 +638,34 @@ const OFICIAL_ALIASES = {
   "los-barrancos": "los-barrancos-de-fajardo",
   "caripito": "bolivar",
   "aguasay-centro": "aguasay",
-  "uracoa-centro": "uracoa"
+  "uracoa-centro": "uracoa",
+  "san-simon": "capital-maturin"
 };
+
+// Mapa bidireccional exhaustivo para resolución infalible
+export const PARISH_ALIAS_MAP = {
+  ...OFICIAL_ALIASES,
+  "capital-piar": "aragua",
+  "capital-caripe": "caripe-centro",
+  "capital-cedeno": "caicara",
+  "capital-libertador": "temblador",
+  "capital-ezequiel-zamora": "punta-de-mata",
+  "capital-acosta": "san-antonio",
+  "capital-punceres": "quiriquire",
+  "santa-barbara": "santa-barbara-centro",
+  "capital-sotillo": "barrancas",
+  "los-barrancos-de-fajardo": "los-barrancos",
+  "bolivar": "caripito",
+  "aguasay": "aguasay-centro",
+  "uracoa": "uracoa-centro",
+  "capital-maturin": "san-simon"
+};
+
+export function resolveParishId(id) {
+  if (!id) return id;
+  const clean = String(id).toLowerCase().trim();
+  return PARISH_ALIAS_MAP[clean] || clean;
+}
 
 // Indexar polígonos oficiales del INE
 const oficialFeatureMap = new Map();
