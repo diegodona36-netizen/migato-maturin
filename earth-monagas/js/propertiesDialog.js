@@ -262,9 +262,9 @@ export class PropertiesDialog {
       const count = (parish?.subparroquias || []).length + 1;
       draftItem = {
         id: `SUBPAR-${Date.now()}`,
-        nombre: `Sub-Parroquia ${count} • Eje Comunal`,
-        alias: `Eje Comunal ${count}`,
-        descripcion: `Eje Comunal de ${parish?.nombre || 'la Parroquia'}`,
+        nombre: `Sub-Parroquia ${count} • Eje Territorial`,
+        alias: `Eje Territorial ${count}`,
+        descripcion: `Eje Territorial de ${parish?.nombre || 'la Parroquia'}`, 
         colorBorde: "#c084fc",
         anchoBorde: 2.5,
         colorRelleno: "#a855f7",
@@ -279,7 +279,7 @@ export class PropertiesDialog {
       const count = (parish?.poligonos || []).length + 1;
       draftItem = {
         id: `POLY-${Date.now()}`,
-        nombre: `Sector Comunal ${count}`,
+        nombre: `Sector Vecinal ${count}`,
         subParroquiaId: window.earthApp?.activeSubParroquiaId || (parish?.subparroquias?.[0]?.id || null),
         descripcion: `Comunidad en ${parish?.nombre || 'la Parroquia'}`,
         colorBorde: "#38bdf8",
@@ -302,7 +302,7 @@ export class PropertiesDialog {
       draftItem = {
         id: `ROUTE-${Date.now()}`,
         nombre: "Nueva Calle / Ruta",
-        descripcion: `Vía comunal en ${parish?.nombre || 'la Parroquia'}`,
+        descripcion: `Vía sectorial en ${parish?.nombre || 'la Parroquia'}`, 
         color: "#10b981",
         ancho: 4,
         puntos: [
@@ -354,13 +354,13 @@ export class PropertiesDialog {
     if (titleEl) {
       if (isNew) {
         titleEl.textContent = 
-          type === "poligono" ? `MIGATO — Nuevo Sector Comunal${parishLabel}` :
-          (type === "subparroquia" ? `MIGATO — Nueva Sub-Parroquia / Eje Comunal${parishLabel}` :
+          type === "poligono" ? `MIGATO — Nuevo Sector Vecinal${parishLabel}` :
+          (type === "subparroquia" ? `MIGATO — Nueva Sub-Parroquia / Eje Territorial${parishLabel}` :
           (type === "ruta" ? `MIGATO — Nueva Calle / Ruta${parishLabel}` : `MIGATO — Nueva Marca de Posición${parishLabel}`));
       } else {
         titleEl.textContent = 
           type === "poligono" ? `MIGATO — Ficha del Sector: ${item.nombre}` :
-          (type === "subparroquia" ? `MIGATO — Sub-Parroquia / Eje Comunal: ${item.nombre}` :
+          (type === "subparroquia" ? `MIGATO — Sub-Parroquia / Eje Territorial: ${item.nombre}` :
           (type === "ruta" ? `MIGATO — Propiedades de la Calle: ${item.nombre}` : `MIGATO — Marca de Posición: ${item.nombre}`));
       }
     }
@@ -616,7 +616,7 @@ export class PropertiesDialog {
             `;
           } else {
             tabMilTbody.innerHTML = electoresSector.map(e => `
-              <tr class="hover:bg-slate-900/60 transition text-slate-300">
+              <tr class="hover:bg-[#23176d]/40 transition text-slate-300">
                 <td class="p-2 font-bold text-white">${e.nombreApellido}</td>
                 <td class="p-2 text-center font-mono text-sky-300">${e.cedula}</td>
                 <td class="p-2 text-center font-mono">${e.edad || '--'}</td>

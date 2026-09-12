@@ -2,16 +2,16 @@
  * Controlador Principal — Google Earth Pro Web (Edición Estado Monagas)
  * Robusto, 100% Operativo y Totalmente Individualizado
  */
-import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=132";
-import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=132";
-import { getAllParishesForSelector } from "./usersCatalog.js?v=132";
-import { EarthStore } from "./earthStore.js?v=132";
-import { EarthMapEngine } from "./mapEngine.js?v=132";
-import { PropertiesDialog } from "./propertiesDialog.js?v=132";
-import { ToolsManager } from "./toolsManager.js?v=132";
-import { detectParishFromGeometry, SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=132";
-import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=132";
-import { getParishDemographics } from "./monagasDemographics.js?v=132";
+import { CATALOGO_MONAGAS, findParishInCatalog } from "./catalogoMonagas.js?v=133";
+import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=133";
+import { getAllParishesForSelector } from "./usersCatalog.js?v=133";
+import { EarthStore } from "./earthStore.js?v=133";
+import { EarthMapEngine } from "./mapEngine.js?v=133";
+import { PropertiesDialog } from "./propertiesDialog.js?v=133";
+import { ToolsManager } from "./toolsManager.js?v=133";
+import { detectParishFromGeometry, SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=133";
+import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=133";
+import { getParishDemographics } from "./monagasDemographics.js?v=133";
 import { 
   getMunicipios, 
   getParroquiasByMun, 
@@ -21,13 +21,13 @@ import {
   findSectorById, 
   searchSectores, 
   ALL_SECTORES_FLAT 
-} from "./monagasSectoresCatalog.js?v=132";
+} from "./monagasSectoresCatalog.js?v=133";
 import { 
   getSavedFirebaseConfig, 
   saveFirebaseConfig, 
   isFirebaseConfigured, 
   initFirebase 
-} from "./firebaseConfig.js?v=132";
+} from "./firebaseConfig.js?v=133";
 
 // Controladores globales infalibles accesibles en cualquier contexto
 window.closeParishSelectorModal = function() {
@@ -110,6 +110,7 @@ window.setTerritoryModalParishGlobal = function(parishId) {
 };
 
 window.openParishSelectorGlobal = function() {
+  window._parishModalRequested = true;
   const modal = document.getElementById("modal-select-parish");
   if (modal) {
     modal.classList.remove("hidden");
@@ -300,6 +301,12 @@ class EarthMonagasApp {
     }
 
     this.updateTerritorialFocusUI();
+
+    // Si el usuario solicitó el selector de parroquias antes o durante la carga de módulos
+    const modalParish = document.getElementById("modal-select-parish");
+    if (window._parishModalRequested || (modalParish && !modalParish.classList.contains("hidden") && modalParish.style.display !== "none")) {
+      this.openParishSelector();
+    }
 
     if (window.lucide) {
       try { window.lucide.createIcons(); } catch(e){}
@@ -1466,6 +1473,13 @@ class EarthMonagasApp {
         }
       });
     }
+
+    // Pre-renderizar inmediatamente el catálogo oficial para que esté listo desde el milisegundo 0
+    try {
+      this.renderParishesCatalog("");
+    } catch(e) {
+      console.warn("Pre-render catálogo aviso:", e);
+    }
   }
 
   openSessionModal() {
@@ -1491,6 +1505,7 @@ class EarthMonagasApp {
   }
 
   openParishSelector() {
+    window._parishModalRequested = false;
     const modal = document.getElementById("modal-select-parish");
     if (!modal) return;
 
@@ -1508,11 +1523,12 @@ class EarthMonagasApp {
     const filterInput = document.getElementById("input-filter-parish-modal");
     if (filterInput) filterInput.value = "";
 
-    // 3. Renderizar catálogo oficial con protección total de errores
+    // 3. Renderizar catálogo oficial con protección total de errores y rescate de emergencia
     try {
       this.renderParishesCatalog("");
     } catch(err) {
       console.error("Error al renderizar catálogo:", err);
+      this.renderParishesCatalogEmergency();
     }
 
     if (window.lucide && typeof window.lucide.createIcons === "function") {
@@ -1559,13 +1575,16 @@ class EarthMonagasApp {
 
   getSectorsForParishCatalog(munId, parishId) {
     try {
+      if (!munId || !parishId) return [];
       const parishData = this.store?.getParish(munId, parishId);
-      if (parishData?.poligonos && parishData.poligonos.length > 0) {
+      if (parishData?.poligonos && Array.isArray(parishData.poligonos) && parishData.poligonos.length > 0) {
         return parishData.poligonos.slice();
       }
-      const catSectors = getSectoresByParish(munId, parishId);
-      if (catSectors && catSectors.length > 0) {
-        return catSectors.slice();
+      if (typeof getSectoresByParish === "function") {
+        const catSectors = getSectoresByParish(munId, parishId);
+        if (Array.isArray(catSectors) && catSectors.length > 0) {
+          return catSectors.slice();
+        }
       }
       return [];
     } catch(err) {
@@ -1750,25 +1769,37 @@ class EarthMonagasApp {
     // MODO 2: NAVEGADOR ESTRUCTURADO Y LIMPIO: MUNICIPIOS ➔ PARROQUIAS
     // =========================================================================
     const activeMunId = this.modalSelectedMun || this.selectedMunId || "maturin";
-    const currentMun = CATALOGO_MONAGAS.find(m => m.id === activeMunId) || CATALOGO_MONAGAS[0];
+    const currentMun = (CATALOGO_MONAGAS && CATALOGO_MONAGAS.find(m => m.id === activeMunId)) || (CATALOGO_MONAGAS && CATALOGO_MONAGAS[0]) || { id: "maturin", nombre: "Municipio Maturín", capital: "Maturín", parroquias: [] };
 
     // Variables para el cajón de Ajuste Avanzado (Sectores y Ejes)
-    const targetParishId = this.modalParishForAdvanced || (currentMun.id === this.selectedMunId ? this.selectedParishId : currentMun.parroquias[0]?.id);
-    const targetParish = currentMun.parroquias.find(p => p.id === targetParishId) || currentMun.parroquias[0];
+    const parishArray = Array.isArray(currentMun.parroquias) ? currentMun.parroquias : [];
+    const targetParishId = this.modalParishForAdvanced || (currentMun.id === this.selectedMunId ? this.selectedParishId : parishArray[0]?.id);
+    const targetParish = parishArray.find(p => p.id === targetParishId) || parishArray[0] || { id: targetParishId || "parroquia", nombre: "Parroquia" };
 
     let ejesList = [];
-    const parishInStore = this.store?.getParish(currentMun.id, targetParishId);
-    if (parishInStore?.subparroquias && parishInStore.subparroquias.length > 0) {
-      ejesList = parishInStore.subparroquias;
-    } else {
-      ejesList = getEjesByParish(currentMun.id, targetParishId) || [];
+    try {
+      const parishInStore = this.store?.getParish(currentMun.id, targetParishId);
+      if (parishInStore?.subparroquias && parishInStore.subparroquias.length > 0) {
+        ejesList = parishInStore.subparroquias;
+      } else if (typeof getEjesByParish === "function") {
+        ejesList = getEjesByParish(currentMun.id, targetParishId) || [];
+      }
+    } catch(e) {
+      console.warn("ejesList error:", e);
+      ejesList = [];
     }
 
     const subParishFilter = this.modalSubParishFilter || "all";
-    let rawSectors = this.getSectorsForParishCatalog(currentMun.id, targetParishId);
+    let rawSectors = [];
+    try {
+      rawSectors = this.getSectorsForParishCatalog(currentMun.id, targetParishId) || [];
+    } catch(e) {
+      console.warn("rawSectors error:", e);
+      rawSectors = [];
+    }
     let displaySectors = rawSectors;
-    if (subParishFilter !== "all") {
-      displaySectors = displaySectors.filter(s => String(s.subParroquiaId) === String(subParishFilter) || String(s.subParroquia) === String(subParishFilter) || String(s.id) === String(subParishFilter));
+    if (subParishFilter !== "all" && Array.isArray(displaySectors)) {
+      displaySectors = displaySectors.filter(s => s && (String(s.subParroquiaId) === String(subParishFilter) || String(s.subParroquia) === String(subParishFilter) || String(s.id) === String(subParishFilter)));
     }
 
     let mainHtml = `
@@ -1776,13 +1807,14 @@ class EarthMonagasApp {
         
         <!-- Pestaña Rápida de Municipios en Móvil (< md:) -->
         <div class="md:hidden flex items-center gap-1.5 overflow-x-auto no-scrollbar py-1 border-b border-[#2d1f85]/60 pb-2 shrink-0">
-          ${CATALOGO_MONAGAS.map(m => {
+          ${(CATALOGO_MONAGAS || []).map(m => {
             const isActive = m.id === currentMun.id;
+            const pCount = Array.isArray(m.parroquias) ? m.parroquias.length : 0;
             return `
               <button type="button" onclick="window.setTerritoryModalMunGlobal('${m.id}')"
                 class="px-3 py-1.5 rounded-xl text-xs font-bold transition shrink-0 cursor-pointer flex items-center gap-1.5 ${isActive ? 'bg-amber-500 text-slate-950 font-black shadow-md' : 'bg-[#140e40] text-slate-300 hover:text-white border border-[#2d1f85]'}">
-                <span>🏛️ ${m.nombre.replace(/^Municipio\s+/i, '')}</span>
-                <span class="text-[10px] font-mono opacity-80 font-normal">(${m.parroquias.length})</span>
+                <span>🏛️ ${(m.nombre || m.id).replace(/^Municipio\s+/i, '')}</span>
+                <span class="text-[10px] font-mono opacity-80 font-normal">(${pCount})</span>
               </button>
             `;
           }).join('')}
@@ -1797,19 +1829,20 @@ class EarthMonagasApp {
             <span class="text-[10px] text-slate-400 font-mono">13 Total</span>
           </div>
           <div class="space-y-1 pt-1">
-            ${CATALOGO_MONAGAS.map(m => {
+            ${(CATALOGO_MONAGAS || []).map(m => {
               const isActive = m.id === currentMun.id;
               const isActualCurrentMun = this.selectedMunId === m.id;
+              const pCount = Array.isArray(m.parroquias) ? m.parroquias.length : 0;
               return `
                 <button type="button" onclick="window.setTerritoryModalMunGlobal('${m.id}')"
                   class="w-full text-left p-2.5 rounded-xl transition flex items-center justify-between gap-2 cursor-pointer group ${isActive ? 'bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 font-black shadow-md shadow-amber-500/20' : 'bg-[#140e40] hover:bg-[#23176d] text-slate-300 hover:text-white border border-[#2d1f85]'}">
                   <div class="flex items-center gap-2 truncate min-w-0">
                     <span class="text-sm shrink-0">🏛️</span>
-                    <span class="text-xs truncate font-bold">${m.nombre.replace(/^Municipio\s+/i, '')}</span>
+                    <span class="text-xs truncate font-bold">${(m.nombre || m.id).replace(/^Municipio\s+/i, '')}</span>
                     ${isActualCurrentMun && !isActive ? `<span class="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0" title="Municipio activo en el satélite"></span>` : ''}
                   </div>
                   <span class="text-[10px] font-mono px-2 py-0.5 rounded-md shrink-0 ${isActive ? 'bg-slate-950/20 text-slate-950 font-black' : 'bg-[#0e092e] text-slate-400 border border-[#2d1f85]'}">
-                    ${m.parroquias.length}
+                    ${pCount}
                   </span>
                 </button>
               `;
@@ -1829,7 +1862,7 @@ class EarthMonagasApp {
                 <span class="text-base sm:text-lg">🏛️</span>
                 <h4 class="text-sm sm:text-base font-black text-white truncate">${currentMun.nombre}</h4>
                 <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-sky-950 text-sky-300 border border-sky-400/40 font-bold shrink-0">
-                  ${currentMun.parroquias.length} Parroquias
+                  ${parishArray.length} Parroquias
                 </span>
               </div>
               <p class="text-[11px] text-slate-400 truncate mt-0.5">Capital: <strong class="text-slate-200">${currentMun.capital || currentMun.nombre}</strong> • Estado Monagas</p>
@@ -1854,9 +1887,14 @@ class EarthMonagasApp {
 
           <!-- Tarjetas de Parroquias (1 Clic Navega y Cierra) -->
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-            ${currentMun.parroquias.map(p => {
+            ${parishArray.map(p => {
               const isCurrent = (this.selectedMunId === currentMun.id && this.selectedParishId === p.id);
-              const sectors = this.getSectorsForParishCatalog(currentMun.id, p.id);
+              let sectors = [];
+              try {
+                sectors = this.getSectorsForParishCatalog(currentMun.id, p.id) || [];
+              } catch(e) {
+                sectors = [];
+              }
               return `
                 <div onclick="window.selectParishGlobal('${currentMun.id}', '${p.id}')"
                   class="p-3.5 rounded-xl border transition-all duration-150 cursor-pointer flex flex-col justify-between gap-2.5 shadow-sm group hover:scale-[1.01] ${isCurrent ? 'bg-[#181a4a] border-emerald-400 ring-2 ring-emerald-400/50 shadow-emerald-950/40' : 'bg-[#140e40] hover:bg-[#20155c] border-[#2d1f85] hover:border-sky-400'}">
@@ -2008,6 +2046,61 @@ class EarthMonagasApp {
 
     if (window.lucide && typeof window.lucide.createIcons === "function") {
       try { window.lucide.createIcons(); } catch(e){}
+    }
+  }
+
+  renderParishesCatalogEmergency() {
+    const catalog = document.getElementById("modal-parishes-catalog");
+    if (!catalog) return;
+    try {
+      const activeMunId = this.modalSelectedMun || this.selectedMunId || "maturin";
+      const currentMun = (CATALOGO_MONAGAS && CATALOGO_MONAGAS.find(m => m.id === activeMunId)) || (CATALOGO_MONAGAS && CATALOGO_MONAGAS[0]) || { id: "maturin", nombre: "Municipio Maturín", parroquias: [] };
+      const pList = Array.isArray(currentMun?.parroquias) ? currentMun.parroquias : [];
+      catalog.innerHTML = `
+        <div class="flex flex-col md:flex-row gap-3 sm:gap-4 h-full min-h-0 flex-1">
+          <!-- Columna Municipios -->
+          <div class="flex md:flex-col overflow-x-auto md:overflow-y-auto w-full md:w-56 shrink-0 gap-1.5 pb-2 md:pb-0 border-b md:border-b-0 md:border-r border-[#2d1f85]/70 pr-0 md:pr-3">
+            ${(CATALOGO_MONAGAS || []).map(m => {
+              const isActive = m.id === currentMun.id;
+              const pCount = Array.isArray(m.parroquias) ? m.parroquias.length : 0;
+              return `
+                <button type="button" onclick="window.setTerritoryModalMunGlobal('${m.id}')"
+                  class="p-2.5 rounded-xl text-xs font-bold transition flex items-center justify-between gap-2 shrink-0 cursor-pointer ${isActive ? 'bg-amber-500 text-slate-950 font-black shadow-md' : 'bg-[#140e40] text-slate-300 hover:text-white border border-[#2d1f85]'}">
+                  <span>🏛️ ${(m.nombre || m.id).replace(/^Municipio\s+/i, '')}</span>
+                  <span class="text-[10px] font-mono px-1.5 py-0.5 rounded ${isActive ? 'bg-slate-950/20 text-slate-950 font-black' : 'bg-[#0e092e] text-slate-400'}">${pCount}</span>
+                </button>
+              `;
+            }).join('')}
+          </div>
+          <!-- Columna Parroquias -->
+          <div class="flex-1 overflow-y-auto space-y-3 pr-1">
+            <div class="bg-[#140e40]/70 p-3 rounded-xl border border-[#2d1f85]/40 flex items-center justify-between">
+              <div>
+                <h4 class="text-sm font-black text-white">🏛️ ${currentMun.nombre}</h4>
+                <p class="text-[10px] text-slate-400">Selecciona una parroquia para acceder a su satélite:</p>
+              </div>
+              <button type="button" onclick="window.earthApp?.focusMunicipio('${currentMun.id}', true); window.earthApp?.closeParishSelector();"
+                class="px-2.5 py-1.5 rounded-xl bg-[#0e092e] hover:bg-sky-900 text-sky-300 border border-sky-400/40 text-xs font-bold transition cursor-pointer">
+                Enfocar Municipio
+              </button>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+              ${pList.map(p => `
+                <div onclick="window.selectParishGlobal('${currentMun.id}', '${p.id}')"
+                  class="p-3.5 rounded-xl bg-[#140e40] hover:bg-[#20155c] border border-[#2d1f85] hover:border-sky-400 cursor-pointer flex items-center justify-between gap-2 shadow-sm transition">
+                  <div>
+                    <h5 class="text-xs sm:text-sm font-black text-white">${p.nombre}</h5>
+                    <span class="text-[10px] text-slate-400">${p.tipo || 'Parroquia'}</span>
+                  </div>
+                  <span class="text-xs font-bold text-sky-400 flex items-center gap-0.5">Entrar ➔</span>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        </div>
+      `;
+    } catch(err) {
+      console.error("renderParishesCatalogEmergency failed:", err);
     }
   }
 

@@ -14,7 +14,7 @@ html, body {
 body {
   font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   overflow: hidden;
-  background-color: #08061a;
+  background-color: #0e092e;
   color: #f8fafc;
   -webkit-tap-highlight-color: transparent;
 }
@@ -31,7 +31,7 @@ input, select, textarea {
 #earth-canvas {
   width: 100%;
   height: 100%;
-  background: #08061a;
+  background: #0e092e;
 }
 
 .leaflet-container canvas {
@@ -41,9 +41,9 @@ input, select, textarea {
 }
 
 .earth-tooltip {
-  background: rgba(8, 6, 26, 0.96) !important;
+  background: rgba(14, 9, 46, 0.96) !important;
   color: #f8fafc !important;
-  border: 1px solid #23176d !important;
+  border: 1px solid #2d1f85 !important;
   border-radius: 10px !important;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.8), 0 0 12px rgba(35, 23, 109, 0.4) !important;
   padding: 6px 12px !important;
@@ -51,7 +51,7 @@ input, select, textarea {
 
 /* Popup de Acción Rápida para Sub-Parroquias / Ejes Comunales */
 .earth-popup-subparish .leaflet-popup-content-wrapper {
-  background: rgba(8, 6, 26, 0.96) !important;
+  background: rgba(20, 14, 64, 0.96) !important;
   backdrop-filter: blur(16px) !important;
   color: #f8fafc !important;
   border: 1.5px solid rgba(168, 85, 247, 0.65) !important;
@@ -60,7 +60,7 @@ input, select, textarea {
   padding: 2px !important;
 }
 .earth-popup-subparish .leaflet-popup-tip {
-  background: rgba(8, 6, 26, 0.96) !important;
+  background: rgba(20, 14, 64, 0.96) !important;
   border: 1.5px solid rgba(168, 85, 247, 0.65) !important;
 }
 .earth-popup-subparish .leaflet-popup-close-button {
@@ -77,8 +77,8 @@ input, select, textarea {
 
 /* Status Bar */
 .earth-status-bar {
-  background: #08061a;
-  border-top: 1px solid #23176d;
+  background: #0e092e;
+  border-top: 1px solid #2d1f85;
   color: #94a3b8;
   font-size: 11px;
 }
@@ -89,14 +89,14 @@ input, select, textarea {
   height: 5px;
 }
 ::-webkit-scrollbar-track {
-  background: #08061a;
+  background: #0e092e;
 }
 ::-webkit-scrollbar-thumb {
-  background: #23176d;
+  background: #2d1f85;
   border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #31228e;
+  background: #35249c;
 }
 
 /* Leaflet Control Overrides para evitar colisiones */
@@ -106,9 +106,9 @@ input, select, textarea {
 }
 
 .leaflet-control-layers {
-  background: rgba(8, 6, 26, 0.95) !important;
+  background: rgba(20, 14, 64, 0.95) !important;
   backdrop-filter: blur(12px) !important;
-  border: 1px solid #23176d !important;
+  border: 1px solid #2d1f85 !important;
   border-radius: 14px !important;
   color: #f8fafc !important;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.7) !important;
@@ -180,18 +180,18 @@ input, select, textarea {
 }
 
 .leaflet-control-zoom {
-  border: 1px solid #23176d !important;
+  border: 1px solid #2d1f85 !important;
   border-radius: 14px !important;
   overflow: hidden !important;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.8) !important;
-  background: rgba(8, 6, 26, 0.95) !important;
+  box-shadow: 0 8px 24px rgba(14, 9, 46, 0.8) !important;
+  background: rgba(20, 14, 64, 0.95) !important;
   backdrop-filter: blur(10px) !important;
 }
 
 .leaflet-control-zoom-in, .leaflet-control-zoom-out {
-  background: rgba(8, 6, 26, 0.95) !important;
+  background: rgba(20, 14, 64, 0.95) !important;
   color: #f8fafc !important;
-  border-bottom: 1px solid #23176d !important;
+  border-bottom: 1px solid #2d1f85 !important;
   width: 36px !important;
   height: 36px !important;
   line-height: 36px !important;
@@ -209,12 +209,12 @@ input, select, textarea {
 }
 
 .leaflet-control-zoom-in:hover, .leaflet-control-zoom-out:hover {
-  background: #23176d !important;
+  background: #2d1f85 !important;
   color: #38bdf8 !important;
 }
 
 .leaflet-control-zoom-in:active, .leaflet-control-zoom-out:active {
-  background: #31228e !important;
+  background: #35249c !important;
   color: #ffffff !important;
 }
 

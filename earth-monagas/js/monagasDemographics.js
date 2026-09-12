@@ -1,7 +1,7 @@
 /**
  * Base Oficial de Variables Territoriales y Demográficas del Estado Monagas
- * Consolidado CNE 2024 / Censo Comunal 2026 para las 44 Parroquias de los 13 Municipios
- * Garantiza que ninguna parroquia, eje comunal o sector muestre ceros.
+ * Consolidado CNE 2024 / Censo Territorial 2026 para las 44 Parroquias de los 13 Municipios
+ * Garantiza que ninguna parroquia, eje territorial o sector muestre ceros.
  */
 
 export const MONAGAS_DEMOGRAPHICS = {

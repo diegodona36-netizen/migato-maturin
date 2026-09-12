@@ -1,8 +1,8 @@
 /**
- * Catálogo Oficial Completo de Municipios, Parroquias, Ejes Comunales y Sectores
- * Estado Monagas • Consolidado CNE / Censo Comunal 2026
+ * Catálogo Oficial Completo de Municipios, Parroquias, Ejes Territoriales y Sectores
+ * Estado Monagas • Consolidado CNE / Censo Territorial 2026
  * Estructurado en 4 capas para selección directa en Banner y Panel:
- * Municipio -> Parroquia -> Eje Comunal -> Sector Comunal
+ * Municipio -> Parroquia -> Eje Territorial -> Sector Vecinal
  */
 
 export const MONAGAS_TERRITORIO_COMPLETO = [
@@ -656,7 +656,7 @@ export const MONAGAS_TERRITORIO_COMPLETO = [
           {
             "id": "sub-godos-lapuente",
             "parroquiaId": "alto-de-los-godos",
-            "nombre": "Eje 6 • Circuito Comunal La Puente",
+            "nombre": "Eje 6 • Circuito Territorial La Puente",
             "codigo": "EJE-GOD-06",
             "colorBorde": "#c084fc",
             "anchoBorde": 2.5,
@@ -700,7 +700,7 @@ export const MONAGAS_TERRITORIO_COMPLETO = [
                 "parishId": "alto-de-los-godos",
                 "parishNombre": "Alto de Los Godos",
                 "subParroquiaId": "sub-godos-lapuente",
-                "subParroquiaNombre": "Eje 6 • Circuito Comunal La Puente",
+                "subParroquiaNombre": "Eje 6 • Circuito Territorial La Puente",
                 "centro": [
                   9.732,
                   -63.20885
@@ -747,7 +747,7 @@ export const MONAGAS_TERRITORIO_COMPLETO = [
                 "parishId": "alto-de-los-godos",
                 "parishNombre": "Alto de Los Godos",
                 "subParroquiaId": "sub-godos-lapuente",
-                "subParroquiaNombre": "Eje 6 • Circuito Comunal La Puente",
+                "subParroquiaNombre": "Eje 6 • Circuito Territorial La Puente",
                 "centro": [
                   9.735513,
                   -63.216026
@@ -794,7 +794,7 @@ export const MONAGAS_TERRITORIO_COMPLETO = [
                 "parishId": "alto-de-los-godos",
                 "parishNombre": "Alto de Los Godos",
                 "subParroquiaId": "sub-godos-lapuente",
-                "subParroquiaNombre": "Eje 6 • Circuito Comunal La Puente",
+                "subParroquiaNombre": "Eje 6 • Circuito Territorial La Puente",
                 "centro": [
                   9.725912,
                   -63.211439
@@ -841,7 +841,7 @@ export const MONAGAS_TERRITORIO_COMPLETO = [
                 "parishId": "alto-de-los-godos",
                 "parishNombre": "Alto de Los Godos",
                 "subParroquiaId": "sub-godos-lapuente",
-                "subParroquiaNombre": "Eje 6 • Circuito Comunal La Puente",
+                "subParroquiaNombre": "Eje 6 • Circuito Territorial La Puente",
                 "centro": [
                   9.737405,
                   -63.207649
@@ -888,7 +888,7 @@ export const MONAGAS_TERRITORIO_COMPLETO = [
                 "parishId": "alto-de-los-godos",
                 "parishNombre": "Alto de Los Godos",
                 "subParroquiaId": "sub-godos-lapuente",
-                "subParroquiaNombre": "Eje 6 • Circuito Comunal La Puente",
+                "subParroquiaNombre": "Eje 6 • Circuito Territorial La Puente",
                 "centro": [
                   9.730711,
                   -63.219651
@@ -8950,7 +8950,7 @@ export const ALL_SECTORES_FLAT = [
     "parishId": "alto-de-los-godos",
     "parishNombre": "Alto de Los Godos",
     "subParroquiaId": "sub-godos-lapuente",
-    "subParroquiaNombre": "Eje 6 • Circuito Comunal La Puente",
+    "subParroquiaNombre": "Eje 6 • Circuito Territorial La Puente",
     "centro": [
       9.732,
       -63.20885
@@ -8997,7 +8997,7 @@ export const ALL_SECTORES_FLAT = [
     "parishId": "alto-de-los-godos",
     "parishNombre": "Alto de Los Godos",
     "subParroquiaId": "sub-godos-lapuente",
-    "subParroquiaNombre": "Eje 6 • Circuito Comunal La Puente",
+    "subParroquiaNombre": "Eje 6 • Circuito Territorial La Puente",
     "centro": [
       9.735513,
       -63.216026
@@ -9044,7 +9044,7 @@ export const ALL_SECTORES_FLAT = [
     "parishId": "alto-de-los-godos",
     "parishNombre": "Alto de Los Godos",
     "subParroquiaId": "sub-godos-lapuente",
-    "subParroquiaNombre": "Eje 6 • Circuito Comunal La Puente",
+    "subParroquiaNombre": "Eje 6 • Circuito Territorial La Puente",
     "centro": [
       9.725912,
       -63.211439
@@ -9091,7 +9091,7 @@ export const ALL_SECTORES_FLAT = [
     "parishId": "alto-de-los-godos",
     "parishNombre": "Alto de Los Godos",
     "subParroquiaId": "sub-godos-lapuente",
-    "subParroquiaNombre": "Eje 6 • Circuito Comunal La Puente",
+    "subParroquiaNombre": "Eje 6 • Circuito Territorial La Puente",
     "centro": [
       9.737405,
       -63.207649
@@ -9138,7 +9138,7 @@ export const ALL_SECTORES_FLAT = [
     "parishId": "alto-de-los-godos",
     "parishNombre": "Alto de Los Godos",
     "subParroquiaId": "sub-godos-lapuente",
-    "subParroquiaNombre": "Eje 6 • Circuito Comunal La Puente",
+    "subParroquiaNombre": "Eje 6 • Circuito Territorial La Puente",
     "centro": [
       9.730711,
       -63.219651
@@ -14412,51 +14412,83 @@ export function getParroquiasByMun(munId) {
 }
 
 export function getEjesByParish(munId, parishId) {
-  const m = MONAGAS_TERRITORIO_COMPLETO.find(mun => mun.id === munId);
-  if (!m) return [];
-  const p = m.parroquias.find(par => par.id === parishId);
-  if (!p) return [];
-  return p.subparroquias.map(sp => ({
-    id: sp.id,
-    nombre: sp.nombre,
-    codigo: sp.codigo,
-    colorBorde: sp.colorBorde,
-    colorRelleno: sp.colorRelleno,
-    sectoresCount: sp.sectores.length,
-    sectores: sp.sectores
-  }));
+  try {
+    if (!munId || !parishId) return [];
+    const m = MONAGAS_TERRITORIO_COMPLETO.find(mun => mun.id === munId);
+    if (!m || !Array.isArray(m.parroquias)) return [];
+    
+    // Normalizar ID para compatibilidad con alias y sufijos
+    const norm = id => String(id).toLowerCase().replace(/-parroquia$|-cabecera$|-centro$|-cedeno$|-acosta$|-fajardo$|-de-maturin$/g, '').replace(/[^a-z0-9]/g, '');
+    const pNorm = norm(parishId);
+    
+    const p = m.parroquias.find(par => {
+      if (par.id === parishId) return true;
+      if (norm(par.id) === pNorm) return true;
+      if (par.nombre && String(par.nombre).toLowerCase() === String(parishId).toLowerCase()) return true;
+      return false;
+    });
+    
+    if (!p || !Array.isArray(p.subparroquias)) return [];
+    return p.subparroquias.map(sp => ({
+      id: sp.id,
+      nombre: sp.nombre,
+      codigo: sp.codigo || "",
+      colorBorde: sp.colorBorde || "#38bdf8",
+      colorRelleno: sp.colorRelleno || "#0284c7",
+      sectoresCount: Array.isArray(sp.sectores) ? sp.sectores.length : 0,
+      sectores: Array.isArray(sp.sectores) ? sp.sectores : []
+    }));
+  } catch (err) {
+    console.warn("getEjesByParish error:", err);
+    return [];
+  }
 }
 
 export function getSectoresByEje(munId, parishId, ejeId) {
-  const ejes = getEjesByParish(munId, parishId);
-  const e = ejes.find(eje => eje.id === ejeId);
-  return e ? e.sectores : [];
+  try {
+    const ejes = getEjesByParish(munId, parishId);
+    const e = ejes.find(eje => eje.id === ejeId);
+    return (e && Array.isArray(e.sectores)) ? e.sectores : [];
+  } catch(err) {
+    console.warn("getSectoresByEje error:", err);
+    return [];
+  }
 }
 
 export function getSectoresByParish(munId, parishId) {
-  const ejes = getEjesByParish(munId, parishId);
-  let list = [];
-  ejes.forEach(e => {
-    list = list.concat(e.sectores || []);
-  });
-  return list;
+  try {
+    const ejes = getEjesByParish(munId, parishId);
+    let list = [];
+    if (Array.isArray(ejes)) {
+      ejes.forEach(e => {
+        if (Array.isArray(e.sectores)) {
+          list = list.concat(e.sectores);
+        }
+      });
+    }
+    return list;
+  } catch (err) {
+    console.warn("getSectoresByParish error:", err);
+    return [];
+  }
 }
 
 export function findSectorById(secId) {
-  return ALL_SECTORES_FLAT.find(s => s.id === secId);
+  if (!secId || !Array.isArray(ALL_SECTORES_FLAT)) return null;
+  return ALL_SECTORES_FLAT.find(s => String(s.id) === String(secId));
 }
 
 export function searchSectores(query, munId = null, parishId = null) {
-  if (!query || query.trim().length === 0) return [];
-  const q = query.toLowerCase().trim();
-  let pool = ALL_SECTORES_FLAT;
+  if (!query || String(query).trim().length === 0) return [];
+  const q = String(query).toLowerCase().trim();
+  let pool = Array.isArray(ALL_SECTORES_FLAT) ? ALL_SECTORES_FLAT : [];
   if (munId) pool = pool.filter(s => s.munId === munId);
   if (parishId) pool = pool.filter(s => s.parishId === parishId);
   
   return pool.filter(s => {
-    return s.nombre.toLowerCase().includes(q) ||
-           s.centroVotacion.toLowerCase().includes(q) ||
-           s.parishNombre.toLowerCase().includes(q) ||
-           s.subParroquiaNombre.toLowerCase().includes(q);
-  }).slice(0, 15);
+    return (s.nombre || "").toLowerCase().includes(q) ||
+           (s.centroVotacion || "").toLowerCase().includes(q) ||
+           (s.parishNombre || "").toLowerCase().includes(q) ||
+           (s.subParroquiaNombre || "").toLowerCase().includes(q);
+  }).slice(0, 30);
 }

@@ -114,9 +114,9 @@ export class ToolsManager {
           if (toolName === "subparroquia") {
             banner.classList.add("border-purple-500/90");
             if (bannerDot) bannerDot.className = "w-3 h-3 rounded-full bg-purple-400 shadow-[0_0_10px_rgba(192,132,252,0.9)] shrink-0 animate-pulse";
-            if (bannerText) bannerText.textContent = "Trazando Sub-Parroquia / Eje Comunal";
+            if (bannerText) bannerText.textContent = "Trazando Sub-Parroquia / Eje Territorial";
             const count = (parishStore?.subparroquias || []).length + 1;
-            if (nameInput) nameInput.value = `Eje Comunal ${count}`;
+            if (nameInput) nameInput.value = `Eje Territorial ${count}`;
             if (sectorExtra) sectorExtra.classList.remove("hidden");
             if (militantesInput) militantesInput.value = "0";
             if (casasInput) casasInput.value = "0";
@@ -128,10 +128,10 @@ export class ToolsManager {
             if (activeSub) {
               if (bannerText) bannerText.innerHTML = `Trazando Sector en: <span class="text-purple-300 font-black">${activeSub.nombre}</span>`;
             } else {
-              if (bannerText) bannerText.textContent = "Trazando Sector Comunal / Militancia";
+              if (bannerText) bannerText.textContent = "Trazando Sector Vecinal / Militancia";
             }
             const count = (parishStore?.poligonos || []).length + 1;
-            if (nameInput) nameInput.value = `Sector Comunal ${count}`;
+            if (nameInput) nameInput.value = `Sector Vecinal ${count}`;
             if (sectorExtra) sectorExtra.classList.remove("hidden");
             if (militantesInput) militantesInput.value = "0";
             if (casasInput) casasInput.value = "0";
@@ -657,7 +657,7 @@ export class ToolsManager {
           return;
         }
         if (window.earthApp?.showToast) {
-          window.earthApp.showToast("⚠️ Un eje comunal necesita al menos 3 esquinas para delimitar su perímetro.", "amber");
+          window.earthApp.showToast("⚠️ Un eje territorial necesita al menos 3 esquinas para delimitar su perímetro.", "amber");
         }
         return;
       }
@@ -666,7 +666,7 @@ export class ToolsManager {
       const newSubParish = {
         id: `SUBPAR-${Date.now()}`,
         nombre: customName || "Nuevo Eje / Sub-Parroquia",
-        descripcion: "Eje o Circuito Comunal",
+        descripcion: "Eje o Circuito Territorial",
         militantes: customMilitantes,
         casas: customCasas,
         habitantes: customMilitantes,
@@ -693,7 +693,7 @@ export class ToolsManager {
           return;
         }
         if (window.earthApp?.showToast) {
-          window.earthApp.showToast("⚠️ Un sector comunal necesita al menos 3 esquinas.", "amber");
+          window.earthApp.showToast("⚠️ Un sector vecinal necesita al menos 3 esquinas.", "amber");
         }
         return;
       }
@@ -701,8 +701,8 @@ export class ToolsManager {
       const perimetroM = this.calculatePerimeterMeters(sanitizedPoints);
       const newPoly = {
         id: `POLY-${Date.now()}`,
-        nombre: customName || "Nuevo Sector Comunal",
-        descripcion: "Comunidad / Consejo Comunal",
+        nombre: customName || "Nuevo Sector Vecinal",
+        descripcion: "Comunidad / Sector Vecinal",
         militantes: customMilitantes,
         casas: customCasas,
         habitantes: customMilitantes,

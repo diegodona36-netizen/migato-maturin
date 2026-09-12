@@ -61,7 +61,7 @@
   <meta http-equiv="Expires" content="0" />
 
   <!-- Custom Styles -->
-  <link rel="stylesheet" href="css/styles.css?v=132">
+  <link rel="stylesheet" href="css/styles.css?v=133">
 
   <!-- Script de Autenticación Rápida y Control de Acceso Estricto (Exclusivo Regional) -->
   <script src="../js/auth.js"></script>
@@ -103,6 +103,7 @@
       }
     };
     window.openParishSelectorGlobal = function() {
+      window._parishModalRequested = true;
       var modal = document.getElementById("modal-select-parish");
       if (modal) {
         modal.classList.remove("hidden");
@@ -1445,14 +1446,188 @@
       <!-- Buscador en tiempo real interno -->
       <div class="relative shrink-0">
         <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none"></i>
-        <input type="text" id="input-filter-parish-modal" placeholder="🔍 Buscar municipio, parroquia o sector vecinal (ej. La Puente, Caripe, Caripito, Punta de Mata, Casco)..." autocomplete="off"
+        <input type="text" id="input-filter-parish-modal" placeholder="🔍 Buscar municipio, parroquia o sector vecinal (ej. La Puente, Caripe, Caripito, Punta de Mata, Casco)..." autocomplete="off" oninput="if(window.earthApp?.renderParishesCatalog) window.earthApp.renderParishesCatalog(this.value)"
           class="w-full bg-[#0e092e] border border-[#2d1f85] focus:border-sky-400 text-xs text-white rounded-xl pl-9 pr-3 py-2.5 focus:outline-none placeholder-slate-400 font-medium transition shadow-inner">
       </div>
 
       <div id="modal-parishes-catalog" class="space-y-3 overflow-y-auto pr-1 flex-1">
-        <div class="p-8 text-center text-xs text-sky-400 font-bold bg-[#0e092e] rounded-xl border border-[#2d1f85]/50 flex items-center justify-center gap-2.5">
-          <span class="w-2 h-2 rounded-full bg-sky-400 animate-ping"></span>
-          <span>Cargando catálogo territorial oficial (13 Municipios)...</span>
+        <div class="flex flex-col md:flex-row gap-3 sm:gap-4 h-full min-h-0 flex-1">
+          <!-- Pestaña Rápida de Municipios en Móvil (< md:) -->
+          <div class="md:hidden flex items-center gap-1.5 overflow-x-auto no-scrollbar py-1 border-b border-[#2d1f85]/60 pb-2 shrink-0">
+            <button type="button" onclick="window.setTerritoryModalMunGlobal('maturin')" class="px-3 py-1.5 rounded-xl text-xs font-bold transition shrink-0 cursor-pointer flex items-center gap-1.5 bg-amber-500 text-slate-950 font-black shadow-md"><span>🏛️ Maturín</span><span class="text-[10px] font-mono opacity-80 font-normal">(10)</span></button>
+            <button type="button" onclick="window.setTerritoryModalMunGlobal('piar')" class="px-3 py-1.5 rounded-xl text-xs font-bold transition shrink-0 cursor-pointer flex items-center gap-1.5 bg-[#140e40] text-slate-300 hover:text-white border border-[#2d1f85]"><span>🏛️ Piar</span><span class="text-[10px] font-mono opacity-80 font-normal">(7)</span></button>
+            <button type="button" onclick="window.setTerritoryModalMunGlobal('caripe')" class="px-3 py-1.5 rounded-xl text-xs font-bold transition shrink-0 cursor-pointer flex items-center gap-1.5 bg-[#140e40] text-slate-300 hover:text-white border border-[#2d1f85]"><span>🏛️ Caripe</span><span class="text-[10px] font-mono opacity-80 font-normal">(6)</span></button>
+            <button type="button" onclick="window.setTerritoryModalMunGlobal('cedeno')" class="px-3 py-1.5 rounded-xl text-xs font-bold transition shrink-0 cursor-pointer flex items-center gap-1.5 bg-[#140e40] text-slate-300 hover:text-white border border-[#2d1f85]"><span>🏛️ Cedeño</span><span class="text-[10px] font-mono opacity-80 font-normal">(4)</span></button>
+            <button type="button" onclick="window.setTerritoryModalMunGlobal('libertador')" class="px-3 py-1.5 rounded-xl text-xs font-bold transition shrink-0 cursor-pointer flex items-center gap-1.5 bg-[#140e40] text-slate-300 hover:text-white border border-[#2d1f85]"><span>🏛️ Libertador</span><span class="text-[10px] font-mono opacity-80 font-normal">(4)</span></button>
+            <button type="button" onclick="window.setTerritoryModalMunGlobal('ezequiel-zamora')" class="px-3 py-1.5 rounded-xl text-xs font-bold transition shrink-0 cursor-pointer flex items-center gap-1.5 bg-[#140e40] text-slate-300 hover:text-white border border-[#2d1f85]"><span>🏛️ Ezequiel Zamora</span><span class="text-[10px] font-mono opacity-80 font-normal">(2)</span></button>
+            <button type="button" onclick="window.setTerritoryModalMunGlobal('acosta')" class="px-3 py-1.5 rounded-xl text-xs font-bold transition shrink-0 cursor-pointer flex items-center gap-1.5 bg-[#140e40] text-slate-300 hover:text-white border border-[#2d1f85]"><span>🏛️ Acosta</span><span class="text-[10px] font-mono opacity-80 font-normal">(2)</span></button>
+            <button type="button" onclick="window.setTerritoryModalMunGlobal('punceres')" class="px-3 py-1.5 rounded-xl text-xs font-bold transition shrink-0 cursor-pointer flex items-center gap-1.5 bg-[#140e40] text-slate-300 hover:text-white border border-[#2d1f85]"><span>🏛️ Punceres</span><span class="text-[10px] font-mono opacity-80 font-normal">(2)</span></button>
+            <button type="button" onclick="window.setTerritoryModalMunGlobal('santa-barbara')" class="px-3 py-1.5 rounded-xl text-xs font-bold transition shrink-0 cursor-pointer flex items-center gap-1.5 bg-[#140e40] text-slate-300 hover:text-white border border-[#2d1f85]"><span>🏛️ Santa Bárbara</span><span class="text-[10px] font-mono opacity-80 font-normal">(2)</span></button>
+            <button type="button" onclick="window.setTerritoryModalMunGlobal('sotillo')" class="px-3 py-1.5 rounded-xl text-xs font-bold transition shrink-0 cursor-pointer flex items-center gap-1.5 bg-[#140e40] text-slate-300 hover:text-white border border-[#2d1f85]"><span>🏛️ Sotillo</span><span class="text-[10px] font-mono opacity-80 font-normal">(2)</span></button>
+            <button type="button" onclick="window.setTerritoryModalMunGlobal('bolivar')" class="px-3 py-1.5 rounded-xl text-xs font-bold transition shrink-0 cursor-pointer flex items-center gap-1.5 bg-[#140e40] text-slate-300 hover:text-white border border-[#2d1f85]"><span>🏛️ Bolívar</span><span class="text-[10px] font-mono opacity-80 font-normal">(1)</span></button>
+            <button type="button" onclick="window.setTerritoryModalMunGlobal('aguasay')" class="px-3 py-1.5 rounded-xl text-xs font-bold transition shrink-0 cursor-pointer flex items-center gap-1.5 bg-[#140e40] text-slate-300 hover:text-white border border-[#2d1f85]"><span>🏛️ Aguasay</span><span class="text-[10px] font-mono opacity-80 font-normal">(1)</span></button>
+            <button type="button" onclick="window.setTerritoryModalMunGlobal('uracoa')" class="px-3 py-1.5 rounded-xl text-xs font-bold transition shrink-0 cursor-pointer flex items-center gap-1.5 bg-[#140e40] text-slate-300 hover:text-white border border-[#2d1f85]"><span>🏛️ Uracoa</span><span class="text-[10px] font-mono opacity-80 font-normal">(1)</span></button>
+          </div>
+
+          <!-- Columna 1: 13 Municipios (Desktop) -->
+          <div class="hidden md:flex flex-col w-56 lg:w-64 shrink-0 border-r border-[#2d1f85]/70 pr-3 space-y-1.5 overflow-y-auto max-h-[72vh]">
+            <div class="text-[11px] font-black text-amber-400 uppercase tracking-wider px-1 pb-1 flex items-center justify-between border-b border-[#2d1f85]/50">
+              <span>1. MUNICIPIOS</span>
+              <span class="text-[10px] text-slate-400 font-mono">13 Total</span>
+            </div>
+            <div class="space-y-1 pt-1">
+              <button type="button" onclick="window.setTerritoryModalMunGlobal('maturin')" class="w-full text-left p-2.5 rounded-xl transition flex items-center justify-between gap-2 cursor-pointer group bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 font-black shadow-md shadow-amber-500/20">
+                <div class="flex items-center gap-2 truncate min-w-0"><span class="text-sm shrink-0">🏛️</span><span class="text-xs truncate font-bold">Maturín</span></div>
+                <span class="text-[10px] font-mono px-2 py-0.5 rounded-md shrink-0 bg-slate-950/20 text-slate-950 font-black">10</span>
+              </button>
+              <button type="button" onclick="window.setTerritoryModalMunGlobal('piar')" class="w-full text-left p-2.5 rounded-xl transition flex items-center justify-between gap-2 cursor-pointer group bg-[#140e40] hover:bg-[#23176d] text-slate-300 hover:text-white border border-[#2d1f85]">
+                <div class="flex items-center gap-2 truncate min-w-0"><span class="text-sm shrink-0">🏛️</span><span class="text-xs truncate font-bold">Piar</span></div>
+                <span class="text-[10px] font-mono px-2 py-0.5 rounded-md shrink-0 bg-[#0e092e] text-slate-400 border border-[#2d1f85]">7</span>
+              </button>
+              <button type="button" onclick="window.setTerritoryModalMunGlobal('caripe')" class="w-full text-left p-2.5 rounded-xl transition flex items-center justify-between gap-2 cursor-pointer group bg-[#140e40] hover:bg-[#23176d] text-slate-300 hover:text-white border border-[#2d1f85]">
+                <div class="flex items-center gap-2 truncate min-w-0"><span class="text-sm shrink-0">🏛️</span><span class="text-xs truncate font-bold">Caripe</span></div>
+                <span class="text-[10px] font-mono px-2 py-0.5 rounded-md shrink-0 bg-[#0e092e] text-slate-400 border border-[#2d1f85]">6</span>
+              </button>
+              <button type="button" onclick="window.setTerritoryModalMunGlobal('cedeno')" class="w-full text-left p-2.5 rounded-xl transition flex items-center justify-between gap-2 cursor-pointer group bg-[#140e40] hover:bg-[#23176d] text-slate-300 hover:text-white border border-[#2d1f85]">
+                <div class="flex items-center gap-2 truncate min-w-0"><span class="text-sm shrink-0">🏛️</span><span class="text-xs truncate font-bold">Cedeño</span></div>
+                <span class="text-[10px] font-mono px-2 py-0.5 rounded-md shrink-0 bg-[#0e092e] text-slate-400 border border-[#2d1f85]">4</span>
+              </button>
+              <button type="button" onclick="window.setTerritoryModalMunGlobal('libertador')" class="w-full text-left p-2.5 rounded-xl transition flex items-center justify-between gap-2 cursor-pointer group bg-[#140e40] hover:bg-[#23176d] text-slate-300 hover:text-white border border-[#2d1f85]">
+                <div class="flex items-center gap-2 truncate min-w-0"><span class="text-sm shrink-0">🏛️</span><span class="text-xs truncate font-bold">Libertador</span></div>
+                <span class="text-[10px] font-mono px-2 py-0.5 rounded-md shrink-0 bg-[#0e092e] text-slate-400 border border-[#2d1f85]">4</span>
+              </button>
+              <button type="button" onclick="window.setTerritoryModalMunGlobal('ezequiel-zamora')" class="w-full text-left p-2.5 rounded-xl transition flex items-center justify-between gap-2 cursor-pointer group bg-[#140e40] hover:bg-[#23176d] text-slate-300 hover:text-white border border-[#2d1f85]">
+                <div class="flex items-center gap-2 truncate min-w-0"><span class="text-sm shrink-0">🏛️</span><span class="text-xs truncate font-bold">Ezequiel Zamora</span></div>
+                <span class="text-[10px] font-mono px-2 py-0.5 rounded-md shrink-0 bg-[#0e092e] text-slate-400 border border-[#2d1f85]">2</span>
+              </button>
+              <button type="button" onclick="window.setTerritoryModalMunGlobal('acosta')" class="w-full text-left p-2.5 rounded-xl transition flex items-center justify-between gap-2 cursor-pointer group bg-[#140e40] hover:bg-[#23176d] text-slate-300 hover:text-white border border-[#2d1f85]">
+                <div class="flex items-center gap-2 truncate min-w-0"><span class="text-sm shrink-0">🏛️</span><span class="text-xs truncate font-bold">Acosta</span></div>
+                <span class="text-[10px] font-mono px-2 py-0.5 rounded-md shrink-0 bg-[#0e092e] text-slate-400 border border-[#2d1f85]">2</span>
+              </button>
+              <button type="button" onclick="window.setTerritoryModalMunGlobal('punceres')" class="w-full text-left p-2.5 rounded-xl transition flex items-center justify-between gap-2 cursor-pointer group bg-[#140e40] hover:bg-[#23176d] text-slate-300 hover:text-white border border-[#2d1f85]">
+                <div class="flex items-center gap-2 truncate min-w-0"><span class="text-sm shrink-0">🏛️</span><span class="text-xs truncate font-bold">Punceres</span></div>
+                <span class="text-[10px] font-mono px-2 py-0.5 rounded-md shrink-0 bg-[#0e092e] text-slate-400 border border-[#2d1f85]">2</span>
+              </button>
+              <button type="button" onclick="window.setTerritoryModalMunGlobal('santa-barbara')" class="w-full text-left p-2.5 rounded-xl transition flex items-center justify-between gap-2 cursor-pointer group bg-[#140e40] hover:bg-[#23176d] text-slate-300 hover:text-white border border-[#2d1f85]">
+                <div class="flex items-center gap-2 truncate min-w-0"><span class="text-sm shrink-0">🏛️</span><span class="text-xs truncate font-bold">Santa Bárbara</span></div>
+                <span class="text-[10px] font-mono px-2 py-0.5 rounded-md shrink-0 bg-[#0e092e] text-slate-400 border border-[#2d1f85]">2</span>
+              </button>
+              <button type="button" onclick="window.setTerritoryModalMunGlobal('sotillo')" class="w-full text-left p-2.5 rounded-xl transition flex items-center justify-between gap-2 cursor-pointer group bg-[#140e40] hover:bg-[#23176d] text-slate-300 hover:text-white border border-[#2d1f85]">
+                <div class="flex items-center gap-2 truncate min-w-0"><span class="text-sm shrink-0">🏛️</span><span class="text-xs truncate font-bold">Sotillo</span></div>
+                <span class="text-[10px] font-mono px-2 py-0.5 rounded-md shrink-0 bg-[#0e092e] text-slate-400 border border-[#2d1f85]">2</span>
+              </button>
+              <button type="button" onclick="window.setTerritoryModalMunGlobal('bolivar')" class="w-full text-left p-2.5 rounded-xl transition flex items-center justify-between gap-2 cursor-pointer group bg-[#140e40] hover:bg-[#23176d] text-slate-300 hover:text-white border border-[#2d1f85]">
+                <div class="flex items-center gap-2 truncate min-w-0"><span class="text-sm shrink-0">🏛️</span><span class="text-xs truncate font-bold">Bolívar</span></div>
+                <span class="text-[10px] font-mono px-2 py-0.5 rounded-md shrink-0 bg-[#0e092e] text-slate-400 border border-[#2d1f85]">1</span>
+              </button>
+              <button type="button" onclick="window.setTerritoryModalMunGlobal('aguasay')" class="w-full text-left p-2.5 rounded-xl transition flex items-center justify-between gap-2 cursor-pointer group bg-[#140e40] hover:bg-[#23176d] text-slate-300 hover:text-white border border-[#2d1f85]">
+                <div class="flex items-center gap-2 truncate min-w-0"><span class="text-sm shrink-0">🏛️</span><span class="text-xs truncate font-bold">Aguasay</span></div>
+                <span class="text-[10px] font-mono px-2 py-0.5 rounded-md shrink-0 bg-[#0e092e] text-slate-400 border border-[#2d1f85]">1</span>
+              </button>
+              <button type="button" onclick="window.setTerritoryModalMunGlobal('uracoa')" class="w-full text-left p-2.5 rounded-xl transition flex items-center justify-between gap-2 cursor-pointer group bg-[#140e40] hover:bg-[#23176d] text-slate-300 hover:text-white border border-[#2d1f85]">
+                <div class="flex items-center gap-2 truncate min-w-0"><span class="text-sm shrink-0">🏛️</span><span class="text-xs truncate font-bold">Uracoa</span></div>
+                <span class="text-[10px] font-mono px-2 py-0.5 rounded-md shrink-0 bg-[#0e092e] text-slate-400 border border-[#2d1f85]">1</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Columna 2: Parroquias de Maturín (Inicial) -->
+          <div class="flex-1 flex flex-col space-y-3 overflow-y-auto max-h-[72vh] pr-1">
+            <div class="flex items-center justify-between gap-2 border-b border-[#2d1f85]/80 pb-2.5 bg-[#140e40]/70 p-3 rounded-xl border border-[#2d1f85]/40 shrink-0">
+              <div class="truncate min-w-0">
+                <div class="flex items-center gap-2">
+                  <span class="text-base sm:text-lg">🏛️</span>
+                  <h4 class="text-sm sm:text-base font-black text-white truncate">Municipio Maturín</h4>
+                  <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-sky-950 text-sky-300 border border-sky-400/40 font-bold shrink-0">10 Parroquias</span>
+                </div>
+                <p class="text-[11px] text-slate-400 truncate mt-0.5">Capital: <strong class="text-slate-200">Maturín</strong> • Estado Monagas</p>
+              </div>
+              <button type="button" onclick="window.earthApp?.focusMunicipio('maturin', true); window.earthApp?.closeParishSelector();" class="px-3 py-1.5 rounded-xl bg-[#0e092e] hover:bg-sky-900/60 text-sky-300 hover:text-white border border-sky-400/40 text-xs font-bold transition flex items-center gap-1.5 cursor-pointer shrink-0 shadow-sm">
+                <i data-lucide="crosshair" class="w-3.5 h-3.5 text-sky-400"></i>
+                <span class="hidden sm:inline">Enfocar Municipio</span>
+              </button>
+            </div>
+
+            <div class="flex items-center justify-between px-1">
+              <div class="text-[11px] font-black text-sky-400 uppercase tracking-wider flex items-center gap-1.5">
+                <span>2. PARROQUIAS</span>
+                <span class="text-[10px] text-slate-400 font-normal">➔ Haz clic en una parroquia para abrirla en el satélite</span>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+              <div onclick="window.selectParishGlobal('maturin', 'san-simon')" class="p-3.5 rounded-xl border transition-all duration-150 cursor-pointer flex flex-col justify-between gap-2.5 shadow-sm group hover:scale-[1.01] bg-[#140e40] hover:bg-[#20155c] border-[#2d1f85] hover:border-sky-400">
+                <div class="flex items-start justify-between gap-2">
+                  <div class="truncate min-w-0"><div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full shrink-0 bg-sky-400"></span><h5 class="text-xs sm:text-sm font-black text-white group-hover:text-sky-300 truncate">San Simón</h5></div><span class="text-[10px] text-slate-400 block mt-0.5">Urbana Central</span></div>
+                  <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-[#0e092e] text-slate-400 border border-[#2d1f85] shrink-0 font-medium">4 sect.</span>
+                </div>
+                <div class="flex items-center justify-between pt-2 border-t border-[#2d1f85]/50 text-xs"><span class="text-[10px] font-mono text-slate-400">📍 4 sectores mapeados</span><span class="text-xs font-bold text-sky-400 group-hover:text-white flex items-center gap-1 group-hover:translate-x-1 transition-transform">Entrar al Mapa ➔</span></div>
+              </div>
+              <div onclick="window.selectParishGlobal('maturin', 'alto-de-los-godos')" class="p-3.5 rounded-xl border transition-all duration-150 cursor-pointer flex flex-col justify-between gap-2.5 shadow-sm group hover:scale-[1.01] bg-[#140e40] hover:bg-[#20155c] border-[#2d1f85] hover:border-sky-400">
+                <div class="flex items-start justify-between gap-2">
+                  <div class="truncate min-w-0"><div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full shrink-0 bg-sky-400"></span><h5 class="text-xs sm:text-sm font-black text-white group-hover:text-sky-300 truncate">Alto de Los Godos</h5></div><span class="text-[10px] text-slate-400 block mt-0.5">Urbana Oeste</span></div>
+                  <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-[#0e092e] text-slate-400 border border-[#2d1f85] shrink-0 font-medium">5 sect.</span>
+                </div>
+                <div class="flex items-center justify-between pt-2 border-t border-[#2d1f85]/50 text-xs"><span class="text-[10px] font-mono text-slate-400">📍 5 sectores mapeados</span><span class="text-xs font-bold text-sky-400 group-hover:text-white flex items-center gap-1 group-hover:translate-x-1 transition-transform">Entrar al Mapa ➔</span></div>
+              </div>
+              <div onclick="window.selectParishGlobal('maturin', 'boqueron')" class="p-3.5 rounded-xl border transition-all duration-150 cursor-pointer flex flex-col justify-between gap-2.5 shadow-sm group hover:scale-[1.01] bg-[#140e40] hover:bg-[#20155c] border-[#2d1f85] hover:border-sky-400">
+                <div class="flex items-start justify-between gap-2">
+                  <div class="truncate min-w-0"><div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full shrink-0 bg-sky-400"></span><h5 class="text-xs sm:text-sm font-black text-white group-hover:text-sky-300 truncate">Boquerón</h5></div><span class="text-[10px] text-slate-400 block mt-0.5">Urbana Norte</span></div>
+                  <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-[#0e092e] text-slate-400 border border-[#2d1f85] shrink-0 font-medium">5 sect.</span>
+                </div>
+                <div class="flex items-center justify-between pt-2 border-t border-[#2d1f85]/50 text-xs"><span class="text-[10px] font-mono text-slate-400">📍 5 sectores mapeados</span><span class="text-xs font-bold text-sky-400 group-hover:text-white flex items-center gap-1 group-hover:translate-x-1 transition-transform">Entrar al Mapa ➔</span></div>
+              </div>
+              <div onclick="window.selectParishGlobal('maturin', 'las-cocuizas')" class="p-3.5 rounded-xl border transition-all duration-150 cursor-pointer flex flex-col justify-between gap-2.5 shadow-sm group hover:scale-[1.01] bg-[#140e40] hover:bg-[#20155c] border-[#2d1f85] hover:border-sky-400">
+                <div class="flex items-start justify-between gap-2">
+                  <div class="truncate min-w-0"><div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full shrink-0 bg-sky-400"></span><h5 class="text-xs sm:text-sm font-black text-white group-hover:text-sky-300 truncate">Las Cocuizas</h5></div><span class="text-[10px] text-slate-400 block mt-0.5">Urbana Este</span></div>
+                  <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-[#0e092e] text-slate-400 border border-[#2d1f85] shrink-0 font-medium">5 sect.</span>
+                </div>
+                <div class="flex items-center justify-between pt-2 border-t border-[#2d1f85]/50 text-xs"><span class="text-[10px] font-mono text-slate-400">📍 5 sectores mapeados</span><span class="text-xs font-bold text-sky-400 group-hover:text-white flex items-center gap-1 group-hover:translate-x-1 transition-transform">Entrar al Mapa ➔</span></div>
+              </div>
+              <div onclick="window.selectParishGlobal('maturin', 'santa-cruz')" class="p-3.5 rounded-xl border transition-all duration-150 cursor-pointer flex flex-col justify-between gap-2.5 shadow-sm group hover:scale-[1.01] bg-[#140e40] hover:bg-[#20155c] border-[#2d1f85] hover:border-sky-400">
+                <div class="flex items-start justify-between gap-2">
+                  <div class="truncate min-w-0"><div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full shrink-0 bg-sky-400"></span><h5 class="text-xs sm:text-sm font-black text-white group-hover:text-sky-300 truncate">Santa Cruz (La Cruz)</h5></div><span class="text-[10px] text-slate-400 block mt-0.5">Urbana Oeste</span></div>
+                  <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-[#0e092e] text-slate-400 border border-[#2d1f85] shrink-0 font-medium">4 sect.</span>
+                </div>
+                <div class="flex items-center justify-between pt-2 border-t border-[#2d1f85]/50 text-xs"><span class="text-[10px] font-mono text-slate-400">📍 4 sectores mapeados</span><span class="text-xs font-bold text-sky-400 group-hover:text-white flex items-center gap-1 group-hover:translate-x-1 transition-transform">Entrar al Mapa ➔</span></div>
+              </div>
+              <div onclick="window.selectParishGlobal('maturin', 'san-vicente')" class="p-3.5 rounded-xl border transition-all duration-150 cursor-pointer flex flex-col justify-between gap-2.5 shadow-sm group hover:scale-[1.01] bg-[#140e40] hover:bg-[#20155c] border-[#2d1f85] hover:border-sky-400">
+                <div class="flex items-start justify-between gap-2">
+                  <div class="truncate min-w-0"><div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full shrink-0 bg-sky-400"></span><h5 class="text-xs sm:text-sm font-black text-white group-hover:text-sky-300 truncate">San Vicente</h5></div><span class="text-[10px] text-slate-400 block mt-0.5">Urbana Oeste</span></div>
+                  <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-[#0e092e] text-slate-400 border border-[#2d1f85] shrink-0 font-medium">4 sect.</span>
+                </div>
+                <div class="flex items-center justify-between pt-2 border-t border-[#2d1f85]/50 text-xs"><span class="text-[10px] font-mono text-slate-400">📍 4 sectores mapeados</span><span class="text-xs font-bold text-sky-400 group-hover:text-white flex items-center gap-1 group-hover:translate-x-1 transition-transform">Entrar al Mapa ➔</span></div>
+              </div>
+              <div onclick="window.selectParishGlobal('maturin', 'la-pica')" class="p-3.5 rounded-xl border transition-all duration-150 cursor-pointer flex flex-col justify-between gap-2.5 shadow-sm group hover:scale-[1.01] bg-[#140e40] hover:bg-[#20155c] border-[#2d1f85] hover:border-sky-400">
+                <div class="flex items-start justify-between gap-2">
+                  <div class="truncate min-w-0"><div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full shrink-0 bg-sky-400"></span><h5 class="text-xs sm:text-sm font-black text-white group-hover:text-sky-300 truncate">La Pica</h5></div><span class="text-[10px] text-slate-400 block mt-0.5">Rural - Agrícola</span></div>
+                  <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-[#0e092e] text-slate-400 border border-[#2d1f85] shrink-0 font-medium">3 sect.</span>
+                </div>
+                <div class="flex items-center justify-between pt-2 border-t border-[#2d1f85]/50 text-xs"><span class="text-[10px] font-mono text-slate-400">📍 3 sectores mapeados</span><span class="text-xs font-bold text-sky-400 group-hover:text-white flex items-center gap-1 group-hover:translate-x-1 transition-transform">Entrar al Mapa ➔</span></div>
+              </div>
+              <div onclick="window.selectParishGlobal('maturin', 'jusepin')" class="p-3.5 rounded-xl border transition-all duration-150 cursor-pointer flex flex-col justify-between gap-2.5 shadow-sm group hover:scale-[1.01] bg-[#140e40] hover:bg-[#20155c] border-[#2d1f85] hover:border-sky-400">
+                <div class="flex items-start justify-between gap-2">
+                  <div class="truncate min-w-0"><div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full shrink-0 bg-sky-400"></span><h5 class="text-xs sm:text-sm font-black text-white group-hover:text-sky-300 truncate">Jusepín</h5></div><span class="text-[10px] text-slate-400 block mt-0.5">Petrolera y Rural</span></div>
+                  <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-[#0e092e] text-slate-400 border border-[#2d1f85] shrink-0 font-medium">3 sect.</span>
+                </div>
+                <div class="flex items-center justify-between pt-2 border-t border-[#2d1f85]/50 text-xs"><span class="text-[10px] font-mono text-slate-400">📍 3 sectores mapeados</span><span class="text-xs font-bold text-sky-400 group-hover:text-white flex items-center gap-1 group-hover:translate-x-1 transition-transform">Entrar al Mapa ➔</span></div>
+              </div>
+              <div onclick="window.selectParishGlobal('maturin', 'el-furrial')" class="p-3.5 rounded-xl border transition-all duration-150 cursor-pointer flex flex-col justify-between gap-2.5 shadow-sm group hover:scale-[1.01] bg-[#140e40] hover:bg-[#20155c] border-[#2d1f85] hover:border-sky-400">
+                <div class="flex items-start justify-between gap-2">
+                  <div class="truncate min-w-0"><div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full shrink-0 bg-sky-400"></span><h5 class="text-xs sm:text-sm font-black text-white group-hover:text-sky-300 truncate">El Furrial</h5></div><span class="text-[10px] text-slate-400 block mt-0.5">Petrolera y Agropecuaria</span></div>
+                  <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-[#0e092e] text-slate-400 border border-[#2d1f85] shrink-0 font-medium">3 sect.</span>
+                </div>
+                <div class="flex items-center justify-between pt-2 border-t border-[#2d1f85]/50 text-xs"><span class="text-[10px] font-mono text-slate-400">📍 3 sectores mapeados</span><span class="text-xs font-bold text-sky-400 group-hover:text-white flex items-center gap-1 group-hover:translate-x-1 transition-transform">Entrar al Mapa ➔</span></div>
+              </div>
+              <div onclick="window.selectParishGlobal('maturin', 'el-corozo')" class="p-3.5 rounded-xl border transition-all duration-150 cursor-pointer flex flex-col justify-between gap-2.5 shadow-sm group hover:scale-[1.01] bg-[#140e40] hover:bg-[#20155c] border-[#2d1f85] hover:border-sky-400">
+                <div class="flex items-start justify-between gap-2">
+                  <div class="truncate min-w-0"><div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full shrink-0 bg-sky-400"></span><h5 class="text-xs sm:text-sm font-black text-white group-hover:text-sky-300 truncate">El Corozo</h5></div><span class="text-[10px] text-slate-400 block mt-0.5">Suburbana Sur</span></div>
+                  <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-[#0e092e] text-slate-400 border border-[#2d1f85] shrink-0 font-medium">3 sect.</span>
+                </div>
+                <div class="flex items-center justify-between pt-2 border-t border-[#2d1f85]/50 text-xs"><span class="text-[10px] font-mono text-slate-400">📍 3 sectores mapeados</span><span class="text-xs font-bold text-sky-400 group-hover:text-white flex items-center gap-1 group-hover:translate-x-1 transition-transform">Entrar al Mapa ➔</span></div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -1740,7 +1915,7 @@
   </div>
 
   <!-- SCRIPT -->
-  <script type="module" src="js/app.js?v=132"></script>
+  <script type="module" src="js/app.js?v=133"></script>
   <script>
     if (window.lucide && typeof window.lucide.createIcons === 'function') {
       window.lucide.createIcons();

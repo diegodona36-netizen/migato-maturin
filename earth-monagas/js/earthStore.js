@@ -275,7 +275,11 @@ export class EarthStore {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(cleanState));
       }
     } catch (e) {
-      console.warn("[EarthStore] Error guardando en localStorage:", e);
+      if (e.name === "QuotaExceededError" || e.code === 22 || e.code === 1014) {
+        console.warn("[EarthStore] Cuota de almacenamiento local excedida (5MB). La capa de polígonos permanece 100% activa en memoria y sincronizada con Firebase.");
+      } else {
+        console.warn("[EarthStore] Error guardando en localStorage:", e);
+      }
     }
   }
 
@@ -787,7 +791,7 @@ export class EarthStore {
 `;
         }
 
-        // Sub-Parroquias / Ejes Comunales con sus Sectores Hijos anidados (Jerarquía Google Earth Pro)
+        // Sub-Parroquias / Ejes Territoriales con sus Sectores Hijos anidados (Jerarquía Google Earth Pro)
         const exportedPolyIds = new Set();
 
         (p.subparroquias || []).forEach(sp => {
@@ -811,11 +815,11 @@ export class EarthStore {
 
           content += `
         <Folder>
-          <name>Eje: ${sp.nombre || "Eje Comunal"}</name>
+          <name>Eje: ${sp.nombre || "Eje Territorial"}</name>
           <visibility>${sp.visible !== false ? 1 : 0}</visibility>
           <description><![CDATA[
             <h3>${sp.nombre}</h3>
-            <p><strong>Nivel 4:</strong> Sub-Parroquia / Eje Comunal</p>
+            <p><strong>Nivel 4:</strong> Sub-Parroquia / Eje Territorial</p>
             <p><strong>Sectores Totales:</strong> ${childSectors.length}</p>
             <p><strong>Total Casas:</strong> ${totCasas}</p>
             <p><strong>Total Familias:</strong> ${totFam}</p>
@@ -824,9 +828,9 @@ export class EarthStore {
             <p><strong>Área:</strong> ${sp.areaHa || 0} Ha</p>
           ]]></description>
 
-          <!-- Perímetro del Eje Comunal -->
+          <!-- Perímetro del Eje Territorial -->
           <Placemark>
-            <name>Límite Eje: ${sp.nombre || "Eje Comunal"}</name>
+            <name>Límite Eje: ${sp.nombre || "Eje Territorial"}</name>
             <ExtendedData>
               <Data name="capa"><value>capa_1_eje</value></Data>
               <Data name="tipo"><value>subparroquia</value></Data>
@@ -851,7 +855,7 @@ export class EarthStore {
 
             content += `
           <Placemark>
-            <name>${poly.nombre || "Sector Comunal"}</name>
+            <name>${poly.nombre || "Sector Vecinal"}</name>
             <description><![CDATA[
               <h3>${poly.nombre}</h3>
               <p><strong>Eje:</strong> ${sp.nombre}</p>
@@ -888,7 +892,7 @@ export class EarthStore {
 
             content += `
           <Placemark>
-            <name>${poly.nombre || "Sector Comunal"}</name>
+            <name>${poly.nombre || "Sector Vecinal"}</name>
             <visibility>${poly.visible !== false ? 1 : 0}</visibility>
             <Style>
               <LineStyle><color>ff${sBHex.slice(4,6)}${sBHex.slice(2,4)}${sBHex.slice(0,2)}</color><width>${poly.anchoBorde || 2}</width></LineStyle>

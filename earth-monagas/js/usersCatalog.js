@@ -1,6 +1,6 @@
 /**
  * Catálogo Oficial de Usuarios y Asignación de Jurisdicciones Territoriales
- * Gobernación del Estado Monagas • Plataforma Cartográfica MIGATO
+ * Comando Regional MIGATO Monagas • Plataforma Cartográfica Territorial
  */
 
 import { CATALOGO_MONAGAS } from "./catalogoMonagas.js?v=100";
@@ -113,7 +113,7 @@ function buildInitialUsers() {
       id: "usr-jefe",
       username: "admin",
       aliases: ["admin", "jefe", "admin-jefe", "admin_jefe", "admin-admin", "admin_admin", "despacho", "gobernador", "jefatura", "superadmin"],
-      email: "jefe@monagas.gob.ve",
+      email: "jefe@migatomonagas.org",
       password: "admin",
       passwordHash: "8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918",
       nombre: "Jefatura de Despacho Central (Jefe)",
@@ -127,7 +127,7 @@ function buildInitialUsers() {
       id: "usr-general-militancia",
       username: "admin-militancia",
       aliases: ["admin-militancia", "admin_militancia", "adminmilitancia", "militancia", "general", "usuario general", "usuario_general", "usuariogeneral", "central", "sala central", "salacentral", "direccion-general", "direccion_general"],
-      email: "militancia@monagas.gob.ve",
+      email: "militancia@migatomonagas.org",
       password: "militancia",
       passwordHash: "7f64b358efe11fe853f7c886449f4d69db170befe6e8a8b3b8a408f94e0f4685",
       nombre: "Dirección General (Militancia)",
@@ -146,7 +146,7 @@ function buildInitialUsers() {
       id: `usr-coord-${mun.id}`,
       username: `coord_${munSlug}`,
       aliases: [`coord_${munSlug}`, mun.id, `coordinador_${munSlug}`, mun.nombre.toLowerCase()],
-      email: `coord.${mun.id}@monagas.gob.ve`,
+      email: `coord.${mun.id}@migatomonagas.org`,
       password: "admin",
       passwordHash: "8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918",
       nombre: `Coordinación Municipal ${mun.nombre}`,
@@ -182,7 +182,7 @@ function buildInitialUsers() {
         id: `usr-op-${mun.id}-${p.id}`,
         username: formalUsername,
         aliases,
-        email: `${p.id}@monagas.gob.ve`,
+        email: `${p.id}@migatomonagas.org`,
         password: formalPassword,
         passwordHash: formalHash,
         nombre: isLosGodos ? "Responsable Parroquia Los Godos" : `Responsable Parroquial ${p.nombre}`,
@@ -245,7 +245,7 @@ export function findUserByCredentials(identity, password) {
     "admin-militancia", "admin_militancia", "adminmilitancia",
     "militancia", "general", "usuario general", "usuario_general",
     "usuariogeneral", "central", "sala central", "salacentral",
-    "direccion-general", "direccion_general", "militancia@monagas.gob.ve"
+    "direccion-general", "direccion_general", "militancia@migatomonagas.org"
   ];
   if (generalAliases.includes(cleanId) && generalUser) {
     const isPassValid = cleanPass === generalUser.password ||
@@ -261,7 +261,7 @@ export function findUserByCredentials(identity, password) {
   // 3. Verificación de Jefatura de Despacho (Solo Jefe: admin-admin, jefe)
   const jefeAliases = [
     "jefe", "admin-jefe", "admin_jefe", "admin-admin", "admin_admin",
-    "despacho", "gobernador", "jefatura", "superadmin", "jefe@monagas.gob.ve"
+    "despacho", "gobernador", "jefatura", "superadmin", "jefe@migatomonagas.org"
   ];
   if (jefeAliases.includes(cleanId) && jefeUser) {
     const isPassValid = cleanPass === jefeUser.password ||
