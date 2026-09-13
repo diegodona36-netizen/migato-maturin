@@ -1172,8 +1172,8 @@ const CENTROS_SALUD_INICIALES = [
     "parroquiaId": "caripito",
     "parroquia": "Caripito",
     "sector": "Sector Madariaga / Caripe Viejo",
-    "lat": 10.10915,
-    "lng": -63.09154,
+    "lat": 10.10952,
+    "lng": -63.10116,
     "tipoRed": "hospitalaria",
     "tipoRedLabel": "Red Hospitalaria Especializada (Tipo I, II, III, IV)",
     "clasificacionEspecifica": "Hospital Tipo I",
@@ -2479,9 +2479,9 @@ const CENTROS_SALUD_INICIALES = [
     "municipio": "Municipio Bolívar",
     "parroquiaId": "caripito",
     "parroquia": "Caripito",
-    "sector": "Sector Bajo Guarapiche",
-    "lat": 10.125,
-    "lng": -63.105,
+    "sector": "Sector Bajo Guarapiche / Las Palmitas",
+    "lat": 10.10915,
+    "lng": -63.09154,
     "tipoRed": "comunal",
     "tipoRedLabel": "Red Comunal / Barrio Adentro (CPT, CDI, SRI, CAT)",
     "clasificacionEspecifica": "Centro de Diagnóstico Integral (CDI)",
@@ -2522,7 +2522,7 @@ const CENTROS_SALUD_INICIALES = [
       "fecha": "2026-09-10"
     },
     "nivelRiesgo": "verde",
-    "precision": "sectorial"
+    "precision": "exacta"
   },
   {
     "id": "cdi-caripe",
@@ -3356,9 +3356,9 @@ const CENTROS_SALUD_INICIALES = [
     "municipio": "Municipio Bolívar",
     "parroquiaId": "caripito",
     "parroquia": "Caripito",
-    "sector": "Caripito",
-    "lat": 10.1245,
-    "lng": -63.1045,
+    "sector": "Sector Bajo Guarapiche / Las Palmitas",
+    "lat": 10.10915,
+    "lng": -63.09154,
     "tipoRed": "comunal",
     "tipoRedLabel": "Red Comunal / Barrio Adentro (CPT, CDI, SRI, CAT)",
     "clasificacionEspecifica": "Sala de Rehabilitación Integral (SRI)",
@@ -3398,7 +3398,7 @@ const CENTROS_SALUD_INICIALES = [
       "fecha": "2026-09-10"
     },
     "nivelRiesgo": "verde",
-    "precision": "sectorial"
+    "precision": "exacta"
   },
   {
     "id": "sri-caripe",
