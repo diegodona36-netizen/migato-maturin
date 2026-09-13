@@ -2,16 +2,15 @@
  * Controlador Principal — Google Earth Pro Web (Edición Estado Monagas)
  * Robusto, 100% Operativo y Totalmente Individualizado
  */
-import { CATALOGO_MONAGAS, findParishInCatalog, PARISH_ALIAS_MAP, resolveParishId } from "./catalogoMonagas.js?v=144";
-import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=144";
-import { getAllParishesForSelector } from "./usersCatalog.js?v=144";
-import { EarthStore } from "./earthStore.js?v=144";
-import { EarthMapEngine } from "./mapEngine.js?v=144";
-import { PropertiesDialog } from "./propertiesDialog.js?v=144";
-import { ToolsManager } from "./toolsManager.js?v=144";
-import { detectParishFromGeometry, SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=144";
-import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=144";
-import { getParishDemographics } from "./monagasDemographics.js?v=144";
+import { CATALOGO_MONAGAS, findParishInCatalog, PARISH_ALIAS_MAP, resolveParishId } from "./catalogoMonagas.js?v=145";
+import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=145";
+import { getAllParishesForSelector } from "./usersCatalog.js?v=145";
+import { EarthStore } from "./earthStore.js?v=145";
+import { EarthMapEngine } from "./mapEngine.js?v=145";
+import { PropertiesDialog } from "./propertiesDialog.js?v=145";
+import { ToolsManager } from "./toolsManager.js?v=145";
+import { detectParishFromGeometry, SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=145";
+import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=145";
 import { 
   getMunicipios, 
   getParroquiasByMun, 
@@ -516,8 +515,8 @@ class EarthMonagasApp {
         }
       }
 
-      // Mostrar de inmediato la Ficha Flotante de Variables y Censo de la Parroquia
-      this.showQuickStats("parroquia", parish);
+      // Mantener la ficha flotante oculta a menos que el usuario la abra
+      this.closeQuickStats();
 
     } catch (err) {
       console.warn("[selectParish] Error controlado:", err);
@@ -552,18 +551,6 @@ class EarthMonagasApp {
     } else if (subMilitantes > 0 || subCasas > 0) {
       totalMilitantes = subMilitantes;
       totalCasas = subCasas;
-    } else if (parish.electores || parish.poblacion) {
-      totalMilitantes = parseInt(parish.electores || parish.poblacion || 0);
-      totalCasas = Math.round(totalMilitantes / 3.8);
-    }
-
-    // Respaldo de variables oficiales de censo y CNE si la sumatoria de polígonos dio 0
-    if (totalMilitantes === 0 && totalCasas === 0) {
-      const demo = getParishDemographics(this.selectedMunId, this.selectedParishId);
-      if (demo) {
-        totalMilitantes = demo.votantes || demo.habitantes || 1000;
-        totalCasas = demo.casas || Math.round(totalMilitantes / 3.8);
-      }
     }
 
     const elMil = document.getElementById("tally-militantes-val");
@@ -2413,7 +2400,6 @@ class EarthMonagasApp {
     const parish = this.store?.getParish(this.selectedMunId, this.selectedParishId);
     const sp = (parish?.subparroquias || []).find(s => String(s.id) === String(spId));
     if (sp) {
-      this.showQuickStats("subparroquia", sp);
       this.showToast(`🎯 Eje seleccionado: ${sp.nombre}`, "purple");
     }
   }
@@ -2505,28 +2491,13 @@ class EarthMonagasApp {
         });
       }
 
-      if (totHab === 0 && item.poblacion) totHab = item.poblacion;
-      if (totVot === 0 && item.electores) totVot = item.electores;
-      if (totCasas === 0 && totHab > 0) totCasas = Math.round(totHab / 3.8);
-      if (totFam === 0 && totCasas > 0) totFam = Math.round(totCasas * 1.15);
-
-      // Respaldo de variables oficiales de censo y CNE si sigue en 0
-      const demo = getParishDemographics(this.selectedMunId, this.selectedParishId);
-      if (demo) {
-        if (totCasas === 0) totCasas = demo.casas;
-        if (totFam === 0) totFam = demo.familias;
-        if (totHab === 0) totHab = demo.habitantes;
-        if (totVot === 0) totVot = demo.votantes;
-      }
-
       if (elCasas) elCasas.textContent = totCasas.toLocaleString();
       if (elFamilias) elFamilias.textContent = totFam.toLocaleString();
       if (elHabitantes) elHabitantes.textContent = totHab.toLocaleString();
       if (elVotantes) elVotantes.textContent = totVot.toLocaleString();
 
       if (elCentro) {
-        const centrosText = demo && demo.centros ? `${demo.centros} Centros CNE (${demo.mesas || 0} mesas) • ` : "";
-        elCentro.textContent = `${centrosText}${allSub.length} Ejes Territoriales • ${allPolys.length} Sectores Mapeados`;
+        elCentro.textContent = `${allSub.length} Ejes Territoriales • ${allPolys.length} Sectores Mapeados`;
       }
       const spRow = document.getElementById("quick-stats-subparish-row");
       if (spRow) spRow.style.display = "none";
@@ -2551,17 +2522,7 @@ class EarthMonagasApp {
         totVot = parseInt(item.militantes !== undefined ? item.militantes : (item.habitantes || 0)) || 0;
       }
 
-      // Si aún sigue en 0, calcular estimado proporcional según el número de ejes
-      if (totCasas === 0 && totHab === 0) {
-        const demo = getParishDemographics(this.selectedMunId, this.selectedParishId);
-        const subCount = Math.max(1, (parish?.subparroquias || []).length);
-        if (demo) {
-          totCasas = Math.round(demo.casas / subCount);
-          totFam = Math.round(demo.familias / subCount);
-          totHab = Math.round(demo.habitantes / subCount);
-          totVot = Math.round(demo.votantes / subCount);
-        }
-      }
+
 
       if (elCasas) elCasas.textContent = totCasas.toLocaleString();
       if (elFamilias) elFamilias.textContent = totFam.toLocaleString();
@@ -2594,17 +2555,7 @@ class EarthMonagasApp {
       let cHab = parseInt(item.habitantes || 0) || 0;
       let cVot = parseInt(item.militantes !== undefined ? item.militantes : (item.votantes || item.habitantes || 0)) || 0;
 
-      // Respaldo proporcional si el polígono no tiene números cargados
-      if (cCas === 0 && cHab === 0) {
-        const demo = getParishDemographics(this.selectedMunId, this.selectedParishId);
-        const polyCount = Math.max(1, (parish?.poligonos || []).length);
-        if (demo) {
-          cCas = Math.max(50, Math.round(demo.casas / polyCount));
-          cFam = Math.round(cCas * 1.15);
-          cHab = Math.round(cCas * 3.8);
-          cVot = Math.max(30, Math.round(demo.votantes / polyCount));
-        }
-      }
+
 
       if (elCasas) elCasas.textContent = cCas.toLocaleString();
       if (elFamilias) elFamilias.textContent = cFam.toLocaleString();
