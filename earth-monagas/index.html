@@ -61,7 +61,7 @@
   <meta http-equiv="Expires" content="0" />
 
   <!-- Custom Styles -->
-  <link rel="stylesheet" href="css/styles.css?v=143">
+  <link rel="stylesheet" href="css/styles.css?v=144">
 
   <!-- Script de Autenticación Rápida y Control de Acceso Estricto (Exclusivo Regional) -->
   <script src="../js/auth.js"></script>
@@ -503,10 +503,10 @@
   <!-- ============================================================== -->
   <!-- 1.1. LA BARRA TERRITORIAL (SUB-PARROQUIA Y SECTORES)            -->
   <!-- ============================================================== -->
-  <div id="toolbar-tools-row" style="z-index: 1990;" class="bg-[#100b33] border-b border-[#2d1f85] shadow-md shrink-0 w-full h-[44px] px-2 sm:px-4 flex items-center justify-between gap-2 overflow-x-auto no-scrollbar transition-all duration-200">
+  <div id="toolbar-tools-row" style="z-index: 1990;" class="bg-[#100b33] border-b border-[#2d1f85] shadow-md shrink-0 w-full h-[42px] px-2 sm:px-3 flex items-center justify-between gap-1.5 sm:gap-2 overflow-x-auto no-scrollbar transition-all duration-200">
     
     <!-- HERRAMIENTAS PRINCIPALES: SUB-PARROQUIA Y SECTORES -->
-    <div class="flex items-center gap-1.5 sm:gap-2.5 shrink-0 min-w-0">
+    <div class="flex items-center gap-1 sm:gap-2 shrink-0">
       
       <!-- 🟪 SUB-PARROQUIA (EJE TERRITORIAL - NIVEL 4) -->
       <button data-tool="subparroquia" id="btn-tool-subparish" onclick="window.activateEarthTool('subparroquia')"
@@ -537,8 +537,8 @@
     </div>
 
     <!-- 📍 INDICADOR CENTRAL: ESTADO TERRITORIAL DEL MAPA (ENTRE FORMULARIO CARGA Y SATÉLITE) -->
-    <div id="hud-territorial-focus" class="flex-1 flex items-center justify-center min-w-0 px-2 shrink-0 pointer-events-auto transition-all duration-200">
-      <div id="hud-territorial-content" class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#140e40]/95 border border-amber-500/50 shadow-md text-xs flex-wrap justify-center max-w-full">
+    <div id="hud-territorial-focus" class="flex items-center justify-center shrink min-w-0 px-1 pointer-events-auto">
+      <div id="hud-territorial-content" class="flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-xl bg-[#140e40]/90 border border-indigo-500/40 text-xs whitespace-nowrap overflow-hidden shadow-sm">
         <!-- Contenido dinámico inyectado por updateTerritorialFocusUI() -->
       </div>
     </div>
@@ -1920,7 +1920,7 @@
   </div>
 
   <!-- SCRIPT -->
-  <script type="module" src="js/app.js?v=143"></script>
+  <script type="module" src="js/app.js?v=144"></script>
   <script>
     if (window.lucide && typeof window.lucide.createIcons === 'function') {
       window.lucide.createIcons();
