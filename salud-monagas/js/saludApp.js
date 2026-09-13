@@ -12,7 +12,7 @@
   const CATALOGO_FALLAS = window.CATALOGO_FALLAS || {};
   const OPCIONES_SOPORTE_VITAL = window.OPCIONES_SOPORTE_VITAL || {};
   const CENTROS_SALUD_INICIALES = window.CENTROS_SALUD_INICIALES || [];
-const STORAGE_KEY = 'migato_salud_centros_v2';
+const STORAGE_KEY = 'migato_salud_centros_v3';
 
 // Estado global de la aplicación
 const state = {
@@ -23,6 +23,7 @@ const state = {
   busqueda: '',
   centroSeleccionado: null,
   modoEdicion: false,
+  precisionActual: 'exacta',
   mapaFormulario: null,
   marcadorFormulario: null,
   mapaGeneral: null,
@@ -44,7 +45,21 @@ function inicializarDatos() {
     try {
       const parsed = JSON.parse(guardados);
       if (Array.isArray(parsed) && parsed.length > 0) {
-        state.centros = parsed;
+        // Sincronizar coordenadas exactas verificadas del catálogo base
+        const mapBase = new Map(centrosBase.map(c => [c.id, c]));
+        state.centros = parsed.map(p => {
+          const base = mapBase.get(p.id);
+          if (base && base.precision === 'exacta' && p.precision !== 'calibrada_usuario') {
+            return {
+              ...p,
+              lat: base.lat,
+              lng: base.lng,
+              precision: 'exacta',
+              sector: base.sector || p.sector
+            };
+          }
+          return p;
+        });
       } else {
         state.centros = [...centrosBase];
       }
@@ -154,21 +169,41 @@ function initMapaFormulario() {
 
     state.marcadorFormulario.on('dragend', function(e) {
       const pos = e.target.getLatLng();
-      actualizarCoordenadasInputs(pos.lat, pos.lng);
+      actualizarCoordenadasInputs(pos.lat, pos.lng, true);
     });
 
     state.mapaFormulario.on('click', function(e) {
       state.marcadorFormulario.setLatLng(e.latlng);
-      actualizarCoordenadasInputs(e.latlng.lat, e.latlng.lng);
+      actualizarCoordenadasInputs(e.latlng.lat, e.latlng.lng, true);
     });
 
-    actualizarCoordenadasInputs(coordsIniciales[0], coordsIniciales[1]);
+    actualizarCoordenadasInputs(coordsIniciales[0], coordsIniciales[1], false);
   } catch (err) {
     console.error('Error inicializando mapa de formulario:', err);
   }
 }
 
-function actualizarCoordenadasInputs(lat, lng) {
+function actualizarBadgePrecisionFormulario(tipo) {
+  const container = document.getElementById('form-precision-status');
+  if (!container) return;
+  if (tipo === 'exacta' || tipo === 'calibrada_usuario') {
+    container.innerHTML = `
+      <div class="flex items-center gap-1.5 text-emerald-400 font-bold text-[10px]">
+        <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+        <span>📍 Coordenada Exacta Verificada (${tipo === 'calibrada_usuario' ? 'Calibrada por Usuario' : 'Cartografía Satelital'})</span>
+      </div>
+    `;
+  } else {
+    container.innerHTML = `
+      <div class="flex items-center gap-1.5 text-amber-400 font-bold text-[10px]">
+        <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
+        <span>📍 Ubicación Referencial de Sector (Mueve el pin o presiona "Mi GPS" para fijar al techo)</span>
+      </div>
+    `;
+  }
+}
+
+function actualizarCoordenadasInputs(lat, lng, esManual = false) {
   const inLat = document.getElementById('form-lat');
   const inLng = document.getElementById('form-lng');
   const dispCoord = document.getElementById('display-coordenadas');
@@ -176,6 +211,13 @@ function actualizarCoordenadasInputs(lat, lng) {
   if (inLat) inLat.value = lat.toFixed(6);
   if (inLng) inLng.value = lng.toFixed(6);
   if (dispCoord) dispCoord.textContent = `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
+
+  if (esManual) {
+    state.precisionActual = 'calibrada_usuario';
+    const precInput = document.getElementById('form-precision');
+    if (precInput) precInput.value = 'calibrada_usuario';
+    actualizarBadgePrecisionFormulario('calibrada_usuario');
+  }
 }
 
 function initMapaGeneral() {
@@ -255,6 +297,22 @@ function actualizarMapaGeneral() {
         <h4 class="font-bold text-sm text-white mb-1 leading-snug">${c.nombre}</h4>
         <p class="text-indigo-200 text-[11px] mb-2">${c.clasificacionEspecificaLabel || c.clasificacionEspecifica} • ${c.parroquia}</p>
         
+        <div class="mb-2">
+          ${(c.precision === 'exacta' || c.precision === 'calibrada_usuario')
+            ? `<div class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-emerald-950/90 border border-emerald-700/80 text-[10px] text-emerald-300 font-bold">
+                 <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                 <span>📍 Coordenada Exacta (${c.precision === 'calibrada_usuario' ? 'Ajustada en Campo' : 'Cartografía OSM / Satélite'})</span>
+               </div>`
+            : `<div class="p-1.5 rounded bg-amber-950/70 border border-amber-700/70 text-[10px] text-amber-300">
+                 <div class="flex items-center gap-1 font-bold">
+                   <span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span>
+                   <span>📍 Ubicación Sectorial (Aproximada)</span>
+                 </div>
+                 <p class="text-[9px] text-amber-200/80 mt-0.5 leading-tight">Sin cartografía pública de edificio. Pulsa "Calibrar" o usa GPS para fijar el techo exacto.</p>
+               </div>`
+          }
+        </div>
+
         <div class="grid grid-cols-2 gap-1.5 text-[10px] bg-indigo-950/70 p-2 rounded-lg border border-indigo-900/50 mb-3">
           <div>⚡ Planta: <strong class="text-white">${c.soporteVital?.plantaElectrica || 'N/A'}</strong></div>
           <div>💧 Agua: <strong class="text-white">${c.soporteVital?.suministroAgua || 'N/A'}</strong></div>
@@ -265,6 +323,9 @@ function actualizarMapaGeneral() {
         <div class="flex gap-1.5">
           <button onclick="window.editarCentro('${c.id}')" class="flex-1 py-2 bg-sky-500 hover:bg-sky-400 text-[#050814] font-black rounded-lg text-xs transition text-center shadow flex items-center justify-center gap-1">
             <span>📝 Realizar Registro / Diagnóstico</span>
+          </button>
+          <button onclick="window.calibrarEnMapa('${c.id}')" class="px-2.5 py-2 bg-[#1b134d] hover:bg-[#2b1f7d] text-amber-300 hover:text-amber-200 rounded-lg border border-amber-500/40 text-[10px] font-bold transition flex items-center justify-center gap-1" title="Ajustar y Calibrar Coordenadas Satelitales">
+            🎯 Calibrar
           </button>
           <button onclick="window.verFichaCentro('${c.id}')" class="px-2.5 py-2 bg-[#140e40] hover:bg-[#2d1f85] text-slate-300 hover:text-white rounded-lg border border-[#2d1f85] text-[10px] font-bold transition" title="Ver Ficha Imprimible">
             Ficha
@@ -580,7 +641,8 @@ function recopilarDatosFormulario() {
       cargo: document.getElementById('form-eval-cargo')?.value.trim() || 'Enlace de Salud y Sala de Mando',
       telefono: document.getElementById('form-eval-telefono')?.value.trim() || '',
       fecha: document.getElementById('form-eval-fecha')?.value || new Date().toISOString().split('T')[0]
-    }
+    },
+    precision: document.getElementById('form-precision')?.value || (state.precisionActual || 'sectorial')
   };
 
   centro.nivelRiesgo = calcularNivelRiesgo(centro);
@@ -629,8 +691,25 @@ function limpiarFormulario() {
   const fechaInput = document.getElementById('form-eval-fecha');
   if (fechaInput) fechaInput.value = new Date().toISOString().split('T')[0];
 
+  state.precisionActual = 'exacta';
+  const precInput = document.getElementById('form-precision');
+  if (precInput) precInput.value = 'exacta';
+  actualizarBadgePrecisionFormulario('exacta');
+
   state.modoEdicion = false;
   evaluarSemaforoEnVivo();
+}
+
+function calibrarEnMapa(id) {
+  editarCentro(id);
+  setTimeout(() => {
+    const mapWidget = document.getElementById('mapa-formulario');
+    if (mapWidget) {
+      mapWidget.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      mapWidget.classList.add('ring-4', 'ring-sky-400');
+      setTimeout(() => mapWidget.classList.remove('ring-4', 'ring-sky-400'), 3000);
+    }
+  }, 250);
 }
 
 function editarCentro(id) {
@@ -642,6 +721,11 @@ function editarCentro(id) {
 
   document.getElementById('form-centro-id').value = centro.id;
   document.getElementById('form-nombre-centro').value = centro.nombre;
+
+  state.precisionActual = centro.precision || 'sectorial';
+  const precInput = document.getElementById('form-precision');
+  if (precInput) precInput.value = state.precisionActual;
+  actualizarBadgePrecisionFormulario(state.precisionActual);
 
   const selMun = document.getElementById('form-municipio');
   if (selMun) {
@@ -666,9 +750,9 @@ function editarCentro(id) {
 
   if (centro.lat && centro.lng && state.mapaFormulario) {
     const pos = [centro.lat, centro.lng];
-    state.mapaFormulario.setView(pos, 15);
+    state.mapaFormulario.setView(pos, 16);
     state.marcadorFormulario.setLatLng(pos);
-    actualizarCoordenadasInputs(pos[0], pos[1]);
+    actualizarCoordenadasInputs(pos[0], pos[1], false);
   }
 
   const radioRed = document.querySelector(`input[name="tipoRed"][value="${centro.tipoRed}"]`);
@@ -1504,6 +1588,7 @@ window.verFichaCentro = (id) => {
   if (centro) renderFichaImprimible(centro);
 };
 window.editarCentro = editarCentro;
+window.calibrarEnMapa = calibrarEnMapa;
 window.eliminarCentro = eliminarCentro;
 window.imprimirFichaActual = () => {
   window.print();

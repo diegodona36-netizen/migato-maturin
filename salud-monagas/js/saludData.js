@@ -808,9 +808,9 @@ const CENTROS_SALUD_INICIALES = [
     "municipio": "Municipio Maturín",
     "parroquiaId": "san-simon",
     "parroquia": "San Simón (Casco Central)",
-    "sector": "Av. Bicentenario / Casco Central",
-    "lat": 9.7483,
-    "lng": -63.1785,
+    "sector": "Av. Bicentenario / Casco Urbano",
+    "lat": 9.74127,
+    "lng": -63.20032,
     "tipoRed": "hospitalaria",
     "tipoRedLabel": "Red Hospitalaria Especializada (Tipo I, II, III, IV)",
     "clasificacionEspecifica": "Hospital Tipo IV",
@@ -864,7 +864,8 @@ const CENTROS_SALUD_INICIALES = [
       "telefono": "0414-7654321",
       "fecha": "2026-09-10"
     },
-    "nivelRiesgo": "amarillo"
+    "nivelRiesgo": "amarillo",
+    "precision": "exacta"
   },
   {
     "id": "hosp-simon-bolivar",
@@ -873,9 +874,9 @@ const CENTROS_SALUD_INICIALES = [
     "municipio": "Municipio Maturín",
     "parroquiaId": "santa-cruz",
     "parroquia": "Santa Cruz (La Cruz)",
-    "sector": "La Cruz / Entrada Los Ángeles",
-    "lat": 9.7612,
-    "lng": -63.2215,
+    "sector": "La Cruz / Entrada Principal",
+    "lat": 9.72687,
+    "lng": -63.25384,
     "tipoRed": "hospitalaria",
     "tipoRedLabel": "Red Hospitalaria Especializada (Tipo I, II, III, IV)",
     "clasificacionEspecifica": "Hospital Tipo II",
@@ -926,7 +927,8 @@ const CENTROS_SALUD_INICIALES = [
       "telefono": "0412-8877665",
       "fecha": "2026-09-11"
     },
-    "nivelRiesgo": "rojo"
+    "nivelRiesgo": "rojo",
+    "precision": "exacta"
   },
   {
     "id": "hosp-felicia-rondon",
@@ -935,9 +937,9 @@ const CENTROS_SALUD_INICIALES = [
     "municipio": "Municipio Maturín",
     "parroquiaId": "el-furrial",
     "parroquia": "El Furrial",
-    "sector": "El Furrial Centro / Troncal 13",
-    "lat": 9.715,
-    "lng": -63.472,
+    "sector": "El Furrial / Carretera Nacional",
+    "lat": 9.70295,
+    "lng": -63.48398,
     "tipoRed": "hospitalaria",
     "tipoRedLabel": "Red Hospitalaria Especializada (Tipo I, II, III, IV)",
     "clasificacionEspecifica": "Hospital Tipo II",
@@ -978,7 +980,8 @@ const CENTROS_SALUD_INICIALES = [
       "telefono": "0414-9988776",
       "fecha": "2026-09-09"
     },
-    "nivelRiesgo": "verde"
+    "nivelRiesgo": "verde",
+    "precision": "exacta"
   },
   {
     "id": "hosp-serres-las-cocuizas",
@@ -987,9 +990,9 @@ const CENTROS_SALUD_INICIALES = [
     "municipio": "Municipio Maturín",
     "parroquiaId": "las-cocuizas",
     "parroquia": "Las Cocuizas",
-    "sector": "Las Cocuizas / Av. El Milagro",
-    "lat": 9.768,
-    "lng": -63.149,
+    "sector": "Las Cocuizas / Av. Principal",
+    "lat": 9.76416,
+    "lng": -63.15007,
     "tipoRed": "hospitalaria",
     "tipoRedLabel": "Red Hospitalaria Especializada (Tipo I, II, III, IV)",
     "clasificacionEspecifica": "Hospital Tipo I",
@@ -1036,7 +1039,8 @@ const CENTROS_SALUD_INICIALES = [
       "telefono": "0416-3322110",
       "fecha": "2026-09-08"
     },
-    "nivelRiesgo": "amarillo"
+    "nivelRiesgo": "amarillo",
+    "precision": "exacta"
   },
   {
     "id": "hosp-psiquiatrico-maturin",
@@ -1093,7 +1097,8 @@ const CENTROS_SALUD_INICIALES = [
       "telefono": "0414-7788990",
       "fecha": "2026-09-07"
     },
-    "nivelRiesgo": "amarillo"
+    "nivelRiesgo": "amarillo",
+    "precision": "sectorial"
   },
   {
     "id": "hosp-punta-de-mata",
@@ -1102,9 +1107,9 @@ const CENTROS_SALUD_INICIALES = [
     "municipio": "Municipio Ezequiel Zamora",
     "parroquiaId": "punta-de-mata",
     "parroquia": "Punta de Mata",
-    "sector": "Av. Bolívar / Casco Urbano",
-    "lat": 9.691,
-    "lng": -63.535,
+    "sector": "Punta de Mata / Casco Central",
+    "lat": 9.69359,
+    "lng": -63.62065,
     "tipoRed": "hospitalaria",
     "tipoRedLabel": "Red Hospitalaria Especializada (Tipo I, II, III, IV)",
     "clasificacionEspecifica": "Hospital Tipo I",
@@ -1156,7 +1161,8 @@ const CENTROS_SALUD_INICIALES = [
       "telefono": "0424-9123847",
       "fecha": "2026-09-10"
     },
-    "nivelRiesgo": "rojo"
+    "nivelRiesgo": "rojo",
+    "precision": "exacta"
   },
   {
     "id": "hosp-caripito",
@@ -1165,9 +1171,9 @@ const CENTROS_SALUD_INICIALES = [
     "municipio": "Municipio Bolívar",
     "parroquiaId": "caripito",
     "parroquia": "Caripito",
-    "sector": "Sector Caripe Viejo / Av. Madariaga",
-    "lat": 10.052,
-    "lng": -63.098,
+    "sector": "Sector Madariaga / Caripe Viejo",
+    "lat": 10.11239,
+    "lng": -63.10344,
     "tipoRed": "hospitalaria",
     "tipoRedLabel": "Red Hospitalaria Especializada (Tipo I, II, III, IV)",
     "clasificacionEspecifica": "Hospital Tipo I",
@@ -1212,7 +1218,8 @@ const CENTROS_SALUD_INICIALES = [
       "telefono": "0416-5544332",
       "fecha": "2026-09-09"
     },
-    "nivelRiesgo": "verde"
+    "nivelRiesgo": "verde",
+    "precision": "exacta"
   },
   {
     "id": "hosp-caripe",
@@ -1222,8 +1229,8 @@ const CENTROS_SALUD_INICIALES = [
     "parroquiaId": "caripe-centro",
     "parroquia": "Caripe",
     "sector": "Caripe Centro / El Mirador",
-    "lat": 10.174,
-    "lng": -63.498,
+    "lat": 10.17321,
+    "lng": -63.50057,
     "tipoRed": "hospitalaria",
     "tipoRedLabel": "Red Hospitalaria Especializada (Tipo I, II, III, IV)",
     "clasificacionEspecifica": "Hospital Tipo I",
@@ -1269,7 +1276,8 @@ const CENTROS_SALUD_INICIALES = [
       "telefono": "0424-7766554",
       "fecha": "2026-09-08"
     },
-    "nivelRiesgo": "verde"
+    "nivelRiesgo": "verde",
+    "precision": "exacta"
   },
   {
     "id": "hosp-caicara",
@@ -1278,9 +1286,9 @@ const CENTROS_SALUD_INICIALES = [
     "municipio": "Municipio Cedeño",
     "parroquiaId": "caicara",
     "parroquia": "Caicara (Capital Cedeño)",
-    "sector": "Caicara Centro / Calle Cedeño",
-    "lat": 9.818,
-    "lng": -63.618,
+    "sector": "Caicara de Maturín Centro",
+    "lat": 9.81711,
+    "lng": -63.61252,
     "tipoRed": "hospitalaria",
     "tipoRedLabel": "Red Hospitalaria Especializada (Tipo I, II, III, IV)",
     "clasificacionEspecifica": "Hospital Tipo I",
@@ -1325,7 +1333,8 @@ const CENTROS_SALUD_INICIALES = [
       "telefono": "0414-8877112",
       "fecha": "2026-09-09"
     },
-    "nivelRiesgo": "verde"
+    "nivelRiesgo": "verde",
+    "precision": "exacta"
   },
   {
     "id": "hosp-san-antonio",
@@ -1334,9 +1343,9 @@ const CENTROS_SALUD_INICIALES = [
     "municipio": "Municipio Acosta",
     "parroquiaId": "san-antonio",
     "parroquia": "San Antonio de Maturín (Capayacuar)",
-    "sector": "San Antonio Centro / Entrada Principal",
-    "lat": 10.045,
-    "lng": -63.705,
+    "sector": "San Antonio de Capayacuar",
+    "lat": 10.1209,
+    "lng": -63.72688,
     "tipoRed": "hospitalaria",
     "tipoRedLabel": "Red Hospitalaria Especializada (Tipo I, II, III, IV)",
     "clasificacionEspecifica": "Hospital Tipo I",
@@ -1379,7 +1388,8 @@ const CENTROS_SALUD_INICIALES = [
       "telefono": "0426-3344556",
       "fecha": "2026-09-08"
     },
-    "nivelRiesgo": "verde"
+    "nivelRiesgo": "verde",
+    "precision": "exacta"
   },
   {
     "id": "hosp-quiriquire",
@@ -1388,9 +1398,9 @@ const CENTROS_SALUD_INICIALES = [
     "municipio": "Municipio Punceres",
     "parroquiaId": "quiriquire",
     "parroquia": "Quiriquire",
-    "sector": "Quiriquire Centro / Av. Principal",
-    "lat": 9.978,
-    "lng": -63.218,
+    "sector": "Quiriquire Centro",
+    "lat": 9.97817,
+    "lng": -63.21986,
     "tipoRed": "hospitalaria",
     "tipoRedLabel": "Red Hospitalaria Especializada (Tipo I, II, III, IV)",
     "clasificacionEspecifica": "Hospital Tipo I",
@@ -1440,7 +1450,8 @@ const CENTROS_SALUD_INICIALES = [
       "telefono": "0412-6677889",
       "fecha": "2026-09-10"
     },
-    "nivelRiesgo": "rojo"
+    "nivelRiesgo": "rojo",
+    "precision": "exacta"
   },
   {
     "id": "hosp-temblador",
@@ -1449,9 +1460,9 @@ const CENTROS_SALUD_INICIALES = [
     "municipio": "Municipio Libertador",
     "parroquiaId": "temblador",
     "parroquia": "Temblador",
-    "sector": "Temblador Centro / Av. Francisco de Miranda",
-    "lat": 9.012,
-    "lng": -62.715,
+    "sector": "Temblador Centro",
+    "lat": 9.00762,
+    "lng": -62.64,
     "tipoRed": "hospitalaria",
     "tipoRedLabel": "Red Hospitalaria Especializada (Tipo I, II, III, IV)",
     "clasificacionEspecifica": "Hospital Tipo I",
@@ -1496,7 +1507,8 @@ const CENTROS_SALUD_INICIALES = [
       "telefono": "0414-9900112",
       "fecha": "2026-09-09"
     },
-    "nivelRiesgo": "amarillo"
+    "nivelRiesgo": "amarillo",
+    "precision": "exacta"
   },
   {
     "id": "hosp-barrancas",
@@ -1505,9 +1517,9 @@ const CENTROS_SALUD_INICIALES = [
     "municipio": "Municipio Sotillo",
     "parroquiaId": "barrancas",
     "parroquia": "Barrancas del Orinoco",
-    "sector": "Barrancas Centro / Ribera del Orinoco",
-    "lat": 8.704,
-    "lng": -62.185,
+    "sector": "Barrancas del Orinoco / Ribera",
+    "lat": 8.70174,
+    "lng": -62.19669,
     "tipoRed": "hospitalaria",
     "tipoRedLabel": "Red Hospitalaria Especializada (Tipo I, II, III, IV)",
     "clasificacionEspecifica": "Hospital Tipo I",
@@ -1552,7 +1564,8 @@ const CENTROS_SALUD_INICIALES = [
       "telefono": "0424-8899770",
       "fecha": "2026-09-08"
     },
-    "nivelRiesgo": "amarillo"
+    "nivelRiesgo": "amarillo",
+    "precision": "exacta"
   },
   {
     "id": "hosp-aguasay",
@@ -1561,9 +1574,9 @@ const CENTROS_SALUD_INICIALES = [
     "municipio": "Municipio Aguasay",
     "parroquiaId": "aguasay-centro",
     "parroquia": "Aguasay",
-    "sector": "Aguasay Centro / Calle Bolívar",
-    "lat": 9.421,
-    "lng": -63.742,
+    "sector": "Aguasay Centro",
+    "lat": 9.42462,
+    "lng": -63.74397,
     "tipoRed": "hospitalaria",
     "tipoRedLabel": "Red Hospitalaria Especializada (Tipo I, II, III, IV)",
     "clasificacionEspecifica": "Hospital Tipo I",
@@ -1604,7 +1617,8 @@ const CENTROS_SALUD_INICIALES = [
       "telefono": "0416-4455667",
       "fecha": "2026-09-09"
     },
-    "nivelRiesgo": "verde"
+    "nivelRiesgo": "verde",
+    "precision": "exacta"
   },
   {
     "id": "hosp-santa-barbara",
@@ -1613,9 +1627,9 @@ const CENTROS_SALUD_INICIALES = [
     "municipio": "Municipio Santa Bárbara",
     "parroquiaId": "santa-barbara-centro",
     "parroquia": "Santa Bárbara",
-    "sector": "Santa Bárbara Centro / Av. Principal",
-    "lat": 9.585,
-    "lng": -63.615,
+    "sector": "Santa Bárbara Centro",
+    "lat": 9.60753,
+    "lng": -63.61041,
     "tipoRed": "hospitalaria",
     "tipoRedLabel": "Red Hospitalaria Especializada (Tipo I, II, III, IV)",
     "clasificacionEspecifica": "Hospital Tipo I",
@@ -1656,7 +1670,8 @@ const CENTROS_SALUD_INICIALES = [
       "telefono": "0414-3322445",
       "fecha": "2026-09-08"
     },
-    "nivelRiesgo": "verde"
+    "nivelRiesgo": "verde",
+    "precision": "exacta"
   },
   {
     "id": "hosp-uracoa",
@@ -1715,7 +1730,8 @@ const CENTROS_SALUD_INICIALES = [
       "telefono": "0424-5566778",
       "fecha": "2026-09-09"
     },
-    "nivelRiesgo": "rojo"
+    "nivelRiesgo": "rojo",
+    "precision": "sectorial"
   },
   {
     "id": "hosp-aragua-maturin",
@@ -1769,7 +1785,8 @@ const CENTROS_SALUD_INICIALES = [
       "telefono": "0416-9900881",
       "fecha": "2026-09-08"
     },
-    "nivelRiesgo": "verde"
+    "nivelRiesgo": "verde",
+    "precision": "sectorial"
   },
   {
     "id": "cdi-los-godos",
@@ -1820,7 +1837,8 @@ const CENTROS_SALUD_INICIALES = [
       "telefono": "0414-0011223",
       "fecha": "2026-09-10"
     },
-    "nivelRiesgo": "verde"
+    "nivelRiesgo": "verde",
+    "precision": "sectorial"
   },
   {
     "id": "cdi-carmelo-regardiz",
@@ -1871,7 +1889,8 @@ const CENTROS_SALUD_INICIALES = [
       "telefono": "0414-0011223",
       "fecha": "2026-09-10"
     },
-    "nivelRiesgo": "verde"
+    "nivelRiesgo": "verde",
+    "precision": "sectorial"
   },
   {
     "id": "cdi-23-de-enero",
@@ -1880,9 +1899,9 @@ const CENTROS_SALUD_INICIALES = [
     "municipio": "Municipio Maturín",
     "parroquiaId": "san-simon",
     "parroquia": "San Simón (Casco Central)",
-    "sector": "Sector 23 de Enero",
-    "lat": 9.754,
-    "lng": -63.188,
+    "sector": "Sector 23 de Enero / Calle Bolívar",
+    "lat": 9.73991,
+    "lng": -63.18135,
     "tipoRed": "comunal",
     "tipoRedLabel": "Red Comunal / Barrio Adentro (CPT, CDI, SRI, CAT)",
     "clasificacionEspecifica": "Centro de Diagnóstico Integral (CDI)",
@@ -1922,7 +1941,8 @@ const CENTROS_SALUD_INICIALES = [
       "telefono": "0414-0011223",
       "fecha": "2026-09-10"
     },
-    "nivelRiesgo": "verde"
+    "nivelRiesgo": "verde",
+    "precision": "exacta"
   },
   {
     "id": "cdi-boqueron",
@@ -1973,7 +1993,8 @@ const CENTROS_SALUD_INICIALES = [
       "telefono": "0414-0011223",
       "fecha": "2026-09-10"
     },
-    "nivelRiesgo": "verde"
+    "nivelRiesgo": "verde",
+    "precision": "sectorial"
   },
   {
     "id": "cdi-los-cortijos",
@@ -2024,7 +2045,8 @@ const CENTROS_SALUD_INICIALES = [
       "telefono": "0414-0011223",
       "fecha": "2026-09-10"
     },
-    "nivelRiesgo": "amarillo"
+    "nivelRiesgo": "amarillo",
+    "precision": "sectorial"
   },
   {
     "id": "cdi-viento-colao",
@@ -2079,7 +2101,8 @@ const CENTROS_SALUD_INICIALES = [
       "telefono": "0414-0011223",
       "fecha": "2026-09-10"
     },
-    "nivelRiesgo": "rojo"
+    "nivelRiesgo": "rojo",
+    "precision": "sectorial"
   },
   {
     "id": "cdi-la-pica",
@@ -2130,7 +2153,8 @@ const CENTROS_SALUD_INICIALES = [
       "telefono": "0414-0011223",
       "fecha": "2026-09-10"
     },
-    "nivelRiesgo": "amarillo"
+    "nivelRiesgo": "amarillo",
+    "precision": "sectorial"
   },
   {
     "id": "cdi-el-furrial",
@@ -2181,7 +2205,8 @@ const CENTROS_SALUD_INICIALES = [
       "telefono": "0414-0011223",
       "fecha": "2026-09-10"
     },
-    "nivelRiesgo": "verde"
+    "nivelRiesgo": "verde",
+    "precision": "sectorial"
   },
   {
     "id": "cdi-jusepin",
@@ -2190,9 +2215,9 @@ const CENTROS_SALUD_INICIALES = [
     "municipio": "Municipio Maturín",
     "parroquiaId": "jusepin",
     "parroquia": "Jusepín",
-    "sector": "Jusepín Centro / Campo Médico",
-    "lat": 9.748,
-    "lng": -63.502,
+    "sector": "Jusepín / Campo Médico",
+    "lat": 9.75499,
+    "lng": -63.46464,
     "tipoRed": "comunal",
     "tipoRedLabel": "Red Comunal / Barrio Adentro (CPT, CDI, SRI, CAT)",
     "clasificacionEspecifica": "Centro de Diagnóstico Integral (CDI)",
@@ -2232,7 +2257,8 @@ const CENTROS_SALUD_INICIALES = [
       "telefono": "0414-0011223",
       "fecha": "2026-09-10"
     },
-    "nivelRiesgo": "amarillo"
+    "nivelRiesgo": "amarillo",
+    "precision": "exacta"
   },
   {
     "id": "cdi-san-vicente",
@@ -2283,7 +2309,8 @@ const CENTROS_SALUD_INICIALES = [
       "telefono": "0414-0011223",
       "fecha": "2026-09-10"
     },
-    "nivelRiesgo": "amarillo"
+    "nivelRiesgo": "amarillo",
+    "precision": "sectorial"
   },
   {
     "id": "cdi-el-corozo",
@@ -2338,7 +2365,8 @@ const CENTROS_SALUD_INICIALES = [
       "telefono": "0414-0011223",
       "fecha": "2026-09-10"
     },
-    "nivelRiesgo": "rojo"
+    "nivelRiesgo": "rojo",
+    "precision": "sectorial"
   },
   {
     "id": "cdi-punta-de-mata",
@@ -2347,9 +2375,9 @@ const CENTROS_SALUD_INICIALES = [
     "municipio": "Municipio Ezequiel Zamora",
     "parroquiaId": "punta-de-mata",
     "parroquia": "Punta de Mata",
-    "sector": "Punta de Mata Sur",
-    "lat": 9.715,
-    "lng": -63.628,
+    "sector": "Punta de Mata / Medicatura",
+    "lat": 9.69646,
+    "lng": -63.61156,
     "tipoRed": "comunal",
     "tipoRedLabel": "Red Comunal / Barrio Adentro (CPT, CDI, SRI, CAT)",
     "clasificacionEspecifica": "Centro de Diagnóstico Integral (CDI)",
@@ -2389,7 +2417,8 @@ const CENTROS_SALUD_INICIALES = [
       "telefono": "0414-0011223",
       "fecha": "2026-09-10"
     },
-    "nivelRiesgo": "amarillo"
+    "nivelRiesgo": "amarillo",
+    "precision": "exacta"
   },
   {
     "id": "cdi-el-tejero",
@@ -2398,9 +2427,9 @@ const CENTROS_SALUD_INICIALES = [
     "municipio": "Municipio Ezequiel Zamora",
     "parroquiaId": "el-tejero",
     "parroquia": "El Tejero",
-    "sector": "El Tejero Centro",
-    "lat": 9.685,
-    "lng": -63.535,
+    "sector": "El Tejero / Medicatura Rural",
+    "lat": 9.77129,
+    "lng": -63.67517,
     "tipoRed": "comunal",
     "tipoRedLabel": "Red Comunal / Barrio Adentro (CPT, CDI, SRI, CAT)",
     "clasificacionEspecifica": "Centro de Diagnóstico Integral (CDI)",
@@ -2440,7 +2469,8 @@ const CENTROS_SALUD_INICIALES = [
       "telefono": "0414-0011223",
       "fecha": "2026-09-10"
     },
-    "nivelRiesgo": "verde"
+    "nivelRiesgo": "verde",
+    "precision": "exacta"
   },
   {
     "id": "cdi-caripito",
@@ -2491,7 +2521,8 @@ const CENTROS_SALUD_INICIALES = [
       "telefono": "0414-0011223",
       "fecha": "2026-09-10"
     },
-    "nivelRiesgo": "verde"
+    "nivelRiesgo": "verde",
+    "precision": "sectorial"
   },
   {
     "id": "cdi-caripe",
@@ -2542,7 +2573,8 @@ const CENTROS_SALUD_INICIALES = [
       "telefono": "0414-0011223",
       "fecha": "2026-09-10"
     },
-    "nivelRiesgo": "verde"
+    "nivelRiesgo": "verde",
+    "precision": "sectorial"
   },
   {
     "id": "cdi-caicara",
@@ -2593,7 +2625,8 @@ const CENTROS_SALUD_INICIALES = [
       "telefono": "0414-0011223",
       "fecha": "2026-09-10"
     },
-    "nivelRiesgo": "verde"
+    "nivelRiesgo": "verde",
+    "precision": "sectorial"
   },
   {
     "id": "cdi-aragua",
@@ -2644,7 +2677,8 @@ const CENTROS_SALUD_INICIALES = [
       "telefono": "0414-0011223",
       "fecha": "2026-09-10"
     },
-    "nivelRiesgo": "verde"
+    "nivelRiesgo": "verde",
+    "precision": "sectorial"
   },
   {
     "id": "cdi-san-antonio",
@@ -2695,7 +2729,8 @@ const CENTROS_SALUD_INICIALES = [
       "telefono": "0414-0011223",
       "fecha": "2026-09-10"
     },
-    "nivelRiesgo": "verde"
+    "nivelRiesgo": "verde",
+    "precision": "sectorial"
   },
   {
     "id": "cdi-quiriquire",
@@ -2746,7 +2781,8 @@ const CENTROS_SALUD_INICIALES = [
       "telefono": "0414-0011223",
       "fecha": "2026-09-10"
     },
-    "nivelRiesgo": "amarillo"
+    "nivelRiesgo": "amarillo",
+    "precision": "sectorial"
   },
   {
     "id": "cdi-temblador",
@@ -2797,7 +2833,8 @@ const CENTROS_SALUD_INICIALES = [
       "telefono": "0414-0011223",
       "fecha": "2026-09-10"
     },
-    "nivelRiesgo": "amarillo"
+    "nivelRiesgo": "amarillo",
+    "precision": "sectorial"
   },
   {
     "id": "cdi-barrancas",
@@ -2806,9 +2843,9 @@ const CENTROS_SALUD_INICIALES = [
     "municipio": "Municipio Sotillo",
     "parroquiaId": "barrancas",
     "parroquia": "Barrancas",
-    "sector": "Barrancas / Av. Guayana",
-    "lat": 8.705,
-    "lng": -62.185,
+    "sector": "Barrancas del Orinoco",
+    "lat": 8.69745,
+    "lng": -62.1891,
     "tipoRed": "comunal",
     "tipoRedLabel": "Red Comunal / Barrio Adentro (CPT, CDI, SRI, CAT)",
     "clasificacionEspecifica": "Centro de Diagnóstico Integral (CDI)",
@@ -2848,7 +2885,8 @@ const CENTROS_SALUD_INICIALES = [
       "telefono": "0414-0011223",
       "fecha": "2026-09-10"
     },
-    "nivelRiesgo": "amarillo"
+    "nivelRiesgo": "amarillo",
+    "precision": "exacta"
   },
   {
     "id": "cdi-aguasay",
@@ -2857,9 +2895,9 @@ const CENTROS_SALUD_INICIALES = [
     "municipio": "Municipio Aguasay",
     "parroquiaId": "aguasay-centro",
     "parroquia": "Aguasay",
-    "sector": "Aguasay / Sector La Plaza",
-    "lat": 9.425,
-    "lng": -63.815,
+    "sector": "Aguasay",
+    "lat": 9.42132,
+    "lng": -63.73059,
     "tipoRed": "comunal",
     "tipoRedLabel": "Red Comunal / Barrio Adentro (CPT, CDI, SRI, CAT)",
     "clasificacionEspecifica": "Centro de Diagnóstico Integral (CDI)",
@@ -2899,7 +2937,8 @@ const CENTROS_SALUD_INICIALES = [
       "telefono": "0414-0011223",
       "fecha": "2026-09-10"
     },
-    "nivelRiesgo": "verde"
+    "nivelRiesgo": "verde",
+    "precision": "exacta"
   },
   {
     "id": "cdi-santa-barbara",
@@ -2950,7 +2989,8 @@ const CENTROS_SALUD_INICIALES = [
       "telefono": "0414-0011223",
       "fecha": "2026-09-10"
     },
-    "nivelRiesgo": "verde"
+    "nivelRiesgo": "verde",
+    "precision": "sectorial"
   },
   {
     "id": "sri-los-godos",
@@ -3000,7 +3040,8 @@ const CENTROS_SALUD_INICIALES = [
       "telefono": "0424-1122334",
       "fecha": "2026-09-10"
     },
-    "nivelRiesgo": "verde"
+    "nivelRiesgo": "verde",
+    "precision": "sectorial"
   },
   {
     "id": "sri-carmelo-regardiz",
@@ -3050,7 +3091,8 @@ const CENTROS_SALUD_INICIALES = [
       "telefono": "0424-1122334",
       "fecha": "2026-09-10"
     },
-    "nivelRiesgo": "verde"
+    "nivelRiesgo": "verde",
+    "precision": "sectorial"
   },
   {
     "id": "sri-23-de-enero",
@@ -3100,7 +3142,8 @@ const CENTROS_SALUD_INICIALES = [
       "telefono": "0424-1122334",
       "fecha": "2026-09-10"
     },
-    "nivelRiesgo": "verde"
+    "nivelRiesgo": "verde",
+    "precision": "sectorial"
   },
   {
     "id": "sri-boqueron",
@@ -3150,7 +3193,8 @@ const CENTROS_SALUD_INICIALES = [
       "telefono": "0424-1122334",
       "fecha": "2026-09-10"
     },
-    "nivelRiesgo": "verde"
+    "nivelRiesgo": "verde",
+    "precision": "sectorial"
   },
   {
     "id": "sri-la-pica",
@@ -3200,7 +3244,8 @@ const CENTROS_SALUD_INICIALES = [
       "telefono": "0424-1122334",
       "fecha": "2026-09-10"
     },
-    "nivelRiesgo": "amarillo"
+    "nivelRiesgo": "amarillo",
+    "precision": "sectorial"
   },
   {
     "id": "sri-el-furrial",
@@ -3250,7 +3295,8 @@ const CENTROS_SALUD_INICIALES = [
       "telefono": "0424-1122334",
       "fecha": "2026-09-10"
     },
-    "nivelRiesgo": "verde"
+    "nivelRiesgo": "verde",
+    "precision": "sectorial"
   },
   {
     "id": "sri-punta-de-mata",
@@ -3300,7 +3346,8 @@ const CENTROS_SALUD_INICIALES = [
       "telefono": "0424-1122334",
       "fecha": "2026-09-10"
     },
-    "nivelRiesgo": "amarillo"
+    "nivelRiesgo": "amarillo",
+    "precision": "sectorial"
   },
   {
     "id": "sri-caripito",
@@ -3350,7 +3397,8 @@ const CENTROS_SALUD_INICIALES = [
       "telefono": "0424-1122334",
       "fecha": "2026-09-10"
     },
-    "nivelRiesgo": "verde"
+    "nivelRiesgo": "verde",
+    "precision": "sectorial"
   },
   {
     "id": "sri-caripe",
@@ -3400,7 +3448,8 @@ const CENTROS_SALUD_INICIALES = [
       "telefono": "0424-1122334",
       "fecha": "2026-09-10"
     },
-    "nivelRiesgo": "verde"
+    "nivelRiesgo": "verde",
+    "precision": "sectorial"
   },
   {
     "id": "sri-caicara",
@@ -3450,7 +3499,8 @@ const CENTROS_SALUD_INICIALES = [
       "telefono": "0424-1122334",
       "fecha": "2026-09-10"
     },
-    "nivelRiesgo": "verde"
+    "nivelRiesgo": "verde",
+    "precision": "sectorial"
   },
   {
     "id": "sri-aragua",
@@ -3500,7 +3550,8 @@ const CENTROS_SALUD_INICIALES = [
       "telefono": "0424-1122334",
       "fecha": "2026-09-10"
     },
-    "nivelRiesgo": "verde"
+    "nivelRiesgo": "verde",
+    "precision": "sectorial"
   },
   {
     "id": "sri-quiriquire",
@@ -3550,7 +3601,8 @@ const CENTROS_SALUD_INICIALES = [
       "telefono": "0424-1122334",
       "fecha": "2026-09-10"
     },
-    "nivelRiesgo": "amarillo"
+    "nivelRiesgo": "amarillo",
+    "precision": "sectorial"
   },
   {
     "id": "sri-temblador",
@@ -3600,7 +3652,8 @@ const CENTROS_SALUD_INICIALES = [
       "telefono": "0424-1122334",
       "fecha": "2026-09-10"
     },
-    "nivelRiesgo": "amarillo"
+    "nivelRiesgo": "amarillo",
+    "precision": "sectorial"
   },
   {
     "id": "sri-barrancas",
@@ -3650,7 +3703,8 @@ const CENTROS_SALUD_INICIALES = [
       "telefono": "0424-1122334",
       "fecha": "2026-09-10"
     },
-    "nivelRiesgo": "amarillo"
+    "nivelRiesgo": "amarillo",
+    "precision": "sectorial"
   },
   {
     "id": "sri-aguasay",
@@ -3700,7 +3754,8 @@ const CENTROS_SALUD_INICIALES = [
       "telefono": "0424-1122334",
       "fecha": "2026-09-10"
     },
-    "nivelRiesgo": "verde"
+    "nivelRiesgo": "verde",
+    "precision": "sectorial"
   },
   {
     "id": "sri-santa-barbara",
@@ -3750,7 +3805,8 @@ const CENTROS_SALUD_INICIALES = [
       "telefono": "0424-1122334",
       "fecha": "2026-09-10"
     },
-    "nivelRiesgo": "verde"
+    "nivelRiesgo": "verde",
+    "precision": "sectorial"
   },
   {
     "id": "amb-vargas",
@@ -3759,9 +3815,9 @@ const CENTROS_SALUD_INICIALES = [
     "municipio": "Municipio Maturín",
     "parroquiaId": "alto-de-los-godos",
     "parroquia": "Alto de Los Godos",
-    "sector": "Los Godos / Av. El Parque",
-    "lat": 9.731,
-    "lng": -63.201,
+    "sector": "Av. José María Vargas / Los Godos",
+    "lat": 9.71751,
+    "lng": -63.20721,
     "tipoRed": "ambulatoria",
     "tipoRedLabel": "Red Ambulatoria Especializada (Urbana / Rural)",
     "clasificacionEspecifica": "Amb. Urbano III",
@@ -3797,7 +3853,8 @@ const CENTROS_SALUD_INICIALES = [
       "telefono": "0424-9988112",
       "fecha": "2026-09-10"
     },
-    "nivelRiesgo": "verde"
+    "nivelRiesgo": "verde",
+    "precision": "exacta"
   },
   {
     "id": "amb-serres-padilla",
@@ -3844,7 +3901,8 @@ const CENTROS_SALUD_INICIALES = [
       "telefono": "0424-9988112",
       "fecha": "2026-09-10"
     },
-    "nivelRiesgo": "verde"
+    "nivelRiesgo": "verde",
+    "precision": "sectorial"
   },
   {
     "id": "amb-sabana-grande",
@@ -3854,8 +3912,8 @@ const CENTROS_SALUD_INICIALES = [
     "parroquiaId": "las-cocuizas",
     "parroquia": "Las Cocuizas",
     "sector": "Sabana Grande / Sector 1",
-    "lat": 9.775,
-    "lng": -63.138,
+    "lat": 9.75447,
+    "lng": -63.1319,
     "tipoRed": "ambulatoria",
     "tipoRedLabel": "Red Ambulatoria Especializada (Urbana / Rural)",
     "clasificacionEspecifica": "Amb. Urbano I",
@@ -3893,7 +3951,8 @@ const CENTROS_SALUD_INICIALES = [
       "telefono": "0424-9988112",
       "fecha": "2026-09-10"
     },
-    "nivelRiesgo": "amarillo"
+    "nivelRiesgo": "amarillo",
+    "precision": "exacta"
   },
   {
     "id": "amb-19-de-abril",
@@ -3942,7 +4001,8 @@ const CENTROS_SALUD_INICIALES = [
       "telefono": "0424-9988112",
       "fecha": "2026-09-10"
     },
-    "nivelRiesgo": "verde"
+    "nivelRiesgo": "verde",
+    "precision": "sectorial"
   },
   {
     "id": "amb-la-puente",
@@ -3951,9 +4011,9 @@ const CENTROS_SALUD_INICIALES = [
     "municipio": "Municipio Maturín",
     "parroquiaId": "alto-de-los-godos",
     "parroquia": "Alto de Los Godos",
-    "sector": "La Puente / Calle Principal",
-    "lat": 9.718,
-    "lng": -63.222,
+    "sector": "La Puente / Vía Principal",
+    "lat": 9.73312,
+    "lng": -63.23203,
     "tipoRed": "ambulatoria",
     "tipoRedLabel": "Red Ambulatoria Especializada (Urbana / Rural)",
     "clasificacionEspecifica": "Amb. Urbano I",
@@ -3991,7 +4051,8 @@ const CENTROS_SALUD_INICIALES = [
       "telefono": "0424-9988112",
       "fecha": "2026-09-10"
     },
-    "nivelRiesgo": "amarillo"
+    "nivelRiesgo": "amarillo",
+    "precision": "exacta"
   },
   {
     "id": "amb-fundemos",
@@ -4000,9 +4061,9 @@ const CENTROS_SALUD_INICIALES = [
     "municipio": "Municipio Maturín",
     "parroquiaId": "alto-de-los-godos",
     "parroquia": "Alto de Los Godos",
-    "sector": "Fundemos 1",
-    "lat": 9.724,
-    "lng": -63.211,
+    "sector": "Los Godos / Fundemos",
+    "lat": 9.72292,
+    "lng": -63.20686,
     "tipoRed": "ambulatoria",
     "tipoRedLabel": "Red Ambulatoria Especializada (Urbana / Rural)",
     "clasificacionEspecifica": "Amb. Urbano I",
@@ -4040,7 +4101,8 @@ const CENTROS_SALUD_INICIALES = [
       "telefono": "0424-9988112",
       "fecha": "2026-09-10"
     },
-    "nivelRiesgo": "verde"
+    "nivelRiesgo": "verde",
+    "precision": "exacta"
   },
   {
     "id": "amb-morichal",
@@ -4089,7 +4151,8 @@ const CENTROS_SALUD_INICIALES = [
       "telefono": "0424-9988112",
       "fecha": "2026-09-10"
     },
-    "nivelRiesgo": "verde"
+    "nivelRiesgo": "verde",
+    "precision": "sectorial"
   },
   {
     "id": "amb-tipuro",
@@ -4138,7 +4201,8 @@ const CENTROS_SALUD_INICIALES = [
       "telefono": "0424-9988112",
       "fecha": "2026-09-10"
     },
-    "nivelRiesgo": "verde"
+    "nivelRiesgo": "verde",
+    "precision": "sectorial"
   },
   {
     "id": "amb-palma-real",
@@ -4187,7 +4251,8 @@ const CENTROS_SALUD_INICIALES = [
       "telefono": "0424-9988112",
       "fecha": "2026-09-10"
     },
-    "nivelRiesgo": "verde"
+    "nivelRiesgo": "verde",
+    "precision": "sectorial"
   },
   {
     "id": "amb-costo-arriba",
@@ -4238,7 +4303,8 @@ const CENTROS_SALUD_INICIALES = [
       "telefono": "0424-9988112",
       "fecha": "2026-09-10"
     },
-    "nivelRiesgo": "amarillo"
+    "nivelRiesgo": "amarillo",
+    "precision": "sectorial"
   },
   {
     "id": "amb-viboral",
@@ -4287,7 +4353,8 @@ const CENTROS_SALUD_INICIALES = [
       "telefono": "0424-9988112",
       "fecha": "2026-09-10"
     },
-    "nivelRiesgo": "verde"
+    "nivelRiesgo": "verde",
+    "precision": "sectorial"
   },
   {
     "id": "amb-el-corozo",
@@ -4338,7 +4405,8 @@ const CENTROS_SALUD_INICIALES = [
       "telefono": "0424-9988112",
       "fecha": "2026-09-10"
     },
-    "nivelRiesgo": "rojo"
+    "nivelRiesgo": "rojo",
+    "precision": "sectorial"
   },
   {
     "id": "amb-san-vicente",
@@ -4387,7 +4455,8 @@ const CENTROS_SALUD_INICIALES = [
       "telefono": "0424-9988112",
       "fecha": "2026-09-10"
     },
-    "nivelRiesgo": "amarillo"
+    "nivelRiesgo": "amarillo",
+    "precision": "sectorial"
   },
   {
     "id": "amb-la-cruz",
@@ -4434,7 +4503,8 @@ const CENTROS_SALUD_INICIALES = [
       "telefono": "0424-9988112",
       "fecha": "2026-09-10"
     },
-    "nivelRiesgo": "verde"
+    "nivelRiesgo": "verde",
+    "precision": "sectorial"
   },
   {
     "id": "amb-san-simon-sur",
@@ -4485,7 +4555,8 @@ const CENTROS_SALUD_INICIALES = [
       "telefono": "0424-9988112",
       "fecha": "2026-09-10"
     },
-    "nivelRiesgo": "rojo"
+    "nivelRiesgo": "rojo",
+    "precision": "sectorial"
   },
   {
     "id": "amb-taguaya",
@@ -4534,7 +4605,8 @@ const CENTROS_SALUD_INICIALES = [
       "telefono": "0424-9988112",
       "fecha": "2026-09-10"
     },
-    "nivelRiesgo": "verde"
+    "nivelRiesgo": "verde",
+    "precision": "sectorial"
   },
   {
     "id": "amb-aparicio",
@@ -4583,7 +4655,8 @@ const CENTROS_SALUD_INICIALES = [
       "telefono": "0424-9988112",
       "fecha": "2026-09-10"
     },
-    "nivelRiesgo": "verde"
+    "nivelRiesgo": "verde",
+    "precision": "sectorial"
   },
   {
     "id": "amb-chaguaramal",
@@ -4632,7 +4705,8 @@ const CENTROS_SALUD_INICIALES = [
       "telefono": "0424-9988112",
       "fecha": "2026-09-10"
     },
-    "nivelRiesgo": "verde"
+    "nivelRiesgo": "verde",
+    "precision": "sectorial"
   },
   {
     "id": "amb-guanaguana",
@@ -4681,7 +4755,8 @@ const CENTROS_SALUD_INICIALES = [
       "telefono": "0424-9988112",
       "fecha": "2026-09-10"
     },
-    "nivelRiesgo": "verde"
+    "nivelRiesgo": "verde",
+    "precision": "sectorial"
   },
   {
     "id": "amb-la-toscana",
@@ -4728,7 +4803,8 @@ const CENTROS_SALUD_INICIALES = [
       "telefono": "0424-9988112",
       "fecha": "2026-09-10"
     },
-    "nivelRiesgo": "verde"
+    "nivelRiesgo": "verde",
+    "precision": "sectorial"
   },
   {
     "id": "amb-el-pinto",
@@ -4779,7 +4855,8 @@ const CENTROS_SALUD_INICIALES = [
       "telefono": "0424-9988112",
       "fecha": "2026-09-10"
     },
-    "nivelRiesgo": "amarillo"
+    "nivelRiesgo": "amarillo",
+    "precision": "sectorial"
   },
   {
     "id": "amb-areo",
@@ -4828,7 +4905,8 @@ const CENTROS_SALUD_INICIALES = [
       "telefono": "0424-9988112",
       "fecha": "2026-09-10"
     },
-    "nivelRiesgo": "verde"
+    "nivelRiesgo": "verde",
+    "precision": "sectorial"
   },
   {
     "id": "amb-viento-fresco",
@@ -4877,7 +4955,8 @@ const CENTROS_SALUD_INICIALES = [
       "telefono": "0424-9988112",
       "fecha": "2026-09-10"
     },
-    "nivelRiesgo": "verde"
+    "nivelRiesgo": "verde",
+    "precision": "sectorial"
   },
   {
     "id": "amb-teresen",
@@ -4926,7 +5005,8 @@ const CENTROS_SALUD_INICIALES = [
       "telefono": "0424-9988112",
       "fecha": "2026-09-10"
     },
-    "nivelRiesgo": "verde"
+    "nivelRiesgo": "verde",
+    "precision": "sectorial"
   },
   {
     "id": "amb-la-guanota",
@@ -4975,7 +5055,8 @@ const CENTROS_SALUD_INICIALES = [
       "telefono": "0424-9988112",
       "fecha": "2026-09-10"
     },
-    "nivelRiesgo": "verde"
+    "nivelRiesgo": "verde",
+    "precision": "sectorial"
   },
   {
     "id": "amb-san-francisco",
@@ -5024,7 +5105,8 @@ const CENTROS_SALUD_INICIALES = [
       "telefono": "0424-9988112",
       "fecha": "2026-09-10"
     },
-    "nivelRiesgo": "verde"
+    "nivelRiesgo": "verde",
+    "precision": "sectorial"
   },
   {
     "id": "amb-chaguaramas",
@@ -5073,7 +5155,8 @@ const CENTROS_SALUD_INICIALES = [
       "telefono": "0424-9988112",
       "fecha": "2026-09-10"
     },
-    "nivelRiesgo": "amarillo"
+    "nivelRiesgo": "amarillo",
+    "precision": "sectorial"
   },
   {
     "id": "amb-tabasca",
@@ -5124,7 +5207,8 @@ const CENTROS_SALUD_INICIALES = [
       "telefono": "0424-9988112",
       "fecha": "2026-09-10"
     },
-    "nivelRiesgo": "rojo"
+    "nivelRiesgo": "rojo",
+    "precision": "sectorial"
   }
 ];
 
