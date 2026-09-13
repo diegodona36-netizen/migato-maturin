@@ -2,15 +2,15 @@
  * Controlador Principal — Google Earth Pro Web (Edición Estado Monagas)
  * Robusto, 100% Operativo y Totalmente Individualizado
  */
-import { CATALOGO_MONAGAS, findParishInCatalog, PARISH_ALIAS_MAP, resolveParishId } from "./catalogoMonagas.js?v=145";
-import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=145";
-import { getAllParishesForSelector } from "./usersCatalog.js?v=145";
-import { EarthStore } from "./earthStore.js?v=145";
-import { EarthMapEngine } from "./mapEngine.js?v=145";
-import { PropertiesDialog } from "./propertiesDialog.js?v=145";
-import { ToolsManager } from "./toolsManager.js?v=145";
-import { detectParishFromGeometry, SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=145";
-import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=145";
+import { CATALOGO_MONAGAS, findParishInCatalog, PARISH_ALIAS_MAP, resolveParishId } from "./catalogoMonagas.js?v=146";
+import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=146";
+import { getAllParishesForSelector } from "./usersCatalog.js?v=146";
+import { EarthStore } from "./earthStore.js?v=146";
+import { EarthMapEngine } from "./mapEngine.js?v=146";
+import { PropertiesDialog } from "./propertiesDialog.js?v=146";
+import { ToolsManager } from "./toolsManager.js?v=146";
+import { detectParishFromGeometry, SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=146";
+import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=146";
 import { 
   getMunicipios, 
   getParroquiasByMun, 
@@ -515,8 +515,8 @@ class EarthMonagasApp {
         }
       }
 
-      // Mantener la ficha flotante oculta a menos que el usuario la abra
-      this.closeQuickStats();
+      // Mostrar la Ficha Flotante de Estadísticas con los datos reales de la parroquia
+      this.showQuickStats("parroquia", parish);
 
     } catch (err) {
       console.warn("[selectParish] Error controlado:", err);
@@ -605,6 +605,7 @@ class EarthMonagasApp {
     if (typeof this.mapEngine.updateHierarchicalLOD === "function") {
       this.mapEngine.updateHierarchicalLOD();
     }
+    this.showQuickStats("subparroquia", sp);
     this.updateTerritorialFocusUI();
     this.renderPlacesTree();
   }
@@ -612,7 +613,6 @@ class EarthMonagasApp {
   clearSubParishFocus() {
     this.activeSectorId = null;
     this.activeSubParroquiaId = null;
-    this.closeQuickStats();
     const parish = this.store ? this.store.getParish(this.selectedMunId, this.selectedParishId) : null;
     if (parish) {
       if (this.mapEngine) {
@@ -624,7 +624,10 @@ class EarthMonagasApp {
           this.handleMapItemSelection(type, item);
         });
       }
-      this.showToast(`↩ Vista y velo restablecidos a toda la parroquia: <strong>${parish.nombre}</strong>`, "sky");
+      this.showQuickStats("parroquia", parish);
+      this.showToast(`↩ Vista restablecida a toda la parroquia: <strong>${parish.nombre}</strong>`, "sky");
+    } else {
+      this.closeQuickStats();
     }
     if (typeof this.mapEngine?.updateHierarchicalLOD === "function") {
       this.mapEngine.updateHierarchicalLOD();
@@ -635,10 +638,12 @@ class EarthMonagasApp {
 
   clearSectorFocus(toSubParish = true) {
     this.activeSectorId = null;
-    this.closeQuickStats();
 
     const parish = this.store ? this.store.getParish(this.selectedMunId, this.selectedParishId) : null;
-    if (!parish) return;
+    if (!parish) {
+      this.closeQuickStats();
+      return;
+    }
 
     if (toSubParish && this.activeSubParroquiaId) {
       const sp = (parish.subparroquias || []).find(s => String(s.id) === String(this.activeSubParroquiaId));
@@ -658,6 +663,7 @@ class EarthMonagasApp {
         this.handleMapItemSelection(type, item);
       });
     }
+    this.showQuickStats("parroquia", parish);
     this.showToast(`↩ Enfoque restablecido a la Parroquia: <strong>${parish.nombre}</strong>`, "sky");
     this.updateTerritorialFocusUI();
     this.renderPlacesTree();
@@ -667,6 +673,7 @@ class EarthMonagasApp {
     if (!munId) munId = this.selectedMunId;
     if (!munId) return;
     this.selectedMunId = munId;
+    this.selectedParishId = null;
     this.activeSectorId = null;
     this.activeSubParroquiaId = null;
     this.closeQuickStats();
@@ -757,16 +764,24 @@ class EarthMonagasApp {
     const cleanMunNom = String(rawMunNom).replace(/^municipio\s+/i, "").trim();
     const displayMunName = `Municipio ${cleanMunNom}`;
     const parishCount = munObj?.parroquias?.length || 1;
-    const focusLevel = this.mapEngine?.activeFocusLevel || (this.activeSectorId ? "sector" : (this.activeSubParroquiaId ? "subparroquia" : (this.selectedParishId ? "parroquia" : (this.selectedMunId ? "municipio" : "estado"))));
+    // Jerarquía territorial determinista e infalible
+    const focusLevel = this.activeSectorId ? "sector" : 
+                       (this.activeSubParroquiaId ? "subparroquia" : 
+                       (this.selectedParishId ? "parroquia" : 
+                       (this.selectedMunId ? "municipio" : "estado")));
+
+    if (this.mapEngine) {
+      this.mapEngine.activeFocusLevel = focusLevel;
+    }
 
     if (!hud || !hudContent) return;
 
     hud.style.display = "flex";
 
     // 1. Nivel Sector Vecinal
-    if (this.activeSectorId && parish) {
+    if (focusLevel === "sector") {
       if (btnQuickBackMun) btnQuickBackMun.style.display = "flex";
-      const sec = (parish.poligonos || []).find(p => String(p.id) === String(this.activeSectorId));
+      const sec = (parish?.poligonos || []).find(p => String(p.id) === String(this.activeSectorId));
       const secName = sec?.nombre || "Sector Vecinal";
 
       hudContent.className = "flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-xl bg-[#140e40]/90 border border-amber-500/50 shadow-sm text-xs whitespace-nowrap overflow-hidden max-w-full";
@@ -775,7 +790,7 @@ class EarthMonagasApp {
         <span class="font-extrabold text-amber-200 text-xs truncate max-w-[130px] sm:max-w-[200px]" title="Sector: ${secName}">🏠 ${secName}</span>
         <button type="button" onclick="window.earthApp?.clearSectorFocus(false)"
           class="ml-1 px-2 py-0.5 rounded-lg bg-amber-500/20 hover:bg-amber-500/40 text-amber-200 hover:text-white font-bold text-[10px] flex items-center gap-0.5 border border-amber-500/40 transition active:scale-95 cursor-pointer shrink-0"
-          title="Volver a toda la parroquia ${parish.nombre}">
+          title="Volver a toda la parroquia">
           <span>✕ Salir</span>
         </button>
       `;
@@ -783,9 +798,9 @@ class EarthMonagasApp {
     }
 
     // 2. Nivel Sub-Parroquia / Eje Territorial
-    if (this.activeSubParroquiaId && parish) {
+    if (focusLevel === "subparroquia") {
       if (btnQuickBackMun) btnQuickBackMun.style.display = "flex";
-      const sp = (parish.subparroquias || []).find(s => String(s.id) === String(this.activeSubParroquiaId));
+      const sp = (parish?.subparroquias || []).find(s => String(s.id) === String(this.activeSubParroquiaId));
       const spName = sp?.nombre || "Eje Territorial";
 
       hudContent.className = "flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-xl bg-[#140e40]/90 border border-purple-500/50 shadow-sm text-xs whitespace-nowrap overflow-hidden max-w-full";
@@ -794,7 +809,7 @@ class EarthMonagasApp {
         <span class="font-extrabold text-purple-200 text-xs truncate max-w-[130px] sm:max-w-[200px]" title="Eje: ${spName}">🛡️ ${spName}</span>
         <button type="button" onclick="window.earthApp?.clearSubParishFocus()"
           class="ml-1 px-2 py-0.5 rounded-lg bg-purple-500/20 hover:bg-purple-500/40 text-purple-200 hover:text-white font-bold text-[10px] flex items-center gap-0.5 border border-purple-500/40 transition active:scale-95 cursor-pointer shrink-0"
-          title="Volver a toda la parroquia ${parish.nombre}">
+          title="Volver a toda la parroquia">
           <span>✕ Salir</span>
         </button>
       `;
@@ -802,7 +817,8 @@ class EarthMonagasApp {
     }
 
     // 3. Nivel Parroquia
-    if (focusLevel === "parroquia" && parish) {
+    if (focusLevel === "parroquia") {
+      const pNom = parish?.nombre || this.selectedParishId || "Parroquia";
       if (btnQuickBackMun) {
         btnQuickBackMun.style.display = "flex";
         btnQuickBackMun.title = `Volver a la vista del ${displayMunName}`;
@@ -810,7 +826,7 @@ class EarthMonagasApp {
       hudContent.className = "flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-xl bg-[#140e40]/90 border border-sky-500/50 shadow-sm text-xs whitespace-nowrap overflow-hidden max-w-full";
       hudContent.innerHTML = `
         <span class="w-2 h-2 rounded-full bg-sky-400 shrink-0 animate-pulse"></span>
-        <span class="font-black text-sky-200 text-xs truncate max-w-[140px] sm:max-w-[220px]" title="Parroquia: ${parish.nombre}">📍 ${parish.nombre}</span>
+        <span class="font-black text-sky-200 text-xs truncate max-w-[140px] sm:max-w-[220px]" title="Parroquia: ${pNom}">📍 ${pNom}</span>
         <button type="button" onclick="window.earthApp?.focusMunicipio('${this.selectedMunId}', true)" 
           class="ml-1 px-2 py-0.5 rounded-lg bg-indigo-500/20 hover:bg-indigo-500/40 text-indigo-200 hover:text-white font-bold text-[10px] flex items-center gap-0.5 border border-indigo-400/40 transition active:scale-95 cursor-pointer shrink-0"
           title="Regresar a todo el ${displayMunName}">
@@ -2400,6 +2416,7 @@ class EarthMonagasApp {
     const parish = this.store?.getParish(this.selectedMunId, this.selectedParishId);
     const sp = (parish?.subparroquias || []).find(s => String(s.id) === String(spId));
     if (sp) {
+      this.showQuickStats("subparroquia", sp);
       this.showToast(`🎯 Eje seleccionado: ${sp.nombre}`, "purple");
     }
   }

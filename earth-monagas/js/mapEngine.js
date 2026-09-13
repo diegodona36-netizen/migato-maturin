@@ -2,8 +2,8 @@
  * Motor Cartográfico Acelerado por GPU — Google Earth Pro Web (Monagas)
  * Integrado con Capas Jerárquicas Oficiales (INE 2021) y Edición de Vértices
  */
-import { GEO_ESTADO_OFICIAL, GEO_MUNICIPIOS_OFICIAL, GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=145";
-import { CATALOGO_MONAGAS, PARISH_ALIAS_MAP, resolveParishId } from "./catalogoMonagas.js?v=145";
+import { GEO_ESTADO_OFICIAL, GEO_MUNICIPIOS_OFICIAL, GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=146";
+import { CATALOGO_MONAGAS, PARISH_ALIAS_MAP, resolveParishId } from "./catalogoMonagas.js?v=146";
 
 export class EarthMapEngine {
   constructor(containerId, onCoordUpdate) {
@@ -91,6 +91,23 @@ export class EarthMapEngine {
       zoomControl: false,
       layers: [googleHybrid]
     });
+
+    // Panes dedicados para garantizar orden de apilamiento e interactividad perfecta
+    this.map.createPane("subParroquiasPane");
+    const spPane = this.map.getPane("subParroquiasPane");
+    if (spPane) spPane.style.zIndex = "405";
+
+    this.map.createPane("polygonsPane");
+    const polyPane = this.map.getPane("polygonsPane");
+    if (polyPane) polyPane.style.zIndex = "415";
+
+    this.map.createPane("routesPane");
+    const rPane = this.map.getPane("routesPane");
+    if (rPane) rPane.style.zIndex = "425";
+
+    this.map.createPane("placemarksPane");
+    const pPane = this.map.getPane("placemarksPane");
+    if (pPane) pPane.style.zIndex = "435";
 
     // Panel exclusivo para el Velo Blanco exterior (z-index 450, superior a todas las capas cartográficas)
     this.map.createPane("spotlightMaskPane");
@@ -249,23 +266,9 @@ export class EarthMapEngine {
               </span>
             </div>
             
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:5px; margin-bottom:6px; font-size:11px;">
-              <div style="background:rgba(15,23,42,0.65); padding:4px 6px; border-radius:6px; border:1px solid rgba(255,255,255,0.08);">
-                <span style="color:#94a3b8; font-size:9px; display:block; text-transform:uppercase; font-weight:600;">División</span>
-                <strong style="color:#f8fafc; font-size:11px;">13 Mun / 45 Par</strong>
-              </div>
-              <div style="background:rgba(15,23,42,0.65); padding:4px 6px; border-radius:6px; border:1px solid rgba(255,255,255,0.08);">
-                <span style="color:#94a3b8; font-size:9px; display:block; text-transform:uppercase; font-weight:600;">Población</span>
-                <strong style="color:#fbbf24; font-size:11px;">~1.028.000</strong>
-              </div>
-              <div style="background:rgba(15,23,42,0.65); padding:4px 6px; border-radius:6px; border:1px solid rgba(255,255,255,0.08);">
-                <span style="color:#94a3b8; font-size:9px; display:block; text-transform:uppercase; font-weight:600;">Centros CNE</span>
-                <strong style="color:#facc15; font-size:11px;">276 Centros</strong>
-              </div>
-              <div style="background:rgba(15,23,42,0.65); padding:4px 6px; border-radius:6px; border:1px solid rgba(255,255,255,0.08);">
-                <span style="color:#94a3b8; font-size:9px; display:block; text-transform:uppercase; font-weight:600;">Capital</span>
-                <strong style="color:#38bdf8; font-size:11px;">Maturín</strong>
-              </div>
+            <div style="font-size:10px; color:#cbd5e1; display:flex; align-items:center; justify-content:space-between; margin-bottom:4px;">
+              <span style="color:#94a3b8;">División: <strong style="color:#ffffff;">13 Municipios</strong></span>
+              <span style="color:#fbbf24; font-weight:700;">Capital: Maturín</span>
             </div>
 
             <div style="font-size:10px; color:#cbd5e1; border-top:1px dashed rgba(255,255,255,0.12); padding-top:4px; text-align:center;">
@@ -1182,12 +1185,13 @@ export class EarthMapEngine {
           const isFocused = String(window.earthApp?.activeSubParroquiaId || "") === String(sp.id || "");
 
           const spLayer = L.polygon(sp.vertices, {
+            pane: "subParroquiasPane",
             color: sp.colorBorde || "#c084fc",
             weight: isFocused ? 3.5 : (sp.anchoBorde || 2.5),
             opacity: 0.95,
             fillColor: sp.colorRelleno || "#a855f7",
             fill: true,
-            fillOpacity: isFocused ? 0.12 : 0.08,
+            fillOpacity: isFocused ? 0.08 : 0.03,
             dashArray: isFocused ? "8, 6" : "6, 4",
             interactive: !isDrawing,
             renderer: this.canvasRenderer
@@ -1294,6 +1298,7 @@ export class EarthMapEngine {
           if (poly.visible === false || rawCoords.length < 3) return;
 
           const pLayer = L.polygon(rawCoords, {
+            pane: "polygonsPane",
             color: poly.colorBorde || "#38bdf8",
             weight: poly.anchoBorde || (isActiveParish ? 2.5 : 2),
             opacity: isActiveParish ? 0.95 : 0.85,
@@ -1396,6 +1401,7 @@ export class EarthMapEngine {
         if (r.visible === false || !r.puntos || r.puntos.length < 2) return;
 
         const line = L.polyline(r.puntos, {
+          pane: "routesPane",
           color: r.color || "#10b981",
           weight: r.ancho || 4,
           opacity: isActiveParish ? 1 : 0.75,
