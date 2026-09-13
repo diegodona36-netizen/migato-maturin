@@ -38,7 +38,7 @@
   </script>
 
   <!-- Custom Stylesheet & Print Rules -->
-  <link rel="stylesheet" href="css/styles.css?v=169">
+  <link rel="stylesheet" href="css/styles.css?v=170">
 
   <!-- Pre-render theme and font preference without layout flash -->
   <script>
@@ -247,6 +247,59 @@
               <span class="text-[11px] font-mono text-slate-500">Estado: <strong class="text-slate-900">Monagas</strong> • Área: <strong class="text-blue-700">Salud</strong></span>
             </div>
 
+            <!-- MOTOR DE BÚSQUEDA Y AUTOCOMPLETADO INTELIGENTE DE CENTROS -->
+            <div class="bg-blue-50/80 border-2 border-blue-200 rounded-2xl p-3.5 space-y-2.5 relative">
+              <div class="flex flex-wrap items-center justify-between gap-2">
+                <label for="input-buscar-centro-form" class="text-xs font-bold text-blue-950 flex items-center gap-1.5">
+                  <span class="text-base">🏥</span>
+                  <span>Buscar centro existente para rellenar la ficha automáticamente:</span>
+                </label>
+                <button type="button" onclick="window.activarModoCentroNuevo()" id="btn-modo-centro-nuevo" 
+                        class="px-2.5 py-1 rounded-lg bg-white hover:bg-blue-100 border border-blue-400 text-blue-800 hover:text-blue-950 font-bold text-xs transition flex items-center gap-1 active:scale-95 shadow-xs" title="Crear y registrar un nuevo centro que no existe en el catálogo">
+                  <span>➕ Es un Centro Nuevo (No catalogado)</span>
+                </button>
+              </div>
+
+              <!-- Campo de Búsqueda Rápida -->
+              <div class="relative">
+                <i data-lucide="search" class="w-4 h-4 text-blue-600 absolute left-3 top-3 pointer-events-none"></i>
+                <input type="text" id="input-buscar-centro-form" 
+                       placeholder="Escriba el nombre del hospital, ambulatorio, CDI o parroquia (84 centros)..." 
+                       autocomplete="off"
+                       class="w-full pl-9 pr-9 py-2.5 text-xs sm:text-sm bg-white border border-blue-300 rounded-xl text-slate-900 placeholder-slate-400 focus:border-blue-600 focus:ring-2 focus:ring-blue-100 focus:outline-none font-bold shadow-xs transition">
+                <button type="button" id="btn-clear-buscar-centro-form" onclick="window.limpiarBuscadorCentroForm()" class="hidden absolute right-2.5 top-2.5 p-1 text-slate-400 hover:text-slate-700 rounded-md transition" title="Limpiar búsqueda">
+                  <i data-lucide="x" class="w-3.5 h-3.5"></i>
+                </button>
+
+                <!-- Menú flotante de resultados de búsqueda -->
+                <div id="dropdown-resultados-centro-form" class="hidden absolute left-0 right-0 top-full mt-1.5 z-50 bg-white border-2 border-blue-600 rounded-xl shadow-2xl max-h-64 overflow-y-auto divide-y divide-slate-100 text-slate-800">
+                  <!-- Llenado dinámicamente -->
+                </div>
+              </div>
+
+              <!-- Indicador de Centro Existente Cargado -->
+              <div id="badge-centro-cargado-info" class="hidden flex flex-wrap items-center justify-between gap-2 pt-1 text-xs bg-emerald-50 border border-emerald-300 px-3 py-2 rounded-xl">
+                <div class="flex items-center gap-2 min-w-0">
+                  <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse shrink-0"></span>
+                  <span class="text-emerald-950 font-bold truncate text-xs" id="texto-centro-cargado">Centro cargado: ...</span>
+                </div>
+                <div class="flex items-center gap-2 shrink-0">
+                  <span class="text-[10px] text-emerald-800 font-mono font-bold bg-emerald-100 px-2 py-0.5 rounded border border-emerald-300" id="texto-centro-cargado-id">ID: ...</span>
+                  <button type="button" onclick="window.activarModoCentroNuevo()" class="text-[11px] text-blue-700 hover:text-blue-900 font-bold hover:underline">
+                    Cambiar a Nuevo
+                  </button>
+                </div>
+              </div>
+
+              <!-- Banner cuando se activa Modo Centro Nuevo -->
+              <div id="badge-modo-nuevo-info" class="hidden flex items-center justify-between gap-2 pt-1 text-xs bg-amber-50 border border-amber-300 px-3 py-2 rounded-xl text-amber-900">
+                <div class="flex items-center gap-1.5 font-bold">
+                  <span>📝</span>
+                  <span>Modo Registro de Centro Nuevo: Seleccione Municipio, Parroquia y asigne el Nombre Oficial abajo.</span>
+                </div>
+              </div>
+            </div>
+
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
               
               <!-- Municipio -->
@@ -257,6 +310,17 @@
                 </label>
                 <select id="form-municipio" required class="w-full px-3 py-2 text-xs bg-white border border-slate-300 rounded-xl text-slate-900 font-medium focus:border-blue-600 focus:ring-2 focus:ring-blue-100 shadow-sm transition">
                   <option value="">Cargando municipios...</option>
+                </select>
+              </div>
+
+              <!-- Selector en Cascada: Centros de este Municipio -->
+              <div class="space-y-1">
+                <label class="text-xs font-bold text-slate-700 flex items-center justify-between">
+                  <span>Centros en este Municipio</span>
+                  <span id="label-conteo-centros-mun" class="text-[10px] text-blue-700 font-mono font-bold">[▼ Filtrar]</span>
+                </label>
+                <select id="form-select-centro-municipio" onchange="window.alSeleccionarCentroDeMunicipio(this.value)" class="w-full px-3 py-2 text-xs bg-white border border-slate-300 rounded-xl text-slate-900 font-medium focus:border-blue-600 focus:ring-2 focus:ring-blue-100 shadow-sm transition">
+                  <option value="">-- Seleccionar centro existente o registrar nuevo --</option>
                 </select>
               </div>
 
@@ -277,13 +341,13 @@
                   <span>Sector / Comunidad</span>
                   <span class="text-[10px] text-blue-700 font-mono">[▼ Cascada]</span>
                 </label>
-                <select id="form-sector" class="w-full px-3 py-2 text-xs bg-white border border-slate-300 rounded-xl text-slate-900 font-medium focus:border-blue-600 focus:ring-2 focus:ring-blue-100 shadow-sm transition">
+                <select id="form-sector" class="w-full px-3 py-2 text-xs bg-white border border-slate-300 rounded-xl text-slate-900 font-medium focus:border-blue-600 focus:outline-none transition">
                   <option value="">Seleccione Parroquia primero</option>
                 </select>
               </div>
 
               <!-- Sector Manual (Opcional) -->
-              <div id="custom-sector-container" class="hidden space-y-1">
+              <div id="custom-sector-container" class="hidden sm:col-span-2 space-y-1">
                 <label class="text-xs font-bold text-amber-800">Especificar Nombre del Sector:</label>
                 <input type="text" id="form-sector-custom" placeholder="Ej. Barrio Bolívar, Callejón 3" class="w-full px-3 py-2 text-xs bg-white border border-amber-400 rounded-xl text-slate-900 focus:border-blue-600 focus:outline-none transition">
               </div>
@@ -766,36 +830,44 @@
         </div>
 
         <!-- TARJETA FLOTANTE INFERIOR GOOGLE MAPS (Aparece inmediatamente al tocar cualquier punto) -->
-        <div id="gmaps-floating-pin-card" class="hidden absolute bottom-4 left-1/2 -translate-x-1/2 z-[400] w-[calc(100%-2rem)] max-w-[500px] bg-white/95 backdrop-blur-md border-2 border-blue-600 rounded-2xl p-3 sm:p-3.5 shadow-2xl space-y-2.5 transition-all text-slate-800">
+        <div id="gmaps-floating-pin-card" class="hidden absolute bottom-4 left-1/2 -translate-x-1/2 z-[400] w-[calc(100%-2rem)] max-w-[480px] bg-white/95 backdrop-blur-md border-2 border-blue-600 rounded-2xl p-3 sm:p-3.5 shadow-2xl space-y-2.5 transition-all text-slate-800 overflow-hidden box-border">
           <div class="flex items-center justify-between gap-2 border-b border-slate-200 pb-2">
             <div class="flex items-center gap-2 min-w-0">
               <span class="text-base shrink-0">🎯</span>
               <div class="min-w-0">
                 <h4 class="text-xs font-black text-slate-900 truncate" id="card-pin-title">Punto Marcado en Google Maps</h4>
-                <div class="text-[10px] text-blue-800 font-mono font-bold" id="card-pin-coords">9.741430, -63.200590</div>
+                <div class="text-[10px] text-blue-800 font-mono font-bold truncate" id="card-pin-coords">9.741430, -63.200590</div>
               </div>
             </div>
             <button type="button" onclick="window.cerrarTarjetaPinFlotante()" class="p-1 text-slate-400 hover:text-slate-700 rounded-lg hover:bg-slate-100 transition shrink-0" title="Cerrar">
               <i data-lucide="x" class="w-4 h-4"></i>
             </button>
           </div>
-          <div class="flex items-center gap-2">
-            <select id="select-card-asignar-centro" class="flex-1 bg-slate-50 border border-slate-300 rounded-xl px-2.5 py-2 text-xs text-slate-900 focus:border-blue-600 focus:outline-none font-medium">
-              <option value="">-- Mover este punto a... --</option>
-            </select>
-            <button type="button" onclick="window.guardarPuntoDesdeTarjetaFlotante()" class="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-xs transition flex items-center gap-1 shrink-0 active:scale-95" title="Mover la ubicación de este centro aquí">
-              <span>Guardar ✓</span>
-            </button>
-            <button type="button" onclick="window.copiarCoordsDesdeTarjetaFlotante()" class="p-2 bg-white hover:bg-slate-100 border border-slate-300 text-blue-700 rounded-xl transition shrink-0 shadow-xs" title="Copiar Coordenadas">
-              <i data-lucide="copy" class="w-3.5 h-3.5"></i>
-            </button>
+
+          <!-- Asignar punto a centro existente -->
+          <div class="space-y-1 bg-slate-50 p-2 sm:p-2.5 rounded-xl border border-slate-200">
+            <span class="text-[10px] text-slate-600 font-bold block">🎯 Reubicar centro existente en estas coordenadas:</span>
+            <div class="flex items-center gap-1.5 w-full min-w-0">
+              <div class="flex-1 min-w-0 w-0">
+                <select id="select-card-asignar-centro" class="w-full min-w-0 bg-white border border-slate-300 rounded-lg px-2.5 py-1.5 text-xs text-slate-900 focus:border-blue-600 focus:outline-none font-medium truncate shadow-xs">
+                  <option value="">-- Mover este punto a... --</option>
+                </select>
+              </div>
+              <button type="button" onclick="window.guardarPuntoDesdeTarjetaFlotante()" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-lg shadow-xs transition flex items-center gap-1 shrink-0 active:scale-95" title="Mover la ubicación de este centro aquí">
+                <span>Guardar ✓</span>
+              </button>
+              <button type="button" onclick="window.copiarCoordsDesdeTarjetaFlotante()" class="p-1.5 bg-white hover:bg-slate-100 border border-slate-300 text-blue-700 rounded-lg transition shrink-0 shadow-xs" title="Copiar Coordenadas">
+                <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+              </button>
+            </div>
           </div>
+
           <div class="flex items-center gap-2 pt-1 border-t border-slate-200">
-            <button type="button" onclick="window.abrirModalCrearCentroRapido()" class="flex-1 py-1.5 px-2.5 bg-blue-700 hover:bg-blue-800 text-white font-bold text-[11px] rounded-xl shadow-xs transition flex items-center justify-center gap-1 active:scale-95" title="Crear un nuevo centro con tu propio puntero">
+            <button type="button" onclick="window.abrirModalCrearCentroRapido()" class="flex-1 py-2 px-3 bg-blue-700 hover:bg-blue-800 text-white font-bold text-xs rounded-xl shadow-xs transition flex items-center justify-center gap-1.5 active:scale-95" title="Crear un nuevo centro con tu propio puntero">
               <span>➕ Crear Nuevo Centro Aquí</span>
             </button>
-            <button type="button" onclick="window.eliminarCentroSeleccionadoDesdeTarjeta()" class="py-1.5 px-2.5 bg-red-50 hover:bg-red-100 text-red-700 font-bold text-[11px] rounded-xl border border-red-200 transition flex items-center gap-1 active:scale-95" title="Eliminar el centro seleccionado en el desplegable si no existe">
-              <span>🗑️ Eliminar Centro</span>
+            <button type="button" onclick="window.eliminarCentroSeleccionadoDesdeTarjeta()" class="py-2 px-3 bg-red-50 hover:bg-red-100 text-red-700 font-bold text-xs rounded-xl border border-red-200 transition flex items-center gap-1 shrink-0 active:scale-95" title="Eliminar el centro seleccionado en el desplegable si no existe">
+              <span>🗑️ Eliminar</span>
             </button>
           </div>
         </div>
@@ -957,7 +1029,7 @@
         <div class="flex flex-wrap items-center justify-between gap-2.5 pt-2.5 border-t border-slate-200 bg-slate-50 p-3 rounded-xl text-xs">
           <div class="flex items-center gap-2 flex-1 min-w-[280px]">
             <span class="text-[11px] text-slate-700 font-semibold shrink-0">🎯 Asignar coordenada a:</span>
-            <select id="select-asignar-centro" class="flex-1 bg-white border border-slate-300 rounded-lg px-2.5 py-1.5 text-xs text-slate-900 focus:border-blue-600 focus:outline-none font-medium">
+            <select id="select-asignar-centro" class="flex-1 min-w-0 w-0 bg-white border border-slate-300 rounded-lg px-2.5 py-1.5 text-xs text-slate-900 focus:border-blue-600 focus:outline-none font-medium truncate">
               <option value="">-- Seleccionar centro de salud a calibrar (84) --</option>
             </select>
           </div>
@@ -1160,23 +1232,28 @@
           </div>
         </div>
 
-        <div class="pt-2 flex items-center justify-end gap-2">
-          <button type="button" onclick="window.cerrarModalCrearCentroRapido()" class="px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-bold transition">
-            Cancelar
+        <div class="pt-2 flex flex-wrap items-center justify-between gap-2 border-t border-slate-200">
+          <button type="button" onclick="window.crearCentroDesdePunto()" class="text-[11px] text-blue-700 hover:text-blue-950 font-bold hover:underline flex items-center gap-1">
+            <span>📋 Ir a Ficha Completa de Pre-Diagnóstico ↗</span>
           </button>
-          <button type="submit" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-black rounded-xl shadow-xs transition flex items-center gap-1.5 active:scale-95">
-            <span>✓ Guardar en el Mapa</span>
-          </button>
+          <div class="flex items-center gap-2">
+            <button type="button" onclick="window.cerrarModalCrearCentroRapido()" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-bold transition text-xs">
+              Cancelar
+            </button>
+            <button type="submit" class="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-black rounded-xl shadow-xs transition flex items-center gap-1.5 active:scale-95 text-xs">
+              <span>✓ Guardar en el Mapa</span>
+            </button>
+          </div>
         </div>
       </form>
     </div>
   </div>
 
   <!-- Delimitación Geográfica Oficial del Estado Monagas (INE / IGVSB) -->
-  <script src="js/geoMonagasLimits.js?v=169"></script>
+  <script src="js/geoMonagasLimits.js?v=170"></script>
   <!-- Scripts de Datos y Lógica (Carga universal estándar) -->
-  <script src="js/saludData.js?v=169"></script>
-  <script src="js/saludApp.js?v=169"></script>
+  <script src="js/saludData.js?v=170"></script>
+  <script src="js/saludApp.js?v=170"></script>
 
 </body>
 </html>

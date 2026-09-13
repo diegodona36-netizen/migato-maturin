@@ -586,20 +586,29 @@ function abrirPuntoEnGoogleMapsOficial() {
 function crearCentroDesdePunto() {
   const inLat = document.getElementById('gmaps-input-lat');
   const inLng = document.getElementById('gmaps-input-lng');
-  const lat = inLat ? parseFloat(inLat.value) : state.coordsInspectorGmaps.lat;
-  const lng = inLng ? parseFloat(inLng.value) : state.coordsInspectorGmaps.lng;
+  const lat = inLat ? parseFloat(inLat.value) : (state.coordsInspectorGmaps ? state.coordsInspectorGmaps.lat : 9.7483);
+  const lng = inLng ? parseFloat(inLng.value) : (state.coordsInspectorGmaps ? state.coordsInspectorGmaps.lng : -63.1785);
+
+  cerrarModalCrearCentroRapido();
+  cerrarTarjetaPinFlotante();
 
   // Cambiar a pestaña de Formulario (tab-registro)
   cambiarPestana('tab-registro');
   initMapaFormulario();
 
+  limpiarFormulario();
+  activarModoCentroNuevo();
+
   actualizarCoordenadasInputs(lat, lng, true);
   if (state.mapaFormulario) {
+    state.mapaFormulario.invalidateSize();
     state.mapaFormulario.setView([lat, lng], 16);
     if (state.marcadorFormulario) {
       state.marcadorFormulario.setLatLng([lat, lng]);
     }
   }
+
+  mostrarToastAccion(`📍 Coordenadas [${lat.toFixed(5)}, ${lng.toFixed(5)}] cargadas al formulario. Seleccione Municipio, Parroquia y asigne el Nombre Oficial.`);
 
   // Desplazar suavemente a la cabecera
   window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -939,6 +948,9 @@ function alCambiarMunicipio(municipioId, moverMapa = true) {
     selectParr.innerHTML += `<option value="${p.id}">${p.nombre}</option>`;
   });
 
+  // ACTUALIZAR SELECTOR EN CASCADA DE CENTROS DE ESTE MUNICIPIO
+  actualizarCentrosMunicipioForm(municipioId);
+
   if (moverMapa && mun.parroquias.length > 0 && state.mapaFormulario && state.marcadorFormulario) {
     const coords = mun.parroquias[0].centro;
     state.mapaFormulario.flyTo(coords, 12.5, { duration: 1 });
@@ -976,6 +988,281 @@ function alCambiarParroquia(parroquiaId, moverMapa = true) {
     state.marcadorFormulario.setLatLng(parr.centro);
     actualizarCoordenadasInputs(parr.centro[0], parr.centro[1]);
   }
+}
+
+// ==============================================================
+// 3.1 MOTOR DE BÚSQUEDA Y AUTOCOMPLETADO INTELIGENTE EN FICHA
+// ==============================================================
+
+function actualizarCentrosMunicipioForm(municipioId) {
+  const selCentrosMun = document.getElementById('form-select-centro-municipio');
+  const labelConteo = document.getElementById('label-conteo-centros-mun');
+  if (!selCentrosMun) return;
+
+  selCentrosMun.innerHTML = '<option value="">-- Seleccionar centro para auto-rellenar --</option>';
+  selCentrosMun.innerHTML += '<option value="nuevo">➕ Registrar un Centro Nuevo en este Municipio</option>';
+
+  if (!municipioId) {
+    if (labelConteo) labelConteo.textContent = '[▼ Filtrar]';
+    return;
+  }
+
+  const catTerritorial = (window.CATALOGO_TERRITORIAL && window.CATALOGO_TERRITORIAL.length > 0)
+    ? window.CATALOGO_TERRITORIAL
+    : (CATALOGO_TERRITORIAL || []);
+  const munObj = catTerritorial.find(m => m.id === municipioId);
+  const munNombre = munObj ? munObj.nombre : municipioId;
+
+  // Filtrar centros de este municipio
+  const centrosMun = (state.centros || []).filter(c => {
+    return (c.municipioId === municipioId) || 
+           (c.municipio && munNombre && c.municipio.toLowerCase().trim() === munNombre.toLowerCase().trim());
+  }).sort((a, b) => (a.nombre || '').localeCompare(b.nombre || ''));
+
+  if (labelConteo) {
+    labelConteo.textContent = `[${centrosMun.length} centros]`;
+  }
+
+  if (centrosMun.length > 0) {
+    const optgroup = document.createElement('optgroup');
+    optgroup.label = `Centros Catalogados (${munNombre})`;
+    centrosMun.forEach(c => {
+      const opt = document.createElement('option');
+      opt.value = c.id;
+      opt.textContent = `${c.nombre} (${c.parroquia || 'Sin Parroquia'})`;
+      optgroup.appendChild(opt);
+    });
+    selCentrosMun.appendChild(optgroup);
+  }
+}
+
+function alSeleccionarCentroDeMunicipio(valor) {
+  if (!valor) return;
+  if (valor === 'nuevo') {
+    activarModoCentroNuevo();
+  } else {
+    seleccionarCentroDesdeBuscadorForm(valor);
+  }
+}
+
+function initBuscadorCentroFormulario() {
+  const inputBuscador = document.getElementById('input-buscar-centro-form');
+  const btnClear = document.getElementById('btn-clear-buscar-centro-form');
+  const dropdown = document.getElementById('dropdown-resultados-centro-form');
+  const selCentrosMun = document.getElementById('form-select-centro-municipio');
+
+  if (selCentrosMun) {
+    selCentrosMun.addEventListener('change', (e) => alSeleccionarCentroDeMunicipio(e.target.value));
+  }
+
+  if (!inputBuscador || !dropdown) return;
+
+  inputBuscador.addEventListener('input', (e) => {
+    const query = (e.target.value || '').trim();
+    if (!query) {
+      if (btnClear) btnClear.classList.add('hidden');
+      dropdown.classList.add('hidden');
+      dropdown.innerHTML = '';
+      return;
+    }
+
+    if (btnClear) btnClear.classList.remove('hidden');
+
+    const qLower = query.toLowerCase();
+    const resultados = (state.centros || []).filter(c => {
+      const matchNom = (c.nombre || '').toLowerCase().includes(qLower);
+      const matchMun = (c.municipio || '').toLowerCase().includes(qLower);
+      const matchParr = (c.parroquia || '').toLowerCase().includes(qLower);
+      const matchSec = (c.sector || '').toLowerCase().includes(qLower);
+      const matchRed = (c.tipoRed || '').toLowerCase().includes(qLower);
+      const matchClas = (c.clasificacionEspecifica || '').toLowerCase().includes(qLower);
+      return matchNom || matchMun || matchParr || matchSec || matchRed || matchClas;
+    }).slice(0, 15);
+
+    renderResultadosBuscadorFormulario(resultados, query);
+  });
+
+  inputBuscador.addEventListener('focus', () => {
+    if (inputBuscador.value.trim().length > 0) {
+      const qLower = inputBuscador.value.trim().toLowerCase();
+      const resultados = (state.centros || []).filter(c => {
+        return (c.nombre || '').toLowerCase().includes(qLower) ||
+               (c.municipio || '').toLowerCase().includes(qLower) ||
+               (c.parroquia || '').toLowerCase().includes(qLower);
+      }).slice(0, 15);
+      renderResultadosBuscadorFormulario(resultados, inputBuscador.value.trim());
+    }
+  });
+
+  // Cerrar al hacer clic fuera
+  document.addEventListener('click', (e) => {
+    if (!dropdown.contains(e.target) && e.target !== inputBuscador && e.target !== btnClear) {
+      dropdown.classList.add('hidden');
+    }
+  });
+}
+
+function renderResultadosBuscadorFormulario(resultados, query) {
+  const dropdown = document.getElementById('dropdown-resultados-centro-form');
+  if (!dropdown) return;
+
+  if (resultados.length === 0) {
+    dropdown.innerHTML = `
+      <div class="p-3.5 text-center space-y-2 bg-white">
+        <p class="text-xs text-slate-500">No se encontró ningún centro de salud catalogado que coincida con "<strong>${query}</strong>".</p>
+        <button type="button" onclick="window.activarModoCentroNuevoConNombre('${query.replace(/'/g, "\\'")}')" class="px-3 py-1.5 bg-blue-700 hover:bg-blue-800 text-white rounded-lg text-xs font-bold transition inline-flex items-center gap-1.5 shadow-xs">
+          <span>➕ Crear como Nuevo Centro Oficial: "${query}"</span>
+        </button>
+      </div>
+    `;
+    dropdown.classList.remove('hidden');
+    return;
+  }
+
+  let html = `
+    <div class="p-2 bg-blue-50 border-b border-blue-100 flex items-center justify-between text-[11px] font-bold text-blue-950">
+      <span>Coincidencias encontradas (${resultados.length}):</span>
+      <span class="text-blue-700">Haz clic para auto-rellenar</span>
+    </div>
+    <div class="max-h-60 overflow-y-auto divide-y divide-slate-100">
+  `;
+
+  resultados.forEach(c => {
+    const badgeColor = c.tipoRed === 'hospitalaria' 
+      ? 'bg-red-100 text-red-800 border-red-200' 
+      : (c.tipoRed === 'especializada' ? 'bg-amber-100 text-amber-800 border-amber-200' : 'bg-emerald-100 text-emerald-800 border-emerald-200');
+    
+    html += `
+      <button type="button" onclick="window.seleccionarCentroDesdeBuscadorForm('${c.id}')" class="w-full p-2.5 text-left hover:bg-blue-50/80 transition flex items-center justify-between gap-2 group">
+        <div class="min-w-0 flex-1">
+          <div class="flex items-center gap-1.5 flex-wrap">
+            <span class="font-black text-slate-900 text-xs group-hover:text-blue-700">${c.nombre}</span>
+            <span class="text-[9px] font-bold uppercase px-1.5 py-0.5 rounded border ${badgeColor}">${c.tipoRed || 'Salud'}</span>
+          </div>
+          <div class="text-[11px] text-slate-500 truncate flex items-center gap-1.5 mt-0.5">
+            <span>📍 ${c.municipio || 'Monagas'}</span>
+            <span>•</span>
+            <span>${c.parroquia || ''}</span>
+            ${c.sector ? `<span>(${c.sector})</span>` : ''}
+          </div>
+        </div>
+        <div class="text-right shrink-0">
+          <span class="inline-flex items-center gap-1 px-2 py-1 rounded bg-blue-100 text-blue-800 font-bold text-[10px] group-hover:bg-blue-700 group-hover:text-white transition">
+            <span>Cargar Datos ➔</span>
+          </span>
+        </div>
+      </button>
+    `;
+  });
+
+  html += `
+    </div>
+    <div class="p-2 bg-slate-50 border-t border-slate-200 flex items-center justify-between">
+      <span class="text-[10px] text-slate-500">¿No es ninguno de estos?</span>
+      <button type="button" onclick="window.activarModoCentroNuevoConNombre('${query.replace(/'/g, "\\'")}')" class="text-xs text-blue-700 hover:text-blue-900 font-bold hover:underline">
+        ➕ Crear nuevo con este nombre
+      </button>
+    </div>
+  `;
+
+  dropdown.innerHTML = html;
+  dropdown.classList.remove('hidden');
+}
+
+function limpiarBuscadorCentroForm() {
+  const inputBuscador = document.getElementById('input-buscar-centro-form');
+  const btnClear = document.getElementById('btn-clear-buscar-centro-form');
+  const dropdown = document.getElementById('dropdown-resultados-centro-form');
+  if (inputBuscador) {
+    inputBuscador.value = '';
+    inputBuscador.focus();
+  }
+  if (btnClear) btnClear.classList.add('hidden');
+  if (dropdown) {
+    dropdown.classList.add('hidden');
+    dropdown.innerHTML = '';
+  }
+}
+
+function seleccionarCentroDesdeBuscadorForm(centroId) {
+  const dropdown = document.getElementById('dropdown-resultados-centro-form');
+  if (dropdown) dropdown.classList.add('hidden');
+
+  editarCentro(centroId);
+
+  const centro = (state.centros || []).find(c => c.id === centroId);
+  if (centro) {
+    mostrarToastAccion(`✅ Ficha auto-rellenada con los datos de: ${centro.nombre}`);
+  }
+}
+
+function activarModoCentroNuevo() {
+  const idInput = document.getElementById('form-centro-id');
+  if (idInput) idInput.value = '';
+
+  state.modoEdicion = false;
+
+  const inputBuscador = document.getElementById('input-buscar-centro-form');
+  if (inputBuscador) inputBuscador.value = '';
+
+  const btnClear = document.getElementById('btn-clear-buscar-centro-form');
+  if (btnClear) btnClear.classList.add('hidden');
+
+  const dropdown = document.getElementById('dropdown-resultados-centro-form');
+  if (dropdown) dropdown.classList.add('hidden');
+
+  const badgeCargado = document.getElementById('badge-centro-cargado-info');
+  if (badgeCargado) badgeCargado.classList.add('hidden');
+
+  const badgeNuevo = document.getElementById('badge-modo-nuevo-info');
+  if (badgeNuevo) badgeNuevo.classList.remove('hidden');
+
+  const selMunCentros = document.getElementById('form-select-centro-municipio');
+  if (selMunCentros) selMunCentros.value = 'nuevo';
+
+  const nomInput = document.getElementById('form-nombre-centro');
+  if (nomInput) {
+    nomInput.value = '';
+    nomInput.placeholder = 'Escriba el nombre oficial del nuevo centro de salud...';
+  }
+
+  const munInput = document.getElementById('form-municipio');
+  if (munInput) munInput.focus();
+
+  mostrarToastAccion('📝 Modo Centro Nuevo activado. Seleccione Municipio, Parroquia y asigne el Nombre Oficial.');
+}
+
+function activarModoCentroNuevoConNombre(nombre) {
+  activarModoCentroNuevo();
+  const nomInput = document.getElementById('form-nombre-centro');
+  if (nomInput && nombre) {
+    nomInput.value = nombre.trim();
+  }
+  const munInput = document.getElementById('form-municipio');
+  if (munInput) munInput.focus();
+}
+
+function mostrarToastAccion(mensaje) {
+  const toastExistente = document.getElementById('salud-toast-global');
+  if (toastExistente) toastExistente.remove();
+
+  const toast = document.createElement('div');
+  toast.id = 'salud-toast-global';
+  toast.className = 'fixed top-5 right-5 z-[99999] bg-slate-900/95 text-white px-4 py-3 rounded-2xl shadow-2xl border border-blue-400 text-xs font-bold flex items-center gap-2 backdrop-blur-md transition-all duration-300 transform translate-y-0 opacity-100 max-w-sm';
+  toast.innerHTML = `
+    <span class="text-base">ℹ️</span>
+    <div class="flex-1">${mensaje}</div>
+    <button type="button" onclick="this.parentElement.remove()" class="text-slate-400 hover:text-white p-0.5">✕</button>
+  `;
+  document.body.appendChild(toast);
+
+  setTimeout(() => {
+    if (toast && toast.parentElement) {
+      toast.style.opacity = '0';
+      toast.style.transform = 'translateY(-10px)';
+      setTimeout(() => toast.remove(), 350);
+    }
+  }, 4000);
 }
 
 // ==============================================================
@@ -1244,6 +1531,19 @@ function limpiarFormulario() {
   
   const idInput = document.getElementById('form-centro-id');
   if (idInput) idInput.value = '';
+
+  const inputBuscador = document.getElementById('input-buscar-centro-form');
+  if (inputBuscador) inputBuscador.value = '';
+  const btnClear = document.getElementById('btn-clear-buscar-centro-form');
+  if (btnClear) btnClear.classList.add('hidden');
+  const badgeCargado = document.getElementById('badge-centro-cargado-info');
+  if (badgeCargado) badgeCargado.classList.add('hidden');
+  const badgeNuevo = document.getElementById('badge-modo-nuevo-info');
+  if (badgeNuevo) badgeNuevo.classList.add('hidden');
+  const dropdown = document.getElementById('dropdown-resultados-centro-form');
+  if (dropdown) dropdown.classList.add('hidden');
+  const selMunCentros = document.getElementById('form-select-centro-municipio');
+  if (selMunCentros) selMunCentros.value = '';
 
   const fechaInput = document.getElementById('form-eval-fecha');
   if (fechaInput) fechaInput.value = new Date().toISOString().split('T')[0];
@@ -1691,6 +1991,22 @@ function editarCentro(id) {
   document.getElementById('form-centro-id').value = centro.id;
   document.getElementById('form-nombre-centro').value = centro.nombre;
 
+  // Sincronizar buscador y badges de estado
+  const inputBuscador = document.getElementById('input-buscar-centro-form');
+  if (inputBuscador) inputBuscador.value = centro.nombre;
+  const btnClear = document.getElementById('btn-clear-buscar-centro-form');
+  if (btnClear) btnClear.classList.remove('hidden');
+
+  const badgeCargado = document.getElementById('badge-centro-cargado-info');
+  const txtCargado = document.getElementById('texto-centro-cargado');
+  const txtCargadoId = document.getElementById('texto-centro-cargado-id');
+  const badgeNuevo = document.getElementById('badge-modo-nuevo-info');
+
+  if (badgeCargado) badgeCargado.classList.remove('hidden');
+  if (txtCargado) txtCargado.textContent = `Centro cargado: ${centro.nombre}`;
+  if (txtCargadoId) txtCargadoId.textContent = `ID: ${centro.id}`;
+  if (badgeNuevo) badgeNuevo.classList.add('hidden');
+
   state.precisionActual = centro.precision || 'sectorial';
   const precInput = document.getElementById('form-precision');
   if (precInput) precInput.value = state.precisionActual;
@@ -1700,6 +2016,11 @@ function editarCentro(id) {
   if (selMun) {
     selMun.value = centro.municipioId;
     alCambiarMunicipio(centro.municipioId, false);
+  }
+
+  const selMunCentros = document.getElementById('form-select-centro-municipio');
+  if (selMunCentros) {
+    selMunCentros.value = centro.id;
   }
 
   const selParr = document.getElementById('form-parroquia');
@@ -2596,6 +2917,8 @@ window.cerrarModalFicha = cerrarModalFicha;
 window.cambiarPestana = cambiarPestana;
 
 function configurarEventListeners() {
+  initBuscadorCentroFormulario();
+
   const selMun = document.getElementById('form-municipio');
   if (selMun) {
     selMun.addEventListener('change', (e) => alCambiarMunicipio(e.target.value));
@@ -3021,6 +3344,14 @@ window.toggleModoOscuroSuave = toggleModoOscuroSuave;
 window.toggleModoLetraGrande = toggleModoLetraGrande;
 window.aplicarModoOscuroSuave = aplicarModoOscuroSuave;
 window.aplicarModoLetraGrande = aplicarModoLetraGrande;
+window.actualizarCentrosMunicipioForm = actualizarCentrosMunicipioForm;
+window.alSeleccionarCentroDeMunicipio = alSeleccionarCentroDeMunicipio;
+window.initBuscadorCentroFormulario = initBuscadorCentroFormulario;
+window.limpiarBuscadorCentroForm = limpiarBuscadorCentroForm;
+window.seleccionarCentroDesdeBuscadorForm = seleccionarCentroDesdeBuscadorForm;
+window.activarModoCentroNuevo = activarModoCentroNuevo;
+window.activarModoCentroNuevoConNombre = activarModoCentroNuevoConNombre;
+window.mostrarToastAccion = mostrarToastAccion;
 
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", iniciarAplicacion);
