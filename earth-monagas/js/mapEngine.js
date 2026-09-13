@@ -2,9 +2,9 @@
  * Motor Cartográfico Acelerado por GPU — Google Earth Pro Web (Monagas)
  * Integrado con Capas Jerárquicas Oficiales (INE 2021) y Edición de Vértices
  */
-import { GEO_ESTADO_OFICIAL, GEO_MUNICIPIOS_OFICIAL, GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=139";
-import { CATALOGO_MONAGAS, PARISH_ALIAS_MAP, resolveParishId } from "./catalogoMonagas.js?v=139";
-import { MONAGAS_DEMOGRAPHICS, getParishDemographics } from "./monagasDemographics.js?v=139";
+import { GEO_ESTADO_OFICIAL, GEO_MUNICIPIOS_OFICIAL, GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=140";
+import { CATALOGO_MONAGAS, PARISH_ALIAS_MAP, resolveParishId } from "./catalogoMonagas.js?v=140";
+import { MONAGAS_DEMOGRAPHICS, getParishDemographics } from "./monagasDemographics.js?v=140";
 
 export class EarthMapEngine {
   constructor(containerId, onCoordUpdate) {
@@ -577,10 +577,16 @@ export class EarthMapEngine {
     this.map.flyToBounds(bounds, { padding: [50, 50], duration: 1.0 });
   }
 
-  renderSpotlightMask(coords, strokeColor = "#0284c7", strokeDash = "6, 4", strokeWeight = 3) {
+  renderSpotlightMask(coords, strokeColor = "#0284c7", strokeDash = "6, 4", strokeWeight = 3, maskCoords = null) {
     if (!this.boundaryLayer) return null;
     this.boundaryLayer.clearLayers();
     if (!coords || coords.length < 3) return null;
+
+    // Regla de Experiencia Territorial:
+    // El velo blanco exterior (máscara invertida) se detiene como máximo a nivel Parroquia.
+    // Para sectores vecinales o sub-parroquias (ejes), la máscara cubre únicamente el exterior de la Parroquia,
+    // garantizando que toda la parroquia permanezca 100% visible con sus calles, satélite y sectores adyacentes.
+    const actualMaskCoords = (maskCoords && maskCoords.length >= 3) ? maskCoords : coords;
 
     if (this.spotlightEnabled) {
       const worldBox = [
@@ -591,8 +597,8 @@ export class EarthMapEngine {
       ];
 
       // Máscara invertida con orificio para la zona activa (SVG con fill-rule: evenodd)
-      // Situada en pane superior 'spotlightMaskPane' (z-index 450) para cubrir todas las capas cartográficas
-      const maskPoly = L.polygon([worldBox, coords], {
+      // Situada en pane superior 'spotlightMaskPane' (z-index 450) para cubrir todas las capas cartográficas exteriores
+      const maskPoly = L.polygon([worldBox, actualMaskCoords], {
         pane: "spotlightMaskPane",
         fillColor: "#ffffff",
         fillOpacity: 1.0,
@@ -604,14 +610,30 @@ export class EarthMapEngine {
         renderer: this.spotlightSvgRenderer || this.svgRenderer
       });
       this.boundaryLayer.addLayer(maskPoly);
+
+      // Si el velo blanco está delimitado a nivel Parroquia pero enfocamos un Sector o Sub-Parroquia,
+      // trazamos un contorno sutil de la Parroquia como referencia visual contextual
+      if (maskCoords && maskCoords !== coords && maskCoords.length >= 3) {
+        const parishFrame = L.polygon(maskCoords, {
+          pane: "spotlightMaskPane",
+          color: "#0284c7",
+          weight: 2.5,
+          opacity: 0.75,
+          fill: false,
+          dashArray: "6, 4",
+          interactive: false,
+          renderer: this.spotlightSvgRenderer || this.svgRenderer
+        });
+        this.boundaryLayer.addLayer(parishFrame);
+      }
     }
 
-    // Contorno delimitador en pane superior para máxima visibilidad
+    // Contorno delimitador en pane superior para el elemento activo (Sector, Sub-Parroquia, Parroquia, Municipio, Estado)
     const bPoly = L.polygon(coords, {
       pane: "spotlightMaskPane",
       color: strokeColor,
       weight: strokeWeight,
-      opacity: 0.95,
+      opacity: 0.98,
       fill: false,
       dashArray: strokeDash,
       interactive: false,
@@ -625,6 +647,8 @@ export class EarthMapEngine {
     if (this.layerMunicipioParroquias) this.layerMunicipioParroquias.clearLayers();
     this.currentSectorVertices = null;
     this.currentSubParishVertices = null;
+    this.currentParishCoords = null;
+    this.currentParishId = null;
     this.activeFocusLevel = "estado";
 
     let coords = null;
@@ -664,6 +688,8 @@ export class EarthMapEngine {
     this.activeFocusLevel = "municipio";
     this.currentSectorVertices = null;
     this.currentSubParishVertices = null;
+    this.currentParishCoords = null;
+    this.currentParishId = null;
 
     // Desactivar temporalmente la capa general L2 para evitar que capture clics o cree rebotes con las parroquias internas
     if (this.layerL2_Municipios && this.map.hasLayer(this.layerL2_Municipios)) {
@@ -814,6 +840,53 @@ export class EarthMapEngine {
     });
   }
 
+  getParishCoordinates(parishId = null) {
+    if (!parishId && this.currentParishId) parishId = this.currentParishId;
+    if (!parishId && window.earthApp?.selectedParishId) parishId = window.earthApp.selectedParishId;
+
+    if (this.currentParishCoords && this.currentParishCoords.length >= 3) {
+      if (!parishId || !this.currentParishId || this.currentParishId === parishId) {
+        return this.currentParishCoords;
+      }
+    }
+
+    if (parishId && typeof GEO_PARROQUIAS_OFICIAL !== "undefined" && GEO_PARROQUIAS_OFICIAL.features) {
+      const cleanId = String(parishId).toLowerCase().replace(/_/g, "-").trim();
+      const feat = GEO_PARROQUIAS_OFICIAL.features.find(f => {
+        if (!f.properties) return false;
+        const fId = String(f.properties.id || "").toLowerCase().replace(/_/g, "-").trim();
+        const fNom = String(f.properties.nombre || "").toLowerCase().replace(/_/g, "-").trim();
+        return fId === cleanId || fNom === cleanId;
+      });
+      if (feat && feat.geometry) {
+        let coords = null;
+        if (feat.geometry.type === "Polygon") {
+          coords = feat.geometry.coordinates[0].map(c => [c[1], c[0]]);
+        } else if (feat.geometry.type === "MultiPolygon") {
+          const polygons = feat.geometry.coordinates.map(p => p[0].map(c => [c[1], c[0]]));
+          coords = polygons.sort((a, b) => b.length - a.length)[0];
+        }
+        if (coords && coords.length >= 3) {
+          this.currentParishCoords = coords;
+          this.currentParishId = parishId;
+          return coords;
+        }
+      }
+    }
+
+    if (window.earthApp?.store) {
+      const munId = window.earthApp.selectedMunId || "maturin";
+      const parish = window.earthApp.store.getParish(munId, parishId);
+      if (parish && parish.limite && parish.limite.length >= 3) {
+        this.currentParishCoords = parish.limite;
+        this.currentParishId = parishId;
+        return parish.limite;
+      }
+    }
+
+    return this.currentParishCoords || null;
+  }
+
   showParishBoundary(limite, parishId = null, flyCamera = true) {
     if (this.layerMunicipioParroquias) this.layerMunicipioParroquias.clearLayers();
     this.currentParishLimite = limite;
@@ -854,6 +927,7 @@ export class EarthMapEngine {
 
     if (!coords || coords.length < 3) return;
     this.activeFocusCoords = coords;
+    this.currentParishCoords = coords;
 
     const bPoly = this.renderSpotlightMask(coords, "#0284c7", "6, 4", 3);
     if (bPoly && flyCamera) {
@@ -898,7 +972,11 @@ export class EarthMapEngine {
     if (!spVertices || spVertices.length < 3) return;
     this.activeFocusCoords = spVertices;
 
-    const bPoly = this.renderSpotlightMask(spVertices, "#c084fc", "6, 4", 3);
+    // Regla de Experiencia Territorial:
+    // El velo blanco exterior (máscara invertida) se detiene a nivel Parroquia.
+    // La parroquia permanece 100% visible, y solo se resalta el eje territorial (sub-parroquia).
+    const parishCoords = this.getParishCoordinates(this.currentParishId || window.earthApp?.selectedParishId);
+    const bPoly = this.renderSpotlightMask(spVertices, "#c084fc", "6, 4", 3.2, parishCoords);
     if (bPoly && flyCamera) {
       this.map.flyToBounds(bPoly.getBounds(), { padding: [50, 50], duration: 1.2 });
     }
@@ -912,7 +990,11 @@ export class EarthMapEngine {
     if (!sectorVertices || sectorVertices.length < 3) return;
     this.activeFocusCoords = sectorVertices;
 
-    const bPoly = this.renderSpotlightMask(sectorVertices, "#eab308", "5, 3", 3.2);
+    // Regla de Experiencia Territorial:
+    // El fondo blanco no se ajusta a dimensiones diminutas como un sector (se ve feo y oculta el entorno).
+    // Se mantiene recortado a nivel Parroquia, dejando la parroquia abierta y resaltando el sector seleccionado.
+    const parishCoords = this.getParishCoordinates(this.currentParishId || window.earthApp?.selectedParishId);
+    const bPoly = this.renderSpotlightMask(sectorVertices, "#eab308", "5, 3", 3.5, parishCoords);
     if (bPoly && flyCamera) {
       this.map.flyToBounds(bPoly.getBounds(), { padding: [60, 60], duration: 1.0 });
     }
