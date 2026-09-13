@@ -2,16 +2,16 @@
  * Controlador Principal — Google Earth Pro Web (Edición Estado Monagas)
  * Robusto, 100% Operativo y Totalmente Individualizado
  */
-import { CATALOGO_MONAGAS, findParishInCatalog, PARISH_ALIAS_MAP, resolveParishId } from "./catalogoMonagas.js?v=147";
-import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=147";
-import { getAllParishesForSelector } from "./usersCatalog.js?v=147";
-import { EarthStore } from "./earthStore.js?v=147";
-import { EarthMapEngine } from "./mapEngine.js?v=147";
-import { PropertiesDialog } from "./propertiesDialog.js?v=147";
-import { ToolsManager } from "./toolsManager.js?v=147";
-import { detectParishFromGeometry, SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=147";
-import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=147";
-import { getParishDemographics, getMunicipioDemographics } from "./monagasDemographics.js?v=147";
+import { CATALOGO_MONAGAS, findParishInCatalog, PARISH_ALIAS_MAP, resolveParishId } from "./catalogoMonagas.js?v=148";
+import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=148";
+import { getAllParishesForSelector } from "./usersCatalog.js?v=148";
+import { EarthStore } from "./earthStore.js?v=148";
+import { EarthMapEngine } from "./mapEngine.js?v=148";
+import { PropertiesDialog } from "./propertiesDialog.js?v=148";
+import { ToolsManager } from "./toolsManager.js?v=148";
+import { detectParishFromGeometry, SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=148";
+import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=148";
+import { getParishDemographics, getMunicipioDemographics } from "./monagasDemographics.js?v=148";
 import { 
   getMunicipios, 
   getParroquiasByMun, 

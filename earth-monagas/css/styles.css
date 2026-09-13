@@ -38,6 +38,10 @@ input, select, textarea {
   will-change: transform;
   image-rendering: -webkit-optimize-contrast;
   image-rendering: crisp-edges;
+  pointer-events: auto !important;
+}
+.leaflet-container canvas.leaflet-interactive {
+  cursor: pointer !important;
 }
 
 .earth-tooltip {

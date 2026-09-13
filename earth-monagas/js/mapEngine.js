@@ -2,9 +2,9 @@
  * Motor Cartográfico Acelerado por GPU — Google Earth Pro Web (Monagas)
  * Integrado con Capas Jerárquicas Oficiales (INE 2021) y Edición de Vértices
  */
-import { GEO_ESTADO_OFICIAL, GEO_MUNICIPIOS_OFICIAL, GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=147";
-import { CATALOGO_MONAGAS, PARISH_ALIAS_MAP, resolveParishId } from "./catalogoMonagas.js?v=147";
-import { MONAGAS_DEMOGRAPHICS, getParishDemographics, getMunicipioDemographics } from "./monagasDemographics.js?v=147";
+import { GEO_ESTADO_OFICIAL, GEO_MUNICIPIOS_OFICIAL, GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=148";
+import { CATALOGO_MONAGAS, PARISH_ALIAS_MAP, resolveParishId } from "./catalogoMonagas.js?v=148";
+import { MONAGAS_DEMOGRAPHICS, getParishDemographics, getMunicipioDemographics } from "./monagasDemographics.js?v=148";
 
 export class EarthMapEngine {
   constructor(containerId, onCoordUpdate) {
@@ -93,22 +93,7 @@ export class EarthMapEngine {
       layers: [googleHybrid]
     });
 
-    // Panes dedicados para garantizar orden de apilamiento e interactividad perfecta
-    this.map.createPane("subParroquiasPane");
-    const spPane = this.map.getPane("subParroquiasPane");
-    if (spPane) spPane.style.zIndex = "405";
-
-    this.map.createPane("polygonsPane");
-    const polyPane = this.map.getPane("polygonsPane");
-    if (polyPane) polyPane.style.zIndex = "415";
-
-    this.map.createPane("routesPane");
-    const rPane = this.map.getPane("routesPane");
-    if (rPane) rPane.style.zIndex = "425";
-
-    this.map.createPane("placemarksPane");
-    const pPane = this.map.getPane("placemarksPane");
-    if (pPane) pPane.style.zIndex = "435";
+    // Configurar paneles base con pointer-events garantizados para el lienzo canvas
 
     // Panel exclusivo para el Velo Blanco exterior (z-index 450, superior a todas las capas cartográficas)
     this.map.createPane("spotlightMaskPane");
@@ -118,6 +103,9 @@ export class EarthMapEngine {
       spotlightPane.style.pointerEvents = "none";
     }
     this.spotlightSvgRenderer = L.svg({ pane: "spotlightMaskPane", padding: 0.5 }).addTo(this.map);
+    if (this.spotlightSvgRenderer && this.spotlightSvgRenderer._container) {
+      this.spotlightSvgRenderer._container.style.pointerEvents = "none";
+    }
     this.svgRenderer = L.svg({ padding: 0.5 }).addTo(this.map);
 
     // Botones de Zoom (+ y -) estilo Google Earth Pro aislados abajo a la derecha
@@ -1271,7 +1259,6 @@ export class EarthMapEngine {
           const isFocused = String(window.earthApp?.activeSubParroquiaId || "") === String(sp.id || "");
 
           const spLayer = L.polygon(sp.vertices, {
-            pane: "subParroquiasPane",
             color: sp.colorBorde || "#c084fc",
             weight: isFocused ? 3.5 : (sp.anchoBorde || 2.5),
             opacity: 0.95,
@@ -1354,19 +1341,34 @@ export class EarthMapEngine {
             `, { sticky: true, className: "earth-tooltip" });
           }
 
-          spLayer.on("click", (e) => {
-            if (e.originalEvent?.target?.blur) e.originalEvent.target.blur();
-            if (document.activeElement?.blur) document.activeElement.blur();
-            if (window.earthApp?.toolsManager?.activeTool) {
+          spLayer.on({
+            mouseover: () => {
+              spLayer.setStyle({ weight: 3.5, color: "#facc15", fillOpacity: 0.16 });
+              if (window.earthApp?.showQuickStats) {
+                window.earthApp.showQuickStats("subparroquia", sp);
+              }
+            },
+            mouseout: () => {
+              spLayer.setStyle({
+                weight: isFocused ? 3.5 : (sp.anchoBorde || 2.5),
+                color: sp.colorBorde || "#c084fc",
+                fillOpacity: isFocused ? 0.08 : 0.03
+              });
+            },
+            click: (e) => {
+              if (e.originalEvent?.target?.blur) e.originalEvent.target.blur();
+              if (document.activeElement?.blur) document.activeElement.blur();
+              if (window.earthApp?.toolsManager?.activeTool) {
+                L.DomEvent.stopPropagation(e);
+                window.earthApp.toolsManager.handleMapClick(e);
+                return;
+              }
               L.DomEvent.stopPropagation(e);
-              window.earthApp.toolsManager.handleMapClick(e);
-              return;
-            }
-            L.DomEvent.stopPropagation(e);
-            if (onSelectCallback) {
-              onSelectCallback("subparroquia", sp, e);
-            } else if (window.earthApp) {
-              window.earthApp.focusSubParish(sp.id, false);
+              if (onSelectCallback) {
+                onSelectCallback("subparroquia", sp, e);
+              } else if (window.earthApp) {
+                window.earthApp.focusSubParish(sp.id, false);
+              }
             }
           });
 
@@ -1384,7 +1386,6 @@ export class EarthMapEngine {
           if (poly.visible === false || rawCoords.length < 3) return;
 
           const pLayer = L.polygon(rawCoords, {
-            pane: "polygonsPane",
             color: poly.colorBorde || "#38bdf8",
             weight: poly.anchoBorde || (isActiveParish ? 2.5 : 2),
             opacity: isActiveParish ? 0.95 : 0.85,
@@ -1463,17 +1464,32 @@ export class EarthMapEngine {
             `, { sticky: true, className: "earth-tooltip" });
           }
 
-          pLayer.on("click", (e) => {
-            if (e.originalEvent?.target?.blur) e.originalEvent.target.blur();
-            if (document.activeElement?.blur) document.activeElement.blur();
-            if (window.earthApp?.toolsManager?.activeTool) {
+          pLayer.on({
+            mouseover: () => {
+              pLayer.setStyle({ weight: (poly.anchoBorde || 2) + 1.5, color: "#facc15", fillOpacity: Math.min(0.85, (poly.opacidad || 0.35) + 0.25) });
+              if (window.earthApp?.showQuickStats) {
+                window.earthApp.showQuickStats("poligono", poly);
+              }
+            },
+            mouseout: () => {
+              pLayer.setStyle({
+                weight: poly.anchoBorde || (isActiveParish ? 2.5 : 2),
+                color: poly.colorBorde || "#38bdf8",
+                fillOpacity: poly.opacidad !== undefined ? poly.opacidad : (isActiveParish ? 0.35 : 0.25)
+              });
+            },
+            click: (e) => {
+              if (e.originalEvent?.target?.blur) e.originalEvent.target.blur();
+              if (document.activeElement?.blur) document.activeElement.blur();
+              if (window.earthApp?.toolsManager?.activeTool) {
+                L.DomEvent.stopPropagation(e);
+                window.earthApp.toolsManager.handleMapClick(e);
+                return;
+              }
               L.DomEvent.stopPropagation(e);
-              window.earthApp.toolsManager.handleMapClick(e);
-              return;
-            }
-            L.DomEvent.stopPropagation(e);
 
-            if (onSelectCallback) onSelectCallback("poligono", poly);
+              if (onSelectCallback) onSelectCallback("poligono", poly);
+            }
           });
 
           this.polygonsLayer.addLayer(pLayer);
@@ -1487,7 +1503,6 @@ export class EarthMapEngine {
         if (r.visible === false || !r.puntos || r.puntos.length < 2) return;
 
         const line = L.polyline(r.puntos, {
-          pane: "routesPane",
           color: r.color || "#10b981",
           weight: r.ancho || 4,
           opacity: isActiveParish ? 1 : 0.75,
