@@ -2,9 +2,9 @@
  * Motor Cartográfico Acelerado por GPU — Google Earth Pro Web (Monagas)
  * Integrado con Capas Jerárquicas Oficiales (INE 2021) y Edición de Vértices
  */
-import { GEO_ESTADO_OFICIAL, GEO_MUNICIPIOS_OFICIAL, GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=149";
-import { CATALOGO_MONAGAS, PARISH_ALIAS_MAP, resolveParishId } from "./catalogoMonagas.js?v=149";
-import { MONAGAS_DEMOGRAPHICS, getParishDemographics, getMunicipioDemographics } from "./monagasDemographics.js?v=149";
+import { GEO_ESTADO_OFICIAL, GEO_MUNICIPIOS_OFICIAL, GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=150";
+import { CATALOGO_MONAGAS, PARISH_ALIAS_MAP, resolveParishId } from "./catalogoMonagas.js?v=150";
+import { MONAGAS_DEMOGRAPHICS, getParishDemographics, getMunicipioDemographics } from "./monagasDemographics.js?v=150";
 
 export class EarthMapEngine {
   constructor(containerId, onCoordUpdate) {
@@ -53,8 +53,97 @@ export class EarthMapEngine {
   }
 
   init() {
-    this.canvasRenderer = L.canvas({ padding: 0.5, tolerance: 12 });
+    this.canvasRenderer = L.canvas({ padding: 0.5, tolerance: 0 });
     this.svgRenderer = L.svg({ padding: 0.5 });
+
+    // Motor de Selección de Alta Precisión (Smart Hit-Testing & Centroid Priority)
+    // Resuelve ambigüedades en polígonos contiguos o con zoom lejano, dando prioridad absoluta
+    // al polígono cuyo interior contiene el cursor sobre las tolerancias de borde de vecinos.
+    const findBestLayerAtPoint = (renderer, point) => {
+      let bestLayer = null;
+      let bestScore = -Infinity;
+
+      for (let o = renderer._drawFirst; o; o = o.next) {
+        const layer = o.layer;
+        if (!layer.options || !layer.options.interactive) continue;
+        if (typeof layer._containsPoint !== "function") continue;
+
+        if (layer._containsPoint(point)) {
+          // 1. Detección matemática estricta: ¿el cursor está dentro del relleno (Point-in-Polygon)?
+          let isStrictInside = false;
+          if (layer._parts && layer.options.fill !== false) {
+            for (let p = 0; p < layer._parts.length; p++) {
+              const part = layer._parts[p];
+              if (!part || part.length < 3) continue;
+              for (let s = 0, r = part.length - 1; s < part.length; r = s++) {
+                const pi = part[s], pr = part[r];
+                if ((pi.y > point.y !== pr.y > point.y) && (point.x < (pr.x - pi.x) * (point.y - pi.y) / (pr.y - pi.y) + pi.x)) {
+                  isStrictInside = !isStrictInside;
+                }
+              }
+            }
+          }
+
+          // 2. Distancia euclidiana del cursor al centroide del polígono
+          let dist = 1000;
+          if (layer._bounds && renderer._map) {
+            try {
+              const centerPt = renderer._map.latLngToLayerPoint(layer._bounds.getCenter());
+              dist = point.distanceTo(centerPt);
+            } catch(e) {}
+          }
+
+          // 3. Área en píxeles del polígono (polígonos más pequeños/específicos tienen mayor prioridad)
+          let areaScore = 0;
+          if (layer._pxBounds) {
+            const w = Math.abs(layer._pxBounds.max.x - layer._pxBounds.min.x);
+            const h = Math.abs(layer._pxBounds.max.y - layer._pxBounds.min.y);
+            areaScore = 1000 / Math.max(10, w * h);
+          }
+
+          // Bonificación para sectores vecinales frente a límites macro o ejes
+          const isSector = layer.options.color !== "#ffffff" && !layer.options.dashArray;
+          const typeBonus = isSector ? 50000 : 0;
+
+          // Puntuación jerárquica de impacto:
+          // Interior estricto (+1.000.000) > Sector vecinal (+50.000) > Menor área (+areaScore) > Menor distancia (-dist)
+          const score = (isStrictInside ? 1000000 : 0) + typeBonus + areaScore - dist;
+
+          if (score > bestScore) {
+            bestScore = score;
+            bestLayer = layer;
+          }
+        }
+      }
+
+      return bestLayer;
+    };
+
+    this.canvasRenderer._onClick = function(t) {
+      const n = this._map.mouseEventToLayerPoint(t);
+      let i = findBestLayerAtPoint(this, n);
+      if (i && (t.type === "click" || t.type === "preclick") && this._map._draggableMoved && this._map._draggableMoved(i)) {
+        i = null;
+      }
+      this._fireEvent(!!i && [i], t);
+    };
+
+    this.canvasRenderer._handleMouseHover = function(t, e) {
+      if (!this._mouseHoverThrottled) {
+        const n = findBestLayerAtPoint(this, e);
+        if (n !== this._hoveredLayer) {
+          this._handleMouseOut(t);
+          if (n) {
+            L.DomUtil.addClass(this._container, "leaflet-interactive");
+            this._fireEvent([n], t, "mouseover");
+            this._hoveredLayer = n;
+          }
+        }
+        this._fireEvent(!!this._hoveredLayer && [this._hoveredLayer], t);
+        this._mouseHoverThrottled = true;
+        setTimeout(() => { this._mouseHoverThrottled = false; }, 32);
+      }
+    };
 
     const googleHybrid = L.tileLayer(
       "https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}",
