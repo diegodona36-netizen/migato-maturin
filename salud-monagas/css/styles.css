@@ -1,0 +1,304 @@
+/* ==============================================================
+   MIGATO • MÓDULO 5: SALUD MONAGAS - ESTILOS PRINCIPALES
+   ============================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap');
+
+:root {
+  --bg-primary: #0a0620;
+  --bg-secondary: #120c36;
+  --bg-card: #18114a;
+  --border-card: #2d1f85;
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+  --color-brand: #38bdf8;
+  --color-vital-rojo: #ef4444;
+  --color-vital-amarillo: #f59e0b;
+  --color-vital-verde: #10b981;
+}
+
+body {
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  background-color: var(--bg-primary);
+  color: var(--text-main);
+  overflow-x: hidden;
+}
+
+code, pre, .font-mono {
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* Scrollbar personalizado */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #0d092b;
+}
+::-webkit-scrollbar-thumb {
+  background: #2d1f85;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #3f2ca8;
+}
+
+/* Glassmorphism utility */
+.glass-panel {
+  background: rgba(24, 17, 74, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--border-card);
+}
+
+/* Marcadores en Mapa Leaflet */
+.health-marker-pin {
+  width: 32px;
+  height: 32px;
+  border-radius: 50% 50% 50% 0;
+  position: absolute;
+  transform: rotate(-45deg);
+  left: 50%;
+  top: 50%;
+  margin: -20px 0 0 -16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+  border: 2px solid #ffffff;
+  cursor: pointer;
+  transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.health-marker-pin:hover {
+  transform: rotate(-45deg) scale(1.15);
+  z-index: 1000;
+}
+
+.health-marker-pin.rojo {
+  background: linear-gradient(135deg, #ef4444, #991b1b);
+}
+.health-marker-pin.amarillo {
+  background: linear-gradient(135deg, #f59e0b, #b45309);
+}
+.health-marker-pin.verde {
+  background: linear-gradient(135deg, #10b981, #047857);
+}
+
+.health-marker-icon {
+  transform: rotate(45deg);
+  color: white;
+  font-size: 14px;
+  font-weight: 900;
+}
+
+/* Pulse animation for high risk */
+.pulse-ring-rojo {
+  position: absolute;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(239, 68, 68, 0.4);
+  top: -6px;
+  left: -6px;
+  animation: pulse-ring 2s infinite ease-out;
+  pointer-events: none;
+}
+
+@keyframes pulse-ring {
+  0% {
+    transform: scale(0.6);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.6);
+    opacity: 0;
+  }
+}
+
+/* Leaflet dark popups */
+.leaflet-popup-content-wrapper {
+  background: #140e40 !important;
+  color: #f1f5f9 !important;
+  border: 1px solid #2d1f85 !important;
+  border-radius: 14px !important;
+  box-shadow: 0 15px 30px rgba(0,0,0,0.6) !important;
+  padding: 0 !important;
+}
+
+.leaflet-popup-content {
+  margin: 12px 14px !important;
+  line-height: 1.4 !important;
+}
+
+.leaflet-popup-tip {
+  background: #140e40 !important;
+  border: 1px solid #2d1f85 !important;
+}
+
+/* ==============================================================
+   ESTILOS DE LA FICHA TÉCNICA OFICIAL (PANTALLA Y PAPEL 1:1)
+   ============================================================== */
+
+.ficha-tecnica-salud {
+  background: #ffffff;
+  color: #000000;
+  font-family: 'Liberation Sans', Arial, Helvetica, sans-serif;
+  font-size: 8.5pt;
+  line-height: 1.22;
+  border: 2px solid #000000;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 790px;
+  margin: 0 auto;
+}
+
+.ficha-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.ficha-table th, 
+.ficha-table td {
+  border: 1.5px solid #000000;
+  padding: 3.5px 5.5px;
+  vertical-align: top;
+}
+
+.ficha-header-title {
+  background-color: #f1f5f9;
+  text-align: center;
+  font-size: 11pt;
+  font-weight: 900;
+  letter-spacing: 0.5px;
+  padding: 5px 4px;
+  border-bottom: 2px solid #000000;
+}
+
+.ficha-label {
+  font-weight: 800;
+  font-size: 8pt;
+  text-transform: uppercase;
+}
+
+.ficha-value {
+  font-weight: 600;
+}
+
+.ficha-select-indicator {
+  display: inline-block;
+  float: right;
+  font-size: 7.5pt;
+  color: #222222;
+  font-weight: 900;
+}
+
+.ficha-box-check {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 12px;
+  height: 12px;
+  border: 1.2px solid #000000;
+  margin-right: 4px;
+  font-size: 8pt;
+  font-weight: 900;
+  line-height: 1;
+  vertical-align: middle;
+  background-color: #ffffff;
+}
+
+.ficha-box-check.checked {
+  background-color: #000000;
+  color: #ffffff;
+}
+
+.ficha-box-check.checked-x {
+  color: #000000;
+  font-family: monospace;
+}
+
+.ficha-map-container {
+  height: 130px;
+  background-color: #e2e8f0;
+  position: relative;
+  overflow: hidden;
+  border: 1px dashed #475569;
+}
+
+.ficha-subheading {
+  font-size: 7.5pt;
+  font-weight: 800;
+  text-transform: uppercase;
+  background-color: #f8fafc;
+  padding: 2px 4px;
+  border-bottom: 1px solid #94a3b8;
+  margin-bottom: 3px;
+}
+
+/* ==============================================================
+   REGLAS EXCLUSIVAS DE IMPRESIÓN (@media print)
+   Garantiza que la ficha física ocupe 1 página exacta en Letter/A4
+   ============================================================== */
+
+@media print {
+  @page {
+    size: letter portrait;
+    margin: 5mm 7mm 5mm 7mm;
+  }
+
+  /* Ocultar absolutamente todo en la página web */
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  body > *:not(#printable-sheet-modal) {
+    display: none !important;
+  }
+
+  #printable-sheet-modal {
+    position: static !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #ffffff !important;
+    display: block !important;
+    visibility: visible !important;
+    box-shadow: none !important;
+  }
+
+  #printable-sheet-modal * {
+    visibility: visible !important;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+
+  .ficha-tecnica-salud {
+    border: 2px solid #000000 !important;
+    box-shadow: none !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    page-break-inside: avoid !important;
+  }
+
+  .ficha-table th, 
+  .ficha-table td {
+    border: 1.5px solid #000000 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  .ficha-map-container {
+    border: 1px solid #000000 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    height: 125px !important;
+  }
+}

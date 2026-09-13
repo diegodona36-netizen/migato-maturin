@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>MIGATO • Módulo 5: Pre-Diagnóstico de Infraestructura de Salud</title>
+
+  <!-- PWA & Theme Meta -->
+  <meta name="theme-color" content="#0a0620">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="icon" type="image/png" href="../assets/logo-migato.png">
+
+  <!-- Tailwind CSS (Local de Alta Disponibilidad + CDN de Respaldo) -->
+  <script src="../vendor/tailwindcss.js"></script>
+  <script>
+    if (!window.tailwind) {
+      document.write('<script src="https://cdn.tailwindcss.com"><\/script>');
+    }
+  </script>
+
+  <!-- Leaflet CSS & JS (Local de Alta Disponibilidad + CDN de Respaldo) -->
+  <link rel="stylesheet" href="../vendor/leaflet.css" />
+  <script src="../vendor/leaflet.js"></script>
+  <script>
+    if (typeof L === 'undefined') {
+      document.write('<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />');
+      document.write('<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"><\/script>');
+    }
+  </script>
+
+  <!-- Lucide Icons (Local + CDN) -->
+  <script src="../vendor/lucide.min.js"></script>
+  <script>
+    if (!window.lucide) {
+      document.write('<script src="https://unpkg.com/lucide@latest"><\/script>');
+    }
+  </script>
+
+  <!-- Custom Stylesheet & Print Rules -->
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="bg-[#0a0620] text-slate-100 min-h-screen flex flex-col antialiased select-none sm:select-auto" style="background: radial-gradient(circle at 50% 15%, #18114a 0%, #0e092e 50%, #080518 100%);">
+
+  <!-- ============================================================== -->
+  <!-- 1. TOP NAVBAR SUPERIOR                                         -->
+  <!-- ============================================================== -->
+  <header style="z-index: 1000;" class="bg-[#120c36]/95 backdrop-blur-md border-b border-[#2d1f85] px-4 py-2.5 flex items-center justify-between shadow-xl shrink-0 sticky top-0">
+    
+    <div class="flex items-center gap-3">
+      <a href="../" class="flex items-center gap-3 group" title="Volver a la Sala de Mando Central">
+        <img src="../assets/logo-migato.png" alt="Logo MIGATO" class="w-10 h-10 object-contain rounded-xl bg-white p-0.5 shadow-md border border-[#2d1f85] group-hover:scale-105 transition-transform">
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="font-black text-sm sm:text-base tracking-tight text-white flex items-center gap-1.5">
+              <span>MIGATO</span>
+              <span class="text-sky-400 font-bold uppercase text-xs hidden sm:inline">| Módulo 5 • Salud</span>
+            </h1>
+            <span class="text-[9px] font-mono font-black uppercase tracking-wider bg-rose-950/80 text-rose-300 border border-rose-700/60 px-2 py-0.5 rounded-full">
+              Fase 5 • Red Hospitalaria
+            </span>
+          </div>
+          <p class="text-[11px] text-slate-300 font-medium">Pre-Diagnóstico de Infraestructura Sanitaria Monagas • Gaceta 36.579 MPPS</p>
+        </div>
+      </a>
+    </div>
+
+    <div class="flex items-center gap-2">
+      
+      <!-- Exportar Base de Datos -->
+      <button id="btn-export-json" class="hidden md:inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-[#18114a] hover:bg-[#251b68] border border-[#2d1f85] text-slate-200 text-xs font-bold transition shadow-sm" title="Descargar base de datos en formato JSON">
+        <i data-lucide="download" class="w-3.5 h-3.5 text-sky-400"></i>
+        <span>JSON</span>
+      </button>
+
+      <button id="btn-export-csv" class="hidden sm:inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-[#18114a] hover:bg-[#251b68] border border-[#2d1f85] text-slate-200 text-xs font-bold transition shadow-sm" title="Descargar sábana de centros en CSV para Excel">
+        <i data-lucide="file-spreadsheet" class="w-3.5 h-3.5 text-emerald-400"></i>
+        <span>CSV</span>
+      </button>
+
+      <!-- Volver al portal -->
+      <a href="../" class="px-3 py-1.5 rounded-xl bg-[#18114a] hover:bg-[#251b68] border border-[#2d1f85] text-slate-300 hover:text-white text-xs font-bold transition flex items-center gap-1.5" title="Ir a la Sala de Mando Central">
+        <i data-lucide="arrow-left" class="w-4 h-4 text-amber-400"></i>
+        <span class="hidden sm:inline">Sala de Mando</span>
+      </a>
+
+    </div>
+
+  </header>
+
+  <!-- ============================================================== -->
+  <!-- 2. BARRA DE CIFRAS Y KPIS DE SALUD                             -->
+  <!-- ============================================================== -->
+  <section class="bg-[#140e40]/80 border-b border-[#2d1f85] px-4 py-2.5">
+    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3 text-xs">
+      
+      <!-- Contadores de Riesgo -->
+      <div class="flex items-center gap-3 sm:gap-4 overflow-x-auto py-1 scrollbar-none">
+        
+        <div class="flex items-center gap-1.5">
+          <span class="text-slate-400">Centros Diagnosticados:</span>
+          <strong id="kpi-total-centros" class="font-mono text-sm font-black text-white">0</strong>
+        </div>
+
+        <div class="w-px h-4 bg-slate-700"></div>
+
+        <div class="flex items-center gap-1.5 text-red-400">
+          <span class="w-2 h-2 rounded-full bg-red-500 animate-ping"></span>
+          <span class="font-bold">Críticos (Rojo):</span>
+          <strong id="kpi-criticos" class="font-mono text-sm font-black text-red-300">0</strong>
+        </div>
+
+        <div class="w-px h-4 bg-slate-700"></div>
+
+        <div class="flex items-center gap-1.5 text-amber-400">
+          <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+          <span class="font-bold">Alerta (Amarillo):</span>
+          <strong id="kpi-alertas" class="font-mono text-sm font-black text-amber-300">0</strong>
+        </div>
+
+        <div class="w-px h-4 bg-slate-700"></div>
+
+        <div class="flex items-center gap-1.5 text-emerald-400">
+          <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+          <span class="font-bold">Operativos (Verde):</span>
+          <strong id="kpi-estables" class="font-mono text-sm font-black text-emerald-300">0</strong>
+        </div>
+
+      </div>
+
+      <!-- Distribución por Red MPPS -->
+      <div class="hidden lg:flex items-center gap-3 text-slate-300 font-mono text-[11px]">
+        <span>🏥 Hospitales: <strong id="kpi-hospitales" class="text-white">0</strong></span>
+        <span>🩺 CDIs: <strong id="kpi-cdi" class="text-white">0</strong></span>
+        <span>💊 Ambulatorios: <strong id="kpi-ambulatorios" class="text-white">0</strong></span>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============================================================== -->
+  <!-- 3. PESTAÑAS DE NAVEGACIÓN PRINCIPAL                            -->
+  <!-- ============================================================== -->
+  <nav class="bg-[#120c36] border-b border-[#2d1f85] px-4">
+    <div class="max-w-7xl mx-auto flex gap-2 overflow-x-auto py-2 scrollbar-none">
+      
+      <button class="tab-btn active px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 bg-sky-500 text-[#050814] shadow-md shadow-sky-500/20" data-target="tab-registro">
+        <i data-lucide="clipboard-list" class="w-4 h-4"></i>
+        <span>Ficha de Levantamiento (Formulario)</span>
+      </button>
+
+      <button class="tab-btn px-4 py-2 rounded-xl text-xs font-bold text-slate-300 hover:text-white hover:bg-[#1c1459] transition flex items-center gap-2" data-target="tab-mapa">
+        <i data-lucide="map" class="w-4 h-4 text-sky-400"></i>
+        <span>Mapa Táctico de Hospitales (13 Municipios)</span>
+      </button>
+
+      <button class="tab-btn px-4 py-2 rounded-xl text-xs font-bold text-slate-300 hover:text-white hover:bg-[#1c1459] transition flex items-center gap-2" data-target="tab-directorio">
+        <i data-lucide="folder-kanban" class="w-4 h-4 text-amber-400"></i>
+        <span>Directorio de Fichas y Centros</span>
+      </button>
+
+    </div>
+  </nav>
+
+  <!-- ============================================================== -->
+  <!-- 4. CONTENIDO PRINCIPAL                                         -->
+  <!-- ============================================================== -->
+  <main class="flex-1 max-w-7xl mx-auto w-full p-4 sm:p-6 space-y-6">
+
+    <!-- ============================================================== -->
+    <!-- TAB 1: FORMULARIO DE LEVANTAMIENTO DE PRE-DIAGNÓSTICO          -->
+    <!-- ============================================================== -->
+    <div id="tab-registro" class="tab-panel space-y-6">
+      
+      <!-- BANNER DE ORIENTACIÓN SANITARIA -->
+      <div class="bg-gradient-to-r from-[#18114a] via-[#1f165a] to-[#251b68] border border-[#2d1f85] rounded-2xl p-4 sm:p-5 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-lg">
+        <div class="space-y-1">
+          <div class="flex items-center gap-2">
+            <span class="px-2 py-0.5 text-[10px] font-black uppercase tracking-wider bg-sky-950 text-sky-300 border border-sky-600/60 rounded-full">
+              Protocolo Oficial de Inspección
+            </span>
+            <span class="text-xs text-amber-300 font-mono font-bold">1:1 Ficha Física de Salud</span>
+          </div>
+          <h2 class="text-lg sm:text-xl font-black text-white tracking-tight">Pre-Diagnóstico de Infraestructura de Salud</h2>
+          <p class="text-xs text-blue-100/80 leading-relaxed">
+            Levantamiento territorial de centros de salud. Evalúa la disponibilidad de soporte vital (planta eléctrica, agua continua, gases medicinales, climatización) y fallas físicas para la toma de decisiones inmediata de la Gobernación de Monagas.
+          </p>
+        </div>
+
+        <div class="flex items-center gap-2 shrink-0">
+          <span id="badge-semaforo-en-vivo" class="px-3 py-1 text-xs font-black uppercase tracking-wider bg-emerald-950 text-emerald-400 border border-emerald-600 rounded-full flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+            <span>🟢 SOPORTE OPERATIVO ESTABLE</span>
+          </span>
+        </div>
+      </div>
+
+      <!-- FORMULARIO PRINCIPAL -->
+      <form id="form-pre-diagnostico" class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        
+        <input type="hidden" id="form-centro-id" value="">
+        <input type="hidden" id="form-lat" value="9.7483">
+        <input type="hidden" id="form-lng" value="-63.1785">
+
+        <!-- COLUMNA IZQUIERDA: CAMPOS DE LA FICHA (8 COLS) -->
+        <div class="lg:col-span-8 space-y-6">
+
+          <!-- 1. CABECERA & UBICACIÓN TERRITORIAL -->
+          <div class="bg-[#18114a] border border-[#2d1f85] rounded-2xl p-5 space-y-4 shadow-md">
+            <div class="flex items-center justify-between border-b border-[#2d1f85] pb-2">
+              <h3 class="text-sm font-black text-white uppercase tracking-wider flex items-center gap-2">
+                <i data-lucide="map-pin" class="w-4 h-4 text-sky-400"></i>
+                <span>1. Ubicación Territorial y Jurisdicción</span>
+              </h3>
+              <span class="text-[11px] font-mono text-slate-400">Estado: <strong class="text-white">Monagas</strong> • Área: <strong class="text-white">Salud</strong></span>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              
+              <!-- Municipio -->
+              <div class="space-y-1">
+                <label class="text-xs font-bold text-slate-300 flex items-center justify-between">
+                  <span>Municipio</span>
+                  <span class="text-[10px] text-amber-400 font-mono">[▼ Cascada]</span>
+                </label>
+                <select id="form-municipio" required class="w-full px-3 py-2 text-xs bg-[#120c36] border border-[#2d1f85] rounded-xl text-white focus:border-sky-400 focus:outline-none transition">
+                  <option value="">Cargando municipios...</option>
+                </select>
+              </div>
+
+              <!-- Parroquia -->
+              <div class="space-y-1">
+                <label class="text-xs font-bold text-slate-300 flex items-center justify-between">
+                  <span>Parroquia</span>
+                  <span class="text-[10px] text-amber-400 font-mono">[▼ Cascada]</span>
+                </label>
+                <select id="form-parroquia" required class="w-full px-3 py-2 text-xs bg-[#120c36] border border-[#2d1f85] rounded-xl text-white focus:border-sky-400 focus:outline-none transition">
+                  <option value="">Seleccione Municipio primero</option>
+                </select>
+              </div>
+
+              <!-- Sector -->
+              <div class="space-y-1">
+                <label class="text-xs font-bold text-slate-300 flex items-center justify-between">
+                  <span>Sector / Comunidad</span>
+                  <span class="text-[10px] text-amber-400 font-mono">[▼ Cascada]</span>
+                </label>
+                <select id="form-sector" class="w-full px-3 py-2 text-xs bg-[#120c36] border border-[#2d1f85] rounded-xl text-white focus:border-sky-400 focus:outline-none transition">
+                  <option value="">Seleccione Parroquia primero</option>
+                </select>
+              </div>
+
+              <!-- Sector Manual (Opcional) -->
+              <div id="custom-sector-container" class="hidden space-y-1">
+                <label class="text-xs font-bold text-amber-300">Especificar Nombre del Sector:</label>
+                <input type="text" id="form-sector-custom" placeholder="Ej. Barrio Bolívar, Callejón 3" class="w-full px-3 py-2 text-xs bg-[#120c36] border border-amber-500/50 rounded-xl text-white focus:border-amber-400 focus:outline-none transition">
+              </div>
+
+              <!-- Nombre del Centro de Salud -->
+              <div class="space-y-1 sm:col-span-2">
+                <label class="text-xs font-bold text-white flex items-center justify-between">
+                  <span>Nombre Oficial del Centro de Salud</span>
+                  <span class="text-[10px] text-rose-400 font-bold">* Requerido</span>
+                </label>
+                <input type="text" id="form-nombre-centro" required placeholder="Ej. Hospital Universitario Dr. Manuel Núñez Tovar (HUMNT) / CDI Los Godos" class="w-full px-3.5 py-2.5 text-xs sm:text-sm bg-[#120c36] border border-[#2d1f85] rounded-xl text-white placeholder-slate-500 focus:border-sky-400 focus:outline-none font-bold transition">
+              </div>
+
+            </div>
+          </div>
+
+          <!-- 2. TIPO DE ESTABLECIMIENTO (MPPS / GACETA 36.579) -->
+          <div class="bg-[#18114a] border border-[#2d1f85] rounded-2xl p-5 space-y-4 shadow-md">
+            <div class="border-b border-[#2d1f85] pb-2">
+              <h3 class="text-sm font-black text-white uppercase tracking-wider flex items-center gap-2">
+                <i data-lucide="building-2" class="w-4 h-4 text-emerald-400"></i>
+                <span>2. Tipo de Establecimiento (Normativa MPPS)</span>
+              </h3>
+              <p class="text-[11px] text-slate-400 mt-0.5">Clasificación asistencial según Gaceta Oficial N° 36.579</p>
+            </div>
+
+            <!-- Selector de Red -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+              
+              <label class="flex items-center gap-2.5 p-3 rounded-xl bg-[#120c36] border border-[#2d1f85] hover:border-sky-400 cursor-pointer text-xs transition">
+                <input type="radio" name="tipoRed" value="comunal" class="text-sky-500 focus:ring-sky-400 bg-slate-900 border-slate-700">
+                <div>
+                  <strong class="text-white block font-bold">Red Comunal</strong>
+                  <span class="text-[10px] text-slate-400 block">Barrio Adentro (CPT, CDI, SRI)</span>
+                </div>
+              </label>
+
+              <label class="flex items-center gap-2.5 p-3 rounded-xl bg-[#120c36] border border-[#2d1f85] hover:border-amber-400 cursor-pointer text-xs transition">
+                <input type="radio" name="tipoRed" value="ambulatoria" class="text-amber-500 focus:ring-amber-400 bg-slate-900 border-slate-700">
+                <div>
+                  <strong class="text-white block font-bold">Red Ambulatoria</strong>
+                  <span class="text-[10px] text-slate-400 block">Rurales I-II, Urbanos I-III</span>
+                </div>
+              </label>
+
+              <label class="flex items-center gap-2.5 p-3 rounded-xl bg-[#120c36] border border-[#2d1f85] hover:border-rose-400 cursor-pointer text-xs transition">
+                <input type="radio" name="tipoRed" value="hospitalaria" checked class="text-rose-500 focus:ring-rose-400 bg-slate-900 border-slate-700">
+                <div>
+                  <strong class="text-white block font-bold">Red Hospitalaria</strong>
+                  <span class="text-[10px] text-slate-400 block">Hospitales Tipo I, II, III, IV</span>
+                </div>
+              </label>
+
+            </div>
+
+            <!-- Subtipos MPPS específicos generados dinámicamente -->
+            <div class="space-y-1.5 pt-2">
+              <span class="text-xs font-bold text-slate-300 block">Clasificación Específica:</span>
+              <div id="container-subtipos-mpps">
+                <!-- Se llena dinámicamente -->
+              </div>
+            </div>
+
+          </div>
+
+          <!-- 3. SOPORTE CRÍTICO Y VITAL (MATRIZ DE RIESGO) -->
+          <div class="bg-[#18114a] border border-[#2d1f85] rounded-2xl p-5 space-y-4 shadow-md">
+            <div class="flex items-center justify-between border-b border-[#2d1f85] pb-2">
+              <div>
+                <h3 class="text-sm font-black text-white uppercase tracking-wider flex items-center gap-2">
+                  <i data-lucide="shield-alert" class="w-4 h-4 text-rose-400"></i>
+                  <span>3. Soporte Crítico y Vital</span>
+                </h3>
+                <p class="text-[11px] text-slate-400">Condición indispensable para quirófanos, emergencias y cadena de frío</p>
+              </div>
+              <span class="text-[10px] font-mono uppercase bg-rose-950 text-rose-300 border border-rose-800 px-2 py-0.5 rounded-full font-bold">
+                Alta Prioridad
+              </span>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
+              
+              <!-- Planta Eléctrica -->
+              <div class="p-3 bg-[#120c36] rounded-xl border border-[#2d1f85] space-y-2">
+                <div class="flex items-center gap-1.5 font-bold text-slate-200">
+                  <span>⚡ Planta Eléctrica</span>
+                </div>
+                <div class="space-y-1.5">
+                  <label class="flex items-center gap-2 cursor-pointer text-slate-300">
+                    <input type="radio" name="soporte_planta" value="Operativa" checked class="text-emerald-500">
+                    <span>Operativa</span>
+                  </label>
+                  <label class="flex items-center gap-2 cursor-pointer text-slate-300">
+                    <input type="radio" name="soporte_planta" value="Inoperativa" class="text-red-500">
+                    <span class="text-red-300 font-bold">Inoperativa</span>
+                  </label>
+                  <label class="flex items-center gap-2 cursor-pointer text-slate-300">
+                    <input type="radio" name="soporte_planta" value="No tiene" class="text-slate-400">
+                    <span>No tiene</span>
+                  </label>
+                </div>
+              </div>
+
+              <!-- Suministro de Agua -->
+              <div class="p-3 bg-[#120c36] rounded-xl border border-[#2d1f85] space-y-2">
+                <div class="flex items-center gap-1.5 font-bold text-slate-200">
+                  <span>💧 Suministro Agua</span>
+                </div>
+                <div class="space-y-1.5">
+                  <label class="flex items-center gap-2 cursor-pointer text-slate-300">
+                    <input type="radio" name="soporte_agua" value="Continuo" checked class="text-emerald-500">
+                    <span>Continuo</span>
+                  </label>
+                  <label class="flex items-center gap-2 cursor-pointer text-slate-300">
+                    <input type="radio" name="soporte_agua" value="Cisterna" class="text-amber-500">
+                    <span>Cisterna</span>
+                  </label>
+                  <label class="flex items-center gap-2 cursor-pointer text-slate-300">
+                    <input type="radio" name="soporte_agua" value="Inexistente" class="text-red-500">
+                    <span class="text-red-300 font-bold">Inexistente</span>
+                  </label>
+                </div>
+              </div>
+
+              <!-- Gases Medicinales -->
+              <div class="p-3 bg-[#120c36] rounded-xl border border-[#2d1f85] space-y-2">
+                <div class="flex items-center gap-1.5 font-bold text-slate-200">
+                  <span>💨 Gases Medicinales</span>
+                </div>
+                <div class="space-y-1.5">
+                  <label class="flex items-center gap-2 cursor-pointer text-slate-300">
+                    <input type="radio" name="soporte_gases" value="Red Central" checked class="text-emerald-500">
+                    <span>Red Central</span>
+                  </label>
+                  <label class="flex items-center gap-2 cursor-pointer text-slate-300">
+                    <input type="radio" name="soporte_gases" value="Bombonas" class="text-amber-500">
+                    <span>Bombonas</span>
+                  </label>
+                  <label class="flex items-center gap-2 cursor-pointer text-slate-300">
+                    <input type="radio" name="soporte_gases" value="Inexistente" class="text-red-500">
+                    <span class="text-red-300 font-bold">Inexistente</span>
+                  </label>
+                </div>
+              </div>
+
+              <!-- Climatización -->
+              <div class="p-3 bg-[#120c36] rounded-xl border border-[#2d1f85] space-y-2">
+                <div class="flex items-center gap-1.5 font-bold text-slate-200">
+                  <span>❄️ Climatización (A/A)</span>
+                </div>
+                <div class="space-y-1.5">
+                  <label class="flex items-center gap-2 cursor-pointer text-slate-300">
+                    <input type="radio" name="soporte_clima" value="100% Operativa" class="text-emerald-500">
+                    <span>100% Operativa</span>
+                  </label>
+                  <label class="flex items-center gap-2 cursor-pointer text-slate-300">
+                    <input type="radio" name="soporte_clima" value="Parcial" checked class="text-amber-500">
+                    <span>Parcial</span>
+                  </label>
+                  <label class="flex items-center gap-2 cursor-pointer text-slate-300">
+                    <input type="radio" name="soporte_clima" value="Cero Clima" class="text-red-500">
+                    <span class="text-red-300 font-bold">Cero Clima</span>
+                  </label>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- 4. ÁREAS / SERVICIOS EVALUADOS -->
+          <div class="bg-[#18114a] border border-[#2d1f85] rounded-2xl p-5 space-y-4 shadow-md">
+            <div class="flex items-center justify-between border-b border-[#2d1f85] pb-2">
+              <div>
+                <h3 class="text-sm font-black text-white uppercase tracking-wider flex items-center gap-2">
+                  <i data-lucide="check-square" class="w-4 h-4 text-sky-400"></i>
+                  <span>4. Áreas y Servicios Evaluados</span>
+                </h3>
+                <p class="text-[11px] text-slate-400">Marque los servicios que se encuentran instalados en el centro</p>
+              </div>
+            </div>
+
+            <div id="container-areas-servicios">
+              <!-- Se llena dinámicamente -->
+            </div>
+          </div>
+
+          <!-- 5. FALLAS DE INFRAESTRUCTURA DETECTADAS -->
+          <div class="bg-[#18114a] border border-[#2d1f85] rounded-2xl p-5 space-y-4 shadow-md">
+            <div class="flex items-center justify-between border-b border-[#2d1f85] pb-2">
+              <div>
+                <h3 class="text-sm font-black text-amber-400 uppercase tracking-wider flex items-center gap-2">
+                  <i data-lucide="alert-triangle" class="w-4 h-4 text-amber-400"></i>
+                  <span>5. Fallas de Infraestructura Física Detectadas</span>
+                </h3>
+                <p class="text-[11px] text-slate-400">Checklist exhaustivo de deficiencias reportadas por el equipo médico</p>
+              </div>
+            </div>
+
+            <div id="container-fallas-detectadas">
+              <!-- Se llena dinámicamente por categorías -->
+            </div>
+          </div>
+
+          <!-- 6. RED DE REMISIÓN, OBSERVACIONES Y FIRMA -->
+          <div class="bg-[#18114a] border border-[#2d1f85] rounded-2xl p-5 space-y-4 shadow-md">
+            <div class="border-b border-[#2d1f85] pb-2">
+              <h3 class="text-sm font-black text-white uppercase tracking-wider flex items-center gap-2">
+                <i data-lucide="send" class="w-4 h-4 text-indigo-400"></i>
+                <span>6. Red de Remisión, Observaciones y Responsable</span>
+              </h3>
+            </div>
+
+            <div class="space-y-4 text-xs">
+              
+              <!-- Red de Remisión -->
+              <div class="space-y-1">
+                <label class="font-bold text-slate-200 block">Centro Hospitalario / Receptor de Referencia:</label>
+                <input type="text" id="form-red-remision" value="Hospital Universitario Dr. Manuel Núñez Tovar (HUMNT)" placeholder="Ej. HUMNT Maturín / CDI más cercano" class="w-full px-3 py-2 text-xs bg-[#120c36] border border-[#2d1f85] rounded-xl text-white focus:border-sky-400 focus:outline-none transition">
+              </div>
+
+              <!-- Observaciones -->
+              <div class="space-y-1">
+                <label class="font-bold text-slate-200 block">Observaciones y Necesidades Urgentes:</label>
+                <textarea id="form-observaciones" rows="3" placeholder="Detalles de averías de equipos, filtraciones graves, urgencia de dotación..." class="w-full px-3 py-2 text-xs bg-[#120c36] border border-[#2d1f85] rounded-xl text-white focus:border-sky-400 focus:outline-none transition"></textarea>
+              </div>
+
+              <!-- Evaluador -->
+              <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 pt-2 border-t border-[#2d1f85]">
+                <div class="space-y-1">
+                  <label class="font-bold text-slate-300 block">Nombre del Evaluador:</label>
+                  <input type="text" id="form-eval-nombre" placeholder="Dr. Carlos Mendoza" class="w-full px-3 py-2 text-xs bg-[#120c36] border border-[#2d1f85] rounded-xl text-white focus:border-sky-400 focus:outline-none transition">
+                </div>
+                <div class="space-y-1">
+                  <label class="font-bold text-slate-300 block">Cédula de Identidad:</label>
+                  <input type="text" id="form-eval-ci" placeholder="V-14.892.410" class="w-full px-3 py-2 text-xs bg-[#120c36] border border-[#2d1f85] rounded-xl text-white focus:border-sky-400 focus:outline-none transition">
+                </div>
+                <div class="space-y-1">
+                  <label class="font-bold text-slate-300 block">Cargo / Enlace:</label>
+                  <input type="text" id="form-eval-cargo" placeholder="Médico Jefe / Enlace Sala de Mando" class="w-full px-3 py-2 text-xs bg-[#120c36] border border-[#2d1f85] rounded-xl text-white focus:border-sky-400 focus:outline-none transition">
+                </div>
+                <div class="space-y-1">
+                  <label class="font-bold text-slate-300 block">Teléfono de Contacto:</label>
+                  <input type="text" id="form-eval-telefono" placeholder="0414-7654321" class="w-full px-3 py-2 text-xs bg-[#120c36] border border-[#2d1f85] rounded-xl text-white focus:border-sky-400 focus:outline-none transition">
+                </div>
+                <div class="space-y-1">
+                  <label class="font-bold text-slate-300 block">Fecha del Levantamiento:</label>
+                  <input type="date" id="form-eval-fecha" class="w-full px-3 py-2 text-xs bg-[#120c36] border border-[#2d1f85] rounded-xl text-white focus:border-sky-400 focus:outline-none transition">
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+
+          <!-- BOTONES DE ACCIÓN DEL FORMULARIO -->
+          <div class="flex flex-wrap items-center justify-between gap-3 pt-2">
+            <button type="button" id="btn-limpiar-form" class="px-4 py-2.5 rounded-xl bg-[#120c36] hover:bg-[#1c1459] border border-[#2d1f85] text-slate-300 text-xs font-bold transition flex items-center gap-1.5">
+              <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+              <span>Limpiar Formulario</span>
+            </button>
+
+            <div class="flex items-center gap-2">
+              <button type="button" id="btn-previsualizar-ficha" class="px-4 py-2.5 rounded-xl bg-indigo-900/80 hover:bg-indigo-800 border border-indigo-500/50 text-indigo-200 text-xs font-bold transition flex items-center gap-1.5 shadow">
+                <i data-lucide="eye" class="w-4 h-4"></i>
+                <span>Previsualizar Ficha 1:1</span>
+              </button>
+
+              <button type="submit" class="px-5 py-2.5 rounded-xl bg-sky-500 hover:bg-sky-400 text-[#050814] font-black text-xs uppercase tracking-wider transition flex items-center gap-1.5 shadow-lg shadow-sky-500/20 active:scale-95">
+                <i data-lucide="save" class="w-4 h-4"></i>
+                <span>Guardar Pre-Diagnóstico</span>
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- COLUMNA DERECHA: MINI-MAPA DE GEORREFERENCIACIÓN (4 COLS) -->
+        <div class="lg:col-span-4 space-y-5">
+          
+          <div class="sticky top-20 space-y-4">
+
+            <!-- WIDGET MAPA SATELITAL DE UBICACIÓN -->
+            <div class="bg-[#18114a] border border-[#2d1f85] rounded-2xl p-4 space-y-3 shadow-xl">
+              <div class="flex items-center justify-between border-b border-[#2d1f85] pb-2">
+                <span class="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-1.5">
+                  <i data-lucide="crosshair" class="w-4 h-4 text-sky-400"></i>
+                  <span>Georreferenciación Satelital</span>
+                </span>
+                <button type="button" id="btn-gps-ubicacion" class="p-1 rounded-lg bg-[#120c36] hover:bg-[#251b68] border border-[#2d1f85] text-sky-400 text-[10px] font-bold transition flex items-center gap-1" title="Usar mi GPS actual">
+                  <i data-lucide="navigation" class="w-3.5 h-3.5"></i>
+                  <span>Mi GPS</span>
+                </button>
+              </div>
+
+              <!-- Contenedor del Mapa Leaflet -->
+              <div id="mapa-formulario" class="w-full h-64 rounded-xl overflow-hidden border border-[#2d1f85] relative shadow-inner"></div>
+
+              <div class="flex items-center justify-between text-[11px] font-mono text-slate-300 pt-1">
+                <span>Coordenadas:</span>
+                <span id="display-coordenadas" class="font-bold text-amber-400">9.74830, -63.17850</span>
+              </div>
+              <p class="text-[10px] text-slate-400 leading-tight">
+                💡 Haz clic o arrastra el marcador rojo para fijar la entrada de emergencia o coordenadas exactas del centro de salud.
+              </p>
+            </div>
+
+            <!-- INSTRUCCIONES RÁPIDAS DE IMPRESIÓN -->
+            <div class="bg-[#140e40] border border-[#2d1f85] rounded-2xl p-4 space-y-2 text-xs">
+              <span class="text-[10px] font-mono uppercase font-black text-amber-400 block tracking-wider">
+                📄 Salida en Papel y PDF 1:1
+              </span>
+              <p class="text-slate-300 text-[11px] leading-relaxed">
+                Al guardar o pulsar <strong>"Previsualizar Ficha 1:1"</strong>, el sistema generará una hoja técnica idéntica a las fichas impresas de Vialidad y Electricidad de la Gobernación, lista para firmar e imprimir en hoja Carta/A4.
+              </p>
+            </div>
+
+          </div>
+
+        </div>
+
+      </form>
+
+    </div>
+
+    <!-- ============================================================== -->
+    <!-- TAB 2: MAPA TÁCTICO GENERAL DE MONAGAS                         -->
+    <!-- ============================================================== -->
+    <div id="tab-mapa" class="tab-panel hidden space-y-4">
+      
+      <div class="bg-[#18114a] border border-[#2d1f85] rounded-2xl p-4 flex flex-wrap items-center justify-between gap-4">
+        <div>
+          <h2 class="text-base font-black text-white flex items-center gap-2">
+            <i data-lucide="map" class="w-5 h-5 text-sky-400"></i>
+            <span>Red Hospitalaria y Sanitaria del Estado Monagas</span>
+          </h2>
+          <p class="text-xs text-slate-300">Monitoreo de 13 Municipios • Semáforo de Soporte Crítico en Tiempo Real</p>
+        </div>
+
+        <!-- Leyenda -->
+        <div class="flex items-center gap-3 text-xs font-bold">
+          <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-red-500 shadow"></span> Crítico</span>
+          <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-amber-500 shadow"></span> Alerta</span>
+          <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-emerald-500 shadow"></span> Operativo</span>
+        </div>
+      </div>
+
+      <!-- MAPA PRINCIPAL -->
+      <div id="mapa-general" class="w-full h-[600px] rounded-2xl overflow-hidden border border-[#2d1f85] shadow-2xl relative"></div>
+
+    </div>
+
+    <!-- ============================================================== -->
+    <!-- TAB 3: DIRECTORIO DE FICHAS Y TABLA DE CENTROS                 -->
+    <!-- ============================================================== -->
+    <div id="tab-directorio" class="tab-panel hidden space-y-4">
+      
+      <!-- BARRA DE BÚSQUEDA Y FILTROS -->
+      <div class="bg-[#18114a] border border-[#2d1f85] rounded-2xl p-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
+        
+        <!-- Búsqueda -->
+        <div class="md:col-span-2">
+          <div class="relative">
+            <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3.5 top-3 pointer-events-none"></i>
+            <input type="text" id="input-busqueda-centros" placeholder="Buscar por nombre, parroquia, sector o tipo..." class="w-full pl-10 pr-4 py-2 text-xs bg-[#120c36] border border-[#2d1f85] rounded-xl text-white placeholder-slate-500 focus:border-sky-400 focus:outline-none transition">
+          </div>
+        </div>
+
+        <!-- Filtro Municipio -->
+        <div>
+          <select id="filtro-municipio" class="w-full px-3 py-2 text-xs bg-[#120c36] border border-[#2d1f85] rounded-xl text-white focus:border-sky-400 focus:outline-none transition">
+            <option value="todos">Todos los Municipios (13)</option>
+          </select>
+        </div>
+
+        <!-- Filtro Riesgo -->
+        <div>
+          <select id="filtro-riesgo" class="w-full px-3 py-2 text-xs bg-[#120c36] border border-[#2d1f85] rounded-xl text-white focus:border-sky-400 focus:outline-none transition">
+            <option value="todos">Todos los Estados de Riesgo</option>
+            <option value="rojo">🔴 Crítico (Rojo)</option>
+            <option value="amarillo">🟡 Alerta (Amarillo)</option>
+            <option value="verde">🟢 Operativo (Verde)</option>
+          </select>
+        </div>
+
+      </div>
+
+      <!-- TABLA DE CENTROS -->
+      <div class="bg-[#18114a] border border-[#2d1f85] rounded-2xl overflow-hidden shadow-xl">
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="bg-[#120c36] border-b border-[#2d1f85] text-[11px] font-mono uppercase text-slate-400">
+                <th class="py-3 px-3">#</th>
+                <th class="py-3 px-3">Centro de Salud</th>
+                <th class="py-3 px-3">Jurisdicción</th>
+                <th class="py-3 px-3">Soporte Vital</th>
+                <th class="py-3 px-3 text-center">Nivel de Riesgo</th>
+                <th class="py-3 px-3 text-right">Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="tabla-centros-tbody">
+              <!-- Se llena dinámicamente -->
+            </tbody>
+          </table>
+        </div>
+
+        <div id="tabla-centros-empty" class="hidden p-8 text-center text-slate-400 space-y-2">
+          <i data-lucide="inbox" class="w-8 h-8 mx-auto text-slate-600"></i>
+          <p class="text-xs">No se encontraron centros de salud con los filtros seleccionados.</p>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- ============================================================== -->
+  <!-- 5. MODAL DE FICHA OFICIAL IMPRIMIBLE 1:1                       -->
+  <!-- ============================================================== -->
+  <div id="printable-sheet-modal" class="hidden fixed inset-0 z-50 bg-black/85 backdrop-blur-sm overflow-y-auto p-2 sm:p-6 flex flex-col items-center">
+    
+    <!-- BARRA DE ACCIÓN NO-PRINT -->
+    <div class="no-print max-w-[790px] w-full bg-[#18114a] border border-[#2d1f85] p-3 rounded-2xl flex items-center justify-between mb-4 shadow-2xl">
+      <div class="flex items-center gap-2">
+        <span class="w-3 h-3 rounded-full bg-emerald-400"></span>
+        <strong class="text-xs font-bold text-white">Previsualización de Ficha Oficial 1:1</strong>
+      </div>
+      <div class="flex items-center gap-2">
+        <button onclick="window.imprimirFichaActual()" class="px-4 py-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-[#050814] font-black text-xs transition flex items-center gap-1.5 shadow">
+          <i data-lucide="printer" class="w-4 h-4"></i>
+          <span>Imprimir Ficha (PDF / Papel)</span>
+        </button>
+        <button onclick="window.cerrarModalFicha()" class="p-1.5 rounded-xl bg-[#120c36] hover:bg-red-950 text-slate-400 hover:text-red-400 border border-[#2d1f85] transition">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- CONTENEDOR DE LA FICHA IMPRESA (EN PANTALLA Y EN @media print) -->
+    <div id="printable-sheet-body" class="w-full flex justify-center">
+      <!-- Inyectado por saludApp.js -->
+    </div>
+
+  </div>
+
+  <!-- Scripts -->
+  <script type="module" src="js/saludApp.js"></script>
+
+</body>
+</html>
