@@ -61,7 +61,7 @@
   <meta http-equiv="Expires" content="0" />
 
   <!-- Custom Styles -->
-  <link rel="stylesheet" href="css/styles.css?v=141">
+  <link rel="stylesheet" href="css/styles.css?v=142">
 
   <!-- Script de Autenticación Rápida y Control de Acceso Estricto (Exclusivo Regional) -->
   <script src="../js/auth.js"></script>
@@ -535,6 +535,13 @@
 
     </div>
 
+    <!-- 📍 INDICADOR CENTRAL: ESTADO TERRITORIAL DEL MAPA (ENTRE FORMULARIO CARGA Y SATÉLITE) -->
+    <div id="hud-territorial-focus" class="flex-1 flex items-center justify-center min-w-0 px-2 shrink-0 pointer-events-auto transition-all duration-200">
+      <div id="hud-territorial-content" class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#140e40]/95 border border-amber-500/50 shadow-md text-xs flex-wrap justify-center max-w-full">
+        <!-- Contenido dinámico inyectado por updateTerritorialFocusUI() -->
+      </div>
+    </div>
+
     <!-- ACCIONES DE ORIENTACIÓN Y VISTA TERRITORIAL -->
     <div class="flex items-center gap-1.5 shrink-0">
       
@@ -759,13 +766,6 @@
         <i data-lucide="list" class="w-4 h-4 text-sky-400"></i>
         <span>Ver Sectores</span>
       </button>
-
-      <!-- HUD FLOTANTE DE ENFOQUE TERRITORIAL MULTI-NIVEL EN CASCADA (MUNICIPIO ➔ PARROQUIA ➔ EJE ➔ SECTOR) -->
-      <div id="hud-territorial-focus" style="display: none;" class="absolute top-3 left-1/2 -translate-x-1/2 z-[1000] pointer-events-auto transition-all animate-in fade-in duration-200 max-w-[95vw]">
-        <div id="hud-territorial-content" class="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#140e40]/95 border border-sky-500/60 shadow-2xl backdrop-blur-md text-xs flex-wrap justify-center">
-          <!-- Contenido dinámico inyectado por updateTerritorialFocusUI() -->
-        </div>
-      </div>
 
       <div id="earth-canvas"></div>
 
@@ -1919,7 +1919,7 @@
   </div>
 
   <!-- SCRIPT -->
-  <script type="module" src="js/app.js?v=141"></script>
+  <script type="module" src="js/app.js?v=142"></script>
   <script>
     if (window.lucide && typeof window.lucide.createIcons === 'function') {
       window.lucide.createIcons();
