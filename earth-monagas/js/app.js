@@ -2,16 +2,16 @@
  * Controlador Principal — Google Earth Pro Web (Edición Estado Monagas)
  * Robusto, 100% Operativo y Totalmente Individualizado
  */
-import { CATALOGO_MONAGAS, findParishInCatalog, PARISH_ALIAS_MAP, resolveParishId } from "./catalogoMonagas.js?v=137";
-import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=137";
-import { getAllParishesForSelector } from "./usersCatalog.js?v=137";
-import { EarthStore } from "./earthStore.js?v=137";
-import { EarthMapEngine } from "./mapEngine.js?v=137";
-import { PropertiesDialog } from "./propertiesDialog.js?v=137";
-import { ToolsManager } from "./toolsManager.js?v=137";
-import { detectParishFromGeometry, SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=137";
-import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=137";
-import { getParishDemographics } from "./monagasDemographics.js?v=137";
+import { CATALOGO_MONAGAS, findParishInCatalog, PARISH_ALIAS_MAP, resolveParishId } from "./catalogoMonagas.js?v=138";
+import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=138";
+import { getAllParishesForSelector } from "./usersCatalog.js?v=138";
+import { EarthStore } from "./earthStore.js?v=138";
+import { EarthMapEngine } from "./mapEngine.js?v=138";
+import { PropertiesDialog } from "./propertiesDialog.js?v=138";
+import { ToolsManager } from "./toolsManager.js?v=138";
+import { detectParishFromGeometry, SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=138";
+import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=138";
+import { getParishDemographics } from "./monagasDemographics.js?v=138";
 import { 
   getMunicipios, 
   getParroquiasByMun, 
@@ -21,13 +21,13 @@ import {
   findSectorById, 
   searchSectores, 
   ALL_SECTORES_FLAT 
-} from "./monagasSectoresCatalog.js?v=137";
+} from "./monagasSectoresCatalog.js?v=138";
 import { 
   getSavedFirebaseConfig, 
   saveFirebaseConfig, 
   isFirebaseConfigured, 
   initFirebase 
-} from "./firebaseConfig.js?v=137";
+} from "./firebaseConfig.js?v=138";
 
 // Controladores globales infalibles accesibles en cualquier contexto
 window.closeParishSelectorModal = function() {

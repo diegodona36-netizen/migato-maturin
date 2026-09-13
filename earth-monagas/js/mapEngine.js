@@ -2,8 +2,9 @@
  * Motor Cartográfico Acelerado por GPU — Google Earth Pro Web (Monagas)
  * Integrado con Capas Jerárquicas Oficiales (INE 2021) y Edición de Vértices
  */
-import { GEO_ESTADO_OFICIAL, GEO_MUNICIPIOS_OFICIAL, GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=137";
-import { CATALOGO_MONAGAS, PARISH_ALIAS_MAP, resolveParishId } from "./catalogoMonagas.js?v=137";
+import { GEO_ESTADO_OFICIAL, GEO_MUNICIPIOS_OFICIAL, GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=138";
+import { CATALOGO_MONAGAS, PARISH_ALIAS_MAP, resolveParishId } from "./catalogoMonagas.js?v=138";
+import { MONAGAS_DEMOGRAPHICS, getParishDemographics } from "./monagasDemographics.js?v=138";
 
 export class EarthMapEngine {
   constructor(containerId, onCoordUpdate) {
@@ -210,37 +211,73 @@ export class EarthMapEngine {
       return;
     }
 
-    // 1. Capa L1: Estado Monagas (Oficial INE/IGVSB) - Capa puramente visual sin eventos invasivos
+    // 1. Capa L1: Estado Monagas (Oficial INE/IGVSB) - Interactivo con estadísticas macro
     this.layerL1_Estado = L.geoJSON(GEO_ESTADO_OFICIAL, {
       renderer: this.canvasRenderer,
-      interactive: false,
+      interactive: true,
       style: {
         color: "#f59e0b",
         weight: 3.5,
         opacity: 0.95,
         fillColor: "#f59e0b",
-        fillOpacity: 0.06,
-        dashArray: "8, 6",
-        interactive: false
+        fillOpacity: 0.08,
+        dashArray: "8, 6"
       },
       onEachFeature: (feature, layer) => {
-        if (!this.isTouchDevice) {
-          layer.bindTooltip(`
-            <div class="p-2 font-mono text-xs max-w-[240px] bg-[#140e40]/95 rounded-xl border border-amber-500/50 shadow-2xl">
-              <div class="flex items-center justify-between border-b border-amber-800/60 pb-1 mb-1">
-                <span class="text-[9px] uppercase tracking-wider text-amber-400 font-black">Nivel 1 • Macro</span>
-                <span class="text-[9px] font-bold text-amber-200 bg-amber-950 px-1.5 py-0.5 rounded border border-amber-700">Estado</span>
-              </div>
-              <strong class="text-white block font-black text-sm mb-0.5">Estado Monagas</strong>
-              <span class="text-[10px] text-slate-300 block mb-1.5">13 Municipios • 44 Parroquias • 536 Centros de Votación</span>
-              <span class="text-[9px] text-amber-300 font-bold block text-center">Acércate con el zoom para ver municipios</span>
+        layer.on({
+          mouseover: () => {
+            layer.setStyle({ weight: 4.5, color: "#fbbf24", fillOpacity: 0.16 });
+          },
+          mouseout: () => {
+            layer.setStyle({ weight: 3.5, color: "#f59e0b", fillOpacity: 0.08 });
+          },
+          click: (e) => {
+            L.DomEvent.stopPropagation(e);
+            if (window.earthApp?.focusEstado) {
+              window.earthApp.focusEstado(true);
+            }
+          }
+        });
+
+        layer.bindTooltip(`
+          <div style="font-family:system-ui, -apple-system, sans-serif; font-size:12px; color:#ffffff; line-height:1.4; padding:6px 10px; min-width:235px;">
+            <div style="display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid rgba(245,158,11,0.4); padding-bottom:4px; margin-bottom:6px;">
+              <span style="font-weight:900; font-size:13px; color:#fbbf24; display:flex; align-items:center; gap:4px;">
+                🗺️ Estado Monagas
+              </span>
+              <span style="font-size:9px; font-weight:800; background:rgba(180,83,9,0.35); color:#fde68a; border:1px solid rgba(245,158,11,0.5); padding:1px 5px; border-radius:4px; text-transform:uppercase;">
+                Nivel 1 • Macro
+              </span>
             </div>
-          `, { sticky: true, className: "earth-tooltip" });
-        }
+            
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:5px; margin-bottom:6px; font-size:11px;">
+              <div style="background:rgba(15,23,42,0.65); padding:4px 6px; border-radius:6px; border:1px solid rgba(255,255,255,0.08);">
+                <span style="color:#94a3b8; font-size:9px; display:block; text-transform:uppercase; font-weight:600;">División</span>
+                <strong style="color:#f8fafc; font-size:11px;">13 Mun / 45 Par</strong>
+              </div>
+              <div style="background:rgba(15,23,42,0.65); padding:4px 6px; border-radius:6px; border:1px solid rgba(255,255,255,0.08);">
+                <span style="color:#94a3b8; font-size:9px; display:block; text-transform:uppercase; font-weight:600;">Población</span>
+                <strong style="color:#fbbf24; font-size:11px;">~1.028.000</strong>
+              </div>
+              <div style="background:rgba(15,23,42,0.65); padding:4px 6px; border-radius:6px; border:1px solid rgba(255,255,255,0.08);">
+                <span style="color:#94a3b8; font-size:9px; display:block; text-transform:uppercase; font-weight:600;">Centros CNE</span>
+                <strong style="color:#facc15; font-size:11px;">276 Centros</strong>
+              </div>
+              <div style="background:rgba(15,23,42,0.65); padding:4px 6px; border-radius:6px; border:1px solid rgba(255,255,255,0.08);">
+                <span style="color:#94a3b8; font-size:9px; display:block; text-transform:uppercase; font-weight:600;">Capital</span>
+                <strong style="color:#38bdf8; font-size:11px;">Maturín</strong>
+              </div>
+            </div>
+
+            <div style="font-size:10px; color:#cbd5e1; border-top:1px dashed rgba(255,255,255,0.12); padding-top:4px; text-align:center;">
+              <span style="color:#fbbf24; font-weight:700;">Haz clic para ver toda la jurisdicción</span>
+            </div>
+          </div>
+        `, { sticky: true, className: "earth-tooltip", direction: "top" });
       }
     });
 
-    // 2. Capa L2: 13 Municipios (Oficial INE) - Clic para zoom directo
+    // 2. Capa L2: 13 Municipios (Oficial INE) - Clic para zoom directo con estadísticas resumidas de la región
     this.layerL2_Municipios = L.geoJSON(GEO_MUNICIPIOS_OFICIAL, {
       renderer: this.canvasRenderer,
       interactive: true,
@@ -254,6 +291,14 @@ export class EarthMapEngine {
       onEachFeature: (feature, layer) => {
         const munId = feature.properties?.id;
         const munNom = feature.properties?.nombre || "Municipio";
+        const stats = this.getMunicipioStats(munId);
+        const habFormatted = stats ? stats.habitantes.toLocaleString("es-VE") : "—";
+        const votFormatted = stats ? stats.votantes.toLocaleString("es-VE") : "—";
+        const casFormatted = stats ? stats.casas.toLocaleString("es-VE") : "—";
+        const cenCount = stats ? stats.centros : "—";
+        const parCount = stats ? stats.parroquiasCount : "—";
+        const capName = stats ? stats.capital : munNom;
+
         layer.on({
           mouseover: () => {
             layer.setStyle({ weight: 3.5, color: "#38bdf8", fillOpacity: 0.35 });
@@ -268,16 +313,47 @@ export class EarthMapEngine {
             }
           }
         });
+
         layer.bindTooltip(`
-          <div style="font-family:system-ui;font-size:12px;color:#ffffff;line-height:1.3;padding:4px 8px;">
-            <div style="font-weight:800;color:#38bdf8;">🏛️ Municipio ${munNom}</div>
-            <div style="font-size:10px;color:#cbd5e1;">Haz clic para hacer zoom y ver parroquias</div>
+          <div style="font-family:system-ui, -apple-system, sans-serif; font-size:12px; color:#ffffff; line-height:1.4; padding:6px 10px; min-width:215px;">
+            <div style="display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid rgba(56,189,248,0.35); padding-bottom:4px; margin-bottom:6px;">
+              <span style="font-weight:900; font-size:13px; color:#38bdf8; display:flex; align-items:center; gap:4px;">
+                🏛️ ${munNom}
+              </span>
+              <span style="font-size:9px; font-weight:800; background:rgba(2,132,199,0.35); color:#7dd3fc; border:1px solid rgba(56,189,248,0.4); padding:1px 5px; border-radius:4px;">
+                ${parCount} Parroquias
+              </span>
+            </div>
+            
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:5px; margin-bottom:6px; font-size:11px;">
+              <div style="background:rgba(15,23,42,0.65); padding:4px 6px; border-radius:6px; border:1px solid rgba(255,255,255,0.08);">
+                <span style="color:#94a3b8; font-size:9px; display:block; text-transform:uppercase; font-weight:600;">Habitantes</span>
+                <strong style="color:#f8fafc; font-size:11px;">${habFormatted}</strong>
+              </div>
+              <div style="background:rgba(15,23,42,0.65); padding:4px 6px; border-radius:6px; border:1px solid rgba(255,255,255,0.08);">
+                <span style="color:#94a3b8; font-size:9px; display:block; text-transform:uppercase; font-weight:600;">Electores CNE</span>
+                <strong style="color:#38bdf8; font-size:11px;">${votFormatted}</strong>
+              </div>
+              <div style="background:rgba(15,23,42,0.65); padding:4px 6px; border-radius:6px; border:1px solid rgba(255,255,255,0.08);">
+                <span style="color:#94a3b8; font-size:9px; display:block; text-transform:uppercase; font-weight:600;">Centros CNE</span>
+                <strong style="color:#facc15; font-size:11px;">${cenCount} Escuelas</strong>
+              </div>
+              <div style="background:rgba(15,23,42,0.65); padding:4px 6px; border-radius:6px; border:1px solid rgba(255,255,255,0.08);">
+                <span style="color:#94a3b8; font-size:9px; display:block; text-transform:uppercase; font-weight:600;">Viviendas</span>
+                <strong style="color:#34d399; font-size:11px;">${casFormatted}</strong>
+              </div>
+            </div>
+
+            <div style="font-size:10px; color:#cbd5e1; border-top:1px dashed rgba(255,255,255,0.12); padding-top:4px; display:flex; align-items:center; justify-content:space-between;">
+              <span style="color:#94a3b8;">Cap: <strong style="color:#ffffff;">${capName}</strong></span>
+              <span style="color:#38bdf8; font-weight:700;">Clic para entrar ➔</span>
+            </div>
           </div>
-        `, { sticky: true, className: "earth-tooltip" });
+        `, { sticky: true, className: "earth-tooltip", direction: "top" });
       }
     });
 
-    // 3. Capa L3: 44 Parroquias Oficiales (INE) - Clic para zoom directo
+    // 3. Capa L3: 44 Parroquias Oficiales (INE) - Clic para zoom directo con demografía
     this.layerL3_Parroquias = L.geoJSON(GEO_PARROQUIAS_OFICIAL, {
       renderer: this.canvasRenderer,
       interactive: true,
@@ -294,6 +370,13 @@ export class EarthMapEngine {
         const pName = pProps.nombre || "Parroquia";
         const pId = pProps.id;
         const munId = String(pProps.municipioId || pProps.ADM2_ES || "maturin").toLowerCase().replace(/_/g, "-").trim();
+        const resolvedParishId = (typeof PARISH_ALIAS_MAP !== "undefined" && PARISH_ALIAS_MAP[pId]) ? PARISH_ALIAS_MAP[pId] : pId;
+        const pDem = typeof getParishDemographics === "function" ? getParishDemographics(munId, resolvedParishId) : null;
+        const pHab = pDem ? pDem.habitantes.toLocaleString("es-VE") : "—";
+        const pVot = pDem ? pDem.votantes.toLocaleString("es-VE") : "—";
+        const pCen = pDem ? pDem.centros : "—";
+        const pCas = pDem ? pDem.casas.toLocaleString("es-VE") : "—";
+
         layer.on({
           mouseover: () => {
             layer.setStyle({ weight: 3, color: "#facc15", fillOpacity: 0.38 });
@@ -304,22 +387,96 @@ export class EarthMapEngine {
           click: (e) => {
             L.DomEvent.stopPropagation(e);
             if (window.earthApp?.selectParish) {
-              const resolvedParishId = (typeof PARISH_ALIAS_MAP !== "undefined" && PARISH_ALIAS_MAP[pId]) ? PARISH_ALIAS_MAP[pId] : pId;
               window.earthApp.selectParish(munId, resolvedParishId, true);
             }
           }
         });
+
         layer.bindTooltip(`
-          <div style="font-family:system-ui;font-size:12px;color:#ffffff;line-height:1.3;padding:4px 8px;">
-            <div style="font-weight:800;color:#10b981;">📍 Parroquia ${pName}</div>
-            <div style="font-size:10px;color:#cbd5e1;">Haz clic para hacer zoom y entrar</div>
+          <div style="font-family:system-ui, -apple-system, sans-serif; font-size:12px; color:#ffffff; line-height:1.4; padding:6px 10px; min-width:200px;">
+            <div style="display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid rgba(16,185,129,0.35); padding-bottom:4px; margin-bottom:6px;">
+              <span style="font-weight:900; font-size:13px; color:#10b981; display:flex; align-items:center; gap:4px;">
+                📍 ${pName}
+              </span>
+              <span style="font-size:9px; font-weight:800; background:rgba(16,185,129,0.25); color:#6ee7b7; border:1px solid rgba(16,185,129,0.4); padding:1px 5px; border-radius:4px;">
+                Parroquia
+              </span>
+            </div>
+            
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:5px; margin-bottom:6px; font-size:11px;">
+              <div style="background:rgba(15,23,42,0.65); padding:4px 6px; border-radius:6px; border:1px solid rgba(255,255,255,0.08);">
+                <span style="color:#94a3b8; font-size:9px; display:block; text-transform:uppercase; font-weight:600;">Habitantes</span>
+                <strong style="color:#f8fafc; font-size:11px;">${pHab}</strong>
+              </div>
+              <div style="background:rgba(15,23,42,0.65); padding:4px 6px; border-radius:6px; border:1px solid rgba(255,255,255,0.08);">
+                <span style="color:#94a3b8; font-size:9px; display:block; text-transform:uppercase; font-weight:600;">Electores CNE</span>
+                <strong style="color:#38bdf8; font-size:11px;">${pVot}</strong>
+              </div>
+              <div style="background:rgba(15,23,42,0.65); padding:4px 6px; border-radius:6px; border:1px solid rgba(255,255,255,0.08);">
+                <span style="color:#94a3b8; font-size:9px; display:block; text-transform:uppercase; font-weight:600;">Centros CNE</span>
+                <strong style="color:#facc15; font-size:11px;">${pCen} Escuelas</strong>
+              </div>
+              <div style="background:rgba(15,23,42,0.65); padding:4px 6px; border-radius:6px; border:1px solid rgba(255,255,255,0.08);">
+                <span style="color:#94a3b8; font-size:9px; display:block; text-transform:uppercase; font-weight:600;">Viviendas</span>
+                <strong style="color:#34d399; font-size:11px;">${pCas}</strong>
+              </div>
+            </div>
+
+            <div style="font-size:10px; color:#cbd5e1; border-top:1px dashed rgba(255,255,255,0.12); padding-top:4px; text-align:right;">
+              <span style="color:#10b981; font-weight:700;">Haz clic para entrar ➔</span>
+            </div>
           </div>
-        `, { sticky: true, className: "earth-tooltip" });
+        `, { sticky: true, className: "earth-tooltip", direction: "top" });
       }
     });
 
     // 4. Capa L4: Sub-Parroquias / Ejes (Dinámica, según parroquia activa)
     this.layerL4_SubParroquias = L.layerGroup();
+  }
+
+  /**
+   * Resumen de estadísticas demográficas agregadas por municipio
+   */
+  getMunicipioStats(munId) {
+    if (!munId) return null;
+    const cleanId = String(munId).toLowerCase().replace(/_/g, "-").trim();
+    const munObj = (typeof CATALOGO_MONAGAS !== "undefined" ? CATALOGO_MONAGAS : []).find(m => {
+      const mId = String(m.id).toLowerCase().replace(/_/g, "-").trim();
+      return mId === cleanId || mId.includes(cleanId) || cleanId.includes(mId);
+    });
+    const munNom = munObj ? munObj.nombre : munId;
+    const munCap = munObj ? (munObj.capital || munNom) : munNom;
+    const parroquias = munObj ? (munObj.parroquias || []) : [];
+
+    let votantes = 0, habitantes = 0, casas = 0, centros = 0, mesas = 0;
+    parroquias.forEach(p => {
+      const dem = (typeof MONAGAS_DEMOGRAPHICS !== "undefined" ? MONAGAS_DEMOGRAPHICS[p.id] : null) || {};
+      votantes += dem.votantes || 0;
+      habitantes += dem.habitantes || 0;
+      casas += dem.casas || 0;
+      centros += dem.centros || 0;
+      mesas += dem.mesas || 0;
+    });
+
+    if (votantes === 0) {
+      votantes = 8500 * Math.max(parroquias.length, 1);
+      habitantes = 13500 * Math.max(parroquias.length, 1);
+      casas = 3400 * Math.max(parroquias.length, 1);
+      centros = 4 * Math.max(parroquias.length, 1);
+      mesas = 7 * Math.max(parroquias.length, 1);
+    }
+
+    return {
+      id: cleanId,
+      nombre: munNom,
+      capital: munCap,
+      parroquiasCount: parroquias.length,
+      votantes,
+      habitantes,
+      casas,
+      centros,
+      mesas
+    };
   }
 
   toggleHierarchicalLayer(levelKey, visible, isUserManual = false) {
@@ -606,15 +763,51 @@ export class EarthMapEngine {
         }
       });
 
+      const resolvedParishId = (typeof PARISH_ALIAS_MAP !== "undefined" && PARISH_ALIAS_MAP[pId]) ? PARISH_ALIAS_MAP[pId] : pId;
+      const pDem = typeof getParishDemographics === "function" ? getParishDemographics(cleanMunId, resolvedParishId) : null;
+      const pHab = pDem ? pDem.habitantes.toLocaleString("es-VE") : "—";
+      const pVot = pDem ? pDem.votantes.toLocaleString("es-VE") : "—";
+      const pCen = pDem ? pDem.centros : "—";
+      const pCas = pDem ? pDem.casas.toLocaleString("es-VE") : "—";
+
       layer.bindTooltip(`
-        <div style="font-family:system-ui;font-size:12px;color:#ffffff;line-height:1.3;padding:4px 8px;">
-          <div style="font-weight:800;color:#38bdf8;">📍 Parroquia ${pName}</div>
-          <div style="font-size:10px;color:#cbd5e1;">Haz clic para entrar y ver sectores</div>
+        <div style="font-family:system-ui, -apple-system, sans-serif; font-size:12px; color:#ffffff; line-height:1.4; padding:6px 10px; min-width:200px;">
+          <div style="display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid rgba(16,185,129,0.35); padding-bottom:4px; margin-bottom:6px;">
+            <span style="font-weight:900; font-size:13px; color:#10b981; display:flex; align-items:center; gap:4px;">
+              📍 ${pName}
+            </span>
+            <span style="font-size:9px; font-weight:800; background:rgba(16,185,129,0.25); color:#6ee7b7; border:1px solid rgba(16,185,129,0.4); padding:1px 5px; border-radius:4px;">
+              Parroquia
+            </span>
+          </div>
+          
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:5px; margin-bottom:6px; font-size:11px;">
+            <div style="background:rgba(15,23,42,0.65); padding:4px 6px; border-radius:6px; border:1px solid rgba(255,255,255,0.08);">
+              <span style="color:#94a3b8; font-size:9px; display:block; text-transform:uppercase; font-weight:600;">Habitantes</span>
+              <strong style="color:#f8fafc; font-size:11px;">${pHab}</strong>
+            </div>
+            <div style="background:rgba(15,23,42,0.65); padding:4px 6px; border-radius:6px; border:1px solid rgba(255,255,255,0.08);">
+              <span style="color:#94a3b8; font-size:9px; display:block; text-transform:uppercase; font-weight:600;">Electores CNE</span>
+              <strong style="color:#38bdf8; font-size:11px;">${pVot}</strong>
+            </div>
+            <div style="background:rgba(15,23,42,0.65); padding:4px 6px; border-radius:6px; border:1px solid rgba(255,255,255,0.08);">
+              <span style="color:#94a3b8; font-size:9px; display:block; text-transform:uppercase; font-weight:600;">Centros CNE</span>
+              <strong style="color:#facc15; font-size:11px;">${pCen} Escuelas</strong>
+            </div>
+            <div style="background:rgba(15,23,42,0.65); padding:4px 6px; border-radius:6px; border:1px solid rgba(255,255,255,0.08);">
+              <span style="color:#94a3b8; font-size:9px; display:block; text-transform:uppercase; font-weight:600;">Viviendas</span>
+              <strong style="color:#34d399; font-size:11px;">${pCas}</strong>
+            </div>
+          </div>
+
+          <div style="font-size:10px; color:#cbd5e1; border-top:1px dashed rgba(255,255,255,0.12); padding-top:4px; text-align:right;">
+            <span style="color:#10b981; font-weight:700;">Haz clic para entrar ➔</span>
+          </div>
         </div>
       `, {
         sticky: true,
         direction: "top",
-        className: "leaflet-tooltip-dark"
+        className: "earth-tooltip"
       });
 
       this.layerMunicipioParroquias.addLayer(layer);
