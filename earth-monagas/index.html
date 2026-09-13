@@ -61,7 +61,7 @@
   <meta http-equiv="Expires" content="0" />
 
   <!-- Custom Styles -->
-  <link rel="stylesheet" href="css/styles.css?v=142">
+  <link rel="stylesheet" href="css/styles.css?v=143">
 
   <!-- Script de Autenticación Rápida y Control de Acceso Estricto (Exclusivo Regional) -->
   <script src="../js/auth.js"></script>
@@ -85,7 +85,7 @@
     html.isolated-parish-view #admin-module-links {
       display: none !important;
     }
-    /* Velo Blanco 100% transparente a clics: permite interactuar y cerrar fichas tocando el mapa */
+    /* Velo Blanco exterior: captura el cursor en modo neutro y evita que eventos de ratón traspasen a territorios ocultos */
     .leaflet-pane.leaflet-spotlightMask-pane,
     .leaflet-pane.leaflet-spotlightMask-pane svg,
     .leaflet-pane.leaflet-spotlightMask-pane path,
@@ -94,7 +94,8 @@
     .leaflet-pane.leaflet-spotlightMaskPane-pane path,
     .leaflet-spotlightMask-pane,
     .leaflet-spotlightMaskPane-pane {
-      pointer-events: none !important;
+      pointer-events: auto !important;
+      cursor: default !important;
     }
   </style>
   <script>
@@ -1919,7 +1920,7 @@
   </div>
 
   <!-- SCRIPT -->
-  <script type="module" src="js/app.js?v=142"></script>
+  <script type="module" src="js/app.js?v=143"></script>
   <script>
     if (window.lucide && typeof window.lucide.createIcons === 'function') {
       window.lucide.createIcons();

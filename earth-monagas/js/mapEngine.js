@@ -511,14 +511,24 @@ export class EarthMapEngine {
     }
 
     if (levelKey === 'l2') {
-      const currentMunId = window.earthApp?.selectedMunId || "maturin";
-      this.showMunicipioBoundary(currentMunId, true);
+      const currentMunId = window.earthApp?.selectedMunId || this.activeMunicipioId;
+      if (currentMunId) {
+        this.showMunicipioBoundary(currentMunId, true);
+      } else {
+        this.showStateBoundary(true);
+      }
       return;
     }
 
     if (levelKey === 'l3') {
-      const p = window.earthApp?.store?.getParish(window.earthApp.selectedMunId, window.earthApp.selectedParishId);
-      this.showParishBoundary(p?.limite || this.currentParishLimite, window.earthApp?.selectedParishId, true);
+      if (window.earthApp?.selectedParishId) {
+        const p = window.earthApp?.store?.getParish(window.earthApp.selectedMunId, window.earthApp.selectedParishId);
+        this.showParishBoundary(p?.limite || this.currentParishLimite, window.earthApp?.selectedParishId, true);
+      } else if (window.earthApp?.selectedMunId || this.activeMunicipioId) {
+        this.showMunicipioBoundary(window.earthApp?.selectedMunId || this.activeMunicipioId, true);
+      } else {
+        this.showStateBoundary(true);
+      }
       return;
     }
 
@@ -597,7 +607,7 @@ export class EarthMapEngine {
       ];
 
       // Máscara invertida con orificio para la zona activa (SVG con fill-rule: evenodd)
-      // Situada en pane superior 'spotlightMaskPane' (z-index 450) para cubrir todas las capas cartográficas exteriores
+      // Situada en pane superior 'spotlightMaskPane' (z-index 450) para cubrir y bloquear totalmente el exterior
       const maskPoly = L.polygon([worldBox, actualMaskCoords], {
         pane: "spotlightMaskPane",
         fillColor: "#ffffff",
@@ -606,8 +616,16 @@ export class EarthMapEngine {
         weight: 2,
         opacity: 1.0,
         fillRule: "evenodd",
-        interactive: false,
+        interactive: true,
         renderer: this.spotlightSvgRenderer || this.svgRenderer
+      });
+      // Bloquear e impedir absolutamente que eventos de cursor o ratón toquen capas ocultas debajo del velo blanco
+      maskPoly.on("mouseover mousemove mouseout mousedown contextmenu", (e) => {
+        L.DomEvent.stopPropagation(e);
+      });
+      maskPoly.on("click", (e) => {
+        L.DomEvent.stopPropagation(e);
+        if (window.closeQuickStats) window.closeQuickStats();
       });
       this.boundaryLayer.addLayer(maskPoly);
 
@@ -644,12 +662,33 @@ export class EarthMapEngine {
   }
 
   showStateBoundary(flyCamera = true) {
-    if (this.layerMunicipioParroquias) this.layerMunicipioParroquias.clearLayers();
     this.currentSectorVertices = null;
     this.currentSubParishVertices = null;
     this.currentParishCoords = null;
     this.currentParishId = null;
+    this.activeMunicipioId = null;
     this.activeFocusLevel = "estado";
+
+    // 1. Limpiar y retirar todas las capas de parroquias y sectores para una vista limpia del estado
+    if (this.layerMunicipioParroquias) {
+      this.layerMunicipioParroquias.clearLayers();
+      if (this.map.hasLayer(this.layerMunicipioParroquias)) this.map.removeLayer(this.layerMunicipioParroquias);
+    }
+    if (this.layerL3_Parroquias && this.map.hasLayer(this.layerL3_Parroquias)) {
+      this.map.removeLayer(this.layerL3_Parroquias);
+    }
+    if (this.subParroquiasLayer && this.map.hasLayer(this.subParroquiasLayer)) {
+      this.map.removeLayer(this.subParroquiasLayer);
+    }
+    if (this.subParroquiaLabelsLayer && this.map.hasLayer(this.subParroquiaLabelsLayer)) {
+      this.map.removeLayer(this.subParroquiaLabelsLayer);
+    }
+    if (this.polygonsLayer && this.map.hasLayer(this.polygonsLayer)) {
+      this.map.removeLayer(this.polygonsLayer);
+    }
+    if (this.sectorLabelsLayer && this.map.hasLayer(this.sectorLabelsLayer)) {
+      this.map.removeLayer(this.sectorLabelsLayer);
+    }
 
     let coords = null;
     if (GEO_ESTADO_OFICIAL && GEO_ESTADO_OFICIAL.features && GEO_ESTADO_OFICIAL.features[0]) {
@@ -671,15 +710,19 @@ export class EarthMapEngine {
       this.map.flyToBounds(bPoly.getBounds(), { padding: [30, 30], duration: 1.2 });
     }
 
-    // Al volver a la vista del estado, restaurar la capa interactiva L2 de municipios si está activada
+    // 2. Al estar en la vista del estado, activar la capa interactiva L2 de los 13 municipios
     if (this.layerL2_Municipios) {
-      const chk2 = document.getElementById("chk-layer-l2");
-      if (!chk2 || chk2.checked) {
-        if (!this.map.hasLayer(this.layerL2_Municipios)) {
-          this.map.addLayer(this.layerL2_Municipios);
-        }
+      if (!this.map.hasLayer(this.layerL2_Municipios)) {
+        this.map.addLayer(this.layerL2_Municipios);
       }
     }
+
+    this.hierarchicalVisibility.l1 = true;
+    this.hierarchicalVisibility.l2 = true;
+    this.hierarchicalVisibility.l3 = false;
+    this.hierarchicalVisibility.l4 = false;
+    this.hierarchicalVisibility.l5 = false;
+    this.syncCheckboxesUI("L1/L2 • Estado y Municipios");
   }
 
   showMunicipioBoundary(munId, flyCamera = true) {
@@ -691,12 +734,18 @@ export class EarthMapEngine {
     this.currentParishCoords = null;
     this.currentParishId = null;
 
-    // Desactivar temporalmente la capa general L2 para evitar que capture clics o cree rebotes con las parroquias internas
+    // 1. Remover estrictamente TODAS las capas macro y externas para que no interfieran
+    if (this.layerL1_Estado && this.map.hasLayer(this.layerL1_Estado)) {
+      this.map.removeLayer(this.layerL1_Estado);
+    }
     if (this.layerL2_Municipios && this.map.hasLayer(this.layerL2_Municipios)) {
       this.map.removeLayer(this.layerL2_Municipios);
     }
+    if (this.layerL3_Parroquias && this.map.hasLayer(this.layerL3_Parroquias)) {
+      this.map.removeLayer(this.layerL3_Parroquias);
+    }
 
-    // Limpiar capas de detalle parroquial para vista municipal limpia y rápida (60 FPS)
+    // 2. Limpiar capas de detalle parroquial para vista municipal limpia y rápida (60 FPS)
     if (this.polygonsLayer) this.polygonsLayer.clearLayers();
     if (this.subParroquiasLayer) this.subParroquiasLayer.clearLayers();
     if (this.subParroquiaLabelsLayer) this.subParroquiaLabelsLayer.clearLayers();
@@ -732,8 +781,16 @@ export class EarthMapEngine {
       this.map.flyToBounds(bPoly.getBounds(), { padding: [55, 55], duration: 1.2 });
     }
 
-    // Renderizar todas las parroquias oficiales pertenecientes a este municipio como interactivas
+    // 3. Renderizar ÚNICAMENTE las parroquias oficiales pertenecientes a este municipio
     this.renderMunicipalParishes(munId);
+
+    // 4. Sincronizar estado en el panel de capas
+    this.hierarchicalVisibility.l1 = false;
+    this.hierarchicalVisibility.l2 = true;
+    this.hierarchicalVisibility.l3 = true;
+    this.hierarchicalVisibility.l4 = false;
+    this.hierarchicalVisibility.l5 = false;
+    this.syncCheckboxesUI("Nivel 2 • Municipio");
   }
 
   renderMunicipalParishes(munId) {
@@ -888,17 +945,36 @@ export class EarthMapEngine {
   }
 
   showParishBoundary(limite, parishId = null, flyCamera = true) {
-    if (this.layerMunicipioParroquias) this.layerMunicipioParroquias.clearLayers();
     this.currentParishLimite = limite;
     this.currentParishId = parishId;
     this.currentSectorVertices = null;
     this.currentSubParishVertices = null;
     this.activeFocusLevel = "parroquia";
 
-    // Desactivar temporalmente la capa L2 para evitar cualquier conflicto al interactuar con la parroquia
+    // 1. Remover estrictamente todas las capas macroscópicas y externas
+    if (this.layerL1_Estado && this.map.hasLayer(this.layerL1_Estado)) {
+      this.map.removeLayer(this.layerL1_Estado);
+    }
     if (this.layerL2_Municipios && this.map.hasLayer(this.layerL2_Municipios)) {
       this.map.removeLayer(this.layerL2_Municipios);
     }
+    if (this.layerL3_Parroquias && this.map.hasLayer(this.layerL3_Parroquias)) {
+      this.map.removeLayer(this.layerL3_Parroquias);
+    }
+    if (this.layerMunicipioParroquias) {
+      this.layerMunicipioParroquias.clearLayers();
+      if (this.map.hasLayer(this.layerMunicipioParroquias)) {
+        this.map.removeLayer(this.layerMunicipioParroquias);
+      }
+    }
+
+    // Sincronizar estado de capas jerárquicas
+    this.hierarchicalVisibility.l1 = false;
+    this.hierarchicalVisibility.l2 = false;
+    this.hierarchicalVisibility.l3 = false;
+    this.hierarchicalVisibility.l4 = true;
+    this.hierarchicalVisibility.l5 = true;
+    this.syncCheckboxesUI("Nivel 3 • Parroquia");
 
     let coords = null;
 
@@ -964,10 +1040,22 @@ export class EarthMapEngine {
   }
 
   showSubParishBoundary(spVertices, flyCamera = true) {
-    if (this.layerMunicipioParroquias) this.layerMunicipioParroquias.clearLayers();
+    if (this.layerL1_Estado && this.map.hasLayer(this.layerL1_Estado)) this.map.removeLayer(this.layerL1_Estado);
+    if (this.layerL2_Municipios && this.map.hasLayer(this.layerL2_Municipios)) this.map.removeLayer(this.layerL2_Municipios);
+    if (this.layerL3_Parroquias && this.map.hasLayer(this.layerL3_Parroquias)) this.map.removeLayer(this.layerL3_Parroquias);
+    if (this.layerMunicipioParroquias) {
+      this.layerMunicipioParroquias.clearLayers();
+      if (this.map.hasLayer(this.layerMunicipioParroquias)) this.map.removeLayer(this.layerMunicipioParroquias);
+    }
     this.currentSubParishVertices = spVertices;
     this.currentSectorVertices = null;
     this.activeFocusLevel = "subparroquia";
+    this.hierarchicalVisibility.l1 = false;
+    this.hierarchicalVisibility.l2 = false;
+    this.hierarchicalVisibility.l3 = false;
+    this.hierarchicalVisibility.l4 = true;
+    this.hierarchicalVisibility.l5 = true;
+    this.syncCheckboxesUI("Nivel 4 • Eje Territorial");
 
     if (!spVertices || spVertices.length < 3) return;
     this.activeFocusCoords = spVertices;
@@ -983,9 +1071,21 @@ export class EarthMapEngine {
   }
 
   showSectorBoundary(sectorVertices, flyCamera = false) {
-    if (this.layerMunicipioParroquias) this.layerMunicipioParroquias.clearLayers();
+    if (this.layerL1_Estado && this.map.hasLayer(this.layerL1_Estado)) this.map.removeLayer(this.layerL1_Estado);
+    if (this.layerL2_Municipios && this.map.hasLayer(this.layerL2_Municipios)) this.map.removeLayer(this.layerL2_Municipios);
+    if (this.layerL3_Parroquias && this.map.hasLayer(this.layerL3_Parroquias)) this.map.removeLayer(this.layerL3_Parroquias);
+    if (this.layerMunicipioParroquias) {
+      this.layerMunicipioParroquias.clearLayers();
+      if (this.map.hasLayer(this.layerMunicipioParroquias)) this.map.removeLayer(this.layerMunicipioParroquias);
+    }
     this.currentSectorVertices = sectorVertices;
     this.activeFocusLevel = "sector";
+    this.hierarchicalVisibility.l1 = false;
+    this.hierarchicalVisibility.l2 = false;
+    this.hierarchicalVisibility.l3 = false;
+    this.hierarchicalVisibility.l4 = true;
+    this.hierarchicalVisibility.l5 = true;
+    this.syncCheckboxesUI("Nivel 5 • Sector");
 
     if (!sectorVertices || sectorVertices.length < 3) return;
     this.activeFocusCoords = sectorVertices;
@@ -1504,6 +1604,87 @@ export class EarthMapEngine {
     if (!this.map) return;
     const z = currentZoom !== undefined ? currentZoom : this.map.getZoom();
 
+    // 1. NIVEL MUNICIPIO:
+    // Solo deben verse las parroquias del municipio activo (layerMunicipioParroquias).
+    // Jamás el estado (L1), ni los 13 municipios (L2), ni las 44 parroquias del estado (L3).
+    if (this.activeFocusLevel === "municipio") {
+      if (this.layerL1_Estado && this.map.hasLayer(this.layerL1_Estado)) this.map.removeLayer(this.layerL1_Estado);
+      if (this.layerL2_Municipios && this.map.hasLayer(this.layerL2_Municipios)) this.map.removeLayer(this.layerL2_Municipios);
+      if (this.layerL3_Parroquias && this.map.hasLayer(this.layerL3_Parroquias)) this.map.removeLayer(this.layerL3_Parroquias);
+      if (this.subParroquiasLayer && this.map.hasLayer(this.subParroquiasLayer)) this.map.removeLayer(this.subParroquiasLayer);
+      if (this.subParroquiaLabelsLayer && this.map.hasLayer(this.subParroquiaLabelsLayer)) this.map.removeLayer(this.subParroquiaLabelsLayer);
+      if (this.polygonsLayer && this.map.hasLayer(this.polygonsLayer)) this.map.removeLayer(this.polygonsLayer);
+      if (this.sectorLabelsLayer && this.map.hasLayer(this.sectorLabelsLayer)) this.map.removeLayer(this.sectorLabelsLayer);
+
+      if (this.hierarchicalVisibility.l3) {
+        if (this.layerMunicipioParroquias) {
+          if (!this.map.hasLayer(this.layerMunicipioParroquias)) this.map.addLayer(this.layerMunicipioParroquias);
+          if (this.layerMunicipioParroquias.getLayers().length === 0 && this.activeMunicipioId) {
+            this.renderMunicipalParishes(this.activeMunicipioId);
+          }
+        }
+      } else {
+        if (this.layerMunicipioParroquias && this.map.hasLayer(this.layerMunicipioParroquias)) {
+          this.map.removeLayer(this.layerMunicipioParroquias);
+        }
+      }
+      return;
+    }
+
+    // 2. NIVEL PARROQUIA / SUBPARROQUIA / SECTOR:
+    // Retirar capas macroscópicas y gestionar únicamente capas locales
+    if (this.activeFocusLevel === "parroquia" || this.activeFocusLevel === "subparroquia" || this.activeFocusLevel === "sector") {
+      if (this.layerL1_Estado && this.map.hasLayer(this.layerL1_Estado)) this.map.removeLayer(this.layerL1_Estado);
+      if (this.layerL2_Municipios && this.map.hasLayer(this.layerL2_Municipios)) this.map.removeLayer(this.layerL2_Municipios);
+      if (this.layerL3_Parroquias && this.map.hasLayer(this.layerL3_Parroquias)) this.map.removeLayer(this.layerL3_Parroquias);
+      if (this.layerMunicipioParroquias) {
+        this.layerMunicipioParroquias.clearLayers();
+        if (this.map.hasLayer(this.layerMunicipioParroquias)) this.map.removeLayer(this.layerMunicipioParroquias);
+      }
+
+      // L4: Sub-Parroquias (Ejes Territoriales)
+      const showSpLabels = z >= 13;
+      if (this.subParroquiasLayer) {
+        if (this.hierarchicalVisibility.l4) {
+          if (!this.map.hasLayer(this.subParroquiasLayer)) this.map.addLayer(this.subParroquiasLayer);
+          if (this.subParroquiaLabelsLayer) {
+            if (showSpLabels && !this.map.hasLayer(this.subParroquiaLabelsLayer)) this.map.addLayer(this.subParroquiaLabelsLayer);
+            else if (!showSpLabels && this.map.hasLayer(this.subParroquiaLabelsLayer)) this.map.removeLayer(this.subParroquiaLabelsLayer);
+          }
+        } else {
+          if (this.map.hasLayer(this.subParroquiasLayer)) this.map.removeLayer(this.subParroquiasLayer);
+          if (this.subParroquiaLabelsLayer && this.map.hasLayer(this.subParroquiaLabelsLayer)) this.map.removeLayer(this.subParroquiaLabelsLayer);
+        }
+      }
+
+      // L5: Sectores Vecinales
+      const isMobileScreen = typeof window !== "undefined" && window.innerWidth < 640;
+      const showSecLabels = isMobileScreen ? z >= 13 : z >= 12;
+      if (this.polygonsLayer) {
+        if (this.hierarchicalVisibility.l5) {
+          if (!this.map.hasLayer(this.polygonsLayer)) this.map.addLayer(this.polygonsLayer);
+          if (this.sectorLabelsLayer) {
+            if (showSecLabels && !this.map.hasLayer(this.sectorLabelsLayer)) this.map.addLayer(this.sectorLabelsLayer);
+            else if (!showSecLabels && this.map.hasLayer(this.sectorLabelsLayer)) this.map.removeLayer(this.sectorLabelsLayer);
+          }
+        } else {
+          if (this.map.hasLayer(this.polygonsLayer)) this.map.removeLayer(this.polygonsLayer);
+          if (this.sectorLabelsLayer && this.map.hasLayer(this.sectorLabelsLayer)) this.map.removeLayer(this.sectorLabelsLayer);
+        }
+      }
+      return;
+    }
+
+    // 3. NIVEL ESTADO (VISTA GENERAL):
+    if (this.layerMunicipioParroquias) {
+      this.layerMunicipioParroquias.clearLayers();
+      if (this.map.hasLayer(this.layerMunicipioParroquias)) this.map.removeLayer(this.layerMunicipioParroquias);
+    }
+    if (this.subParroquiasLayer && this.map.hasLayer(this.subParroquiasLayer)) this.map.removeLayer(this.subParroquiasLayer);
+    if (this.subParroquiaLabelsLayer && this.map.hasLayer(this.subParroquiaLabelsLayer)) this.map.removeLayer(this.subParroquiaLabelsLayer);
+    if (this.polygonsLayer && this.map.hasLayer(this.polygonsLayer)) this.map.removeLayer(this.polygonsLayer);
+    if (this.sectorLabelsLayer && this.map.hasLayer(this.sectorLabelsLayer)) this.map.removeLayer(this.sectorLabelsLayer);
+
     // L1: Estado Monagas
     if (this.layerL1_Estado) {
       if (this.hierarchicalVisibility.l1) {
@@ -1530,37 +1711,6 @@ export class EarthMapEngine {
         if (this.map.hasLayer(this.layerL3_Parroquias)) this.map.removeLayer(this.layerL3_Parroquias);
       }
     }
-
-    // L4: Sub-Parroquias (Ejes Territoriales)
-    const showSpLabels = z >= 13;
-    if (this.subParroquiasLayer) {
-      if (this.hierarchicalVisibility.l4) {
-        if (!this.map.hasLayer(this.subParroquiasLayer)) this.map.addLayer(this.subParroquiasLayer);
-        if (this.subParroquiaLabelsLayer) {
-          if (showSpLabels && !this.map.hasLayer(this.subParroquiaLabelsLayer)) this.map.addLayer(this.subParroquiaLabelsLayer);
-          else if (!showSpLabels && this.map.hasLayer(this.subParroquiaLabelsLayer)) this.map.removeLayer(this.subParroquiaLabelsLayer);
-        }
-      } else {
-        if (this.map.hasLayer(this.subParroquiasLayer)) this.map.removeLayer(this.subParroquiasLayer);
-        if (this.subParroquiaLabelsLayer && this.map.hasLayer(this.subParroquiaLabelsLayer)) this.map.removeLayer(this.subParroquiaLabelsLayer);
-      }
-    }
-
-    // L5: Sectores Vecinales (Base)
-    const isMobileScreen = typeof window !== "undefined" && window.innerWidth < 640;
-    const showSecLabels = isMobileScreen ? z >= 13 : z >= 12;
-    if (this.polygonsLayer) {
-      if (this.hierarchicalVisibility.l5) {
-        if (!this.map.hasLayer(this.polygonsLayer)) this.map.addLayer(this.polygonsLayer);
-        if (this.sectorLabelsLayer) {
-          if (showSecLabels && !this.map.hasLayer(this.sectorLabelsLayer)) this.map.addLayer(this.sectorLabelsLayer);
-          else if (!showSecLabels && this.map.hasLayer(this.sectorLabelsLayer)) this.map.removeLayer(this.sectorLabelsLayer);
-        }
-      } else {
-        if (this.map.hasLayer(this.polygonsLayer)) this.map.removeLayer(this.polygonsLayer);
-        if (this.sectorLabelsLayer && this.map.hasLayer(this.sectorLabelsLayer)) this.map.removeLayer(this.sectorLabelsLayer);
-      }
-    }
   }
 
   /**
@@ -1573,8 +1723,40 @@ export class EarthMapEngine {
     const zoomValEl = document.getElementById("lbl-active-zoom-val");
     if (zoomValEl) zoomValEl.textContent = `Zoom ${currentZoom}`;
 
+    // Si el usuario está enfocado en un municipio, respetar ese ámbito y no cargar todo el estado
+    if (this.activeFocusLevel === "municipio") {
+      if (this.autoZoomLOD) {
+        this.hierarchicalVisibility.l1 = false;
+        this.hierarchicalVisibility.l2 = false;
+        this.hierarchicalVisibility.l3 = true;
+        this.hierarchicalVisibility.l4 = false;
+        this.hierarchicalVisibility.l5 = false;
+        this.syncCheckboxesUI("Nivel 2 • Municipio");
+      }
+      this.applyVisibilityToLayers(currentZoom);
+      return;
+    }
+
+    // Si el usuario está enfocado en una parroquia, sub-parroquia o sector
+    if (this.activeFocusLevel === "parroquia" || this.activeFocusLevel === "subparroquia" || this.activeFocusLevel === "sector") {
+      if (this.autoZoomLOD) {
+        this.hierarchicalVisibility.l1 = false;
+        this.hierarchicalVisibility.l2 = false;
+        this.hierarchicalVisibility.l3 = false;
+        this.hierarchicalVisibility.l4 = true;
+        this.hierarchicalVisibility.l5 = true;
+        const lodName = this.activeFocusLevel === "parroquia"
+          ? "Nivel 3 • Parroquia"
+          : (this.activeFocusLevel === "subparroquia" ? "Nivel 4 • Eje Territorial" : "Nivel 5 • Sector");
+        this.syncCheckboxesUI(lodName);
+      }
+      this.applyVisibilityToLayers(currentZoom);
+      return;
+    }
+
+    // Nivel Estado (Vista Global):
     if (this.autoZoomLOD) {
-      let lodName = "Nivel 5 • Sectores";
+      let lodName = "L1/L2 • Estado y Municipios";
       if (currentZoom < 10) {
         // Zoom macro: Todo el estado y los 13 municipios
         this.hierarchicalVisibility.l1 = true;
@@ -1584,21 +1766,21 @@ export class EarthMapEngine {
         this.hierarchicalVisibility.l5 = false;
         lodName = "L1/L2 • Estado y Municipios";
       } else if (currentZoom >= 10 && currentZoom < 13) {
-        // Zoom intermedio: 44 Parroquias oficiales visibles, municipios cerrados
+        // Zoom intermedio: 13 Municipios activos
         this.hierarchicalVisibility.l1 = false;
-        this.hierarchicalVisibility.l2 = false;
-        this.hierarchicalVisibility.l3 = true;
+        this.hierarchicalVisibility.l2 = true;
+        this.hierarchicalVisibility.l3 = false;
         this.hierarchicalVisibility.l4 = false;
         this.hierarchicalVisibility.l5 = false;
-        lodName = "L3 • 44 Parroquias Oficiales";
+        lodName = "L2 • 13 Municipios";
       } else {
-        // Zoom de nivel parroquial, ejes y sectores (>= 13): NUNCA ocultar sectores ni ejes
+        // Zoom más cercano dentro de la vista general
         this.hierarchicalVisibility.l1 = false;
-        this.hierarchicalVisibility.l2 = false;
+        this.hierarchicalVisibility.l2 = true;
         this.hierarchicalVisibility.l3 = false;
-        this.hierarchicalVisibility.l4 = true;
-        this.hierarchicalVisibility.l5 = true;
-        lodName = currentZoom < 15 ? "L4/L5 • Ejes y Sectores" : "L5 • Sectores Vecinales";
+        this.hierarchicalVisibility.l4 = false;
+        this.hierarchicalVisibility.l5 = false;
+        lodName = "L2 • 13 Municipios";
       }
 
       this.syncCheckboxesUI(lodName);
