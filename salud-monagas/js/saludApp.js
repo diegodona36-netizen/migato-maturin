@@ -105,7 +105,9 @@ function guardarEnStorage() {
   actualizarContadoresKPI();
   renderDirectorioTabla();
   actualizarMapaGeneral();
+  poblarSelectorMapaCentros();
 }
+const guardarCentrosEnStorage = guardarEnStorage;
 
 function calcularNivelRiesgo(datos) {
   const soporte = datos.soporteVital || {};
@@ -855,14 +857,17 @@ function actualizarMapaGeneral() {
           <div>❄️ Clima: <strong class="text-white">${c.soporteVital?.climatizacion || 'N/A'}</strong></div>
         </div>
 
-        <div class="flex gap-1.5">
-          <button onclick="window.editarCentro('${c.id}')" class="flex-1 py-2 bg-sky-500 hover:bg-sky-400 text-[#050814] font-black rounded-lg text-xs transition text-center shadow flex items-center justify-center gap-1">
-            <span>📝 Diagnóstico</span>
+        <div class="flex gap-1.5 flex-wrap">
+          <button onclick="window.editarCentro('${c.id}')" class="flex-1 py-1.5 bg-sky-500 hover:bg-sky-400 text-[#050814] font-black rounded-lg text-[11px] transition text-center shadow flex items-center justify-center gap-1">
+            <span>📝 Editar</span>
           </button>
-          <button onclick="window.enfocarEnMapa('${c.id}')" class="px-2.5 py-2 bg-amber-500 hover:bg-amber-400 text-slate-950 rounded-lg font-black text-xs transition flex items-center justify-center gap-1 shadow" title="Calibrar y Mover Pin al Techo Exacto">
-            🎯 Calibrar
+          <button onclick="window.enfocarEnMapa('${c.id}')" class="px-2 py-1.5 bg-amber-500 hover:bg-amber-400 text-slate-950 rounded-lg font-black text-[11px] transition flex items-center justify-center gap-1 shadow" title="Calibrar y Mover Pin al Techo Exacto">
+            🎯 Mover
           </button>
-          <button onclick="window.verFichaCentro('${c.id}')" class="px-2.5 py-2 bg-[#140e40] hover:bg-[#2d1f85] text-slate-300 hover:text-white rounded-lg border border-[#2d1f85] text-[10px] font-bold transition" title="Ver Ficha Imprimible">
+          <button onclick="window.eliminarCentro('${c.id}')" class="px-2 py-1.5 bg-rose-600 hover:bg-rose-500 text-white rounded-lg font-bold text-[11px] transition flex items-center justify-center gap-1 shadow" title="Eliminar este centro si no existe">
+            🗑️ Eliminar
+          </button>
+          <button onclick="window.verFichaCentro('${c.id}')" class="px-2 py-1.5 bg-[#140e40] hover:bg-[#2d1f85] text-slate-300 hover:text-white rounded-lg border border-[#2d1f85] text-[10px] font-bold transition" title="Ver Ficha Imprimible">
             Ficha
           </button>
         </div>
@@ -1310,7 +1315,7 @@ function poblarSelectorMapaCentros() {
 
   const selCardAsignar = document.getElementById('select-card-asignar-centro');
   if (selCardAsignar) {
-    selCardAsignar.innerHTML = '<option value="">-- Asignar este punto a... --</option>' + optgroupsCentros;
+    selCardAsignar.innerHTML = '<option value="">-- Mover este punto a... --</option>' + optgroupsCentros;
     if (state.centroCalibrando) {
       selCardAsignar.value = state.centroCalibrando.id;
     }
@@ -1763,9 +1768,145 @@ function eliminarCentro(id) {
   const centro = state.centros.find(c => c.id === id);
   if (!centro) return;
 
-  if (confirm(`¿Confirma eliminar el pre-diagnóstico de "${centro.nombre}"? Esta acción no se puede deshacer.`)) {
-    state.centros = state.centros.filter(c => c.id !== id);
+  const confirmar = confirm(`¿Confirma eliminar el centro de salud "${centro.nombre}" (${centro.municipio || ''})?\n\nSi no existe o está duplicado, se removerá permanentemente del mapa y del sistema.`);
+  if (!confirmar) return;
+
+  state.centros = state.centros.filter(c => c.id !== id);
+  guardarEnStorage();
+
+  // Si el calibrador rápido estaba abierto con este centro, cerrarlo
+  if (state.centroCalibrando && state.centroCalibrando.id === id) {
+    cerrarCalibradorRapido();
+  }
+
+  // Si la tarjeta flotante estaba apuntando a este centro, resetear selección
+  const selCard = document.getElementById('select-card-asignar-centro');
+  if (selCard && selCard.value === id) selCard.value = '';
+
+  const selAsignar = document.getElementById('select-asignar-centro');
+  if (selAsignar && selAsignar.value === id) selAsignar.value = '';
+}
+
+function eliminarCentroCalibradorActual() {
+  if (!state.centroCalibrando) {
+    alert('No hay ningún centro seleccionado actualmente.');
+    return;
+  }
+  eliminarCentro(state.centroCalibrando.id);
+}
+
+function eliminarCentroSeleccionadoDesdeTarjeta() {
+  const sel = document.getElementById('select-card-asignar-centro');
+  if (!sel || !sel.value) {
+    alert('Por favor selecciona primero en el menú desplegable cuál centro deseas eliminar.');
+    return;
+  }
+  eliminarCentro(sel.value);
+}
+
+function abrirModalCrearCentroRapido() {
+  const modal = document.getElementById('modal-nuevo-centro-rapido');
+  if (!modal) return;
+
+  const lat = (state.coordsInspectorGmaps && state.coordsInspectorGmaps.lat) ? state.coordsInspectorGmaps.lat : 9.7489;
+  const lng = (state.coordsInspectorGmaps && state.coordsInspectorGmaps.lng) ? state.coordsInspectorGmaps.lng : -63.1794;
+
+  const subCoords = document.getElementById('modal-rapido-coords-sub');
+  if (subCoords) {
+    subCoords.textContent = `Coords: ${lat.toFixed(6)}, ${lng.toFixed(6)}`;
+  }
+
+  // Poblar select de municipios si está vacío o solo con la opción por defecto
+  const selMun = document.getElementById('modal-rapido-municipio');
+  if (selMun && selMun.options.length <= 1 && window.CATALOGO_TERRITORIAL) {
+    selMun.innerHTML = '<option value="">Seleccione Municipio...</option>';
+    window.CATALOGO_TERRITORIAL.forEach(m => {
+      const opt = document.createElement('option');
+      opt.value = m.nombre;
+      opt.textContent = m.nombre;
+      selMun.appendChild(opt);
+    });
+  }
+
+  // Resetear inputs
+  const inNom = document.getElementById('modal-rapido-nombre');
+  if (inNom) inNom.value = '';
+  const inSec = document.getElementById('modal-rapido-sector');
+  if (inSec) inSec.value = '';
+
+  modal.classList.remove('hidden');
+  if (inNom) inNom.focus();
+}
+
+function cerrarModalCrearCentroRapido() {
+  const modal = document.getElementById('modal-nuevo-centro-rapido');
+  if (modal) modal.classList.add('hidden');
+}
+
+function guardarNuevoCentroRapido() {
+  const inNom = document.getElementById('modal-rapido-nombre');
+  const selMun = document.getElementById('modal-rapido-municipio');
+  const selRed = document.getElementById('modal-rapido-tipo-red');
+  const inSec = document.getElementById('modal-rapido-sector');
+  const selClas = document.getElementById('modal-rapido-clasificacion');
+
+  if (!inNom || !inNom.value.trim()) {
+    alert('Por favor indica el nombre del nuevo centro de salud.');
+    return;
+  }
+  if (!selMun || !selMun.value) {
+    alert('Por favor selecciona el municipio.');
+    return;
+  }
+
+  const lat = (state.coordsInspectorGmaps && state.coordsInspectorGmaps.lat) ? parseFloat(state.coordsInspectorGmaps.lat.toFixed(6)) : 9.7489;
+  const lng = (state.coordsInspectorGmaps && state.coordsInspectorGmaps.lng) ? parseFloat(state.coordsInspectorGmaps.lng.toFixed(6)) : -63.1794;
+
+  const nuevoId = 'cs-user-' + Date.now();
+  const nuevoCentro = {
+    id: nuevoId,
+    nombre: inNom.value.trim(),
+    municipio: selMun.value,
+    tipoRed: selRed ? selRed.value : 'comunal',
+    sector: inSec ? inSec.value.trim() : '',
+    parroquia: inSec ? inSec.value.trim() : '',
+    clasificacion: selClas ? selClas.value : 'Ambulatorio Rural Tipo II',
+    lat: lat,
+    lng: lng,
+    precision: 'calibrada_usuario',
+    operatividad: 'Operativo',
+    semaforo: 'verde',
+    scoreOperatividad: 100,
+    serviciosBasicos: { agua: 'Continuo', luz: 'Estable', plantaElectrica: 'Operativa' },
+    soporteVital: { oxigeno: 'Disponible', climatizacion: 'Operativo' },
+    fallas: {},
+    areasServicios: [],
+    observacionesGenerales: 'Centro creado por el usuario con puntero propio directo en el mapa.'
+  };
+
+  state.centros.unshift(nuevoCentro);
+  guardarEnStorage();
+  cerrarModalCrearCentroRapido();
+  cerrarTarjetaPinFlotante();
+
+  alert(`✅ ¡Centro creado exitosamente!\n\n${nuevoCentro.nombre}\nCoordenadas: ${lat}, ${lng}\nMunicipio: ${nuevoCentro.municipio}`);
+
+  enfocarEnMapa(nuevoId);
+}
+
+function restaurarCentrosOriginales() {
+  const centrosBase = (window.CENTROS_SALUD_INICIALES && window.CENTROS_SALUD_INICIALES.length > 0)
+    ? window.CENTROS_SALUD_INICIALES
+    : (CENTROS_SALUD_INICIALES || []);
+
+  if (confirm(`¿Deseas restaurar la lista oficial de centros de salud originales (${centrosBase.length} centros)?\n\nEsto recuperará cualquier centro que hayas eliminado.`)) {
+    localStorage.removeItem(STORAGE_KEY);
+    state.centros = JSON.parse(JSON.stringify(centrosBase));
     guardarEnStorage();
+    if (state.centroCalibrando) {
+      cerrarCalibradorRapido();
+    }
+    alert(`✅ Catálogo restaurado exitosamente con ${state.centros.length} centros de salud.`);
   }
 }
 
@@ -2658,6 +2799,12 @@ window.buscarCentroEnGoogleMaps = (id) => {
   window.open(`https://www.google.com/maps/search/${encodeURIComponent(query)}`, '_blank');
 };
 window.eliminarCentro = eliminarCentro;
+window.eliminarCentroCalibradorActual = eliminarCentroCalibradorActual;
+window.eliminarCentroSeleccionadoDesdeTarjeta = eliminarCentroSeleccionadoDesdeTarjeta;
+window.abrirModalCrearCentroRapido = abrirModalCrearCentroRapido;
+window.cerrarModalCrearCentroRapido = cerrarModalCrearCentroRapido;
+window.guardarNuevoCentroRapido = guardarNuevoCentroRapido;
+window.restaurarCentrosOriginales = restaurarCentrosOriginales;
 window.imprimirFichaActual = () => {
   window.print();
 };

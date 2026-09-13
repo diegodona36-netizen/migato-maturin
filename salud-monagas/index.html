@@ -38,7 +38,7 @@
   </script>
 
   <!-- Custom Stylesheet & Print Rules -->
-  <link rel="stylesheet" href="css/styles.css?v=164">
+  <link rel="stylesheet" href="css/styles.css?v=165">
 </head>
 <body class="bg-[#0a0620] text-slate-100 min-h-screen flex flex-col antialiased select-none sm:select-auto" style="background: radial-gradient(circle at 50% 15%, #18114a 0%, #0e092e 50%, #080518 100%);">
 
@@ -695,6 +695,9 @@
             <button onclick="window.recentrarMapaMonagas()" class="px-2.5 py-1 rounded-lg bg-[#18114a] hover:bg-[#251b68] text-amber-300 border border-amber-500/40 font-bold text-[11px] transition flex items-center gap-1 ml-1" title="Centrar vista completa del Estado Monagas">
               <span>🔄 Monagas</span>
             </button>
+            <button onclick="window.restaurarCentrosOriginales()" class="px-2.5 py-1 rounded-lg bg-[#18114a] hover:bg-rose-950 text-slate-400 hover:text-rose-300 border border-slate-700 font-medium text-[11px] transition flex items-center gap-1" title="Restablecer los 84 centros iniciales si eliminaste alguno por error">
+              <span>↺ Restaurar</span>
+            </button>
           </div>
         </div>
 
@@ -746,13 +749,21 @@
           </div>
           <div class="flex items-center gap-2">
             <select id="select-card-asignar-centro" class="flex-1 bg-[#18114a] border border-[#2d1f85] rounded-xl px-2.5 py-2 text-xs text-white focus:border-amber-400 focus:outline-none">
-              <option value="">-- Asignar este punto a... --</option>
+              <option value="">-- Mover este punto a... --</option>
             </select>
-            <button type="button" onclick="window.guardarPuntoDesdeTarjetaFlotante()" class="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-black text-xs rounded-xl shadow transition flex items-center gap-1 shrink-0 active:scale-95">
+            <button type="button" onclick="window.guardarPuntoDesdeTarjetaFlotante()" class="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-black text-xs rounded-xl shadow transition flex items-center gap-1 shrink-0 active:scale-95" title="Mover la ubicación de este centro aquí">
               <span>Guardar ✓</span>
             </button>
             <button type="button" onclick="window.copiarCoordsDesdeTarjetaFlotante()" class="p-2 bg-[#18114a] hover:bg-[#281b7a] border border-[#2d1f85] text-sky-300 rounded-xl transition shrink-0" title="Copiar Coordenadas">
               <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+            </button>
+          </div>
+          <div class="flex items-center gap-2 pt-1 border-t border-[#2d1f85]/60">
+            <button type="button" onclick="window.abrirModalCrearCentroRapido()" class="flex-1 py-1.5 px-2.5 bg-sky-600 hover:bg-sky-500 text-white font-black text-[11px] rounded-xl shadow transition flex items-center justify-center gap-1 active:scale-95" title="Crear un nuevo centro con tu propio puntero">
+              <span>➕ Crear Nuevo Centro Aquí</span>
+            </button>
+            <button type="button" onclick="window.eliminarCentroSeleccionadoDesdeTarjeta()" class="py-1.5 px-2.5 bg-rose-950 hover:bg-rose-900 text-rose-300 font-bold text-[11px] rounded-xl border border-rose-700/60 transition flex items-center gap-1 active:scale-95" title="Eliminar el centro seleccionado en el desplegable si no existe">
+              <span>🗑️ Eliminar Centro</span>
             </button>
           </div>
         </div>
@@ -821,6 +832,10 @@
             <button id="btn-guardar-calibracion" onclick="window.guardarCalibracionActual()" class="w-full py-2.5 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black rounded-xl text-xs transition flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/20 active:scale-95">
               <i data-lucide="check-circle" class="w-4 h-4"></i>
               <span>💾 Guardar Ubicación Exacta</span>
+            </button>
+            <button onclick="window.eliminarCentroCalibradorActual()" class="w-full py-2 bg-rose-950/80 hover:bg-rose-900 text-rose-300 hover:text-white rounded-xl border border-rose-600/60 font-bold text-xs transition flex items-center justify-center gap-1.5 shadow active:scale-95" title="Eliminar este centro si no existe">
+              <i data-lucide="trash-2" class="w-3.5 h-3.5 text-rose-400"></i>
+              <span>🗑️ Eliminar este Centro (No Existe)</span>
             </button>
             <button onclick="window.verFichaCalibradorActual()" class="w-full py-1.5 bg-[#18114a] hover:bg-[#251b6a] text-slate-300 hover:text-white rounded-xl border border-[#2d1f85] text-xs transition flex items-center justify-center gap-1">
               <i data-lucide="printer" class="w-3.5 h-3.5"></i>
@@ -1031,11 +1046,87 @@
 
   </div>
 
+  <!-- ============================================================== -->
+  <!-- 5.1. MODAL RÁPIDO: CREAR NUEVO CENTRO / PUNTERO EN EL MAPA     -->
+  <!-- ============================================================== -->
+  <div id="modal-nuevo-centro-rapido" class="hidden fixed inset-0 z-[99999] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-[#120c36] border-2 border-sky-500/80 rounded-2xl max-w-md w-full p-4 sm:p-5 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between border-b border-[#2d1f85] pb-2.5">
+        <div class="flex items-center gap-2">
+          <span class="text-xl">📍</span>
+          <div>
+            <h3 class="font-black text-white text-sm">Nuevo Centro de Salud</h3>
+            <p class="text-[10px] text-sky-300 font-mono" id="modal-rapido-coords-sub">Coords: 0.00000, 0.00000</p>
+          </div>
+        </div>
+        <button type="button" onclick="window.cerrarModalCrearCentroRapido()" class="p-1 text-slate-400 hover:text-white rounded-lg hover:bg-white/10 transition">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <form id="form-nuevo-centro-rapido" onsubmit="event.preventDefault(); window.guardarNuevoCentroRapido();" class="space-y-3 text-xs">
+        <div>
+          <label class="block text-slate-300 font-semibold mb-1">Nombre del Centro / Ambulatorio / Hospital: *</label>
+          <input type="text" id="modal-rapido-nombre" required placeholder="Ej: Ambulatorio Dr. Carlos Gómez" class="w-full bg-[#18114a] border border-[#2d1f85] rounded-xl px-3 py-2 text-white placeholder-slate-500 focus:outline-none focus:border-sky-400 font-medium">
+        </div>
+
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block text-slate-300 font-semibold mb-1">Municipio: *</label>
+            <select id="modal-rapido-municipio" required class="w-full bg-[#18114a] border border-[#2d1f85] rounded-xl px-2.5 py-2 text-white focus:outline-none focus:border-sky-400">
+              <option value="">Seleccione...</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-slate-300 font-semibold mb-1">Tipo de Red: *</label>
+            <select id="modal-rapido-tipo-red" required class="w-full bg-[#18114a] border border-[#2d1f85] rounded-xl px-2.5 py-2 text-white focus:outline-none focus:border-sky-400">
+              <option value="comunal">Red Comunal (Ambulatorio / CPT3)</option>
+              <option value="hospitalaria">Red Hospitalaria (Hospital Tipo I - IV)</option>
+              <option value="especializada">Red Especializada / CDI / SRI</option>
+              <option value="emergencia">Red de Emergencia / Punto Médico</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block text-slate-300 font-semibold mb-1">Parroquia / Sector:</label>
+            <input type="text" id="modal-rapido-sector" placeholder="Ej: Sector Las Garzas" class="w-full bg-[#18114a] border border-[#2d1f85] rounded-xl px-3 py-2 text-white placeholder-slate-500 focus:outline-none focus:border-sky-400">
+          </div>
+          <div>
+            <label class="block text-slate-300 font-semibold mb-1">Clasificación:</label>
+            <select id="modal-rapido-clasificacion" class="w-full bg-[#18114a] border border-[#2d1f85] rounded-xl px-2.5 py-2 text-white focus:outline-none focus:border-sky-400">
+              <option value="Ambulatorio Rural Tipo II">Ambulatorio Rural Tipo II</option>
+              <option value="Ambulatorio Urbano Tipo I">Ambulatorio Urbano Tipo I</option>
+              <option value="Ambulatorio Urbano Tipo II">Ambulatorio Urbano Tipo II</option>
+              <option value="Ambulatorio Urbano Tipo III">Ambulatorio Urbano Tipo III</option>
+              <option value="Centro de Diagnóstico Integral (CDI)">CDI</option>
+              <option value="Sala de Rehabilitación Integral (SRI)">SRI</option>
+              <option value="Hospital Tipo I">Hospital Tipo I</option>
+              <option value="Hospital Tipo II">Hospital Tipo II</option>
+              <option value="Hospital Tipo III">Hospital Tipo III</option>
+              <option value="Hospital Tipo IV">Hospital Tipo IV</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="pt-2 flex items-center justify-end gap-2">
+          <button type="button" onclick="window.cerrarModalCrearCentroRapido()" class="px-3.5 py-2 bg-[#18114a] hover:bg-[#251b6a] text-slate-300 rounded-xl font-bold transition">
+            Cancelar
+          </button>
+          <button type="submit" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-black rounded-xl shadow transition flex items-center gap-1.5 active:scale-95">
+            <span>✓ Guardar en el Mapa</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <!-- Delimitación Geográfica Oficial del Estado Monagas (INE / IGVSB) -->
-  <script src="js/geoMonagasLimits.js?v=164"></script>
+  <script src="js/geoMonagasLimits.js?v=165"></script>
   <!-- Scripts de Datos y Lógica (Carga universal estándar) -->
-  <script src="js/saludData.js?v=164"></script>
-  <script src="js/saludApp.js?v=164"></script>
+  <script src="js/saludData.js?v=165"></script>
+  <script src="js/saludApp.js?v=165"></script>
 
 </body>
 </html>
