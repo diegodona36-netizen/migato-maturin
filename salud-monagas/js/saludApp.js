@@ -12,7 +12,7 @@
   const CATALOGO_FALLAS = window.CATALOGO_FALLAS || {};
   const OPCIONES_SOPORTE_VITAL = window.OPCIONES_SOPORTE_VITAL || {};
   const CENTROS_SALUD_INICIALES = window.CENTROS_SALUD_INICIALES || [];
-const STORAGE_KEY = 'migato_salud_centros_v8';
+const STORAGE_KEY = 'migato_salud_centros_v9';
 
 // Delimitación geográfica estricta del Estado Monagas (Caripe al Norte, Orinoco al Sur)
 const BOUNDS_MONAGAS_COORDS = [
@@ -348,6 +348,7 @@ function initMapaGeneral() {
 
     // Inicializar Inspector de Clic Interactivo Google Maps
     initClickInteractivoGoogleMaps();
+    initBusquedaFlotanteGoogleMaps();
   } catch (err) {
     console.error('Error inicializando mapa general:', err);
   }
@@ -515,6 +516,12 @@ function actualizarPuntoInspectorGmaps(lat, lng, recentrar = false) {
     state.marcadorInspectorGmaps.setLatLng([lat, lng]);
   }
 
+  // Mostrar y actualizar la tarjeta flotante directamente dentro del mapa
+  const card = document.getElementById('gmaps-floating-pin-card');
+  const cardCoords = document.getElementById('card-pin-coords');
+  if (card) card.classList.remove('hidden');
+  if (cardCoords) cardCoords.textContent = `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
+
   if (recentrar && state.mapaGeneral) {
     state.mapaGeneral.panTo([lat, lng]);
   }
@@ -613,6 +620,165 @@ function aplicarCoordenadaACentroSeleccionado() {
   poblarSelectorMapaCentros();
 
   alert(`✅ ¡Ubicación guardada con éxito!\n\nCentro: ${state.centros[idx].nombre}\nCoordenadas: ${lat.toFixed(6)}, ${lng.toFixed(6)}\nEstado: Calibrada por Usuario.`);
+}
+
+// Búsqueda Flotante Estilo Google Maps con Autocomplete en Vivo
+function initBusquedaFlotanteGoogleMaps() {
+  const inputSearch = document.getElementById('input-search-gmaps-overlay');
+  const resultsBox = document.getElementById('gmaps-search-results');
+  const btnClear = document.getElementById('btn-clear-search-gmaps');
+  if (!inputSearch || !resultsBox) return;
+
+  inputSearch.addEventListener('input', function(e) {
+    const q = (e.target.value || '').trim().toLowerCase();
+    if (btnClear) {
+      if (q.length > 0) btnClear.classList.remove('hidden');
+      else btnClear.classList.add('hidden');
+    }
+
+    if (q.length === 0) {
+      resultsBox.classList.add('hidden');
+      resultsBox.innerHTML = '';
+      return;
+    }
+
+    // Buscar en los 84 centros de salud
+    const matches = state.centros.filter(c => {
+      const nom = (c.nombre || '').toLowerCase();
+      const mun = (c.municipio || '').toLowerCase();
+      const parr = (c.parroquia || '').toLowerCase();
+      const sec = (c.sector || '').toLowerCase();
+      return nom.includes(q) || mun.includes(q) || parr.includes(q) || sec.includes(q);
+    });
+
+    if (matches.length === 0) {
+      resultsBox.innerHTML = `
+        <div class="p-3 text-xs text-slate-400 text-center">
+          No se encontró "${e.target.value}" en la base local.<br>
+          <button type="button" onclick="window.buscarExternoGmapsQuery()" class="mt-2 px-3 py-1.5 bg-sky-600 hover:bg-sky-500 text-white rounded-xl font-bold text-[11px] transition">
+            🔍 Buscar en Google Maps Oficial ↗
+          </button>
+        </div>
+      `;
+      resultsBox.classList.remove('hidden');
+      return;
+    }
+
+    let html = '';
+    matches.slice(0, 8).forEach(c => {
+      const icono = (c.precision === 'exacta' || c.precision === 'calibrada_usuario') ? '🟢' : '⚠️';
+      html += `
+        <div onclick="window.seleccionarCentroDesdeBusquedaFlotante('${c.id}')" 
+             class="p-2.5 hover:bg-sky-950/80 cursor-pointer flex items-center justify-between gap-2 text-xs text-slate-200 transition">
+          <div class="min-w-0">
+            <div class="font-bold text-white truncate flex items-center gap-1.5">
+              <span>${icono}</span>
+              <span class="truncate">${c.nombre}</span>
+            </div>
+            <div class="text-[10px] text-sky-300/80 truncate">
+              ${c.municipio} • ${c.parroquia} ${c.sector ? '• ' + c.sector : ''}
+            </div>
+          </div>
+          <span class="text-[10px] text-slate-400 font-mono shrink-0">${c.lat.toFixed(4)}, ${c.lng.toFixed(4)}</span>
+        </div>
+      `;
+    });
+
+    resultsBox.innerHTML = html;
+    resultsBox.classList.remove('hidden');
+  });
+
+  inputSearch.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') {
+      const q = (inputSearch.value || '').trim().toLowerCase();
+      const firstMatch = state.centros.find(c => {
+        const nom = (c.nombre || '').toLowerCase();
+        return nom.includes(q);
+      });
+      if (firstMatch) {
+        seleccionarCentroDesdeBusquedaFlotante(firstMatch.id);
+      } else {
+        buscarExternoGmapsQuery();
+      }
+    }
+  });
+
+  // Cerrar al hacer clic fuera
+  document.addEventListener('click', function(e) {
+    if (!e.target.closest('#gmaps-floating-search')) {
+      resultsBox.classList.add('hidden');
+    }
+  });
+}
+
+function seleccionarCentroDesdeBusquedaFlotante(id) {
+  const c = state.centros.find(item => item.id === id);
+  if (!c) return;
+
+  const inputSearch = document.getElementById('input-search-gmaps-overlay');
+  const resultsBox = document.getElementById('gmaps-search-results');
+  if (inputSearch) inputSearch.value = c.nombre;
+  if (resultsBox) resultsBox.classList.add('hidden');
+
+  enfocarEnMapa(c.id);
+}
+
+function limpiarBusquedaFlotante() {
+  const inputSearch = document.getElementById('input-search-gmaps-overlay');
+  const resultsBox = document.getElementById('gmaps-search-results');
+  const btnClear = document.getElementById('btn-clear-search-gmaps');
+  if (inputSearch) inputSearch.value = '';
+  if (resultsBox) resultsBox.classList.add('hidden');
+  if (btnClear) btnClear.classList.add('hidden');
+}
+
+function buscarExternoGmapsQuery() {
+  const inputSearch = document.getElementById('input-search-gmaps-overlay');
+  const q = inputSearch ? inputSearch.value.trim() : '';
+  const query = (q ? q : 'Hospitales') + ' Estado Monagas Venezuela';
+  window.open(`https://www.google.com/maps/search/${encodeURIComponent(query)}`, '_blank');
+}
+
+function cerrarTarjetaPinFlotante() {
+  const card = document.getElementById('gmaps-floating-pin-card');
+  if (card) card.classList.add('hidden');
+}
+
+function guardarPuntoDesdeTarjetaFlotante() {
+  const sel = document.getElementById('select-card-asignar-centro');
+  if (!sel || !sel.value) {
+    alert('Por favor selecciona el centro de salud en el desplegable de la tarjeta.');
+    return;
+  }
+  const centroId = sel.value;
+  const lat = state.coordsInspectorGmaps.lat;
+  const lng = state.coordsInspectorGmaps.lng;
+
+  const idx = state.centros.findIndex(c => c.id === centroId);
+  if (idx === -1) return;
+
+  state.centros[idx].lat = parseFloat(lat.toFixed(6));
+  state.centros[idx].lng = parseFloat(lng.toFixed(6));
+  state.centros[idx].precision = 'calibrada_usuario';
+
+  guardarCentrosEnStorage();
+  actualizarMapaGeneral();
+  actualizarContadoresKPI();
+  poblarSelectorMapaCentros();
+
+  alert(`✅ ¡Ubicación guardada con éxito!\n\n${state.centros[idx].nombre}\nCoordenadas: ${lat.toFixed(6)}, ${lng.toFixed(6)}\nSemáforo actualizado a Calibrado.`);
+  cerrarTarjetaPinFlotante();
+}
+
+function copiarCoordsDesdeTarjetaFlotante() {
+  const lat = state.coordsInspectorGmaps.lat.toFixed(6);
+  const lng = state.coordsInspectorGmaps.lng.toFixed(6);
+  const txt = `${lat}, ${lng}`;
+  navigator.clipboard.writeText(txt).then(() => {
+    alert(`Copiado al portapapeles: ${txt}`);
+  }).catch(() => {
+    alert(`Coordenadas: ${txt}`);
+  });
 }
 
 function recentrarMapaMonagas() {
@@ -1121,21 +1287,30 @@ function poblarSelectorMapaCentros() {
   }
   actualizarContadorNavMapa();
 
-  // Poblar también el selector del Inspector Interactivo Google Maps
+  // Poblar también los selectores del Inspector y la Tarjeta Flotante Google Maps
+  let optgroupsCentros = '';
+  for (const [mun, centros] of Object.entries(grupos)) {
+    optgroupsCentros += `<optgroup label="Municipio ${mun}">`;
+    centros.forEach(c => {
+      const icono = (c.precision === 'exacta' || c.precision === 'calibrada_usuario') ? '🟢' : '⚠️';
+      optgroupsCentros += `<option value="${c.id}">${icono} ${c.nombre} (${c.parroquia})</option>`;
+    });
+    optgroupsCentros += `</optgroup>`;
+  }
+
   const selAsignar = document.getElementById('select-asignar-centro');
   if (selAsignar) {
-    let htmlAsignar = '<option value="">-- Seleccionar centro a calibrar (84) --</option>';
-    for (const [mun, centros] of Object.entries(grupos)) {
-      htmlAsignar += `<optgroup label="Municipio ${mun}">`;
-      centros.forEach(c => {
-        const icono = (c.precision === 'exacta' || c.precision === 'calibrada_usuario') ? '🟢' : '⚠️';
-        htmlAsignar += `<option value="${c.id}">${icono} ${c.nombre} (${c.parroquia})</option>`;
-      });
-      htmlAsignar += `</optgroup>`;
-    }
-    selAsignar.innerHTML = htmlAsignar;
+    selAsignar.innerHTML = '<option value="">-- Seleccionar centro a calibrar (84) --</option>' + optgroupsCentros;
     if (state.centroCalibrando) {
       selAsignar.value = state.centroCalibrando.id;
+    }
+  }
+
+  const selCardAsignar = document.getElementById('select-card-asignar-centro');
+  if (selCardAsignar) {
+    selCardAsignar.innerHTML = '<option value="">-- Asignar este punto a... --</option>' + optgroupsCentros;
+    if (state.centroCalibrando) {
+      selCardAsignar.value = state.centroCalibrando.id;
     }
   }
 }
@@ -2492,6 +2667,12 @@ window.copiarCoordenadasInspector = copiarCoordenadasInspector;
 window.abrirPuntoEnGoogleMapsOficial = abrirPuntoEnGoogleMapsOficial;
 window.crearCentroDesdePunto = crearCentroDesdePunto;
 window.aplicarCoordenadaACentroSeleccionado = aplicarCoordenadaACentroSeleccionado;
+window.seleccionarCentroDesdeBusquedaFlotante = seleccionarCentroDesdeBusquedaFlotante;
+window.limpiarBusquedaFlotante = limpiarBusquedaFlotante;
+window.buscarExternoGmapsQuery = buscarExternoGmapsQuery;
+window.cerrarTarjetaPinFlotante = cerrarTarjetaPinFlotante;
+window.guardarPuntoDesdeTarjetaFlotante = guardarPuntoDesdeTarjetaFlotante;
+window.copiarCoordsDesdeTarjetaFlotante = copiarCoordsDesdeTarjetaFlotante;
 window.cambiarPestana = cambiarPestana;
 window.iniciarAplicacion = iniciarAplicacion;
 

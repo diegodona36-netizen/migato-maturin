@@ -38,7 +38,7 @@
   </script>
 
   <!-- Custom Stylesheet & Print Rules -->
-  <link rel="stylesheet" href="css/styles.css?v=161">
+  <link rel="stylesheet" href="css/styles.css?v=162">
 </head>
 <body class="bg-[#0a0620] text-slate-100 min-h-screen flex flex-col antialiased select-none sm:select-auto" style="background: radial-gradient(circle at 50% 15%, #18114a 0%, #0e092e 50%, #080518 100%);">
 
@@ -700,11 +700,62 @@
 
       </div>
 
-      <!-- CONTENEDOR DEL MAPA Y PANEL CALIBRADOR FLOTANTE -->
+      <!-- CONTENEDOR DEL MAPA Y CONTROLES FLOTANTES GOOGLE MAPS -->
       <div class="relative w-full rounded-2xl overflow-hidden border border-[#2d1f85] shadow-2xl bg-[#080518]">
         
         <!-- MAPA TÁCTICO LEAFLET -->
         <div id="mapa-general" class="w-full h-[620px] relative isolate z-0"></div>
+
+        <!-- BARRA DE BÚSQUEDA FLOTANTE ESTILO GOOGLE MAPS (ARRIBA A LA IZQUIERDA) -->
+        <div id="gmaps-floating-search" class="absolute top-3 left-12 sm:left-14 z-[400] max-w-[340px] sm:max-w-[420px] w-[calc(100%-4rem)]">
+          <div class="relative flex items-center bg-[#120c36]/95 backdrop-blur-md border-2 border-sky-500/80 rounded-2xl shadow-2xl overflow-hidden">
+            <div class="pl-3 pr-1.5 text-sky-400 pointer-events-none">
+              <i data-lucide="search" class="w-4 h-4"></i>
+            </div>
+            <input type="text" id="input-search-gmaps-overlay" 
+                   placeholder="Buscar hospital, ambulatorio o sector (ej. Manuel Núñez, Los Godos)..."
+                   class="w-full bg-transparent py-2.5 pr-2 text-xs text-white placeholder-slate-400 focus:outline-none font-medium">
+            <button type="button" id="btn-clear-search-gmaps" onclick="window.limpiarBusquedaFlotante()" 
+                    class="hidden px-2 text-slate-400 hover:text-white transition" title="Limpiar búsqueda">
+              <i data-lucide="x" class="w-3.5 h-3.5"></i>
+            </button>
+            <button type="button" onclick="window.buscarExternoGmapsQuery()" 
+                    class="px-3 py-2.5 bg-sky-600 hover:bg-sky-500 text-white font-black text-[11px] transition flex items-center gap-1 shrink-0 active:scale-95" 
+                    title="Buscar directamente en Google Maps oficial">
+              <span>Google ↗</span>
+            </button>
+          </div>
+          <!-- Resultados Autocomplete en vivo -->
+          <div id="gmaps-search-results" class="hidden mt-1.5 bg-[#120c36]/95 backdrop-blur-md border border-sky-500/70 rounded-2xl shadow-2xl max-h-64 overflow-y-auto divide-y divide-[#2d1f85]/50">
+          </div>
+        </div>
+
+        <!-- TARJETA FLOTANTE INFERIOR GOOGLE MAPS (Aparece inmediatamente al tocar cualquier punto) -->
+        <div id="gmaps-floating-pin-card" class="hidden absolute bottom-4 left-1/2 -translate-x-1/2 z-[400] w-[calc(100%-2rem)] max-w-[500px] bg-[#0e092e]/95 backdrop-blur-md border-2 border-amber-400/90 rounded-2xl p-3 sm:p-3.5 shadow-2xl space-y-2.5 transition-all">
+          <div class="flex items-center justify-between gap-2 border-b border-[#2d1f85] pb-2">
+            <div class="flex items-center gap-2 min-w-0">
+              <span class="text-base shrink-0">🎯</span>
+              <div class="min-w-0">
+                <h4 class="text-xs font-black text-white truncate" id="card-pin-title">Punto Marcado en Google Maps</h4>
+                <div class="text-[10px] text-amber-300 font-mono font-bold" id="card-pin-coords">9.741430, -63.200590</div>
+              </div>
+            </div>
+            <button type="button" onclick="window.cerrarTarjetaPinFlotante()" class="p-1 text-slate-400 hover:text-white rounded-lg hover:bg-white/10 transition shrink-0" title="Cerrar">
+              <i data-lucide="x" class="w-4 h-4"></i>
+            </button>
+          </div>
+          <div class="flex items-center gap-2">
+            <select id="select-card-asignar-centro" class="flex-1 bg-[#18114a] border border-[#2d1f85] rounded-xl px-2.5 py-2 text-xs text-white focus:border-amber-400 focus:outline-none">
+              <option value="">-- Asignar este punto a... --</option>
+            </select>
+            <button type="button" onclick="window.guardarPuntoDesdeTarjetaFlotante()" class="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-black text-xs rounded-xl shadow transition flex items-center gap-1 shrink-0 active:scale-95">
+              <span>Guardar ✓</span>
+            </button>
+            <button type="button" onclick="window.copiarCoordsDesdeTarjetaFlotante()" class="p-2 bg-[#18114a] hover:bg-[#281b7a] border border-[#2d1f85] text-sky-300 rounded-xl transition shrink-0" title="Copiar Coordenadas">
+              <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+            </button>
+          </div>
+        </div>
 
         <!-- PANEL / INSPECTOR FLOTANTE DE CALIBRACIÓN RÁPIDA -->
         <div id="mapa-quick-calibrator" class="hidden absolute top-4 right-4 z-[400] max-w-[400px] w-[calc(100%-2rem)] bg-[#120c36]/95 backdrop-blur-md border-2 border-sky-500/90 rounded-2xl p-4 shadow-2xl text-xs space-y-3 max-h-[92%] overflow-y-auto">
@@ -981,10 +1032,10 @@
   </div>
 
   <!-- Delimitación Geográfica Oficial del Estado Monagas (INE / IGVSB) -->
-  <script src="js/geoMonagasLimits.js?v=161"></script>
+  <script src="js/geoMonagasLimits.js?v=162"></script>
   <!-- Scripts de Datos y Lógica (Carga universal estándar) -->
-  <script src="js/saludData.js?v=161"></script>
-  <script src="js/saludApp.js?v=161"></script>
+  <script src="js/saludData.js?v=162"></script>
+  <script src="js/saludApp.js?v=162"></script>
 
 </body>
 </html>
