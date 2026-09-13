@@ -540,10 +540,29 @@
                   <i data-lucide="crosshair" class="w-4 h-4 text-sky-400"></i>
                   <span>Georreferenciación Satelital</span>
                 </span>
-                <button type="button" id="btn-gps-ubicacion" class="p-1 rounded-lg bg-[#120c36] hover:bg-[#251b68] border border-[#2d1f85] text-sky-400 text-[10px] font-bold transition flex items-center gap-1" title="Usar mi GPS actual">
+                <button type="button" id="btn-gps-ubicacion" class="p-1 px-2.5 rounded-lg bg-[#120c36] hover:bg-[#251b68] border border-[#2d1f85] text-sky-400 text-[10px] font-bold transition flex items-center gap-1" title="Usar mi GPS actual">
                   <i data-lucide="navigation" class="w-3.5 h-3.5"></i>
                   <span>Mi GPS</span>
                 </button>
+              </div>
+
+              <!-- BARRA DE IMPORTACIÓN RÁPIDA DE GOOGLE MAPS -->
+              <div class="space-y-1.5 bg-[#120c36] p-2 rounded-xl border border-[#2d1f85]">
+                <div class="flex gap-1.5">
+                  <input type="text" id="input-google-maps" placeholder="Pegar enlace Google Maps o lat, lng..." 
+                         class="flex-1 bg-[#0d0926] border border-[#2d1f85] rounded-lg px-2.5 py-1.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-sky-400 font-mono">
+                  <button type="button" id="btn-aplicar-gmaps" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-lg shadow transition flex items-center gap-1 active:scale-95" title="Fijar coordenadas">
+                    <i data-lucide="check" class="w-3.5 h-3.5"></i>
+                    <span>Fijar</span>
+                  </button>
+                </div>
+                <div class="flex items-center justify-between pt-0.5">
+                  <button type="button" id="btn-buscar-gmaps" class="text-[10px] text-sky-400 hover:text-sky-300 font-semibold flex items-center gap-1 transition" title="Abrir búsqueda en Google Maps en nueva pestaña">
+                    <i data-lucide="external-link" class="w-3 h-3"></i>
+                    <span>Buscar este centro en Google Maps ↗</span>
+                  </button>
+                  <span class="text-[9px] text-slate-400">Pega URL o 9.7175, -63.2072</span>
+                </div>
               </div>
 
               <!-- Contenedor del Mapa Leaflet -->
@@ -714,8 +733,8 @@
   </div>
 
   <!-- Scripts de Datos y Lógica (Carga universal estándar) -->
-  <script src="js/saludData.js?v=155"></script>
-  <script src="js/saludApp.js?v=155"></script>
+  <script src="js/saludData.js?v=156"></script>
+  <script src="js/saludApp.js?v=156"></script>
 
 </body>
 </html>

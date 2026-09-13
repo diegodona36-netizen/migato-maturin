@@ -12,7 +12,7 @@
   const CATALOGO_FALLAS = window.CATALOGO_FALLAS || {};
   const OPCIONES_SOPORTE_VITAL = window.OPCIONES_SOPORTE_VITAL || {};
   const CENTROS_SALUD_INICIALES = window.CENTROS_SALUD_INICIALES || [];
-const STORAGE_KEY = 'migato_salud_centros_v3';
+const STORAGE_KEY = 'migato_salud_centros_v4';
 
 // Estado global de la aplicación
 const state = {
@@ -181,6 +181,41 @@ function initMapaFormulario() {
   } catch (err) {
     console.error('Error inicializando mapa de formulario:', err);
   }
+}
+
+function procesarEnlaceOGoogleMaps(texto) {
+  if (!texto) return null;
+  const str = texto.trim();
+
+  // 1. Coordenadas directas: 9.71751, -63.20721 o 9.71751 -63.20721
+  const mSimple = str.match(/([+-]?\d+\.?\d*)[,\s]+([+-]?\d+\.?\d*)/);
+  if (mSimple) {
+    const lat = parseFloat(mSimple[1]);
+    const lng = parseFloat(mSimple[2]);
+    if (lat >= 7.5 && lat <= 11.5 && lng >= -65.5 && lng <= -61.0) {
+      return { lat, lng };
+    }
+  }
+
+  // 2. Formato Google Maps /@lat,lng
+  const mAt = str.match(/@([+-]?\d+\.\d+),([+-]?\d+\.\d+)/);
+  if (mAt) {
+    return { lat: parseFloat(mAt[1]), lng: parseFloat(mAt[2]) };
+  }
+
+  // 3. Formato !3dlat!4dlng
+  const m3d = str.match(/!3d([+-]?\d+\.\d+)!4d([+-]?\d+\.\d+)/);
+  if (m3d) {
+    return { lat: parseFloat(m3d[1]), lng: parseFloat(m3d[2]) };
+  }
+
+  // 4. Formato ?q=lat,lng o ll=lat,lng
+  const mQ = str.match(/[?&](?:q|ll)=([+-]?\d+\.\d+),([+-]?\d+\.\d+)/);
+  if (mQ) {
+    return { lat: parseFloat(mQ[1]), lng: parseFloat(mQ[2]) };
+  }
+
+  return null;
 }
 
 function actualizarBadgePrecisionFormulario(tipo) {
@@ -1231,6 +1266,12 @@ function renderDirectorioTabla() {
         <td class="py-3 px-3 text-slate-300">
           <div class="font-medium">${(c.municipio || '').replace('Municipio ', '')}</div>
           <div class="text-[11px] text-slate-400">${c.parroquia} • ${c.sector || 'N/A'}</div>
+          <div class="mt-1">
+            ${(c.precision === 'exacta' || c.precision === 'calibrada_usuario')
+              ? `<span class="inline-flex items-center gap-1 text-[9px] text-emerald-300 font-bold bg-emerald-950/70 px-1.5 py-0.5 rounded border border-emerald-800/60"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> Exacta (${c.lat.toFixed(4)}, ${c.lng.toFixed(4)})</span>`
+              : `<span class="inline-flex items-center gap-1 text-[9px] text-amber-300 font-bold bg-amber-950/70 px-1.5 py-0.5 rounded border border-amber-800/60"><span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span> Sectorial</span>`
+            }
+          </div>
         </td>
         <td class="py-3 px-3">
           <div class="grid grid-cols-2 gap-1 text-[10px] font-mono">
@@ -1247,11 +1288,14 @@ function renderDirectorioTabla() {
         </td>
         <td class="py-3 px-3 text-right">
           <div class="flex items-center justify-end gap-1.5">
+            <button onclick="window.buscarCentroEnGoogleMaps('${c.id}')" class="p-1.5 bg-[#140e40] hover:bg-[#251b68] text-amber-400 hover:text-amber-300 rounded-lg border border-amber-500/40 transition" title="Buscar en Google Maps ↗">
+              <i data-lucide="compass" class="w-3.5 h-3.5"></i>
+            </button>
             <button onclick="window.verFichaCentro('${c.id}')" class="px-2.5 py-1.5 bg-sky-500/20 hover:bg-sky-500 text-sky-300 hover:text-[#050814] font-bold rounded-lg text-[11px] border border-sky-500/40 transition flex items-center gap-1" title="Ver Ficha Imprimible 1:1">
               <i data-lucide="printer" class="w-3.5 h-3.5"></i>
               <span>Ficha 1:1</span>
             </button>
-            <button onclick="window.editarCentro('${c.id}')" class="p-1.5 bg-[#140e40] hover:bg-[#2d1f85] text-slate-300 hover:text-white rounded-lg border border-[#2d1f85] transition" title="Editar">
+            <button onclick="window.editarCentro('${c.id}')" class="p-1.5 bg-[#140e40] hover:bg-[#2d1f85] text-slate-300 hover:text-white rounded-lg border border-[#2d1f85] transition" title="Editar y Georreferenciar">
               <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
             </button>
             <button onclick="window.eliminarCentro('${c.id}')" class="p-1.5 bg-[#140e40] hover:bg-red-950 text-red-400 rounded-lg border border-red-900/50 transition" title="Eliminar">
@@ -1525,6 +1569,53 @@ function configurarEventListeners() {
     });
   }
 
+  // 10.1 Integración y Parser de Google Maps
+  const btnAplicarGmaps = document.getElementById('btn-aplicar-gmaps');
+  const inputGmaps = document.getElementById('input-google-maps');
+  
+  const aplicarCoordenadasDesdeInput = () => {
+    if (!inputGmaps) return;
+    const valor = inputGmaps.value.trim();
+    if (!valor) return;
+
+    const coords = procesarEnlaceOGoogleMaps(valor);
+    if (coords) {
+      if (state.mapaFormulario && state.marcadorFormulario) {
+        state.mapaFormulario.flyTo([coords.lat, coords.lng], 17);
+        state.marcadorFormulario.setLatLng([coords.lat, coords.lng]);
+        actualizarCoordenadasInputs(coords.lat, coords.lng, true);
+        actualizarBadgePrecisionFormulario('calibrada_usuario');
+      }
+      inputGmaps.value = '';
+    } else {
+      alert('No se pudieron extraer coordenadas válidas.\\nFormato admitido:\\n- Enlace de Google Maps con @lat,lng\\n- Coordenadas separadas por coma (ej: 9.71751, -63.20721)');
+    }
+  };
+
+  if (btnAplicarGmaps) {
+    btnAplicarGmaps.addEventListener('click', aplicarCoordenadasDesdeInput);
+  }
+  if (inputGmaps) {
+    inputGmaps.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        aplicarCoordenadasDesdeInput();
+      }
+    });
+  }
+
+  const btnBuscarGmaps = document.getElementById('btn-buscar-gmaps');
+  if (btnBuscarGmaps) {
+    btnBuscarGmaps.addEventListener('click', () => {
+      const nombre = document.getElementById('form-nombre-centro')?.value || '';
+      const sector = document.getElementById('form-sector')?.value || '';
+      const selMun = document.getElementById('form-municipio');
+      const munNombre = selMun ? selMun.options[selMun.selectedIndex]?.text || '' : '';
+      const query = `${nombre} ${sector} ${munNombre} Monagas Venezuela`.replace(/\\s+/g, ' ').trim();
+      window.open(`https://www.google.com/maps/search/${encodeURIComponent(query)}`, '_blank');
+    });
+  }
+
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') cerrarModalFicha();
   });
@@ -1589,6 +1680,12 @@ window.verFichaCentro = (id) => {
 };
 window.editarCentro = editarCentro;
 window.calibrarEnMapa = calibrarEnMapa;
+window.buscarCentroEnGoogleMaps = (id) => {
+  const c = state.centros.find(item => item.id === id);
+  if (!c) return;
+  const query = `${c.nombre} ${c.sector || ''} ${c.municipio || ''} Monagas Venezuela`.replace(/\\s+/g, ' ').trim();
+  window.open(`https://www.google.com/maps/search/${encodeURIComponent(query)}`, '_blank');
+};
 window.eliminarCentro = eliminarCentro;
 window.imprimirFichaActual = () => {
   window.print();

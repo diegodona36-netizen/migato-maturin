@@ -1172,8 +1172,8 @@ const CENTROS_SALUD_INICIALES = [
     "parroquiaId": "caripito",
     "parroquia": "Caripito",
     "sector": "Sector Madariaga / Caripe Viejo",
-    "lat": 10.11239,
-    "lng": -63.10344,
+    "lat": 10.10915,
+    "lng": -63.09154,
     "tipoRed": "hospitalaria",
     "tipoRedLabel": "Red Hospitalaria Especializada (Tipo I, II, III, IV)",
     "clasificacionEspecifica": "Hospital Tipo I",
@@ -1287,8 +1287,8 @@ const CENTROS_SALUD_INICIALES = [
     "parroquiaId": "caicara",
     "parroquia": "Caicara (Capital Cedeño)",
     "sector": "Caicara de Maturín Centro",
-    "lat": 9.81711,
-    "lng": -63.61252,
+    "lat": 9.81567,
+    "lng": -63.60854,
     "tipoRed": "hospitalaria",
     "tipoRedLabel": "Red Hospitalaria Especializada (Tipo I, II, III, IV)",
     "clasificacionEspecifica": "Hospital Tipo I",
@@ -1344,8 +1344,8 @@ const CENTROS_SALUD_INICIALES = [
     "parroquiaId": "san-antonio",
     "parroquia": "San Antonio de Maturín (Capayacuar)",
     "sector": "San Antonio de Capayacuar",
-    "lat": 10.1209,
-    "lng": -63.72688,
+    "lat": 10.11514,
+    "lng": -63.72735,
     "tipoRed": "hospitalaria",
     "tipoRedLabel": "Red Hospitalaria Especializada (Tipo I, II, III, IV)",
     "clasificacionEspecifica": "Hospital Tipo I",
@@ -2584,8 +2584,8 @@ const CENTROS_SALUD_INICIALES = [
     "parroquiaId": "caicara",
     "parroquia": "Caicara",
     "sector": "Caicara / Av. Miranda",
-    "lat": 9.822,
-    "lng": -63.615,
+    "lat": 9.8197,
+    "lng": -63.61434,
     "tipoRed": "comunal",
     "tipoRedLabel": "Red Comunal / Barrio Adentro (CPT, CDI, SRI, CAT)",
     "clasificacionEspecifica": "Centro de Diagnóstico Integral (CDI)",
@@ -2626,7 +2626,7 @@ const CENTROS_SALUD_INICIALES = [
       "fecha": "2026-09-10"
     },
     "nivelRiesgo": "verde",
-    "precision": "sectorial"
+    "precision": "exacta"
   },
   {
     "id": "cdi-aragua",
@@ -3864,8 +3864,8 @@ const CENTROS_SALUD_INICIALES = [
     "parroquiaId": "las-cocuizas",
     "parroquia": "Las Cocuizas",
     "sector": "Las Cocuizas / Calle 3",
-    "lat": 9.769,
-    "lng": -63.148,
+    "lat": 9.76341,
+    "lng": -63.14465,
     "tipoRed": "ambulatoria",
     "tipoRedLabel": "Red Ambulatoria Especializada (Urbana / Rural)",
     "clasificacionEspecifica": "Amb. Urbano II",
@@ -3902,7 +3902,7 @@ const CENTROS_SALUD_INICIALES = [
       "fecha": "2026-09-10"
     },
     "nivelRiesgo": "verde",
-    "precision": "sectorial"
+    "precision": "exacta"
   },
   {
     "id": "amb-sabana-grande",
@@ -5211,6 +5211,7 @@ const CENTROS_SALUD_INICIALES = [
     "precision": "sectorial"
   }
 ];
+
 
 
   // Exportar al objeto global window
