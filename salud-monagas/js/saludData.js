@@ -804,8 +804,6 @@ const CENTROS_SALUD_INICIALES = [
   {
     "id": "humnt-maturin",
     "nombre": "Hospital Universitario Dr. Manuel Núñez Tovar (HUMNT)",
-    "estado": "Monagas",
-    "area": "Salud",
     "municipioId": "maturin",
     "municipio": "Municipio Maturín",
     "parroquiaId": "san-simon",
@@ -816,88 +814,75 @@ const CENTROS_SALUD_INICIALES = [
     "tipoRed": "hospitalaria",
     "tipoRedLabel": "Red Hospitalaria Especializada (Tipo I, II, III, IV)",
     "clasificacionEspecifica": "Hospital Tipo IV",
-    "clasificacionEspecificaLabel": "Hospital Tipo IV (Central / Universitario)",
-    "quirofanosTotal": 8,
-    "quirofanosOperativos": 4,
-    "camasHospitalizacion": 420,
+    "clasificacionEspecificaLabel": "Hospital Tipo IV (Nodal Regional)",
+    "quirofanosTotal": 9,
+    "quirofanosOperativos": 5,
+    "camasHospitalizacion": 480,
     "areasServicios": [
       "triaje",
       "consulta_externa",
       "emergencia_adultos",
       "emergencia_pediatrica",
+      "trauma_shock",
       "sala_partos",
       "quirofanos",
+      "uci_adultos",
+      "uci_pediatrica",
       "hospitalizacion",
-      "aislamiento",
-      "inmunizacion",
       "laboratorio",
       "imagenologia",
       "banco_sangre",
-      "farmacia",
-      "desechos",
-      "lavanderia",
-      "morgue",
-      "ambulancia"
+      "farmacia"
     ],
     "soporteVital": {
       "plantaElectrica": "Operativa",
-      "suministroAgua": "Continuo",
-      "gasesMedicinales": "Red Central",
+      "suministroAgua": "Pozo Propio",
+      "gasesMedicinales": "Tanque Criogénico",
       "climatizacion": "Parcial"
     },
     "fallas": {
       "electricas": [
-        "sin_ats",
         "fluctuaciones"
       ],
       "hidrosanitarias": [
-        "fuga_tuberias",
-        "banos_inoperativos"
+        "fuga_tuberias"
       ],
       "estructurales": [
-        "filtraciones_techo",
-        "cielo_raso_caido",
-        "pisos_agrietados"
+        "filtraciones_techo"
       ],
       "climatizacion": [
-        "quirofanos_sin_clima",
-        "emergencia_sin_clima"
+        "aire_danado_emergencia"
       ],
-      "bioseguridad": [
-        "sin_ruta_diferenciada",
-        "falta_ambulancia"
-      ]
+      "bioseguridad": []
     },
-    "redRemision": "Centro de Máxima Resolución del Estado Monagas y Oriente Sur",
-    "observaciones": "Requiere rehabilitación integral de climatización en quirófanos de trauma shock y sustitución de luminarias cialíticas. Los tanques de reserva subterránea tienen bomba operativa.",
+    "redRemision": "Centro de Referencia Terciaria Estadal",
+    "observaciones": "Principal hospital del oriente. Demanda alta de insumos en trauma shock y pabellones.",
     "elaboradoPor": {
       "nombre": "Dr. Carlos Mendoza",
       "ci": "V-14.892.410",
-      "cargo": "Director Médico Regional / Enlace Sala de Mando",
+      "cargo": "Director Médico HUMNT",
       "telefono": "0414-7654321",
-      "fecha": "2026-09-12"
+      "fecha": "2026-09-10"
     },
     "nivelRiesgo": "amarillo"
   },
   {
     "id": "hosp-simon-bolivar",
     "nombre": "Hospital Dr. Simón Bolívar",
-    "estado": "Monagas",
-    "area": "Salud",
     "municipioId": "maturin",
     "municipio": "Municipio Maturín",
     "parroquiaId": "santa-cruz",
     "parroquia": "Santa Cruz (La Cruz)",
-    "sector": "Zona Industrial / La Cruz",
-    "lat": 9.731,
-    "lng": -63.242,
+    "sector": "La Cruz / Entrada Los Ángeles",
+    "lat": 9.7612,
+    "lng": -63.2215,
     "tipoRed": "hospitalaria",
     "tipoRedLabel": "Red Hospitalaria Especializada (Tipo I, II, III, IV)",
     "clasificacionEspecifica": "Hospital Tipo II",
     "clasificacionEspecificaLabel": "Hospital Tipo II",
     "quirofanosTotal": 3,
-    "quirofanosOperativos": 2,
-    "camasHospitalizacion": 90,
+    "quirofanosOperativos": 1,
+    "camasHospitalizacion": 85,
     "areasServicios": [
       "triaje",
       "consulta_externa",
@@ -907,64 +892,59 @@ const CENTROS_SALUD_INICIALES = [
       "quirofanos",
       "hospitalizacion",
       "laboratorio",
-      "imagenologia",
-      "farmacia",
-      "lavanderia",
-      "desechos"
+      "farmacia"
     ],
     "soporteVital": {
-      "plantaElectrica": "Operativa",
-      "suministroAgua": "Continuo",
+      "plantaElectrica": "Inoperativa",
+      "suministroAgua": "Cisterna",
       "gasesMedicinales": "Bombonas",
       "climatizacion": "Parcial"
     },
     "fallas": {
       "electricas": [
-        "fluctuaciones"
+        "planta_inoperativa"
       ],
       "hidrosanitarias": [
-        "banos_inoperativos"
+        "sin_agua_tuberia"
       ],
       "estructurales": [
-        "pintura_deteriorada"
+        "filtraciones_techo"
       ],
       "climatizacion": [
-        "emergencia_sin_clima"
+        "aire_danado_quirofano"
       ],
       "bioseguridad": [
         "falta_ambulancia"
       ]
     },
-    "redRemision": "Hospital Universitario Dr. Manuel Núñez Tovar (HUMNT)",
-    "observaciones": "Operatividad estable en consulta y emergencia diurna. Necesidad de dotación continua de bombonas de oxígeno medicinal y reparación del compresor del área de emergencia.",
+    "redRemision": "HUMNT Maturín",
+    "observaciones": "Planta eléctrica dañada. Urgente sustitución de bomba de agua y transfer switch.",
     "elaboradoPor": {
       "nombre": "Dra. María Elena Rivas",
-      "ci": "V-16.230.119",
-      "cargo": "Coordinadora de Epidemiología y Servicios",
-      "telefono": "0416-8901234",
-      "fecha": "2026-09-10"
+      "ci": "V-16.320.104",
+      "cargo": "Directora Médica",
+      "telefono": "0412-8877665",
+      "fecha": "2026-09-11"
     },
-    "nivelRiesgo": "verde"
+    "nivelRiesgo": "rojo"
   },
   {
     "id": "hosp-felicia-rondon",
-    "nombre": "Hospital Dra. Felicia Rondón de Cabello",
-    "estado": "Monagas",
-    "area": "Salud",
+    "nombre": "Hospital Dra. Felicia Rondón de Cabello (IVSS)",
     "municipioId": "maturin",
     "municipio": "Municipio Maturín",
     "parroquiaId": "el-furrial",
     "parroquia": "El Furrial",
-    "sector": "El Furrial Centro",
-    "lat": 9.7022,
-    "lng": -63.468,
+    "sector": "El Furrial Centro / Troncal 13",
+    "lat": 9.715,
+    "lng": -63.472,
     "tipoRed": "hospitalaria",
     "tipoRedLabel": "Red Hospitalaria Especializada (Tipo I, II, III, IV)",
     "clasificacionEspecifica": "Hospital Tipo II",
     "clasificacionEspecificaLabel": "Hospital Tipo II",
     "quirofanosTotal": 2,
-    "quirofanosOperativos": 1,
-    "camasHospitalizacion": 65,
+    "quirofanosOperativos": 2,
+    "camasHospitalizacion": 50,
     "areasServicios": [
       "triaje",
       "consulta_externa",
@@ -974,9 +954,7 @@ const CENTROS_SALUD_INICIALES = [
       "quirofanos",
       "hospitalizacion",
       "laboratorio",
-      "imagenologia",
-      "farmacia",
-      "inmunizacion"
+      "farmacia"
     ],
     "soporteVital": {
       "plantaElectrica": "Operativa",
@@ -985,47 +963,39 @@ const CENTROS_SALUD_INICIALES = [
       "climatizacion": "100% Operativa"
     },
     "fallas": {
-      "electricas": [
-        "fluctuaciones"
-      ],
+      "electricas": [],
       "hidrosanitarias": [],
-      "estructurales": [
-        "cerrajeria_danada"
-      ],
+      "estructurales": [],
       "climatizacion": [],
-      "bioseguridad": [
-        "falta_ambulancia"
-      ]
+      "bioseguridad": []
     },
     "redRemision": "HUMNT Maturín",
-    "observaciones": "Instalaciones con buen mantenimiento general. Se requiere ambulancia propia para traslados hacia el HUMNT sobre el corredor oeste.",
+    "observaciones": "Operatividad óptima en quirófanos y climatización. Buena dotación de IVSS.",
     "elaboradoPor": {
       "nombre": "Dr. José Antonio Bastardo",
-      "ci": "V-13.441.802",
-      "cargo": "Médico Jefe de Guardia / Enlace Territorial",
-      "telefono": "0424-9123456",
-      "fecha": "2026-09-11"
+      "ci": "V-12.980.543",
+      "cargo": "Coordinador General",
+      "telefono": "0414-9988776",
+      "fecha": "2026-09-09"
     },
     "nivelRiesgo": "verde"
   },
   {
-    "id": "hosp-serres-cocuizas",
+    "id": "hosp-serres-las-cocuizas",
     "nombre": "Hospital Tipo I Dr. José Antonio Serres",
-    "estado": "Monagas",
-    "area": "Salud",
     "municipioId": "maturin",
     "municipio": "Municipio Maturín",
     "parroquiaId": "las-cocuizas",
     "parroquia": "Las Cocuizas",
-    "sector": "Las Cocuizas / Av. Aeropuerto",
-    "lat": 9.761,
+    "sector": "Las Cocuizas / Av. El Milagro",
+    "lat": 9.768,
     "lng": -63.149,
     "tipoRed": "hospitalaria",
     "tipoRedLabel": "Red Hospitalaria Especializada (Tipo I, II, III, IV)",
     "clasificacionEspecifica": "Hospital Tipo I",
     "clasificacionEspecificaLabel": "Hospital Tipo I",
     "quirofanosTotal": 2,
-    "quirofanosOperativos": 0,
+    "quirofanosOperativos": 1,
     "camasHospitalizacion": 40,
     "areasServicios": [
       "triaje",
@@ -1033,80 +1003,10 @@ const CENTROS_SALUD_INICIALES = [
       "emergencia_adultos",
       "emergencia_pediatrica",
       "sala_partos",
-      "laboratorio",
-      "farmacia",
-      "inmunizacion"
-    ],
-    "soporteVital": {
-      "plantaElectrica": "Inoperativa",
-      "suministroAgua": "Cisterna",
-      "gasesMedicinales": "Bombonas",
-      "climatizacion": "Cero Clima"
-    },
-    "fallas": {
-      "electricas": [
-        "planta_inoperativa",
-        "sin_ats",
-        "iluminacion_deficiente"
-      ],
-      "hidrosanitarias": [
-        "sin_agua_tuberia",
-        "banos_inoperativos"
-      ],
-      "estructurales": [
-        "filtraciones_techo",
-        "cielo_raso_caido",
-        "pisos_agrietados"
-      ],
-      "climatizacion": [
-        "emergencia_sin_clima",
-        "cavas_vacunas_falla"
-      ],
-      "bioseguridad": [
-        "sin_cuarto_biologicos",
-        "falta_ambulancia"
-      ]
-    },
-    "redRemision": "HUMNT (Hospital Universitario Dr. Manuel Núñez Tovar)",
-    "observaciones": "URGENCIA CRÍTICA: La planta eléctrica tiene avería mayor de inyectores. No llega agua por tubería (abastecimiento dependiente de cisterna). Quirófanos paralizados por falta de aire acondicionado estéril.",
-    "elaboradoPor": {
-      "nombre": "Dr. Marcos Bermúdez",
-      "ci": "V-17.902.115",
-      "cargo": "Enlace Parroquial Las Cocuizas",
-      "telefono": "0414-9988776",
-      "fecha": "2026-09-12"
-    },
-    "nivelRiesgo": "rojo"
-  },
-  {
-    "id": "cdi-godos-rosendo",
-    "nombre": "CDI Los Godos • Dr. Rosendo Gómez Lorenzo",
-    "estado": "Monagas",
-    "area": "Salud",
-    "municipioId": "maturin",
-    "municipio": "Municipio Maturín",
-    "parroquiaId": "alto-de-los-godos",
-    "parroquia": "Alto de Los Godos",
-    "sector": "Los Godos 1 / La Puente",
-    "lat": 9.7285,
-    "lng": -63.205,
-    "tipoRed": "comunal",
-    "tipoRedLabel": "Red Comunal / Barrio Adentro (CPT, CDI, SRI)",
-    "clasificacionEspecifica": "CDI",
-    "clasificacionEspecificaLabel": "CDI (Centro de Diagnóstico Integral)",
-    "quirofanosTotal": 1,
-    "quirofanosOperativos": 1,
-    "camasHospitalizacion": 12,
-    "areasServicios": [
-      "triaje",
-      "consulta_externa",
-      "emergencia_adultos",
       "quirofanos",
       "hospitalizacion",
       "laboratorio",
-      "imagenologia",
-      "farmacia",
-      "inmunizacion"
+      "farmacia"
     ],
     "soporteVital": {
       "plantaElectrica": "Operativa",
@@ -1121,39 +1021,153 @@ const CENTROS_SALUD_INICIALES = [
       "hidrosanitarias": [
         "fuga_tuberias"
       ],
+      "estructurales": [],
+      "climatizacion": [
+        "aire_danado_emergencia"
+      ],
+      "bioseguridad": []
+    },
+    "redRemision": "HUMNT Maturín",
+    "observaciones": "Sala de partos activa. Mantenimiento requerido para segundo quirófano.",
+    "elaboradoPor": {
+      "nombre": "Dr. Marcos Bermúdez",
+      "ci": "V-15.654.321",
+      "cargo": "Médico Jefe Serres",
+      "telefono": "0416-3322110",
+      "fecha": "2026-09-08"
+    },
+    "nivelRiesgo": "amarillo"
+  },
+  {
+    "id": "hosp-psiquiatrico-maturin",
+    "nombre": "Hospital Psiquiátrico de Maturín",
+    "municipioId": "maturin",
+    "municipio": "Municipio Maturín",
+    "parroquiaId": "boqueron",
+    "parroquia": "Boquerón",
+    "sector": "Las Piñas / Vía Boquerón",
+    "lat": 9.791,
+    "lng": -63.185,
+    "tipoRed": "hospitalaria",
+    "tipoRedLabel": "Red Hospitalaria Especializada (Tipo I, II, III, IV)",
+    "clasificacionEspecifica": "Hospital Tipo I",
+    "clasificacionEspecificaLabel": "Hospital Especializado",
+    "quirofanosTotal": 0,
+    "quirofanosOperativos": 0,
+    "camasHospitalizacion": 60,
+    "areasServicios": [
+      "consulta_externa",
+      "emergencia_adultos",
+      "hospitalizacion",
+      "farmacia"
+    ],
+    "soporteVital": {
+      "plantaElectrica": "No tiene",
+      "suministroAgua": "Continuo",
+      "gasesMedicinales": "Inexistente",
+      "climatizacion": "Parcial"
+    },
+    "fallas": {
+      "electricas": [
+        "sin_planta"
+      ],
+      "hidrosanitarias": [
+        "banos_inoperativos"
+      ],
       "estructurales": [
-        "cerrajeria_danada"
+        "grietas_paredes"
       ],
       "climatizacion": [
-        "lab_imagen_sin_clima"
+        "sin_aire_pabellon"
       ],
       "bioseguridad": [
-        "sin_rampas_ascensor"
+        "falta_vigilancia"
       ]
     },
     "redRemision": "HUMNT Maturín",
-    "observaciones": "Punto neurálgico de la parroquia Alto de Los Godos. Rayos X operativo. Climatización del laboratorio requiere reemplazo de motor soplador.",
+    "observaciones": "Único centro psiquiátrico de la entidad. Se requiere impermeabilización y dotación de sedantes.",
     "elaboradoPor": {
-      "nombre": "Dr. Luisana Velásquez",
-      "ci": "V-19.340.582",
-      "cargo": "Médico Integral Comunitario / Jefa de ASIC",
-      "telefono": "0412-3344556",
-      "fecha": "2026-09-12"
+      "nombre": "Dra. Luisa Gómez",
+      "ci": "V-11.234.567",
+      "cargo": "Jefe de Psiquiatría",
+      "telefono": "0414-7788990",
+      "fecha": "2026-09-07"
     },
     "nivelRiesgo": "amarillo"
   },
   {
     "id": "hosp-punta-de-mata",
     "nombre": "Hospital Tipo I Dr. Luis González Espinoza",
-    "estado": "Monagas",
-    "area": "Salud",
     "municipioId": "ezequiel-zamora",
     "municipio": "Municipio Ezequiel Zamora",
     "parroquiaId": "punta-de-mata",
     "parroquia": "Punta de Mata",
-    "sector": "Punta de Mata Centro",
-    "lat": 9.689,
-    "lng": -63.628,
+    "sector": "Av. Bolívar / Casco Urbano",
+    "lat": 9.691,
+    "lng": -63.535,
+    "tipoRed": "hospitalaria",
+    "tipoRedLabel": "Red Hospitalaria Especializada (Tipo I, II, III, IV)",
+    "clasificacionEspecifica": "Hospital Tipo I",
+    "clasificacionEspecificaLabel": "Hospital Tipo I",
+    "quirofanosTotal": 2,
+    "quirofanosOperativos": 0,
+    "camasHospitalizacion": 45,
+    "areasServicios": [
+      "triaje",
+      "consulta_externa",
+      "emergencia_adultos",
+      "emergencia_pediatrica",
+      "sala_partos",
+      "quirofanos",
+      "hospitalizacion",
+      "laboratorio",
+      "farmacia"
+    ],
+    "soporteVital": {
+      "plantaElectrica": "Inoperativa",
+      "suministroAgua": "Cisterna",
+      "gasesMedicinales": "Bombonas",
+      "climatizacion": "Cero Clima"
+    },
+    "fallas": {
+      "electricas": [
+        "planta_inoperativa"
+      ],
+      "hidrosanitarias": [
+        "sin_agua_tuberia"
+      ],
+      "estructurales": [
+        "filtraciones_techo"
+      ],
+      "climatizacion": [
+        "sin_aire_emergencia",
+        "sin_aire_quirofano"
+      ],
+      "bioseguridad": [
+        "falta_ambulancia"
+      ]
+    },
+    "redRemision": "HUMNT Maturín",
+    "observaciones": "Riesgo crítico por inoperatividad total de quirófanos y colapso de climatización en el eje petrolero oeste.",
+    "elaboradoPor": {
+      "nombre": "Dr. Fernando Salazar",
+      "ci": "V-13.789.012",
+      "cargo": "Coordinador de Emergencia",
+      "telefono": "0424-9123847",
+      "fecha": "2026-09-10"
+    },
+    "nivelRiesgo": "rojo"
+  },
+  {
+    "id": "hosp-caripito",
+    "nombre": "Hospital Tipo I Dr. Darío Márquez",
+    "municipioId": "bolivar",
+    "municipio": "Municipio Bolívar",
+    "parroquiaId": "caripito",
+    "parroquia": "Caripito",
+    "sector": "Sector Caripe Viejo / Av. Madariaga",
+    "lat": 10.052,
+    "lng": -63.098,
     "tipoRed": "hospitalaria",
     "tipoRedLabel": "Red Hospitalaria Especializada (Tipo I, II, III, IV)",
     "clasificacionEspecifica": "Hospital Tipo I",
@@ -1170,9 +1184,7 @@ const CENTROS_SALUD_INICIALES = [
       "quirofanos",
       "hospitalizacion",
       "laboratorio",
-      "farmacia",
-      "desechos",
-      "ambulancia"
+      "farmacia"
     ],
     "soporteVital": {
       "plantaElectrica": "Operativa",
@@ -1182,105 +1194,32 @@ const CENTROS_SALUD_INICIALES = [
     },
     "fallas": {
       "electricas": [
-        "sin_ats"
-      ],
-      "hidrosanitarias": [
-        "fuga_tuberias"
-      ],
-      "estructurales": [
-        "filtraciones_techo"
-      ],
-      "climatizacion": [
-        "emergencia_sin_clima"
-      ],
-      "bioseguridad": []
-    },
-    "redRemision": "HUMNT Maturín (a 45 minutos por carretera nacional)",
-    "observaciones": "Atiende eje petrolero Zamora-Cedeño. Sala de parto operativa. Fuga en bajante hidroneumático requiere fontanería menor.",
-    "elaboradoPor": {
-      "nombre": "Dr. Fernando Salazar",
-      "ci": "V-15.823.901",
-      "cargo": "Director Municipal de Salud Zamora",
-      "telefono": "0414-8765432",
-      "fecha": "2026-09-09"
-    },
-    "nivelRiesgo": "amarillo"
-  },
-  {
-    "id": "hosp-caripito-dario-marquez",
-    "nombre": "Hospital Tipo I Dr. Darío Márquez",
-    "estado": "Monagas",
-    "area": "Salud",
-    "municipioId": "bolivar",
-    "municipio": "Municipio Bolívar",
-    "parroquiaId": "caripito",
-    "parroquia": "Caripito",
-    "sector": "Caripito Arriba / Centro",
-    "lat": 10.116,
-    "lng": -63.099,
-    "tipoRed": "hospitalaria",
-    "tipoRedLabel": "Red Hospitalaria Especializada (Tipo I, II, III, IV)",
-    "clasificacionEspecifica": "Hospital Tipo I",
-    "clasificacionEspecificaLabel": "Hospital Tipo I",
-    "quirofanosTotal": 2,
-    "quirofanosOperativos": 1,
-    "camasHospitalizacion": 45,
-    "areasServicios": [
-      "triaje",
-      "consulta_externa",
-      "emergencia_adultos",
-      "emergencia_pediatrica",
-      "sala_partos",
-      "quirofanos",
-      "hospitalizacion",
-      "laboratorio",
-      "farmacia",
-      "inmunizacion"
-    ],
-    "soporteVital": {
-      "plantaElectrica": "Inoperativa",
-      "suministroAgua": "Cisterna",
-      "gasesMedicinales": "Bombonas",
-      "climatizacion": "Parcial"
-    },
-    "fallas": {
-      "electricas": [
-        "planta_inoperativa",
         "fluctuaciones"
       ],
-      "hidrosanitarias": [
-        "sin_agua_tuberia"
-      ],
+      "hidrosanitarias": [],
       "estructurales": [
-        "filtraciones_techo",
-        "cielo_raso_caido"
+        "pintura_deteriorada"
       ],
-      "climatizacion": [
-        "quirofanos_sin_clima"
-      ],
-      "bioseguridad": [
-        "falta_ambulancia"
-      ]
+      "climatizacion": [],
+      "bioseguridad": []
     },
-    "redRemision": "HUMNT Maturín / Hospital de Carúpano (Sucre)",
-    "observaciones": "ALERTA: Falla de energía recurrente por estar al final del circuito Caripito. Planta eléctrica requiere mantenimiento de bomba diésel. Quirófano funcionando con aire acondicionado provisional.",
+    "redRemision": "HUMNT Maturín",
+    "observaciones": "Operatividad estable en sala de partos y laboratorio. Necesita mantenimiento en segundo pabellón quirúrgico.",
     "elaboradoPor": {
       "nombre": "Dr. Ramón Gómez",
-      "ci": "V-12.784.093",
-      "cargo": "Enlace Médico Municipio Bolívar",
+      "ci": "V-10.456.890",
+      "cargo": "Director Caripito",
       "telefono": "0416-5544332",
-      "fecha": "2026-09-11"
+      "fecha": "2026-09-09"
     },
-    "nivelRiesgo": "rojo"
+    "nivelRiesgo": "verde"
   },
   {
-    "id": "hosp-caripe-urrestarazu",
+    "id": "hosp-caripe",
     "nombre": "Hospital Tipo I Dr. José Antonio Urrestarazu",
-    "estado": "Monagas",
-    "area": "Salud",
     "municipioId": "caripe",
     "municipio": "Municipio Caripe",
-    "parroquiaId": "caripe",
+    "parroquiaId": "caripe-centro",
     "parroquia": "Caripe",
     "sector": "Caripe Centro / El Mirador",
     "lat": 10.174,
@@ -1315,16 +1254,14 @@ const CENTROS_SALUD_INICIALES = [
         "fluctuaciones"
       ],
       "hidrosanitarias": [],
-      "estructurales": [
-        "pintura_deteriorada"
-      ],
+      "estructurales": [],
       "climatizacion": [],
       "bioseguridad": [
         "falta_ambulancia"
       ]
     },
     "redRemision": "HUMNT Maturín",
-    "observaciones": "Clima de montaña favorece la conservación térmica. Sala de inmunización dotada. Se requiere vehículo de doble tracción para traslados desde caseríos lejanos de la montaña.",
+    "observaciones": "Clima de montaña favorece climatización. Se requiere unidad móvil de tracción 4x4 para traslados desde caseríos.",
     "elaboradoPor": {
       "nombre": "Dra. Patricia Rondón",
       "ci": "V-18.445.671",
@@ -1333,6 +1270,3861 @@ const CENTROS_SALUD_INICIALES = [
       "fecha": "2026-09-08"
     },
     "nivelRiesgo": "verde"
+  },
+  {
+    "id": "hosp-caicara",
+    "nombre": "Hospital Tipo I Dr. Ernesto Guzmán Saavedra",
+    "municipioId": "cedeno",
+    "municipio": "Municipio Cedeño",
+    "parroquiaId": "caicara",
+    "parroquia": "Caicara (Capital Cedeño)",
+    "sector": "Caicara Centro / Calle Cedeño",
+    "lat": 9.818,
+    "lng": -63.618,
+    "tipoRed": "hospitalaria",
+    "tipoRedLabel": "Red Hospitalaria Especializada (Tipo I, II, III, IV)",
+    "clasificacionEspecifica": "Hospital Tipo I",
+    "clasificacionEspecificaLabel": "Hospital Tipo I",
+    "quirofanosTotal": 2,
+    "quirofanosOperativos": 1,
+    "camasHospitalizacion": 40,
+    "areasServicios": [
+      "triaje",
+      "consulta_externa",
+      "emergencia_adultos",
+      "emergencia_pediatrica",
+      "sala_partos",
+      "quirofanos",
+      "hospitalizacion",
+      "laboratorio",
+      "farmacia"
+    ],
+    "soporteVital": {
+      "plantaElectrica": "Operativa",
+      "suministroAgua": "Continuo",
+      "gasesMedicinales": "Bombonas",
+      "climatizacion": "Parcial"
+    },
+    "fallas": {
+      "electricas": [
+        "fluctuaciones"
+      ],
+      "hidrosanitarias": [],
+      "estructurales": [
+        "filtraciones_techo"
+      ],
+      "climatizacion": [],
+      "bioseguridad": []
+    },
+    "redRemision": "HUMNT Maturín",
+    "observaciones": "Punto central de atención del eje oeste. Sala de parto operativa con respaldo eléctrico.",
+    "elaboradoPor": {
+      "nombre": "Dr. Raúl Cedeño",
+      "ci": "V-15.112.233",
+      "cargo": "Director Hospital Caicara",
+      "telefono": "0414-8877112",
+      "fecha": "2026-09-09"
+    },
+    "nivelRiesgo": "verde"
+  },
+  {
+    "id": "hosp-san-antonio",
+    "nombre": "Hospital Tipo I Dr. Pablo Villarroel",
+    "municipioId": "acosta",
+    "municipio": "Municipio Acosta",
+    "parroquiaId": "san-antonio",
+    "parroquia": "San Antonio de Maturín (Capayacuar)",
+    "sector": "San Antonio Centro / Entrada Principal",
+    "lat": 10.045,
+    "lng": -63.705,
+    "tipoRed": "hospitalaria",
+    "tipoRedLabel": "Red Hospitalaria Especializada (Tipo I, II, III, IV)",
+    "clasificacionEspecifica": "Hospital Tipo I",
+    "clasificacionEspecificaLabel": "Hospital Tipo I",
+    "quirofanosTotal": 1,
+    "quirofanosOperativos": 1,
+    "camasHospitalizacion": 30,
+    "areasServicios": [
+      "triaje",
+      "consulta_externa",
+      "emergencia_adultos",
+      "emergencia_pediatrica",
+      "sala_partos",
+      "quirofanos",
+      "hospitalizacion",
+      "laboratorio",
+      "farmacia"
+    ],
+    "soporteVital": {
+      "plantaElectrica": "Operativa",
+      "suministroAgua": "Continuo",
+      "gasesMedicinales": "Bombonas",
+      "climatizacion": "Parcial"
+    },
+    "fallas": {
+      "electricas": [
+        "fluctuaciones"
+      ],
+      "hidrosanitarias": [],
+      "estructurales": [],
+      "climatizacion": [],
+      "bioseguridad": []
+    },
+    "redRemision": "HUMNT Maturín",
+    "observaciones": "Atiende cabecera del Valle de Capayacuar. Se solicita ambulancia de soporte vital avanzado.",
+    "elaboradoPor": {
+      "nombre": "Dra. Carmen Villarroel",
+      "ci": "V-17.889.900",
+      "cargo": "Médico Jefe Acosta",
+      "telefono": "0426-3344556",
+      "fecha": "2026-09-08"
+    },
+    "nivelRiesgo": "verde"
+  },
+  {
+    "id": "hosp-quiriquire",
+    "nombre": "Hospital Tipo I Dr. Nicolás Giannini",
+    "municipioId": "punceres",
+    "municipio": "Municipio Punceres",
+    "parroquiaId": "quiriquire",
+    "parroquia": "Quiriquire",
+    "sector": "Quiriquire Centro / Av. Principal",
+    "lat": 9.978,
+    "lng": -63.218,
+    "tipoRed": "hospitalaria",
+    "tipoRedLabel": "Red Hospitalaria Especializada (Tipo I, II, III, IV)",
+    "clasificacionEspecifica": "Hospital Tipo I",
+    "clasificacionEspecificaLabel": "Hospital Tipo I",
+    "quirofanosTotal": 1,
+    "quirofanosOperativos": 0,
+    "camasHospitalizacion": 30,
+    "areasServicios": [
+      "triaje",
+      "consulta_externa",
+      "emergencia_adultos",
+      "emergencia_pediatrica",
+      "sala_partos",
+      "hospitalizacion",
+      "laboratorio",
+      "farmacia"
+    ],
+    "soporteVital": {
+      "plantaElectrica": "Inoperativa",
+      "suministroAgua": "Cisterna",
+      "gasesMedicinales": "Bombonas",
+      "climatizacion": "Cero Clima"
+    },
+    "fallas": {
+      "electricas": [
+        "planta_inoperativa"
+      ],
+      "hidrosanitarias": [
+        "sin_agua_tuberia"
+      ],
+      "estructurales": [
+        "filtraciones_techo"
+      ],
+      "climatizacion": [
+        "sin_aire_emergencia"
+      ],
+      "bioseguridad": [
+        "falta_ambulancia"
+      ]
+    },
+    "redRemision": "HUMNT Maturín",
+    "observaciones": "Pabellón fuera de servicio. Requiere intervención inmediata de infraestructura eléctrica y agua.",
+    "elaboradoPor": {
+      "nombre": "Dr. Jorge Giannini",
+      "ci": "V-14.556.778",
+      "cargo": "Director Punceres",
+      "telefono": "0412-6677889",
+      "fecha": "2026-09-10"
+    },
+    "nivelRiesgo": "rojo"
+  },
+  {
+    "id": "hosp-temblador",
+    "nombre": "Hospital Tipo I Dr. Tulio López Ramírez",
+    "municipioId": "libertador",
+    "municipio": "Municipio Libertador",
+    "parroquiaId": "temblador",
+    "parroquia": "Temblador",
+    "sector": "Temblador Centro / Av. Francisco de Miranda",
+    "lat": 9.012,
+    "lng": -62.715,
+    "tipoRed": "hospitalaria",
+    "tipoRedLabel": "Red Hospitalaria Especializada (Tipo I, II, III, IV)",
+    "clasificacionEspecifica": "Hospital Tipo I",
+    "clasificacionEspecificaLabel": "Hospital Tipo I",
+    "quirofanosTotal": 2,
+    "quirofanosOperativos": 1,
+    "camasHospitalizacion": 45,
+    "areasServicios": [
+      "triaje",
+      "consulta_externa",
+      "emergencia_adultos",
+      "emergencia_pediatrica",
+      "sala_partos",
+      "quirofanos",
+      "hospitalizacion",
+      "laboratorio",
+      "farmacia"
+    ],
+    "soporteVital": {
+      "plantaElectrica": "Operativa",
+      "suministroAgua": "Continuo",
+      "gasesMedicinales": "Bombonas",
+      "climatizacion": "Parcial"
+    },
+    "fallas": {
+      "electricas": [
+        "fluctuaciones"
+      ],
+      "hidrosanitarias": [],
+      "estructurales": [],
+      "climatizacion": [
+        "aire_danado_hospitalizacion"
+      ],
+      "bioseguridad": []
+    },
+    "redRemision": "HUMNT Maturín",
+    "observaciones": "Nodo de salud para el sur de Monagas. Distancia a Maturín de 120 km amerita ambulancia activa.",
+    "elaboradoPor": {
+      "nombre": "Dr. Eduardo Mata",
+      "ci": "V-13.223.344",
+      "cargo": "Director Libertador",
+      "telefono": "0414-9900112",
+      "fecha": "2026-09-09"
+    },
+    "nivelRiesgo": "amarillo"
+  },
+  {
+    "id": "hosp-barrancas",
+    "nombre": "Hospital Tipo I Dr. Tulio López Ramírez (Barrancas)",
+    "municipioId": "sotillo",
+    "municipio": "Municipio Sotillo",
+    "parroquiaId": "barrancas",
+    "parroquia": "Barrancas del Orinoco",
+    "sector": "Barrancas Centro / Ribera del Orinoco",
+    "lat": 8.704,
+    "lng": -62.185,
+    "tipoRed": "hospitalaria",
+    "tipoRedLabel": "Red Hospitalaria Especializada (Tipo I, II, III, IV)",
+    "clasificacionEspecifica": "Hospital Tipo I",
+    "clasificacionEspecificaLabel": "Hospital Tipo I",
+    "quirofanosTotal": 1,
+    "quirofanosOperativos": 1,
+    "camasHospitalizacion": 35,
+    "areasServicios": [
+      "triaje",
+      "consulta_externa",
+      "emergencia_adultos",
+      "emergencia_pediatrica",
+      "sala_partos",
+      "quirofanos",
+      "hospitalizacion",
+      "laboratorio",
+      "farmacia"
+    ],
+    "soporteVital": {
+      "plantaElectrica": "Operativa",
+      "suministroAgua": "Continuo",
+      "gasesMedicinales": "Bombonas",
+      "climatizacion": "Parcial"
+    },
+    "fallas": {
+      "electricas": [
+        "fluctuaciones"
+      ],
+      "hidrosanitarias": [],
+      "estructurales": [],
+      "climatizacion": [],
+      "bioseguridad": [
+        "falta_lancha_ambulancia"
+      ]
+    },
+    "redRemision": "HUMNT Maturín / Hospital Uyapar Bolívar",
+    "observaciones": "Punto fluvial clave sobre el Río Orinoco. Requiere lancha ambulancia para comunidades indígenas warao.",
+    "elaboradoPor": {
+      "nombre": "Dr. Víctor Sotillo",
+      "ci": "V-16.778.899",
+      "cargo": "Director Sotillo",
+      "telefono": "0424-8899770",
+      "fecha": "2026-09-08"
+    },
+    "nivelRiesgo": "amarillo"
+  },
+  {
+    "id": "hosp-aguasay",
+    "nombre": "Hospital Tipo I / Clínica Popular Aguasay",
+    "municipioId": "aguasay",
+    "municipio": "Municipio Aguasay",
+    "parroquiaId": "aguasay-centro",
+    "parroquia": "Aguasay",
+    "sector": "Aguasay Centro / Calle Bolívar",
+    "lat": 9.421,
+    "lng": -63.742,
+    "tipoRed": "hospitalaria",
+    "tipoRedLabel": "Red Hospitalaria Especializada (Tipo I, II, III, IV)",
+    "clasificacionEspecifica": "Hospital Tipo I",
+    "clasificacionEspecificaLabel": "Hospital Tipo I / Clínica Popular",
+    "quirofanosTotal": 1,
+    "quirofanosOperativos": 1,
+    "camasHospitalizacion": 25,
+    "areasServicios": [
+      "triaje",
+      "consulta_externa",
+      "emergencia_adultos",
+      "emergencia_pediatrica",
+      "sala_partos",
+      "quirofanos",
+      "hospitalizacion",
+      "laboratorio",
+      "farmacia"
+    ],
+    "soporteVital": {
+      "plantaElectrica": "Operativa",
+      "suministroAgua": "Continuo",
+      "gasesMedicinales": "Bombonas",
+      "climatizacion": "100% Operativa"
+    },
+    "fallas": {
+      "electricas": [],
+      "hidrosanitarias": [],
+      "estructurales": [],
+      "climatizacion": [],
+      "bioseguridad": []
+    },
+    "redRemision": "HUMNT Maturín",
+    "observaciones": "Atención materno-infantil y emergencias menores para la población agropecuaria e indígena Kariña.",
+    "elaboradoPor": {
+      "nombre": "Dra. Yelitza Aguasay",
+      "ci": "V-18.990.123",
+      "cargo": "Médico Jefe Aguasay",
+      "telefono": "0416-4455667",
+      "fecha": "2026-09-09"
+    },
+    "nivelRiesgo": "verde"
+  },
+  {
+    "id": "hosp-santa-barbara",
+    "nombre": "Hospital Tipo I / Clínica Popular Santa Bárbara",
+    "municipioId": "santa-barbara",
+    "municipio": "Municipio Santa Bárbara",
+    "parroquiaId": "santa-barbara-centro",
+    "parroquia": "Santa Bárbara",
+    "sector": "Santa Bárbara Centro / Av. Principal",
+    "lat": 9.585,
+    "lng": -63.615,
+    "tipoRed": "hospitalaria",
+    "tipoRedLabel": "Red Hospitalaria Especializada (Tipo I, II, III, IV)",
+    "clasificacionEspecifica": "Hospital Tipo I",
+    "clasificacionEspecificaLabel": "Hospital Tipo I / Clínica Popular",
+    "quirofanosTotal": 1,
+    "quirofanosOperativos": 1,
+    "camasHospitalizacion": 25,
+    "areasServicios": [
+      "triaje",
+      "consulta_externa",
+      "emergencia_adultos",
+      "emergencia_pediatrica",
+      "sala_partos",
+      "quirofanos",
+      "hospitalizacion",
+      "laboratorio",
+      "farmacia"
+    ],
+    "soporteVital": {
+      "plantaElectrica": "Operativa",
+      "suministroAgua": "Continuo",
+      "gasesMedicinales": "Bombonas",
+      "climatizacion": "100% Operativa"
+    },
+    "fallas": {
+      "electricas": [],
+      "hidrosanitarias": [],
+      "estructurales": [],
+      "climatizacion": [],
+      "bioseguridad": []
+    },
+    "redRemision": "HUMNT Maturín",
+    "observaciones": "Buenas condiciones generales de infraestructura y dotación básica.",
+    "elaboradoPor": {
+      "nombre": "Dr. Santos Bárcenas",
+      "ci": "V-15.432.109",
+      "cargo": "Director Santa Bárbara",
+      "telefono": "0414-3322445",
+      "fecha": "2026-09-08"
+    },
+    "nivelRiesgo": "verde"
+  },
+  {
+    "id": "hosp-uracoa",
+    "nombre": "Hospital Tipo I / Clínica Popular Uracoa",
+    "municipioId": "uracoa",
+    "municipio": "Municipio Uracoa",
+    "parroquiaId": "uracoa-centro",
+    "parroquia": "Uracoa",
+    "sector": "Uracoa Centro / Plaza Bolívar",
+    "lat": 8.745,
+    "lng": -62.345,
+    "tipoRed": "hospitalaria",
+    "tipoRedLabel": "Red Hospitalaria Especializada (Tipo I, II, III, IV)",
+    "clasificacionEspecifica": "Hospital Tipo I",
+    "clasificacionEspecificaLabel": "Hospital Tipo I / Clínica Popular",
+    "quirofanosTotal": 1,
+    "quirofanosOperativos": 0,
+    "camasHospitalizacion": 20,
+    "areasServicios": [
+      "triaje",
+      "consulta_externa",
+      "emergencia_adultos",
+      "emergencia_pediatrica",
+      "sala_partos",
+      "hospitalizacion",
+      "laboratorio",
+      "farmacia"
+    ],
+    "soporteVital": {
+      "plantaElectrica": "Inoperativa",
+      "suministroAgua": "Cisterna",
+      "gasesMedicinales": "Bombonas",
+      "climatizacion": "Parcial"
+    },
+    "fallas": {
+      "electricas": [
+        "planta_inoperativa"
+      ],
+      "hidrosanitarias": [
+        "sin_agua_tuberia"
+      ],
+      "estructurales": [],
+      "climatizacion": [
+        "aire_danado_emergencia"
+      ],
+      "bioseguridad": [
+        "falta_ambulancia"
+      ]
+    },
+    "redRemision": "Hospital de Temblador / HUMNT Maturín",
+    "observaciones": "Pabellón quirúrgico no operativo. Planta eléctrica averiada por tarjeta de control.",
+    "elaboradoPor": {
+      "nombre": "Dra. Rosa Uracoa",
+      "ci": "V-17.654.321",
+      "cargo": "Médico Jefe Uracoa",
+      "telefono": "0424-5566778",
+      "fecha": "2026-09-09"
+    },
+    "nivelRiesgo": "rojo"
+  },
+  {
+    "id": "hosp-aragua-maturin",
+    "nombre": "Hospital Tipo I Dr. Manuel Núñez Tovar (Piar)",
+    "municipioId": "piar",
+    "municipio": "Municipio Piar",
+    "parroquiaId": "aragua",
+    "parroquia": "Aragua de Maturín",
+    "sector": "Aragua de Maturín / Calle Bolívar",
+    "lat": 9.972,
+    "lng": -63.485,
+    "tipoRed": "hospitalaria",
+    "tipoRedLabel": "Red Hospitalaria Especializada (Tipo I, II, III, IV)",
+    "clasificacionEspecifica": "Hospital Tipo I",
+    "clasificacionEspecificaLabel": "Hospital Tipo I",
+    "quirofanosTotal": 1,
+    "quirofanosOperativos": 1,
+    "camasHospitalizacion": 30,
+    "areasServicios": [
+      "triaje",
+      "consulta_externa",
+      "emergencia_adultos",
+      "emergencia_pediatrica",
+      "sala_partos",
+      "quirofanos",
+      "hospitalizacion",
+      "laboratorio",
+      "farmacia"
+    ],
+    "soporteVital": {
+      "plantaElectrica": "Operativa",
+      "suministroAgua": "Continuo",
+      "gasesMedicinales": "Bombonas",
+      "climatizacion": "Parcial"
+    },
+    "fallas": {
+      "electricas": [
+        "fluctuaciones"
+      ],
+      "hidrosanitarias": [],
+      "estructurales": [],
+      "climatizacion": [],
+      "bioseguridad": []
+    },
+    "redRemision": "HUMNT Maturín",
+    "observaciones": "Cabecera del municipio Piar. Sala de partos con atención continua a caseríos del norte.",
+    "elaboradoPor": {
+      "nombre": "Dr. Gilberto Piar",
+      "ci": "V-12.334.455",
+      "cargo": "Director Piar",
+      "telefono": "0416-9900881",
+      "fecha": "2026-09-08"
+    },
+    "nivelRiesgo": "verde"
+  },
+  {
+    "id": "cdi-los-godos",
+    "nombre": "CDI Dr. Rosendo Gómez Lorenzo",
+    "municipioId": "maturin",
+    "municipio": "Municipio Maturín",
+    "parroquiaId": "alto-de-los-godos",
+    "parroquia": "Alto de Los Godos",
+    "sector": "Los Godos / Calle Principal",
+    "lat": 9.7285,
+    "lng": -63.2065,
+    "tipoRed": "comunal",
+    "tipoRedLabel": "Red Comunal / Barrio Adentro (CPT, CDI, SRI, CAT)",
+    "clasificacionEspecifica": "Centro de Diagnóstico Integral (CDI)",
+    "clasificacionEspecificaLabel": "Centro de Diagnóstico Integral (CDI)",
+    "quirofanosTotal": 1,
+    "quirofanosOperativos": 1,
+    "camasHospitalizacion": 8,
+    "areasServicios": [
+      "triaje",
+      "consulta_externa",
+      "emergencia_adultos",
+      "sala_partos",
+      "laboratorio",
+      "imagenologia",
+      "farmacia",
+      "inmunizacion"
+    ],
+    "soporteVital": {
+      "plantaElectrica": "Operativa",
+      "suministroAgua": "Continuo",
+      "gasesMedicinales": "Bombonas",
+      "climatizacion": "100% Operativa"
+    },
+    "fallas": {
+      "electricas": [],
+      "hidrosanitarias": [],
+      "estructurales": [],
+      "climatizacion": [],
+      "bioseguridad": []
+    },
+    "redRemision": "HUMNT Maturín",
+    "observaciones": "Centro de Diagnóstico Integral con atención médica continuada 24/7.",
+    "elaboradoPor": {
+      "nombre": "Dr. Enlace Comunal",
+      "ci": "V-19.123.456",
+      "cargo": "Coordinador ASIC",
+      "telefono": "0414-0011223",
+      "fecha": "2026-09-10"
+    },
+    "nivelRiesgo": "verde"
+  },
+  {
+    "id": "cdi-carmelo-regardiz",
+    "nombre": "CDI Dr. Carmelo Regardiz",
+    "municipioId": "maturin",
+    "municipio": "Municipio Maturín",
+    "parroquiaId": "san-simon",
+    "parroquia": "San Simón (Casco Central)",
+    "sector": "Brisas del Orinoco / Calle 4",
+    "lat": 9.739,
+    "lng": -63.172,
+    "tipoRed": "comunal",
+    "tipoRedLabel": "Red Comunal / Barrio Adentro (CPT, CDI, SRI, CAT)",
+    "clasificacionEspecifica": "Centro de Diagnóstico Integral (CDI)",
+    "clasificacionEspecificaLabel": "Centro de Diagnóstico Integral (CDI)",
+    "quirofanosTotal": 1,
+    "quirofanosOperativos": 1,
+    "camasHospitalizacion": 8,
+    "areasServicios": [
+      "triaje",
+      "consulta_externa",
+      "emergencia_adultos",
+      "sala_partos",
+      "laboratorio",
+      "imagenologia",
+      "farmacia",
+      "inmunizacion"
+    ],
+    "soporteVital": {
+      "plantaElectrica": "Operativa",
+      "suministroAgua": "Continuo",
+      "gasesMedicinales": "Bombonas",
+      "climatizacion": "100% Operativa"
+    },
+    "fallas": {
+      "electricas": [],
+      "hidrosanitarias": [],
+      "estructurales": [],
+      "climatizacion": [],
+      "bioseguridad": []
+    },
+    "redRemision": "HUMNT Maturín",
+    "observaciones": "Centro de Diagnóstico Integral con atención médica continuada 24/7.",
+    "elaboradoPor": {
+      "nombre": "Dr. Enlace Comunal",
+      "ci": "V-19.123.456",
+      "cargo": "Coordinador ASIC",
+      "telefono": "0414-0011223",
+      "fecha": "2026-09-10"
+    },
+    "nivelRiesgo": "verde"
+  },
+  {
+    "id": "cdi-23-de-enero",
+    "nombre": "CDI 23 de Enero",
+    "municipioId": "maturin",
+    "municipio": "Municipio Maturín",
+    "parroquiaId": "san-simon",
+    "parroquia": "San Simón (Casco Central)",
+    "sector": "Sector 23 de Enero",
+    "lat": 9.754,
+    "lng": -63.188,
+    "tipoRed": "comunal",
+    "tipoRedLabel": "Red Comunal / Barrio Adentro (CPT, CDI, SRI, CAT)",
+    "clasificacionEspecifica": "Centro de Diagnóstico Integral (CDI)",
+    "clasificacionEspecificaLabel": "Centro de Diagnóstico Integral (CDI)",
+    "quirofanosTotal": 1,
+    "quirofanosOperativos": 1,
+    "camasHospitalizacion": 8,
+    "areasServicios": [
+      "triaje",
+      "consulta_externa",
+      "emergencia_adultos",
+      "sala_partos",
+      "laboratorio",
+      "imagenologia",
+      "farmacia",
+      "inmunizacion"
+    ],
+    "soporteVital": {
+      "plantaElectrica": "Operativa",
+      "suministroAgua": "Continuo",
+      "gasesMedicinales": "Bombonas",
+      "climatizacion": "100% Operativa"
+    },
+    "fallas": {
+      "electricas": [],
+      "hidrosanitarias": [],
+      "estructurales": [],
+      "climatizacion": [],
+      "bioseguridad": []
+    },
+    "redRemision": "HUMNT Maturín",
+    "observaciones": "Centro de Diagnóstico Integral con atención médica continuada 24/7.",
+    "elaboradoPor": {
+      "nombre": "Dr. Enlace Comunal",
+      "ci": "V-19.123.456",
+      "cargo": "Coordinador ASIC",
+      "telefono": "0414-0011223",
+      "fecha": "2026-09-10"
+    },
+    "nivelRiesgo": "verde"
+  },
+  {
+    "id": "cdi-boqueron",
+    "nombre": "CDI Boquerón",
+    "municipioId": "maturin",
+    "municipio": "Municipio Maturín",
+    "parroquiaId": "boqueron",
+    "parroquia": "Boquerón",
+    "sector": "Tipuro / Av. Alirio Ugarte Pelayo",
+    "lat": 9.789,
+    "lng": -63.189,
+    "tipoRed": "comunal",
+    "tipoRedLabel": "Red Comunal / Barrio Adentro (CPT, CDI, SRI, CAT)",
+    "clasificacionEspecifica": "Centro de Diagnóstico Integral (CDI)",
+    "clasificacionEspecificaLabel": "Centro de Diagnóstico Integral (CDI)",
+    "quirofanosTotal": 1,
+    "quirofanosOperativos": 1,
+    "camasHospitalizacion": 8,
+    "areasServicios": [
+      "triaje",
+      "consulta_externa",
+      "emergencia_adultos",
+      "sala_partos",
+      "laboratorio",
+      "imagenologia",
+      "farmacia",
+      "inmunizacion"
+    ],
+    "soporteVital": {
+      "plantaElectrica": "Operativa",
+      "suministroAgua": "Continuo",
+      "gasesMedicinales": "Bombonas",
+      "climatizacion": "100% Operativa"
+    },
+    "fallas": {
+      "electricas": [],
+      "hidrosanitarias": [],
+      "estructurales": [],
+      "climatizacion": [],
+      "bioseguridad": []
+    },
+    "redRemision": "HUMNT Maturín",
+    "observaciones": "Centro de Diagnóstico Integral con atención médica continuada 24/7.",
+    "elaboradoPor": {
+      "nombre": "Dr. Enlace Comunal",
+      "ci": "V-19.123.456",
+      "cargo": "Coordinador ASIC",
+      "telefono": "0414-0011223",
+      "fecha": "2026-09-10"
+    },
+    "nivelRiesgo": "verde"
+  },
+  {
+    "id": "cdi-los-cortijos",
+    "nombre": "CDI Los Cortijos",
+    "municipioId": "maturin",
+    "municipio": "Municipio Maturín",
+    "parroquiaId": "boqueron",
+    "parroquia": "Boquerón",
+    "sector": "Las Piñas / Los Cortijos",
+    "lat": 9.805,
+    "lng": -63.165,
+    "tipoRed": "comunal",
+    "tipoRedLabel": "Red Comunal / Barrio Adentro (CPT, CDI, SRI, CAT)",
+    "clasificacionEspecifica": "Centro de Diagnóstico Integral (CDI)",
+    "clasificacionEspecificaLabel": "Centro de Diagnóstico Integral (CDI)",
+    "quirofanosTotal": 1,
+    "quirofanosOperativos": 0,
+    "camasHospitalizacion": 8,
+    "areasServicios": [
+      "triaje",
+      "consulta_externa",
+      "emergencia_adultos",
+      "sala_partos",
+      "laboratorio",
+      "imagenologia",
+      "farmacia",
+      "inmunizacion"
+    ],
+    "soporteVital": {
+      "plantaElectrica": "Operativa",
+      "suministroAgua": "Continuo",
+      "gasesMedicinales": "Bombonas",
+      "climatizacion": "Parcial"
+    },
+    "fallas": {
+      "electricas": [],
+      "hidrosanitarias": [],
+      "estructurales": [],
+      "climatizacion": [],
+      "bioseguridad": []
+    },
+    "redRemision": "HUMNT Maturín",
+    "observaciones": "Centro de Diagnóstico Integral con atención médica continuada 24/7.",
+    "elaboradoPor": {
+      "nombre": "Dr. Enlace Comunal",
+      "ci": "V-19.123.456",
+      "cargo": "Coordinador ASIC",
+      "telefono": "0414-0011223",
+      "fecha": "2026-09-10"
+    },
+    "nivelRiesgo": "amarillo"
+  },
+  {
+    "id": "cdi-viento-colao",
+    "nombre": "CDI Viento Colao",
+    "municipioId": "maturin",
+    "municipio": "Municipio Maturín",
+    "parroquiaId": "san-simon",
+    "parroquia": "San Simón (Casco Central)",
+    "sector": "Sector Viento Colao Sur",
+    "lat": 9.732,
+    "lng": -63.181,
+    "tipoRed": "comunal",
+    "tipoRedLabel": "Red Comunal / Barrio Adentro (CPT, CDI, SRI, CAT)",
+    "clasificacionEspecifica": "Centro de Diagnóstico Integral (CDI)",
+    "clasificacionEspecificaLabel": "Centro de Diagnóstico Integral (CDI)",
+    "quirofanosTotal": 1,
+    "quirofanosOperativos": 0,
+    "camasHospitalizacion": 8,
+    "areasServicios": [
+      "triaje",
+      "consulta_externa",
+      "emergencia_adultos",
+      "sala_partos",
+      "laboratorio",
+      "imagenologia",
+      "farmacia",
+      "inmunizacion"
+    ],
+    "soporteVital": {
+      "plantaElectrica": "Inoperativa",
+      "suministroAgua": "Cisterna",
+      "gasesMedicinales": "Bombonas",
+      "climatizacion": "Parcial"
+    },
+    "fallas": {
+      "electricas": [
+        "planta_inoperativa"
+      ],
+      "hidrosanitarias": [
+        "sin_agua_tuberia"
+      ],
+      "estructurales": [],
+      "climatizacion": [],
+      "bioseguridad": []
+    },
+    "redRemision": "HUMNT Maturín",
+    "observaciones": "Centro de Diagnóstico Integral con atención médica continuada 24/7.",
+    "elaboradoPor": {
+      "nombre": "Dr. Enlace Comunal",
+      "ci": "V-19.123.456",
+      "cargo": "Coordinador ASIC",
+      "telefono": "0414-0011223",
+      "fecha": "2026-09-10"
+    },
+    "nivelRiesgo": "rojo"
+  },
+  {
+    "id": "cdi-la-pica",
+    "nombre": "CDI La Pica",
+    "municipioId": "maturin",
+    "municipio": "Municipio Maturín",
+    "parroquiaId": "la-pica",
+    "parroquia": "La Pica",
+    "sector": "La Pica Centro / Calle Real",
+    "lat": 9.775,
+    "lng": -63.078,
+    "tipoRed": "comunal",
+    "tipoRedLabel": "Red Comunal / Barrio Adentro (CPT, CDI, SRI, CAT)",
+    "clasificacionEspecifica": "Centro de Diagnóstico Integral (CDI)",
+    "clasificacionEspecificaLabel": "Centro de Diagnóstico Integral (CDI)",
+    "quirofanosTotal": 1,
+    "quirofanosOperativos": 0,
+    "camasHospitalizacion": 8,
+    "areasServicios": [
+      "triaje",
+      "consulta_externa",
+      "emergencia_adultos",
+      "sala_partos",
+      "laboratorio",
+      "imagenologia",
+      "farmacia",
+      "inmunizacion"
+    ],
+    "soporteVital": {
+      "plantaElectrica": "Operativa",
+      "suministroAgua": "Continuo",
+      "gasesMedicinales": "Bombonas",
+      "climatizacion": "Parcial"
+    },
+    "fallas": {
+      "electricas": [],
+      "hidrosanitarias": [],
+      "estructurales": [],
+      "climatizacion": [],
+      "bioseguridad": []
+    },
+    "redRemision": "HUMNT Maturín",
+    "observaciones": "Centro de Diagnóstico Integral con atención médica continuada 24/7.",
+    "elaboradoPor": {
+      "nombre": "Dr. Enlace Comunal",
+      "ci": "V-19.123.456",
+      "cargo": "Coordinador ASIC",
+      "telefono": "0414-0011223",
+      "fecha": "2026-09-10"
+    },
+    "nivelRiesgo": "amarillo"
+  },
+  {
+    "id": "cdi-el-furrial",
+    "nombre": "CDI El Furrial",
+    "municipioId": "maturin",
+    "municipio": "Municipio Maturín",
+    "parroquiaId": "el-furrial",
+    "parroquia": "El Furrial",
+    "sector": "El Furrial / Entrada Oeste",
+    "lat": 9.725,
+    "lng": -63.365,
+    "tipoRed": "comunal",
+    "tipoRedLabel": "Red Comunal / Barrio Adentro (CPT, CDI, SRI, CAT)",
+    "clasificacionEspecifica": "Centro de Diagnóstico Integral (CDI)",
+    "clasificacionEspecificaLabel": "Centro de Diagnóstico Integral (CDI)",
+    "quirofanosTotal": 1,
+    "quirofanosOperativos": 1,
+    "camasHospitalizacion": 8,
+    "areasServicios": [
+      "triaje",
+      "consulta_externa",
+      "emergencia_adultos",
+      "sala_partos",
+      "laboratorio",
+      "imagenologia",
+      "farmacia",
+      "inmunizacion"
+    ],
+    "soporteVital": {
+      "plantaElectrica": "Operativa",
+      "suministroAgua": "Continuo",
+      "gasesMedicinales": "Bombonas",
+      "climatizacion": "100% Operativa"
+    },
+    "fallas": {
+      "electricas": [],
+      "hidrosanitarias": [],
+      "estructurales": [],
+      "climatizacion": [],
+      "bioseguridad": []
+    },
+    "redRemision": "HUMNT Maturín",
+    "observaciones": "Centro de Diagnóstico Integral con atención médica continuada 24/7.",
+    "elaboradoPor": {
+      "nombre": "Dr. Enlace Comunal",
+      "ci": "V-19.123.456",
+      "cargo": "Coordinador ASIC",
+      "telefono": "0414-0011223",
+      "fecha": "2026-09-10"
+    },
+    "nivelRiesgo": "verde"
+  },
+  {
+    "id": "cdi-jusepin",
+    "nombre": "CDI Jusepín",
+    "municipioId": "maturin",
+    "municipio": "Municipio Maturín",
+    "parroquiaId": "jusepin",
+    "parroquia": "Jusepín",
+    "sector": "Jusepín Centro / Campo Médico",
+    "lat": 9.748,
+    "lng": -63.502,
+    "tipoRed": "comunal",
+    "tipoRedLabel": "Red Comunal / Barrio Adentro (CPT, CDI, SRI, CAT)",
+    "clasificacionEspecifica": "Centro de Diagnóstico Integral (CDI)",
+    "clasificacionEspecificaLabel": "Centro de Diagnóstico Integral (CDI)",
+    "quirofanosTotal": 1,
+    "quirofanosOperativos": 0,
+    "camasHospitalizacion": 8,
+    "areasServicios": [
+      "triaje",
+      "consulta_externa",
+      "emergencia_adultos",
+      "sala_partos",
+      "laboratorio",
+      "imagenologia",
+      "farmacia",
+      "inmunizacion"
+    ],
+    "soporteVital": {
+      "plantaElectrica": "Operativa",
+      "suministroAgua": "Continuo",
+      "gasesMedicinales": "Bombonas",
+      "climatizacion": "Parcial"
+    },
+    "fallas": {
+      "electricas": [],
+      "hidrosanitarias": [],
+      "estructurales": [],
+      "climatizacion": [],
+      "bioseguridad": []
+    },
+    "redRemision": "HUMNT Maturín",
+    "observaciones": "Centro de Diagnóstico Integral con atención médica continuada 24/7.",
+    "elaboradoPor": {
+      "nombre": "Dr. Enlace Comunal",
+      "ci": "V-19.123.456",
+      "cargo": "Coordinador ASIC",
+      "telefono": "0414-0011223",
+      "fecha": "2026-09-10"
+    },
+    "nivelRiesgo": "amarillo"
+  },
+  {
+    "id": "cdi-san-vicente",
+    "nombre": "CDI San Vicente",
+    "municipioId": "maturin",
+    "municipio": "Municipio Maturín",
+    "parroquiaId": "san-vicente",
+    "parroquia": "San Vicente",
+    "sector": "San Vicente Centro",
+    "lat": 9.728,
+    "lng": -63.285,
+    "tipoRed": "comunal",
+    "tipoRedLabel": "Red Comunal / Barrio Adentro (CPT, CDI, SRI, CAT)",
+    "clasificacionEspecifica": "Centro de Diagnóstico Integral (CDI)",
+    "clasificacionEspecificaLabel": "Centro de Diagnóstico Integral (CDI)",
+    "quirofanosTotal": 1,
+    "quirofanosOperativos": 0,
+    "camasHospitalizacion": 8,
+    "areasServicios": [
+      "triaje",
+      "consulta_externa",
+      "emergencia_adultos",
+      "sala_partos",
+      "laboratorio",
+      "imagenologia",
+      "farmacia",
+      "inmunizacion"
+    ],
+    "soporteVital": {
+      "plantaElectrica": "Operativa",
+      "suministroAgua": "Continuo",
+      "gasesMedicinales": "Bombonas",
+      "climatizacion": "Parcial"
+    },
+    "fallas": {
+      "electricas": [],
+      "hidrosanitarias": [],
+      "estructurales": [],
+      "climatizacion": [],
+      "bioseguridad": []
+    },
+    "redRemision": "HUMNT Maturín",
+    "observaciones": "Centro de Diagnóstico Integral con atención médica continuada 24/7.",
+    "elaboradoPor": {
+      "nombre": "Dr. Enlace Comunal",
+      "ci": "V-19.123.456",
+      "cargo": "Coordinador ASIC",
+      "telefono": "0414-0011223",
+      "fecha": "2026-09-10"
+    },
+    "nivelRiesgo": "amarillo"
+  },
+  {
+    "id": "cdi-el-corozo",
+    "nombre": "CDI El Corozo",
+    "municipioId": "maturin",
+    "municipio": "Municipio Maturín",
+    "parroquiaId": "el-corozo",
+    "parroquia": "El Corozo",
+    "sector": "El Corozo / Troncal 10",
+    "lat": 9.675,
+    "lng": -63.215,
+    "tipoRed": "comunal",
+    "tipoRedLabel": "Red Comunal / Barrio Adentro (CPT, CDI, SRI, CAT)",
+    "clasificacionEspecifica": "Centro de Diagnóstico Integral (CDI)",
+    "clasificacionEspecificaLabel": "Centro de Diagnóstico Integral (CDI)",
+    "quirofanosTotal": 1,
+    "quirofanosOperativos": 0,
+    "camasHospitalizacion": 8,
+    "areasServicios": [
+      "triaje",
+      "consulta_externa",
+      "emergencia_adultos",
+      "sala_partos",
+      "laboratorio",
+      "imagenologia",
+      "farmacia",
+      "inmunizacion"
+    ],
+    "soporteVital": {
+      "plantaElectrica": "Inoperativa",
+      "suministroAgua": "Cisterna",
+      "gasesMedicinales": "Bombonas",
+      "climatizacion": "Parcial"
+    },
+    "fallas": {
+      "electricas": [
+        "planta_inoperativa"
+      ],
+      "hidrosanitarias": [
+        "sin_agua_tuberia"
+      ],
+      "estructurales": [],
+      "climatizacion": [],
+      "bioseguridad": []
+    },
+    "redRemision": "HUMNT Maturín",
+    "observaciones": "Centro de Diagnóstico Integral con atención médica continuada 24/7.",
+    "elaboradoPor": {
+      "nombre": "Dr. Enlace Comunal",
+      "ci": "V-19.123.456",
+      "cargo": "Coordinador ASIC",
+      "telefono": "0414-0011223",
+      "fecha": "2026-09-10"
+    },
+    "nivelRiesgo": "rojo"
+  },
+  {
+    "id": "cdi-punta-de-mata",
+    "nombre": "CDI Punta de Mata",
+    "municipioId": "ezequiel-zamora",
+    "municipio": "Municipio Ezequiel Zamora",
+    "parroquiaId": "punta-de-mata",
+    "parroquia": "Punta de Mata",
+    "sector": "Punta de Mata Sur",
+    "lat": 9.715,
+    "lng": -63.628,
+    "tipoRed": "comunal",
+    "tipoRedLabel": "Red Comunal / Barrio Adentro (CPT, CDI, SRI, CAT)",
+    "clasificacionEspecifica": "Centro de Diagnóstico Integral (CDI)",
+    "clasificacionEspecificaLabel": "Centro de Diagnóstico Integral (CDI)",
+    "quirofanosTotal": 1,
+    "quirofanosOperativos": 0,
+    "camasHospitalizacion": 8,
+    "areasServicios": [
+      "triaje",
+      "consulta_externa",
+      "emergencia_adultos",
+      "sala_partos",
+      "laboratorio",
+      "imagenologia",
+      "farmacia",
+      "inmunizacion"
+    ],
+    "soporteVital": {
+      "plantaElectrica": "Operativa",
+      "suministroAgua": "Continuo",
+      "gasesMedicinales": "Bombonas",
+      "climatizacion": "Parcial"
+    },
+    "fallas": {
+      "electricas": [],
+      "hidrosanitarias": [],
+      "estructurales": [],
+      "climatizacion": [],
+      "bioseguridad": []
+    },
+    "redRemision": "HUMNT Maturín",
+    "observaciones": "Centro de Diagnóstico Integral con atención médica continuada 24/7.",
+    "elaboradoPor": {
+      "nombre": "Dr. Enlace Comunal",
+      "ci": "V-19.123.456",
+      "cargo": "Coordinador ASIC",
+      "telefono": "0414-0011223",
+      "fecha": "2026-09-10"
+    },
+    "nivelRiesgo": "amarillo"
+  },
+  {
+    "id": "cdi-el-tejero",
+    "nombre": "CDI El Tejero",
+    "municipioId": "ezequiel-zamora",
+    "municipio": "Municipio Ezequiel Zamora",
+    "parroquiaId": "el-tejero",
+    "parroquia": "El Tejero",
+    "sector": "El Tejero Centro",
+    "lat": 9.685,
+    "lng": -63.535,
+    "tipoRed": "comunal",
+    "tipoRedLabel": "Red Comunal / Barrio Adentro (CPT, CDI, SRI, CAT)",
+    "clasificacionEspecifica": "Centro de Diagnóstico Integral (CDI)",
+    "clasificacionEspecificaLabel": "Centro de Diagnóstico Integral (CDI)",
+    "quirofanosTotal": 1,
+    "quirofanosOperativos": 1,
+    "camasHospitalizacion": 8,
+    "areasServicios": [
+      "triaje",
+      "consulta_externa",
+      "emergencia_adultos",
+      "sala_partos",
+      "laboratorio",
+      "imagenologia",
+      "farmacia",
+      "inmunizacion"
+    ],
+    "soporteVital": {
+      "plantaElectrica": "Operativa",
+      "suministroAgua": "Continuo",
+      "gasesMedicinales": "Bombonas",
+      "climatizacion": "100% Operativa"
+    },
+    "fallas": {
+      "electricas": [],
+      "hidrosanitarias": [],
+      "estructurales": [],
+      "climatizacion": [],
+      "bioseguridad": []
+    },
+    "redRemision": "HUMNT Maturín",
+    "observaciones": "Centro de Diagnóstico Integral con atención médica continuada 24/7.",
+    "elaboradoPor": {
+      "nombre": "Dr. Enlace Comunal",
+      "ci": "V-19.123.456",
+      "cargo": "Coordinador ASIC",
+      "telefono": "0414-0011223",
+      "fecha": "2026-09-10"
+    },
+    "nivelRiesgo": "verde"
+  },
+  {
+    "id": "cdi-caripito",
+    "nombre": "CDI Caripito",
+    "municipioId": "bolivar",
+    "municipio": "Municipio Bolívar",
+    "parroquiaId": "caripito",
+    "parroquia": "Caripito",
+    "sector": "Sector Bajo Guarapiche",
+    "lat": 10.125,
+    "lng": -63.105,
+    "tipoRed": "comunal",
+    "tipoRedLabel": "Red Comunal / Barrio Adentro (CPT, CDI, SRI, CAT)",
+    "clasificacionEspecifica": "Centro de Diagnóstico Integral (CDI)",
+    "clasificacionEspecificaLabel": "Centro de Diagnóstico Integral (CDI)",
+    "quirofanosTotal": 1,
+    "quirofanosOperativos": 1,
+    "camasHospitalizacion": 8,
+    "areasServicios": [
+      "triaje",
+      "consulta_externa",
+      "emergencia_adultos",
+      "sala_partos",
+      "laboratorio",
+      "imagenologia",
+      "farmacia",
+      "inmunizacion"
+    ],
+    "soporteVital": {
+      "plantaElectrica": "Operativa",
+      "suministroAgua": "Continuo",
+      "gasesMedicinales": "Bombonas",
+      "climatizacion": "100% Operativa"
+    },
+    "fallas": {
+      "electricas": [],
+      "hidrosanitarias": [],
+      "estructurales": [],
+      "climatizacion": [],
+      "bioseguridad": []
+    },
+    "redRemision": "HUMNT Maturín",
+    "observaciones": "Centro de Diagnóstico Integral con atención médica continuada 24/7.",
+    "elaboradoPor": {
+      "nombre": "Dr. Enlace Comunal",
+      "ci": "V-19.123.456",
+      "cargo": "Coordinador ASIC",
+      "telefono": "0414-0011223",
+      "fecha": "2026-09-10"
+    },
+    "nivelRiesgo": "verde"
+  },
+  {
+    "id": "cdi-caripe",
+    "nombre": "CDI Caripe",
+    "municipioId": "caripe",
+    "municipio": "Municipio Caripe",
+    "parroquiaId": "caripe-centro",
+    "parroquia": "Caripe",
+    "sector": "Sector La Troja",
+    "lat": 10.178,
+    "lng": -63.498,
+    "tipoRed": "comunal",
+    "tipoRedLabel": "Red Comunal / Barrio Adentro (CPT, CDI, SRI, CAT)",
+    "clasificacionEspecifica": "Centro de Diagnóstico Integral (CDI)",
+    "clasificacionEspecificaLabel": "Centro de Diagnóstico Integral (CDI)",
+    "quirofanosTotal": 1,
+    "quirofanosOperativos": 1,
+    "camasHospitalizacion": 8,
+    "areasServicios": [
+      "triaje",
+      "consulta_externa",
+      "emergencia_adultos",
+      "sala_partos",
+      "laboratorio",
+      "imagenologia",
+      "farmacia",
+      "inmunizacion"
+    ],
+    "soporteVital": {
+      "plantaElectrica": "Operativa",
+      "suministroAgua": "Continuo",
+      "gasesMedicinales": "Bombonas",
+      "climatizacion": "100% Operativa"
+    },
+    "fallas": {
+      "electricas": [],
+      "hidrosanitarias": [],
+      "estructurales": [],
+      "climatizacion": [],
+      "bioseguridad": []
+    },
+    "redRemision": "HUMNT Maturín",
+    "observaciones": "Centro de Diagnóstico Integral con atención médica continuada 24/7.",
+    "elaboradoPor": {
+      "nombre": "Dr. Enlace Comunal",
+      "ci": "V-19.123.456",
+      "cargo": "Coordinador ASIC",
+      "telefono": "0414-0011223",
+      "fecha": "2026-09-10"
+    },
+    "nivelRiesgo": "verde"
+  },
+  {
+    "id": "cdi-caicara",
+    "nombre": "CDI Caicara de Maturín",
+    "municipioId": "cedeno",
+    "municipio": "Municipio Cedeño",
+    "parroquiaId": "caicara",
+    "parroquia": "Caicara",
+    "sector": "Caicara / Av. Miranda",
+    "lat": 9.822,
+    "lng": -63.615,
+    "tipoRed": "comunal",
+    "tipoRedLabel": "Red Comunal / Barrio Adentro (CPT, CDI, SRI, CAT)",
+    "clasificacionEspecifica": "Centro de Diagnóstico Integral (CDI)",
+    "clasificacionEspecificaLabel": "Centro de Diagnóstico Integral (CDI)",
+    "quirofanosTotal": 1,
+    "quirofanosOperativos": 1,
+    "camasHospitalizacion": 8,
+    "areasServicios": [
+      "triaje",
+      "consulta_externa",
+      "emergencia_adultos",
+      "sala_partos",
+      "laboratorio",
+      "imagenologia",
+      "farmacia",
+      "inmunizacion"
+    ],
+    "soporteVital": {
+      "plantaElectrica": "Operativa",
+      "suministroAgua": "Continuo",
+      "gasesMedicinales": "Bombonas",
+      "climatizacion": "100% Operativa"
+    },
+    "fallas": {
+      "electricas": [],
+      "hidrosanitarias": [],
+      "estructurales": [],
+      "climatizacion": [],
+      "bioseguridad": []
+    },
+    "redRemision": "HUMNT Maturín",
+    "observaciones": "Centro de Diagnóstico Integral con atención médica continuada 24/7.",
+    "elaboradoPor": {
+      "nombre": "Dr. Enlace Comunal",
+      "ci": "V-19.123.456",
+      "cargo": "Coordinador ASIC",
+      "telefono": "0414-0011223",
+      "fecha": "2026-09-10"
+    },
+    "nivelRiesgo": "verde"
+  },
+  {
+    "id": "cdi-aragua",
+    "nombre": "CDI Aragua de Maturín",
+    "municipioId": "piar",
+    "municipio": "Municipio Piar",
+    "parroquiaId": "aragua",
+    "parroquia": "Aragua de Maturín",
+    "sector": "Aragua Centro",
+    "lat": 9.972,
+    "lng": -63.485,
+    "tipoRed": "comunal",
+    "tipoRedLabel": "Red Comunal / Barrio Adentro (CPT, CDI, SRI, CAT)",
+    "clasificacionEspecifica": "Centro de Diagnóstico Integral (CDI)",
+    "clasificacionEspecificaLabel": "Centro de Diagnóstico Integral (CDI)",
+    "quirofanosTotal": 1,
+    "quirofanosOperativos": 1,
+    "camasHospitalizacion": 8,
+    "areasServicios": [
+      "triaje",
+      "consulta_externa",
+      "emergencia_adultos",
+      "sala_partos",
+      "laboratorio",
+      "imagenologia",
+      "farmacia",
+      "inmunizacion"
+    ],
+    "soporteVital": {
+      "plantaElectrica": "Operativa",
+      "suministroAgua": "Continuo",
+      "gasesMedicinales": "Bombonas",
+      "climatizacion": "100% Operativa"
+    },
+    "fallas": {
+      "electricas": [],
+      "hidrosanitarias": [],
+      "estructurales": [],
+      "climatizacion": [],
+      "bioseguridad": []
+    },
+    "redRemision": "HUMNT Maturín",
+    "observaciones": "Centro de Diagnóstico Integral con atención médica continuada 24/7.",
+    "elaboradoPor": {
+      "nombre": "Dr. Enlace Comunal",
+      "ci": "V-19.123.456",
+      "cargo": "Coordinador ASIC",
+      "telefono": "0414-0011223",
+      "fecha": "2026-09-10"
+    },
+    "nivelRiesgo": "verde"
+  },
+  {
+    "id": "cdi-san-antonio",
+    "nombre": "CDI San Antonio de Capayacuar",
+    "municipioId": "acosta",
+    "municipio": "Municipio Acosta",
+    "parroquiaId": "san-antonio",
+    "parroquia": "San Antonio",
+    "sector": "San Antonio Centro",
+    "lat": 10.005,
+    "lng": -63.712,
+    "tipoRed": "comunal",
+    "tipoRedLabel": "Red Comunal / Barrio Adentro (CPT, CDI, SRI, CAT)",
+    "clasificacionEspecifica": "Centro de Diagnóstico Integral (CDI)",
+    "clasificacionEspecificaLabel": "Centro de Diagnóstico Integral (CDI)",
+    "quirofanosTotal": 1,
+    "quirofanosOperativos": 1,
+    "camasHospitalizacion": 8,
+    "areasServicios": [
+      "triaje",
+      "consulta_externa",
+      "emergencia_adultos",
+      "sala_partos",
+      "laboratorio",
+      "imagenologia",
+      "farmacia",
+      "inmunizacion"
+    ],
+    "soporteVital": {
+      "plantaElectrica": "Operativa",
+      "suministroAgua": "Continuo",
+      "gasesMedicinales": "Bombonas",
+      "climatizacion": "100% Operativa"
+    },
+    "fallas": {
+      "electricas": [],
+      "hidrosanitarias": [],
+      "estructurales": [],
+      "climatizacion": [],
+      "bioseguridad": []
+    },
+    "redRemision": "HUMNT Maturín",
+    "observaciones": "Centro de Diagnóstico Integral con atención médica continuada 24/7.",
+    "elaboradoPor": {
+      "nombre": "Dr. Enlace Comunal",
+      "ci": "V-19.123.456",
+      "cargo": "Coordinador ASIC",
+      "telefono": "0414-0011223",
+      "fecha": "2026-09-10"
+    },
+    "nivelRiesgo": "verde"
+  },
+  {
+    "id": "cdi-quiriquire",
+    "nombre": "CDI Quiriquire",
+    "municipioId": "punceres",
+    "municipio": "Municipio Punceres",
+    "parroquiaId": "quiriquire",
+    "parroquia": "Quiriquire",
+    "sector": "Sector Miraflores",
+    "lat": 9.975,
+    "lng": -63.215,
+    "tipoRed": "comunal",
+    "tipoRedLabel": "Red Comunal / Barrio Adentro (CPT, CDI, SRI, CAT)",
+    "clasificacionEspecifica": "Centro de Diagnóstico Integral (CDI)",
+    "clasificacionEspecificaLabel": "Centro de Diagnóstico Integral (CDI)",
+    "quirofanosTotal": 1,
+    "quirofanosOperativos": 0,
+    "camasHospitalizacion": 8,
+    "areasServicios": [
+      "triaje",
+      "consulta_externa",
+      "emergencia_adultos",
+      "sala_partos",
+      "laboratorio",
+      "imagenologia",
+      "farmacia",
+      "inmunizacion"
+    ],
+    "soporteVital": {
+      "plantaElectrica": "Operativa",
+      "suministroAgua": "Continuo",
+      "gasesMedicinales": "Bombonas",
+      "climatizacion": "Parcial"
+    },
+    "fallas": {
+      "electricas": [],
+      "hidrosanitarias": [],
+      "estructurales": [],
+      "climatizacion": [],
+      "bioseguridad": []
+    },
+    "redRemision": "HUMNT Maturín",
+    "observaciones": "Centro de Diagnóstico Integral con atención médica continuada 24/7.",
+    "elaboradoPor": {
+      "nombre": "Dr. Enlace Comunal",
+      "ci": "V-19.123.456",
+      "cargo": "Coordinador ASIC",
+      "telefono": "0414-0011223",
+      "fecha": "2026-09-10"
+    },
+    "nivelRiesgo": "amarillo"
+  },
+  {
+    "id": "cdi-temblador",
+    "nombre": "CDI Temblador",
+    "municipioId": "libertador",
+    "municipio": "Municipio Libertador",
+    "parroquiaId": "temblador",
+    "parroquia": "Temblador",
+    "sector": "Temblador Sur",
+    "lat": 9.025,
+    "lng": -62.715,
+    "tipoRed": "comunal",
+    "tipoRedLabel": "Red Comunal / Barrio Adentro (CPT, CDI, SRI, CAT)",
+    "clasificacionEspecifica": "Centro de Diagnóstico Integral (CDI)",
+    "clasificacionEspecificaLabel": "Centro de Diagnóstico Integral (CDI)",
+    "quirofanosTotal": 1,
+    "quirofanosOperativos": 0,
+    "camasHospitalizacion": 8,
+    "areasServicios": [
+      "triaje",
+      "consulta_externa",
+      "emergencia_adultos",
+      "sala_partos",
+      "laboratorio",
+      "imagenologia",
+      "farmacia",
+      "inmunizacion"
+    ],
+    "soporteVital": {
+      "plantaElectrica": "Operativa",
+      "suministroAgua": "Continuo",
+      "gasesMedicinales": "Bombonas",
+      "climatizacion": "Parcial"
+    },
+    "fallas": {
+      "electricas": [],
+      "hidrosanitarias": [],
+      "estructurales": [],
+      "climatizacion": [],
+      "bioseguridad": []
+    },
+    "redRemision": "HUMNT Maturín",
+    "observaciones": "Centro de Diagnóstico Integral con atención médica continuada 24/7.",
+    "elaboradoPor": {
+      "nombre": "Dr. Enlace Comunal",
+      "ci": "V-19.123.456",
+      "cargo": "Coordinador ASIC",
+      "telefono": "0414-0011223",
+      "fecha": "2026-09-10"
+    },
+    "nivelRiesgo": "amarillo"
+  },
+  {
+    "id": "cdi-barrancas",
+    "nombre": "CDI Barrancas del Orinoco",
+    "municipioId": "sotillo",
+    "municipio": "Municipio Sotillo",
+    "parroquiaId": "barrancas",
+    "parroquia": "Barrancas",
+    "sector": "Barrancas / Av. Guayana",
+    "lat": 8.705,
+    "lng": -62.185,
+    "tipoRed": "comunal",
+    "tipoRedLabel": "Red Comunal / Barrio Adentro (CPT, CDI, SRI, CAT)",
+    "clasificacionEspecifica": "Centro de Diagnóstico Integral (CDI)",
+    "clasificacionEspecificaLabel": "Centro de Diagnóstico Integral (CDI)",
+    "quirofanosTotal": 1,
+    "quirofanosOperativos": 0,
+    "camasHospitalizacion": 8,
+    "areasServicios": [
+      "triaje",
+      "consulta_externa",
+      "emergencia_adultos",
+      "sala_partos",
+      "laboratorio",
+      "imagenologia",
+      "farmacia",
+      "inmunizacion"
+    ],
+    "soporteVital": {
+      "plantaElectrica": "Operativa",
+      "suministroAgua": "Continuo",
+      "gasesMedicinales": "Bombonas",
+      "climatizacion": "Parcial"
+    },
+    "fallas": {
+      "electricas": [],
+      "hidrosanitarias": [],
+      "estructurales": [],
+      "climatizacion": [],
+      "bioseguridad": []
+    },
+    "redRemision": "HUMNT Maturín",
+    "observaciones": "Centro de Diagnóstico Integral con atención médica continuada 24/7.",
+    "elaboradoPor": {
+      "nombre": "Dr. Enlace Comunal",
+      "ci": "V-19.123.456",
+      "cargo": "Coordinador ASIC",
+      "telefono": "0414-0011223",
+      "fecha": "2026-09-10"
+    },
+    "nivelRiesgo": "amarillo"
+  },
+  {
+    "id": "cdi-aguasay",
+    "nombre": "CDI Aguasay",
+    "municipioId": "aguasay",
+    "municipio": "Municipio Aguasay",
+    "parroquiaId": "aguasay-centro",
+    "parroquia": "Aguasay",
+    "sector": "Aguasay / Sector La Plaza",
+    "lat": 9.425,
+    "lng": -63.815,
+    "tipoRed": "comunal",
+    "tipoRedLabel": "Red Comunal / Barrio Adentro (CPT, CDI, SRI, CAT)",
+    "clasificacionEspecifica": "Centro de Diagnóstico Integral (CDI)",
+    "clasificacionEspecificaLabel": "Centro de Diagnóstico Integral (CDI)",
+    "quirofanosTotal": 1,
+    "quirofanosOperativos": 1,
+    "camasHospitalizacion": 8,
+    "areasServicios": [
+      "triaje",
+      "consulta_externa",
+      "emergencia_adultos",
+      "sala_partos",
+      "laboratorio",
+      "imagenologia",
+      "farmacia",
+      "inmunizacion"
+    ],
+    "soporteVital": {
+      "plantaElectrica": "Operativa",
+      "suministroAgua": "Continuo",
+      "gasesMedicinales": "Bombonas",
+      "climatizacion": "100% Operativa"
+    },
+    "fallas": {
+      "electricas": [],
+      "hidrosanitarias": [],
+      "estructurales": [],
+      "climatizacion": [],
+      "bioseguridad": []
+    },
+    "redRemision": "HUMNT Maturín",
+    "observaciones": "Centro de Diagnóstico Integral con atención médica continuada 24/7.",
+    "elaboradoPor": {
+      "nombre": "Dr. Enlace Comunal",
+      "ci": "V-19.123.456",
+      "cargo": "Coordinador ASIC",
+      "telefono": "0414-0011223",
+      "fecha": "2026-09-10"
+    },
+    "nivelRiesgo": "verde"
+  },
+  {
+    "id": "cdi-santa-barbara",
+    "nombre": "CDI Santa Bárbara",
+    "municipioId": "santa-barbara",
+    "municipio": "Municipio Santa Bárbara",
+    "parroquiaId": "santa-barbara-centro",
+    "parroquia": "Santa Bárbara",
+    "sector": "Santa Bárbara Norte",
+    "lat": 9.585,
+    "lng": -63.615,
+    "tipoRed": "comunal",
+    "tipoRedLabel": "Red Comunal / Barrio Adentro (CPT, CDI, SRI, CAT)",
+    "clasificacionEspecifica": "Centro de Diagnóstico Integral (CDI)",
+    "clasificacionEspecificaLabel": "Centro de Diagnóstico Integral (CDI)",
+    "quirofanosTotal": 1,
+    "quirofanosOperativos": 1,
+    "camasHospitalizacion": 8,
+    "areasServicios": [
+      "triaje",
+      "consulta_externa",
+      "emergencia_adultos",
+      "sala_partos",
+      "laboratorio",
+      "imagenologia",
+      "farmacia",
+      "inmunizacion"
+    ],
+    "soporteVital": {
+      "plantaElectrica": "Operativa",
+      "suministroAgua": "Continuo",
+      "gasesMedicinales": "Bombonas",
+      "climatizacion": "100% Operativa"
+    },
+    "fallas": {
+      "electricas": [],
+      "hidrosanitarias": [],
+      "estructurales": [],
+      "climatizacion": [],
+      "bioseguridad": []
+    },
+    "redRemision": "HUMNT Maturín",
+    "observaciones": "Centro de Diagnóstico Integral con atención médica continuada 24/7.",
+    "elaboradoPor": {
+      "nombre": "Dr. Enlace Comunal",
+      "ci": "V-19.123.456",
+      "cargo": "Coordinador ASIC",
+      "telefono": "0414-0011223",
+      "fecha": "2026-09-10"
+    },
+    "nivelRiesgo": "verde"
+  },
+  {
+    "id": "sri-los-godos",
+    "nombre": "SRI Los Godos",
+    "municipioId": "maturin",
+    "municipio": "Municipio Maturín",
+    "parroquiaId": "alto-de-los-godos",
+    "parroquia": "Alto de Los Godos",
+    "sector": "Los Godos Centro",
+    "lat": 9.729,
+    "lng": -63.205,
+    "tipoRed": "comunal",
+    "tipoRedLabel": "Red Comunal / Barrio Adentro (CPT, CDI, SRI, CAT)",
+    "clasificacionEspecifica": "Sala de Rehabilitación Integral (SRI)",
+    "clasificacionEspecificaLabel": "Sala de Rehabilitación Integral (SRI)",
+    "quirofanosTotal": 0,
+    "quirofanosOperativos": 0,
+    "camasHospitalizacion": 0,
+    "areasServicios": [
+      "consulta_externa",
+      "fisiatria",
+      "gimnasio_terapeutico",
+      "electroterapia",
+      "hidroterapia",
+      "terapia_ocupacional",
+      "farmacia"
+    ],
+    "soporteVital": {
+      "plantaElectrica": "Operativa",
+      "suministroAgua": "Continuo",
+      "gasesMedicinales": "Inexistente",
+      "climatizacion": "100% Operativa"
+    },
+    "fallas": {
+      "electricas": [],
+      "hidrosanitarias": [],
+      "estructurales": [],
+      "climatizacion": [],
+      "bioseguridad": []
+    },
+    "redRemision": "CDI / HUMNT Maturín",
+    "observaciones": "Servicio de rehabilitación física, logopedia, podología y terapia ocupacional.",
+    "elaboradoPor": {
+      "nombre": "Lic. Fisioterapia",
+      "ci": "V-20.345.678",
+      "cargo": "Jefe de Sala SRI",
+      "telefono": "0424-1122334",
+      "fecha": "2026-09-10"
+    },
+    "nivelRiesgo": "verde"
+  },
+  {
+    "id": "sri-carmelo-regardiz",
+    "nombre": "SRI Carmelo Regardiz",
+    "municipioId": "maturin",
+    "municipio": "Municipio Maturín",
+    "parroquiaId": "san-simon",
+    "parroquia": "San Simón (Casco Central)",
+    "sector": "Brisas del Orinoco",
+    "lat": 9.7395,
+    "lng": -63.1715,
+    "tipoRed": "comunal",
+    "tipoRedLabel": "Red Comunal / Barrio Adentro (CPT, CDI, SRI, CAT)",
+    "clasificacionEspecifica": "Sala de Rehabilitación Integral (SRI)",
+    "clasificacionEspecificaLabel": "Sala de Rehabilitación Integral (SRI)",
+    "quirofanosTotal": 0,
+    "quirofanosOperativos": 0,
+    "camasHospitalizacion": 0,
+    "areasServicios": [
+      "consulta_externa",
+      "fisiatria",
+      "gimnasio_terapeutico",
+      "electroterapia",
+      "hidroterapia",
+      "terapia_ocupacional",
+      "farmacia"
+    ],
+    "soporteVital": {
+      "plantaElectrica": "Operativa",
+      "suministroAgua": "Continuo",
+      "gasesMedicinales": "Inexistente",
+      "climatizacion": "100% Operativa"
+    },
+    "fallas": {
+      "electricas": [],
+      "hidrosanitarias": [],
+      "estructurales": [],
+      "climatizacion": [],
+      "bioseguridad": []
+    },
+    "redRemision": "CDI / HUMNT Maturín",
+    "observaciones": "Servicio de rehabilitación física, logopedia, podología y terapia ocupacional.",
+    "elaboradoPor": {
+      "nombre": "Lic. Fisioterapia",
+      "ci": "V-20.345.678",
+      "cargo": "Jefe de Sala SRI",
+      "telefono": "0424-1122334",
+      "fecha": "2026-09-10"
+    },
+    "nivelRiesgo": "verde"
+  },
+  {
+    "id": "sri-23-de-enero",
+    "nombre": "SRI 23 de Enero",
+    "municipioId": "maturin",
+    "municipio": "Municipio Maturín",
+    "parroquiaId": "san-simon",
+    "parroquia": "San Simón (Casco Central)",
+    "sector": "23 de Enero",
+    "lat": 9.7535,
+    "lng": -63.1875,
+    "tipoRed": "comunal",
+    "tipoRedLabel": "Red Comunal / Barrio Adentro (CPT, CDI, SRI, CAT)",
+    "clasificacionEspecifica": "Sala de Rehabilitación Integral (SRI)",
+    "clasificacionEspecificaLabel": "Sala de Rehabilitación Integral (SRI)",
+    "quirofanosTotal": 0,
+    "quirofanosOperativos": 0,
+    "camasHospitalizacion": 0,
+    "areasServicios": [
+      "consulta_externa",
+      "fisiatria",
+      "gimnasio_terapeutico",
+      "electroterapia",
+      "hidroterapia",
+      "terapia_ocupacional",
+      "farmacia"
+    ],
+    "soporteVital": {
+      "plantaElectrica": "Operativa",
+      "suministroAgua": "Continuo",
+      "gasesMedicinales": "Inexistente",
+      "climatizacion": "100% Operativa"
+    },
+    "fallas": {
+      "electricas": [],
+      "hidrosanitarias": [],
+      "estructurales": [],
+      "climatizacion": [],
+      "bioseguridad": []
+    },
+    "redRemision": "CDI / HUMNT Maturín",
+    "observaciones": "Servicio de rehabilitación física, logopedia, podología y terapia ocupacional.",
+    "elaboradoPor": {
+      "nombre": "Lic. Fisioterapia",
+      "ci": "V-20.345.678",
+      "cargo": "Jefe de Sala SRI",
+      "telefono": "0424-1122334",
+      "fecha": "2026-09-10"
+    },
+    "nivelRiesgo": "verde"
+  },
+  {
+    "id": "sri-boqueron",
+    "nombre": "SRI Boquerón",
+    "municipioId": "maturin",
+    "municipio": "Municipio Maturín",
+    "parroquiaId": "boqueron",
+    "parroquia": "Boquerón",
+    "sector": "Tipuro",
+    "lat": 9.7895,
+    "lng": -63.1885,
+    "tipoRed": "comunal",
+    "tipoRedLabel": "Red Comunal / Barrio Adentro (CPT, CDI, SRI, CAT)",
+    "clasificacionEspecifica": "Sala de Rehabilitación Integral (SRI)",
+    "clasificacionEspecificaLabel": "Sala de Rehabilitación Integral (SRI)",
+    "quirofanosTotal": 0,
+    "quirofanosOperativos": 0,
+    "camasHospitalizacion": 0,
+    "areasServicios": [
+      "consulta_externa",
+      "fisiatria",
+      "gimnasio_terapeutico",
+      "electroterapia",
+      "hidroterapia",
+      "terapia_ocupacional",
+      "farmacia"
+    ],
+    "soporteVital": {
+      "plantaElectrica": "Operativa",
+      "suministroAgua": "Continuo",
+      "gasesMedicinales": "Inexistente",
+      "climatizacion": "100% Operativa"
+    },
+    "fallas": {
+      "electricas": [],
+      "hidrosanitarias": [],
+      "estructurales": [],
+      "climatizacion": [],
+      "bioseguridad": []
+    },
+    "redRemision": "CDI / HUMNT Maturín",
+    "observaciones": "Servicio de rehabilitación física, logopedia, podología y terapia ocupacional.",
+    "elaboradoPor": {
+      "nombre": "Lic. Fisioterapia",
+      "ci": "V-20.345.678",
+      "cargo": "Jefe de Sala SRI",
+      "telefono": "0424-1122334",
+      "fecha": "2026-09-10"
+    },
+    "nivelRiesgo": "verde"
+  },
+  {
+    "id": "sri-la-pica",
+    "nombre": "SRI La Pica",
+    "municipioId": "maturin",
+    "municipio": "Municipio Maturín",
+    "parroquiaId": "la-pica",
+    "parroquia": "La Pica",
+    "sector": "La Pica",
+    "lat": 9.7755,
+    "lng": -63.0775,
+    "tipoRed": "comunal",
+    "tipoRedLabel": "Red Comunal / Barrio Adentro (CPT, CDI, SRI, CAT)",
+    "clasificacionEspecifica": "Sala de Rehabilitación Integral (SRI)",
+    "clasificacionEspecificaLabel": "Sala de Rehabilitación Integral (SRI)",
+    "quirofanosTotal": 0,
+    "quirofanosOperativos": 0,
+    "camasHospitalizacion": 0,
+    "areasServicios": [
+      "consulta_externa",
+      "fisiatria",
+      "gimnasio_terapeutico",
+      "electroterapia",
+      "hidroterapia",
+      "terapia_ocupacional",
+      "farmacia"
+    ],
+    "soporteVital": {
+      "plantaElectrica": "Operativa",
+      "suministroAgua": "Continuo",
+      "gasesMedicinales": "Inexistente",
+      "climatizacion": "100% Operativa"
+    },
+    "fallas": {
+      "electricas": [],
+      "hidrosanitarias": [],
+      "estructurales": [],
+      "climatizacion": [],
+      "bioseguridad": []
+    },
+    "redRemision": "CDI / HUMNT Maturín",
+    "observaciones": "Servicio de rehabilitación física, logopedia, podología y terapia ocupacional.",
+    "elaboradoPor": {
+      "nombre": "Lic. Fisioterapia",
+      "ci": "V-20.345.678",
+      "cargo": "Jefe de Sala SRI",
+      "telefono": "0424-1122334",
+      "fecha": "2026-09-10"
+    },
+    "nivelRiesgo": "amarillo"
+  },
+  {
+    "id": "sri-el-furrial",
+    "nombre": "SRI El Furrial",
+    "municipioId": "maturin",
+    "municipio": "Municipio Maturín",
+    "parroquiaId": "el-furrial",
+    "parroquia": "El Furrial",
+    "sector": "El Furrial",
+    "lat": 9.7245,
+    "lng": -63.3645,
+    "tipoRed": "comunal",
+    "tipoRedLabel": "Red Comunal / Barrio Adentro (CPT, CDI, SRI, CAT)",
+    "clasificacionEspecifica": "Sala de Rehabilitación Integral (SRI)",
+    "clasificacionEspecificaLabel": "Sala de Rehabilitación Integral (SRI)",
+    "quirofanosTotal": 0,
+    "quirofanosOperativos": 0,
+    "camasHospitalizacion": 0,
+    "areasServicios": [
+      "consulta_externa",
+      "fisiatria",
+      "gimnasio_terapeutico",
+      "electroterapia",
+      "hidroterapia",
+      "terapia_ocupacional",
+      "farmacia"
+    ],
+    "soporteVital": {
+      "plantaElectrica": "Operativa",
+      "suministroAgua": "Continuo",
+      "gasesMedicinales": "Inexistente",
+      "climatizacion": "100% Operativa"
+    },
+    "fallas": {
+      "electricas": [],
+      "hidrosanitarias": [],
+      "estructurales": [],
+      "climatizacion": [],
+      "bioseguridad": []
+    },
+    "redRemision": "CDI / HUMNT Maturín",
+    "observaciones": "Servicio de rehabilitación física, logopedia, podología y terapia ocupacional.",
+    "elaboradoPor": {
+      "nombre": "Lic. Fisioterapia",
+      "ci": "V-20.345.678",
+      "cargo": "Jefe de Sala SRI",
+      "telefono": "0424-1122334",
+      "fecha": "2026-09-10"
+    },
+    "nivelRiesgo": "verde"
+  },
+  {
+    "id": "sri-punta-de-mata",
+    "nombre": "SRI Punta de Mata",
+    "municipioId": "ezequiel-zamora",
+    "municipio": "Municipio Ezequiel Zamora",
+    "parroquiaId": "punta-de-mata",
+    "parroquia": "Punta de Mata",
+    "sector": "Punta de Mata",
+    "lat": 9.7145,
+    "lng": -63.6275,
+    "tipoRed": "comunal",
+    "tipoRedLabel": "Red Comunal / Barrio Adentro (CPT, CDI, SRI, CAT)",
+    "clasificacionEspecifica": "Sala de Rehabilitación Integral (SRI)",
+    "clasificacionEspecificaLabel": "Sala de Rehabilitación Integral (SRI)",
+    "quirofanosTotal": 0,
+    "quirofanosOperativos": 0,
+    "camasHospitalizacion": 0,
+    "areasServicios": [
+      "consulta_externa",
+      "fisiatria",
+      "gimnasio_terapeutico",
+      "electroterapia",
+      "hidroterapia",
+      "terapia_ocupacional",
+      "farmacia"
+    ],
+    "soporteVital": {
+      "plantaElectrica": "Operativa",
+      "suministroAgua": "Continuo",
+      "gasesMedicinales": "Inexistente",
+      "climatizacion": "100% Operativa"
+    },
+    "fallas": {
+      "electricas": [],
+      "hidrosanitarias": [],
+      "estructurales": [],
+      "climatizacion": [],
+      "bioseguridad": []
+    },
+    "redRemision": "CDI / HUMNT Maturín",
+    "observaciones": "Servicio de rehabilitación física, logopedia, podología y terapia ocupacional.",
+    "elaboradoPor": {
+      "nombre": "Lic. Fisioterapia",
+      "ci": "V-20.345.678",
+      "cargo": "Jefe de Sala SRI",
+      "telefono": "0424-1122334",
+      "fecha": "2026-09-10"
+    },
+    "nivelRiesgo": "amarillo"
+  },
+  {
+    "id": "sri-caripito",
+    "nombre": "SRI Caripito",
+    "municipioId": "bolivar",
+    "municipio": "Municipio Bolívar",
+    "parroquiaId": "caripito",
+    "parroquia": "Caripito",
+    "sector": "Caripito",
+    "lat": 10.1245,
+    "lng": -63.1045,
+    "tipoRed": "comunal",
+    "tipoRedLabel": "Red Comunal / Barrio Adentro (CPT, CDI, SRI, CAT)",
+    "clasificacionEspecifica": "Sala de Rehabilitación Integral (SRI)",
+    "clasificacionEspecificaLabel": "Sala de Rehabilitación Integral (SRI)",
+    "quirofanosTotal": 0,
+    "quirofanosOperativos": 0,
+    "camasHospitalizacion": 0,
+    "areasServicios": [
+      "consulta_externa",
+      "fisiatria",
+      "gimnasio_terapeutico",
+      "electroterapia",
+      "hidroterapia",
+      "terapia_ocupacional",
+      "farmacia"
+    ],
+    "soporteVital": {
+      "plantaElectrica": "Operativa",
+      "suministroAgua": "Continuo",
+      "gasesMedicinales": "Inexistente",
+      "climatizacion": "100% Operativa"
+    },
+    "fallas": {
+      "electricas": [],
+      "hidrosanitarias": [],
+      "estructurales": [],
+      "climatizacion": [],
+      "bioseguridad": []
+    },
+    "redRemision": "CDI / HUMNT Maturín",
+    "observaciones": "Servicio de rehabilitación física, logopedia, podología y terapia ocupacional.",
+    "elaboradoPor": {
+      "nombre": "Lic. Fisioterapia",
+      "ci": "V-20.345.678",
+      "cargo": "Jefe de Sala SRI",
+      "telefono": "0424-1122334",
+      "fecha": "2026-09-10"
+    },
+    "nivelRiesgo": "verde"
+  },
+  {
+    "id": "sri-caripe",
+    "nombre": "SRI Caripe",
+    "municipioId": "caripe",
+    "municipio": "Municipio Caripe",
+    "parroquiaId": "caripe-centro",
+    "parroquia": "Caripe",
+    "sector": "Caripe",
+    "lat": 10.1775,
+    "lng": -63.4975,
+    "tipoRed": "comunal",
+    "tipoRedLabel": "Red Comunal / Barrio Adentro (CPT, CDI, SRI, CAT)",
+    "clasificacionEspecifica": "Sala de Rehabilitación Integral (SRI)",
+    "clasificacionEspecificaLabel": "Sala de Rehabilitación Integral (SRI)",
+    "quirofanosTotal": 0,
+    "quirofanosOperativos": 0,
+    "camasHospitalizacion": 0,
+    "areasServicios": [
+      "consulta_externa",
+      "fisiatria",
+      "gimnasio_terapeutico",
+      "electroterapia",
+      "hidroterapia",
+      "terapia_ocupacional",
+      "farmacia"
+    ],
+    "soporteVital": {
+      "plantaElectrica": "Operativa",
+      "suministroAgua": "Continuo",
+      "gasesMedicinales": "Inexistente",
+      "climatizacion": "100% Operativa"
+    },
+    "fallas": {
+      "electricas": [],
+      "hidrosanitarias": [],
+      "estructurales": [],
+      "climatizacion": [],
+      "bioseguridad": []
+    },
+    "redRemision": "CDI / HUMNT Maturín",
+    "observaciones": "Servicio de rehabilitación física, logopedia, podología y terapia ocupacional.",
+    "elaboradoPor": {
+      "nombre": "Lic. Fisioterapia",
+      "ci": "V-20.345.678",
+      "cargo": "Jefe de Sala SRI",
+      "telefono": "0424-1122334",
+      "fecha": "2026-09-10"
+    },
+    "nivelRiesgo": "verde"
+  },
+  {
+    "id": "sri-caicara",
+    "nombre": "SRI Caicara de Maturín",
+    "municipioId": "cedeno",
+    "municipio": "Municipio Cedeño",
+    "parroquiaId": "caicara",
+    "parroquia": "Caicara",
+    "sector": "Caicara",
+    "lat": 9.8215,
+    "lng": -63.6145,
+    "tipoRed": "comunal",
+    "tipoRedLabel": "Red Comunal / Barrio Adentro (CPT, CDI, SRI, CAT)",
+    "clasificacionEspecifica": "Sala de Rehabilitación Integral (SRI)",
+    "clasificacionEspecificaLabel": "Sala de Rehabilitación Integral (SRI)",
+    "quirofanosTotal": 0,
+    "quirofanosOperativos": 0,
+    "camasHospitalizacion": 0,
+    "areasServicios": [
+      "consulta_externa",
+      "fisiatria",
+      "gimnasio_terapeutico",
+      "electroterapia",
+      "hidroterapia",
+      "terapia_ocupacional",
+      "farmacia"
+    ],
+    "soporteVital": {
+      "plantaElectrica": "Operativa",
+      "suministroAgua": "Continuo",
+      "gasesMedicinales": "Inexistente",
+      "climatizacion": "100% Operativa"
+    },
+    "fallas": {
+      "electricas": [],
+      "hidrosanitarias": [],
+      "estructurales": [],
+      "climatizacion": [],
+      "bioseguridad": []
+    },
+    "redRemision": "CDI / HUMNT Maturín",
+    "observaciones": "Servicio de rehabilitación física, logopedia, podología y terapia ocupacional.",
+    "elaboradoPor": {
+      "nombre": "Lic. Fisioterapia",
+      "ci": "V-20.345.678",
+      "cargo": "Jefe de Sala SRI",
+      "telefono": "0424-1122334",
+      "fecha": "2026-09-10"
+    },
+    "nivelRiesgo": "verde"
+  },
+  {
+    "id": "sri-aragua",
+    "nombre": "SRI Aragua de Maturín",
+    "municipioId": "piar",
+    "municipio": "Municipio Piar",
+    "parroquiaId": "aragua",
+    "parroquia": "Aragua de Maturín",
+    "sector": "Aragua",
+    "lat": 9.9715,
+    "lng": -63.4845,
+    "tipoRed": "comunal",
+    "tipoRedLabel": "Red Comunal / Barrio Adentro (CPT, CDI, SRI, CAT)",
+    "clasificacionEspecifica": "Sala de Rehabilitación Integral (SRI)",
+    "clasificacionEspecificaLabel": "Sala de Rehabilitación Integral (SRI)",
+    "quirofanosTotal": 0,
+    "quirofanosOperativos": 0,
+    "camasHospitalizacion": 0,
+    "areasServicios": [
+      "consulta_externa",
+      "fisiatria",
+      "gimnasio_terapeutico",
+      "electroterapia",
+      "hidroterapia",
+      "terapia_ocupacional",
+      "farmacia"
+    ],
+    "soporteVital": {
+      "plantaElectrica": "Operativa",
+      "suministroAgua": "Continuo",
+      "gasesMedicinales": "Inexistente",
+      "climatizacion": "100% Operativa"
+    },
+    "fallas": {
+      "electricas": [],
+      "hidrosanitarias": [],
+      "estructurales": [],
+      "climatizacion": [],
+      "bioseguridad": []
+    },
+    "redRemision": "CDI / HUMNT Maturín",
+    "observaciones": "Servicio de rehabilitación física, logopedia, podología y terapia ocupacional.",
+    "elaboradoPor": {
+      "nombre": "Lic. Fisioterapia",
+      "ci": "V-20.345.678",
+      "cargo": "Jefe de Sala SRI",
+      "telefono": "0424-1122334",
+      "fecha": "2026-09-10"
+    },
+    "nivelRiesgo": "verde"
+  },
+  {
+    "id": "sri-quiriquire",
+    "nombre": "SRI Quiriquire",
+    "municipioId": "punceres",
+    "municipio": "Municipio Punceres",
+    "parroquiaId": "quiriquire",
+    "parroquia": "Quiriquire",
+    "sector": "Quiriquire",
+    "lat": 9.9745,
+    "lng": -63.2145,
+    "tipoRed": "comunal",
+    "tipoRedLabel": "Red Comunal / Barrio Adentro (CPT, CDI, SRI, CAT)",
+    "clasificacionEspecifica": "Sala de Rehabilitación Integral (SRI)",
+    "clasificacionEspecificaLabel": "Sala de Rehabilitación Integral (SRI)",
+    "quirofanosTotal": 0,
+    "quirofanosOperativos": 0,
+    "camasHospitalizacion": 0,
+    "areasServicios": [
+      "consulta_externa",
+      "fisiatria",
+      "gimnasio_terapeutico",
+      "electroterapia",
+      "hidroterapia",
+      "terapia_ocupacional",
+      "farmacia"
+    ],
+    "soporteVital": {
+      "plantaElectrica": "Operativa",
+      "suministroAgua": "Continuo",
+      "gasesMedicinales": "Inexistente",
+      "climatizacion": "100% Operativa"
+    },
+    "fallas": {
+      "electricas": [],
+      "hidrosanitarias": [],
+      "estructurales": [],
+      "climatizacion": [],
+      "bioseguridad": []
+    },
+    "redRemision": "CDI / HUMNT Maturín",
+    "observaciones": "Servicio de rehabilitación física, logopedia, podología y terapia ocupacional.",
+    "elaboradoPor": {
+      "nombre": "Lic. Fisioterapia",
+      "ci": "V-20.345.678",
+      "cargo": "Jefe de Sala SRI",
+      "telefono": "0424-1122334",
+      "fecha": "2026-09-10"
+    },
+    "nivelRiesgo": "amarillo"
+  },
+  {
+    "id": "sri-temblador",
+    "nombre": "SRI Temblador",
+    "municipioId": "libertador",
+    "municipio": "Municipio Libertador",
+    "parroquiaId": "temblador",
+    "parroquia": "Temblador",
+    "sector": "Temblador",
+    "lat": 9.0245,
+    "lng": -62.7145,
+    "tipoRed": "comunal",
+    "tipoRedLabel": "Red Comunal / Barrio Adentro (CPT, CDI, SRI, CAT)",
+    "clasificacionEspecifica": "Sala de Rehabilitación Integral (SRI)",
+    "clasificacionEspecificaLabel": "Sala de Rehabilitación Integral (SRI)",
+    "quirofanosTotal": 0,
+    "quirofanosOperativos": 0,
+    "camasHospitalizacion": 0,
+    "areasServicios": [
+      "consulta_externa",
+      "fisiatria",
+      "gimnasio_terapeutico",
+      "electroterapia",
+      "hidroterapia",
+      "terapia_ocupacional",
+      "farmacia"
+    ],
+    "soporteVital": {
+      "plantaElectrica": "Operativa",
+      "suministroAgua": "Continuo",
+      "gasesMedicinales": "Inexistente",
+      "climatizacion": "100% Operativa"
+    },
+    "fallas": {
+      "electricas": [],
+      "hidrosanitarias": [],
+      "estructurales": [],
+      "climatizacion": [],
+      "bioseguridad": []
+    },
+    "redRemision": "CDI / HUMNT Maturín",
+    "observaciones": "Servicio de rehabilitación física, logopedia, podología y terapia ocupacional.",
+    "elaboradoPor": {
+      "nombre": "Lic. Fisioterapia",
+      "ci": "V-20.345.678",
+      "cargo": "Jefe de Sala SRI",
+      "telefono": "0424-1122334",
+      "fecha": "2026-09-10"
+    },
+    "nivelRiesgo": "amarillo"
+  },
+  {
+    "id": "sri-barrancas",
+    "nombre": "SRI Barrancas",
+    "municipioId": "sotillo",
+    "municipio": "Municipio Sotillo",
+    "parroquiaId": "barrancas",
+    "parroquia": "Barrancas",
+    "sector": "Barrancas",
+    "lat": 8.7045,
+    "lng": -62.1845,
+    "tipoRed": "comunal",
+    "tipoRedLabel": "Red Comunal / Barrio Adentro (CPT, CDI, SRI, CAT)",
+    "clasificacionEspecifica": "Sala de Rehabilitación Integral (SRI)",
+    "clasificacionEspecificaLabel": "Sala de Rehabilitación Integral (SRI)",
+    "quirofanosTotal": 0,
+    "quirofanosOperativos": 0,
+    "camasHospitalizacion": 0,
+    "areasServicios": [
+      "consulta_externa",
+      "fisiatria",
+      "gimnasio_terapeutico",
+      "electroterapia",
+      "hidroterapia",
+      "terapia_ocupacional",
+      "farmacia"
+    ],
+    "soporteVital": {
+      "plantaElectrica": "Operativa",
+      "suministroAgua": "Continuo",
+      "gasesMedicinales": "Inexistente",
+      "climatizacion": "100% Operativa"
+    },
+    "fallas": {
+      "electricas": [],
+      "hidrosanitarias": [],
+      "estructurales": [],
+      "climatizacion": [],
+      "bioseguridad": []
+    },
+    "redRemision": "CDI / HUMNT Maturín",
+    "observaciones": "Servicio de rehabilitación física, logopedia, podología y terapia ocupacional.",
+    "elaboradoPor": {
+      "nombre": "Lic. Fisioterapia",
+      "ci": "V-20.345.678",
+      "cargo": "Jefe de Sala SRI",
+      "telefono": "0424-1122334",
+      "fecha": "2026-09-10"
+    },
+    "nivelRiesgo": "amarillo"
+  },
+  {
+    "id": "sri-aguasay",
+    "nombre": "SRI Aguasay",
+    "municipioId": "aguasay",
+    "municipio": "Municipio Aguasay",
+    "parroquiaId": "aguasay-centro",
+    "parroquia": "Aguasay",
+    "sector": "Aguasay",
+    "lat": 9.4245,
+    "lng": -63.8145,
+    "tipoRed": "comunal",
+    "tipoRedLabel": "Red Comunal / Barrio Adentro (CPT, CDI, SRI, CAT)",
+    "clasificacionEspecifica": "Sala de Rehabilitación Integral (SRI)",
+    "clasificacionEspecificaLabel": "Sala de Rehabilitación Integral (SRI)",
+    "quirofanosTotal": 0,
+    "quirofanosOperativos": 0,
+    "camasHospitalizacion": 0,
+    "areasServicios": [
+      "consulta_externa",
+      "fisiatria",
+      "gimnasio_terapeutico",
+      "electroterapia",
+      "hidroterapia",
+      "terapia_ocupacional",
+      "farmacia"
+    ],
+    "soporteVital": {
+      "plantaElectrica": "Operativa",
+      "suministroAgua": "Continuo",
+      "gasesMedicinales": "Inexistente",
+      "climatizacion": "100% Operativa"
+    },
+    "fallas": {
+      "electricas": [],
+      "hidrosanitarias": [],
+      "estructurales": [],
+      "climatizacion": [],
+      "bioseguridad": []
+    },
+    "redRemision": "CDI / HUMNT Maturín",
+    "observaciones": "Servicio de rehabilitación física, logopedia, podología y terapia ocupacional.",
+    "elaboradoPor": {
+      "nombre": "Lic. Fisioterapia",
+      "ci": "V-20.345.678",
+      "cargo": "Jefe de Sala SRI",
+      "telefono": "0424-1122334",
+      "fecha": "2026-09-10"
+    },
+    "nivelRiesgo": "verde"
+  },
+  {
+    "id": "sri-santa-barbara",
+    "nombre": "SRI Santa Bárbara",
+    "municipioId": "santa-barbara",
+    "municipio": "Municipio Santa Bárbara",
+    "parroquiaId": "santa-barbara-centro",
+    "parroquia": "Santa Bárbara",
+    "sector": "Santa Bárbara",
+    "lat": 9.5845,
+    "lng": -63.6145,
+    "tipoRed": "comunal",
+    "tipoRedLabel": "Red Comunal / Barrio Adentro (CPT, CDI, SRI, CAT)",
+    "clasificacionEspecifica": "Sala de Rehabilitación Integral (SRI)",
+    "clasificacionEspecificaLabel": "Sala de Rehabilitación Integral (SRI)",
+    "quirofanosTotal": 0,
+    "quirofanosOperativos": 0,
+    "camasHospitalizacion": 0,
+    "areasServicios": [
+      "consulta_externa",
+      "fisiatria",
+      "gimnasio_terapeutico",
+      "electroterapia",
+      "hidroterapia",
+      "terapia_ocupacional",
+      "farmacia"
+    ],
+    "soporteVital": {
+      "plantaElectrica": "Operativa",
+      "suministroAgua": "Continuo",
+      "gasesMedicinales": "Inexistente",
+      "climatizacion": "100% Operativa"
+    },
+    "fallas": {
+      "electricas": [],
+      "hidrosanitarias": [],
+      "estructurales": [],
+      "climatizacion": [],
+      "bioseguridad": []
+    },
+    "redRemision": "CDI / HUMNT Maturín",
+    "observaciones": "Servicio de rehabilitación física, logopedia, podología y terapia ocupacional.",
+    "elaboradoPor": {
+      "nombre": "Lic. Fisioterapia",
+      "ci": "V-20.345.678",
+      "cargo": "Jefe de Sala SRI",
+      "telefono": "0424-1122334",
+      "fecha": "2026-09-10"
+    },
+    "nivelRiesgo": "verde"
+  },
+  {
+    "id": "amb-vargas",
+    "nombre": "Ambulatorio Urbano Dr. José María Vargas",
+    "municipioId": "maturin",
+    "municipio": "Municipio Maturín",
+    "parroquiaId": "alto-de-los-godos",
+    "parroquia": "Alto de Los Godos",
+    "sector": "Los Godos / Av. El Parque",
+    "lat": 9.731,
+    "lng": -63.201,
+    "tipoRed": "ambulatoria",
+    "tipoRedLabel": "Red Ambulatoria Especializada (Urbana / Rural)",
+    "clasificacionEspecifica": "Amb. Urbano III",
+    "clasificacionEspecificaLabel": "Amb. Urbano III",
+    "quirofanosTotal": 0,
+    "quirofanosOperativos": 0,
+    "camasHospitalizacion": 2,
+    "areasServicios": [
+      "triaje",
+      "consulta_externa",
+      "farmacia",
+      "inmunizacion"
+    ],
+    "soporteVital": {
+      "plantaElectrica": "Operativa",
+      "suministroAgua": "Continuo",
+      "gasesMedicinales": "Inexistente",
+      "climatizacion": "Parcial"
+    },
+    "fallas": {
+      "electricas": [],
+      "hidrosanitarias": [],
+      "estructurales": [],
+      "climatizacion": [],
+      "bioseguridad": []
+    },
+    "redRemision": "CDI de la Parroquia / Hospital Base",
+    "observaciones": "Atención primaria comunitaria, control prenatal, inmunización y triaje ambulatorio.",
+    "elaboradoPor": {
+      "nombre": "Dr. Médico Rural",
+      "ci": "V-22.334.455",
+      "cargo": "Médico Rural",
+      "telefono": "0424-9988112",
+      "fecha": "2026-09-10"
+    },
+    "nivelRiesgo": "verde"
+  },
+  {
+    "id": "amb-serres-padilla",
+    "nombre": "Ambulatorio Dr. Marcos Serres Padilla",
+    "municipioId": "maturin",
+    "municipio": "Municipio Maturín",
+    "parroquiaId": "las-cocuizas",
+    "parroquia": "Las Cocuizas",
+    "sector": "Las Cocuizas / Calle 3",
+    "lat": 9.769,
+    "lng": -63.148,
+    "tipoRed": "ambulatoria",
+    "tipoRedLabel": "Red Ambulatoria Especializada (Urbana / Rural)",
+    "clasificacionEspecifica": "Amb. Urbano II",
+    "clasificacionEspecificaLabel": "Amb. Urbano II",
+    "quirofanosTotal": 0,
+    "quirofanosOperativos": 0,
+    "camasHospitalizacion": 2,
+    "areasServicios": [
+      "triaje",
+      "consulta_externa",
+      "farmacia",
+      "inmunizacion"
+    ],
+    "soporteVital": {
+      "plantaElectrica": "Operativa",
+      "suministroAgua": "Continuo",
+      "gasesMedicinales": "Inexistente",
+      "climatizacion": "Parcial"
+    },
+    "fallas": {
+      "electricas": [],
+      "hidrosanitarias": [],
+      "estructurales": [],
+      "climatizacion": [],
+      "bioseguridad": []
+    },
+    "redRemision": "CDI de la Parroquia / Hospital Base",
+    "observaciones": "Atención primaria comunitaria, control prenatal, inmunización y triaje ambulatorio.",
+    "elaboradoPor": {
+      "nombre": "Dr. Médico Rural",
+      "ci": "V-22.334.455",
+      "cargo": "Médico Rural",
+      "telefono": "0424-9988112",
+      "fecha": "2026-09-10"
+    },
+    "nivelRiesgo": "verde"
+  },
+  {
+    "id": "amb-sabana-grande",
+    "nombre": "Ambulatorio Sabana Grande",
+    "municipioId": "maturin",
+    "municipio": "Municipio Maturín",
+    "parroquiaId": "las-cocuizas",
+    "parroquia": "Las Cocuizas",
+    "sector": "Sabana Grande / Sector 1",
+    "lat": 9.775,
+    "lng": -63.138,
+    "tipoRed": "ambulatoria",
+    "tipoRedLabel": "Red Ambulatoria Especializada (Urbana / Rural)",
+    "clasificacionEspecifica": "Amb. Urbano I",
+    "clasificacionEspecificaLabel": "Amb. Urbano I",
+    "quirofanosTotal": 0,
+    "quirofanosOperativos": 0,
+    "camasHospitalizacion": 2,
+    "areasServicios": [
+      "triaje",
+      "consulta_externa",
+      "farmacia",
+      "inmunizacion"
+    ],
+    "soporteVital": {
+      "plantaElectrica": "No tiene",
+      "suministroAgua": "Continuo",
+      "gasesMedicinales": "Inexistente",
+      "climatizacion": "Parcial"
+    },
+    "fallas": {
+      "electricas": [
+        "sin_planta"
+      ],
+      "hidrosanitarias": [],
+      "estructurales": [],
+      "climatizacion": [],
+      "bioseguridad": []
+    },
+    "redRemision": "CDI de la Parroquia / Hospital Base",
+    "observaciones": "Atención primaria comunitaria, control prenatal, inmunización y triaje ambulatorio.",
+    "elaboradoPor": {
+      "nombre": "Dr. Médico Rural",
+      "ci": "V-22.334.455",
+      "cargo": "Médico Rural",
+      "telefono": "0424-9988112",
+      "fecha": "2026-09-10"
+    },
+    "nivelRiesgo": "amarillo"
+  },
+  {
+    "id": "amb-19-de-abril",
+    "nombre": "Consultorio Popular Tipo 3 (CPT3) 19 de Abril",
+    "municipioId": "maturin",
+    "municipio": "Municipio Maturín",
+    "parroquiaId": "san-simon",
+    "parroquia": "San Simón (Casco Central)",
+    "sector": "Sector 19 de Abril",
+    "lat": 9.741,
+    "lng": -63.169,
+    "tipoRed": "ambulatoria",
+    "tipoRedLabel": "Red Ambulatoria Especializada (Urbana / Rural)",
+    "clasificacionEspecifica": "Consultorio Popular (CPT)",
+    "clasificacionEspecificaLabel": "Consultorio Popular (CPT)",
+    "quirofanosTotal": 0,
+    "quirofanosOperativos": 0,
+    "camasHospitalizacion": 2,
+    "areasServicios": [
+      "triaje",
+      "consulta_externa",
+      "farmacia",
+      "inmunizacion"
+    ],
+    "soporteVital": {
+      "plantaElectrica": "No tiene",
+      "suministroAgua": "Continuo",
+      "gasesMedicinales": "Inexistente",
+      "climatizacion": "Parcial"
+    },
+    "fallas": {
+      "electricas": [
+        "sin_planta"
+      ],
+      "hidrosanitarias": [],
+      "estructurales": [],
+      "climatizacion": [],
+      "bioseguridad": []
+    },
+    "redRemision": "CDI de la Parroquia / Hospital Base",
+    "observaciones": "Atención primaria comunitaria, control prenatal, inmunización y triaje ambulatorio.",
+    "elaboradoPor": {
+      "nombre": "Dr. Médico Rural",
+      "ci": "V-22.334.455",
+      "cargo": "Médico Rural",
+      "telefono": "0424-9988112",
+      "fecha": "2026-09-10"
+    },
+    "nivelRiesgo": "verde"
+  },
+  {
+    "id": "amb-la-puente",
+    "nombre": "Ambulatorio La Puente",
+    "municipioId": "maturin",
+    "municipio": "Municipio Maturín",
+    "parroquiaId": "alto-de-los-godos",
+    "parroquia": "Alto de Los Godos",
+    "sector": "La Puente / Calle Principal",
+    "lat": 9.718,
+    "lng": -63.222,
+    "tipoRed": "ambulatoria",
+    "tipoRedLabel": "Red Ambulatoria Especializada (Urbana / Rural)",
+    "clasificacionEspecifica": "Amb. Urbano I",
+    "clasificacionEspecificaLabel": "Amb. Urbano I",
+    "quirofanosTotal": 0,
+    "quirofanosOperativos": 0,
+    "camasHospitalizacion": 2,
+    "areasServicios": [
+      "triaje",
+      "consulta_externa",
+      "farmacia",
+      "inmunizacion"
+    ],
+    "soporteVital": {
+      "plantaElectrica": "No tiene",
+      "suministroAgua": "Continuo",
+      "gasesMedicinales": "Inexistente",
+      "climatizacion": "Parcial"
+    },
+    "fallas": {
+      "electricas": [
+        "sin_planta"
+      ],
+      "hidrosanitarias": [],
+      "estructurales": [],
+      "climatizacion": [],
+      "bioseguridad": []
+    },
+    "redRemision": "CDI de la Parroquia / Hospital Base",
+    "observaciones": "Atención primaria comunitaria, control prenatal, inmunización y triaje ambulatorio.",
+    "elaboradoPor": {
+      "nombre": "Dr. Médico Rural",
+      "ci": "V-22.334.455",
+      "cargo": "Médico Rural",
+      "telefono": "0424-9988112",
+      "fecha": "2026-09-10"
+    },
+    "nivelRiesgo": "amarillo"
+  },
+  {
+    "id": "amb-fundemos",
+    "nombre": "Ambulatorio Fundemos",
+    "municipioId": "maturin",
+    "municipio": "Municipio Maturín",
+    "parroquiaId": "alto-de-los-godos",
+    "parroquia": "Alto de Los Godos",
+    "sector": "Fundemos 1",
+    "lat": 9.724,
+    "lng": -63.211,
+    "tipoRed": "ambulatoria",
+    "tipoRedLabel": "Red Ambulatoria Especializada (Urbana / Rural)",
+    "clasificacionEspecifica": "Amb. Urbano I",
+    "clasificacionEspecificaLabel": "Amb. Urbano I",
+    "quirofanosTotal": 0,
+    "quirofanosOperativos": 0,
+    "camasHospitalizacion": 2,
+    "areasServicios": [
+      "triaje",
+      "consulta_externa",
+      "farmacia",
+      "inmunizacion"
+    ],
+    "soporteVital": {
+      "plantaElectrica": "No tiene",
+      "suministroAgua": "Continuo",
+      "gasesMedicinales": "Inexistente",
+      "climatizacion": "Parcial"
+    },
+    "fallas": {
+      "electricas": [
+        "sin_planta"
+      ],
+      "hidrosanitarias": [],
+      "estructurales": [],
+      "climatizacion": [],
+      "bioseguridad": []
+    },
+    "redRemision": "CDI de la Parroquia / Hospital Base",
+    "observaciones": "Atención primaria comunitaria, control prenatal, inmunización y triaje ambulatorio.",
+    "elaboradoPor": {
+      "nombre": "Dr. Médico Rural",
+      "ci": "V-22.334.455",
+      "cargo": "Médico Rural",
+      "telefono": "0424-9988112",
+      "fecha": "2026-09-10"
+    },
+    "nivelRiesgo": "verde"
+  },
+  {
+    "id": "amb-morichal",
+    "nombre": "Ambulatorio Morichal",
+    "municipioId": "maturin",
+    "municipio": "Municipio Maturín",
+    "parroquiaId": "alto-de-los-godos",
+    "parroquia": "Alto de Los Godos",
+    "sector": "Morichal / Sector B",
+    "lat": 9.729,
+    "lng": -63.198,
+    "tipoRed": "ambulatoria",
+    "tipoRedLabel": "Red Ambulatoria Especializada (Urbana / Rural)",
+    "clasificacionEspecifica": "Amb. Urbano I",
+    "clasificacionEspecificaLabel": "Amb. Urbano I",
+    "quirofanosTotal": 0,
+    "quirofanosOperativos": 0,
+    "camasHospitalizacion": 2,
+    "areasServicios": [
+      "triaje",
+      "consulta_externa",
+      "farmacia",
+      "inmunizacion"
+    ],
+    "soporteVital": {
+      "plantaElectrica": "No tiene",
+      "suministroAgua": "Continuo",
+      "gasesMedicinales": "Inexistente",
+      "climatizacion": "Parcial"
+    },
+    "fallas": {
+      "electricas": [
+        "sin_planta"
+      ],
+      "hidrosanitarias": [],
+      "estructurales": [],
+      "climatizacion": [],
+      "bioseguridad": []
+    },
+    "redRemision": "CDI de la Parroquia / Hospital Base",
+    "observaciones": "Atención primaria comunitaria, control prenatal, inmunización y triaje ambulatorio.",
+    "elaboradoPor": {
+      "nombre": "Dr. Médico Rural",
+      "ci": "V-22.334.455",
+      "cargo": "Médico Rural",
+      "telefono": "0424-9988112",
+      "fecha": "2026-09-10"
+    },
+    "nivelRiesgo": "verde"
+  },
+  {
+    "id": "amb-tipuro",
+    "nombre": "Ambulatorio Tipuro",
+    "municipioId": "maturin",
+    "municipio": "Municipio Maturín",
+    "parroquiaId": "boqueron",
+    "parroquia": "Boquerón",
+    "sector": "Tipuro 2",
+    "lat": 9.795,
+    "lng": -63.188,
+    "tipoRed": "ambulatoria",
+    "tipoRedLabel": "Red Ambulatoria Especializada (Urbana / Rural)",
+    "clasificacionEspecifica": "Amb. Urbano I",
+    "clasificacionEspecificaLabel": "Amb. Urbano I",
+    "quirofanosTotal": 0,
+    "quirofanosOperativos": 0,
+    "camasHospitalizacion": 2,
+    "areasServicios": [
+      "triaje",
+      "consulta_externa",
+      "farmacia",
+      "inmunizacion"
+    ],
+    "soporteVital": {
+      "plantaElectrica": "No tiene",
+      "suministroAgua": "Continuo",
+      "gasesMedicinales": "Inexistente",
+      "climatizacion": "Parcial"
+    },
+    "fallas": {
+      "electricas": [
+        "sin_planta"
+      ],
+      "hidrosanitarias": [],
+      "estructurales": [],
+      "climatizacion": [],
+      "bioseguridad": []
+    },
+    "redRemision": "CDI de la Parroquia / Hospital Base",
+    "observaciones": "Atención primaria comunitaria, control prenatal, inmunización y triaje ambulatorio.",
+    "elaboradoPor": {
+      "nombre": "Dr. Médico Rural",
+      "ci": "V-22.334.455",
+      "cargo": "Médico Rural",
+      "telefono": "0424-9988112",
+      "fecha": "2026-09-10"
+    },
+    "nivelRiesgo": "verde"
+  },
+  {
+    "id": "amb-palma-real",
+    "nombre": "Ambulatorio Palma Real",
+    "municipioId": "maturin",
+    "municipio": "Municipio Maturín",
+    "parroquiaId": "boqueron",
+    "parroquia": "Boquerón",
+    "sector": "Palma Real Centro",
+    "lat": 9.802,
+    "lng": -63.195,
+    "tipoRed": "ambulatoria",
+    "tipoRedLabel": "Red Ambulatoria Especializada (Urbana / Rural)",
+    "clasificacionEspecifica": "Amb. Urbano I",
+    "clasificacionEspecificaLabel": "Amb. Urbano I",
+    "quirofanosTotal": 0,
+    "quirofanosOperativos": 0,
+    "camasHospitalizacion": 2,
+    "areasServicios": [
+      "triaje",
+      "consulta_externa",
+      "farmacia",
+      "inmunizacion"
+    ],
+    "soporteVital": {
+      "plantaElectrica": "No tiene",
+      "suministroAgua": "Continuo",
+      "gasesMedicinales": "Inexistente",
+      "climatizacion": "Parcial"
+    },
+    "fallas": {
+      "electricas": [
+        "sin_planta"
+      ],
+      "hidrosanitarias": [],
+      "estructurales": [],
+      "climatizacion": [],
+      "bioseguridad": []
+    },
+    "redRemision": "CDI de la Parroquia / Hospital Base",
+    "observaciones": "Atención primaria comunitaria, control prenatal, inmunización y triaje ambulatorio.",
+    "elaboradoPor": {
+      "nombre": "Dr. Médico Rural",
+      "ci": "V-22.334.455",
+      "cargo": "Médico Rural",
+      "telefono": "0424-9988112",
+      "fecha": "2026-09-10"
+    },
+    "nivelRiesgo": "verde"
+  },
+  {
+    "id": "amb-costo-arriba",
+    "nombre": "Ambulatorio Costo Arriba",
+    "municipioId": "maturin",
+    "municipio": "Municipio Maturín",
+    "parroquiaId": "boqueron",
+    "parroquia": "Boquerón",
+    "sector": "Costo Arriba",
+    "lat": 9.825,
+    "lng": -63.178,
+    "tipoRed": "ambulatoria",
+    "tipoRedLabel": "Red Ambulatoria Especializada (Urbana / Rural)",
+    "clasificacionEspecifica": "Amb. Rural II",
+    "clasificacionEspecificaLabel": "Amb. Rural II",
+    "quirofanosTotal": 0,
+    "quirofanosOperativos": 0,
+    "camasHospitalizacion": 2,
+    "areasServicios": [
+      "triaje",
+      "consulta_externa",
+      "farmacia",
+      "inmunizacion"
+    ],
+    "soporteVital": {
+      "plantaElectrica": "No tiene",
+      "suministroAgua": "Cisterna",
+      "gasesMedicinales": "Inexistente",
+      "climatizacion": "Parcial"
+    },
+    "fallas": {
+      "electricas": [
+        "sin_planta"
+      ],
+      "hidrosanitarias": [
+        "sin_agua_tuberia"
+      ],
+      "estructurales": [],
+      "climatizacion": [],
+      "bioseguridad": []
+    },
+    "redRemision": "CDI de la Parroquia / Hospital Base",
+    "observaciones": "Atención primaria comunitaria, control prenatal, inmunización y triaje ambulatorio.",
+    "elaboradoPor": {
+      "nombre": "Dr. Médico Rural",
+      "ci": "V-22.334.455",
+      "cargo": "Médico Rural",
+      "telefono": "0424-9988112",
+      "fecha": "2026-09-10"
+    },
+    "nivelRiesgo": "amarillo"
+  },
+  {
+    "id": "amb-viboral",
+    "nombre": "Ambulatorio Viboral",
+    "municipioId": "maturin",
+    "municipio": "Municipio Maturín",
+    "parroquiaId": "boqueron",
+    "parroquia": "Boquerón",
+    "sector": "Viboral Centro",
+    "lat": 9.811,
+    "lng": -63.182,
+    "tipoRed": "ambulatoria",
+    "tipoRedLabel": "Red Ambulatoria Especializada (Urbana / Rural)",
+    "clasificacionEspecifica": "Amb. Rural I",
+    "clasificacionEspecificaLabel": "Amb. Rural I",
+    "quirofanosTotal": 0,
+    "quirofanosOperativos": 0,
+    "camasHospitalizacion": 2,
+    "areasServicios": [
+      "triaje",
+      "consulta_externa",
+      "farmacia",
+      "inmunizacion"
+    ],
+    "soporteVital": {
+      "plantaElectrica": "No tiene",
+      "suministroAgua": "Continuo",
+      "gasesMedicinales": "Inexistente",
+      "climatizacion": "Parcial"
+    },
+    "fallas": {
+      "electricas": [
+        "sin_planta"
+      ],
+      "hidrosanitarias": [],
+      "estructurales": [],
+      "climatizacion": [],
+      "bioseguridad": []
+    },
+    "redRemision": "CDI de la Parroquia / Hospital Base",
+    "observaciones": "Atención primaria comunitaria, control prenatal, inmunización y triaje ambulatorio.",
+    "elaboradoPor": {
+      "nombre": "Dr. Médico Rural",
+      "ci": "V-22.334.455",
+      "cargo": "Médico Rural",
+      "telefono": "0424-9988112",
+      "fecha": "2026-09-10"
+    },
+    "nivelRiesgo": "verde"
+  },
+  {
+    "id": "amb-el-corozo",
+    "nombre": "Ambulatorio El Corozo",
+    "municipioId": "maturin",
+    "municipio": "Municipio Maturín",
+    "parroquiaId": "el-corozo",
+    "parroquia": "El Corozo",
+    "sector": "El Corozo Casco",
+    "lat": 9.685,
+    "lng": -63.285,
+    "tipoRed": "ambulatoria",
+    "tipoRedLabel": "Red Ambulatoria Especializada (Urbana / Rural)",
+    "clasificacionEspecifica": "Amb. Rural II",
+    "clasificacionEspecificaLabel": "Amb. Rural II",
+    "quirofanosTotal": 0,
+    "quirofanosOperativos": 0,
+    "camasHospitalizacion": 2,
+    "areasServicios": [
+      "triaje",
+      "consulta_externa",
+      "farmacia",
+      "inmunizacion"
+    ],
+    "soporteVital": {
+      "plantaElectrica": "No tiene",
+      "suministroAgua": "Cisterna",
+      "gasesMedicinales": "Inexistente",
+      "climatizacion": "Parcial"
+    },
+    "fallas": {
+      "electricas": [
+        "sin_planta"
+      ],
+      "hidrosanitarias": [
+        "sin_agua_tuberia"
+      ],
+      "estructurales": [],
+      "climatizacion": [],
+      "bioseguridad": []
+    },
+    "redRemision": "CDI de la Parroquia / Hospital Base",
+    "observaciones": "Atención primaria comunitaria, control prenatal, inmunización y triaje ambulatorio.",
+    "elaboradoPor": {
+      "nombre": "Dr. Médico Rural",
+      "ci": "V-22.334.455",
+      "cargo": "Médico Rural",
+      "telefono": "0424-9988112",
+      "fecha": "2026-09-10"
+    },
+    "nivelRiesgo": "rojo"
+  },
+  {
+    "id": "amb-san-vicente",
+    "nombre": "Ambulatorio San Vicente",
+    "municipioId": "maturin",
+    "municipio": "Municipio Maturín",
+    "parroquiaId": "san-vicente",
+    "parroquia": "San Vicente",
+    "sector": "San Vicente",
+    "lat": 9.725,
+    "lng": -63.268,
+    "tipoRed": "ambulatoria",
+    "tipoRedLabel": "Red Ambulatoria Especializada (Urbana / Rural)",
+    "clasificacionEspecifica": "Amb. Urbano I",
+    "clasificacionEspecificaLabel": "Amb. Urbano I",
+    "quirofanosTotal": 0,
+    "quirofanosOperativos": 0,
+    "camasHospitalizacion": 2,
+    "areasServicios": [
+      "triaje",
+      "consulta_externa",
+      "farmacia",
+      "inmunizacion"
+    ],
+    "soporteVital": {
+      "plantaElectrica": "No tiene",
+      "suministroAgua": "Continuo",
+      "gasesMedicinales": "Inexistente",
+      "climatizacion": "Parcial"
+    },
+    "fallas": {
+      "electricas": [
+        "sin_planta"
+      ],
+      "hidrosanitarias": [],
+      "estructurales": [],
+      "climatizacion": [],
+      "bioseguridad": []
+    },
+    "redRemision": "CDI de la Parroquia / Hospital Base",
+    "observaciones": "Atención primaria comunitaria, control prenatal, inmunización y triaje ambulatorio.",
+    "elaboradoPor": {
+      "nombre": "Dr. Médico Rural",
+      "ci": "V-22.334.455",
+      "cargo": "Médico Rural",
+      "telefono": "0424-9988112",
+      "fecha": "2026-09-10"
+    },
+    "nivelRiesgo": "amarillo"
+  },
+  {
+    "id": "amb-la-cruz",
+    "nombre": "Ambulatorio La Cruz",
+    "municipioId": "maturin",
+    "municipio": "Municipio Maturín",
+    "parroquiaId": "santa-cruz",
+    "parroquia": "Santa Cruz (La Cruz)",
+    "sector": "Casco La Cruz",
+    "lat": 9.764,
+    "lng": -63.225,
+    "tipoRed": "ambulatoria",
+    "tipoRedLabel": "Red Ambulatoria Especializada (Urbana / Rural)",
+    "clasificacionEspecifica": "Amb. Urbano II",
+    "clasificacionEspecificaLabel": "Amb. Urbano II",
+    "quirofanosTotal": 0,
+    "quirofanosOperativos": 0,
+    "camasHospitalizacion": 2,
+    "areasServicios": [
+      "triaje",
+      "consulta_externa",
+      "farmacia",
+      "inmunizacion"
+    ],
+    "soporteVital": {
+      "plantaElectrica": "Operativa",
+      "suministroAgua": "Continuo",
+      "gasesMedicinales": "Inexistente",
+      "climatizacion": "Parcial"
+    },
+    "fallas": {
+      "electricas": [],
+      "hidrosanitarias": [],
+      "estructurales": [],
+      "climatizacion": [],
+      "bioseguridad": []
+    },
+    "redRemision": "CDI de la Parroquia / Hospital Base",
+    "observaciones": "Atención primaria comunitaria, control prenatal, inmunización y triaje ambulatorio.",
+    "elaboradoPor": {
+      "nombre": "Dr. Médico Rural",
+      "ci": "V-22.334.455",
+      "cargo": "Médico Rural",
+      "telefono": "0424-9988112",
+      "fecha": "2026-09-10"
+    },
+    "nivelRiesgo": "verde"
+  },
+  {
+    "id": "amb-san-simon-sur",
+    "nombre": "Ambulatorio El Furrialito",
+    "municipioId": "maturin",
+    "municipio": "Municipio Maturín",
+    "parroquiaId": "san-simon-sur",
+    "parroquia": "San Simón Sur",
+    "sector": "San Simón Sur",
+    "lat": 9.3636,
+    "lng": -62.8426,
+    "tipoRed": "ambulatoria",
+    "tipoRedLabel": "Red Ambulatoria Especializada (Urbana / Rural)",
+    "clasificacionEspecifica": "Amb. Rural I",
+    "clasificacionEspecificaLabel": "Amb. Rural I",
+    "quirofanosTotal": 0,
+    "quirofanosOperativos": 0,
+    "camasHospitalizacion": 2,
+    "areasServicios": [
+      "triaje",
+      "consulta_externa",
+      "farmacia",
+      "inmunizacion"
+    ],
+    "soporteVital": {
+      "plantaElectrica": "No tiene",
+      "suministroAgua": "Cisterna",
+      "gasesMedicinales": "Inexistente",
+      "climatizacion": "Parcial"
+    },
+    "fallas": {
+      "electricas": [
+        "sin_planta"
+      ],
+      "hidrosanitarias": [
+        "sin_agua_tuberia"
+      ],
+      "estructurales": [],
+      "climatizacion": [],
+      "bioseguridad": []
+    },
+    "redRemision": "CDI de la Parroquia / Hospital Base",
+    "observaciones": "Atención primaria comunitaria, control prenatal, inmunización y triaje ambulatorio.",
+    "elaboradoPor": {
+      "nombre": "Dr. Médico Rural",
+      "ci": "V-22.334.455",
+      "cargo": "Médico Rural",
+      "telefono": "0424-9988112",
+      "fecha": "2026-09-10"
+    },
+    "nivelRiesgo": "rojo"
+  },
+  {
+    "id": "amb-taguaya",
+    "nombre": "Ambulatorio Rural Taguaya",
+    "municipioId": "piar",
+    "municipio": "Municipio Piar",
+    "parroquiaId": "taguaya",
+    "parroquia": "Taguaya",
+    "sector": "Taguaya Centro",
+    "lat": 9.905,
+    "lng": -63.355,
+    "tipoRed": "ambulatoria",
+    "tipoRedLabel": "Red Ambulatoria Especializada (Urbana / Rural)",
+    "clasificacionEspecifica": "Amb. Rural II",
+    "clasificacionEspecificaLabel": "Amb. Rural II",
+    "quirofanosTotal": 0,
+    "quirofanosOperativos": 0,
+    "camasHospitalizacion": 2,
+    "areasServicios": [
+      "triaje",
+      "consulta_externa",
+      "farmacia",
+      "inmunizacion"
+    ],
+    "soporteVital": {
+      "plantaElectrica": "No tiene",
+      "suministroAgua": "Continuo",
+      "gasesMedicinales": "Inexistente",
+      "climatizacion": "Parcial"
+    },
+    "fallas": {
+      "electricas": [
+        "sin_planta"
+      ],
+      "hidrosanitarias": [],
+      "estructurales": [],
+      "climatizacion": [],
+      "bioseguridad": []
+    },
+    "redRemision": "CDI de la Parroquia / Hospital Base",
+    "observaciones": "Atención primaria comunitaria, control prenatal, inmunización y triaje ambulatorio.",
+    "elaboradoPor": {
+      "nombre": "Dr. Médico Rural",
+      "ci": "V-22.334.455",
+      "cargo": "Médico Rural",
+      "telefono": "0424-9988112",
+      "fecha": "2026-09-10"
+    },
+    "nivelRiesgo": "verde"
+  },
+  {
+    "id": "amb-aparicio",
+    "nombre": "Ambulatorio Rural Aparicio",
+    "municipioId": "piar",
+    "municipio": "Municipio Piar",
+    "parroquiaId": "aparicio",
+    "parroquia": "Aparicio",
+    "sector": "Aparicio Centro",
+    "lat": 9.985,
+    "lng": -63.565,
+    "tipoRed": "ambulatoria",
+    "tipoRedLabel": "Red Ambulatoria Especializada (Urbana / Rural)",
+    "clasificacionEspecifica": "Amb. Rural II",
+    "clasificacionEspecificaLabel": "Amb. Rural II",
+    "quirofanosTotal": 0,
+    "quirofanosOperativos": 0,
+    "camasHospitalizacion": 2,
+    "areasServicios": [
+      "triaje",
+      "consulta_externa",
+      "farmacia",
+      "inmunizacion"
+    ],
+    "soporteVital": {
+      "plantaElectrica": "No tiene",
+      "suministroAgua": "Continuo",
+      "gasesMedicinales": "Inexistente",
+      "climatizacion": "Parcial"
+    },
+    "fallas": {
+      "electricas": [
+        "sin_planta"
+      ],
+      "hidrosanitarias": [],
+      "estructurales": [],
+      "climatizacion": [],
+      "bioseguridad": []
+    },
+    "redRemision": "CDI de la Parroquia / Hospital Base",
+    "observaciones": "Atención primaria comunitaria, control prenatal, inmunización y triaje ambulatorio.",
+    "elaboradoPor": {
+      "nombre": "Dr. Médico Rural",
+      "ci": "V-22.334.455",
+      "cargo": "Médico Rural",
+      "telefono": "0424-9988112",
+      "fecha": "2026-09-10"
+    },
+    "nivelRiesgo": "verde"
+  },
+  {
+    "id": "amb-chaguaramal",
+    "nombre": "Ambulatorio Rural Chaguaramal",
+    "municipioId": "piar",
+    "municipio": "Municipio Piar",
+    "parroquiaId": "chaguaramal",
+    "parroquia": "Chaguaramal",
+    "sector": "Chaguaramal",
+    "lat": 9.945,
+    "lng": -63.415,
+    "tipoRed": "ambulatoria",
+    "tipoRedLabel": "Red Ambulatoria Especializada (Urbana / Rural)",
+    "clasificacionEspecifica": "Amb. Rural II",
+    "clasificacionEspecificaLabel": "Amb. Rural II",
+    "quirofanosTotal": 0,
+    "quirofanosOperativos": 0,
+    "camasHospitalizacion": 2,
+    "areasServicios": [
+      "triaje",
+      "consulta_externa",
+      "farmacia",
+      "inmunizacion"
+    ],
+    "soporteVital": {
+      "plantaElectrica": "No tiene",
+      "suministroAgua": "Continuo",
+      "gasesMedicinales": "Inexistente",
+      "climatizacion": "Parcial"
+    },
+    "fallas": {
+      "electricas": [
+        "sin_planta"
+      ],
+      "hidrosanitarias": [],
+      "estructurales": [],
+      "climatizacion": [],
+      "bioseguridad": []
+    },
+    "redRemision": "CDI de la Parroquia / Hospital Base",
+    "observaciones": "Atención primaria comunitaria, control prenatal, inmunización y triaje ambulatorio.",
+    "elaboradoPor": {
+      "nombre": "Dr. Médico Rural",
+      "ci": "V-22.334.455",
+      "cargo": "Médico Rural",
+      "telefono": "0424-9988112",
+      "fecha": "2026-09-10"
+    },
+    "nivelRiesgo": "verde"
+  },
+  {
+    "id": "amb-guanaguana",
+    "nombre": "Ambulatorio Rural Guanaguana",
+    "municipioId": "piar",
+    "municipio": "Municipio Piar",
+    "parroquiaId": "guanaguana",
+    "parroquia": "Guanaguana",
+    "sector": "Guanaguana Centro",
+    "lat": 10.055,
+    "lng": -63.525,
+    "tipoRed": "ambulatoria",
+    "tipoRedLabel": "Red Ambulatoria Especializada (Urbana / Rural)",
+    "clasificacionEspecifica": "Amb. Rural II",
+    "clasificacionEspecificaLabel": "Amb. Rural II",
+    "quirofanosTotal": 0,
+    "quirofanosOperativos": 0,
+    "camasHospitalizacion": 2,
+    "areasServicios": [
+      "triaje",
+      "consulta_externa",
+      "farmacia",
+      "inmunizacion"
+    ],
+    "soporteVital": {
+      "plantaElectrica": "No tiene",
+      "suministroAgua": "Continuo",
+      "gasesMedicinales": "Inexistente",
+      "climatizacion": "Parcial"
+    },
+    "fallas": {
+      "electricas": [
+        "sin_planta"
+      ],
+      "hidrosanitarias": [],
+      "estructurales": [],
+      "climatizacion": [],
+      "bioseguridad": []
+    },
+    "redRemision": "CDI de la Parroquia / Hospital Base",
+    "observaciones": "Atención primaria comunitaria, control prenatal, inmunización y triaje ambulatorio.",
+    "elaboradoPor": {
+      "nombre": "Dr. Médico Rural",
+      "ci": "V-22.334.455",
+      "cargo": "Médico Rural",
+      "telefono": "0424-9988112",
+      "fecha": "2026-09-10"
+    },
+    "nivelRiesgo": "verde"
+  },
+  {
+    "id": "amb-la-toscana",
+    "nombre": "Ambulatorio Rural La Toscana",
+    "municipioId": "piar",
+    "municipio": "Municipio Piar",
+    "parroquiaId": "la-toscana",
+    "parroquia": "La Toscana",
+    "sector": "La Toscana",
+    "lat": 9.855,
+    "lng": -63.425,
+    "tipoRed": "ambulatoria",
+    "tipoRedLabel": "Red Ambulatoria Especializada (Urbana / Rural)",
+    "clasificacionEspecifica": "Amb. Rural II",
+    "clasificacionEspecificaLabel": "Amb. Rural II",
+    "quirofanosTotal": 0,
+    "quirofanosOperativos": 0,
+    "camasHospitalizacion": 2,
+    "areasServicios": [
+      "triaje",
+      "consulta_externa",
+      "farmacia",
+      "inmunizacion"
+    ],
+    "soporteVital": {
+      "plantaElectrica": "Operativa",
+      "suministroAgua": "Continuo",
+      "gasesMedicinales": "Inexistente",
+      "climatizacion": "Parcial"
+    },
+    "fallas": {
+      "electricas": [],
+      "hidrosanitarias": [],
+      "estructurales": [],
+      "climatizacion": [],
+      "bioseguridad": []
+    },
+    "redRemision": "CDI de la Parroquia / Hospital Base",
+    "observaciones": "Atención primaria comunitaria, control prenatal, inmunización y triaje ambulatorio.",
+    "elaboradoPor": {
+      "nombre": "Dr. Médico Rural",
+      "ci": "V-22.334.455",
+      "cargo": "Médico Rural",
+      "telefono": "0424-9988112",
+      "fecha": "2026-09-10"
+    },
+    "nivelRiesgo": "verde"
+  },
+  {
+    "id": "amb-el-pinto",
+    "nombre": "Ambulatorio Rural El Pinto",
+    "municipioId": "punceres",
+    "municipio": "Municipio Punceres",
+    "parroquiaId": "cachipo",
+    "parroquia": "Cachipo",
+    "sector": "El Pinto Centro",
+    "lat": 9.915,
+    "lng": -63.235,
+    "tipoRed": "ambulatoria",
+    "tipoRedLabel": "Red Ambulatoria Especializada (Urbana / Rural)",
+    "clasificacionEspecifica": "Amb. Rural II",
+    "clasificacionEspecificaLabel": "Amb. Rural II",
+    "quirofanosTotal": 0,
+    "quirofanosOperativos": 0,
+    "camasHospitalizacion": 2,
+    "areasServicios": [
+      "triaje",
+      "consulta_externa",
+      "farmacia",
+      "inmunizacion"
+    ],
+    "soporteVital": {
+      "plantaElectrica": "No tiene",
+      "suministroAgua": "Cisterna",
+      "gasesMedicinales": "Inexistente",
+      "climatizacion": "Parcial"
+    },
+    "fallas": {
+      "electricas": [
+        "sin_planta"
+      ],
+      "hidrosanitarias": [
+        "sin_agua_tuberia"
+      ],
+      "estructurales": [],
+      "climatizacion": [],
+      "bioseguridad": []
+    },
+    "redRemision": "CDI de la Parroquia / Hospital Base",
+    "observaciones": "Atención primaria comunitaria, control prenatal, inmunización y triaje ambulatorio.",
+    "elaboradoPor": {
+      "nombre": "Dr. Médico Rural",
+      "ci": "V-22.334.455",
+      "cargo": "Médico Rural",
+      "telefono": "0424-9988112",
+      "fecha": "2026-09-10"
+    },
+    "nivelRiesgo": "amarillo"
+  },
+  {
+    "id": "amb-areo",
+    "nombre": "Ambulatorio Rural Areo",
+    "municipioId": "cedeno",
+    "municipio": "Municipio Cedeño",
+    "parroquiaId": "areo",
+    "parroquia": "Areo",
+    "sector": "Areo Centro",
+    "lat": 9.782,
+    "lng": -63.745,
+    "tipoRed": "ambulatoria",
+    "tipoRedLabel": "Red Ambulatoria Especializada (Urbana / Rural)",
+    "clasificacionEspecifica": "Amb. Rural II",
+    "clasificacionEspecificaLabel": "Amb. Rural II",
+    "quirofanosTotal": 0,
+    "quirofanosOperativos": 0,
+    "camasHospitalizacion": 2,
+    "areasServicios": [
+      "triaje",
+      "consulta_externa",
+      "farmacia",
+      "inmunizacion"
+    ],
+    "soporteVital": {
+      "plantaElectrica": "No tiene",
+      "suministroAgua": "Continuo",
+      "gasesMedicinales": "Inexistente",
+      "climatizacion": "Parcial"
+    },
+    "fallas": {
+      "electricas": [
+        "sin_planta"
+      ],
+      "hidrosanitarias": [],
+      "estructurales": [],
+      "climatizacion": [],
+      "bioseguridad": []
+    },
+    "redRemision": "CDI de la Parroquia / Hospital Base",
+    "observaciones": "Atención primaria comunitaria, control prenatal, inmunización y triaje ambulatorio.",
+    "elaboradoPor": {
+      "nombre": "Dr. Médico Rural",
+      "ci": "V-22.334.455",
+      "cargo": "Médico Rural",
+      "telefono": "0424-9988112",
+      "fecha": "2026-09-10"
+    },
+    "nivelRiesgo": "verde"
+  },
+  {
+    "id": "amb-viento-fresco",
+    "nombre": "Ambulatorio Rural Viento Fresco",
+    "municipioId": "cedeno",
+    "municipio": "Municipio Cedeño",
+    "parroquiaId": "viento-fresco",
+    "parroquia": "Viento Fresco",
+    "sector": "Viento Fresco",
+    "lat": 9.712,
+    "lng": -63.685,
+    "tipoRed": "ambulatoria",
+    "tipoRedLabel": "Red Ambulatoria Especializada (Urbana / Rural)",
+    "clasificacionEspecifica": "Amb. Rural II",
+    "clasificacionEspecificaLabel": "Amb. Rural II",
+    "quirofanosTotal": 0,
+    "quirofanosOperativos": 0,
+    "camasHospitalizacion": 2,
+    "areasServicios": [
+      "triaje",
+      "consulta_externa",
+      "farmacia",
+      "inmunizacion"
+    ],
+    "soporteVital": {
+      "plantaElectrica": "No tiene",
+      "suministroAgua": "Continuo",
+      "gasesMedicinales": "Inexistente",
+      "climatizacion": "Parcial"
+    },
+    "fallas": {
+      "electricas": [
+        "sin_planta"
+      ],
+      "hidrosanitarias": [],
+      "estructurales": [],
+      "climatizacion": [],
+      "bioseguridad": []
+    },
+    "redRemision": "CDI de la Parroquia / Hospital Base",
+    "observaciones": "Atención primaria comunitaria, control prenatal, inmunización y triaje ambulatorio.",
+    "elaboradoPor": {
+      "nombre": "Dr. Médico Rural",
+      "ci": "V-22.334.455",
+      "cargo": "Médico Rural",
+      "telefono": "0424-9988112",
+      "fecha": "2026-09-10"
+    },
+    "nivelRiesgo": "verde"
+  },
+  {
+    "id": "amb-teresen",
+    "nombre": "Ambulatorio Rural Teresén",
+    "municipioId": "caripe",
+    "municipio": "Municipio Caripe",
+    "parroquiaId": "teresen",
+    "parroquia": "Teresén",
+    "sector": "Teresén",
+    "lat": 10.145,
+    "lng": -63.465,
+    "tipoRed": "ambulatoria",
+    "tipoRedLabel": "Red Ambulatoria Especializada (Urbana / Rural)",
+    "clasificacionEspecifica": "Amb. Rural II",
+    "clasificacionEspecificaLabel": "Amb. Rural II",
+    "quirofanosTotal": 0,
+    "quirofanosOperativos": 0,
+    "camasHospitalizacion": 2,
+    "areasServicios": [
+      "triaje",
+      "consulta_externa",
+      "farmacia",
+      "inmunizacion"
+    ],
+    "soporteVital": {
+      "plantaElectrica": "No tiene",
+      "suministroAgua": "Continuo",
+      "gasesMedicinales": "Inexistente",
+      "climatizacion": "Parcial"
+    },
+    "fallas": {
+      "electricas": [
+        "sin_planta"
+      ],
+      "hidrosanitarias": [],
+      "estructurales": [],
+      "climatizacion": [],
+      "bioseguridad": []
+    },
+    "redRemision": "CDI de la Parroquia / Hospital Base",
+    "observaciones": "Atención primaria comunitaria, control prenatal, inmunización y triaje ambulatorio.",
+    "elaboradoPor": {
+      "nombre": "Dr. Médico Rural",
+      "ci": "V-22.334.455",
+      "cargo": "Médico Rural",
+      "telefono": "0424-9988112",
+      "fecha": "2026-09-10"
+    },
+    "nivelRiesgo": "verde"
+  },
+  {
+    "id": "amb-la-guanota",
+    "nombre": "Ambulatorio Rural La Guanota",
+    "municipioId": "caripe",
+    "municipio": "Municipio Caripe",
+    "parroquiaId": "la-guanota",
+    "parroquia": "La Guanota",
+    "sector": "La Guanota",
+    "lat": 10.215,
+    "lng": -63.505,
+    "tipoRed": "ambulatoria",
+    "tipoRedLabel": "Red Ambulatoria Especializada (Urbana / Rural)",
+    "clasificacionEspecifica": "Amb. Rural I",
+    "clasificacionEspecificaLabel": "Amb. Rural I",
+    "quirofanosTotal": 0,
+    "quirofanosOperativos": 0,
+    "camasHospitalizacion": 2,
+    "areasServicios": [
+      "triaje",
+      "consulta_externa",
+      "farmacia",
+      "inmunizacion"
+    ],
+    "soporteVital": {
+      "plantaElectrica": "No tiene",
+      "suministroAgua": "Continuo",
+      "gasesMedicinales": "Inexistente",
+      "climatizacion": "Parcial"
+    },
+    "fallas": {
+      "electricas": [
+        "sin_planta"
+      ],
+      "hidrosanitarias": [],
+      "estructurales": [],
+      "climatizacion": [],
+      "bioseguridad": []
+    },
+    "redRemision": "CDI de la Parroquia / Hospital Base",
+    "observaciones": "Atención primaria comunitaria, control prenatal, inmunización y triaje ambulatorio.",
+    "elaboradoPor": {
+      "nombre": "Dr. Médico Rural",
+      "ci": "V-22.334.455",
+      "cargo": "Médico Rural",
+      "telefono": "0424-9988112",
+      "fecha": "2026-09-10"
+    },
+    "nivelRiesgo": "verde"
+  },
+  {
+    "id": "amb-san-francisco",
+    "nombre": "Ambulatorio Rural San Francisco",
+    "municipioId": "acosta",
+    "municipio": "Municipio Acosta",
+    "parroquiaId": "san-francisco",
+    "parroquia": "San Francisco",
+    "sector": "San Francisco",
+    "lat": 10.065,
+    "lng": -63.675,
+    "tipoRed": "ambulatoria",
+    "tipoRedLabel": "Red Ambulatoria Especializada (Urbana / Rural)",
+    "clasificacionEspecifica": "Amb. Rural II",
+    "clasificacionEspecificaLabel": "Amb. Rural II",
+    "quirofanosTotal": 0,
+    "quirofanosOperativos": 0,
+    "camasHospitalizacion": 2,
+    "areasServicios": [
+      "triaje",
+      "consulta_externa",
+      "farmacia",
+      "inmunizacion"
+    ],
+    "soporteVital": {
+      "plantaElectrica": "No tiene",
+      "suministroAgua": "Continuo",
+      "gasesMedicinales": "Inexistente",
+      "climatizacion": "Parcial"
+    },
+    "fallas": {
+      "electricas": [
+        "sin_planta"
+      ],
+      "hidrosanitarias": [],
+      "estructurales": [],
+      "climatizacion": [],
+      "bioseguridad": []
+    },
+    "redRemision": "CDI de la Parroquia / Hospital Base",
+    "observaciones": "Atención primaria comunitaria, control prenatal, inmunización y triaje ambulatorio.",
+    "elaboradoPor": {
+      "nombre": "Dr. Médico Rural",
+      "ci": "V-22.334.455",
+      "cargo": "Médico Rural",
+      "telefono": "0424-9988112",
+      "fecha": "2026-09-10"
+    },
+    "nivelRiesgo": "verde"
+  },
+  {
+    "id": "amb-chaguaramas",
+    "nombre": "Ambulatorio Rural Chaguaramas",
+    "municipioId": "libertador",
+    "municipio": "Municipio Libertador",
+    "parroquiaId": "chaguaramas",
+    "parroquia": "Chaguaramas",
+    "sector": "Chaguaramas",
+    "lat": 9.095,
+    "lng": -62.675,
+    "tipoRed": "ambulatoria",
+    "tipoRedLabel": "Red Ambulatoria Especializada (Urbana / Rural)",
+    "clasificacionEspecifica": "Amb. Rural II",
+    "clasificacionEspecificaLabel": "Amb. Rural II",
+    "quirofanosTotal": 0,
+    "quirofanosOperativos": 0,
+    "camasHospitalizacion": 2,
+    "areasServicios": [
+      "triaje",
+      "consulta_externa",
+      "farmacia",
+      "inmunizacion"
+    ],
+    "soporteVital": {
+      "plantaElectrica": "No tiene",
+      "suministroAgua": "Continuo",
+      "gasesMedicinales": "Inexistente",
+      "climatizacion": "Parcial"
+    },
+    "fallas": {
+      "electricas": [
+        "sin_planta"
+      ],
+      "hidrosanitarias": [],
+      "estructurales": [],
+      "climatizacion": [],
+      "bioseguridad": []
+    },
+    "redRemision": "CDI de la Parroquia / Hospital Base",
+    "observaciones": "Atención primaria comunitaria, control prenatal, inmunización y triaje ambulatorio.",
+    "elaboradoPor": {
+      "nombre": "Dr. Médico Rural",
+      "ci": "V-22.334.455",
+      "cargo": "Médico Rural",
+      "telefono": "0424-9988112",
+      "fecha": "2026-09-10"
+    },
+    "nivelRiesgo": "amarillo"
+  },
+  {
+    "id": "amb-tabasca",
+    "nombre": "Ambulatorio Rural Tabasca",
+    "municipioId": "libertador",
+    "municipio": "Municipio Libertador",
+    "parroquiaId": "tabasca",
+    "parroquia": "Tabasca",
+    "sector": "Tabasca",
+    "lat": 9.155,
+    "lng": -62.615,
+    "tipoRed": "ambulatoria",
+    "tipoRedLabel": "Red Ambulatoria Especializada (Urbana / Rural)",
+    "clasificacionEspecifica": "Amb. Rural I",
+    "clasificacionEspecificaLabel": "Amb. Rural I",
+    "quirofanosTotal": 0,
+    "quirofanosOperativos": 0,
+    "camasHospitalizacion": 2,
+    "areasServicios": [
+      "triaje",
+      "consulta_externa",
+      "farmacia",
+      "inmunizacion"
+    ],
+    "soporteVital": {
+      "plantaElectrica": "No tiene",
+      "suministroAgua": "Cisterna",
+      "gasesMedicinales": "Inexistente",
+      "climatizacion": "Parcial"
+    },
+    "fallas": {
+      "electricas": [
+        "sin_planta"
+      ],
+      "hidrosanitarias": [
+        "sin_agua_tuberia"
+      ],
+      "estructurales": [],
+      "climatizacion": [],
+      "bioseguridad": []
+    },
+    "redRemision": "CDI de la Parroquia / Hospital Base",
+    "observaciones": "Atención primaria comunitaria, control prenatal, inmunización y triaje ambulatorio.",
+    "elaboradoPor": {
+      "nombre": "Dr. Médico Rural",
+      "ci": "V-22.334.455",
+      "cargo": "Médico Rural",
+      "telefono": "0424-9988112",
+      "fecha": "2026-09-10"
+    },
+    "nivelRiesgo": "rojo"
   }
 ];
 

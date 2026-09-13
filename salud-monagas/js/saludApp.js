@@ -12,7 +12,7 @@
   const CATALOGO_FALLAS = window.CATALOGO_FALLAS || {};
   const OPCIONES_SOPORTE_VITAL = window.OPCIONES_SOPORTE_VITAL || {};
   const CENTROS_SALUD_INICIALES = window.CENTROS_SALUD_INICIALES || [];
-const STORAGE_KEY = 'migato_salud_centros_v1';
+const STORAGE_KEY = 'migato_salud_centros_v2';
 
 // Estado global de la aplicación
 const state = {
@@ -263,11 +263,11 @@ function actualizarMapaGeneral() {
         </div>
 
         <div class="flex gap-1.5">
-          <button onclick="window.verFichaCentro('${c.id}')" class="flex-1 py-1.5 bg-sky-500 hover:bg-sky-400 text-[#050814] font-black rounded-lg text-[10px] transition text-center shadow">
-            Ver Ficha 1:1
+          <button onclick="window.editarCentro('${c.id}')" class="flex-1 py-2 bg-sky-500 hover:bg-sky-400 text-[#050814] font-black rounded-lg text-xs transition text-center shadow flex items-center justify-center gap-1">
+            <span>📝 Realizar Registro / Diagnóstico</span>
           </button>
-          <button onclick="window.editarCentro('${c.id}')" class="px-2 py-1.5 bg-indigo-900 hover:bg-indigo-800 text-slate-200 font-bold rounded-lg text-[10px] transition">
-            Editar
+          <button onclick="window.verFichaCentro('${c.id}')" class="px-2.5 py-2 bg-[#140e40] hover:bg-[#2d1f85] text-slate-300 hover:text-white rounded-lg border border-[#2d1f85] text-[10px] font-bold transition" title="Ver Ficha Imprimible">
+            Ficha
           </button>
         </div>
       </div>
