@@ -76,14 +76,26 @@ function inicializarDatos() {
         const mapBase = new Map(centrosBase.map(c => [c.id, c]));
         state.centros = parsed.map(p => {
           const base = mapBase.get(p.id);
-          if (base && base.precision === 'exacta' && p.precision !== 'calibrada_usuario') {
-            return {
-              ...p,
-              lat: base.lat,
-              lng: base.lng,
-              precision: 'exacta',
-              sector: base.sector || p.sector
-            };
+          if (base && base.precision === 'exacta') {
+            // Auto-sanar Hospital Serres si fue desplazado al centroide parroquial (9.756, -63.146)
+            if (p.id === 'hosp-serres-las-cocuizas' && Math.abs(p.lat - 9.756) < 0.002 && Math.abs(p.lng - (-63.146)) < 0.002) {
+              return {
+                ...p,
+                lat: base.lat,
+                lng: base.lng,
+                precision: 'exacta',
+                sector: base.sector || p.sector
+              };
+            }
+            if (p.precision !== 'calibrada_usuario') {
+              return {
+                ...p,
+                lat: base.lat,
+                lng: base.lng,
+                precision: 'exacta',
+                sector: base.sector || p.sector
+              };
+            }
           }
           return p;
         });
@@ -575,8 +587,8 @@ function crearCentroDesdePunto() {
   const lat = inLat ? parseFloat(inLat.value) : state.coordsInspectorGmaps.lat;
   const lng = inLng ? parseFloat(inLng.value) : state.coordsInspectorGmaps.lng;
 
-  // Cambiar a pestaña de Formulario
-  cambiarPestana('tab-formulario');
+  // Cambiar a pestaña de Formulario (tab-registro)
+  cambiarPestana('tab-registro');
   initMapaFormulario();
 
   actualizarCoordenadasInputs(lat, lng, true);
@@ -906,7 +918,7 @@ function poblarMunicipios() {
   }
 }
 
-function alCambiarMunicipio(municipioId) {
+function alCambiarMunicipio(municipioId, moverMapa = true) {
   const selectParr = document.getElementById('form-parroquia');
   const selectSec = document.getElementById('form-sector');
   if (!selectParr) return;
@@ -925,7 +937,7 @@ function alCambiarMunicipio(municipioId) {
     selectParr.innerHTML += `<option value="${p.id}">${p.nombre}</option>`;
   });
 
-  if (mun.parroquias.length > 0 && state.mapaFormulario && state.marcadorFormulario) {
+  if (moverMapa && mun.parroquias.length > 0 && state.mapaFormulario && state.marcadorFormulario) {
     const coords = mun.parroquias[0].centro;
     state.mapaFormulario.flyTo(coords, 12.5, { duration: 1 });
     state.marcadorFormulario.setLatLng(coords);
@@ -933,7 +945,7 @@ function alCambiarMunicipio(municipioId) {
   }
 }
 
-function alCambiarParroquia(parroquiaId) {
+function alCambiarParroquia(parroquiaId, moverMapa = true) {
   const selectMun = document.getElementById('form-municipio');
   const selectSec = document.getElementById('form-sector');
   if (!selectMun || !selectSec) return;
@@ -957,7 +969,7 @@ function alCambiarParroquia(parroquiaId) {
   }
   selectSec.innerHTML += '<option value="otro">+ Otro Sector (Ingresar manualmente)...</option>';
 
-  if (parr.centro && state.mapaFormulario && state.marcadorFormulario) {
+  if (moverMapa && parr.centro && state.mapaFormulario && state.marcadorFormulario) {
     state.mapaFormulario.flyTo(parr.centro, 14, { duration: 1 });
     state.marcadorFormulario.setLatLng(parr.centro);
     actualizarCoordenadasInputs(parr.centro[0], parr.centro[1]);
@@ -1682,29 +1694,38 @@ function editarCentro(id) {
   const selMun = document.getElementById('form-municipio');
   if (selMun) {
     selMun.value = centro.municipioId;
-    alCambiarMunicipio(centro.municipioId);
+    alCambiarMunicipio(centro.municipioId, false);
   }
 
-  setTimeout(() => {
-    const selParr = document.getElementById('form-parroquia');
-    if (selParr) {
-      selParr.value = centro.parroquiaId;
-      alCambiarParroquia(centro.parroquiaId);
-    }
+  const selParr = document.getElementById('form-parroquia');
+  if (selParr) {
+    selParr.value = centro.parroquiaId;
+    alCambiarParroquia(centro.parroquiaId, false);
+  }
+
+  const selSec = document.getElementById('form-sector');
+  if (selSec) {
+    selSec.value = centro.sector || '';
+  }
+
+  // Establecer posición EXACTA del centro en el mapa del formulario (sin sobreescrituras)
+  if (centro.lat && centro.lng) {
+    const latNum = parseFloat(centro.lat);
+    const lngNum = parseFloat(centro.lng);
+    actualizarCoordenadasInputs(latNum, lngNum, false);
 
     setTimeout(() => {
-      const selSec = document.getElementById('form-sector');
-      if (selSec) {
-        selSec.value = centro.sector;
+      if (!state.mapaFormulario && typeof initMapaFormulario === 'function') {
+        initMapaFormulario();
       }
-    }, 100);
-  }, 100);
-
-  if (centro.lat && centro.lng && state.mapaFormulario) {
-    const pos = [centro.lat, centro.lng];
-    state.mapaFormulario.setView(pos, 16);
-    state.marcadorFormulario.setLatLng(pos);
-    actualizarCoordenadasInputs(pos[0], pos[1], false);
+      if (state.mapaFormulario) {
+        state.mapaFormulario.invalidateSize();
+        state.mapaFormulario.setView([latNum, lngNum], 16);
+        if (state.marcadorFormulario) {
+          state.marcadorFormulario.setLatLng([latNum, lngNum]);
+        }
+      }
+    }, 120);
   }
 
   const radioRed = document.querySelector(`input[name="tipoRed"][value="${centro.tipoRed}"]`);
