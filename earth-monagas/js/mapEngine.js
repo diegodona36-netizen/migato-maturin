@@ -2,8 +2,8 @@
  * Motor Cartográfico Acelerado por GPU — Google Earth Pro Web (Monagas)
  * Integrado con Capas Jerárquicas Oficiales (INE 2021) y Edición de Vértices
  */
-import { GEO_ESTADO_OFICIAL, GEO_MUNICIPIOS_OFICIAL, GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=136";
-import { CATALOGO_MONAGAS, PARISH_ALIAS_MAP, resolveParishId } from "./catalogoMonagas.js?v=136";
+import { GEO_ESTADO_OFICIAL, GEO_MUNICIPIOS_OFICIAL, GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=137";
+import { CATALOGO_MONAGAS, PARISH_ALIAS_MAP, resolveParishId } from "./catalogoMonagas.js?v=137";
 
 export class EarthMapEngine {
   constructor(containerId, onCoordUpdate) {
@@ -489,6 +489,16 @@ export class EarthMapEngine {
     if (bPoly && flyCamera) {
       this.map.flyToBounds(bPoly.getBounds(), { padding: [30, 30], duration: 1.2 });
     }
+
+    // Al volver a la vista del estado, restaurar la capa interactiva L2 de municipios si está activada
+    if (this.layerL2_Municipios) {
+      const chk2 = document.getElementById("chk-layer-l2");
+      if (!chk2 || chk2.checked) {
+        if (!this.map.hasLayer(this.layerL2_Municipios)) {
+          this.map.addLayer(this.layerL2_Municipios);
+        }
+      }
+    }
   }
 
   showMunicipioBoundary(munId, flyCamera = true) {
@@ -497,6 +507,11 @@ export class EarthMapEngine {
     this.activeFocusLevel = "municipio";
     this.currentSectorVertices = null;
     this.currentSubParishVertices = null;
+
+    // Desactivar temporalmente la capa general L2 para evitar que capture clics o cree rebotes con las parroquias internas
+    if (this.layerL2_Municipios && this.map.hasLayer(this.layerL2_Municipios)) {
+      this.map.removeLayer(this.layerL2_Municipios);
+    }
 
     // Limpiar capas de detalle parroquial para vista municipal limpia y rápida (60 FPS)
     if (this.polygonsLayer) this.polygonsLayer.clearLayers();
@@ -531,7 +546,7 @@ export class EarthMapEngine {
 
     const bPoly = this.renderSpotlightMask(coords, "#38bdf8", "8, 5", 3.2);
     if (bPoly && flyCamera) {
-      this.map.flyToBounds(bPoly.getBounds(), { padding: [40, 40], duration: 1.2 });
+      this.map.flyToBounds(bPoly.getBounds(), { padding: [55, 55], duration: 1.2 });
     }
 
     // Renderizar todas las parroquias oficiales pertenecientes a este municipio como interactivas
@@ -614,6 +629,11 @@ export class EarthMapEngine {
     this.currentSubParishVertices = null;
     this.activeFocusLevel = "parroquia";
 
+    // Desactivar temporalmente la capa L2 para evitar cualquier conflicto al interactuar con la parroquia
+    if (this.layerL2_Municipios && this.map.hasLayer(this.layerL2_Municipios)) {
+      this.map.removeLayer(this.layerL2_Municipios);
+    }
+
     let coords = null;
 
     // 1. Intentar obtener polígono oficial del INE desde GEO_PARROQUIAS_OFICIAL
@@ -663,12 +683,15 @@ export class EarthMapEngine {
         }
       }
 
+      // Zoom equilibrado: ni muy lejos ni excesivamente pegado al suelo
+      const safeParishZoom = Math.min(Math.max(customZoom || 12, 11.2), 12.3);
+
       // Para parroquias rurales extensas (como La Pica que abarca 90 km hasta el delta fluvial),
-      // volar directamente a su centro poblado para enfocar de inmediato sus calles y sectores
-      if (customCenter && (latDiff > 0.20 || lngDiff > 0.20)) {
-        this.map.flyTo(customCenter, customZoom || 12, { duration: 1.2 });
+      // volar directamente a su centro poblado calibrado con altura balanceada
+      if (customCenter && (latDiff > 0.15 || lngDiff > 0.15)) {
+        this.map.flyTo(customCenter, safeParishZoom, { duration: 1.2 });
       } else {
-        this.map.flyToBounds(bounds, { padding: [40, 40], duration: 1.2, maxZoom: 14 });
+        this.map.flyToBounds(bounds, { padding: [70, 70], duration: 1.2, maxZoom: 12.4 });
       }
     }
   }

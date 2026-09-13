@@ -2,16 +2,16 @@
  * Controlador Principal — Google Earth Pro Web (Edición Estado Monagas)
  * Robusto, 100% Operativo y Totalmente Individualizado
  */
-import { CATALOGO_MONAGAS, findParishInCatalog, PARISH_ALIAS_MAP, resolveParishId } from "./catalogoMonagas.js?v=136";
-import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=136";
-import { getAllParishesForSelector } from "./usersCatalog.js?v=136";
-import { EarthStore } from "./earthStore.js?v=136";
-import { EarthMapEngine } from "./mapEngine.js?v=136";
-import { PropertiesDialog } from "./propertiesDialog.js?v=136";
-import { ToolsManager } from "./toolsManager.js?v=136";
-import { detectParishFromGeometry, SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=136";
-import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=136";
-import { getParishDemographics } from "./monagasDemographics.js?v=136";
+import { CATALOGO_MONAGAS, findParishInCatalog, PARISH_ALIAS_MAP, resolveParishId } from "./catalogoMonagas.js?v=137";
+import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=137";
+import { getAllParishesForSelector } from "./usersCatalog.js?v=137";
+import { EarthStore } from "./earthStore.js?v=137";
+import { EarthMapEngine } from "./mapEngine.js?v=137";
+import { PropertiesDialog } from "./propertiesDialog.js?v=137";
+import { ToolsManager } from "./toolsManager.js?v=137";
+import { detectParishFromGeometry, SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=137";
+import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=137";
+import { getParishDemographics } from "./monagasDemographics.js?v=137";
 import { 
   getMunicipios, 
   getParroquiasByMun, 
@@ -21,13 +21,13 @@ import {
   findSectorById, 
   searchSectores, 
   ALL_SECTORES_FLAT 
-} from "./monagasSectoresCatalog.js?v=136";
+} from "./monagasSectoresCatalog.js?v=137";
 import { 
   getSavedFirebaseConfig, 
   saveFirebaseConfig, 
   isFirebaseConfigured, 
   initFirebase 
-} from "./firebaseConfig.js?v=136";
+} from "./firebaseConfig.js?v=137";
 
 // Controladores globales infalibles accesibles en cualquier contexto
 window.closeParishSelectorModal = function() {
@@ -789,7 +789,92 @@ class EarthMonagasApp {
       return;
     }
 
-    // Para Parroquia, Municipio y Estado: El satélite debe permanecer 100% LIMPIO Y DESPEJADO
+    // 3. Nivel Parroquia (Muestra Breadcrumb completo con botón directo de Retorno a Municipio)
+    if (focusLevel === "parroquia" && parish) {
+      if (hud && hudContent) {
+        hud.style.display = "block";
+        hudContent.className = "flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#140e40]/95 border border-sky-500/60 shadow-2xl backdrop-blur-md text-xs flex-wrap justify-center";
+        hudContent.innerHTML = `
+          <button type="button" onclick="window.earthApp?.focusEstado(true)" 
+            class="px-2.5 py-1 rounded-full bg-blue-950/80 hover:bg-blue-900 text-blue-200 hover:text-white font-semibold text-[11px] flex items-center gap-1 border border-blue-500/40 transition active:scale-95 cursor-pointer"
+            title="Volver a ver todo el Estado Monagas">
+            <span>🗺️ Monagas</span>
+          </button>
+          <span class="text-blue-300/60 text-[11px]">›</span>
+          <button type="button" onclick="window.earthApp?.focusMunicipio('${this.selectedMunId}', true)" 
+            class="px-2.5 py-1 rounded-full bg-indigo-900/80 hover:bg-indigo-800 text-indigo-100 hover:text-white font-bold text-[11px] flex items-center gap-1 border border-indigo-400/50 transition active:scale-95 cursor-pointer"
+            title="Volver a ver todo el Municipio ${munNom}">
+            <span>🏛️ Mun. ${munNom}</span>
+          </button>
+          <span class="text-blue-300/60 text-[11px]">›</span>
+          <span class="px-2.5 py-1 rounded-full bg-sky-500/20 text-sky-200 font-extrabold text-[11px] border border-sky-400/50 flex items-center gap-1">
+            <span class="w-2 h-2 rounded-full bg-sky-400 animate-pulse"></span>
+            <span>📍 ${parish.nombre}</span>
+          </span>
+          <div class="h-3 w-px bg-sky-500/30 mx-0.5"></div>
+          <button type="button" onclick="window.earthApp?.focusMunicipio('${this.selectedMunId}', true)" 
+            class="px-3 py-1 rounded-full bg-amber-500/25 hover:bg-amber-500/40 text-amber-300 hover:text-amber-100 font-extrabold text-[11px] flex items-center gap-1.5 border border-amber-500/50 transition active:scale-95 cursor-pointer shadow-md shadow-amber-950/40"
+            title="Regresar a la vista de todo el Municipio ${munNom} entero">
+            <span>↩ Volver a Municipio</span>
+          </button>
+          <button type="button" onclick="window.earthApp?.focusEstado(true)" 
+            class="px-2 py-1 rounded-full bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white font-bold text-[11px] flex items-center gap-1 border border-slate-600 transition active:scale-95 cursor-pointer"
+            title="Restablecer y ver los 13 Municipios de Monagas">
+            <span>↺ Reset</span>
+          </button>
+        `;
+      }
+      return;
+    }
+
+    // 4. Nivel Municipio (Muestra botón de regreso a todo el Estado)
+    if (focusLevel === "municipio") {
+      if (hud && hudContent) {
+        hud.style.display = "block";
+        hudContent.className = "flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#140e40]/95 border border-indigo-500/60 shadow-2xl backdrop-blur-md text-xs flex-wrap justify-center";
+        hudContent.innerHTML = `
+          <button type="button" onclick="window.earthApp?.focusEstado(true)" 
+            class="px-2.5 py-1 rounded-full bg-blue-950/80 hover:bg-blue-900 text-blue-200 hover:text-white font-semibold text-[11px] flex items-center gap-1 border border-blue-500/40 transition active:scale-95 cursor-pointer"
+            title="Volver a ver todo el Estado Monagas">
+            <span>🗺️ Monagas</span>
+          </button>
+          <span class="text-blue-300/60 text-[11px]">›</span>
+          <span class="px-2.5 py-1 rounded-full bg-indigo-500/20 text-indigo-200 font-extrabold text-[11px] border border-indigo-400/50 flex items-center gap-1">
+            <span class="w-2 h-2 rounded-full bg-indigo-400 animate-pulse"></span>
+            <span>🏛️ Municipio ${munNom} (${parishCount} Parroquias)</span>
+          </span>
+          <div class="h-3 w-px bg-indigo-500/30 mx-0.5"></div>
+          <button type="button" onclick="window.earthApp?.focusEstado(true)" 
+            class="px-3 py-1 rounded-full bg-amber-500/25 hover:bg-amber-500/40 text-amber-300 hover:text-amber-100 font-extrabold text-[11px] flex items-center gap-1.5 border border-amber-500/50 transition active:scale-95 cursor-pointer shadow-md shadow-amber-950/40"
+            title="Restablecer y ver los 13 Municipios de Monagas">
+            <span>↺ Ver Todo Monagas</span>
+          </button>
+        `;
+      }
+      return;
+    }
+
+    // 5. Nivel Estado (Vista Global)
+    if (focusLevel === "estado") {
+      if (hud && hudContent) {
+        hud.style.display = "block";
+        hudContent.className = "flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#140e40]/95 border border-amber-500/50 shadow-2xl backdrop-blur-md text-xs flex-wrap justify-center";
+        hudContent.innerHTML = `
+          <span class="font-extrabold text-amber-300 flex items-center gap-1.5 text-[11px]">
+            <span>🗺️ Estado Monagas</span>
+            <span class="text-slate-400 text-[10px] font-medium">• 13 Municipios y 45 Parroquias</span>
+          </span>
+          <div class="h-3 w-px bg-amber-500/30"></div>
+          <button type="button" onclick="window.openParishSelectorGlobal()" 
+            class="px-2.5 py-0.5 rounded-full bg-sky-500/20 hover:bg-sky-500/40 text-sky-200 hover:text-white font-bold text-[10px] border border-sky-500/40 transition active:scale-95 cursor-pointer">
+            <span>🔍 Cambiar Parroquia</span>
+          </button>
+        `;
+      }
+      return;
+    }
+
+    // Respaldo de seguridad
     if (hud) hud.style.display = "none";
     if (btnReturnParish) btnReturnParish.style.display = "none";
   }

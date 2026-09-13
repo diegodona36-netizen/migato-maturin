@@ -19,7 +19,7 @@ export const CATALOGO_MONAGAS = [
         codigo: "MAT-SIM",
         tipo: "Urbana Central",
         centro: [9.7469, -63.1812],
-        zoom: 14,
+        zoom: 12.5,
         sectores: ["Casco Central", "Palo Negro", "Brisas del Orinoco", "La Muralla"],
         limite: [
           [9.7640, -63.1960], [9.7670, -63.1700], [9.7550, -63.1580],
@@ -33,7 +33,7 @@ export const CATALOGO_MONAGAS = [
         codigo: "MAT-GOD",
         tipo: "Urbana Oeste",
         centro: [9.7280, -63.2060],
-        zoom: 14,
+        zoom: 12.5,
         sectores: ["La Puente", "Los Godos 1 y 2", "Morichal", "Fundemos", "Los Guaros"],
         limite: [
           [9.7440, -63.2260], [9.7480, -63.1970], [9.7320, -63.1880],
@@ -47,7 +47,7 @@ export const CATALOGO_MONAGAS = [
         codigo: "MAT-BOQ",
         tipo: "Urbana Norte",
         centro: [9.7880, -63.1900],
-        zoom: 13,
+        zoom: 12.5,
         sectores: ["Tipuro 1 y 2", "Palma Real", "Los Cortijos", "Costo Arriba", "Viboral"],
         limite: [
           [9.8180, -63.2120], [9.8220, -63.1730], [9.7960, -63.1630],
@@ -61,7 +61,7 @@ export const CATALOGO_MONAGAS = [
         codigo: "MAT-COC",
         tipo: "Urbana Este",
         centro: [9.7560, -63.1460],
-        zoom: 14,
+        zoom: 12.5,
         sectores: ["Sabana Grande", "El Silencio", "El Nazareno", "Aeropuerto"],
         limite: [
           [9.7760, -63.1640], [9.7800, -63.1300], [9.7600, -63.1180],
@@ -75,7 +75,7 @@ export const CATALOGO_MONAGAS = [
         codigo: "MAT-STC",
         tipo: "Urbana Suroeste",
         centro: [9.7120, -63.2380],
-        zoom: 13,
+        zoom: 12.5,
         sectores: ["La Gran Victoria", "Santa Cruz Centro", "Zona Industrial"],
         limite: [
           [9.7350, -63.2600], [9.7420, -63.2280], [9.7220, -63.2180],
@@ -89,7 +89,7 @@ export const CATALOGO_MONAGAS = [
         codigo: "MAT-VIC",
         tipo: "Suburbana",
         centro: [9.7280, -63.2850],
-        zoom: 13,
+        zoom: 12.5,
         sectores: ["Pueblo Nuevo", "San Vicente Centro", "Corocito"],
         limite: [
           [9.7520, -63.3080], [9.7550, -63.2720], [9.7280, -63.2650],

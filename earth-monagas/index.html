@@ -61,7 +61,7 @@
   <meta http-equiv="Expires" content="0" />
 
   <!-- Custom Styles -->
-  <link rel="stylesheet" href="css/styles.css?v=136">
+  <link rel="stylesheet" href="css/styles.css?v=137">
 
   <!-- Script de Autenticación Rápida y Control de Acceso Estricto (Exclusivo Regional) -->
   <script src="../js/auth.js"></script>
@@ -401,10 +401,22 @@
         <div class="h-4 w-[1px] bg-[#2d1f85] shrink-0 hidden sm:block"></div>
 
         <!-- Selector Territorial (Parroquia Activa con buen ancho en móvil) -->
-        <button id="btn-open-parish-modal" type="button" onclick="window.openParishSelectorGlobal()" class="px-2.5 py-1.5 rounded-xl bg-[#18114a] hover:bg-[#23176d] border border-sky-400/50 text-white text-xs font-bold flex items-center gap-1.5 transition active:scale-95 cursor-pointer max-w-[240px] sm:max-w-xs shrink min-w-0 shadow-sm" style="pointer-events: auto !important; cursor: pointer !important;" title="Seleccionar Parroquia de Trabajo y Ver Sectores (Clic para abrir panel)">
+        <button id="btn-open-parish-modal" type="button" onclick="window.openParishSelectorGlobal()" class="px-2.5 py-1.5 rounded-xl bg-[#18114a] hover:bg-[#23176d] border border-sky-400/50 text-white text-xs font-bold flex items-center gap-1.5 transition active:scale-95 cursor-pointer max-w-[200px] sm:max-w-xs shrink min-w-0 shadow-sm" style="pointer-events: auto !important; cursor: pointer !important;" title="Seleccionar Parroquia de Trabajo y Ver Sectores (Clic para abrir panel)">
           <i data-lucide="map-pin" class="w-3.5 h-3.5 text-amber-400 shrink-0 pointer-events-none"></i>
           <span id="nav-current-location" class="truncate font-black text-xs text-sky-200 cursor-pointer" onclick="event.stopPropagation(); window.openParishSelectorGlobal()">📍 Seleccionar Parroquia / Municipio ▾</span>
           <i id="nav-arrow-icon" data-lucide="chevron-down" class="w-3 h-3 text-slate-400 shrink-0 pointer-events-none"></i>
+        </button>
+
+        <!-- Botón Rápido: Volver al Municipio Completo -->
+        <button id="btn-quick-back-mun" type="button" onclick="window.earthApp?.focusMunicipio(window.earthApp?.selectedMunId || 'maturin', true)" class="px-2.5 py-1.5 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/40 text-amber-300 hover:text-amber-100 text-xs font-extrabold flex items-center gap-1.5 transition active:scale-95 cursor-pointer shrink-0 shadow-sm" title="Volver a la vista del Municipio completo">
+          <i data-lucide="corner-up-left" class="w-3.5 h-3.5 text-amber-400"></i>
+          <span class="hidden sm:inline">Municipio</span>
+        </button>
+
+        <!-- Botón Rápido: Reset a Todo el Estado Monagas -->
+        <button id="btn-quick-reset-all" type="button" onclick="window.earthApp?.focusEstado(true)" class="p-1.5 sm:px-2.5 sm:py-1.5 rounded-xl bg-[#18114a] hover:bg-[#23176d] border border-slate-600 text-slate-300 hover:text-white text-xs font-bold flex items-center gap-1 transition active:scale-95 cursor-pointer shrink-0 shadow-sm" title="Restablecer vista a todo el Estado Monagas">
+          <i data-lucide="rotate-ccw" class="w-3.5 h-3.5 text-slate-400"></i>
+          <span class="hidden sm:inline">Reset</span>
         </button>
 
         <!-- Elemento oculto de sesión para compatibilidad con scripts existentes -->
@@ -1903,7 +1915,7 @@
   </div>
 
   <!-- SCRIPT -->
-  <script type="module" src="js/app.js?v=136"></script>
+  <script type="module" src="js/app.js?v=137"></script>
   <script>
     if (window.lucide && typeof window.lucide.createIcons === 'function') {
       window.lucide.createIcons();
