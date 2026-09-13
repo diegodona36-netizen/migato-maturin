@@ -3144,13 +3144,14 @@ function configurarEventListeners() {
 
 function initPreferenciasVisuales() {
   try {
-    // 1. Modo Oscuro Suave
+    // 1. Modo Oscuro Suave (Blanco y Azul Gubernamental vs Noche Suave)
     const darkPref = localStorage.getItem('salud_modo_oscuro') === 'true';
     aplicarModoOscuroSuave(darkPref);
 
-    // 2. Modo Letra Grande (40-60+ años)
-    const fontPref = localStorage.getItem('salud_letra_grande') === 'true';
-    aplicarModoLetraGrande(fontPref);
+    // 2. Limpiar residuos de letra grande para mantener tipografía estándar y armónica
+    localStorage.removeItem('salud_letra_grande');
+    document.body.classList.remove('modo-letra-grande');
+    document.documentElement.classList.remove('modo-letra-grande');
   } catch (e) {
     console.warn("Preferencias visuales no cargadas:", e);
   }
@@ -3192,49 +3193,14 @@ function toggleModoOscuroSuave() {
   aplicarModoOscuroSuave(!estaActivo);
 }
 
-function aplicarModoLetraGrande(activar) {
-  const body = document.body;
-  const label = document.getElementById('label-letra-grande');
-  const btn = document.getElementById('btn-toggle-letra-grande');
-
-  if (activar) {
-    body.classList.add('modo-letra-grande');
-    document.documentElement.classList.add('modo-letra-grande');
-    if (label) label.textContent = 'Letra Grande ✓';
-    if (btn) {
-      btn.classList.add('bg-amber-400', 'text-slate-950', 'border-amber-300', 'ring-2', 'ring-amber-300/60');
-      btn.classList.remove('bg-blue-950/90', 'text-amber-300', 'border-amber-400');
-      btn.title = 'Modo Lectura Cómoda ACTIVO (Letras y casillas ampliadas para 40-60+ años). Clic para volver a letra estándar';
-    }
-    localStorage.setItem('salud_letra_grande', 'true');
-  } else {
-    body.classList.remove('modo-letra-grande');
-    document.documentElement.classList.remove('modo-letra-grande');
-    if (label) label.textContent = 'Letra Grande';
-    if (btn) {
-      btn.classList.remove('bg-amber-400', 'text-slate-950', 'border-amber-300', 'ring-2', 'ring-amber-300/60');
-      btn.classList.add('bg-blue-950/90', 'text-amber-300', 'border-amber-400');
-      btn.title = 'Modo Lectura Cómoda: Aumenta el tamaño de la letra y casillas para personas de 40, 50 o 60+ años';
-    }
-    localStorage.setItem('salud_letra_grande', 'false');
-  }
-
-  // Refrescar dimensiones del mapa si existe
-  if (state.mapaGeneral) {
-    setTimeout(() => {
-      try { state.mapaGeneral.invalidateSize(); } catch (e) {}
-    }, 150);
-  }
-  if (state.mapaFormulario) {
-    setTimeout(() => {
-      try { state.mapaFormulario.invalidateSize(); } catch (e) {}
-    }, 150);
-  }
+function aplicarModoLetraGrande() {
+  localStorage.removeItem('salud_letra_grande');
+  document.body.classList.remove('modo-letra-grande');
+  document.documentElement.classList.remove('modo-letra-grande');
 }
 
 function toggleModoLetraGrande() {
-  const estaActivo = document.body.classList.contains('modo-letra-grande');
-  aplicarModoLetraGrande(!estaActivo);
+  aplicarModoLetraGrande();
 }
 
 // ==============================================================
