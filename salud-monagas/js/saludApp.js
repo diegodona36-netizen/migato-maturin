@@ -12,7 +12,7 @@
   const CATALOGO_FALLAS = window.CATALOGO_FALLAS || {};
   const OPCIONES_SOPORTE_VITAL = window.OPCIONES_SOPORTE_VITAL || {};
   const CENTROS_SALUD_INICIALES = window.CENTROS_SALUD_INICIALES || [];
-const STORAGE_KEY = 'migato_salud_centros_v9';
+const STORAGE_KEY = 'migato_salud_centros_v10';
 
 // Delimitación geográfica estricta del Estado Monagas (Caripe al Norte, Orinoco al Sur)
 const BOUNDS_MONAGAS_COORDS = [

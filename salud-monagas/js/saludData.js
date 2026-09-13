@@ -809,8 +809,8 @@ const CENTROS_SALUD_INICIALES = [
     "parroquiaId": "san-simon",
     "parroquia": "San Simón (Casco Central)",
     "sector": "Av. Bicentenario / Casco Urbano",
-    "lat": 9.74143,
-    "lng": -63.20059,
+    "lat": 9.74146,
+    "lng": -63.20064,
     "tipoRed": "hospitalaria",
     "tipoRedLabel": "Red Hospitalaria Especializada (Tipo I, II, III, IV)",
     "clasificacionEspecifica": "Hospital Tipo IV",
@@ -865,7 +865,8 @@ const CENTROS_SALUD_INICIALES = [
       "fecha": "2026-09-10"
     },
     "nivelRiesgo": "amarillo",
-    "precision": "exacta"
+    "precision": "exacta",
+    "fuentePrecision": "Google Maps Oficial (POI Verificado)"
   },
   {
     "id": "hosp-simon-bolivar",
@@ -875,8 +876,8 @@ const CENTROS_SALUD_INICIALES = [
     "parroquiaId": "santa-cruz",
     "parroquia": "Santa Cruz (La Cruz)",
     "sector": "La Cruz / Entrada Principal",
-    "lat": 9.72687,
-    "lng": -63.25384,
+    "lat": 9.72703,
+    "lng": -63.25368,
     "tipoRed": "hospitalaria",
     "tipoRedLabel": "Red Hospitalaria Especializada (Tipo I, II, III, IV)",
     "clasificacionEspecifica": "Hospital Tipo II",
@@ -928,7 +929,8 @@ const CENTROS_SALUD_INICIALES = [
       "fecha": "2026-09-11"
     },
     "nivelRiesgo": "rojo",
-    "precision": "exacta"
+    "precision": "exacta",
+    "fuentePrecision": "Google Maps Oficial (POI Verificado)"
   },
   {
     "id": "hosp-felicia-rondon",
@@ -938,8 +940,8 @@ const CENTROS_SALUD_INICIALES = [
     "parroquiaId": "el-furrial",
     "parroquia": "El Furrial",
     "sector": "El Furrial / Carretera Nacional",
-    "lat": 9.70295,
-    "lng": -63.48398,
+    "lat": 9.68391,
+    "lng": -63.43203,
     "tipoRed": "hospitalaria",
     "tipoRedLabel": "Red Hospitalaria Especializada (Tipo I, II, III, IV)",
     "clasificacionEspecifica": "Hospital Tipo II",
@@ -981,7 +983,8 @@ const CENTROS_SALUD_INICIALES = [
       "fecha": "2026-09-09"
     },
     "nivelRiesgo": "verde",
-    "precision": "exacta"
+    "precision": "exacta",
+    "fuentePrecision": "Google Maps Oficial (POI Verificado)"
   },
   {
     "id": "hosp-serres-las-cocuizas",
@@ -991,8 +994,8 @@ const CENTROS_SALUD_INICIALES = [
     "parroquiaId": "las-cocuizas",
     "parroquia": "Las Cocuizas",
     "sector": "Las Cocuizas / Av. Principal",
-    "lat": 9.76416,
-    "lng": -63.15007,
+    "lat": 9.764,
+    "lng": -63.15001,
     "tipoRed": "hospitalaria",
     "tipoRedLabel": "Red Hospitalaria Especializada (Tipo I, II, III, IV)",
     "clasificacionEspecifica": "Hospital Tipo I",
@@ -1040,7 +1043,8 @@ const CENTROS_SALUD_INICIALES = [
       "fecha": "2026-09-08"
     },
     "nivelRiesgo": "amarillo",
-    "precision": "exacta"
+    "precision": "exacta",
+    "fuentePrecision": "Google Maps Oficial (POI Verificado)"
   },
   {
     "id": "hosp-psiquiatrico-maturin",
@@ -1098,7 +1102,8 @@ const CENTROS_SALUD_INICIALES = [
       "fecha": "2026-09-07"
     },
     "nivelRiesgo": "amarillo",
-    "precision": "exacta"
+    "precision": "exacta",
+    "fuentePrecision": "Google Maps Oficial (POI Verificado)"
   },
   {
     "id": "hosp-punta-de-mata",
@@ -1108,8 +1113,8 @@ const CENTROS_SALUD_INICIALES = [
     "parroquiaId": "punta-de-mata",
     "parroquia": "Punta de Mata",
     "sector": "Punta de Mata / Casco Central",
-    "lat": 9.69359,
-    "lng": -63.62065,
+    "lat": 9.69334,
+    "lng": -63.62276,
     "tipoRed": "hospitalaria",
     "tipoRedLabel": "Red Hospitalaria Especializada (Tipo I, II, III, IV)",
     "clasificacionEspecifica": "Hospital Tipo I",
@@ -1162,7 +1167,8 @@ const CENTROS_SALUD_INICIALES = [
       "fecha": "2026-09-10"
     },
     "nivelRiesgo": "rojo",
-    "precision": "exacta"
+    "precision": "exacta",
+    "fuentePrecision": "Google Maps Oficial (POI Verificado)"
   },
   {
     "id": "hosp-caripito",
@@ -1173,7 +1179,7 @@ const CENTROS_SALUD_INICIALES = [
     "parroquia": "Caripito",
     "sector": "Sector Madariaga / Caripe Viejo",
     "lat": 10.10952,
-    "lng": -63.10116,
+    "lng": -63.10105,
     "tipoRed": "hospitalaria",
     "tipoRedLabel": "Red Hospitalaria Especializada (Tipo I, II, III, IV)",
     "clasificacionEspecifica": "Hospital Tipo I",
@@ -1219,7 +1225,8 @@ const CENTROS_SALUD_INICIALES = [
       "fecha": "2026-09-09"
     },
     "nivelRiesgo": "verde",
-    "precision": "exacta"
+    "precision": "exacta",
+    "fuentePrecision": "Google Maps Oficial (POI Verificado)"
   },
   {
     "id": "hosp-caripe",
@@ -1229,8 +1236,8 @@ const CENTROS_SALUD_INICIALES = [
     "parroquiaId": "caripe-centro",
     "parroquia": "Caripe",
     "sector": "Caripe Centro / El Mirador",
-    "lat": 10.17321,
-    "lng": -63.50057,
+    "lat": 10.16855,
+    "lng": -63.50654,
     "tipoRed": "hospitalaria",
     "tipoRedLabel": "Red Hospitalaria Especializada (Tipo I, II, III, IV)",
     "clasificacionEspecifica": "Hospital Tipo I",
@@ -1277,7 +1284,8 @@ const CENTROS_SALUD_INICIALES = [
       "fecha": "2026-09-08"
     },
     "nivelRiesgo": "verde",
-    "precision": "exacta"
+    "precision": "exacta",
+    "fuentePrecision": "Google Maps Oficial (POI Verificado)"
   },
   {
     "id": "hosp-caicara",
@@ -1287,8 +1295,8 @@ const CENTROS_SALUD_INICIALES = [
     "parroquiaId": "caicara",
     "parroquia": "Caicara (Capital Cedeño)",
     "sector": "Caicara de Maturín Centro",
-    "lat": 9.81567,
-    "lng": -63.60854,
+    "lat": 9.81519,
+    "lng": -63.60887,
     "tipoRed": "hospitalaria",
     "tipoRedLabel": "Red Hospitalaria Especializada (Tipo I, II, III, IV)",
     "clasificacionEspecifica": "Hospital Tipo I",
@@ -1334,7 +1342,8 @@ const CENTROS_SALUD_INICIALES = [
       "fecha": "2026-09-09"
     },
     "nivelRiesgo": "verde",
-    "precision": "exacta"
+    "precision": "exacta",
+    "fuentePrecision": "Google Maps Oficial (POI Verificado)"
   },
   {
     "id": "hosp-san-antonio",
@@ -1344,8 +1353,8 @@ const CENTROS_SALUD_INICIALES = [
     "parroquiaId": "san-antonio",
     "parroquia": "San Antonio de Maturín (Capayacuar)",
     "sector": "San Antonio de Capayacuar",
-    "lat": 10.11514,
-    "lng": -63.72735,
+    "lat": 10.1152,
+    "lng": -63.72761,
     "tipoRed": "hospitalaria",
     "tipoRedLabel": "Red Hospitalaria Especializada (Tipo I, II, III, IV)",
     "clasificacionEspecifica": "Hospital Tipo I",
@@ -1389,7 +1398,8 @@ const CENTROS_SALUD_INICIALES = [
       "fecha": "2026-09-08"
     },
     "nivelRiesgo": "verde",
-    "precision": "exacta"
+    "precision": "exacta",
+    "fuentePrecision": "Google Maps Oficial (POI Verificado)"
   },
   {
     "id": "hosp-quiriquire",
@@ -1399,8 +1409,8 @@ const CENTROS_SALUD_INICIALES = [
     "parroquiaId": "quiriquire",
     "parroquia": "Quiriquire",
     "sector": "Quiriquire Centro",
-    "lat": 9.97817,
-    "lng": -63.21986,
+    "lat": 9.97794,
+    "lng": -63.21819,
     "tipoRed": "hospitalaria",
     "tipoRedLabel": "Red Hospitalaria Especializada (Tipo I, II, III, IV)",
     "clasificacionEspecifica": "Hospital Tipo I",
@@ -1451,7 +1461,8 @@ const CENTROS_SALUD_INICIALES = [
       "fecha": "2026-09-10"
     },
     "nivelRiesgo": "rojo",
-    "precision": "exacta"
+    "precision": "exacta",
+    "fuentePrecision": "Google Maps Oficial (POI Verificado)"
   },
   {
     "id": "hosp-temblador",
@@ -1518,8 +1529,8 @@ const CENTROS_SALUD_INICIALES = [
     "parroquiaId": "barrancas",
     "parroquia": "Barrancas del Orinoco",
     "sector": "Barrancas del Orinoco / Ribera",
-    "lat": 8.70174,
-    "lng": -62.19669,
+    "lat": 8.70164,
+    "lng": -62.19684,
     "tipoRed": "hospitalaria",
     "tipoRedLabel": "Red Hospitalaria Especializada (Tipo I, II, III, IV)",
     "clasificacionEspecifica": "Hospital Tipo I",
@@ -1565,7 +1576,8 @@ const CENTROS_SALUD_INICIALES = [
       "fecha": "2026-09-08"
     },
     "nivelRiesgo": "amarillo",
-    "precision": "exacta"
+    "precision": "exacta",
+    "fuentePrecision": "Google Maps Oficial (POI Verificado)"
   },
   {
     "id": "hosp-aguasay",
@@ -1628,8 +1640,8 @@ const CENTROS_SALUD_INICIALES = [
     "parroquiaId": "santa-barbara-centro",
     "parroquia": "Santa Bárbara",
     "sector": "Santa Bárbara Centro",
-    "lat": 9.60753,
-    "lng": -63.61041,
+    "lat": 9.60993,
+    "lng": -63.60862,
     "tipoRed": "hospitalaria",
     "tipoRedLabel": "Red Hospitalaria Especializada (Tipo I, II, III, IV)",
     "clasificacionEspecifica": "Hospital Tipo I",
@@ -1671,7 +1683,8 @@ const CENTROS_SALUD_INICIALES = [
       "fecha": "2026-09-08"
     },
     "nivelRiesgo": "verde",
-    "precision": "exacta"
+    "precision": "exacta",
+    "fuentePrecision": "Google Maps Oficial (POI Verificado)"
   },
   {
     "id": "hosp-uracoa",
@@ -1741,8 +1754,8 @@ const CENTROS_SALUD_INICIALES = [
     "parroquiaId": "aragua",
     "parroquia": "Aragua de Maturín",
     "sector": "Aragua de Maturín / Calle Bolívar",
-    "lat": 9.9722,
-    "lng": -63.4851,
+    "lat": 9.96803,
+    "lng": -63.48528,
     "tipoRed": "hospitalaria",
     "tipoRedLabel": "Red Hospitalaria Especializada (Tipo I, II, III, IV)",
     "clasificacionEspecifica": "Hospital Tipo I",
@@ -1786,7 +1799,8 @@ const CENTROS_SALUD_INICIALES = [
       "fecha": "2026-09-08"
     },
     "nivelRiesgo": "verde",
-    "precision": "exacta"
+    "precision": "exacta",
+    "fuentePrecision": "Google Maps Oficial (POI Verificado)"
   },
   {
     "id": "cdi-los-godos",
@@ -1848,8 +1862,8 @@ const CENTROS_SALUD_INICIALES = [
     "parroquiaId": "las-cocuizas",
     "parroquia": "Las Cocuizas",
     "sector": "Brisas del Aeropuerto / Av. José Tadeo Monagas",
-    "lat": 9.74561,
-    "lng": -63.14517,
+    "lat": 9.74577,
+    "lng": -63.14523,
     "tipoRed": "comunal",
     "tipoRedLabel": "Red Comunal / Barrio Adentro (CPT, CDI, SRI, CAT)",
     "clasificacionEspecifica": "Centro de Diagnóstico Integral (CDI)",
@@ -1890,7 +1904,8 @@ const CENTROS_SALUD_INICIALES = [
       "fecha": "2026-09-10"
     },
     "nivelRiesgo": "verde",
-    "precision": "exacta"
+    "precision": "exacta",
+    "fuentePrecision": "Google Maps Oficial (POI Verificado)"
   },
   {
     "id": "cdi-23-de-enero",
@@ -1900,8 +1915,8 @@ const CENTROS_SALUD_INICIALES = [
     "parroquiaId": "san-simon",
     "parroquia": "San Simón (Casco Central)",
     "sector": "Sector 23 de Enero / Calle Bolívar",
-    "lat": 9.73991,
-    "lng": -63.18135,
+    "lat": 9.73436,
+    "lng": -63.19117,
     "tipoRed": "comunal",
     "tipoRedLabel": "Red Comunal / Barrio Adentro (CPT, CDI, SRI, CAT)",
     "clasificacionEspecifica": "Centro de Diagnóstico Integral (CDI)",
@@ -1942,7 +1957,8 @@ const CENTROS_SALUD_INICIALES = [
       "fecha": "2026-09-10"
     },
     "nivelRiesgo": "verde",
-    "precision": "exacta"
+    "precision": "exacta",
+    "fuentePrecision": "Google Maps Oficial (POI Verificado)"
   },
   {
     "id": "cdi-boqueron",
@@ -1952,8 +1968,8 @@ const CENTROS_SALUD_INICIALES = [
     "parroquiaId": "boqueron",
     "parroquia": "Boquerón",
     "sector": "Boquerón Centro / Av. Alirio Ugarte Pelayo",
-    "lat": 9.7891,
-    "lng": -63.1895,
+    "lat": 9.77466,
+    "lng": -63.20855,
     "tipoRed": "comunal",
     "tipoRedLabel": "Red Comunal / Barrio Adentro (CPT, CDI, SRI, CAT)",
     "clasificacionEspecifica": "Centro de Diagnóstico Integral (CDI)",
@@ -1994,7 +2010,8 @@ const CENTROS_SALUD_INICIALES = [
       "fecha": "2026-09-10"
     },
     "nivelRiesgo": "verde",
-    "precision": "exacta"
+    "precision": "exacta",
+    "fuentePrecision": "Google Maps Oficial (POI Verificado)"
   },
   {
     "id": "cdi-los-cortijos",
@@ -2004,8 +2021,8 @@ const CENTROS_SALUD_INICIALES = [
     "parroquiaId": "boqueron",
     "parroquia": "Boquerón",
     "sector": "Las Piñas / Los Cortijos",
-    "lat": 9.805,
-    "lng": -63.165,
+    "lat": 9.76405,
+    "lng": -63.14587,
     "tipoRed": "comunal",
     "tipoRedLabel": "Red Comunal / Barrio Adentro (CPT, CDI, SRI, CAT)",
     "clasificacionEspecifica": "Centro de Diagnóstico Integral (CDI)",
@@ -2046,7 +2063,8 @@ const CENTROS_SALUD_INICIALES = [
       "fecha": "2026-09-10"
     },
     "nivelRiesgo": "amarillo",
-    "precision": "sectorial"
+    "precision": "exacta",
+    "fuentePrecision": "Google Maps Oficial (POI Verificado)"
   },
   {
     "id": "cdi-viento-colao",
@@ -2056,8 +2074,8 @@ const CENTROS_SALUD_INICIALES = [
     "parroquiaId": "san-simon",
     "parroquia": "San Simón (Casco Central)",
     "sector": "Sector Viento Colao Sur",
-    "lat": 9.732,
-    "lng": -63.181,
+    "lat": 9.74716,
+    "lng": -63.19401,
     "tipoRed": "comunal",
     "tipoRedLabel": "Red Comunal / Barrio Adentro (CPT, CDI, SRI, CAT)",
     "clasificacionEspecifica": "Centro de Diagnóstico Integral (CDI)",
@@ -2102,7 +2120,8 @@ const CENTROS_SALUD_INICIALES = [
       "fecha": "2026-09-10"
     },
     "nivelRiesgo": "rojo",
-    "precision": "sectorial"
+    "precision": "exacta",
+    "fuentePrecision": "Google Maps Oficial (POI Verificado)"
   },
   {
     "id": "cdi-la-pica",
@@ -2376,8 +2395,8 @@ const CENTROS_SALUD_INICIALES = [
     "parroquiaId": "punta-de-mata",
     "parroquia": "Punta de Mata",
     "sector": "Punta de Mata / Medicatura",
-    "lat": 9.69646,
-    "lng": -63.61156,
+    "lat": 9.6884,
+    "lng": -63.60838,
     "tipoRed": "comunal",
     "tipoRedLabel": "Red Comunal / Barrio Adentro (CPT, CDI, SRI, CAT)",
     "clasificacionEspecifica": "Centro de Diagnóstico Integral (CDI)",
@@ -2418,7 +2437,8 @@ const CENTROS_SALUD_INICIALES = [
       "fecha": "2026-09-10"
     },
     "nivelRiesgo": "amarillo",
-    "precision": "exacta"
+    "precision": "exacta",
+    "fuentePrecision": "Google Maps Oficial (POI Verificado)"
   },
   {
     "id": "cdi-el-tejero",
@@ -2480,8 +2500,8 @@ const CENTROS_SALUD_INICIALES = [
     "parroquiaId": "caripito",
     "parroquia": "Caripito",
     "sector": "Sector Bajo Guarapiche / Las Palmitas",
-    "lat": 10.10915,
-    "lng": -63.09154,
+    "lat": 10.10898,
+    "lng": -63.09157,
     "tipoRed": "comunal",
     "tipoRedLabel": "Red Comunal / Barrio Adentro (CPT, CDI, SRI, CAT)",
     "clasificacionEspecifica": "Centro de Diagnóstico Integral (CDI)",
@@ -2522,7 +2542,8 @@ const CENTROS_SALUD_INICIALES = [
       "fecha": "2026-09-10"
     },
     "nivelRiesgo": "verde",
-    "precision": "exacta"
+    "precision": "exacta",
+    "fuentePrecision": "Google Maps Oficial (POI Verificado)"
   },
   {
     "id": "cdi-caripe",
@@ -2792,8 +2813,8 @@ const CENTROS_SALUD_INICIALES = [
     "parroquiaId": "temblador",
     "parroquia": "Temblador",
     "sector": "Temblador Sur",
-    "lat": 9.025,
-    "lng": -62.715,
+    "lat": 9.00804,
+    "lng": -62.64236,
     "tipoRed": "comunal",
     "tipoRedLabel": "Red Comunal / Barrio Adentro (CPT, CDI, SRI, CAT)",
     "clasificacionEspecifica": "Centro de Diagnóstico Integral (CDI)",
@@ -2834,7 +2855,8 @@ const CENTROS_SALUD_INICIALES = [
       "fecha": "2026-09-10"
     },
     "nivelRiesgo": "amarillo",
-    "precision": "sectorial"
+    "precision": "exacta",
+    "fuentePrecision": "Google Maps Oficial (POI Verificado)"
   },
   {
     "id": "cdi-barrancas",
@@ -2844,8 +2866,8 @@ const CENTROS_SALUD_INICIALES = [
     "parroquiaId": "barrancas",
     "parroquia": "Barrancas",
     "sector": "Barrancas del Orinoco",
-    "lat": 8.69745,
-    "lng": -62.1891,
+    "lat": 8.70297,
+    "lng": -62.20125,
     "tipoRed": "comunal",
     "tipoRedLabel": "Red Comunal / Barrio Adentro (CPT, CDI, SRI, CAT)",
     "clasificacionEspecifica": "Centro de Diagnóstico Integral (CDI)",
@@ -2886,7 +2908,8 @@ const CENTROS_SALUD_INICIALES = [
       "fecha": "2026-09-10"
     },
     "nivelRiesgo": "amarillo",
-    "precision": "exacta"
+    "precision": "exacta",
+    "fuentePrecision": "Google Maps Oficial (POI Verificado)"
   },
   {
     "id": "cdi-aguasay",
@@ -3816,8 +3839,8 @@ const CENTROS_SALUD_INICIALES = [
     "parroquiaId": "alto-de-los-godos",
     "parroquia": "Alto de Los Godos",
     "sector": "Av. José María Vargas / Los Godos",
-    "lat": 9.71751,
-    "lng": -63.20721,
+    "lat": 9.7172,
+    "lng": -63.20736,
     "tipoRed": "ambulatoria",
     "tipoRedLabel": "Red Ambulatoria Especializada (Urbana / Rural)",
     "clasificacionEspecifica": "Amb. Urbano III",
@@ -3854,7 +3877,8 @@ const CENTROS_SALUD_INICIALES = [
       "fecha": "2026-09-10"
     },
     "nivelRiesgo": "verde",
-    "precision": "exacta"
+    "precision": "exacta",
+    "fuentePrecision": "Google Maps Oficial (POI Verificado)"
   },
   {
     "id": "amb-serres-padilla",
@@ -3864,8 +3888,8 @@ const CENTROS_SALUD_INICIALES = [
     "parroquiaId": "las-cocuizas",
     "parroquia": "Las Cocuizas",
     "sector": "Las Cocuizas / Calle 3",
-    "lat": 9.76341,
-    "lng": -63.14465,
+    "lat": 9.76188,
+    "lng": -63.15148,
     "tipoRed": "ambulatoria",
     "tipoRedLabel": "Red Ambulatoria Especializada (Urbana / Rural)",
     "clasificacionEspecifica": "Amb. Urbano II",
@@ -3902,7 +3926,8 @@ const CENTROS_SALUD_INICIALES = [
       "fecha": "2026-09-10"
     },
     "nivelRiesgo": "verde",
-    "precision": "exacta"
+    "precision": "exacta",
+    "fuentePrecision": "Google Maps Oficial (POI Verificado)"
   },
   {
     "id": "amb-sabana-grande",
@@ -3912,8 +3937,8 @@ const CENTROS_SALUD_INICIALES = [
     "parroquiaId": "las-cocuizas",
     "parroquia": "Las Cocuizas",
     "sector": "Sabana Grande / Sector 1",
-    "lat": 9.75447,
-    "lng": -63.1319,
+    "lat": 9.75468,
+    "lng": -63.13199,
     "tipoRed": "ambulatoria",
     "tipoRedLabel": "Red Ambulatoria Especializada (Urbana / Rural)",
     "clasificacionEspecifica": "Amb. Urbano I",
@@ -3952,7 +3977,8 @@ const CENTROS_SALUD_INICIALES = [
       "fecha": "2026-09-10"
     },
     "nivelRiesgo": "amarillo",
-    "precision": "exacta"
+    "precision": "exacta",
+    "fuentePrecision": "Google Maps Oficial (POI Verificado)"
   },
   {
     "id": "amb-19-de-abril",
@@ -4262,8 +4288,8 @@ const CENTROS_SALUD_INICIALES = [
     "parroquiaId": "boqueron",
     "parroquia": "Boquerón",
     "sector": "Costo Arriba",
-    "lat": 9.825,
-    "lng": -63.178,
+    "lat": 9.83168,
+    "lng": -63.1826,
     "tipoRed": "ambulatoria",
     "tipoRedLabel": "Red Ambulatoria Especializada (Urbana / Rural)",
     "clasificacionEspecifica": "Amb. Rural II",
@@ -4304,7 +4330,8 @@ const CENTROS_SALUD_INICIALES = [
       "fecha": "2026-09-10"
     },
     "nivelRiesgo": "amarillo",
-    "precision": "sectorial"
+    "precision": "exacta",
+    "fuentePrecision": "Google Maps Oficial (POI Verificado)"
   },
   {
     "id": "amb-viboral",
@@ -4716,8 +4743,8 @@ const CENTROS_SALUD_INICIALES = [
     "parroquiaId": "guanaguana",
     "parroquia": "Guanaguana",
     "sector": "Guanaguana Centro",
-    "lat": 10.055,
-    "lng": -63.525,
+    "lat": 10.07788,
+    "lng": -63.61044,
     "tipoRed": "ambulatoria",
     "tipoRedLabel": "Red Ambulatoria Especializada (Urbana / Rural)",
     "clasificacionEspecifica": "Amb. Rural II",
@@ -4756,7 +4783,8 @@ const CENTROS_SALUD_INICIALES = [
       "fecha": "2026-09-10"
     },
     "nivelRiesgo": "verde",
-    "precision": "sectorial"
+    "precision": "exacta",
+    "fuentePrecision": "Google Maps Oficial (POI Verificado)"
   },
   {
     "id": "amb-la-toscana",
@@ -4814,8 +4842,8 @@ const CENTROS_SALUD_INICIALES = [
     "parroquiaId": "cachipo",
     "parroquia": "Cachipo",
     "sector": "El Pinto Centro",
-    "lat": 9.915,
-    "lng": -63.235,
+    "lat": 9.91492,
+    "lng": -63.14564,
     "tipoRed": "ambulatoria",
     "tipoRedLabel": "Red Ambulatoria Especializada (Urbana / Rural)",
     "clasificacionEspecifica": "Amb. Rural II",
@@ -4856,7 +4884,8 @@ const CENTROS_SALUD_INICIALES = [
       "fecha": "2026-09-10"
     },
     "nivelRiesgo": "amarillo",
-    "precision": "sectorial"
+    "precision": "exacta",
+    "fuentePrecision": "Google Maps Oficial (POI Verificado)"
   },
   {
     "id": "amb-areo",
@@ -5116,8 +5145,8 @@ const CENTROS_SALUD_INICIALES = [
     "parroquiaId": "chaguaramas",
     "parroquia": "Chaguaramas",
     "sector": "Chaguaramas",
-    "lat": 9.095,
-    "lng": -62.675,
+    "lat": 8.65805,
+    "lng": -62.77748,
     "tipoRed": "ambulatoria",
     "tipoRedLabel": "Red Ambulatoria Especializada (Urbana / Rural)",
     "clasificacionEspecifica": "Amb. Rural II",
@@ -5156,7 +5185,8 @@ const CENTROS_SALUD_INICIALES = [
       "fecha": "2026-09-10"
     },
     "nivelRiesgo": "amarillo",
-    "precision": "sectorial"
+    "precision": "exacta",
+    "fuentePrecision": "Google Maps Oficial (POI Verificado)"
   },
   {
     "id": "amb-tabasca",
