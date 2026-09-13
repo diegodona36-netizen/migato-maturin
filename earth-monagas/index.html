@@ -155,7 +155,7 @@
 
     // Reseteo Total de Fábrica global
     window.resetEarthFullData = function() {
-      if (confirm("¿Desea restaurar de fábrica toda la plataforma MIGATO Earth?\n\nSe limpiarán la memoria local, la caché y se recargarán los datos limpios de producción (v=120).")) {
+      if (confirm("¿Desea restaurar de fábrica toda la plataforma MIGATO Earth?\n\nSe limpiarán la memoria local, la caché y se recargarán los datos limpios de producción (v=148).")) {
         try {
           localStorage.clear();
           sessionStorage.clear();
@@ -171,12 +171,12 @@
           }).catch(function(){});
         }
         setTimeout(function() {
-          window.location.replace(window.location.pathname + '?v=128&u=admin-militancia');
+          window.location.replace(window.location.pathname + '?v=148&u=admin-militancia');
         }, 150);
       }
     };
 
-    // Auto-actualización a la versión más reciente v=132
+    // Auto-actualización a la versión más reciente v=148
     (function() {
       try {
         var p = new URLSearchParams(window.location.search);
@@ -184,7 +184,7 @@
         var isReset = p.get('reset') === '1';
         var paramP = p.get('p') || p.get('parroquia') || p.get('parish');
 
-        if (isReset || !curV || parseInt(curV) < 132) {
+        if (isReset || !curV || parseInt(curV) < 148) {
           if (isReset) {
             try {
               localStorage.removeItem("migato_last_parish");
@@ -193,7 +193,7 @@
             p.delete('reset');
           }
 
-          p.set('v', '132');
+          p.set('v', '148');
           if (!p.get('u')) p.set('u', 'admin-militancia');
           if (paramP) {
             p.set('p', paramP);

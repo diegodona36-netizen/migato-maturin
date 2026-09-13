@@ -11,9 +11,9 @@ import {
   enableIndexedDbPersistence
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-import { CATALOGO_MONAGAS } from "../../earth-monagas/js/catalogoMonagas.js?v=102";
-import { SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "../../earth-monagas/js/geoMonagas.js?v=102";
-import { DEFAULT_SAN_SIMON_SUBPARROQUIAS, DEFAULT_COROZO_SUBPARROQUIAS } from "../../earth-monagas/js/earthStore.js?v=102";
+import { CATALOGO_MONAGAS } from "../../earth-monagas/js/catalogoMonagas.js?v=148";
+import { SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "../../earth-monagas/js/geoMonagas.js?v=148";
+import { DEFAULT_SAN_SIMON_SUBPARROQUIAS, DEFAULT_COROZO_SUBPARROQUIAS } from "../../earth-monagas/js/earthStore.js?v=148";
 import { MONAGAS_DEMO_DATA } from "../../demo-estadisticas/js/demoData.js?v=102";
 
 const FIREBASE_CONFIG = {
