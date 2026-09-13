@@ -294,3 +294,8 @@ svg.leaflet-zoom-animated:focus-visible,
   -webkit-focus-ring-color: transparent !important;
 }
 
+/* Ocultar badge flotante inyectado por auth.js para no obstruir el satélite ni colisionar con la barra de coordenadas */
+#migato-user-badge {
+  display: none !important;
+}
+

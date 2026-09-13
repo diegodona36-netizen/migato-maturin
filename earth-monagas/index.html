@@ -61,7 +61,7 @@
   <meta http-equiv="Expires" content="0" />
 
   <!-- Custom Styles -->
-  <link rel="stylesheet" href="css/styles.css?v=138">
+  <link rel="stylesheet" href="css/styles.css?v=139">
 
   <!-- Script de Autenticación Rápida y Control de Acceso Estricto (Exclusivo Regional) -->
   <script src="../js/auth.js"></script>
@@ -76,6 +76,10 @@
     })();
   </script>
   <style>
+    /* Ocultar el badge flotante inyectado por auth.js que tapaba el satélite y chocaba con la barra inferior */
+    #migato-user-badge {
+      display: none !important;
+    }
     /* Aislamiento sutil para operadores restringidos sin bloquear jamás la navegación administrativa */
     html.isolated-parish-view #btn-session-badge,
     html.isolated-parish-view #admin-module-links {
@@ -811,7 +815,7 @@
     </div>
 
     <div class="flex items-center gap-3 text-[9px] sm:text-[10px] shrink-0">
-      <span id="status-user-role" class="text-sky-400 font-bold hidden sm:inline">Sesión Activa</span>
+      <span id="status-user-role" class="text-amber-300 font-bold hidden sm:inline-flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span>Máxima Autoridad MIGATO</span>
       <span class="hidden sm:inline text-slate-600">|</span>
       <span id="status-eye-alt">Ojo: 8.5 km</span>
     </div>
@@ -1915,7 +1919,7 @@
   </div>
 
   <!-- SCRIPT -->
-  <script type="module" src="js/app.js?v=138"></script>
+  <script type="module" src="js/app.js?v=139"></script>
   <script>
     if (window.lucide && typeof window.lucide.createIcons === 'function') {
       window.lucide.createIcons();
