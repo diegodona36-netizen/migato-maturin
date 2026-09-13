@@ -55,7 +55,9 @@ const state = {
   mascaraActiva: true,
   // Inspector Interactivo Google Maps (Punto seleccionado en tiempo real)
   marcadorInspectorGmaps: null,
-  coordsInspectorGmaps: { lat: 9.7483, lng: -63.1785 }
+  coordsInspectorGmaps: { lat: 9.7483, lng: -63.1785 },
+  // Estilo de mapa de la Ficha Imprimible ('plano' | 'relieve' | 'satelite')
+  estiloMapaFicha: 'plano'
 };
 
 // ==============================================================
@@ -1950,51 +1952,68 @@ function renderFichaImprimible(centro) {
   const html = `
     <div class="ficha-tecnica-salud">
       
-      <!-- CABECERA PRINCIPAL -->
+      <!-- CABECERA INSTITUCIONAL CON LOGO OFICIAL DEL PARTIDO MIGATO -->
       <table class="ficha-table">
         <tr>
-          <td colspan="4" class="ficha-header-title">
-            PRE DIAGNÓSTICO DE INFRAESTRUCTURA
+          <td width="14%" style="text-align: center; vertical-align: middle; padding: 4px 6px; background-color: #ffffff;">
+            <img src="assets/logo-migato.png" alt="Logo MIGATO" style="height: 48px; max-width: 58px; object-fit: contain; margin: 0 auto; display: block;">
           </td>
-        </tr>
-        <tr>
-          <td colspan="2" width="50%">
-            <span class="ficha-label">Estado:</span> <span class="ficha-value">MONAGAS</span>
+          <td width="72%" class="ficha-header-title" style="vertical-align: middle; padding: 4px 8px; border-left: 1.5px solid #000; border-right: 1.5px solid #000; background-color: #f8fafc;">
+            <div style="font-size: 7.5pt; font-weight: 800; letter-spacing: 1px; color: #334155; text-transform: uppercase;">MOVIMIENTO INDEPENDIENTE GANAMOS TODOS • ESTADO MONAGAS</div>
+            <div style="font-size: 11pt; font-weight: 900; letter-spacing: 0.5px; color: #000000; margin: 1px 0;">PRE DIAGNÓSTICO DE INFRAESTRUCTURA SANITARIA</div>
+            <div style="font-size: 7pt; font-weight: 700; color: #475569; letter-spacing: 0.5px;">PLAN INTEGRAL DE SALUD • SISTEMA ASISTENCIAL DE MONAGAS</div>
           </td>
-          <td colspan="2" width="50%">
-            <span class="ficha-label">Área:</span> <span class="ficha-value">SALUD</span>
-          </td>
-        </tr>
-        <tr>
-          <td width="25%">
-            <span class="ficha-label">Municipio:</span> <span class="ficha-select-indicator">▼</span><br>
-            <span class="ficha-value text-xs">${(centro.municipio || '').replace('Municipio ', '')}</span>
-          </td>
-          <td width="25%">
-            <span class="ficha-label">Parroquia:</span> <span class="ficha-select-indicator">▼</span><br>
-            <span class="ficha-value text-xs">${centro.parroquia || ''}</span>
-          </td>
-          <td width="25%">
-            <span class="ficha-label">Sector:</span> <span class="ficha-select-indicator">▼</span><br>
-            <span class="ficha-value text-xs">${centro.sector || 'Casco Central'}</span>
-          </td>
-          <td width="25%">
-            <span class="ficha-label">Nombre del Centro:</span><br>
-            <strong class="ficha-value text-xs">${centro.nombre}</strong>
+          <td width="14%" style="text-align: center; vertical-align: middle; padding: 4px 6px; background-color: #ffffff; font-size: 7pt;">
+            <span style="display: block; font-size: 6pt; color: #64748b; font-weight: 800; text-transform: uppercase;">N° FICHA</span>
+            <span style="font-family: monospace; font-size: 8pt; font-weight: 900; color: #0f172a;">${(centro.id || 'CS-000').toUpperCase()}</span>
           </td>
         </tr>
       </table>
 
-      <!-- MAPA DE UBICACIÓN INTERACTIVO O ESTÁTICO -->
+      <!-- DATOS DE LOCALIZACIÓN POLÍTICO-TERRITORIAL -->
       <table class="ficha-table">
         <tr>
-          <td style="background-color: #f8fafc; text-align: center; font-weight: 800; font-size: 8pt; padding: 2px 0; border-top: none;">
-            MAPA DE UBICACIÓN (Coordenadas: ${(centro.lat || 9.7483).toFixed(5)}, ${(centro.lng || -63.1785).toFixed(5)})
+          <td width="20%">
+            <span class="ficha-label">Estado:</span><br>
+            <strong class="ficha-value text-xs">MONAGAS</strong>
+          </td>
+          <td width="20%">
+            <span class="ficha-label">Municipio:</span><br>
+            <span class="ficha-value text-xs">${(centro.municipio || '').replace('Municipio ', '')}</span>
+          </td>
+          <td width="20%">
+            <span class="ficha-label">Parroquia:</span><br>
+            <span class="ficha-value text-xs">${centro.parroquia || ''}</span>
+          </td>
+          <td width="20%">
+            <span class="ficha-label">Sector:</span><br>
+            <span class="ficha-value text-xs">${centro.sector || 'Casco Central'}</span>
+          </td>
+          <td width="20%">
+            <span class="ficha-label">Área / Módulo:</span><br>
+            <strong class="ficha-value text-xs">SALUD (MOD. 5)</strong>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="5" style="background-color: #f8fafc; padding: 4px 8px;">
+            <span class="ficha-label" style="font-size: 8pt;">Nombre del Centro de Salud:</span>
+            <strong style="font-size: 10pt; color: #000; margin-left: 6px;">${centro.nombre}</strong>
+          </td>
+        </tr>
+      </table>
+
+      <!-- MAPA DE UBICACIÓN (FORMATO PLANO / EDITABLE) -->
+      <table class="ficha-table">
+        <tr>
+          <td style="background-color: #f1f5f9; text-align: center; font-weight: 800; font-size: 7.5pt; padding: 3px 6px; border-top: none;">
+            <span>PLANO DE UBICACIÓN Y ACCESO VIAL</span> 
+            <span style="font-family: monospace; color: #1e293b; margin-left: 8px;">(Coordenadas: ${(centro.lat || 9.7483).toFixed(5)}, ${(centro.lng || -63.1785).toFixed(5)})</span>
+            <span id="ficha-mapa-tipo-label" style="margin-left: 8px; font-size: 6.5pt; padding: 1px 6px; border-radius: 4px; background: #e2e8f0; border: 1px solid #cbd5e1; font-weight: 900;">PLANO CADASTRAL / CALLES</span>
           </td>
         </tr>
         <tr>
           <td style="padding: 0;">
-            <div id="mapa-ficha-print" class="ficha-map-container"></div>
+            <div id="mapa-ficha-print" class="ficha-map-container" style="height: 125px; width: 100%;"></div>
           </td>
         </tr>
       </table>
@@ -2226,9 +2245,17 @@ function renderFichaImprimible(centro) {
   }, 100);
 }
 
-function initMiniMapaFicha(centro) {
+function initMiniMapaFicha(centro, estilo) {
   const container = document.getElementById('mapa-ficha-print');
   if (!container || typeof L === 'undefined') return;
+
+  if (estilo) {
+    state.estiloMapaFicha = estilo;
+  } else {
+    estilo = state.estiloMapaFicha || 'plano';
+  }
+
+  actualizarBotonesEstiloFicha(estilo);
 
   if (state.mapaFichaImpresion) {
     state.mapaFichaImpresion.remove();
@@ -2245,28 +2272,69 @@ function initMiniMapaFicha(centro) {
     const map = L.map('mapa-ficha-print', {
       zoomControl: false,
       attributionControl: false,
-      dragging: false,
+      dragging: true,
       scrollWheelZoom: false,
       doubleClickZoom: false
     }).setView([lat, lng], 16);
 
-    L.tileLayer('https://mt{s}.google.com/vt/lyrs=y&hl=es&gl=VE&x={x}&y={y}&z={z}', {
+    let tileUrl = 'https://mt{s}.google.com/vt/lyrs=m&hl=es&gl=VE&x={x}&y={y}&z={z}'; // Plano limpio por defecto (Calles sin relieve)
+    if (estilo === 'relieve') {
+      tileUrl = 'https://mt{s}.google.com/vt/lyrs=p&hl=es&gl=VE&x={x}&y={y}&z={z}';
+    } else if (estilo === 'satelite') {
+      tileUrl = 'https://mt{s}.google.com/vt/lyrs=y&hl=es&gl=VE&x={x}&y={y}&z={z}';
+    }
+
+    L.tileLayer(tileUrl, {
       subdomains: ['0', '1', '2', '3'],
       maxZoom: 20
     }).addTo(map);
 
+    // Marcador de mira técnica estilo plano arquitectónico / catastral
     const pin = L.divIcon({
       className: 'custom-print-pin',
-      html: '<div style="background:#ef4444; border:2px solid white; border-radius:50%; width:16px; height:16px; box-shadow:0 2px 4px rgba(0,0,0,0.8);"></div>',
-      iconSize: [16, 16],
-      iconAnchor: [8, 8]
+      html: `
+        <div style="position:relative; width:28px; height:28px; display:flex; align-items:center; justify-content:center;">
+          <div style="position:absolute; width:24px; height:24px; border:2px solid #b91c1c; border-radius:50%; background:rgba(239,68,68,0.25);"></div>
+          <div style="position:absolute; width:1.5px; height:28px; background:#b91c1c;"></div>
+          <div style="position:absolute; width:28px; height:1.5px; background:#b91c1c;"></div>
+          <div style="width:8px; height:8px; background:#dc2626; border:2px solid #ffffff; border-radius:50%; box-shadow:0 1px 3px rgba(0,0,0,0.7);"></div>
+        </div>
+      `,
+      iconSize: [28, 28],
+      iconAnchor: [14, 14]
     });
 
     L.marker([lat, lng], { icon: pin }).addTo(map);
     state.mapaFichaImpresion = map;
+
+    const lblEstilo = document.getElementById('ficha-mapa-tipo-label');
+    if (lblEstilo) {
+      lblEstilo.textContent = estilo === 'plano' 
+        ? 'PLANO CADASTRAL / CALLES (SIN RELIEVE)' 
+        : (estilo === 'relieve' ? 'RELIEVE TOPOGRÁFICO' : 'VISTA SATELITAL');
+    }
   } catch (err) {
     console.error('Error inicializando mini-mapa en ficha:', err);
   }
+}
+
+function cambiarEstiloMapaFicha(tipo) {
+  if (!state.centroSeleccionado) return;
+  state.estiloMapaFicha = tipo;
+  initMiniMapaFicha(state.centroSeleccionado, tipo);
+}
+
+function actualizarBotonesEstiloFicha(estiloActivo) {
+  const btnPlano = document.getElementById('btn-ficha-mapa-plano');
+  const btnRelieve = document.getElementById('btn-ficha-mapa-relieve');
+  const btnSat = document.getElementById('btn-ficha-mapa-satelite');
+
+  const btnActive = 'px-2.5 py-1 rounded-lg bg-sky-500 text-slate-950 font-black text-xs transition shadow flex items-center gap-1 active:scale-95';
+  const btnInactive = 'px-2.5 py-1 rounded-lg text-slate-300 hover:text-white font-bold text-xs transition flex items-center gap-1 active:scale-95';
+
+  if (btnPlano) btnPlano.className = (estiloActivo === 'plano') ? btnActive : btnInactive;
+  if (btnRelieve) btnRelieve.className = (estiloActivo === 'relieve') ? btnActive : btnInactive;
+  if (btnSat) btnSat.className = (estiloActivo === 'satelite') ? btnActive : btnInactive;
 }
 
 function cerrarModalFicha() {
@@ -2830,6 +2898,7 @@ window.imprimirFichaActual = () => {
   window.print();
 };
 window.cerrarModalFicha = cerrarModalFicha;
+window.cambiarEstiloMapaFicha = cambiarEstiloMapaFicha;
 window.recentrarMapaMonagas = recentrarMapaMonagas;
 window.toggleMascaraMonagas = toggleMascaraMonagas;
 window.actualizarPuntoDesdeInputs = actualizarPuntoDesdeInputs;

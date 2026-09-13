@@ -38,7 +38,7 @@
   </script>
 
   <!-- Custom Stylesheet & Print Rules -->
-  <link rel="stylesheet" href="css/styles.css?v=166">
+  <link rel="stylesheet" href="css/styles.css?v=167">
 </head>
 <body class="bg-[#0a0620] text-slate-100 min-h-screen flex flex-col antialiased select-none sm:select-auto" style="background: radial-gradient(circle at 50% 15%, #18114a 0%, #0e092e 50%, #080518 100%);">
 
@@ -680,14 +680,14 @@
 
           <!-- Conmutador de Capas Google Maps (Delimitado a Monagas) -->
           <div class="flex items-center gap-1 bg-[#100b33] p-1 rounded-xl border border-[#2d1f85]">
-            <button id="btn-toggle-calles" onclick="window.conmutarCapaMapa('calles')" class="px-2.5 py-1 rounded-lg bg-sky-500 text-slate-950 font-bold text-[11px] transition flex items-center gap-1 shadow" title="Google Maps: Calles y Puntos de Referencia">
-              <span>🗺️ Google Calles</span>
+            <button id="btn-toggle-calles" onclick="window.conmutarCapaMapa('calles')" class="px-2.5 py-1 rounded-lg bg-sky-500 text-slate-950 font-bold text-[11px] transition flex items-center gap-1 shadow" title="Formato Plano: Calles limpias sin relieve">
+              <span>📐 Tipo Plano</span>
+            </button>
+            <button id="btn-toggle-terreno" onclick="window.conmutarCapaMapa('terreno')" class="px-2.5 py-1 rounded-lg text-slate-300 hover:text-white font-medium text-[11px] transition flex items-center gap-1" title="Con Relieve: Mapa topográfico y elevación">
+              <span>⛰️ Con Relieve</span>
             </button>
             <button id="btn-toggle-satelite" onclick="window.conmutarCapaMapa('satelite')" class="px-2.5 py-1 rounded-lg text-slate-300 hover:text-white font-medium text-[11px] transition flex items-center gap-1" title="Google Maps: Satélite con Etiquetas">
-              <span>🛰️ Google Satélite</span>
-            </button>
-            <button id="btn-toggle-terreno" onclick="window.conmutarCapaMapa('terreno')" class="px-2.5 py-1 rounded-lg text-slate-300 hover:text-white font-medium text-[11px] transition flex items-center gap-1" title="Google Maps: Terreno y Elevación">
-              <span>⛰️ Terreno</span>
+              <span>🛰️ Satélite</span>
             </button>
             <button id="btn-toggle-mascara" onclick="window.toggleMascaraMonagas()" class="px-2.5 py-1 rounded-lg bg-sky-950 text-sky-300 border border-sky-600/50 font-bold text-[11px] transition flex items-center gap-1" title="Activar/Desactivar Velo Oscuro fuera de Monagas">
               <span>🛡️ Velo Monagas</span>
@@ -1023,13 +1023,31 @@
   <div id="printable-sheet-modal" class="hidden fixed inset-0 z-[99999] bg-black/90 backdrop-blur-md overflow-y-auto p-2 sm:p-6 flex flex-col items-center" style="z-index: 99999;">
     
     <!-- BARRA DE ACCIÓN NO-PRINT -->
-    <div class="no-print max-w-[790px] w-full bg-[#18114a] border border-[#2d1f85] p-3 rounded-2xl flex items-center justify-between mb-4 shadow-2xl">
+    <div class="no-print max-w-[790px] w-full bg-[#18114a] border border-[#2d1f85] p-2.5 sm:p-3 rounded-2xl flex flex-wrap items-center justify-between gap-2.5 mb-4 shadow-2xl">
       <div class="flex items-center gap-2">
-        <span class="w-3 h-3 rounded-full bg-emerald-400"></span>
-        <strong class="text-xs font-bold text-white">Previsualización de Ficha Oficial 1:1</strong>
+        <img src="assets/logo-migato.png" alt="MIGATO" class="w-7 h-7 object-contain rounded-lg bg-white p-0.5 shadow">
+        <div>
+          <strong class="text-xs font-bold text-white block leading-tight">Previsualización de Ficha Oficial 1:1</strong>
+          <span class="text-[10px] text-sky-300/80">Movimiento Independiente Ganamos Todos • Monagas</span>
+        </div>
       </div>
+
+      <!-- SELECTOR DE FORMATO DE MAPA PARA LA FICHA -->
+      <div class="flex items-center gap-1 bg-[#0d072b] p-1 rounded-xl border border-[#2d1f85]">
+        <span class="text-[10px] text-slate-400 font-bold px-1.5 hidden sm:inline">Mapa:</span>
+        <button id="btn-ficha-mapa-plano" type="button" onclick="window.cambiarEstiloMapaFicha('plano')" class="px-2.5 py-1 rounded-lg bg-sky-500 text-slate-950 font-black text-xs transition shadow flex items-center gap-1 active:scale-95" title="Formato Plano: Limpio, sin relieve ni fotos, ideal para imprimir en papel">
+          <span>📐 Tipo Plano</span>
+        </button>
+        <button id="btn-ficha-mapa-relieve" type="button" onclick="window.cambiarEstiloMapaFicha('relieve')" class="px-2.5 py-1 rounded-lg text-slate-300 hover:text-white font-bold text-xs transition flex items-center gap-1 active:scale-95" title="Con Relieve: Mapa topográfico y elevación">
+          <span>⛰️ Con Relieve</span>
+        </button>
+        <button id="btn-ficha-mapa-satelite" type="button" onclick="window.cambiarEstiloMapaFicha('satelite')" class="px-2.5 py-1 rounded-lg text-slate-300 hover:text-white font-bold text-xs transition flex items-center gap-1 active:scale-95" title="Satélite: Fotografía aérea de alta resolución">
+          <span>🛰️ Satélite</span>
+        </button>
+      </div>
+
       <div class="flex items-center gap-2">
-        <button onclick="window.imprimirFichaActual()" class="px-4 py-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-[#050814] font-black text-xs transition flex items-center gap-1.5 shadow">
+        <button onclick="window.imprimirFichaActual()" class="px-3.5 py-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-[#050814] font-black text-xs transition flex items-center gap-1.5 shadow active:scale-95">
           <i data-lucide="printer" class="w-4 h-4"></i>
           <span>Imprimir Ficha (PDF / Papel)</span>
         </button>
@@ -1123,10 +1141,10 @@
   </div>
 
   <!-- Delimitación Geográfica Oficial del Estado Monagas (INE / IGVSB) -->
-  <script src="js/geoMonagasLimits.js?v=166"></script>
+  <script src="js/geoMonagasLimits.js?v=167"></script>
   <!-- Scripts de Datos y Lógica (Carga universal estándar) -->
-  <script src="js/saludData.js?v=166"></script>
-  <script src="js/saludApp.js?v=166"></script>
+  <script src="js/saludData.js?v=167"></script>
+  <script src="js/saludApp.js?v=167"></script>
 
 </body>
 </html>
