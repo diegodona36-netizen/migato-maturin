@@ -646,8 +646,8 @@
             <label class="flex items-center gap-2 cursor-pointer truncate">
               <input type="checkbox" id="chk-layer-l1" class="w-4 h-4 rounded bg-[#0e092e] border-[#2d1f85] text-amber-500 focus:ring-0 cursor-pointer">
               <span class="w-2.5 h-2.5 rounded-full bg-amber-400 shrink-0"></span>
-              <div class="truncate">
-                <span class="text-xs font-bold text-white block truncate">Nivel 1: Estado Monagas</span>
+              <div class="truncate cursor-pointer group" onclick="event.preventDefault(); window.earthApp?.mapEngine?.focusHierarchicalLayer('l1')" title="Clic para hacer zoom a Estado Monagas">
+                <span class="text-xs font-bold text-white group-hover:text-amber-300 block truncate transition">Nivel 1: Estado Monagas</span>
                 <span class="text-[10px] text-slate-400">Oficial INE • Macro-Límite</span>
               </div>
             </label>
@@ -661,8 +661,8 @@
             <label class="flex items-center gap-2 cursor-pointer truncate">
               <input type="checkbox" id="chk-layer-l2" class="w-4 h-4 rounded bg-[#0e092e] border-[#2d1f85] text-sky-500 focus:ring-0 cursor-pointer">
               <span class="w-2.5 h-2.5 rounded-full bg-sky-400 shrink-0"></span>
-              <div class="truncate">
-                <span class="text-xs font-bold text-white block truncate">Nivel 2: 13 Municipios</span>
+              <div class="truncate cursor-pointer group" onclick="event.preventDefault(); window.earthApp?.mapEngine?.focusHierarchicalLayer('l2')" title="Clic para hacer zoom a Municipios">
+                <span class="text-xs font-bold text-white group-hover:text-sky-300 block truncate transition">Nivel 2: 13 Municipios</span>
                 <span class="text-[10px] text-slate-400">Oficial INE • Polígonos Cantonales</span>
               </div>
             </label>
@@ -676,8 +676,8 @@
             <label class="flex items-center gap-2 cursor-pointer truncate">
               <input type="checkbox" id="chk-layer-l3" class="w-4 h-4 rounded bg-[#0e092e] border-[#2d1f85] text-emerald-500 focus:ring-0 cursor-pointer">
               <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 shrink-0"></span>
-              <div class="truncate">
-                <span class="text-xs font-bold text-white block truncate">Nivel 3: 44 Parroquias</span>
+              <div class="truncate cursor-pointer group" onclick="event.preventDefault(); window.earthApp?.mapEngine?.focusHierarchicalLayer('l3')" title="Clic para hacer zoom a Parroquias">
+                <span class="text-xs font-bold text-white group-hover:text-emerald-300 block truncate transition">Nivel 3: 44 Parroquias</span>
                 <span class="text-[10px] text-slate-400">Oficial INE 2021 • 11 de Maturín</span>
               </div>
             </label>
@@ -691,8 +691,8 @@
             <label class="flex items-center gap-2 cursor-pointer truncate">
               <input type="checkbox" id="chk-layer-l4" checked class="w-4 h-4 rounded bg-[#0e092e] border-[#2d1f85] text-purple-500 focus:ring-0 cursor-pointer">
               <span class="w-2.5 h-2.5 rounded-full bg-purple-400 shrink-0"></span>
-              <div class="truncate">
-                <span class="text-xs font-black text-purple-300 block truncate">Nivel 4: Sub-Parroquias (Ejes)</span>
+              <div class="truncate cursor-pointer group" onclick="event.preventDefault(); window.earthApp?.mapEngine?.focusHierarchicalLayer('l4')" title="Clic para hacer zoom a Ejes Territoriales">
+                <span class="text-xs font-black text-purple-300 group-hover:text-purple-200 block truncate transition">Nivel 4: Sub-Parroquias (Ejes)</span>
                 <span class="text-[10px] text-slate-400">Ejes y circuitos territoriales</span>
               </div>
             </label>
@@ -1435,7 +1435,7 @@
         <div class="flex flex-col md:flex-row gap-3 sm:gap-4 h-full min-h-0 flex-1 overflow-hidden">
           <!-- Pestaña Rápida de Municipios en Móvil (< md:) -->
           <div class="md:hidden flex items-center gap-1.5 overflow-x-auto no-scrollbar py-1 border-b border-[#2d1f85]/60 pb-2 shrink-0">
-            <button type="button" onclick="window.setTerritoryModalMunGlobal('maturin')" class="px-3 py-1.5 rounded-xl text-xs font-bold transition shrink-0 cursor-pointer flex items-center gap-1.5 bg-amber-500 text-slate-950 font-black shadow-md"><span>🏛️ Maturín</span><span class="text-[10px] font-mono opacity-80 font-normal">(10)</span></button>
+            <button type="button" onclick="window.setTerritoryModalMunGlobal('maturin')" class="px-3 py-1.5 rounded-xl text-xs font-bold transition shrink-0 cursor-pointer flex items-center gap-1.5 bg-amber-500 text-slate-950 font-black shadow-md"><span>🏛️ Maturín</span><span class="text-[10px] font-mono opacity-80 font-normal">(11)</span></button>
             <button type="button" onclick="window.setTerritoryModalMunGlobal('piar')" class="px-3 py-1.5 rounded-xl text-xs font-bold transition shrink-0 cursor-pointer flex items-center gap-1.5 bg-[#140e40] text-slate-300 hover:text-white border border-[#2d1f85]"><span>🏛️ Piar</span><span class="text-[10px] font-mono opacity-80 font-normal">(7)</span></button>
             <button type="button" onclick="window.setTerritoryModalMunGlobal('caripe')" class="px-3 py-1.5 rounded-xl text-xs font-bold transition shrink-0 cursor-pointer flex items-center gap-1.5 bg-[#140e40] text-slate-300 hover:text-white border border-[#2d1f85]"><span>🏛️ Caripe</span><span class="text-[10px] font-mono opacity-80 font-normal">(6)</span></button>
             <button type="button" onclick="window.setTerritoryModalMunGlobal('cedeno')" class="px-3 py-1.5 rounded-xl text-xs font-bold transition shrink-0 cursor-pointer flex items-center gap-1.5 bg-[#140e40] text-slate-300 hover:text-white border border-[#2d1f85]"><span>🏛️ Cedeño</span><span class="text-[10px] font-mono opacity-80 font-normal">(4)</span></button>
@@ -1459,7 +1459,7 @@
             <div class="space-y-1 pt-1">
               <button type="button" onclick="window.setTerritoryModalMunGlobal('maturin')" class="w-full text-left p-2.5 rounded-xl transition flex items-center justify-between gap-2 cursor-pointer group bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 font-black shadow-md shadow-amber-500/20">
                 <div class="flex items-center gap-2 truncate min-w-0"><span class="text-sm shrink-0">🏛️</span><span class="text-xs truncate font-bold">Maturín</span></div>
-                <span class="text-[10px] font-mono px-2 py-0.5 rounded-md shrink-0 bg-slate-950/20 text-slate-950 font-black">10</span>
+                <span class="text-[10px] font-mono px-2 py-0.5 rounded-md shrink-0 bg-slate-950/20 text-slate-950 font-black">11</span>
               </button>
               <button type="button" onclick="window.setTerritoryModalMunGlobal('piar')" class="w-full text-left p-2.5 rounded-xl transition flex items-center justify-between gap-2 cursor-pointer group bg-[#140e40] hover:bg-[#23176d] text-slate-300 hover:text-white border border-[#2d1f85]">
                 <div class="flex items-center gap-2 truncate min-w-0"><span class="text-sm shrink-0">🏛️</span><span class="text-xs truncate font-bold">Piar</span></div>
@@ -1519,7 +1519,7 @@
                 <div class="flex items-center gap-2">
                   <span class="text-base sm:text-lg">🏛️</span>
                   <h4 class="text-sm sm:text-base font-black text-white truncate">Municipio Maturín</h4>
-                  <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-sky-950 text-sky-300 border border-sky-400/40 font-bold shrink-0">10 Parroquias</span>
+                  <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-sky-950 text-sky-300 border border-sky-400/40 font-bold shrink-0">11 Parroquias</span>
                 </div>
                 <p class="text-[11px] text-slate-400 truncate mt-0.5">Capital: <strong class="text-slate-200">Maturín</strong> • Estado Monagas</p>
               </div>
@@ -1539,10 +1539,17 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
               <div onclick="window.selectParishGlobal('maturin', 'san-simon')" class="p-3.5 rounded-xl border transition-all duration-150 cursor-pointer flex flex-col justify-between gap-2.5 shadow-sm group hover:scale-[1.01] bg-[#140e40] hover:bg-[#20155c] border-[#2d1f85] hover:border-sky-400">
                 <div class="flex items-start justify-between gap-2">
-                  <div class="truncate min-w-0"><div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full shrink-0 bg-sky-400"></span><h5 class="text-xs sm:text-sm font-black text-white group-hover:text-sky-300 truncate">San Simón</h5></div><span class="text-[10px] text-slate-400 block mt-0.5">Urbana Central</span></div>
+                  <div class="truncate min-w-0"><div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full shrink-0 bg-sky-400"></span><h5 class="text-xs sm:text-sm font-black text-white group-hover:text-sky-300 truncate">San Simón (Casco Central)</h5></div><span class="text-[10px] text-slate-400 block mt-0.5">Urbana Central</span></div>
                   <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-[#0e092e] text-slate-400 border border-[#2d1f85] shrink-0 font-medium">4 sect.</span>
                 </div>
                 <div class="flex items-center justify-between pt-2 border-t border-[#2d1f85]/50 text-xs"><span class="text-[10px] font-mono text-slate-400">📍 4 sectores mapeados</span><span class="text-xs font-bold text-sky-400 group-hover:text-white flex items-center gap-1 group-hover:translate-x-1 transition-transform">Entrar al Mapa ➔</span></div>
+              </div>
+              <div onclick="window.selectParishGlobal('maturin', 'san-simon-sur')" class="p-3.5 rounded-xl border transition-all duration-150 cursor-pointer flex flex-col justify-between gap-2.5 shadow-sm group hover:scale-[1.01] bg-[#140e40] hover:bg-[#20155c] border-[#2d1f85] hover:border-amber-400">
+                <div class="flex items-start justify-between gap-2">
+                  <div class="truncate min-w-0"><div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full shrink-0 bg-amber-400"></span><h5 class="text-xs sm:text-sm font-black text-white group-hover:text-amber-300 truncate">San Simón Sur</h5></div><span class="text-[10px] text-slate-400 block mt-0.5">Rural y Sabana Sur</span></div>
+                  <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-[#0e092e] text-slate-400 border border-[#2d1f85] shrink-0 font-medium">5 sect.</span>
+                </div>
+                <div class="flex items-center justify-between pt-2 border-t border-[#2d1f85]/50 text-xs"><span class="text-[10px] font-mono text-slate-400">📍 5 sectores mapeados</span><span class="text-xs font-bold text-amber-400 group-hover:text-white flex items-center gap-1 group-hover:translate-x-1 transition-transform">Entrar al Mapa ➔</span></div>
               </div>
               <div onclick="window.selectParishGlobal('maturin', 'alto-de-los-godos')" class="p-3.5 rounded-xl border transition-all duration-150 cursor-pointer flex flex-col justify-between gap-2.5 shadow-sm group hover:scale-[1.01] bg-[#140e40] hover:bg-[#20155c] border-[#2d1f85] hover:border-sky-400">
                 <div class="flex items-start justify-between gap-2">

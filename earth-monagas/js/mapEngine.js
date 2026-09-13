@@ -240,33 +240,82 @@ export class EarthMapEngine {
       }
     });
 
-    // 2. Capa L2: 13 Municipios (Oficial INE) - Capa puramente visual e informativa
+    // 2. Capa L2: 13 Municipios (Oficial INE) - Clic para zoom directo
     this.layerL2_Municipios = L.geoJSON(GEO_MUNICIPIOS_OFICIAL, {
       renderer: this.canvasRenderer,
-      interactive: false,
+      interactive: true,
       style: (feature) => ({
-        color: feature.properties.color || "#38bdf8",
+        color: feature.properties?.color || "#38bdf8",
         weight: 2,
         opacity: 0.9,
-        fillColor: feature.properties.color || "#38bdf8",
-        fillOpacity: 0.12,
-        interactive: false
-      })
+        fillColor: feature.properties?.color || "#38bdf8",
+        fillOpacity: 0.12
+      }),
+      onEachFeature: (feature, layer) => {
+        const munId = feature.properties?.id;
+        const munNom = feature.properties?.nombre || "Municipio";
+        layer.on({
+          mouseover: () => {
+            layer.setStyle({ weight: 3.5, color: "#38bdf8", fillOpacity: 0.35 });
+          },
+          mouseout: () => {
+            layer.setStyle({ weight: 2, color: feature.properties?.color || "#38bdf8", fillOpacity: 0.12 });
+          },
+          click: (e) => {
+            L.DomEvent.stopPropagation(e);
+            if (window.earthApp?.focusMunicipio) {
+              window.earthApp.focusMunicipio(munId, true);
+            }
+          }
+        });
+        layer.bindTooltip(`
+          <div style="font-family:system-ui;font-size:12px;color:#ffffff;line-height:1.3;padding:4px 8px;">
+            <div style="font-weight:800;color:#38bdf8;">🏛️ Municipio ${munNom}</div>
+            <div style="font-size:10px;color:#cbd5e1;">Haz clic para hacer zoom y ver parroquias</div>
+          </div>
+        `, { sticky: true, className: "earth-tooltip" });
+      }
     });
 
-    // 3. Capa L3: 44 Parroquias Oficiales (INE 2021) - Visualización limpia sin interacción táctil invasiva
+    // 3. Capa L3: 44 Parroquias Oficiales (INE) - Clic para zoom directo
     this.layerL3_Parroquias = L.geoJSON(GEO_PARROQUIAS_OFICIAL, {
       renderer: this.canvasRenderer,
-      interactive: false,
+      interactive: true,
       style: (feature) => ({
         color: "#ffffff",
         weight: 1.5,
         opacity: 0.85,
-        fillColor: feature.properties.color || "#10b981",
+        fillColor: feature.properties?.color || "#10b981",
         fillOpacity: 0.14,
-        dashArray: "5, 4",
-        interactive: false
-      })
+        dashArray: "5, 4"
+      }),
+      onEachFeature: (feature, layer) => {
+        const pProps = feature.properties || {};
+        const pName = pProps.nombre || "Parroquia";
+        const pId = pProps.id;
+        const munId = String(pProps.municipioId || pProps.ADM2_ES || "maturin").toLowerCase().replace(/_/g, "-").trim();
+        layer.on({
+          mouseover: () => {
+            layer.setStyle({ weight: 3, color: "#facc15", fillOpacity: 0.38 });
+          },
+          mouseout: () => {
+            layer.setStyle({ weight: 1.5, color: "#ffffff", fillOpacity: 0.14 });
+          },
+          click: (e) => {
+            L.DomEvent.stopPropagation(e);
+            if (window.earthApp?.selectParish) {
+              const resolvedParishId = (typeof PARISH_ALIAS_MAP !== "undefined" && PARISH_ALIAS_MAP[pId]) ? PARISH_ALIAS_MAP[pId] : pId;
+              window.earthApp.selectParish(munId, resolvedParishId, true);
+            }
+          }
+        });
+        layer.bindTooltip(`
+          <div style="font-family:system-ui;font-size:12px;color:#ffffff;line-height:1.3;padding:4px 8px;">
+            <div style="font-weight:800;color:#10b981;">📍 Parroquia ${pName}</div>
+            <div style="font-size:10px;color:#cbd5e1;">Haz clic para hacer zoom y entrar</div>
+          </div>
+        `, { sticky: true, className: "earth-tooltip" });
+      }
     });
 
     // 4. Capa L4: Sub-Parroquias / Ejes (Dinámica, según parroquia activa)

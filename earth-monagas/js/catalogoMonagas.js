@@ -15,7 +15,7 @@ export const CATALOGO_MONAGAS = [
     parroquias: [
       {
         id: "san-simon",
-        nombre: "San Simón",
+        nombre: "San Simón (Casco Central)",
         codigo: "MAT-SIM",
         tipo: "Urbana Central",
         centro: [9.7469, -63.1812],
@@ -146,6 +146,18 @@ export const CATALOGO_MONAGAS = [
         limite: [
           [9.7000, -63.2450], [9.7050, -63.1950], [9.6550, -63.1850],
           [9.6450, -63.2350], [9.7000, -63.2450]
+        ]
+      },
+      {
+        id: "san-simon-sur",
+        nombre: "San Simón Sur",
+        codigo: "MAT-SUR",
+        tipo: "Rural y Sabana Sur",
+        centro: [9.3636, -62.8426],
+        zoom: 11,
+        sectores: ["Santa Inés", "La Orquídea del Sur", "Amana del Tamarindo", "Morichal", "El Rincón"],
+        limite: [
+          [9.9390, -63.4975], [9.9390, -62.2909], [8.7419, -62.2909], [8.7419, -63.4975], [9.9390, -63.4975]
         ]
       }
     ]
@@ -639,7 +651,7 @@ const OFICIAL_ALIASES = {
   "caripito": "bolivar",
   "aguasay-centro": "aguasay",
   "uracoa-centro": "uracoa",
-  "san-simon": "capital-maturin"
+  "san-simon-sur": "capital-maturin"
 };
 
 // Mapa bidireccional exhaustivo para resolución infalible
@@ -658,7 +670,9 @@ export const PARISH_ALIAS_MAP = {
   "bolivar": "caripito",
   "aguasay": "aguasay-centro",
   "uracoa": "uracoa-centro",
-  "capital-maturin": "san-simon"
+  "capital-maturin": "san-simon-sur",
+  "san-simon-sur": "capital-maturin",
+  "san-simon": "san-simon"
 };
 
 export function resolveParishId(id) {

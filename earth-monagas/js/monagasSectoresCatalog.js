@@ -3265,6 +3265,83 @@ export const MONAGAS_TERRITORIO_COMPLETO = [
             ]
           }
         ]
+      },
+      {
+        "id": "san-simon-sur",
+        "nombre": "San Simón Sur",
+        "tipo": "Rural y Sabana Sur",
+        "centro": [
+          9.3636,
+          -62.8426
+        ],
+        "subparroquias": [
+          {
+            "id": "sub-sur-santaines",
+            "parroquiaId": "san-simon-sur",
+            "nombre": "Eje 1 • Santa Inés - La Orquídea",
+            "codigo": "EJE-SUR-01",
+            "colorBorde": "#f59e0b",
+            "anchoBorde": 2.5,
+            "colorRelleno": "#d97706",
+            "opacidad": 0.2,
+            "vertices": [
+              [9.7390, -63.1850],
+              [9.7420, -63.1650],
+              [9.7280, -63.1650],
+              [9.7250, -63.1850],
+              [9.7390, -63.1850]
+            ],
+            "visible": true,
+            "sectores": [
+              {
+                "id": "POL-SUR-001",
+                "subParroquiaId": "sub-sur-santaines",
+                "nombre": "Santa Inés I y II",
+                "tipo": "Sector Vecinal",
+                "centro": [9.7379, -63.1765],
+                "centroVotacion": "Casa De Misiones Santa Ines Ii",
+                "casas": 380,
+                "habitantes": 1250,
+                "votantes": 890,
+                "vertices": [
+                  [9.7400, -63.1800],
+                  [9.7410, -63.1730],
+                  [9.7350, -63.1730],
+                  [9.7340, -63.1800],
+                  [9.7400, -63.1800]
+                ],
+                "colorBorde": "#38bdf8",
+                "anchoBorde": 2,
+                "colorRelleno": "#0284c7",
+                "opacidad": 0.32,
+                "visible": true
+              },
+              {
+                "id": "POL-SUR-002",
+                "subParroquiaId": "sub-sur-santaines",
+                "nombre": "La Orquídea del Sur",
+                "tipo": "Sector Vecinal",
+                "centro": [9.7446, -63.1697],
+                "centroVotacion": "Centro De Votacion La Orquidea Del Sur",
+                "casas": 290,
+                "habitantes": 980,
+                "votantes": 710,
+                "vertices": [
+                  [9.7460, -63.1720],
+                  [9.7470, -63.1670],
+                  [9.7420, -63.1670],
+                  [9.7410, -63.1720],
+                  [9.7460, -63.1720]
+                ],
+                "colorBorde": "#38bdf8",
+                "anchoBorde": 2,
+                "colorRelleno": "#0284c7",
+                "opacidad": 0.32,
+                "visible": true
+              }
+            ]
+          }
+        ]
       }
     ]
   },
