@@ -3,13 +3,15 @@
  * Carga directa y universal para compatibilidad total en navegadores y móviles.
  */
 
-const CATALOGO_TERRITORIAL = window.CATALOGO_TERRITORIAL || [];
-const CATALOGO_TIPOS_ESTABLECIMIENTO = window.CATALOGO_TIPOS_ESTABLECIMIENTO || [];
-const CATALOGO_AREAS_SERVICIOS = window.CATALOGO_AREAS_SERVICIOS || [];
-const CATALOGO_FALLAS = window.CATALOGO_FALLAS || {};
-const OPCIONES_SOPORTE_VITAL = window.OPCIONES_SOPORTE_VITAL || {};
-const CENTROS_SALUD_INICIALES = window.CENTROS_SALUD_INICIALES || [];
+(function(window) {
+  'use strict';
 
+  const CATALOGO_TERRITORIAL = window.CATALOGO_TERRITORIAL || [];
+  const CATALOGO_TIPOS_ESTABLECIMIENTO = window.CATALOGO_TIPOS_ESTABLECIMIENTO || [];
+  const CATALOGO_AREAS_SERVICIOS = window.CATALOGO_AREAS_SERVICIOS || [];
+  const CATALOGO_FALLAS = window.CATALOGO_FALLAS || {};
+  const OPCIONES_SOPORTE_VITAL = window.OPCIONES_SOPORTE_VITAL || {};
+  const CENTROS_SALUD_INICIALES = window.CENTROS_SALUD_INICIALES || [];
 const STORAGE_KEY = 'migato_salud_centros_v1';
 
 // Estado global de la aplicación
@@ -33,16 +35,25 @@ const state = {
 // ==============================================================
 
 function inicializarDatos() {
+  const centrosBase = (window.CENTROS_SALUD_INICIALES && window.CENTROS_SALUD_INICIALES.length > 0)
+    ? window.CENTROS_SALUD_INICIALES
+    : (CENTROS_SALUD_INICIALES || []);
+
   const guardados = localStorage.getItem(STORAGE_KEY);
   if (guardados) {
     try {
-      state.centros = JSON.parse(guardados);
+      const parsed = JSON.parse(guardados);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        state.centros = parsed;
+      } else {
+        state.centros = [...centrosBase];
+      }
     } catch (e) {
       console.error('Error al parsear centros guardados, usando iniciales', e);
-      state.centros = [...CENTROS_SALUD_INICIALES];
+      state.centros = [...centrosBase];
     }
   } else {
-    state.centros = [...CENTROS_SALUD_INICIALES];
+    state.centros = [...centrosBase];
     guardarEnStorage();
   }
 }
@@ -275,16 +286,20 @@ function poblarMunicipios() {
   const selectMun = document.getElementById('form-municipio');
   const filtroMun = document.getElementById('filtro-municipio');
 
+  const catTerritorial = (window.CATALOGO_TERRITORIAL && window.CATALOGO_TERRITORIAL.length > 0)
+    ? window.CATALOGO_TERRITORIAL
+    : (CATALOGO_TERRITORIAL || []);
+
   if (selectMun) {
     selectMun.innerHTML = '<option value="">-- Seleccione Municipio --</option>';
-    CATALOGO_TERRITORIAL.forEach(m => {
+    catTerritorial.forEach(m => {
       selectMun.innerHTML += `<option value="${m.id}">${m.nombre}</option>`;
     });
   }
 
   if (filtroMun) {
     filtroMun.innerHTML = '<option value="todos">Todos los Municipios (13)</option>';
-    CATALOGO_TERRITORIAL.forEach(m => {
+    catTerritorial.forEach(m => {
       filtroMun.innerHTML += `<option value="${m.id}">${m.nombre}</option>`;
     });
   }
@@ -298,7 +313,11 @@ function alCambiarMunicipio(municipioId) {
   selectParr.innerHTML = '<option value="">-- Seleccione Parroquia --</option>';
   if (selectSec) selectSec.innerHTML = '<option value="">-- Seleccione o escriba sector --</option>';
 
-  const mun = CATALOGO_TERRITORIAL.find(m => m.id === municipioId);
+  const catTerritorial = (window.CATALOGO_TERRITORIAL && window.CATALOGO_TERRITORIAL.length > 0)
+    ? window.CATALOGO_TERRITORIAL
+    : (CATALOGO_TERRITORIAL || []);
+
+  const mun = catTerritorial.find(m => m.id === municipioId);
   if (!mun) return;
 
   mun.parroquias.forEach(p => {
@@ -319,7 +338,11 @@ function alCambiarParroquia(parroquiaId) {
   if (!selectMun || !selectSec) return;
 
   const munId = selectMun.value;
-  const mun = CATALOGO_TERRITORIAL.find(m => m.id === munId);
+  const catTerritorial = (window.CATALOGO_TERRITORIAL && window.CATALOGO_TERRITORIAL.length > 0)
+    ? window.CATALOGO_TERRITORIAL
+    : (CATALOGO_TERRITORIAL || []);
+
+  const mun = catTerritorial.find(m => m.id === munId);
   if (!mun) return;
 
   const parr = mun.parroquias.find(p => p.id === parroquiaId);
@@ -352,7 +375,11 @@ function renderTiposEstablecimiento() {
     if (!container) return;
     container.innerHTML = '';
 
-    const red = CATALOGO_TIPOS_ESTABLECIMIENTO.find(r => r.id === redId);
+    const catTipos = (window.CATALOGO_TIPOS_ESTABLECIMIENTO && window.CATALOGO_TIPOS_ESTABLECIMIENTO.length > 0)
+      ? window.CATALOGO_TIPOS_ESTABLECIMIENTO
+      : (CATALOGO_TIPOS_ESTABLECIMIENTO || []);
+
+    const red = catTipos.find(r => r.id === redId);
     if (!red) return;
 
     let html = '<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">';
@@ -385,8 +412,12 @@ function renderAreasServiciosChecks() {
   const container = document.getElementById('container-areas-servicios');
   if (!container) return;
 
+  const catAreas = (window.CATALOGO_AREAS_SERVICIOS && window.CATALOGO_AREAS_SERVICIOS.length > 0)
+    ? window.CATALOGO_AREAS_SERVICIOS
+    : (CATALOGO_AREAS_SERVICIOS || []);
+
   let html = '<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5">';
-  CATALOGO_AREAS_SERVICIOS.forEach(a => {
+  catAreas.forEach(a => {
     html += `
       <div class="p-2.5 rounded-xl bg-[#140e40] border border-[#2d1f85] flex flex-col justify-between space-y-2">
         <label class="flex items-center gap-2 text-xs font-semibold text-slate-200 cursor-pointer">
@@ -418,12 +449,16 @@ function renderFallasChecks() {
   const container = document.getElementById('container-fallas-detectadas');
   if (!container) return;
 
+  const catFallas = (window.CATALOGO_FALLAS && Object.keys(window.CATALOGO_FALLAS).length > 0)
+    ? window.CATALOGO_FALLAS
+    : (CATALOGO_FALLAS || {});
+
   const grupos = [
-    { key: 'electricas', titulo: '⚡ Fallas Eléctricas', items: CATALOGO_FALLAS.electricas || [] },
-    { key: 'hidrosanitarias', titulo: '💧 Fallas Hidrosanitarias', items: CATALOGO_FALLAS.hidrosanitarias || [] },
-    { key: 'estructurales', titulo: '🏗️ Estructurales y Arquitectónicas', items: CATALOGO_FALLAS.estructurales || [] },
-    { key: 'climatizacion', titulo: '❄️ Climatización y Cadena de Frío', items: CATALOGO_FALLAS.climatizacion || [] },
-    { key: 'bioseguridad', titulo: '☣️ Bioseguridad y Movilidad', items: CATALOGO_FALLAS.bioseguridad || [] }
+    { key: 'electricas', titulo: '⚡ Fallas Eléctricas', items: catFallas.electricas || [] },
+    { key: 'hidrosanitarias', titulo: '💧 Fallas Hidrosanitarias', items: catFallas.hidrosanitarias || [] },
+    { key: 'estructurales', titulo: '🏗️ Estructurales y Arquitectónicas', items: catFallas.estructurales || [] },
+    { key: 'climatizacion', titulo: '❄️ Climatización y Cadena de Frío', items: catFallas.climatizacion || [] },
+    { key: 'bioseguridad', titulo: '☣️ Bioseguridad y Movilidad', items: catFallas.bioseguridad || [] }
   ];
 
   let html = '<div class="space-y-4">';
@@ -1224,8 +1259,7 @@ function exportarCSV() {
     `"${c.elaboradoPor?.fecha || ''}"`
   ]);
 
-  const csvContent = 'data:text/csv;charset=utf-8,﻿' + [headers.join(';'), ...rows.map(e => e.join(';'))].join('
-');
+  const csvContent = 'data:text/csv;charset=utf-8,﻿' + [headers.join(';'), ...rows.map(e => e.join(';'))].join('\n');
   const dlAnchor = document.createElement('a');
   dlAnchor.setAttribute('href', encodeURI(csvContent));
   dlAnchor.setAttribute('download', `MIGATO_Salud_Monagas_${new Date().toISOString().split('T')[0]}.csv`);
@@ -1416,9 +1450,22 @@ function configurarEventListeners() {
 // 11. INICIO INFALIBLE DE LA APLICACIÓN
 // ==============================================================
 
+let intentosCarga = 0;
+
 function iniciarAplicacion() {
   try {
     console.log("🚀 Iniciando Módulo 5 Salud Monagas...");
+    
+    // Verificar que los datos territoriales estén listos
+    if (!window.CATALOGO_TERRITORIAL || window.CATALOGO_TERRITORIAL.length === 0) {
+      if (intentosCarga < 10) {
+        intentosCarga++;
+        console.warn("⏳ Esperando catálogo territorial (intento " + intentosCarga + "/10)...");
+        setTimeout(iniciarAplicacion, 150);
+        return;
+      }
+    }
+
     inicializarDatos();
     poblarMunicipios();
     renderTiposEstablecimiento();
@@ -1431,13 +1478,13 @@ function iniciarAplicacion() {
       initMapaFormulario();
       initMapaGeneral();
     } else {
-      console.warn("⚠️ Leaflet aún no está disponible, reintentando...");
+      console.warn("⚠️ Leaflet aún no está disponible, reintentando en 300ms...");
       setTimeout(() => {
         if (typeof L !== 'undefined') {
           initMapaFormulario();
           initMapaGeneral();
         }
-      }, 350);
+      }, 300);
     }
 
     configurarEventListeners();
@@ -1451,8 +1498,24 @@ function iniciarAplicacion() {
   }
 }
 
+// Exponer funciones globales para eventos HTML (onclick, etc.)
+window.verFichaCentro = (id) => {
+  const centro = state.centros.find(c => c.id === id);
+  if (centro) renderFichaImprimible(centro);
+};
+window.editarCentro = editarCentro;
+window.eliminarCentro = eliminarCentro;
+window.imprimirFichaActual = () => {
+  window.print();
+};
+window.cerrarModalFicha = cerrarModalFicha;
+window.cambiarPestana = cambiarPestana;
+window.iniciarAplicacion = iniciarAplicacion;
+
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", iniciarAplicacion);
 } else {
   iniciarAplicacion();
 }
+
+})(typeof window !== 'undefined' ? window : this);

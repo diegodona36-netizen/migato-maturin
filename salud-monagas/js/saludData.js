@@ -3,6 +3,9 @@
  * Catálogo Territorial de Monagas (13 Municipios, 45 Parroquias), Normativa MPPS y Registros Base
  */
 
+(function(window) {
+  'use strict';
+
 const CATALOGO_TERRITORIAL = [
   {
     "id": "maturin",
@@ -1333,11 +1336,12 @@ const CENTROS_SALUD_INICIALES = [
   }
 ];
 
-if (typeof window !== 'undefined') {
+
+  // Exportar al objeto global window
   window.CATALOGO_TERRITORIAL = CATALOGO_TERRITORIAL;
   window.CATALOGO_TIPOS_ESTABLECIMIENTO = CATALOGO_TIPOS_ESTABLECIMIENTO;
   window.CATALOGO_AREAS_SERVICIOS = CATALOGO_AREAS_SERVICIOS;
   window.CATALOGO_FALLAS = CATALOGO_FALLAS;
   window.OPCIONES_SOPORTE_VITAL = OPCIONES_SOPORTE_VITAL;
   window.CENTROS_SALUD_INICIALES = CENTROS_SALUD_INICIALES;
-}
+})(typeof window !== 'undefined' ? window : this);
