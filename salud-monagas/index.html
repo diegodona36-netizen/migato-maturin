@@ -38,7 +38,21 @@
   </script>
 
   <!-- Custom Stylesheet & Print Rules -->
-  <link rel="stylesheet" href="css/styles.css?v=168">
+  <link rel="stylesheet" href="css/styles.css?v=169">
+
+  <!-- Pre-render theme and font preference without layout flash -->
+  <script>
+    (function() {
+      try {
+        if (localStorage.getItem('salud_modo_oscuro') === 'true') {
+          document.documentElement.classList.add('modo-oscuro-suave');
+        }
+        if (localStorage.getItem('salud_letra_grande') === 'true') {
+          document.documentElement.classList.add('modo-letra-grande');
+        }
+      } catch (e) {}
+    })();
+  </script>
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col antialiased select-none sm:select-auto">
 
@@ -65,10 +79,28 @@
       </a>
     </div>
 
-    <div class="flex items-center gap-2">
+    <div class="flex items-center gap-1.5 sm:gap-2">
       
+      <!-- ACCESIBILIDAD 40-60+ AÑOS: MODO LETRA GRANDE -->
+      <button id="btn-toggle-letra-grande" type="button" onclick="window.toggleModoLetraGrande()" 
+              class="px-2.5 py-1.5 rounded-xl bg-blue-950/90 hover:bg-blue-900 border border-amber-400 text-amber-300 hover:text-amber-200 text-xs font-bold transition flex items-center gap-1.5 shadow-sm active:scale-95" 
+              title="Modo Lectura Cómoda: Aumenta el tamaño de la letra y casillas para personas de 40, 50 o 60+ años">
+        <span class="text-sm font-black text-amber-400">A+</span>
+        <span id="label-letra-grande" class="hidden sm:inline font-bold">Letra Grande</span>
+      </button>
+
+      <!-- MODO NOCHE EJECUTIVO SUAVE (NO TAN OSCURO) -->
+      <button id="btn-toggle-tema-oscuro" type="button" onclick="window.toggleModoOscuroSuave()" 
+              class="px-2.5 py-1.5 rounded-xl bg-blue-950/90 hover:bg-blue-900 border border-sky-400/80 text-sky-200 hover:text-white text-xs font-bold transition flex items-center gap-1.5 shadow-sm active:scale-95" 
+              title="Modo Noche Ejecutivo: Descanso visual sin ser excesivamente oscuro">
+        <span id="icono-tema-oscuro">🌙</span>
+        <span id="label-tema-oscuro" class="hidden sm:inline font-bold">Modo Noche</span>
+      </button>
+
+      <div class="w-px h-5 bg-blue-800/80 hidden sm:block mx-0.5"></div>
+
       <!-- Exportar Base de Datos -->
-      <button id="btn-export-json" class="hidden md:inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-blue-900/80 hover:bg-blue-800 border border-blue-700 text-white text-xs font-bold transition shadow-sm" title="Descargar base de datos en formato JSON">
+      <button id="btn-export-json" class="hidden xl:inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-blue-900/80 hover:bg-blue-800 border border-blue-700 text-white text-xs font-bold transition shadow-sm" title="Descargar base de datos en formato JSON">
         <i data-lucide="download" class="w-3.5 h-3.5 text-sky-300"></i>
         <span>JSON</span>
       </button>
@@ -79,7 +111,7 @@
       </button>
 
       <!-- Volver al portal -->
-      <a href="../" class="px-3 py-1.5 rounded-xl bg-blue-900/80 hover:bg-blue-800 border border-blue-700 text-sky-200 hover:text-white text-xs font-bold transition flex items-center gap-1.5 shadow-sm" title="Ir a la Sala de Mando Central">
+      <a href="../" class="px-2.5 sm:px-3 py-1.5 rounded-xl bg-blue-900/80 hover:bg-blue-800 border border-blue-700 text-sky-200 hover:text-white text-xs font-bold transition flex items-center gap-1.5 shadow-sm" title="Ir a la Sala de Mando Central">
         <i data-lucide="arrow-left" class="w-4 h-4 text-amber-300"></i>
         <span class="hidden sm:inline">Sala de Mando</span>
       </a>
@@ -171,11 +203,15 @@
       <!-- BANNER DE ORIENTACIÓN SANITARIA -->
       <div class="bg-white border-l-4 border-l-blue-700 border border-slate-200 rounded-2xl p-4 sm:p-5 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-sm">
         <div class="space-y-1">
-          <div class="flex items-center gap-2">
+          <div class="flex items-center gap-2 flex-wrap">
             <span class="px-2 py-0.5 text-[10px] font-black uppercase tracking-wider bg-blue-100 text-blue-800 border border-blue-300 rounded-full">
               Protocolo Oficial de Inspección
             </span>
             <span class="text-xs text-blue-900 font-mono font-bold">1:1 Ficha Física de Salud</span>
+            <span class="inline-flex items-center gap-1 text-[11px] font-semibold text-slate-600 bg-slate-100 px-2.5 py-0.5 rounded-full border border-slate-200">
+              <span>👓</span>
+              <span>Lectura Cómoda disponible en la barra superior (botón <strong>A+ Letra Grande</strong>)</span>
+            </span>
           </div>
           <h2 class="text-lg sm:text-xl font-black text-slate-900 tracking-tight">Pre-Diagnóstico de Infraestructura de Salud</h2>
           <p class="text-xs text-slate-600 leading-relaxed">
@@ -1137,10 +1173,10 @@
   </div>
 
   <!-- Delimitación Geográfica Oficial del Estado Monagas (INE / IGVSB) -->
-  <script src="js/geoMonagasLimits.js?v=168"></script>
+  <script src="js/geoMonagasLimits.js?v=169"></script>
   <!-- Scripts de Datos y Lógica (Carga universal estándar) -->
-  <script src="js/saludData.js?v=168"></script>
-  <script src="js/saludApp.js?v=168"></script>
+  <script src="js/saludData.js?v=169"></script>
+  <script src="js/saludApp.js?v=169"></script>
 
 </body>
 </html>

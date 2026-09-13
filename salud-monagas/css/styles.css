@@ -391,3 +391,332 @@ code, pre, .font-mono {
 .leaflet-control-layers {
   display: none !important;
 }
+
+/* ==============================================================
+   MODO OSCURO SUAVE / NOCHE EJECUTIVO (Gubernamental Amigable)
+   ============================================================== */
+
+html.modo-oscuro-suave,
+body.modo-oscuro-suave {
+  --bg-primary: #151f30;
+  --bg-secondary: #1c2a40;
+  --bg-card: #1e2c40;
+  --border-card: #2e4362;
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+  background-color: #151f30 !important;
+  color: #f8fafc !important;
+}
+
+body.modo-oscuro-suave ::-webkit-scrollbar-track {
+  background: #151f30;
+}
+body.modo-oscuro-suave ::-webkit-scrollbar-thumb {
+  background: #2e4362;
+}
+body.modo-oscuro-suave ::-webkit-scrollbar-thumb:hover {
+  background: #3b5278;
+}
+
+/* Superficies y Tarjetas */
+body.modo-oscuro-suave .bg-white {
+  background-color: #1c2a40 !important;
+}
+body.modo-oscuro-suave .bg-slate-50 {
+  background-color: #162234 !important;
+}
+body.modo-oscuro-suave .bg-slate-100 {
+  background-color: #21324c !important;
+}
+body.modo-oscuro-suave .bg-slate-100\/90 {
+  background-color: rgba(28, 42, 64, 0.95) !important;
+}
+body.modo-oscuro-suave .bg-slate-200 {
+  background-color: #2b3e5c !important;
+}
+
+/* Bordes */
+body.modo-oscuro-suave .border-slate-200,
+body.modo-oscuro-suave .border-slate-300 {
+  border-color: #2b3e5c !important;
+}
+
+/* Textos */
+body.modo-oscuro-suave .text-slate-900,
+body.modo-oscuro-suave .text-slate-800 {
+  color: #f8fafc !important;
+}
+body.modo-oscuro-suave .text-slate-700 {
+  color: #e2e8f0 !important;
+}
+body.modo-oscuro-suave .text-slate-600,
+body.modo-oscuro-suave .text-slate-500 {
+  color: #94a3b8 !important;
+}
+body.modo-oscuro-suave .text-slate-400 {
+  color: #94a3b8 !important;
+}
+
+/* Azules y acentos institucionales en modo oscuro suave */
+body.modo-oscuro-suave .text-blue-950,
+body.modo-oscuro-suave .text-blue-900 {
+  color: #93c5fd !important;
+}
+body.modo-oscuro-suave .text-blue-800,
+body.modo-oscuro-suave .text-blue-700 {
+  color: #60a5fa !important;
+}
+
+/* Entradas de formulario, selectores y textarea */
+body.modo-oscuro-suave input:not([type="checkbox"]):not([type="radio"]),
+body.modo-oscuro-suave select,
+body.modo-oscuro-suave textarea {
+  background-color: #142032 !important;
+  border-color: #2e4465 !important;
+  color: #ffffff !important;
+}
+body.modo-oscuro-suave input::placeholder,
+body.modo-oscuro-suave textarea::placeholder {
+  color: #64748b !important;
+}
+body.modo-oscuro-suave input:focus,
+body.modo-oscuro-suave select:focus,
+body.modo-oscuro-suave textarea:focus {
+  border-color: #60a5fa !important;
+  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.2) !important;
+}
+body.modo-oscuro-suave select option {
+  background-color: #1c2a40 !important;
+  color: #ffffff !important;
+}
+
+/* Casillas de opción institucional (gov-option-box) */
+body.modo-oscuro-suave .gov-option-box {
+  background-color: #172437 !important;
+  border-color: #2b3e5c !important;
+  color: #e2e8f0 !important;
+}
+body.modo-oscuro-suave .gov-option-box:hover {
+  background-color: #21334c !important;
+  border-color: #3b82f6 !important;
+}
+body.modo-oscuro-suave .gov-option-box.checked,
+body.modo-oscuro-suave .gov-option-box:has(input:checked) {
+  background-color: #1c365b !important;
+  border-color: #60a5fa !important;
+}
+
+/* Pestañas de navegación superiores */
+body.modo-oscuro-suave .tab-btn:not(.active) {
+  color: #cbd5e1 !important;
+  background-color: transparent !important;
+  border-color: transparent !important;
+}
+body.modo-oscuro-suave .tab-btn:not(.active):hover {
+  background-color: #24354f !important;
+  color: #ffffff !important;
+  border-color: #3b5074 !important;
+}
+body.modo-oscuro-suave .tab-btn.active {
+  background-color: #2563eb !important;
+  color: #ffffff !important;
+  border-color: #60a5fa !important;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3) !important;
+}
+
+/* Barra de KPIs en Modo Oscuro Suave */
+body.modo-oscuro-suave .bg-red-50 {
+  background-color: rgba(220, 38, 38, 0.18) !important;
+  border-color: rgba(239, 68, 68, 0.4) !important;
+  color: #fca5a5 !important;
+}
+body.modo-oscuro-suave .bg-amber-50 {
+  background-color: rgba(217, 119, 6, 0.18) !important;
+  border-color: rgba(245, 158, 11, 0.4) !important;
+  color: #fde68a !important;
+}
+body.modo-oscuro-suave .bg-emerald-50 {
+  background-color: rgba(5, 150, 105, 0.18) !important;
+  border-color: rgba(16, 185, 129, 0.4) !important;
+  color: #6ee7b7 !important;
+}
+body.modo-oscuro-suave .bg-blue-50 {
+  background-color: rgba(37, 99, 235, 0.18) !important;
+  border-color: rgba(59, 130, 246, 0.4) !important;
+  color: #93c5fd !important;
+}
+
+/* Tabla del Directorio */
+body.modo-oscuro-suave table thead tr {
+  background-color: #172437 !important;
+  border-bottom: 1px solid #2b3e5c !important;
+  color: #94a3b8 !important;
+}
+body.modo-oscuro-suave table tbody tr {
+  border-bottom: 1px solid #23334a !important;
+}
+body.modo-oscuro-suave table tbody tr:hover {
+  background-color: #22344e !important;
+}
+
+/* Popups de Leaflet */
+body.modo-oscuro-suave .leaflet-popup-content-wrapper {
+  background-color: #1c2a40 !important;
+  color: #f8fafc !important;
+  border-color: #384d6b !important;
+}
+body.modo-oscuro-suave .leaflet-popup-tip {
+  background-color: #1c2a40 !important;
+  border-color: #384d6b !important;
+}
+
+/* Inspector y calibrador flotante */
+body.modo-oscuro-suave #panel-coordenadas-gmaps,
+body.modo-oscuro-suave #gmaps-floating-pin-card,
+body.modo-oscuro-suave #mapa-quick-calibrator {
+  background-color: #1c2a40 !important;
+  border-color: #3b82f6 !important;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.45) !important;
+}
+
+/* Modales */
+body.modo-oscuro-suave #modal-nuevo-centro-rapido > div {
+  background-color: #1c2a40 !important;
+  border-color: #3b82f6 !important;
+  color: #f8fafc !important;
+}
+body.modo-oscuro-suave #printable-sheet-modal .no-print {
+  background-color: #1c2a40 !important;
+  border-color: #384d6b !important;
+}
+
+/* Exclusión estricta de la Ficha Técnica 1:1 física (debe imprimirse en blanco y negro oficial) */
+body.modo-oscuro-suave .ficha-tecnica-salud {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+}
+body.modo-oscuro-suave .ficha-tecnica-salud * {
+  color: #000000 !important;
+}
+body.modo-oscuro-suave .ficha-tecnica-salud .ficha-header-title {
+  background-color: #f1f5f9 !important;
+}
+
+/* ==============================================================
+   MODO LECTURA CÓMODA / LETRA GRANDE (Accesibilidad 40, 50, 60+ años)
+   ============================================================== */
+
+html.modo-letra-grande,
+body.modo-letra-grande {
+  font-size: 16px !important;
+  line-height: 1.6 !important;
+}
+
+/* Escalar textos pequeños a tamaño amplio y descansado */
+body.modo-letra-grande .text-xs,
+body.modo-letra-grande .text-\[11px\],
+body.modo-letra-grande .text-\[10px\],
+body.modo-letra-grande .text-\[9px\] {
+  font-size: 0.935rem !important; /* ~15px */
+  line-height: 1.55 !important;
+}
+
+body.modo-letra-grande .text-sm {
+  font-size: 1.05rem !important; /* ~16.8px */
+  line-height: 1.55 !important;
+}
+
+body.modo-letra-grande .text-base {
+  font-size: 1.15rem !important; /* ~18.5px */
+}
+
+body.modo-letra-grande .text-lg {
+  font-size: 1.3rem !important; /* ~21px */
+}
+
+body.modo-letra-grande .text-xl {
+  font-size: 1.45rem !important; /* ~23px */
+}
+
+/* Casillas (Checkboxes y Radios) ampliadas para mayor facilidad táctil */
+body.modo-letra-grande input[type="checkbox"],
+body.modo-letra-grande input[type="radio"] {
+  width: 22px !important;
+  height: 22px !important;
+  cursor: pointer !important;
+  accent-color: #1d4ed8;
+}
+
+/* Casillas de opciones con más espacio y texto destacado */
+body.modo-letra-grande .gov-option-box {
+  padding: 12px 14px !important;
+  font-size: 15px !important;
+}
+
+body.modo-letra-grande .gov-option-box strong {
+  font-size: 15.5px !important;
+}
+
+/* Inputs y Selects más amplios y legibles */
+body.modo-letra-grande input:not([type="checkbox"]):not([type="radio"]),
+body.modo-letra-grande select,
+body.modo-letra-grande textarea {
+  font-size: 15.5px !important;
+  min-height: 46px !important;
+  padding: 8px 14px !important;
+  font-weight: 500 !important;
+}
+
+/* Botones con mayor altura táctil y tipografía reforzada */
+body.modo-letra-grande button:not(.ficha-box-check):not(#printable-sheet-modal button) {
+  min-height: 44px !important;
+  font-size: 14.5px !important;
+  padding-left: 16px !important;
+  padding-right: 16px !important;
+  font-weight: 800 !important;
+}
+
+/* Pestañas de navegación superiores */
+body.modo-letra-grande .tab-btn {
+  font-size: 14.5px !important;
+  padding: 10px 18px !important;
+}
+
+/* Visor de coordenadas satelitales en números claros */
+body.modo-letra-grande #gmaps-display-lat,
+body.modo-letra-grande #gmaps-display-lng,
+body.modo-letra-grande #pin-card-coords-text {
+  font-size: 1.15rem !important;
+  font-weight: 900 !important;
+  letter-spacing: 0.5px !important;
+}
+
+/* Celdas de la tabla del directorio */
+body.modo-letra-grande table thead th {
+  font-size: 13px !important;
+  padding: 12px 14px !important;
+}
+
+body.modo-letra-grande table tbody td {
+  font-size: 14.5px !important;
+  padding: 14px 14px !important;
+}
+
+body.modo-letra-grande table tbody td strong {
+  font-size: 16px !important;
+}
+
+/* KPIs ampliados */
+body.modo-letra-grande #kpi-total-centros,
+body.modo-letra-grande #kpi-criticos,
+body.modo-letra-grande #kpi-alertas,
+body.modo-letra-grande #kpi-estables {
+  font-size: 1.25rem !important;
+}
+
+/* Excluir la Ficha 1:1 física del zoom para que no se deforme al imprimir */
+body.modo-letra-grande .ficha-tecnica-salud,
+body.modo-letra-grande .ficha-tecnica-salud * {
+  font-size: inherit;
+  line-height: inherit;
+}
