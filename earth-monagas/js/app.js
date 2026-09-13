@@ -2,16 +2,16 @@
  * Controlador Principal — Google Earth Pro Web (Edición Estado Monagas)
  * Robusto, 100% Operativo y Totalmente Individualizado
  */
-import { CATALOGO_MONAGAS, findParishInCatalog, PARISH_ALIAS_MAP, resolveParishId } from "./catalogoMonagas.js?v=140";
-import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=140";
-import { getAllParishesForSelector } from "./usersCatalog.js?v=140";
-import { EarthStore } from "./earthStore.js?v=140";
-import { EarthMapEngine } from "./mapEngine.js?v=140";
-import { PropertiesDialog } from "./propertiesDialog.js?v=140";
-import { ToolsManager } from "./toolsManager.js?v=140";
-import { detectParishFromGeometry, SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=140";
-import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=140";
-import { getParishDemographics } from "./monagasDemographics.js?v=140";
+import { CATALOGO_MONAGAS, findParishInCatalog, PARISH_ALIAS_MAP, resolveParishId } from "./catalogoMonagas.js?v=141";
+import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=141";
+import { getAllParishesForSelector } from "./usersCatalog.js?v=141";
+import { EarthStore } from "./earthStore.js?v=141";
+import { EarthMapEngine } from "./mapEngine.js?v=141";
+import { PropertiesDialog } from "./propertiesDialog.js?v=141";
+import { ToolsManager } from "./toolsManager.js?v=141";
+import { detectParishFromGeometry, SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=141";
+import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=141";
+import { getParishDemographics } from "./monagasDemographics.js?v=141";
 import { 
   getMunicipios, 
   getParroquiasByMun, 
@@ -21,13 +21,13 @@ import {
   findSectorById, 
   searchSectores, 
   ALL_SECTORES_FLAT 
-} from "./monagasSectoresCatalog.js?v=140";
+} from "./monagasSectoresCatalog.js?v=141";
 import { 
   getSavedFirebaseConfig, 
   saveFirebaseConfig, 
   isFirebaseConfigured, 
   initFirebase 
-} from "./firebaseConfig.js?v=140";
+} from "./firebaseConfig.js?v=141";
 
 // Controladores globales infalibles accesibles en cualquier contexto
 window.closeParishSelectorModal = function() {
@@ -139,11 +139,11 @@ class EarthMonagasApp {
     this.toolsManager = null;
     this.authManager = new AuthManager();
 
-    this.selectedMunId = "maturin";
-    this.selectedParishId = "san-simon";
+    this.selectedMunId = null;
+    this.selectedParishId = null;
     this.activeSubParroquiaId = null;
     this.activeSectorId = null;
-    this.modalSelectedMun = "maturin";
+    this.modalSelectedMun = null;
     this.modalAdvancedOpen = false;
     this.modalParishForAdvanced = null;
     this.modalSubParishFilter = "all";
@@ -367,11 +367,6 @@ class EarthMonagasApp {
           }
         }
       }
-      if (!parish && this.store) {
-        munId = "maturin";
-        parishId = "san-simon";
-        parish = this.store.getParish("maturin", "san-simon");
-      }
       if (!parish) return;
 
       // Navegación territorial abierta para todos los funcionarios y usuarios
@@ -400,6 +395,13 @@ class EarthMonagasApp {
           navLoc.textContent = `${parish.nombre} (${munObj ? munObj.nombre : 'Monagas'})`;
         }
         navLoc.parentElement.title = `${parish.nombre} - Municipio ${munObj ? munObj.nombre : 'Monagas'}`;
+      }
+
+      // Mostrar botón para volver al Municipio ahora que hay un municipio activo
+      const btnMun = document.getElementById("btn-quick-back-mun");
+      if (btnMun) {
+        btnMun.style.display = "flex";
+        btnMun.title = `Volver a la vista del Municipio ${munObj ? munObj.nombre : ''}`;
       }
 
       // Actualizar título de pestaña
@@ -672,7 +674,8 @@ class EarthMonagasApp {
   }
 
   focusMunicipio(munId = null, flyCamera = true) {
-    if (!munId) munId = this.selectedMunId || "maturin";
+    if (!munId) munId = this.selectedMunId;
+    if (!munId) return;
     this.selectedMunId = munId;
     this.activeSectorId = null;
     this.activeSubParroquiaId = null;
@@ -686,16 +689,15 @@ class EarthMonagasApp {
     const munNom = munObj ? munObj.nombre : munId;
     const parishCount = munObj?.parroquias?.length || 1;
 
-    if (munObj && munObj.parroquias && munObj.parroquias.length > 0) {
-      const isParishInMun = munObj.parroquias.some(p => p.id === this.selectedParishId || PARISH_ALIAS_MAP[this.selectedParishId] === p.id);
-      if (!isParishInMun) {
-        this.selectedParishId = munObj.parroquias[0].id;
-      }
-    }
-
     const navLoc = document.getElementById("nav-current-location");
     if (navLoc) {
       navLoc.textContent = `Municipio ${munNom} (${parishCount} Parroquias)`;
+    }
+
+    // Al estar enfocados en el municipio completo, ocultamos el botón "Volver a Municipio"
+    const btnMun = document.getElementById("btn-quick-back-mun");
+    if (btnMun) {
+      btnMun.style.display = "none";
     }
 
     this.showToast(`🏛️ Enfocando Municipio <strong>${munNom}</strong> (${parishCount} Parroquias). Haz clic en cualquier parroquia para entrar.`, "sky");
@@ -705,18 +707,51 @@ class EarthMonagasApp {
   focusEstado(flyCamera = true) {
     this.activeSectorId = null;
     this.activeSubParroquiaId = null;
+    this.selectedMunId = null;
+    this.selectedParishId = null;
+    this.modalSelectedMun = null;
     this.closeQuickStats();
 
+    // 1. Limpiar rastro de URL y almacenamiento local para eliminar cualquier dependencia municipal
+    try {
+      localStorage.removeItem("migato_last_mun");
+      localStorage.removeItem("migato_last_parish");
+      const u = new URL(window.location.href);
+      u.searchParams.delete("p");
+      u.searchParams.delete("mun");
+      window.history.replaceState({}, "", u.toString());
+    } catch(e) {}
+
+    // 2. Limpiar capas de detalle parroquial y mostrar vista macro del Estado Monagas
     if (this.mapEngine) {
+      if (this.mapEngine.polygonsLayer) this.mapEngine.polygonsLayer.clearLayers();
+      if (this.mapEngine.subParroquiasLayer) this.mapEngine.subParroquiasLayer.clearLayers();
+      if (this.mapEngine.subParroquiaLabelsLayer) this.mapEngine.subParroquiaLabelsLayer.clearLayers();
+      if (this.mapEngine.sectorLabelsLayer) this.mapEngine.sectorLabelsLayer.clearLayers();
+      if (this.mapEngine.routesLayer) this.mapEngine.routesLayer.clearLayers();
+      if (this.mapEngine.placemarksLayer) this.mapEngine.placemarksLayer.clearLayers();
+      if (this.mapEngine.leafletLayersMap) this.mapEngine.leafletLayersMap.clear();
+      if (this.mapEngine.layerMunicipioParroquias) this.mapEngine.layerMunicipioParroquias.clearLayers();
+      this.mapEngine.clearPolygonHighlight();
       this.mapEngine.showStateBoundary(flyCamera);
     }
 
+    // 3. Dejar la barra superior en "Seleccionar Parroquia" (sin dependencias con ningún municipio)
     const navLoc = document.getElementById("nav-current-location");
     if (navLoc) {
-      navLoc.textContent = `Estado Monagas (13 Municipios)`;
+      navLoc.textContent = `📍 Seleccionar Parroquia / Municipio ▾`;
+      navLoc.parentElement.title = "Seleccionar Parroquia o Municipio de Monagas (Clic para abrir panel)";
+    }
+    document.title = "MÓDULO 4: MAPA TERRITORIAL • MIGATO";
+
+    // 4. Ocultar botón Municipio (no hay municipio dependiente)
+    const btnMun = document.getElementById("btn-quick-back-mun");
+    if (btnMun) {
+      btnMun.style.display = "none";
     }
 
-    this.showToast(`🗺️ Vista general del Estado Monagas (13 Municipios).`, "amber");
+    this.renderPlacesTree();
+    this.showToast(`🔄 Vista restablecida a Seleccionar Parroquia (sin dependencia municipal).`, "amber");
     this.updateTerritorialFocusUI();
   }
 
@@ -724,14 +759,16 @@ class EarthMonagasApp {
     const hud = document.getElementById("hud-territorial-focus");
     const hudContent = document.getElementById("hud-territorial-content");
     const btnReturnParish = document.getElementById("btn-return-parish");
-    const parish = this.store ? this.store.getParish(this.selectedMunId, this.selectedParishId) : null;
-    const munObj = CATALOGO_MONAGAS.find(m => m.id === this.selectedMunId);
+    const btnQuickBackMun = document.getElementById("btn-quick-back-mun");
+    const parish = (this.selectedMunId && this.selectedParishId) ? this.store.getParish(this.selectedMunId, this.selectedParishId) : null;
+    const munObj = this.selectedMunId ? CATALOGO_MONAGAS.find(m => m.id === this.selectedMunId) : null;
     const munNom = munObj ? munObj.nombre : (this.selectedMunId || "Maturín");
     const parishCount = munObj?.parroquias?.length || 1;
-    const focusLevel = this.mapEngine?.activeFocusLevel || (this.activeSectorId ? "sector" : (this.activeSubParroquiaId ? "subparroquia" : "parroquia"));
+    const focusLevel = this.mapEngine?.activeFocusLevel || (this.activeSectorId ? "sector" : (this.activeSubParroquiaId ? "subparroquia" : (this.selectedParishId ? "parroquia" : (this.selectedMunId ? "municipio" : "estado"))));
 
     // 1. Nivel Sector Vecinal (Solo cuando se selecciona un sector específico)
     if (this.activeSectorId && parish) {
+      if (btnQuickBackMun) btnQuickBackMun.style.display = "flex";
       const sec = (parish.poligonos || []).find(p => String(p.id) === String(this.activeSectorId));
       const secName = sec?.nombre || "Sector Vecinal";
       let sp = null;
@@ -767,6 +804,7 @@ class EarthMonagasApp {
 
     // 2. Nivel Sub-Parroquia / Eje Territorial (Solo cuando se selecciona un eje específico)
     if (this.activeSubParroquiaId && parish) {
+      if (btnQuickBackMun) btnQuickBackMun.style.display = "flex";
       const sp = (parish.subparroquias || []).find(s => String(s.id) === String(this.activeSubParroquiaId));
       const spName = sp?.nombre || "Eje Territorial";
 
@@ -791,13 +829,17 @@ class EarthMonagasApp {
 
     // 3. Nivel Parroquia (Muestra Breadcrumb completo con botón directo de Retorno a Municipio)
     if (focusLevel === "parroquia" && parish) {
+      if (btnQuickBackMun) {
+        btnQuickBackMun.style.display = "flex";
+        btnQuickBackMun.title = `Volver a la vista del Municipio ${munNom}`;
+      }
       if (hud && hudContent) {
         hud.style.display = "block";
         hudContent.className = "flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#140e40]/95 border border-sky-500/60 shadow-2xl backdrop-blur-md text-xs flex-wrap justify-center";
         hudContent.innerHTML = `
           <button type="button" onclick="window.earthApp?.focusEstado(true)" 
             class="px-2.5 py-1 rounded-full bg-blue-950/80 hover:bg-blue-900 text-blue-200 hover:text-white font-semibold text-[11px] flex items-center gap-1 border border-blue-500/40 transition active:scale-95 cursor-pointer"
-            title="Volver a ver todo el Estado Monagas">
+            title="Volver a Seleccionar Parroquia">
             <span>🗺️ Monagas</span>
           </button>
           <span class="text-blue-300/60 text-[11px]">›</span>
@@ -819,7 +861,7 @@ class EarthMonagasApp {
           </button>
           <button type="button" onclick="window.earthApp?.focusEstado(true)" 
             class="px-2 py-1 rounded-full bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white font-bold text-[11px] flex items-center gap-1 border border-slate-600 transition active:scale-95 cursor-pointer"
-            title="Restablecer y ver los 13 Municipios de Monagas">
+            title="Restablecer a Seleccionar Parroquia (sin dependencias)">
             <span>↺ Reset</span>
           </button>
         `;
@@ -828,14 +870,15 @@ class EarthMonagasApp {
     }
 
     // 4. Nivel Municipio (Muestra botón de regreso a todo el Estado)
-    if (focusLevel === "municipio") {
+    if (focusLevel === "municipio" && this.selectedMunId) {
+      if (btnQuickBackMun) btnQuickBackMun.style.display = "none";
       if (hud && hudContent) {
         hud.style.display = "block";
-        hudContent.className = "flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#140e40]/95 border border-indigo-500/60 shadow-2xl backdrop-blur-md text-xs flex-wrap justify-center";
+        hudContent.className = "flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#140e40]/95 border border-indigo-500/60 shadow-2xl backdrop-blur-md text-xs flex-wrap justify-center";
         hudContent.innerHTML = `
           <button type="button" onclick="window.earthApp?.focusEstado(true)" 
             class="px-2.5 py-1 rounded-full bg-blue-950/80 hover:bg-blue-900 text-blue-200 hover:text-white font-semibold text-[11px] flex items-center gap-1 border border-blue-500/40 transition active:scale-95 cursor-pointer"
-            title="Volver a ver todo el Estado Monagas">
+            title="Volver a Seleccionar Parroquia">
             <span>🗺️ Monagas</span>
           </button>
           <span class="text-blue-300/60 text-[11px]">›</span>
@@ -847,15 +890,16 @@ class EarthMonagasApp {
           <button type="button" onclick="window.earthApp?.focusEstado(true)" 
             class="px-3 py-1 rounded-full bg-amber-500/25 hover:bg-amber-500/40 text-amber-300 hover:text-amber-100 font-extrabold text-[11px] flex items-center gap-1.5 border border-amber-500/50 transition active:scale-95 cursor-pointer shadow-md shadow-amber-950/40"
             title="Restablecer y ver los 13 Municipios de Monagas">
-            <span>↺ Ver Todo Monagas</span>
+            <span>↺ Reset</span>
           </button>
         `;
       }
       return;
     }
 
-    // 5. Nivel Estado (Vista Global)
-    if (focusLevel === "estado") {
+    // 5. Nivel Estado (Vista Global sin dependencia municipal)
+    if (focusLevel === "estado" || !this.selectedMunId) {
+      if (btnQuickBackMun) btnQuickBackMun.style.display = "none";
       if (hud && hudContent) {
         hud.style.display = "block";
         hudContent.className = "flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#140e40]/95 border border-amber-500/50 shadow-2xl backdrop-blur-md text-xs flex-wrap justify-center";
@@ -866,8 +910,8 @@ class EarthMonagasApp {
           </span>
           <div class="h-3 w-px bg-amber-500/30"></div>
           <button type="button" onclick="window.openParishSelectorGlobal()" 
-            class="px-2.5 py-0.5 rounded-full bg-sky-500/20 hover:bg-sky-500/40 text-sky-200 hover:text-white font-bold text-[10px] border border-sky-500/40 transition active:scale-95 cursor-pointer">
-            <span>🔍 Cambiar Parroquia</span>
+            class="px-2.5 py-1 rounded-full bg-sky-500/20 hover:bg-sky-500/40 text-sky-200 hover:text-white font-bold text-[11px] border border-sky-500/40 transition active:scale-95 cursor-pointer flex items-center gap-1">
+            <span>📍 Seleccionar Parroquia</span>
           </button>
         `;
       }
@@ -1172,9 +1216,26 @@ class EarthMonagasApp {
     const container = document.getElementById("places-tree-content");
     if (!container) return;
 
-    const munObj = CATALOGO_MONAGAS.find(m => m.id === this.selectedMunId);
-    const pData = this.store.getParish(this.selectedMunId, this.selectedParishId);
-    if (!pData) return;
+    const munObj = this.selectedMunId ? CATALOGO_MONAGAS.find(m => m.id === this.selectedMunId) : null;
+    const pData = (this.selectedMunId && this.selectedParishId) ? this.store.getParish(this.selectedMunId, this.selectedParishId) : null;
+    if (!pData) {
+      container.innerHTML = `
+        <div class="p-5 text-center flex flex-col items-center justify-center my-6">
+          <div class="w-14 h-14 rounded-2xl bg-sky-500/10 border border-sky-400/30 flex items-center justify-center mb-3.5 text-2xl shadow-inner">
+            🗺️
+          </div>
+          <h4 class="text-sm font-black text-white mb-1.5">Estado Monagas</h4>
+          <p class="text-xs text-slate-400 mb-5 leading-relaxed max-w-[220px]">
+            13 Municipios y 45 Parroquias Oficiales.<br>Toca cualquier municipio en el mapa o abre el catálogo.
+          </p>
+          <button type="button" onclick="window.openParishSelectorGlobal()" 
+            class="w-full py-2.5 px-3 rounded-xl bg-gradient-to-r from-sky-600 to-blue-600 hover:from-sky-500 hover:to-blue-500 text-white text-xs font-black flex items-center justify-center gap-2 shadow-lg shadow-sky-950/50 transition cursor-pointer active:scale-95">
+            <span>📍 Seleccionar Parroquia</span>
+          </button>
+        </div>
+      `;
+      return;
+    }
 
     const q = filterQuery.toLowerCase().trim();
 
@@ -1639,8 +1700,8 @@ class EarthMonagasApp {
     modal.classList.add("flex");
     modal.style.setProperty("display", "flex", "important");
 
-    // 2. Establecer el municipio activo actual por defecto
-    this.modalSelectedMun = this.selectedMunId || "maturin";
+    // 2. Establecer el municipio activo actual por defecto (null si está en vista general o reset)
+    this.modalSelectedMun = this.selectedMunId || null;
     this.modalAdvancedOpen = false;
     this.modalParishForAdvanced = this.selectedParishId || null;
     this.modalSubParishFilter = "all";
@@ -1669,7 +1730,7 @@ class EarthMonagasApp {
   }
 
   setTerritoryModalFilter(munId) {
-    this.modalSelectedMun = munId === "all" ? (this.selectedMunId || "maturin") : munId;
+    this.modalSelectedMun = (munId === "all" || !munId) ? (this.selectedMunId || null) : munId;
     this.modalParishForAdvanced = null;
     this.modalSubParishFilter = "all";
     const filterInput = document.getElementById("input-filter-parish-modal");
@@ -1893,8 +1954,113 @@ class EarthMonagasApp {
     // =========================================================================
     // MODO 2: NAVEGADOR ESTRUCTURADO Y LIMPIO: MUNICIPIOS ➔ PARROQUIAS
     // =========================================================================
-    const activeMunId = this.modalSelectedMun || this.selectedMunId || "maturin";
-    const currentMun = (CATALOGO_MONAGAS && CATALOGO_MONAGAS.find(m => m.id === activeMunId)) || (CATALOGO_MONAGAS && CATALOGO_MONAGAS[0]) || { id: "maturin", nombre: "Municipio Maturín", capital: "Maturín", parroquias: [] };
+    const activeMunId = this.modalSelectedMun || this.selectedMunId || null;
+    const currentMun = activeMunId ? (CATALOGO_MONAGAS && CATALOGO_MONAGAS.find(m => m.id === activeMunId)) : null;
+
+    if (!currentMun) {
+      let mainHtml = `
+        <div class="flex flex-col md:flex-row gap-3 sm:gap-4 h-full min-h-0 flex-1 overflow-hidden">
+          
+          <!-- Pestaña Rápida de Municipios en Móvil (< md:) -->
+          <div class="md:hidden flex items-center gap-1.5 overflow-x-auto no-scrollbar py-1 border-b border-[#2d1f85]/60 pb-2 shrink-0">
+            ${(CATALOGO_MONAGAS || []).map(m => {
+              const pCount = Array.isArray(m.parroquias) ? m.parroquias.length : 0;
+              return `
+                <button type="button" onclick="window.setTerritoryModalMunGlobal('${m.id}')"
+                  class="px-3 py-1.5 rounded-xl text-xs font-bold transition shrink-0 cursor-pointer flex items-center gap-1.5 bg-[#140e40] text-slate-300 hover:text-white border border-[#2d1f85]">
+                  <span>🏛️ ${(m.nombre || m.id).replace(/^Municipio\s+/i, '')}</span>
+                  <span class="text-[10px] font-mono opacity-80 font-normal">(${pCount})</span>
+                </button>
+              `;
+            }).join('')}
+          </div>
+
+          <!-- COLUMNA 1: LISTA DE LOS 13 MUNICIPIOS (Desktop) -->
+          <div class="hidden md:flex flex-col w-56 lg:w-64 shrink-0 border-r border-[#2d1f85]/70 pr-3 space-y-1.5 overflow-y-auto max-h-[72vh]">
+            <div class="text-[11px] font-black text-amber-400 uppercase tracking-wider px-1 pb-1 flex items-center justify-between border-b border-[#2d1f85]/50">
+              <span>1. MUNICIPIOS</span>
+              <span class="text-[10px] text-slate-400 font-mono">13 Total</span>
+            </div>
+            <div class="space-y-1 pt-1">
+              ${(CATALOGO_MONAGAS || []).map(m => {
+                const pCount = Array.isArray(m.parroquias) ? m.parroquias.length : 0;
+                return `
+                  <button type="button" onclick="window.setTerritoryModalMunGlobal('${m.id}')"
+                    class="w-full text-left p-2.5 rounded-xl transition flex items-center justify-between gap-2 cursor-pointer group bg-[#140e40] hover:bg-[#23176d] text-slate-300 hover:text-white border border-[#2d1f85]">
+                    <div class="flex items-center gap-2 truncate min-w-0">
+                      <span class="text-sm shrink-0">🏛️</span>
+                      <span class="text-xs truncate font-bold">${(m.nombre || m.id).replace(/^Municipio\s+/i, '')}</span>
+                    </div>
+                    <span class="text-[10px] font-mono px-2 py-0.5 rounded-md shrink-0 bg-[#0e092e] text-slate-400 border border-[#2d1f85]">
+                      ${pCount}
+                    </span>
+                  </button>
+                `;
+              }).join('')}
+            </div>
+          </div>
+
+          <!-- COLUMNA 2: PANORAMA DE LOS 13 MUNICIPIOS -->
+          <div class="flex-1 flex flex-col space-y-3 overflow-y-auto max-h-[72vh] pr-1">
+            <div class="flex items-center justify-between gap-2 border-b border-[#2d1f85]/80 pb-2.5 bg-[#140e40]/70 p-3 rounded-xl border border-[#2d1f85]/40 shrink-0">
+              <div class="truncate min-w-0">
+                <div class="flex items-center gap-2">
+                  <span class="text-base sm:text-lg">🗺️</span>
+                  <h4 class="text-sm sm:text-base font-black text-white truncate">Estado Monagas</h4>
+                  <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-950 text-amber-300 border border-amber-400/40 font-bold shrink-0">
+                    13 Municipios • 45 Parroquias
+                  </span>
+                </div>
+                <p class="text-[11px] text-slate-400 truncate mt-0.5">Selecciona un municipio para desplegar sus parroquias o enfocarlo en el mapa satelital.</p>
+              </div>
+              <button type="button" onclick="window.earthApp?.focusEstado(true); window.earthApp?.closeParishSelector();"
+                class="px-3 py-1.5 rounded-xl bg-[#0e092e] hover:bg-amber-900/60 text-amber-300 hover:text-white border border-amber-400/40 text-xs font-bold transition flex items-center gap-1.5 cursor-pointer shrink-0 shadow-sm"
+                title="Ver todo el Estado Monagas en el satélite">
+                <i data-lucide="map" class="w-3.5 h-3.5 text-amber-400"></i>
+                <span class="hidden sm:inline">Ver Todo Monagas</span>
+              </button>
+            </div>
+
+            <div class="flex items-center justify-between px-1">
+              <div class="text-[11px] font-black text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
+                <span>1. SELECCIONA UN MUNICIPIO</span>
+                <span class="text-[10px] text-slate-400 font-normal">➔ Toca un municipio para ver sus parroquias</span>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5">
+              ${(CATALOGO_MONAGAS || []).map(m => {
+                const pCount = Array.isArray(m.parroquias) ? m.parroquias.length : 0;
+                return `
+                  <div onclick="window.setTerritoryModalMunGlobal('${m.id}')"
+                    class="p-3.5 rounded-xl bg-[#140e40] hover:bg-[#20155c] border border-[#2d1f85] hover:border-amber-400 cursor-pointer flex flex-col justify-between gap-2 shadow-sm transition group hover:scale-[1.01]">
+                    <div class="flex items-center justify-between gap-1.5">
+                      <div class="flex items-center gap-2 truncate min-w-0">
+                        <span class="text-base">🏛️</span>
+                        <h5 class="text-xs sm:text-sm font-black text-white group-hover:text-amber-300 truncate">${(m.nombre || m.id).replace(/^Municipio\s+/i, '')}</h5>
+                      </div>
+                      <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-[#0e092e] text-slate-300 border border-[#2d1f85] shrink-0 font-semibold">${pCount} parr.</span>
+                    </div>
+                    <div class="flex items-center justify-between pt-2 border-t border-[#2d1f85]/40 text-xs">
+                      <span class="text-[10px] text-slate-400 truncate">Cap: ${m.capital || m.nombre}</span>
+                      <span class="text-xs font-bold text-amber-400 group-hover:text-white flex items-center gap-0.5 group-hover:translate-x-1 transition-transform">
+                        Ver parroquias ➔
+                      </span>
+                    </div>
+                  </div>
+                `;
+              }).join('')}
+            </div>
+          </div>
+        </div>
+      `;
+
+      catalog.innerHTML = mainHtml;
+      if (window.lucide && typeof window.lucide.createIcons === "function") {
+        try { window.lucide.createIcons(); } catch(e){}
+      }
+      return;
+    }
 
     // Variables para el cajón de Ajuste Avanzado (Sectores y Ejes)
     const parishArray = Array.isArray(currentMun.parroquias) ? currentMun.parroquias : [];
@@ -2178,8 +2344,29 @@ class EarthMonagasApp {
     const catalog = document.getElementById("modal-parishes-catalog");
     if (!catalog) return;
     try {
-      const activeMunId = this.modalSelectedMun || this.selectedMunId || "maturin";
-      const currentMun = (CATALOGO_MONAGAS && CATALOGO_MONAGAS.find(m => m.id === activeMunId)) || (CATALOGO_MONAGAS && CATALOGO_MONAGAS[0]) || { id: "maturin", nombre: "Municipio Maturín", parroquias: [] };
+      const activeMunId = this.modalSelectedMun || this.selectedMunId || null;
+      const currentMun = activeMunId ? (CATALOGO_MONAGAS && CATALOGO_MONAGAS.find(m => m.id === activeMunId)) : null;
+
+      if (!currentMun) {
+        catalog.innerHTML = `
+          <div class="flex flex-col gap-3 h-full overflow-y-auto pr-1">
+            <div class="bg-[#140e40]/70 p-3.5 rounded-xl border border-[#2d1f85]/50 text-center">
+              <h4 class="text-sm font-black text-white">🗺️ Estado Monagas: 13 Municipios</h4>
+              <p class="text-xs text-slate-400 mt-1">Selecciona un municipio para ver sus parroquias:</p>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2.5">
+              ${(CATALOGO_MONAGAS || []).map(m => `
+                <div onclick="window.setTerritoryModalMunGlobal('${m.id}')"
+                  class="p-3 rounded-xl bg-[#140e40] hover:bg-[#20155c] border border-[#2d1f85] hover:border-amber-400 cursor-pointer flex items-center justify-between gap-2 shadow-sm transition">
+                  <span class="text-xs font-bold text-white">🏛️ ${(m.nombre || m.id).replace(/^Municipio\s+/i, '')}</span>
+                  <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-[#0e092e] text-slate-300 border border-[#2d1f85]">${m.parroquias?.length || 0} parr.</span>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `;
+        return;
+      }
       const pList = Array.isArray(currentMun?.parroquias) ? currentMun.parroquias : [];
       catalog.innerHTML = `
         <div class="flex flex-col md:flex-row gap-3 sm:gap-4 h-full min-h-0 flex-1 overflow-hidden">
@@ -3245,14 +3432,10 @@ class EarthMonagasApp {
         this.selectedMunId = savedMun;
         this.selectedParishId = savedParish;
       } else {
-        const recent = this.store.getMostRecentlyUpdatedParish();
-        if (recent && recent.parishId) {
-          this.selectedMunId = recent.munId;
-          this.selectedParishId = recent.parishId;
-        } else {
-          this.selectedMunId = this.selectedMunId || "maturin";
-          this.selectedParishId = this.selectedParishId || "san-simon";
-        }
+        // En ausencia de selección explícita o tras un reset:
+        // Cero dependencia municipal automática (inicia en Seleccionar Parroquia / Monagas)
+        this.selectedMunId = null;
+        this.selectedParishId = null;
       }
     }
 
@@ -3296,7 +3479,11 @@ class EarthMonagasApp {
       }
     }
 
-    this.selectParish(this.selectedMunId, this.selectedParishId);
+    if (this.selectedMunId && this.selectedParishId) {
+      this.selectParish(this.selectedMunId, this.selectedParishId);
+    } else {
+      this.focusEstado(false);
+    }
     this.renderPlacesTree();
     this.renderQuickParishBar();
 
