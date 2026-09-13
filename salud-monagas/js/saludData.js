@@ -3,7 +3,7 @@
  * Catálogo Territorial de Monagas (13 Municipios, 45 Parroquias), Normativa MPPS y Registros Base
  */
 
-export const CATALOGO_TERRITORIAL = [
+const CATALOGO_TERRITORIAL = [
   {
     "id": "maturin",
     "nombre": "Municipio Maturín",
@@ -690,7 +690,7 @@ export const CATALOGO_TERRITORIAL = [
   }
 ];
 
-export const CATALOGO_TIPOS_ESTABLECIMIENTO = [
+const CATALOGO_TIPOS_ESTABLECIMIENTO = [
   {
     id: 'comunal',
     nombre: 'Red Comunal / Barrio Adentro',
@@ -732,7 +732,7 @@ export const CATALOGO_TIPOS_ESTABLECIMIENTO = [
   }
 ];
 
-export const CATALOGO_AREAS_SERVICIOS = [
+const CATALOGO_AREAS_SERVICIOS = [
   { id: 'triaje', label: 'Triaje / Sala de Espera', icon: 'clock' },
   { id: 'consulta_externa', label: 'Consulta Externa', icon: 'users' },
   { id: 'emergencia_adultos', label: 'Emergencia Adultos', icon: 'activity' },
@@ -753,7 +753,7 @@ export const CATALOGO_AREAS_SERVICIOS = [
   { id: 'ambulancia', label: 'Puesto de Ambulancia', icon: 'truck' }
 ];
 
-export const CATALOGO_FALLAS = {
+const CATALOGO_FALLAS = {
   electricas: [
     { id: 'sin_planta', label: 'Sin planta eléctrica de emergencia' },
     { id: 'planta_inoperativa', label: 'Planta eléctrica inoperativa / dañada' },
@@ -790,14 +790,14 @@ export const CATALOGO_FALLAS = {
   ]
 };
 
-export const OPCIONES_SOPORTE_VITAL = {
+const OPCIONES_SOPORTE_VITAL = {
   plantaElectrica: ['Operativa', 'Inoperativa', 'No tiene'],
   suministroAgua: ['Continuo', 'Cisterna', 'Inexistente'],
   gasesMedicinales: ['Red Central', 'Bombonas', 'Inexistente'],
   climatizacion: ['100% Operativa', 'Parcial', 'Cero Clima']
 };
 
-export const CENTROS_SALUD_INICIALES = [
+const CENTROS_SALUD_INICIALES = [
   {
     "id": "humnt-maturin",
     "nombre": "Hospital Universitario Dr. Manuel Núñez Tovar (HUMNT)",
@@ -1332,3 +1332,12 @@ export const CENTROS_SALUD_INICIALES = [
     "nivelRiesgo": "verde"
   }
 ];
+
+if (typeof window !== 'undefined') {
+  window.CATALOGO_TERRITORIAL = CATALOGO_TERRITORIAL;
+  window.CATALOGO_TIPOS_ESTABLECIMIENTO = CATALOGO_TIPOS_ESTABLECIMIENTO;
+  window.CATALOGO_AREAS_SERVICIOS = CATALOGO_AREAS_SERVICIOS;
+  window.CATALOGO_FALLAS = CATALOGO_FALLAS;
+  window.OPCIONES_SOPORTE_VITAL = OPCIONES_SOPORTE_VITAL;
+  window.CENTROS_SALUD_INICIALES = CENTROS_SALUD_INICIALES;
+}

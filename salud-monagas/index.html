@@ -11,34 +11,22 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <link rel="icon" type="image/png" href="../assets/logo-migato.png">
 
-  <!-- Tailwind CSS (Local de Alta Disponibilidad + CDN de Respaldo) -->
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
   <script src="../vendor/tailwindcss.js"></script>
-  <script>
-    if (!window.tailwind) {
-      document.write('<script src="https://cdn.tailwindcss.com"><\/script>');
-    }
-  </script>
 
-  <!-- Leaflet CSS & JS (Local de Alta Disponibilidad + CDN de Respaldo) -->
+  <!-- Leaflet CSS & JS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <link rel="stylesheet" href="../vendor/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="../vendor/leaflet.js"></script>
-  <script>
-    if (typeof L === 'undefined') {
-      document.write('<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />');
-      document.write('<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"><\/script>');
-    }
-  </script>
 
-  <!-- Lucide Icons (Local + CDN) -->
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
   <script src="../vendor/lucide.min.js"></script>
-  <script>
-    if (!window.lucide) {
-      document.write('<script src="https://unpkg.com/lucide@latest"><\/script>');
-    }
-  </script>
 
   <!-- Custom Stylesheet & Print Rules -->
-  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/styles.css?v=152">
 </head>
 <body class="bg-[#0a0620] text-slate-100 min-h-screen flex flex-col antialiased select-none sm:select-auto" style="background: radial-gradient(circle at 50% 15%, #18114a 0%, #0e092e 50%, #080518 100%);">
 
@@ -609,7 +597,7 @@
     <div id="tab-directorio" class="tab-panel hidden space-y-4">
       
       <!-- BARRA DE BÚSQUEDA Y FILTROS -->
-      <div class="bg-[#18114a] border border-[#2d1f85] rounded-2xl p-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
+      <div class="bg-[#18114a] border border-[#2d1f85] rounded-2xl p-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-3">
         
         <!-- Búsqueda -->
         <div class="md:col-span-2">
@@ -626,10 +614,20 @@
           </select>
         </div>
 
+        <!-- Filtro Tipo de Red MPPS -->
+        <div>
+          <select id="filtro-tipo-red" class="w-full px-3 py-2 text-xs bg-[#120c36] border border-[#2d1f85] rounded-xl text-white focus:border-sky-400 focus:outline-none transition">
+            <option value="todos">Todas las Redes (MPPS)</option>
+            <option value="hospitalaria">Red Hospitalaria (Tipo I - IV)</option>
+            <option value="comunal">Red Comunal (CPT, CDI, SRI)</option>
+            <option value="ambulatoria">Red Ambulatoria (Rural / Urbano)</option>
+          </select>
+        </div>
+
         <!-- Filtro Riesgo -->
         <div>
           <select id="filtro-riesgo" class="w-full px-3 py-2 text-xs bg-[#120c36] border border-[#2d1f85] rounded-xl text-white focus:border-sky-400 focus:outline-none transition">
-            <option value="todos">Todos los Estados de Riesgo</option>
+            <option value="todos">Todos los Estados</option>
             <option value="rojo">🔴 Crítico (Rojo)</option>
             <option value="amarillo">🟡 Alerta (Amarillo)</option>
             <option value="verde">🟢 Operativo (Verde)</option>
@@ -697,8 +695,9 @@
 
   </div>
 
-  <!-- Scripts -->
-  <script type="module" src="js/saludApp.js"></script>
+  <!-- Scripts de Datos y Lógica (Carga universal estándar) -->
+  <script src="js/saludData.js?v=152"></script>
+  <script src="js/saludApp.js?v=152"></script>
 
 </body>
 </html>

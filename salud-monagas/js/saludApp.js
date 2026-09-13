@@ -1,11 +1,14 @@
-import { 
-  CATALOGO_TERRITORIAL, 
-  CATALOGO_TIPOS_ESTABLECIMIENTO, 
-  CATALOGO_AREAS_SERVICIOS, 
-  CATALOGO_FALLAS, 
-  OPCIONES_SOPORTE_VITAL, 
-  CENTROS_SALUD_INICIALES 
-} from './saludData.js';
+/**
+ * MIGATO • Módulo 5: Controlador de Pre-Diagnóstico de Infraestructura de Salud
+ * Carga directa y universal para compatibilidad total en navegadores y móviles.
+ */
+
+const CATALOGO_TERRITORIAL = window.CATALOGO_TERRITORIAL || [];
+const CATALOGO_TIPOS_ESTABLECIMIENTO = window.CATALOGO_TIPOS_ESTABLECIMIENTO || [];
+const CATALOGO_AREAS_SERVICIOS = window.CATALOGO_AREAS_SERVICIOS || [];
+const CATALOGO_FALLAS = window.CATALOGO_FALLAS || {};
+const OPCIONES_SOPORTE_VITAL = window.OPCIONES_SOPORTE_VITAL || {};
+const CENTROS_SALUD_INICIALES = window.CENTROS_SALUD_INICIALES || [];
 
 const STORAGE_KEY = 'migato_salud_centros_v1';
 
@@ -96,59 +99,62 @@ function calcularNivelRiesgo(datos) {
 
 function initMapaFormulario() {
   if (state.mapaFormulario) return;
+  if (typeof L === 'undefined') {
+    console.warn('Leaflet aún no disponible para mapa-formulario');
+    return;
+  }
 
   const mapContainer = document.getElementById('mapa-formulario');
-  if (!mapContainer) return;
+  if (!mapContainer || mapContainer._leaflet_id) return;
 
-  // Centro inicial por defecto: Maturín
   const coordsIniciales = [9.7483, -63.1785];
 
-  state.mapaFormulario = L.map('mapa-formulario', {
-    zoomControl: true,
-    attributionControl: false
-  }).setView(coordsIniciales, 13);
+  try {
+    state.mapaFormulario = L.map('mapa-formulario', {
+      zoomControl: true,
+      attributionControl: false
+    }).setView(coordsIniciales, 13);
 
-  // Capa Satelital ESRI de Alta Resolución
-  const satLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-    maxZoom: 19
-  }).addTo(state.mapaFormulario);
+    // Capa Satelital ESRI
+    const satLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+      maxZoom: 19
+    }).addTo(state.mapaFormulario);
 
-  // Capa CartoDB Positron como alternativa clara
-  const streetsLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-    maxZoom: 19
-  });
+    const streetsLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19
+    });
 
-  L.control.layers({
-    '🛰️ Satelital': satLayer,
-    '🗺️ Calles / Urbano': streetsLayer
-  }, null, { position: 'topright' }).addTo(state.mapaFormulario);
+    L.control.layers({
+      '🛰️ Satelital': satLayer,
+      '🗺️ Calles': streetsLayer
+    }, null, { position: 'topright' }).addTo(state.mapaFormulario);
 
-  // Icono arrastrable personalizado
-  const customPin = L.divIcon({
-    className: 'custom-form-pin',
-    html: '<div class="health-marker-pin rojo"><span class="health-marker-icon">+</span></div>',
-    iconSize: [32, 32],
-    iconAnchor: [16, 32]
-  });
+    const customPin = L.divIcon({
+      className: 'custom-form-pin',
+      html: '<div class="health-marker-pin rojo"><span class="health-marker-icon">+</span></div>',
+      iconSize: [32, 32],
+      iconAnchor: [16, 32]
+    });
 
-  state.marcadorFormulario = L.marker(coordsIniciales, {
-    draggable: true,
-    icon: customPin
-  }).addTo(state.mapaFormulario);
+    state.marcadorFormulario = L.marker(coordsIniciales, {
+      draggable: true,
+      icon: customPin
+    }).addTo(state.mapaFormulario);
 
-  // Evento al arrastrar marcador
-  state.marcadorFormulario.on('dragend', function(e) {
-    const pos = e.target.getLatLng();
-    actualizarCoordenadasInputs(pos.lat, pos.lng);
-  });
+    state.marcadorFormulario.on('dragend', function(e) {
+      const pos = e.target.getLatLng();
+      actualizarCoordenadasInputs(pos.lat, pos.lng);
+    });
 
-  // Evento al hacer clic en cualquier parte del mapa
-  state.mapaFormulario.on('click', function(e) {
-    state.marcadorFormulario.setLatLng(e.latlng);
-    actualizarCoordenadasInputs(e.latlng.lat, e.latlng.lng);
-  });
+    state.mapaFormulario.on('click', function(e) {
+      state.marcadorFormulario.setLatLng(e.latlng);
+      actualizarCoordenadasInputs(e.latlng.lat, e.latlng.lng);
+    });
 
-  actualizarCoordenadasInputs(coordsIniciales[0], coordsIniciales[1]);
+    actualizarCoordenadasInputs(coordsIniciales[0], coordsIniciales[1]);
+  } catch (err) {
+    console.error('Error inicializando mapa de formulario:', err);
+  }
 }
 
 function actualizarCoordenadasInputs(lat, lng) {
@@ -163,35 +169,43 @@ function actualizarCoordenadasInputs(lat, lng) {
 
 function initMapaGeneral() {
   if (state.mapaGeneral) return;
+  if (typeof L === 'undefined') {
+    console.warn('Leaflet aún no disponible para mapa-general');
+    return;
+  }
 
   const mapContainer = document.getElementById('mapa-general');
-  if (!mapContainer) return;
+  if (!mapContainer || mapContainer._leaflet_id) return;
 
-  // Centro de Monagas
-  state.mapaGeneral = L.map('mapa-general', {
-    zoomControl: true,
-    attributionControl: false
-  }).setView([9.6000, -63.2000], 9);
+  try {
+    state.mapaGeneral = L.map('mapa-general', {
+      zoomControl: true,
+      attributionControl: false
+    }).setView([9.6000, -63.2000], 9);
 
-  const satLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-    maxZoom: 19
-  }).addTo(state.mapaGeneral);
+    const satLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+      maxZoom: 19
+    }).addTo(state.mapaGeneral);
 
-  const streetsLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-    maxZoom: 19
-  });
+    const streetsLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19
+    });
 
-  L.control.layers({
-    '🛰️ Satélite Monagas': satLayer,
-    '🌙 Mapa Oscuro Táctico': streetsLayer
-  }, null, { position: 'topright' }).addTo(state.mapaGeneral);
+    L.control.layers({
+      '🛰️ Satélite Monagas': satLayer,
+      '🗺️ Mapa Urbano': streetsLayer
+    }, null, { position: 'topright' }).addTo(state.mapaGeneral);
 
-  state.marcadoresGeneralLayer = L.layerGroup().addTo(state.mapaGeneral);
-  actualizarMapaGeneral();
+    state.marcadoresGeneralLayer = L.layerGroup().addTo(state.mapaGeneral);
+    actualizarMapaGeneral();
+  } catch (err) {
+    console.error('Error inicializando mapa general:', err);
+  }
 }
 
 function actualizarMapaGeneral() {
   if (!state.mapaGeneral || !state.marcadoresGeneralLayer) return;
+  if (typeof L === 'undefined') return;
 
   state.marcadoresGeneralLayer.clearLayers();
 
@@ -225,7 +239,7 @@ function actualizarMapaGeneral() {
           }">
             ${color === 'rojo' ? '⚠️ RIESGO CRÍTICO' : color === 'amarillo' ? '🟡 ALERTA' : '🟢 OPERATIVO'}
           </span>
-          <span class="text-[10px] text-slate-400 font-mono">${c.municipio.replace('Municipio ', '')}</span>
+          <span class="text-[10px] text-slate-400 font-mono">${(c.municipio || '').replace('Municipio ', '')}</span>
         </div>
         <h4 class="font-bold text-sm text-white mb-1 leading-snug">${c.nombre}</h4>
         <p class="text-indigo-200 text-[11px] mb-2">${c.clasificacionEspecificaLabel || c.clasificacionEspecifica} • ${c.parroquia}</p>
@@ -291,8 +305,7 @@ function alCambiarMunicipio(municipioId) {
     selectParr.innerHTML += `<option value="${p.id}">${p.nombre}</option>`;
   });
 
-  // Centrar mapa de formulario en la primera parroquia
-  if (mun.parroquias.length > 0 && state.mapaFormulario) {
+  if (mun.parroquias.length > 0 && state.mapaFormulario && state.marcadorFormulario) {
     const coords = mun.parroquias[0].centro;
     state.mapaFormulario.flyTo(coords, 12.5, { duration: 1 });
     state.marcadorFormulario.setLatLng(coords);
@@ -320,8 +333,7 @@ function alCambiarParroquia(parroquiaId) {
   }
   selectSec.innerHTML += '<option value="otro">+ Otro Sector (Ingresar manualmente)...</option>';
 
-  // Volar al centro de la parroquia con zoom más cercano
-  if (parr.centro && state.mapaFormulario) {
+  if (parr.centro && state.mapaFormulario && state.marcadorFormulario) {
     state.mapaFormulario.flyTo(parr.centro, 14, { duration: 1 });
     state.marcadorFormulario.setLatLng(parr.centro);
     actualizarCoordenadasInputs(parr.centro[0], parr.centro[1]);
@@ -366,7 +378,6 @@ function renderTiposEstablecimiento() {
     });
   });
 
-  // Inicial con red hospitalaria por defecto
   actualizarSubtipos('hospitalaria');
 }
 
@@ -408,11 +419,11 @@ function renderFallasChecks() {
   if (!container) return;
 
   const grupos = [
-    { key: 'electricas', titulo: '⚡ Fallas Eléctricas', items: CATALOGO_FALLAS.electricas },
-    { key: 'hidrosanitarias', titulo: '💧 Fallas Hidrosanitarias', items: CATALOGO_FALLAS.hidrosanitarias },
-    { key: 'estructurales', titulo: '🏗️ Estructurales y Arquitectónicas', items: CATALOGO_FALLAS.estructurales },
-    { key: 'climatizacion', titulo: '❄️ Climatización y Cadena de Frío', items: CATALOGO_FALLAS.climatizacion },
-    { key: 'bioseguridad', titulo: '☣️ Bioseguridad y Movilidad', items: CATALOGO_FALLAS.bioseguridad }
+    { key: 'electricas', titulo: '⚡ Fallas Eléctricas', items: CATALOGO_FALLAS.electricas || [] },
+    { key: 'hidrosanitarias', titulo: '💧 Fallas Hidrosanitarias', items: CATALOGO_FALLAS.hidrosanitarias || [] },
+    { key: 'estructurales', titulo: '🏗️ Estructurales y Arquitectónicas', items: CATALOGO_FALLAS.estructurales || [] },
+    { key: 'climatizacion', titulo: '❄️ Climatización y Cadena de Frío', items: CATALOGO_FALLAS.climatizacion || [] },
+    { key: 'bioseguridad', titulo: '☣️ Bioseguridad y Movilidad', items: CATALOGO_FALLAS.bioseguridad || [] }
   ];
 
   let html = '<div class="space-y-4">';
@@ -434,7 +445,6 @@ function renderFallasChecks() {
   html += '</div>';
   container.innerHTML = html;
 
-  // Escuchar cambios en checkboxes de fallas para actualizar el semáforo
   container.querySelectorAll('input[type="checkbox"]').forEach(cb => {
     cb.addEventListener('change', evaluarSemaforoEnVivo);
   });
@@ -476,13 +486,11 @@ function recopilarDatosFormulario() {
   const tipoRedRadio = document.querySelector('input[name="tipoRed"]:checked');
   const subTipoRadio = document.querySelector('input[name="clasificacionEspecifica"]:checked');
 
-  // Áreas seleccionadas
   const areasServicios = [];
   document.querySelectorAll('input[name="areaServicio"]:checked').forEach(cb => {
     areasServicios.push(cb.value);
   });
 
-  // Fallas agrupadas
   const fallas = {
     electricas: [],
     hidrosanitarias: [],
@@ -621,7 +629,6 @@ function editarCentro(id) {
     }, 100);
   }, 100);
 
-  // Coordenadas y mapa
   if (centro.lat && centro.lng && state.mapaFormulario) {
     const pos = [centro.lat, centro.lng];
     state.mapaFormulario.setView(pos, 15);
@@ -629,7 +636,6 @@ function editarCentro(id) {
     actualizarCoordenadasInputs(pos[0], pos[1]);
   }
 
-  // Red
   const radioRed = document.querySelector(`input[name="tipoRed"][value="${centro.tipoRed}"]`);
   if (radioRed) {
     radioRed.checked = true;
@@ -641,7 +647,6 @@ function editarCentro(id) {
     if (radioSub) radioSub.checked = true;
   }, 150);
 
-  // Áreas
   document.querySelectorAll('input[name="areaServicio"]').forEach(cb => {
     cb.checked = (centro.areasServicios || []).includes(cb.value);
   });
@@ -654,7 +659,6 @@ function editarCentro(id) {
     document.getElementById('num-camas-hosp').value = centro.camasHospitalizacion || 0;
   }
 
-  // Soporte vital
   if (centro.soporteVital) {
     const p = document.querySelector(`input[name="soporte_planta"][value="${centro.soporteVital.plantaElectrica}"]`);
     if (p) p.checked = true;
@@ -666,7 +670,6 @@ function editarCentro(id) {
     if (c) c.checked = true;
   }
 
-  // Fallas
   if (centro.fallas) {
     Object.keys(centro.fallas).forEach(k => {
       const arr = centro.fallas[k] || [];
@@ -711,10 +714,8 @@ function renderFichaImprimible(centro) {
 
   state.centroSeleccionado = centro;
 
-  // Helper de checkbox [X] o [ ]
   const box = (isChecked) => `<span class="ficha-box-check ${isChecked ? 'checked-x font-mono font-bold' : ''}">${isChecked ? 'X' : '&nbsp;'}</span>`;
 
-  // Fallas check helper
   const hasFalla = (cat, fid) => (centro.fallas && centro.fallas[cat] && centro.fallas[cat].includes(fid));
   const hasArea = (aid) => (centro.areasServicios && centro.areasServicios.includes(aid));
 
@@ -739,11 +740,11 @@ function renderFichaImprimible(centro) {
         <tr>
           <td width="25%">
             <span class="ficha-label">Municipio:</span> <span class="ficha-select-indicator">▼</span><br>
-            <span class="ficha-value text-xs">${centro.municipio.replace('Municipio ', '')}</span>
+            <span class="ficha-value text-xs">${(centro.municipio || '').replace('Municipio ', '')}</span>
           </td>
           <td width="25%">
             <span class="ficha-label">Parroquia:</span> <span class="ficha-select-indicator">▼</span><br>
-            <span class="ficha-value text-xs">${centro.parroquia}</span>
+            <span class="ficha-value text-xs">${centro.parroquia || ''}</span>
           </td>
           <td width="25%">
             <span class="ficha-label">Sector:</span> <span class="ficha-select-indicator">▼</span><br>
@@ -760,7 +761,7 @@ function renderFichaImprimible(centro) {
       <table class="ficha-table">
         <tr>
           <td style="background-color: #f8fafc; text-align: center; font-weight: 800; font-size: 8pt; padding: 2px 0; border-top: none;">
-            MAPA DE UBICACIÓN (Coordenadas: ${centro.lat.toFixed(5)}, ${centro.lng.toFixed(5)})
+            MAPA DE UBICACIÓN (Coordenadas: ${(centro.lat || 9.7483).toFixed(5)}, ${(centro.lng || -63.1785).toFixed(5)})
           </td>
         </tr>
         <tr>
@@ -992,7 +993,6 @@ function renderFichaImprimible(centro) {
   bodyFicha.innerHTML = html;
   modal.classList.remove('hidden');
 
-  // Inicializar mini-mapa estático de la ficha
   setTimeout(() => {
     initMiniMapaFicha(centro);
   }, 100);
@@ -1000,34 +1000,44 @@ function renderFichaImprimible(centro) {
 
 function initMiniMapaFicha(centro) {
   const container = document.getElementById('mapa-ficha-print');
-  if (!container) return;
+  if (!container || typeof L === 'undefined') return;
 
   if (state.mapaFichaImpresion) {
     state.mapaFichaImpresion.remove();
     state.mapaFichaImpresion = null;
   }
+  if (container._leaflet_id) {
+    container._leaflet_id = null;
+  }
 
-  const map = L.map('mapa-ficha-print', {
-    zoomControl: false,
-    attributionControl: false,
-    dragging: false,
-    scrollWheelZoom: false,
-    doubleClickZoom: false
-  }).setView([centro.lat, centro.lng], 15);
+  try {
+    const lat = centro.lat || 9.7483;
+    const lng = centro.lng || -63.1785;
 
-  L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-    maxZoom: 19
-  }).addTo(map);
+    const map = L.map('mapa-ficha-print', {
+      zoomControl: false,
+      attributionControl: false,
+      dragging: false,
+      scrollWheelZoom: false,
+      doubleClickZoom: false
+    }).setView([lat, lng], 15);
 
-  const pin = L.divIcon({
-    className: 'custom-print-pin',
-    html: '<div style="background:#ef4444; border:2px solid white; border-radius:50%; width:16px; height:16px; box-shadow:0 2px 4px rgba(0,0,0,0.8);"></div>',
-    iconSize: [16, 16],
-    iconAnchor: [8, 8]
-  });
+    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+      maxZoom: 19
+    }).addTo(map);
 
-  L.marker([centro.lat, centro.lng], { icon: pin }).addTo(map);
-  state.mapaFichaImpresion = map;
+    const pin = L.divIcon({
+      className: 'custom-print-pin',
+      html: '<div style="background:#ef4444; border:2px solid white; border-radius:50%; width:16px; height:16px; box-shadow:0 2px 4px rgba(0,0,0,0.8);"></div>',
+      iconSize: [16, 16],
+      iconAnchor: [8, 8]
+    });
+
+    L.marker([lat, lng], { icon: pin }).addTo(map);
+    state.mapaFichaImpresion = map;
+  } catch (err) {
+    console.error('Error inicializando mini-mapa en ficha:', err);
+  }
 }
 
 function cerrarModalFicha() {
@@ -1041,19 +1051,15 @@ function cerrarModalFicha() {
 
 function obtenerCentrosFiltrados() {
   return state.centros.filter(c => {
-    // Filtro municipio
     if (state.filtroMunicipio !== 'todos' && c.municipioId !== state.filtroMunicipio) {
       return false;
     }
-    // Filtro tipo red
     if (state.filtroTipoRed !== 'todos' && c.tipoRed !== state.filtroTipoRed) {
       return false;
     }
-    // Filtro riesgo
     if (state.filtroRiesgo !== 'todos' && c.nivelRiesgo !== state.filtroRiesgo) {
       return false;
     }
-    // Búsqueda por texto
     if (state.busqueda) {
       const q = state.busqueda.toLowerCase();
       const matchNom = (c.nombre || '').toLowerCase().includes(q);
@@ -1104,7 +1110,7 @@ function renderDirectorioTabla() {
           <span class="text-[11px] text-sky-400 font-mono">${c.clasificacionEspecificaLabel || c.clasificacionEspecifica}</span>
         </td>
         <td class="py-3 px-3 text-slate-300">
-          <div class="font-medium">${c.municipio.replace('Municipio ', '')}</div>
+          <div class="font-medium">${(c.municipio || '').replace('Municipio ', '')}</div>
           <div class="text-[11px] text-slate-400">${c.parroquia} • ${c.sector || 'N/A'}</div>
         </td>
         <td class="py-3 px-3">
@@ -1139,7 +1145,9 @@ function renderDirectorioTabla() {
   });
 
   tbody.innerHTML = html;
-  if (window.lucide) lucide.createIcons();
+  if (window.lucide && typeof window.lucide.createIcons === 'function') {
+    lucide.createIcons();
+  }
 }
 
 function actualizarContadoresKPI() {
@@ -1259,7 +1267,7 @@ function cambiarPestana(targetId) {
 }
 
 // ==============================================================
-// 10. EXPOSICIÓN GLOBAL Y EVENT LISTENERS
+// 10. EXPOSICIÓN GLOBAL Y CONTROLADORES
 // ==============================================================
 
 window.verFichaCentro = (id) => {
@@ -1273,23 +1281,9 @@ window.imprimirFichaActual = () => {
   window.print();
 };
 window.cerrarModalFicha = cerrarModalFicha;
+window.cambiarPestana = cambiarPestana;
 
-document.addEventListener('DOMContentLoaded', () => {
-  inicializarDatos();
-  poblarMunicipios();
-  renderTiposEstablecimiento();
-  renderAreasServiciosChecks();
-  renderFallasChecks();
-  actualizarContadoresKPI();
-  renderDirectorioTabla();
-
-  // Iniciar mapa formulario
-  initMapaFormulario();
-
-  // Iniciar mapa general
-  initMapaGeneral();
-
-  // Event Listeners Cascada
+function configurarEventListeners() {
   const selMun = document.getElementById('form-municipio');
   if (selMun) {
     selMun.addEventListener('change', (e) => alCambiarMunicipio(e.target.value));
@@ -1312,30 +1306,25 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Soporte vital en vivo
   document.querySelectorAll('input[name^="soporte_"]').forEach(radio => {
     radio.addEventListener('change', evaluarSemaforoEnVivo);
   });
 
-  // Fecha hoy por defecto
   const fechaInput = document.getElementById('form-eval-fecha');
   if (fechaInput && !fechaInput.value) {
     fechaInput.value = new Date().toISOString().split('T')[0];
   }
 
-  // Submit formulario
   const form = document.getElementById('form-pre-diagnostico');
   if (form) {
     form.addEventListener('submit', guardarPreDiagnostico);
   }
 
-  // Botón Limpiar
   const btnLimpiar = document.getElementById('btn-limpiar-form');
   if (btnLimpiar) {
     btnLimpiar.addEventListener('click', limpiarFormulario);
   }
 
-  // Botón Previsualizar en formulario
   const btnPrevisualizar = document.getElementById('btn-previsualizar-ficha');
   if (btnPrevisualizar) {
     btnPrevisualizar.addEventListener('click', () => {
@@ -1344,12 +1333,10 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Botones de pestañas
   document.querySelectorAll('.tab-btn').forEach(btn => {
     btn.addEventListener('click', () => cambiarPestana(btn.dataset.target));
   });
 
-  // Filtros de directorio
   const filtroMun = document.getElementById('filtro-municipio');
   if (filtroMun) {
     filtroMun.addEventListener('change', (e) => {
@@ -1386,14 +1373,12 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Exportar
   const btnExpJson = document.getElementById('btn-export-json');
   if (btnExpJson) btnExpJson.addEventListener('click', exportarJSON);
 
   const btnExpCsv = document.getElementById('btn-export-csv');
   if (btnExpCsv) btnExpCsv.addEventListener('click', exportarCSV);
 
-  // Botón GPS
   const btnGps = document.getElementById('btn-gps-ubicacion');
   if (btnGps) {
     btnGps.addEventListener('click', () => {
@@ -1407,7 +1392,7 @@ document.addEventListener('DOMContentLoaded', () => {
           btnGps.classList.remove('animate-spin');
           const lat = pos.coords.latitude;
           const lng = pos.coords.longitude;
-          if (state.mapaFormulario) {
+          if (state.mapaFormulario && state.marcadorFormulario) {
             state.mapaFormulario.flyTo([lat, lng], 16);
             state.marcadorFormulario.setLatLng([lat, lng]);
             actualizarCoordenadasInputs(lat, lng);
@@ -1422,12 +1407,52 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Cerrar modal al pulsar Escape
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') cerrarModalFicha();
   });
+}
 
-  if (window.lucide) {
-    lucide.createIcons();
+// ==============================================================
+// 11. INICIO INFALIBLE DE LA APLICACIÓN
+// ==============================================================
+
+function iniciarAplicacion() {
+  try {
+    console.log("🚀 Iniciando Módulo 5 Salud Monagas...");
+    inicializarDatos();
+    poblarMunicipios();
+    renderTiposEstablecimiento();
+    renderAreasServiciosChecks();
+    renderFallasChecks();
+    actualizarContadoresKPI();
+    renderDirectorioTabla();
+
+    if (typeof L !== 'undefined') {
+      initMapaFormulario();
+      initMapaGeneral();
+    } else {
+      console.warn("⚠️ Leaflet aún no está disponible, reintentando...");
+      setTimeout(() => {
+        if (typeof L !== 'undefined') {
+          initMapaFormulario();
+          initMapaGeneral();
+        }
+      }, 350);
+    }
+
+    configurarEventListeners();
+
+    if (window.lucide && typeof window.lucide.createIcons === 'function') {
+      window.lucide.createIcons();
+    }
+    console.log("✅ Módulo 5 Salud Monagas iniciado con éxito.");
+  } catch (err) {
+    console.error("❌ Error al iniciar Módulo 5 Salud Monagas:", err);
   }
-});
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", iniciarAplicacion);
+} else {
+  iniciarAplicacion();
+}
