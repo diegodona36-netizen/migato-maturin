@@ -1050,8 +1050,8 @@ const CENTROS_SALUD_INICIALES = [
     "parroquiaId": "boqueron",
     "parroquia": "Boquerón",
     "sector": "Las Piñas / Vía Boquerón",
-    "lat": 9.791,
-    "lng": -63.185,
+    "lat": 9.7845,
+    "lng": -63.1992,
     "tipoRed": "hospitalaria",
     "tipoRedLabel": "Red Hospitalaria Especializada (Tipo I, II, III, IV)",
     "clasificacionEspecifica": "Hospital Tipo I",
@@ -1098,7 +1098,7 @@ const CENTROS_SALUD_INICIALES = [
       "fecha": "2026-09-07"
     },
     "nivelRiesgo": "amarillo",
-    "precision": "sectorial"
+    "precision": "exacta"
   },
   {
     "id": "hosp-punta-de-mata",
@@ -1680,9 +1680,9 @@ const CENTROS_SALUD_INICIALES = [
     "municipio": "Municipio Uracoa",
     "parroquiaId": "uracoa-centro",
     "parroquia": "Uracoa",
-    "sector": "Uracoa Centro / Plaza Bolívar",
-    "lat": 8.745,
-    "lng": -62.345,
+    "sector": "Uracoa Centro / Calle Comercio",
+    "lat": 8.7468,
+    "lng": -62.3385,
     "tipoRed": "hospitalaria",
     "tipoRedLabel": "Red Hospitalaria Especializada (Tipo I, II, III, IV)",
     "clasificacionEspecifica": "Hospital Tipo I",
@@ -1731,7 +1731,7 @@ const CENTROS_SALUD_INICIALES = [
       "fecha": "2026-09-09"
     },
     "nivelRiesgo": "rojo",
-    "precision": "sectorial"
+    "precision": "exacta"
   },
   {
     "id": "hosp-aragua-maturin",
@@ -1741,8 +1741,8 @@ const CENTROS_SALUD_INICIALES = [
     "parroquiaId": "aragua",
     "parroquia": "Aragua de Maturín",
     "sector": "Aragua de Maturín / Calle Bolívar",
-    "lat": 9.972,
-    "lng": -63.485,
+    "lat": 9.9722,
+    "lng": -63.4851,
     "tipoRed": "hospitalaria",
     "tipoRedLabel": "Red Hospitalaria Especializada (Tipo I, II, III, IV)",
     "clasificacionEspecifica": "Hospital Tipo I",
@@ -1786,7 +1786,7 @@ const CENTROS_SALUD_INICIALES = [
       "fecha": "2026-09-08"
     },
     "nivelRiesgo": "verde",
-    "precision": "sectorial"
+    "precision": "exacta"
   },
   {
     "id": "cdi-los-godos",
@@ -1845,11 +1845,11 @@ const CENTROS_SALUD_INICIALES = [
     "nombre": "CDI Dr. Carmelo Regardiz",
     "municipioId": "maturin",
     "municipio": "Municipio Maturín",
-    "parroquiaId": "san-simon",
-    "parroquia": "San Simón (Casco Central)",
-    "sector": "Brisas del Orinoco / Calle 4",
-    "lat": 9.739,
-    "lng": -63.172,
+    "parroquiaId": "las-cocuizas",
+    "parroquia": "Las Cocuizas",
+    "sector": "Brisas del Aeropuerto / Av. José Tadeo Monagas",
+    "lat": 9.74561,
+    "lng": -63.14517,
     "tipoRed": "comunal",
     "tipoRedLabel": "Red Comunal / Barrio Adentro (CPT, CDI, SRI, CAT)",
     "clasificacionEspecifica": "Centro de Diagnóstico Integral (CDI)",
@@ -1890,7 +1890,7 @@ const CENTROS_SALUD_INICIALES = [
       "fecha": "2026-09-10"
     },
     "nivelRiesgo": "verde",
-    "precision": "sectorial"
+    "precision": "exacta"
   },
   {
     "id": "cdi-23-de-enero",
@@ -1951,9 +1951,9 @@ const CENTROS_SALUD_INICIALES = [
     "municipio": "Municipio Maturín",
     "parroquiaId": "boqueron",
     "parroquia": "Boquerón",
-    "sector": "Tipuro / Av. Alirio Ugarte Pelayo",
-    "lat": 9.789,
-    "lng": -63.189,
+    "sector": "Boquerón Centro / Av. Alirio Ugarte Pelayo",
+    "lat": 9.7891,
+    "lng": -63.1895,
     "tipoRed": "comunal",
     "tipoRedLabel": "Red Comunal / Barrio Adentro (CPT, CDI, SRI, CAT)",
     "clasificacionEspecifica": "Centro de Diagnóstico Integral (CDI)",
@@ -1994,7 +1994,7 @@ const CENTROS_SALUD_INICIALES = [
       "fecha": "2026-09-10"
     },
     "nivelRiesgo": "verde",
-    "precision": "sectorial"
+    "precision": "exacta"
   },
   {
     "id": "cdi-los-cortijos",
@@ -2111,9 +2111,9 @@ const CENTROS_SALUD_INICIALES = [
     "municipio": "Municipio Maturín",
     "parroquiaId": "la-pica",
     "parroquia": "La Pica",
-    "sector": "La Pica Centro / Calle Real",
-    "lat": 9.775,
-    "lng": -63.078,
+    "sector": "La Pica Centro / Calle Principal",
+    "lat": 9.7752,
+    "lng": -63.0784,
     "tipoRed": "comunal",
     "tipoRedLabel": "Red Comunal / Barrio Adentro (CPT, CDI, SRI, CAT)",
     "clasificacionEspecifica": "Centro de Diagnóstico Integral (CDI)",
@@ -2154,7 +2154,7 @@ const CENTROS_SALUD_INICIALES = [
       "fecha": "2026-09-10"
     },
     "nivelRiesgo": "amarillo",
-    "precision": "sectorial"
+    "precision": "exacta"
   },
   {
     "id": "cdi-el-furrial",
@@ -2163,9 +2163,9 @@ const CENTROS_SALUD_INICIALES = [
     "municipio": "Municipio Maturín",
     "parroquiaId": "el-furrial",
     "parroquia": "El Furrial",
-    "sector": "El Furrial / Entrada Oeste",
-    "lat": 9.725,
-    "lng": -63.365,
+    "sector": "El Furrial / Sector La Florida",
+    "lat": 9.7032,
+    "lng": -63.4835,
     "tipoRed": "comunal",
     "tipoRedLabel": "Red Comunal / Barrio Adentro (CPT, CDI, SRI, CAT)",
     "clasificacionEspecifica": "Centro de Diagnóstico Integral (CDI)",
@@ -2206,7 +2206,7 @@ const CENTROS_SALUD_INICIALES = [
       "fecha": "2026-09-10"
     },
     "nivelRiesgo": "verde",
-    "precision": "sectorial"
+    "precision": "exacta"
   },
   {
     "id": "cdi-jusepin",
@@ -2267,9 +2267,9 @@ const CENTROS_SALUD_INICIALES = [
     "municipio": "Municipio Maturín",
     "parroquiaId": "san-vicente",
     "parroquia": "San Vicente",
-    "sector": "San Vicente Centro",
-    "lat": 9.728,
-    "lng": -63.285,
+    "sector": "San Vicente Centro / Calle Bolívar",
+    "lat": 9.7285,
+    "lng": -63.2854,
     "tipoRed": "comunal",
     "tipoRedLabel": "Red Comunal / Barrio Adentro (CPT, CDI, SRI, CAT)",
     "clasificacionEspecifica": "Centro de Diagnóstico Integral (CDI)",
@@ -2310,7 +2310,7 @@ const CENTROS_SALUD_INICIALES = [
       "fecha": "2026-09-10"
     },
     "nivelRiesgo": "amarillo",
-    "precision": "sectorial"
+    "precision": "exacta"
   },
   {
     "id": "cdi-el-corozo",
@@ -2319,9 +2319,9 @@ const CENTROS_SALUD_INICIALES = [
     "municipio": "Municipio Maturín",
     "parroquiaId": "el-corozo",
     "parroquia": "El Corozo",
-    "sector": "El Corozo / Troncal 10",
-    "lat": 9.675,
-    "lng": -63.215,
+    "sector": "El Corozo / Carretera Troncal 10",
+    "lat": 9.6852,
+    "lng": -63.2155,
     "tipoRed": "comunal",
     "tipoRedLabel": "Red Comunal / Barrio Adentro (CPT, CDI, SRI, CAT)",
     "clasificacionEspecifica": "Centro de Diagnóstico Integral (CDI)",
@@ -2366,7 +2366,7 @@ const CENTROS_SALUD_INICIALES = [
       "fecha": "2026-09-10"
     },
     "nivelRiesgo": "rojo",
-    "precision": "sectorial"
+    "precision": "exacta"
   },
   {
     "id": "cdi-punta-de-mata",
@@ -2635,9 +2635,9 @@ const CENTROS_SALUD_INICIALES = [
     "municipio": "Municipio Piar",
     "parroquiaId": "aragua",
     "parroquia": "Aragua de Maturín",
-    "sector": "Aragua Centro",
-    "lat": 9.972,
-    "lng": -63.485,
+    "sector": "Aragua de Maturín / Sector Banco Obrero",
+    "lat": 9.9735,
+    "lng": -63.4842,
     "tipoRed": "comunal",
     "tipoRedLabel": "Red Comunal / Barrio Adentro (CPT, CDI, SRI, CAT)",
     "clasificacionEspecifica": "Centro de Diagnóstico Integral (CDI)",
@@ -2678,7 +2678,7 @@ const CENTROS_SALUD_INICIALES = [
       "fecha": "2026-09-10"
     },
     "nivelRiesgo": "verde",
-    "precision": "sectorial"
+    "precision": "exacta"
   },
   {
     "id": "cdi-san-antonio",
@@ -3048,11 +3048,11 @@ const CENTROS_SALUD_INICIALES = [
     "nombre": "SRI Carmelo Regardiz",
     "municipioId": "maturin",
     "municipio": "Municipio Maturín",
-    "parroquiaId": "san-simon",
-    "parroquia": "San Simón (Casco Central)",
-    "sector": "Brisas del Orinoco",
-    "lat": 9.7395,
-    "lng": -63.1715,
+    "parroquiaId": "las-cocuizas",
+    "parroquia": "Las Cocuizas",
+    "sector": "Brisas del Aeropuerto / Av. José Tadeo Monagas",
+    "lat": 9.74561,
+    "lng": -63.14517,
     "tipoRed": "comunal",
     "tipoRedLabel": "Red Comunal / Barrio Adentro (CPT, CDI, SRI, CAT)",
     "clasificacionEspecifica": "Sala de Rehabilitación Integral (SRI)",
@@ -3092,7 +3092,7 @@ const CENTROS_SALUD_INICIALES = [
       "fecha": "2026-09-10"
     },
     "nivelRiesgo": "verde",
-    "precision": "sectorial"
+    "precision": "exacta"
   },
   {
     "id": "sri-23-de-enero",
@@ -3152,9 +3152,9 @@ const CENTROS_SALUD_INICIALES = [
     "municipio": "Municipio Maturín",
     "parroquiaId": "boqueron",
     "parroquia": "Boquerón",
-    "sector": "Tipuro",
-    "lat": 9.7895,
-    "lng": -63.1885,
+    "sector": "Boquerón Centro / Av. Alirio Ugarte Pelayo",
+    "lat": 9.7891,
+    "lng": -63.1895,
     "tipoRed": "comunal",
     "tipoRedLabel": "Red Comunal / Barrio Adentro (CPT, CDI, SRI, CAT)",
     "clasificacionEspecifica": "Sala de Rehabilitación Integral (SRI)",
@@ -3194,7 +3194,7 @@ const CENTROS_SALUD_INICIALES = [
       "fecha": "2026-09-10"
     },
     "nivelRiesgo": "verde",
-    "precision": "sectorial"
+    "precision": "exacta"
   },
   {
     "id": "sri-la-pica",
@@ -3203,9 +3203,9 @@ const CENTROS_SALUD_INICIALES = [
     "municipio": "Municipio Maturín",
     "parroquiaId": "la-pica",
     "parroquia": "La Pica",
-    "sector": "La Pica",
-    "lat": 9.7755,
-    "lng": -63.0775,
+    "sector": "La Pica Centro / Calle Principal",
+    "lat": 9.7752,
+    "lng": -63.0784,
     "tipoRed": "comunal",
     "tipoRedLabel": "Red Comunal / Barrio Adentro (CPT, CDI, SRI, CAT)",
     "clasificacionEspecifica": "Sala de Rehabilitación Integral (SRI)",
@@ -3245,7 +3245,7 @@ const CENTROS_SALUD_INICIALES = [
       "fecha": "2026-09-10"
     },
     "nivelRiesgo": "amarillo",
-    "precision": "sectorial"
+    "precision": "exacta"
   },
   {
     "id": "sri-el-furrial",
@@ -3254,9 +3254,9 @@ const CENTROS_SALUD_INICIALES = [
     "municipio": "Municipio Maturín",
     "parroquiaId": "el-furrial",
     "parroquia": "El Furrial",
-    "sector": "El Furrial",
-    "lat": 9.7245,
-    "lng": -63.3645,
+    "sector": "El Furrial / Sector La Florida",
+    "lat": 9.7032,
+    "lng": -63.4835,
     "tipoRed": "comunal",
     "tipoRedLabel": "Red Comunal / Barrio Adentro (CPT, CDI, SRI, CAT)",
     "clasificacionEspecifica": "Sala de Rehabilitación Integral (SRI)",
@@ -3296,7 +3296,7 @@ const CENTROS_SALUD_INICIALES = [
       "fecha": "2026-09-10"
     },
     "nivelRiesgo": "verde",
-    "precision": "sectorial"
+    "precision": "exacta"
   },
   {
     "id": "sri-punta-de-mata",
@@ -3509,9 +3509,9 @@ const CENTROS_SALUD_INICIALES = [
     "municipio": "Municipio Piar",
     "parroquiaId": "aragua",
     "parroquia": "Aragua de Maturín",
-    "sector": "Aragua",
-    "lat": 9.9715,
-    "lng": -63.4845,
+    "sector": "Aragua de Maturín / Sector Banco Obrero",
+    "lat": 9.9735,
+    "lng": -63.4842,
     "tipoRed": "comunal",
     "tipoRedLabel": "Red Comunal / Barrio Adentro (CPT, CDI, SRI, CAT)",
     "clasificacionEspecifica": "Sala de Rehabilitación Integral (SRI)",
@@ -3551,7 +3551,7 @@ const CENTROS_SALUD_INICIALES = [
       "fecha": "2026-09-10"
     },
     "nivelRiesgo": "verde",
-    "precision": "sectorial"
+    "precision": "exacta"
   },
   {
     "id": "sri-quiriquire",
@@ -4313,9 +4313,9 @@ const CENTROS_SALUD_INICIALES = [
     "municipio": "Municipio Maturín",
     "parroquiaId": "boqueron",
     "parroquia": "Boquerón",
-    "sector": "Viboral Centro",
-    "lat": 9.811,
-    "lng": -63.182,
+    "sector": "Viboral Centro / Cerca Escuela Santa Elena",
+    "lat": 9.78368,
+    "lng": -63.20465,
     "tipoRed": "ambulatoria",
     "tipoRedLabel": "Red Ambulatoria Especializada (Urbana / Rural)",
     "clasificacionEspecifica": "Amb. Rural I",
@@ -4354,7 +4354,7 @@ const CENTROS_SALUD_INICIALES = [
       "fecha": "2026-09-10"
     },
     "nivelRiesgo": "verde",
-    "precision": "sectorial"
+    "precision": "exacta"
   },
   {
     "id": "amb-el-corozo",
@@ -5211,6 +5211,7 @@ const CENTROS_SALUD_INICIALES = [
     "precision": "sectorial"
   }
 ];
+
 
 
 
