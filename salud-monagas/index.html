@@ -38,7 +38,7 @@
   </script>
 
   <!-- Custom Stylesheet & Print Rules -->
-  <link rel="stylesheet" href="css/styles.css?v=159">
+  <link rel="stylesheet" href="css/styles.css?v=160">
 </head>
 <body class="bg-[#0a0620] text-slate-100 min-h-screen flex flex-col antialiased select-none sm:select-auto" style="background: radial-gradient(circle at 50% 15%, #18114a 0%, #0e092e 50%, #080518 100%);">
 
@@ -611,8 +611,9 @@
           <h2 class="text-base font-black text-white flex items-center gap-2">
             <i data-lucide="map" class="w-5 h-5 text-sky-400"></i>
             <span>Red Hospitalaria y Sanitaria del Estado Monagas</span>
+            <span class="text-[10px] font-mono font-bold bg-blue-950 text-blue-300 border border-blue-600/50 px-2 py-0.5 rounded-full hidden sm:inline">Google Maps • Exclusivo Monagas</span>
           </h2>
-          <p class="text-xs text-slate-300">Monitoreo de 13 Municipios • Semáforo de Soporte Crítico en Tiempo Real</p>
+          <p class="text-xs text-slate-300">Monitoreo de 13 Municipios • Cartografía Google Maps • Bloqueo territorial estricto a Monagas</p>
         </div>
 
         <!-- Leyenda -->
@@ -677,13 +678,19 @@
             </button>
           </div>
 
-          <!-- Conmutador Directo Satélite / Calles -->
+          <!-- Conmutador de Capas Google Maps (Delimitado a Monagas) -->
           <div class="flex items-center gap-1 bg-[#100b33] p-1 rounded-xl border border-[#2d1f85]">
-            <button id="btn-toggle-satelite" onclick="window.conmutarCapaMapa('satelite')" class="px-2.5 py-1 rounded-lg bg-sky-500 text-slate-950 font-bold text-[11px] transition flex items-center gap-1 shadow">
-              <span>🛰️ Satélite HD</span>
+            <button id="btn-toggle-calles" onclick="window.conmutarCapaMapa('calles')" class="px-2.5 py-1 rounded-lg bg-sky-500 text-slate-950 font-bold text-[11px] transition flex items-center gap-1 shadow" title="Google Maps: Calles y Puntos de Referencia">
+              <span>🗺️ Google Calles</span>
             </button>
-            <button id="btn-toggle-calles" onclick="window.conmutarCapaMapa('calles')" class="px-2.5 py-1 rounded-lg text-slate-300 hover:text-white font-medium text-[11px] transition flex items-center gap-1">
-              <span>🗺️ Mapa Urbano</span>
+            <button id="btn-toggle-satelite" onclick="window.conmutarCapaMapa('satelite')" class="px-2.5 py-1 rounded-lg text-slate-300 hover:text-white font-medium text-[11px] transition flex items-center gap-1" title="Google Maps: Satélite con Etiquetas">
+              <span>🛰️ Google Satélite</span>
+            </button>
+            <button id="btn-toggle-terreno" onclick="window.conmutarCapaMapa('terreno')" class="px-2.5 py-1 rounded-lg text-slate-300 hover:text-white font-medium text-[11px] transition flex items-center gap-1" title="Google Maps: Terreno y Elevación">
+              <span>⛰️ Terreno</span>
+            </button>
+            <button onclick="window.recentrarMapaMonagas()" class="px-2.5 py-1 rounded-lg bg-[#18114a] hover:bg-[#251b68] text-amber-300 border border-amber-500/40 font-bold text-[11px] transition flex items-center gap-1 ml-1" title="Centrar vista completa del Estado Monagas">
+              <span>🔄 Monagas</span>
             </button>
           </div>
         </div>
@@ -878,8 +885,8 @@
   </div>
 
   <!-- Scripts de Datos y Lógica (Carga universal estándar) -->
-  <script src="js/saludData.js?v=159"></script>
-  <script src="js/saludApp.js?v=159"></script>
+  <script src="js/saludData.js?v=160"></script>
+  <script src="js/saludApp.js?v=160"></script>
 
 </body>
 </html>

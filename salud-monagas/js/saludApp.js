@@ -12,7 +12,13 @@
   const CATALOGO_FALLAS = window.CATALOGO_FALLAS || {};
   const OPCIONES_SOPORTE_VITAL = window.OPCIONES_SOPORTE_VITAL || {};
   const CENTROS_SALUD_INICIALES = window.CENTROS_SALUD_INICIALES || [];
-const STORAGE_KEY = 'migato_salud_centros_v6';
+const STORAGE_KEY = 'migato_salud_centros_v7';
+
+// Delimitación geográfica estricta del Estado Monagas (Caripe al Norte, Orinoco al Sur)
+const BOUNDS_MONAGAS_COORDS = [
+  [8.30, -64.30], // Suroeste (Frontera Orinoco / Anzoátegui)
+  [10.50, -62.25] // Noreste (Frontera Sucre / Delta Amacuro)
+];
 
 // Estado global de la aplicación
 const state = {
@@ -37,8 +43,11 @@ const state = {
   filtroEstadoMapa: 'todos', // 'todos' | 'calibrar' | 'exactos'
   busquedaMapa: '',
   centrosListaMapa: [],
-  satLayer: null,
-  streetsLayer: null
+  // Capas Oficiales de Google Maps
+  googleRoadmapLayer: null,
+  googleHybridLayer: null,
+  googleTerrainLayer: null,
+  capaActualMapa: 'calles'
 };
 
 // ==============================================================
@@ -144,25 +153,35 @@ function initMapaFormulario() {
   if (!mapContainer || mapContainer._leaflet_id) return;
 
   const coordsIniciales = [9.7483, -63.1785];
+  const boundsMonagas = L.latLngBounds(BOUNDS_MONAGAS_COORDS);
 
   try {
     state.mapaFormulario = L.map('mapa-formulario', {
       zoomControl: true,
-      attributionControl: false
+      attributionControl: false,
+      maxBounds: boundsMonagas,
+      maxBoundsViscosity: 1.0,
+      minZoom: 8.5,
+      maxZoom: 20
     }).setView(coordsIniciales, 13);
 
-    // Capa Satelital ESRI
-    const satLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-      maxZoom: 19
+    // Google Maps Calles (con POIs locales de Monagas en español)
+    const googleRoadmap = L.tileLayer('https://mt{s}.google.com/vt/lyrs=m&hl=es&gl=VE&x={x}&y={y}&z={z}', {
+      subdomains: ['0', '1', '2', '3'],
+      maxZoom: 20,
+      attribution: 'Google Maps'
     }).addTo(state.mapaFormulario);
 
-    const streetsLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 19
+    // Google Maps Satélite Híbrido (Imágenes satelitales + etiquetas viales)
+    const googleHybrid = L.tileLayer('https://mt{s}.google.com/vt/lyrs=y&hl=es&gl=VE&x={x}&y={y}&z={z}', {
+      subdomains: ['0', '1', '2', '3'],
+      maxZoom: 20,
+      attribution: 'Google Maps'
     });
 
     L.control.layers({
-      '🛰️ Satelital': satLayer,
-      '🗺️ Calles': streetsLayer
+      '🗺️ Google Calles': googleRoadmap,
+      '🛰️ Google Satélite': googleHybrid
     }, null, { position: 'topright' }).addTo(state.mapaFormulario);
 
     const customPin = L.divIcon({
@@ -275,19 +294,42 @@ function initMapaGeneral() {
   const mapContainer = document.getElementById('mapa-general');
   if (!mapContainer || mapContainer._leaflet_id) return;
 
+  const boundsMonagas = L.latLngBounds(BOUNDS_MONAGAS_COORDS);
+
   try {
     state.mapaGeneral = L.map('mapa-general', {
       zoomControl: true,
-      attributionControl: false
-    }).setView([9.6000, -63.2000], 9);
+      attributionControl: false,
+      maxBounds: boundsMonagas,
+      maxBoundsViscosity: 1.0,
+      minZoom: 8.5,
+      maxZoom: 20
+    }).setView([9.7483, -63.1785], 9.5);
 
-    state.satLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-      maxZoom: 19
-    }).addTo(state.mapaGeneral);
-
-    state.streetsLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 19
+    // 1. Google Maps Calles (Roadmap con POIs, hospitales, vías y comercios de Monagas en español)
+    state.googleRoadmapLayer = L.tileLayer('https://mt{s}.google.com/vt/lyrs=m&hl=es&gl=VE&x={x}&y={y}&z={z}', {
+      subdomains: ['0', '1', '2', '3'],
+      maxZoom: 20,
+      attribution: 'Google Maps'
     });
+
+    // 2. Google Maps Satélite Híbrido (Ortofoto satelital de alta resolución + calles y sitios)
+    state.googleHybridLayer = L.tileLayer('https://mt{s}.google.com/vt/lyrs=y&hl=es&gl=VE&x={x}&y={y}&z={z}', {
+      subdomains: ['0', '1', '2', '3'],
+      maxZoom: 20,
+      attribution: 'Google Maps'
+    });
+
+    // 3. Google Maps Terreno (Relieve topográfico y elevación de Monagas)
+    state.googleTerrainLayer = L.tileLayer('https://mt{s}.google.com/vt/lyrs=p&hl=es&gl=VE&x={x}&y={y}&z={z}', {
+      subdomains: ['0', '1', '2', '3'],
+      maxZoom: 20,
+      attribution: 'Google Maps'
+    });
+
+    // Activar Google Calles por defecto
+    state.googleRoadmapLayer.addTo(state.mapaGeneral);
+    state.capaActualMapa = 'calles';
 
     state.marcadoresGeneralLayer = L.layerGroup().addTo(state.mapaGeneral);
     actualizarMapaGeneral();
@@ -304,6 +346,14 @@ function initMapaGeneral() {
   } catch (err) {
     console.error('Error inicializando mapa general:', err);
   }
+}
+
+function recentrarMapaMonagas() {
+  if (!state.mapaGeneral) return;
+  state.mapaGeneral.flyTo([9.7483, -63.1785], 9.5, {
+    animate: true,
+    duration: 1.0
+  });
 }
 
 function actualizarMapaGeneral() {
@@ -866,37 +916,43 @@ function filtrarCentrosMapa(criterio) {
 }
 
 function conmutarCapaMapa(tipo) {
-  if (!state.mapaGeneral || !state.satLayer || !state.streetsLayer) return;
+  if (!state.mapaGeneral || !state.googleRoadmapLayer || !state.googleHybridLayer || !state.googleTerrainLayer) return;
 
-  const btnSat = document.getElementById('btn-toggle-satelite');
   const btnCalles = document.getElementById('btn-toggle-calles');
+  const btnSat = document.getElementById('btn-toggle-satelite');
+  const btnTerreno = document.getElementById('btn-toggle-terreno');
+
+  // Remover capas activas
+  if (state.mapaGeneral.hasLayer(state.googleRoadmapLayer)) {
+    state.mapaGeneral.removeLayer(state.googleRoadmapLayer);
+  }
+  if (state.mapaGeneral.hasLayer(state.googleHybridLayer)) {
+    state.mapaGeneral.removeLayer(state.googleHybridLayer);
+  }
+  if (state.mapaGeneral.hasLayer(state.googleTerrainLayer)) {
+    state.mapaGeneral.removeLayer(state.googleTerrainLayer);
+  }
+
+  const activeClass = 'px-2.5 py-1 rounded-lg bg-sky-500 text-slate-950 font-bold text-[11px] transition flex items-center gap-1 shadow';
+  const inactiveClass = 'px-2.5 py-1 rounded-lg text-slate-300 hover:text-white font-medium text-[11px] transition flex items-center gap-1';
+
+  if (btnCalles) btnCalles.className = inactiveClass;
+  if (btnSat) btnSat.className = inactiveClass;
+  if (btnTerreno) btnTerreno.className = inactiveClass;
 
   if (tipo === 'satelite') {
-    if (state.mapaGeneral.hasLayer(state.streetsLayer)) {
-      state.mapaGeneral.removeLayer(state.streetsLayer);
-    }
-    if (!state.mapaGeneral.hasLayer(state.satLayer)) {
-      state.satLayer.addTo(state.mapaGeneral);
-    }
-    if (btnSat) {
-      btnSat.className = 'px-2.5 py-1 rounded-lg bg-sky-500 text-slate-950 font-bold text-[11px] transition flex items-center gap-1 shadow';
-    }
-    if (btnCalles) {
-      btnCalles.className = 'px-2.5 py-1 rounded-lg text-slate-300 hover:text-white font-medium text-[11px] transition flex items-center gap-1';
-    }
+    state.googleHybridLayer.addTo(state.mapaGeneral);
+    state.capaActualMapa = 'satelite';
+    if (btnSat) btnSat.className = activeClass;
+  } else if (tipo === 'terreno') {
+    state.googleTerrainLayer.addTo(state.mapaGeneral);
+    state.capaActualMapa = 'terreno';
+    if (btnTerreno) btnTerreno.className = activeClass;
   } else {
-    if (state.mapaGeneral.hasLayer(state.satLayer)) {
-      state.mapaGeneral.removeLayer(state.satLayer);
-    }
-    if (!state.mapaGeneral.hasLayer(state.streetsLayer)) {
-      state.streetsLayer.addTo(state.mapaGeneral);
-    }
-    if (btnCalles) {
-      btnCalles.className = 'px-2.5 py-1 rounded-lg bg-sky-500 text-slate-950 font-bold text-[11px] transition flex items-center gap-1 shadow';
-    }
-    if (btnSat) {
-      btnSat.className = 'px-2.5 py-1 rounded-lg text-slate-300 hover:text-white font-medium text-[11px] transition flex items-center gap-1';
-    }
+    // Calles por defecto
+    state.googleRoadmapLayer.addTo(state.mapaGeneral);
+    state.capaActualMapa = 'calles';
+    if (btnCalles) btnCalles.className = activeClass;
   }
 }
 
@@ -1563,10 +1619,11 @@ function initMiniMapaFicha(centro) {
       dragging: false,
       scrollWheelZoom: false,
       doubleClickZoom: false
-    }).setView([lat, lng], 15);
+    }).setView([lat, lng], 16);
 
-    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-      maxZoom: 19
+    L.tileLayer('https://mt{s}.google.com/vt/lyrs=y&hl=es&gl=VE&x={x}&y={y}&z={z}', {
+      subdomains: ['0', '1', '2', '3'],
+      maxZoom: 20
     }).addTo(map);
 
     const pin = L.divIcon({
@@ -2138,6 +2195,7 @@ window.imprimirFichaActual = () => {
   window.print();
 };
 window.cerrarModalFicha = cerrarModalFicha;
+window.recentrarMapaMonagas = recentrarMapaMonagas;
 window.cambiarPestana = cambiarPestana;
 window.iniciarAplicacion = iniciarAplicacion;
 
