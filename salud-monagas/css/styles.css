@@ -5,16 +5,17 @@
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap');
 
 :root {
-  --bg-primary: #0a0620;
-  --bg-secondary: #120c36;
-  --bg-card: #18114a;
-  --border-card: #2d1f85;
-  --text-main: #f8fafc;
-  --text-muted: #94a3b8;
-  --color-brand: #38bdf8;
-  --color-vital-rojo: #ef4444;
-  --color-vital-amarillo: #f59e0b;
-  --color-vital-verde: #10b981;
+  --bg-primary: #f8fafc;
+  --bg-secondary: #ffffff;
+  --bg-card: #ffffff;
+  --border-card: #cbd5e1;
+  --text-main: #0f172a;
+  --text-muted: #475569;
+  --color-brand: #1d4ed8;
+  --color-brand-deep: #0f294a;
+  --color-vital-rojo: #dc2626;
+  --color-vital-amarillo: #d97706;
+  --color-vital-verde: #059669;
 }
 
 body {
@@ -28,25 +29,25 @@ code, pre, .font-mono {
   font-family: 'JetBrains Mono', monospace;
 }
 
-/* Scrollbar personalizado */
+/* Scrollbar personalizado institucional */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #0d092b;
+  background: #f1f5f9;
 }
 ::-webkit-scrollbar-thumb {
-  background: #2d1f85;
+  background: #cbd5e1;
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #3f2ca8;
+  background: #94a3b8;
 }
 
-/* Glassmorphism utility */
+/* Glassmorphism utility institucional */
 .glass-panel {
-  background: rgba(24, 17, 74, 0.85);
+  background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid var(--border-card);
@@ -65,7 +66,7 @@ code, pre, .font-mono {
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.35);
   border: 2px solid #ffffff;
   cursor: pointer;
   transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -99,7 +100,7 @@ code, pre, .font-mono {
   width: 44px;
   height: 44px;
   border-radius: 50%;
-  background: rgba(239, 68, 68, 0.4);
+  background: rgba(239, 68, 68, 0.35);
   top: -6px;
   left: -6px;
   animation: pulse-ring 2s infinite ease-out;
@@ -117,24 +118,64 @@ code, pre, .font-mono {
   }
 }
 
-/* Leaflet dark popups */
+/* Leaflet governmental light popups */
 .leaflet-popup-content-wrapper {
-  background: #140e40 !important;
-  color: #f1f5f9 !important;
-  border: 1px solid #2d1f85 !important;
+  background: #ffffff !important;
+  color: #0f172a !important;
+  border: 1px solid #cbd5e1 !important;
   border-radius: 14px !important;
-  box-shadow: 0 15px 30px rgba(0,0,0,0.6) !important;
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.18) !important;
   padding: 0 !important;
 }
 
 .leaflet-popup-content {
-  margin: 12px 14px !important;
+  margin: 10px 12px !important;
   line-height: 1.4 !important;
 }
 
 .leaflet-popup-tip {
-  background: #140e40 !important;
-  border: 1px solid #2d1f85 !important;
+  background: #ffffff !important;
+  border: 1px solid #cbd5e1 !important;
+}
+
+/* Casillas y controles gubernamentales */
+.gov-card {
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 1rem;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+}
+
+.gov-input {
+  background-color: #ffffff;
+  border: 1px solid #cbd5e1;
+  color: #0f172a;
+  border-radius: 0.75rem;
+  transition: all 0.15s ease-in-out;
+}
+
+.gov-input:focus {
+  border-color: #2563eb;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+.gov-option-box {
+  background-color: #f8fafc;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 0.75rem;
+  transition: all 0.15s ease-in-out;
+}
+
+.gov-option-box:hover {
+  border-color: #3b82f6;
+  background-color: #eff6ff;
+}
+
+.gov-option-box.checked,
+.gov-option-box:has(input:checked) {
+  border-color: #1d4ed8;
+  background-color: #eff6ff;
 }
 
 /* ==============================================================

@@ -276,15 +276,15 @@ function actualizarBadgePrecisionFormulario(tipo) {
   if (!container) return;
   if (tipo === 'exacta' || tipo === 'calibrada_usuario') {
     container.innerHTML = `
-      <div class="flex items-center gap-1.5 text-emerald-400 font-bold text-[10px]">
-        <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+      <div class="flex items-center gap-1.5 text-emerald-800 font-bold text-[10px]">
+        <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
         <span>📍 Coordenada Exacta Verificada (${tipo === 'calibrada_usuario' ? 'Calibrada por Usuario' : 'Cartografía Satelital'})</span>
       </div>
     `;
   } else {
     container.innerHTML = `
-      <div class="flex items-center gap-1.5 text-amber-400 font-bold text-[10px]">
-        <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
+      <div class="flex items-center gap-1.5 text-amber-800 font-bold text-[10px]">
+        <span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
         <span>📍 Ubicación Referencial de Sector (Mueve el pin o presiona "Mi GPS" para fijar al techo)</span>
       </div>
     `;
@@ -685,20 +685,20 @@ function initBusquedaFlotanteGoogleMaps() {
       const icono = (c.precision === 'exacta' || c.precision === 'calibrada_usuario') ? '🟢' : '⚠️';
       html += `
         <div onclick="window.seleccionarCentroDesdeBusquedaFlotante('${c.id}')" 
-             class="p-2.5 hover:bg-sky-950/80 cursor-pointer flex items-center justify-between gap-2 text-xs text-slate-200 transition">
-          <div class="min-w-0">
-            <div class="font-bold text-white truncate flex items-center gap-1.5">
-              <span>${icono}</span>
-              <span class="truncate">${c.nombre}</span>
-            </div>
-            <div class="text-[10px] text-sky-300/80 truncate">
-              ${c.municipio} • ${c.parroquia} ${c.sector ? '• ' + c.sector : ''}
-            </div>
-          </div>
-          <span class="text-[10px] text-slate-400 font-mono shrink-0">${c.lat.toFixed(4)}, ${c.lng.toFixed(4)}</span>
-        </div>
-      `;
-    });
+             class="p-2.5 hover:bg-blue-50 cursor-pointer flex items-center justify-between gap-2 text-xs text-slate-800 transition border-b border-slate-100 last:border-0">
+           <div class="min-w-0">
+             <div class="font-bold text-slate-900 truncate flex items-center gap-1.5">
+               <span>${icono}</span>
+               <span class="truncate">${c.nombre}</span>
+             </div>
+             <div class="text-[10px] text-blue-700 font-medium truncate">
+               ${c.municipio} • ${c.parroquia} ${c.sector ? '• ' + c.sector : ''}
+             </div>
+           </div>
+           <span class="text-[10px] text-slate-500 font-mono shrink-0">${c.lat.toFixed(4)}, ${c.lng.toFixed(4)}</span>
+         </div>
+       `;
+     });
 
     resultsBox.innerHTML = html;
     resultsBox.classList.remove('hidden');
@@ -834,55 +834,55 @@ function actualizarMapaGeneral() {
     const marker = L.marker([c.lat, c.lng], { icon: customIcon });
 
     const popupHtml = `
-      <div class="p-3 min-w-[240px] text-xs font-sans text-slate-100">
-        <div class="flex items-center justify-between gap-2 border-b border-indigo-900/60 pb-1.5 mb-2">
-          <span class="font-mono text-[9px] uppercase px-1.5 py-0.5 rounded font-bold ${
-            color === 'rojo' ? 'bg-red-950 text-red-400 border border-red-800' :
-            color === 'amarillo' ? 'bg-amber-950 text-amber-400 border border-amber-800' :
-            'bg-emerald-950 text-emerald-400 border border-emerald-800'
+      <div class="p-3.5 min-w-[260px] text-xs font-sans text-slate-800 bg-white">
+        <div class="flex items-center justify-between gap-2 border-b border-slate-200 pb-1.5 mb-2">
+          <span class="font-mono text-[9px] uppercase px-2 py-0.5 rounded font-bold ${
+            color === 'rojo' ? 'bg-red-50 text-red-700 border border-red-200' :
+            color === 'amarillo' ? 'bg-amber-50 text-amber-800 border border-amber-200' :
+            'bg-emerald-50 text-emerald-800 border border-emerald-200'
           }">
             ${color === 'rojo' ? '⚠️ RIESGO CRÍTICO' : color === 'amarillo' ? '🟡 ALERTA' : '🟢 OPERATIVO'}
           </span>
-          <span class="text-[10px] text-slate-400 font-mono">${(c.municipio || '').replace('Municipio ', '')}</span>
+          <span class="text-[10px] text-slate-500 font-mono font-bold">${(c.municipio || '').replace('Municipio ', '')}</span>
         </div>
-        <h4 class="font-bold text-sm text-white mb-1 leading-snug">${c.nombre}</h4>
-        <p class="text-indigo-200 text-[11px] mb-2">${c.clasificacionEspecificaLabel || c.clasificacionEspecifica} • ${c.parroquia}</p>
+        <h4 class="font-bold text-sm text-slate-900 mb-1 leading-snug">${c.nombre}</h4>
+        <p class="text-blue-700 font-semibold text-[11px] mb-2">${c.clasificacionEspecificaLabel || c.clasificacionEspecifica} • ${c.parroquia}</p>
         
         <div class="mb-2">
           ${(c.precision === 'exacta' || c.precision === 'calibrada_usuario')
-            ? `<div class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-emerald-950/90 border border-emerald-700/80 text-[10px] text-emerald-300 font-bold">
-                 <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+            ? `<div class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-emerald-50 border border-emerald-200 text-[10px] text-emerald-800 font-bold">
+                 <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
                  <span>📍 Coordenada Exacta (${c.precision === 'calibrada_usuario' ? 'Ajustada en Campo' : 'Cartografía OSM / Satélite'})</span>
                </div>`
-            : `<div class="p-1.5 rounded bg-amber-950/70 border border-amber-700/70 text-[10px] text-amber-300">
+            : `<div class="p-1.5 rounded bg-amber-50 border border-amber-200 text-[10px] text-amber-900">
                  <div class="flex items-center gap-1 font-bold">
-                   <span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span>
+                   <span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
                    <span>📍 Ubicación Sectorial (Aproximada)</span>
                  </div>
-                 <p class="text-[9px] text-amber-200/80 mt-0.5 leading-tight">Sin cartografía pública de edificio. Pulsa "Calibrar" o usa GPS para fijar el techo exacto.</p>
+                 <p class="text-[9px] text-amber-800 mt-0.5 leading-tight">Sin cartografía pública de edificio. Pulsa "Mover" o usa GPS para fijar el techo exacto.</p>
                </div>`
           }
         </div>
 
-        <div class="grid grid-cols-2 gap-1.5 text-[10px] bg-indigo-950/70 p-2 rounded-lg border border-indigo-900/50 mb-3">
-          <div>⚡ Planta: <strong class="text-white">${c.soporteVital?.plantaElectrica || 'N/A'}</strong></div>
-          <div>💧 Agua: <strong class="text-white">${c.soporteVital?.suministroAgua || 'N/A'}</strong></div>
-          <div>💨 Gases: <strong class="text-white">${c.soporteVital?.gasesMedicinales || 'N/A'}</strong></div>
-          <div>❄️ Clima: <strong class="text-white">${c.soporteVital?.climatizacion || 'N/A'}</strong></div>
+        <div class="grid grid-cols-2 gap-1.5 text-[10px] bg-slate-50 p-2 rounded-lg border border-slate-200 mb-3 text-slate-700">
+          <div>⚡ Planta: <strong class="text-slate-900">${c.soporteVital?.plantaElectrica || 'N/A'}</strong></div>
+          <div>💧 Agua: <strong class="text-slate-900">${c.soporteVital?.suministroAgua || 'N/A'}</strong></div>
+          <div>💨 Gases: <strong class="text-slate-900">${c.soporteVital?.gasesMedicinales || 'N/A'}</strong></div>
+          <div>❄️ Clima: <strong class="text-slate-900">${c.soporteVital?.climatizacion || 'N/A'}</strong></div>
         </div>
 
         <div class="flex gap-1.5 flex-wrap">
-          <button onclick="window.editarCentro('${c.id}')" class="flex-1 py-1.5 bg-sky-500 hover:bg-sky-400 text-[#050814] font-black rounded-lg text-[11px] transition text-center shadow flex items-center justify-center gap-1">
-            <span>📝 Editar</span>
+          <button onclick="window.editarCentro('${c.id}')" class="flex-1 py-1.5 bg-blue-700 hover:bg-blue-800 text-white font-bold rounded-lg text-[11px] transition text-center shadow-sm flex items-center justify-center gap-1">
+            <span>📝 Diagnóstico</span>
           </button>
-          <button onclick="window.enfocarEnMapa('${c.id}')" class="px-2 py-1.5 bg-amber-500 hover:bg-amber-400 text-slate-950 rounded-lg font-black text-[11px] transition flex items-center justify-center gap-1 shadow" title="Calibrar y Mover Pin al Techo Exacto">
+          <button onclick="window.enfocarEnMapa('${c.id}')" class="px-2.5 py-1.5 bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300 rounded-lg font-bold text-[11px] transition flex items-center justify-center gap-1 shadow-sm" title="Calibrar y Mover Pin al Techo Exacto">
             🎯 Mover
           </button>
-          <button onclick="window.eliminarCentro('${c.id}')" class="px-2 py-1.5 bg-rose-600 hover:bg-rose-500 text-white rounded-lg font-bold text-[11px] transition flex items-center justify-center gap-1 shadow" title="Eliminar este centro si no existe">
+          <button onclick="window.eliminarCentro('${c.id}')" class="px-2 py-1.5 bg-red-50 hover:bg-red-100 text-red-700 border border-red-200 rounded-lg font-bold text-[11px] transition flex items-center justify-center gap-1 shadow-sm" title="Eliminar este centro si no existe">
             🗑️ Eliminar
           </button>
-          <button onclick="window.verFichaCentro('${c.id}')" class="px-2 py-1.5 bg-[#140e40] hover:bg-[#2d1f85] text-slate-300 hover:text-white rounded-lg border border-[#2d1f85] text-[10px] font-bold transition" title="Ver Ficha Imprimible">
-            Ficha
+          <button onclick="window.verFichaCentro('${c.id}')" class="px-2 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-slate-900 rounded-lg border border-slate-300 text-[10px] font-bold transition" title="Ver Ficha Imprimible">
+            Ficha 1:1
           </button>
         </div>
       </div>
@@ -1000,11 +1000,11 @@ function renderTiposEstablecimiento() {
     let html = '<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">';
     red.subtipos.forEach(st => {
       html += `
-        <label class="flex items-center gap-2 p-2.5 rounded-xl bg-[#140e40] border border-[#2d1f85] hover:border-sky-400/60 cursor-pointer text-xs transition">
-          <input type="radio" name="clasificacionEspecifica" value="${st.codigo}" data-label="${st.nombre}" class="text-sky-500 focus:ring-sky-400 bg-slate-900 border-slate-700">
+        <label class="flex items-center gap-2.5 p-2.5 rounded-xl bg-white border border-slate-200 hover:border-blue-500 hover:bg-blue-50/50 cursor-pointer text-xs transition shadow-xs">
+          <input type="radio" name="clasificacionEspecifica" value="${st.codigo}" data-label="${st.nombre}" class="accent-blue-600 w-4 h-4">
           <div>
-            <span class="font-bold text-white block">${st.codigo}</span>
-            <span class="text-[11px] text-slate-400 block">${st.nombre}</span>
+            <span class="font-black text-blue-900 block text-xs">${st.codigo}</span>
+            <span class="text-[11px] text-slate-600 block">${st.nombre}</span>
           </div>
         </label>
       `;
@@ -1034,23 +1034,23 @@ function renderAreasServiciosChecks() {
   let html = '<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5">';
   catAreas.forEach(a => {
     html += `
-      <div class="p-2.5 rounded-xl bg-[#140e40] border border-[#2d1f85] flex flex-col justify-between space-y-2">
-        <label class="flex items-center gap-2 text-xs font-semibold text-slate-200 cursor-pointer">
-          <input type="checkbox" name="areaServicio" value="${a.id}" class="w-4 h-4 rounded text-sky-500 focus:ring-sky-400 bg-slate-900 border-slate-700">
+      <div class="p-3 rounded-xl bg-white border border-slate-200 shadow-xs flex flex-col justify-between space-y-2 hover:border-blue-300 hover:shadow-sm transition">
+        <label class="flex items-center gap-2 text-xs font-bold text-slate-800 cursor-pointer">
+          <input type="checkbox" name="areaServicio" value="${a.id}" class="accent-blue-600 w-4 h-4 rounded border-slate-300">
           <span>${a.label}</span>
         </label>
         ${a.id === 'quirofanos' ? `
-          <div class="flex items-center gap-2 pt-1 border-t border-[#2d1f85]/60 text-[11px]">
-            <span class="text-slate-400">Total:</span>
-            <input type="number" id="num-quirofanos-total" min="0" max="50" value="0" class="w-12 px-1.5 py-0.5 bg-[#0e092e] border border-slate-700 rounded text-center text-white">
-            <span class="text-emerald-400 font-bold ml-1">Op:</span>
-            <input type="number" id="num-quirofanos-op" min="0" max="50" value="0" class="w-12 px-1.5 py-0.5 bg-[#0e092e] border border-slate-700 rounded text-center text-white">
+          <div class="flex items-center gap-2 pt-1.5 border-t border-slate-200 text-[11px]">
+            <span class="text-slate-500 font-semibold">Total:</span>
+            <input type="number" id="num-quirofanos-total" min="0" max="50" value="0" class="w-12 px-1.5 py-0.5 bg-slate-50 border border-slate-300 rounded text-center text-slate-900 font-bold focus:border-blue-600">
+            <span class="text-emerald-700 font-bold ml-1">Op:</span>
+            <input type="number" id="num-quirofanos-op" min="0" max="50" value="0" class="w-12 px-1.5 py-0.5 bg-slate-50 border border-slate-300 rounded text-center text-slate-900 font-bold focus:border-blue-600">
           </div>
         ` : ''}
         ${a.id === 'hospitalizacion' ? `
-          <div class="flex items-center gap-2 pt-1 border-t border-[#2d1f85]/60 text-[11px]">
-            <span class="text-slate-400">Camas Totales:</span>
-            <input type="number" id="num-camas-hosp" min="0" max="1000" value="0" class="w-16 px-1.5 py-0.5 bg-[#0e092e] border border-slate-700 rounded text-center text-white">
+          <div class="flex items-center gap-2 pt-1.5 border-t border-slate-200 text-[11px]">
+            <span class="text-slate-500 font-semibold">Camas Totales:</span>
+            <input type="number" id="num-camas-hosp" min="0" max="1000" value="0" class="w-16 px-1.5 py-0.5 bg-slate-50 border border-slate-300 rounded text-center text-slate-900 font-bold focus:border-blue-600">
           </div>
         ` : ''}
       </div>
@@ -1079,13 +1079,16 @@ function renderFallasChecks() {
   let html = '<div class="space-y-4">';
   grupos.forEach(g => {
     html += `
-      <div class="bg-[#140e40] p-3.5 rounded-2xl border border-[#2d1f85]">
-        <h4 class="text-xs font-black text-amber-300 uppercase tracking-wider mb-2.5 pb-1 border-b border-[#2d1f85]">${g.titulo}</h4>
+      <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200 shadow-xs space-y-2">
+        <h4 class="text-xs font-black text-slate-800 uppercase tracking-wider mb-2 pb-1.5 border-b border-slate-200 flex items-center justify-between">
+          <span>${g.titulo}</span>
+          <span class="text-[10px] text-amber-700 font-mono font-bold">[Inspección]</span>
+        </h4>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
           ${g.items.map(item => `
-            <label class="flex items-start gap-2 text-xs text-slate-300 hover:text-white cursor-pointer p-1 rounded hover:bg-[#1c1459] transition">
-              <input type="checkbox" name="falla_${g.key}" value="${item.id}" class="w-3.5 h-3.5 mt-0.5 rounded text-amber-500 focus:ring-amber-400 bg-slate-900 border-slate-700">
-              <span class="leading-tight">${item.label}</span>
+            <label class="flex items-start gap-2.5 text-xs text-slate-700 hover:text-slate-900 cursor-pointer p-1.5 rounded-lg hover:bg-white transition">
+              <input type="checkbox" name="falla_${g.key}" value="${item.id}" class="accent-amber-600 w-3.5 h-3.5 mt-0.5 rounded border-slate-300">
+              <span class="leading-tight font-medium">${item.label}</span>
             </label>
           `).join('')}
         </div>
@@ -1108,13 +1111,13 @@ function evaluarSemaforoEnVivo() {
   const nivel = calcularNivelRiesgo(datosTemp);
 
   if (nivel === 'rojo') {
-    badge.className = 'px-3 py-1 text-xs font-black uppercase tracking-wider bg-red-950 text-red-400 border border-red-600 rounded-full flex items-center gap-1.5 animate-pulse';
+    badge.className = 'px-3 py-1 text-xs font-black uppercase tracking-wider bg-red-50 text-red-700 border border-red-300 rounded-full flex items-center gap-1.5 animate-pulse';
     badge.innerHTML = '<span class="w-2 h-2 rounded-full bg-red-500"></span> ⚠️ RIESGO CRÍTICO DETECTADO';
   } else if (nivel === 'amarillo') {
-    badge.className = 'px-3 py-1 text-xs font-black uppercase tracking-wider bg-amber-950 text-amber-400 border border-amber-600 rounded-full flex items-center gap-1.5';
+    badge.className = 'px-3 py-1 text-xs font-black uppercase tracking-wider bg-amber-50 text-amber-800 border border-amber-300 rounded-full flex items-center gap-1.5';
     badge.innerHTML = '<span class="w-2 h-2 rounded-full bg-amber-500"></span> 🟡 ALERTA / COMPROMISO PARCIAL';
   } else {
-    badge.className = 'px-3 py-1 text-xs font-black uppercase tracking-wider bg-emerald-950 text-emerald-400 border border-emerald-600 rounded-full flex items-center gap-1.5';
+    badge.className = 'px-3 py-1 text-xs font-black uppercase tracking-wider bg-emerald-50 text-emerald-800 border border-emerald-300 rounded-full flex items-center gap-1.5';
     badge.innerHTML = '<span class="w-2 h-2 rounded-full bg-emerald-500"></span> 🟢 SOPORTE OPERATIVO ESTABLE';
   }
 }
@@ -1379,14 +1382,14 @@ function filtrarCentrosMapa(criterio) {
   state.filtroEstadoMapa = criterio;
 
   document.querySelectorAll('.chip-filter').forEach(chip => {
-    chip.classList.remove('active', 'bg-sky-500', 'text-slate-950', 'shadow-sm');
-    chip.classList.add('bg-[#120c36]', 'text-slate-300');
+    chip.classList.remove('active', 'bg-blue-700', 'text-white', 'shadow-sm');
+    chip.classList.add('bg-white', 'text-slate-700', 'border', 'border-slate-300');
   });
 
   const activeChip = document.getElementById(`chip-filtro-${criterio}`);
   if (activeChip) {
-    activeChip.classList.add('active', 'bg-sky-500', 'text-slate-950', 'shadow-sm');
-    activeChip.classList.remove('bg-[#120c36]', 'text-slate-300');
+    activeChip.classList.add('active', 'bg-blue-700', 'text-white', 'shadow-sm');
+    activeChip.classList.remove('bg-white', 'text-slate-700');
   }
 
   poblarSelectorMapaCentros();
@@ -1414,8 +1417,8 @@ function conmutarCapaMapa(tipo) {
     state.mapaGeneral.removeLayer(state.googleTerrainLayer);
   }
 
-  const activeClass = 'px-2.5 py-1 rounded-lg bg-sky-500 text-slate-950 font-bold text-[11px] transition flex items-center gap-1 shadow';
-  const inactiveClass = 'px-2.5 py-1 rounded-lg text-slate-300 hover:text-white font-medium text-[11px] transition flex items-center gap-1';
+  const activeClass = 'px-2.5 py-1 rounded-lg bg-blue-700 text-white font-bold text-[11px] transition flex items-center gap-1 shadow-sm';
+  const inactiveClass = 'px-2.5 py-1 rounded-lg text-slate-700 hover:text-blue-900 font-medium text-[11px] transition flex items-center gap-1';
 
   if (btnCalles) btnCalles.className = inactiveClass;
   if (btnSat) btnSat.className = inactiveClass;
@@ -2390,38 +2393,38 @@ function renderDirectorioTabla() {
     const color = c.nivelRiesgo || 'verde';
     const badgeRisk = `
       <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider ${
-        color === 'rojo' ? 'bg-red-950/80 text-red-300 border border-red-700/60 animate-pulse' :
-        color === 'amarillo' ? 'bg-amber-950/80 text-amber-300 border border-amber-700/60' :
-        'bg-emerald-950/80 text-emerald-300 border border-emerald-700/60'
+        color === 'rojo' ? 'bg-red-50 text-red-700 border border-red-200 animate-pulse' :
+        color === 'amarillo' ? 'bg-amber-50 text-amber-800 border border-amber-200' :
+        'bg-emerald-50 text-emerald-800 border border-emerald-200'
       }">
-        <span class="w-1.5 h-1.5 rounded-full ${color === 'rojo' ? 'bg-red-400' : color === 'amarillo' ? 'bg-amber-400' : 'bg-emerald-400'}"></span>
+        <span class="w-1.5 h-1.5 rounded-full ${color === 'rojo' ? 'bg-red-500' : color === 'amarillo' ? 'bg-amber-500' : 'bg-emerald-500'}"></span>
         ${color === 'rojo' ? 'Crítico' : color === 'amarillo' ? 'Alerta' : 'Estable'}
       </span>
     `;
 
     html += `
-      <tr class="border-b border-[#2d1f85]/50 hover:bg-[#1c1459]/50 transition text-xs">
-        <td class="py-3 px-3 font-mono text-slate-400">#${idx + 1}</td>
+      <tr class="border-b border-slate-200 hover:bg-blue-50/50 transition text-xs">
+        <td class="py-3 px-3 font-mono text-slate-500">#${idx + 1}</td>
         <td class="py-3 px-3">
-          <strong class="text-white block font-bold text-sm leading-snug">${c.nombre}</strong>
-          <span class="text-[11px] text-sky-400 font-mono">${c.clasificacionEspecificaLabel || c.clasificacionEspecifica}</span>
+          <strong class="text-slate-900 block font-bold text-sm leading-snug">${c.nombre}</strong>
+          <span class="text-[11px] text-blue-700 font-bold font-mono">${c.clasificacionEspecificaLabel || c.clasificacionEspecifica}</span>
         </td>
-        <td class="py-3 px-3 text-slate-300">
-          <div class="font-medium">${(c.municipio || '').replace('Municipio ', '')}</div>
-          <div class="text-[11px] text-slate-400">${c.parroquia} • ${c.sector || 'N/A'}</div>
+        <td class="py-3 px-3 text-slate-700">
+          <div class="font-semibold text-slate-900">${(c.municipio || '').replace('Municipio ', '')}</div>
+          <div class="text-[11px] text-slate-500">${c.parroquia} • ${c.sector || 'N/A'}</div>
           <div class="mt-1">
             ${(c.precision === 'exacta' || c.precision === 'calibrada_usuario')
-              ? `<span class="inline-flex items-center gap-1 text-[9px] text-emerald-300 font-bold bg-emerald-950/70 px-1.5 py-0.5 rounded border border-emerald-800/60"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> Exacta (${c.lat.toFixed(4)}, ${c.lng.toFixed(4)})</span>`
-              : `<span class="inline-flex items-center gap-1 text-[9px] text-amber-300 font-bold bg-amber-950/70 px-1.5 py-0.5 rounded border border-amber-800/60"><span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span> Sectorial</span>`
+              ? `<span class="inline-flex items-center gap-1 text-[9px] text-emerald-800 font-bold bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Exacta (${c.lat.toFixed(4)}, ${c.lng.toFixed(4)})</span>`
+              : `<span class="inline-flex items-center gap-1 text-[9px] text-amber-800 font-bold bg-amber-50 px-1.5 py-0.5 rounded border border-amber-200"><span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span> Sectorial</span>`
             }
           </div>
         </td>
         <td class="py-3 px-3">
           <div class="grid grid-cols-2 gap-1 text-[10px] font-mono">
-            <span title="Planta Eléctrica" class="px-1.5 py-0.5 rounded ${c.soporteVital?.plantaElectrica === 'Operativa' ? 'bg-emerald-950 text-emerald-300' : 'bg-red-950 text-red-300'}">
+            <span title="Planta Eléctrica" class="px-1.5 py-0.5 rounded ${c.soporteVital?.plantaElectrica === 'Operativa' ? 'bg-emerald-50 text-emerald-800 border border-emerald-200 font-bold' : 'bg-red-50 text-red-800 border border-red-200 font-bold'}">
               ⚡ ${c.soporteVital?.plantaElectrica || 'N/A'}
             </span>
-            <span title="Suministro de Agua" class="px-1.5 py-0.5 rounded ${c.soporteVital?.suministroAgua === 'Continuo' ? 'bg-emerald-950 text-emerald-300' : 'bg-amber-950 text-amber-300'}">
+            <span title="Suministro de Agua" class="px-1.5 py-0.5 rounded ${c.soporteVital?.suministroAgua === 'Continuo' ? 'bg-emerald-50 text-emerald-800 border border-emerald-200 font-bold' : 'bg-amber-50 text-amber-800 border border-amber-200 font-bold'}">
               💧 ${c.soporteVital?.suministroAgua || 'N/A'}
             </span>
           </div>
@@ -2431,21 +2434,21 @@ function renderDirectorioTabla() {
         </td>
         <td class="py-3 px-3 text-right">
           <div class="flex items-center justify-end gap-1.5">
-            <button onclick="window.enfocarEnMapa('${c.id}')" class="px-2 py-1.5 bg-emerald-500/20 hover:bg-emerald-500 text-emerald-300 hover:text-[#050814] font-bold rounded-lg text-[11px] border border-emerald-500/40 transition flex items-center gap-1 shadow-sm" title="Enfocar y Calibrar en el Mapa">
+            <button onclick="window.enfocarEnMapa('${c.id}')" class="px-2 py-1.5 bg-emerald-50 hover:bg-emerald-600 text-emerald-800 hover:text-white font-bold rounded-lg text-[11px] border border-emerald-300 transition flex items-center gap-1 shadow-xs" title="Enfocar y Calibrar en el Mapa">
               <i data-lucide="crosshair" class="w-3.5 h-3.5"></i>
               <span>Calibrar</span>
             </button>
-            <button onclick="window.buscarCentroEnGoogleMaps('${c.id}')" class="p-1.5 bg-[#140e40] hover:bg-[#251b68] text-amber-400 hover:text-amber-300 rounded-lg border border-amber-500/40 transition" title="Buscar en Google Maps ↗">
+            <button onclick="window.buscarCentroEnGoogleMaps('${c.id}')" class="p-1.5 bg-white hover:bg-amber-50 text-amber-600 hover:text-amber-700 rounded-lg border border-amber-200 transition shadow-xs" title="Buscar en Google Maps ↗">
               <i data-lucide="compass" class="w-3.5 h-3.5"></i>
             </button>
-            <button onclick="window.verFichaCentro('${c.id}')" class="px-2.5 py-1.5 bg-sky-500/20 hover:bg-sky-500 text-sky-300 hover:text-[#050814] font-bold rounded-lg text-[11px] border border-sky-500/40 transition flex items-center gap-1" title="Ver Ficha Imprimible 1:1">
+            <button onclick="window.verFichaCentro('${c.id}')" class="px-2.5 py-1.5 bg-blue-50 hover:bg-blue-600 text-blue-800 hover:text-white font-bold rounded-lg text-[11px] border border-blue-300 transition flex items-center gap-1 shadow-xs" title="Ver Ficha Imprimible 1:1">
               <i data-lucide="printer" class="w-3.5 h-3.5"></i>
               <span>Ficha 1:1</span>
             </button>
-            <button onclick="window.editarCentro('${c.id}')" class="p-1.5 bg-[#140e40] hover:bg-[#2d1f85] text-slate-300 hover:text-white rounded-lg border border-[#2d1f85] transition" title="Editar y Georreferenciar">
+            <button onclick="window.editarCentro('${c.id}')" class="p-1.5 bg-white hover:bg-slate-100 text-slate-700 hover:text-slate-900 rounded-lg border border-slate-300 transition shadow-xs" title="Editar y Georreferenciar">
               <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
             </button>
-            <button onclick="window.eliminarCentro('${c.id}')" class="p-1.5 bg-[#140e40] hover:bg-red-950 text-red-400 rounded-lg border border-red-900/50 transition" title="Eliminar">
+            <button onclick="window.eliminarCentro('${c.id}')" class="p-1.5 bg-white hover:bg-red-50 text-red-600 hover:text-red-700 rounded-lg border border-red-200 transition shadow-xs" title="Eliminar">
               <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
             </button>
           </div>
@@ -2548,11 +2551,11 @@ function exportarCSV() {
 function cambiarPestana(targetId) {
   document.querySelectorAll('.tab-btn').forEach(btn => {
     if (btn.dataset.target === targetId) {
-      btn.classList.add('active', 'bg-sky-500', 'text-[#050814]');
-      btn.classList.remove('text-slate-300', 'bg-transparent');
+      btn.classList.add('active', 'bg-blue-700', 'text-white', 'shadow-sm', 'border-blue-800');
+      btn.classList.remove('text-slate-700', 'bg-white', 'border-slate-300');
     } else {
-      btn.classList.remove('active', 'bg-sky-500', 'text-[#050814]');
-      btn.classList.add('text-slate-300');
+      btn.classList.remove('active', 'bg-blue-700', 'text-white', 'shadow-sm', 'border-blue-800');
+      btn.classList.add('text-slate-700', 'bg-white', 'border-slate-300');
     }
   });
 
