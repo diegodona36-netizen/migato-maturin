@@ -2,16 +2,16 @@
  * Controlador Principal — Google Earth Pro Web (Edición Estado Monagas)
  * Robusto, 100% Operativo y Totalmente Individualizado
  */
-import { CATALOGO_MONAGAS, findParishInCatalog, PARISH_ALIAS_MAP, resolveParishId } from "./catalogoMonagas.js?v=148";
-import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=148";
-import { getAllParishesForSelector } from "./usersCatalog.js?v=148";
-import { EarthStore } from "./earthStore.js?v=148";
-import { EarthMapEngine } from "./mapEngine.js?v=148";
-import { PropertiesDialog } from "./propertiesDialog.js?v=148";
-import { ToolsManager } from "./toolsManager.js?v=148";
-import { detectParishFromGeometry, SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=148";
-import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=148";
-import { getParishDemographics, getMunicipioDemographics } from "./monagasDemographics.js?v=148";
+import { CATALOGO_MONAGAS, findParishInCatalog, PARISH_ALIAS_MAP, resolveParishId } from "./catalogoMonagas.js?v=149";
+import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=149";
+import { getAllParishesForSelector } from "./usersCatalog.js?v=149";
+import { EarthStore } from "./earthStore.js?v=149";
+import { EarthMapEngine } from "./mapEngine.js?v=149";
+import { PropertiesDialog } from "./propertiesDialog.js?v=149";
+import { ToolsManager } from "./toolsManager.js?v=149";
+import { detectParishFromGeometry, SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=149";
+import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=149";
+import { getParishDemographics, getMunicipioDemographics } from "./monagasDemographics.js?v=149";
 import { 
   getMunicipios, 
   getParroquiasByMun, 
@@ -21,13 +21,13 @@ import {
   findSectorById, 
   searchSectores, 
   ALL_SECTORES_FLAT 
-} from "./monagasSectoresCatalog.js?v=148";
+} from "./monagasSectoresCatalog.js?v=149";
 import { 
   getSavedFirebaseConfig, 
   saveFirebaseConfig, 
   isFirebaseConfigured, 
   initFirebase 
-} from "./firebaseConfig.js?v=148";
+} from "./firebaseConfig.js?v=149";
 
 // Controladores globales infalibles accesibles en cualquier contexto
 window.closeParishSelectorModal = function() {
@@ -2494,7 +2494,9 @@ class EarthMonagasApp {
       const munObj = (typeof CATALOGO_MONAGAS !== "undefined" ? CATALOGO_MONAGAS : []).find(m => m.id === munId) || item;
       if (badge) badge.style.backgroundColor = item.color || munObj.color || "#0284c7";
       if (subTitle) subTitle.textContent = "División Político-Territorial • Estado Monagas";
-      if (title) title.textContent = `🏛️ Municipio ${item.nombre || munObj.nombre || 'Municipio'}`;
+      const rawMunName = item.nombre || munObj.nombre || 'Municipio';
+      const cleanMunName = String(rawMunName).replace(/^municipio\s+/i, '').trim();
+      if (title) title.textContent = `🏛️ Municipio ${cleanMunName}`;
 
       if (elCasas) elCasas.textContent = (item.casas || 0).toLocaleString();
       if (elFamilias) elFamilias.textContent = (item.familias || Math.round((item.casas || 0) * 1.15)).toLocaleString();
@@ -2510,8 +2512,12 @@ class EarthMonagasApp {
       const munId = item.municipioId || item.munId || this.selectedMunId;
       const munObj = (typeof CATALOGO_MONAGAS !== "undefined" ? CATALOGO_MONAGAS : []).find(m => m.id === munId);
       if (badge) badge.style.backgroundColor = item.color || "#10b981";
-      if (subTitle) subTitle.textContent = `Territorio Parroquial • Municipio ${munObj ? munObj.nombre : 'Monagas'}`;
-      if (title) title.textContent = `📍 Parroquia ${item.nombre || 'Parroquia'}`;
+      const rawMunName = munObj ? munObj.nombre : 'Monagas';
+      const cleanMunName = String(rawMunName).replace(/^municipio\s+/i, '').trim();
+      if (subTitle) subTitle.textContent = `Territorio Parroquial • Municipio ${cleanMunName}`;
+      const rawParName = item.nombre || 'Parroquia';
+      const cleanParName = String(rawParName).replace(/^parroquia\s+/i, '').trim();
+      if (title) title.textContent = `📍 Parroquia ${cleanParName}`;
 
       const allPolys = item.poligonos || [];
       const allSub = item.subparroquias || [];

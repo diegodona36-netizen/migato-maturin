@@ -61,7 +61,7 @@
   <meta http-equiv="Expires" content="0" />
 
   <!-- Custom Styles -->
-  <link rel="stylesheet" href="css/styles.css?v=148">
+  <link rel="stylesheet" href="css/styles.css?v=149">
 
   <!-- Script de Autenticación Rápida y Control de Acceso Estricto (Exclusivo Regional) -->
   <script src="../js/auth.js"></script>
@@ -155,7 +155,7 @@
 
     // Reseteo Total de Fábrica global
     window.resetEarthFullData = function() {
-      if (confirm("¿Desea restaurar de fábrica toda la plataforma MIGATO Earth?\n\nSe limpiarán la memoria local, la caché y se recargarán los datos limpios de producción (v=148).")) {
+      if (confirm("¿Desea restaurar de fábrica toda la plataforma MIGATO Earth?\n\nSe limpiarán la memoria local, la caché y se recargarán los datos limpios de producción (v=149).")) {
         try {
           localStorage.clear();
           sessionStorage.clear();
@@ -171,12 +171,12 @@
           }).catch(function(){});
         }
         setTimeout(function() {
-          window.location.replace(window.location.pathname + '?v=148&u=admin-militancia');
+          window.location.replace(window.location.pathname + '?v=149&u=admin-militancia');
         }, 150);
       }
     };
 
-    // Auto-actualización a la versión más reciente v=148
+    // Auto-actualización a la versión más reciente v=149
     (function() {
       try {
         var p = new URLSearchParams(window.location.search);
@@ -184,7 +184,7 @@
         var isReset = p.get('reset') === '1';
         var paramP = p.get('p') || p.get('parroquia') || p.get('parish');
 
-        if (isReset || !curV || parseInt(curV) < 148) {
+        if (isReset || !curV || parseInt(curV) < 149) {
           if (isReset) {
             try {
               localStorage.removeItem("migato_last_parish");
@@ -1941,7 +1941,7 @@
   </div>
 
   <!-- SCRIPT -->
-  <script type="module" src="js/app.js?v=148"></script>
+  <script type="module" src="js/app.js?v=149"></script>
   <script>
     if (window.lucide && typeof window.lucide.createIcons === 'function') {
       window.lucide.createIcons();

@@ -2,9 +2,9 @@
  * Motor Cartográfico Acelerado por GPU — Google Earth Pro Web (Monagas)
  * Integrado con Capas Jerárquicas Oficiales (INE 2021) y Edición de Vértices
  */
-import { GEO_ESTADO_OFICIAL, GEO_MUNICIPIOS_OFICIAL, GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=148";
-import { CATALOGO_MONAGAS, PARISH_ALIAS_MAP, resolveParishId } from "./catalogoMonagas.js?v=148";
-import { MONAGAS_DEMOGRAPHICS, getParishDemographics, getMunicipioDemographics } from "./monagasDemographics.js?v=148";
+import { GEO_ESTADO_OFICIAL, GEO_MUNICIPIOS_OFICIAL, GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=149";
+import { CATALOGO_MONAGAS, PARISH_ALIAS_MAP, resolveParishId } from "./catalogoMonagas.js?v=149";
+import { MONAGAS_DEMOGRAPHICS, getParishDemographics, getMunicipioDemographics } from "./monagasDemographics.js?v=149";
 
 export class EarthMapEngine {
   constructor(containerId, onCoordUpdate) {
@@ -294,9 +294,6 @@ export class EarthMapEngine {
         layer.on({
           mouseover: () => {
             layer.setStyle({ weight: 3.5, color: "#38bdf8", fillOpacity: 0.35 });
-            if (window.earthApp?.showQuickStats && stats) {
-              window.earthApp.showQuickStats("municipio", stats);
-            }
           },
           mouseout: () => {
             layer.setStyle({ weight: 2, color: feature.properties?.color || "#38bdf8", fillOpacity: 0.12 });
@@ -381,17 +378,6 @@ export class EarthMapEngine {
         layer.on({
           mouseover: () => {
             layer.setStyle({ weight: 3, color: "#facc15", fillOpacity: 0.38 });
-            if (window.earthApp?.showQuickStats) {
-              const storeParish = window.earthApp?.store?.getParish(munId, resolvedParishId);
-              const parishData = storeParish || {
-                id: resolvedParishId,
-                nombre: pName,
-                municipioId: munId,
-                color: pProps.color || "#10b981",
-                ...(pDem || {})
-              };
-              window.earthApp.showQuickStats("parroquia", parishData);
-            }
           },
           mouseout: () => {
             layer.setStyle({ weight: 1.5, color: "#ffffff", fillOpacity: 0.14 });
@@ -814,17 +800,6 @@ export class EarthMapEngine {
       layer.on({
         mouseover: () => {
           layer.setStyle({ weight: 3.5, color: "#facc15", fillOpacity: 0.45 });
-          if (window.earthApp?.showQuickStats) {
-            const storeParish = window.earthApp?.store?.getParish(cleanMunId, resolvedParishId);
-            const parishData = storeParish || {
-              id: resolvedParishId,
-              nombre: pName,
-              municipioId: cleanMunId,
-              color: pColor,
-              ...(pDem || {})
-            };
-            window.earthApp.showQuickStats("parroquia", parishData);
-          }
         },
         mouseout: () => {
           layer.setStyle({ weight: 2, color: "#ffffff", fillOpacity: 0.22 });
@@ -1344,9 +1319,6 @@ export class EarthMapEngine {
           spLayer.on({
             mouseover: () => {
               spLayer.setStyle({ weight: 3.5, color: "#facc15", fillOpacity: 0.16 });
-              if (window.earthApp?.showQuickStats) {
-                window.earthApp.showQuickStats("subparroquia", sp);
-              }
             },
             mouseout: () => {
               spLayer.setStyle({
@@ -1467,9 +1439,6 @@ export class EarthMapEngine {
           pLayer.on({
             mouseover: () => {
               pLayer.setStyle({ weight: (poly.anchoBorde || 2) + 1.5, color: "#facc15", fillOpacity: Math.min(0.85, (poly.opacidad || 0.35) + 0.25) });
-              if (window.earthApp?.showQuickStats) {
-                window.earthApp.showQuickStats("poligono", poly);
-              }
             },
             mouseout: () => {
               pLayer.setStyle({
