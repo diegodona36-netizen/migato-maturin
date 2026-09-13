@@ -12,7 +12,7 @@
   const CATALOGO_FALLAS = window.CATALOGO_FALLAS || {};
   const OPCIONES_SOPORTE_VITAL = window.OPCIONES_SOPORTE_VITAL || {};
   const CENTROS_SALUD_INICIALES = window.CENTROS_SALUD_INICIALES || [];
-const STORAGE_KEY = 'migato_salud_centros_v7';
+const STORAGE_KEY = 'migato_salud_centros_v8';
 
 // Delimitación geográfica estricta del Estado Monagas (Caripe al Norte, Orinoco al Sur)
 const BOUNDS_MONAGAS_COORDS = [
@@ -47,7 +47,15 @@ const state = {
   googleRoadmapLayer: null,
   googleHybridLayer: null,
   googleTerrainLayer: null,
-  capaActualMapa: 'calles'
+  capaActualMapa: 'calles',
+  // Delimitación Cartográfica Oficial Monagas (Velo exterior + Límites INE)
+  mascaraExteriorMonagas: null,
+  limiteOficialMonagas: null,
+  layerMunicipiosMonagas: null,
+  mascaraActiva: true,
+  // Inspector Interactivo Google Maps (Punto seleccionado en tiempo real)
+  marcadorInspectorGmaps: null,
+  coordsInspectorGmaps: { lat: 9.7483, lng: -63.1785 }
 };
 
 // ==============================================================
@@ -331,21 +339,280 @@ function initMapaGeneral() {
     state.googleRoadmapLayer.addTo(state.mapaGeneral);
     state.capaActualMapa = 'calles';
 
+    // Aplicar Delimitación Territorial Oficial de Monagas (Velo exterior + Límites INE)
+    aplicarDelimitacionMonagas();
+
     state.marcadoresGeneralLayer = L.layerGroup().addTo(state.mapaGeneral);
     actualizarMapaGeneral();
     poblarSelectorMapaCentros();
 
-    // Escuchador de clics en el mapa durante el modo arrastre / calibración
-    state.mapaGeneral.on('click', function(e) {
-      if (state.modoArrastreActivo && state.marcadorCalibracion) {
-        state.coordsTempCalibracion = { lat: e.latlng.lat, lng: e.latlng.lng };
-        state.marcadorCalibracion.setLatLng(e.latlng);
-        actualizarDisplayCoordsCalibrador(e.latlng.lat, e.latlng.lng);
-      }
-    });
+    // Inicializar Inspector de Clic Interactivo Google Maps
+    initClickInteractivoGoogleMaps();
   } catch (err) {
     console.error('Error inicializando mapa general:', err);
   }
+}
+
+// Delimitación Oficial del Estado Monagas (Velo Exterior e Invertido)
+function aplicarDelimitacionMonagas() {
+  if (!state.mapaGeneral || typeof L === 'undefined') return;
+
+  const ring = window.GEO_ESTADO_MONAGAS_RING;
+  if (!ring || ring.length === 0) {
+    console.warn('Delimitación oficial de Monagas no encontrada en window.GEO_ESTADO_MONAGAS_RING');
+    return;
+  }
+
+  // Convertir [lng, lat] GeoJSON a [lat, lng] Leaflet
+  const ringLatLng = ring.map(pt => [pt[1], pt[0]]);
+
+  // Caja envolvente mundial que cubre el resto del planeta
+  const worldBox = [
+    [-90, -180],
+    [-90, 180],
+    [90, 180],
+    [90, -180]
+  ];
+
+  try {
+    // 1. Máscara exterior invertida (Cubre todo fuera de Monagas con tono noche oscuro)
+    if (state.mascaraExteriorMonagas) {
+      state.mapaGeneral.removeLayer(state.mascaraExteriorMonagas);
+    }
+
+    state.mascaraExteriorMonagas = L.polygon([worldBox, ringLatLng], {
+      fillColor: '#0a0620',
+      fillOpacity: state.mascaraActiva ? 0.88 : 0.0,
+      color: '#38bdf8',
+      weight: 1.5,
+      opacity: state.mascaraActiva ? 0.8 : 0.0,
+      fillRule: 'evenodd',
+      interactive: false
+    }).addTo(state.mapaGeneral);
+
+    // 2. Trazo del Límite Territorial Oficial de Monagas
+    if (state.limiteOficialMonagas) {
+      state.mapaGeneral.removeLayer(state.limiteOficialMonagas);
+    }
+
+    state.limiteOficialMonagas = L.polyline(ringLatLng, {
+      color: '#38bdf8',
+      weight: 3.5,
+      opacity: 0.95,
+      lineCap: 'round',
+      lineJoin: 'round',
+      interactive: false
+    }).addTo(state.mapaGeneral);
+
+    // 3. Límites Municipales Oficiales (13 Municipios)
+    if (window.GEO_MUNICIPIOS_MONAGAS && !state.layerMunicipiosMonagas) {
+      state.layerMunicipiosMonagas = L.geoJSON(window.GEO_MUNICIPIOS_MONAGAS, {
+        style: {
+          color: '#818cf8',
+          weight: 1.2,
+          opacity: 0.6,
+          dashArray: '4, 4',
+          fill: false
+        },
+        interactive: false
+      }).addTo(state.mapaGeneral);
+    }
+  } catch (err) {
+    console.error('Error al aplicar delimitación cartográfica de Monagas:', err);
+  }
+}
+
+function toggleMascaraMonagas() {
+  state.mascaraActiva = !state.mascaraActiva;
+  const btn = document.getElementById('btn-toggle-mascara');
+  if (state.mascaraExteriorMonagas) {
+    state.mascaraExteriorMonagas.setStyle({
+      fillOpacity: state.mascaraActiva ? 0.88 : 0.0,
+      opacity: state.mascaraActiva ? 0.8 : 0.0
+    });
+  }
+  if (btn) {
+    if (state.mascaraActiva) {
+      btn.className = 'px-2.5 py-1 rounded-lg bg-sky-950 text-sky-300 border border-sky-600/50 font-bold text-[11px] transition flex items-center gap-1 shadow';
+      btn.innerHTML = '<span>🛡️ Velo Monagas</span>';
+    } else {
+      btn.className = 'px-2.5 py-1 rounded-lg bg-[#120c36] text-slate-400 border border-slate-700 font-bold text-[11px] transition flex items-center gap-1';
+      btn.innerHTML = '<span>👁️ Sin Velo</span>';
+    }
+  }
+}
+
+// Inspector Interactivo Google Maps (Clic libre en cualquier parte del mapa)
+function initClickInteractivoGoogleMaps() {
+  if (!state.mapaGeneral) return;
+
+  state.mapaGeneral.on('click', function(e) {
+    const lat = e.latlng.lat;
+    const lng = e.latlng.lng;
+
+    // Si estamos en modo calibrador clásico de un centro específico
+    if (state.modoArrastreActivo && state.marcadorCalibracion) {
+      state.coordsTempCalibracion = { lat, lng };
+      state.marcadorCalibracion.setLatLng(e.latlng);
+      actualizarDisplayCoordsCalibrador(lat, lng);
+    }
+
+    // SIEMPRE actualizar el Inspector Interactivo Google Maps en cualquier clic
+    actualizarPuntoInspectorGmaps(lat, lng, false);
+  });
+}
+
+function actualizarPuntoInspectorGmaps(lat, lng, recentrar = false) {
+  state.coordsInspectorGmaps = { lat, lng };
+
+  const inLat = document.getElementById('gmaps-input-lat');
+  const inLng = document.getElementById('gmaps-input-lng');
+  const dispEstado = document.getElementById('gmaps-estado-click');
+
+  if (inLat) inLat.value = lat.toFixed(6);
+  if (inLng) inLng.value = lng.toFixed(6);
+
+  if (dispEstado) {
+    dispEstado.innerHTML = `<span class="text-emerald-400 font-bold">📍 Coordenada Capturada:</span> <span class="font-mono text-white font-bold">${lat.toFixed(6)}, ${lng.toFixed(6)}</span>`;
+  }
+
+  // Crear o mover el marcador interactivo estilo cruz/pin Google Maps
+  if (!state.marcadorInspectorGmaps) {
+    const pinHtml = `
+      <div style="position:relative; width:34px; height:34px; display:flex; align-items:center; justify-content:center; cursor:grab;">
+        <div style="position:absolute; width:32px; height:32px; border:2px dashed #38bdf8; border-radius:50%; animation:spin 6s linear infinite;"></div>
+        <div style="width:12px; height:12px; background:#ef4444; border:2px solid white; border-radius:50%; box-shadow:0 0 10px rgba(239,68,68,1);"></div>
+      </div>
+    `;
+
+    const iconCruz = L.divIcon({
+      className: 'gmaps-target-pin',
+      html: pinHtml,
+      iconSize: [34, 34],
+      iconAnchor: [17, 17]
+    });
+
+    state.marcadorInspectorGmaps = L.marker([lat, lng], {
+      draggable: true,
+      icon: iconCruz,
+      zIndexOffset: 1200
+    }).addTo(state.mapaGeneral);
+
+    state.marcadorInspectorGmaps.on('drag', function(evt) {
+      const pos = evt.target.getLatLng();
+      if (inLat) inLat.value = pos.lat.toFixed(6);
+      if (inLng) inLng.value = pos.lng.toFixed(6);
+      if (dispEstado) {
+        dispEstado.innerHTML = `<span class="text-sky-400 font-bold">🎯 Arrastrando sobre el techo:</span> <span class="font-mono text-white">${pos.lat.toFixed(6)}, ${pos.lng.toFixed(6)}</span>`;
+      }
+    });
+
+    state.marcadorInspectorGmaps.on('dragend', function(evt) {
+      const pos = evt.target.getLatLng();
+      actualizarPuntoInspectorGmaps(pos.lat, pos.lng, false);
+    });
+  } else {
+    state.marcadorInspectorGmaps.setLatLng([lat, lng]);
+  }
+
+  if (recentrar && state.mapaGeneral) {
+    state.mapaGeneral.panTo([lat, lng]);
+  }
+}
+
+function actualizarPuntoDesdeInputs() {
+  const inLat = document.getElementById('gmaps-input-lat');
+  const inLng = document.getElementById('gmaps-input-lng');
+  if (!inLat || !inLng) return;
+
+  const lat = parseFloat(inLat.value);
+  const lng = parseFloat(inLng.value);
+
+  if (!isNaN(lat) && !isNaN(lng)) {
+    actualizarPuntoInspectorGmaps(lat, lng, true);
+  }
+}
+
+function copiarCoordenadasInspector() {
+  const inLat = document.getElementById('gmaps-input-lat');
+  const inLng = document.getElementById('gmaps-input-lng');
+  const btnTxt = document.getElementById('btn-copiar-texto');
+  if (!inLat || !inLng) return;
+
+  const texto = `${inLat.value}, ${inLng.value}`;
+  navigator.clipboard.writeText(texto).then(() => {
+    if (btnTxt) {
+      const orig = btnTxt.textContent;
+      btnTxt.textContent = '¡Copiado! ✓';
+      setTimeout(() => { btnTxt.textContent = orig; }, 1800);
+    }
+  }).catch(() => {
+    alert(`Coordenadas: ${texto}`);
+  });
+}
+
+function abrirPuntoEnGoogleMapsOficial() {
+  const inLat = document.getElementById('gmaps-input-lat');
+  const inLng = document.getElementById('gmaps-input-lng');
+  const lat = inLat ? inLat.value : state.coordsInspectorGmaps.lat;
+  const lng = inLng ? inLng.value : state.coordsInspectorGmaps.lng;
+  const url = `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
+  window.open(url, '_blank');
+}
+
+function crearCentroDesdePunto() {
+  const inLat = document.getElementById('gmaps-input-lat');
+  const inLng = document.getElementById('gmaps-input-lng');
+  const lat = inLat ? parseFloat(inLat.value) : state.coordsInspectorGmaps.lat;
+  const lng = inLng ? parseFloat(inLng.value) : state.coordsInspectorGmaps.lng;
+
+  // Cambiar a pestaña de Formulario
+  cambiarPestana('tab-formulario');
+  initMapaFormulario();
+
+  actualizarCoordenadasInputs(lat, lng, true);
+  if (state.mapaFormulario) {
+    state.mapaFormulario.setView([lat, lng], 16);
+    if (state.marcadorFormulario) {
+      state.marcadorFormulario.setLatLng([lat, lng]);
+    }
+  }
+
+  // Desplazar suavemente a la cabecera
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function aplicarCoordenadaACentroSeleccionado() {
+  const sel = document.getElementById('select-asignar-centro');
+  const inLat = document.getElementById('gmaps-input-lat');
+  const inLng = document.getElementById('gmaps-input-lng');
+  if (!sel || !sel.value) {
+    alert('Por favor selecciona en el menú desplegable a cuál de los centros de salud deseas asignar esta coordenada.');
+    return;
+  }
+
+  const centroId = sel.value;
+  const lat = parseFloat(inLat.value);
+  const lng = parseFloat(inLng.value);
+
+  if (isNaN(lat) || isNaN(lng)) {
+    alert('Coordenadas inválidas en las casillas.');
+    return;
+  }
+
+  const idx = state.centros.findIndex(c => c.id === centroId);
+  if (idx === -1) return;
+
+  state.centros[idx].lat = lat;
+  state.centros[idx].lng = lng;
+  state.centros[idx].precision = 'calibrada_usuario';
+
+  guardarCentrosEnStorage();
+  actualizarMapaGeneral();
+  actualizarContadoresKPI();
+  poblarSelectorMapaCentros();
+
+  alert(`✅ ¡Ubicación guardada con éxito!\n\nCentro: ${state.centros[idx].nombre}\nCoordenadas: ${lat.toFixed(6)}, ${lng.toFixed(6)}\nEstado: Calibrada por Usuario.`);
 }
 
 function recentrarMapaMonagas() {
@@ -853,6 +1120,24 @@ function poblarSelectorMapaCentros() {
     sel.value = state.centroCalibrando.id;
   }
   actualizarContadorNavMapa();
+
+  // Poblar también el selector del Inspector Interactivo Google Maps
+  const selAsignar = document.getElementById('select-asignar-centro');
+  if (selAsignar) {
+    let htmlAsignar = '<option value="">-- Seleccionar centro a calibrar (84) --</option>';
+    for (const [mun, centros] of Object.entries(grupos)) {
+      htmlAsignar += `<optgroup label="Municipio ${mun}">`;
+      centros.forEach(c => {
+        const icono = (c.precision === 'exacta' || c.precision === 'calibrada_usuario') ? '🟢' : '⚠️';
+        htmlAsignar += `<option value="${c.id}">${icono} ${c.nombre} (${c.parroquia})</option>`;
+      });
+      htmlAsignar += `</optgroup>`;
+    }
+    selAsignar.innerHTML = htmlAsignar;
+    if (state.centroCalibrando) {
+      selAsignar.value = state.centroCalibrando.id;
+    }
+  }
 }
 
 function actualizarContadorNavMapa() {
@@ -974,6 +1259,11 @@ function enfocarEnMapa(id) {
   }
 
   actualizarUICalibrador(centro);
+
+  // Sincronizar también con el Inspector Interactivo Google Maps
+  actualizarPuntoInspectorGmaps(centro.lat, centro.lng, false);
+  const selAsignar = document.getElementById('select-asignar-centro');
+  if (selAsignar) selAsignar.value = centro.id;
 
   const sel = document.getElementById('mapa-select-centro');
   if (sel) sel.value = centro.id;
@@ -2196,6 +2486,12 @@ window.imprimirFichaActual = () => {
 };
 window.cerrarModalFicha = cerrarModalFicha;
 window.recentrarMapaMonagas = recentrarMapaMonagas;
+window.toggleMascaraMonagas = toggleMascaraMonagas;
+window.actualizarPuntoDesdeInputs = actualizarPuntoDesdeInputs;
+window.copiarCoordenadasInspector = copiarCoordenadasInspector;
+window.abrirPuntoEnGoogleMapsOficial = abrirPuntoEnGoogleMapsOficial;
+window.crearCentroDesdePunto = crearCentroDesdePunto;
+window.aplicarCoordenadaACentroSeleccionado = aplicarCoordenadaACentroSeleccionado;
 window.cambiarPestana = cambiarPestana;
 window.iniciarAplicacion = iniciarAplicacion;
 

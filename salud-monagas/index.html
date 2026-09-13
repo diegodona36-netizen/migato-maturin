@@ -38,7 +38,7 @@
   </script>
 
   <!-- Custom Stylesheet & Print Rules -->
-  <link rel="stylesheet" href="css/styles.css?v=160">
+  <link rel="stylesheet" href="css/styles.css?v=161">
 </head>
 <body class="bg-[#0a0620] text-slate-100 min-h-screen flex flex-col antialiased select-none sm:select-auto" style="background: radial-gradient(circle at 50% 15%, #18114a 0%, #0e092e 50%, #080518 100%);">
 
@@ -689,6 +689,9 @@
             <button id="btn-toggle-terreno" onclick="window.conmutarCapaMapa('terreno')" class="px-2.5 py-1 rounded-lg text-slate-300 hover:text-white font-medium text-[11px] transition flex items-center gap-1" title="Google Maps: Terreno y Elevación">
               <span>⛰️ Terreno</span>
             </button>
+            <button id="btn-toggle-mascara" onclick="window.toggleMascaraMonagas()" class="px-2.5 py-1 rounded-lg bg-sky-950 text-sky-300 border border-sky-600/50 font-bold text-[11px] transition flex items-center gap-1" title="Activar/Desactivar Velo Oscuro fuera de Monagas">
+              <span>🛡️ Velo Monagas</span>
+            </button>
             <button onclick="window.recentrarMapaMonagas()" class="px-2.5 py-1 rounded-lg bg-[#18114a] hover:bg-[#251b68] text-amber-300 border border-amber-500/40 font-bold text-[11px] transition flex items-center gap-1 ml-1" title="Centrar vista completa del Estado Monagas">
               <span>🔄 Monagas</span>
             </button>
@@ -774,6 +777,99 @@
             </button>
           </div>
 
+        </div>
+
+      </div>
+
+      <!-- PANEL INTERACTIVO DE COORDENADAS (CLON GOOGLE MAPS CON CASILLAS) -->
+      <div id="panel-coordenadas-gmaps" class="bg-[#120c36] border-2 border-sky-500/70 rounded-2xl p-4 shadow-2xl space-y-3">
+        <div class="flex flex-wrap items-center justify-between gap-2 border-b border-[#2d1f85] pb-2.5">
+          <div class="flex items-center gap-2">
+            <span class="flex h-3 w-3 relative">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-3 w-3 bg-sky-500"></span>
+            </span>
+            <h3 class="text-xs sm:text-sm font-black text-white flex items-center gap-1.5 uppercase tracking-wide">
+              <i data-lucide="crosshair" class="w-4 h-4 text-sky-400"></i>
+              <span>Inspector Interactivo Google Maps (Casillas de Coordenadas)</span>
+            </h3>
+          </div>
+          <div class="flex items-center gap-2">
+            <span id="gmaps-estado-click" class="text-[11px] text-amber-300 font-mono font-medium">
+              👉 Toca o haz clic en cualquier ambulatorio, calle o techo del mapa
+            </span>
+          </div>
+        </div>
+
+        <!-- CASILLAS DE COORDENADAS INTERACTIVAS -->
+        <div class="grid grid-cols-1 sm:grid-cols-12 gap-3 items-center">
+          
+          <!-- Casilla Latitud -->
+          <div class="sm:col-span-3 space-y-1">
+            <label class="text-[10px] uppercase font-bold text-slate-400 tracking-wider flex items-center justify-between">
+              <span>Latitud (Norte)</span>
+              <span class="text-sky-400 font-mono text-[9px]">Grados Decimales</span>
+            </label>
+            <input type="text" id="gmaps-input-lat" value="9.748300" onchange="window.actualizarPuntoDesdeInputs()"
+                   class="w-full bg-[#09051c] border border-sky-500/50 rounded-xl px-3 py-2 text-xs font-mono font-black text-amber-400 focus:outline-none focus:ring-2 focus:ring-sky-500 select-all" 
+                   placeholder="9.xxxxx">
+          </div>
+
+          <!-- Casilla Longitud -->
+          <div class="sm:col-span-3 space-y-1">
+            <label class="text-[10px] uppercase font-bold text-slate-400 tracking-wider flex items-center justify-between">
+              <span>Longitud (Oeste)</span>
+              <span class="text-sky-400 font-mono text-[9px]">Grados Decimales</span>
+            </label>
+            <input type="text" id="gmaps-input-lng" value="-63.178500" onchange="window.actualizarPuntoDesdeInputs()"
+                   class="w-full bg-[#09051c] border border-sky-500/50 rounded-xl px-3 py-2 text-xs font-mono font-black text-amber-400 focus:outline-none focus:ring-2 focus:ring-sky-500 select-all" 
+                   placeholder="-63.xxxxx">
+          </div>
+
+          <!-- Botón Copiar Rápido -->
+          <div class="sm:col-span-2 flex items-end">
+            <button type="button" id="btn-gmaps-copiar" onclick="window.copiarCoordenadasInspector()" 
+                    class="w-full py-2 px-3 bg-[#18114a] hover:bg-[#281b7a] border border-[#2d1f85] hover:border-sky-400 text-sky-300 hover:text-white rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 shadow active:scale-95" title="Copiar coordenadas al portapapeles">
+              <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+              <span id="btn-copiar-texto">Copiar Coords</span>
+            </button>
+          </div>
+
+          <!-- Botón Abrir en Google Maps Externo -->
+          <div class="sm:col-span-2 flex items-end">
+            <button type="button" onclick="window.abrirPuntoEnGoogleMapsOficial()" 
+                    class="w-full py-2 px-3 bg-[#18114a] hover:bg-[#20155a] border border-[#2d1f85] text-slate-300 hover:text-white rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 shadow active:scale-95" title="Abrir satélite en Google Maps">
+              <i data-lucide="external-link" class="w-3.5 h-3.5 text-emerald-400"></i>
+              <span>Google Maps ↗</span>
+            </button>
+          </div>
+
+          <!-- Botón Crear Nuevo Centro Aquí -->
+          <div class="sm:col-span-2 flex items-end">
+            <button type="button" onclick="window.crearCentroDesdePunto()" 
+                    class="w-full py-2 px-3 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 shadow active:scale-95" title="Abrir Formulario de Pre-Diagnóstico con estas coordenadas">
+              <i data-lucide="plus-circle" class="w-3.5 h-3.5"></i>
+              <span>Nuevo Centro</span>
+            </button>
+          </div>
+
+        </div>
+
+        <!-- FILA DE ASIGNACIÓN RÁPIDA: ASIGNAR ESTE PUNTO A CUALQUIERA DE LOS 84 CENTROS -->
+        <div class="flex flex-wrap items-center justify-between gap-2.5 pt-2.5 border-t border-[#2d1f85]/60 bg-[#0d0829] p-3 rounded-xl text-xs">
+          <div class="flex items-center gap-2 flex-1 min-w-[280px]">
+            <span class="text-[11px] text-slate-400 font-semibold shrink-0">🎯 Asignar coordenada a:</span>
+            <select id="select-asignar-centro" class="flex-1 bg-[#140e40] border border-[#2d1f85] rounded-lg px-2.5 py-1.5 text-xs text-white focus:border-amber-400 focus:outline-none">
+              <option value="">-- Seleccionar centro de salud a calibrar (84) --</option>
+            </select>
+          </div>
+          <div class="flex items-center gap-2">
+            <button type="button" onclick="window.aplicarCoordenadaACentroSeleccionado()" 
+                    class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-black text-xs rounded-xl shadow transition flex items-center gap-1.5 active:scale-95">
+              <i data-lucide="check-check" class="w-4 h-4"></i>
+              <span>Guardar en este Centro</span>
+            </button>
+          </div>
         </div>
 
       </div>
@@ -884,9 +980,11 @@
 
   </div>
 
+  <!-- Delimitación Geográfica Oficial del Estado Monagas (INE / IGVSB) -->
+  <script src="js/geoMonagasLimits.js?v=161"></script>
   <!-- Scripts de Datos y Lógica (Carga universal estándar) -->
-  <script src="js/saludData.js?v=160"></script>
-  <script src="js/saludApp.js?v=160"></script>
+  <script src="js/saludData.js?v=161"></script>
+  <script src="js/saludApp.js?v=161"></script>
 
 </body>
 </html>
