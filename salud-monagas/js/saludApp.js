@@ -28,7 +28,17 @@ const state = {
   marcadorFormulario: null,
   mapaGeneral: null,
   marcadoresGeneralLayer: null,
-  mapaFichaImpresion: null
+  mapaFichaImpresion: null,
+  // Herramientas de Calibración Rápida y Navegación del Mapa Táctico
+  centroCalibrando: null,
+  coordsTempCalibracion: null,
+  modoArrastreActivo: false,
+  marcadorCalibracion: null,
+  filtroEstadoMapa: 'todos', // 'todos' | 'calibrar' | 'exactos'
+  busquedaMapa: '',
+  centrosListaMapa: [],
+  satLayer: null,
+  streetsLayer: null
 };
 
 // ==============================================================
@@ -271,21 +281,26 @@ function initMapaGeneral() {
       attributionControl: false
     }).setView([9.6000, -63.2000], 9);
 
-    const satLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+    state.satLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
       maxZoom: 19
     }).addTo(state.mapaGeneral);
 
-    const streetsLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    state.streetsLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19
     });
 
-    L.control.layers({
-      '🛰️ Satélite Monagas': satLayer,
-      '🗺️ Mapa Urbano': streetsLayer
-    }, null, { position: 'topright' }).addTo(state.mapaGeneral);
-
     state.marcadoresGeneralLayer = L.layerGroup().addTo(state.mapaGeneral);
     actualizarMapaGeneral();
+    poblarSelectorMapaCentros();
+
+    // Escuchador de clics en el mapa durante el modo arrastre / calibración
+    state.mapaGeneral.on('click', function(e) {
+      if (state.modoArrastreActivo && state.marcadorCalibracion) {
+        state.coordsTempCalibracion = { lat: e.latlng.lat, lng: e.latlng.lng };
+        state.marcadorCalibracion.setLatLng(e.latlng);
+        actualizarDisplayCoordsCalibrador(e.latlng.lat, e.latlng.lng);
+      }
+    });
   } catch (err) {
     console.error('Error inicializando mapa general:', err);
   }
@@ -357,9 +372,9 @@ function actualizarMapaGeneral() {
 
         <div class="flex gap-1.5">
           <button onclick="window.editarCentro('${c.id}')" class="flex-1 py-2 bg-sky-500 hover:bg-sky-400 text-[#050814] font-black rounded-lg text-xs transition text-center shadow flex items-center justify-center gap-1">
-            <span>📝 Realizar Registro / Diagnóstico</span>
+            <span>📝 Diagnóstico</span>
           </button>
-          <button onclick="window.calibrarEnMapa('${c.id}')" class="px-2.5 py-2 bg-[#1b134d] hover:bg-[#2b1f7d] text-amber-300 hover:text-amber-200 rounded-lg border border-amber-500/40 text-[10px] font-bold transition flex items-center justify-center gap-1" title="Ajustar y Calibrar Coordenadas Satelitales">
+          <button onclick="window.enfocarEnMapa('${c.id}')" class="px-2.5 py-2 bg-amber-500 hover:bg-amber-400 text-slate-950 rounded-lg font-black text-xs transition flex items-center justify-center gap-1 shadow" title="Calibrar y Mover Pin al Techo Exacto">
             🎯 Calibrar
           </button>
           <button onclick="window.verFichaCentro('${c.id}')" class="px-2.5 py-2 bg-[#140e40] hover:bg-[#2d1f85] text-slate-300 hover:text-white rounded-lg border border-[#2d1f85] text-[10px] font-bold transition" title="Ver Ficha Imprimible">
@@ -735,16 +750,390 @@ function limpiarFormulario() {
   evaluarSemaforoEnVivo();
 }
 
-function calibrarEnMapa(id) {
-  editarCentro(id);
-  setTimeout(() => {
-    const mapWidget = document.getElementById('mapa-formulario');
-    if (mapWidget) {
-      mapWidget.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      mapWidget.classList.add('ring-4', 'ring-sky-400');
-      setTimeout(() => mapWidget.classList.remove('ring-4', 'ring-sky-400'), 3000);
+// ==============================================================
+// 5.1 CALIBRADOR RÁPIDO Y BUSCADOR TÁCTICO DEL MAPA GENERAL
+// ==============================================================
+
+function poblarSelectorMapaCentros() {
+  const sel = document.getElementById('mapa-select-centro');
+  if (!sel) return;
+
+  let filtrados = [...state.centros];
+
+  if (state.filtroEstadoMapa === 'calibrar') {
+    filtrados = filtrados.filter(c => c.precision !== 'exacta' && c.precision !== 'calibrada_usuario');
+  } else if (state.filtroEstadoMapa === 'exactos') {
+    filtrados = filtrados.filter(c => c.precision === 'exacta' || c.precision === 'calibrada_usuario');
+  }
+
+  if (state.busquedaMapa) {
+    const q = state.busquedaMapa.toLowerCase();
+    filtrados = filtrados.filter(c => {
+      const matchNom = (c.nombre || '').toLowerCase().includes(q);
+      const matchParr = (c.parroquia || '').toLowerCase().includes(q);
+      const matchSec = (c.sector || '').toLowerCase().includes(q);
+      const matchMun = (c.municipio || '').toLowerCase().includes(q);
+      return matchNom || matchParr || matchSec || matchMun;
+    });
+  }
+
+  state.centrosListaMapa = filtrados;
+
+  const grupos = {};
+  filtrados.forEach(c => {
+    const mun = (c.municipio || 'Otros').replace('Municipio ', '');
+    if (!grupos[mun]) grupos[mun] = [];
+    grupos[mun].push(c);
+  });
+
+  const estadoLabel = state.filtroEstadoMapa === 'calibrar' ? 'Por Calibrar' : (state.filtroEstadoMapa === 'exactos' ? 'Exactos' : 'Todos');
+  let html = `<option value="">-- ${filtrados.length} centros (${estadoLabel}) --</option>`;
+  for (const [mun, centros] of Object.entries(grupos)) {
+    html += `<optgroup label="Municipio ${mun}">`;
+    centros.forEach(c => {
+      const icono = (c.precision === 'exacta' || c.precision === 'calibrada_usuario') ? '🟢' : '⚠️';
+      const sec = c.sector ? ` [${c.sector}]` : '';
+      html += `<option value="${c.id}">${icono} ${c.nombre}${sec}</option>`;
+    });
+    html += `</optgroup>`;
+  }
+
+  sel.innerHTML = html;
+  if (state.centroCalibrando) {
+    sel.value = state.centroCalibrando.id;
+  }
+  actualizarContadorNavMapa();
+}
+
+function actualizarContadorNavMapa() {
+  const counter = document.getElementById('mapa-nav-counter');
+  if (!counter) return;
+
+  if (!state.centrosListaMapa || state.centrosListaMapa.length === 0) {
+    counter.textContent = '0/0';
+    return;
+  }
+
+  if (!state.centroCalibrando) {
+    counter.textContent = `1/${state.centrosListaMapa.length}`;
+    return;
+  }
+
+  const idx = state.centrosListaMapa.findIndex(c => c.id === state.centroCalibrando.id);
+  if (idx !== -1) {
+    counter.textContent = `${idx + 1}/${state.centrosListaMapa.length}`;
+  } else {
+    counter.textContent = `-/${state.centrosListaMapa.length}`;
+  }
+}
+
+function navegarCentroMapa(delta) {
+  if (!state.centrosListaMapa || state.centrosListaMapa.length === 0) return;
+
+  let nextIdx = 0;
+  if (state.centroCalibrando) {
+    const curIdx = state.centrosListaMapa.findIndex(c => c.id === state.centroCalibrando.id);
+    if (curIdx !== -1) {
+      nextIdx = (curIdx + delta + state.centrosListaMapa.length) % state.centrosListaMapa.length;
     }
-  }, 250);
+  }
+
+  const nextCentro = state.centrosListaMapa[nextIdx];
+  if (nextCentro) {
+    enfocarEnMapa(nextCentro.id);
+  }
+}
+
+function filtrarCentrosMapa(criterio) {
+  state.filtroEstadoMapa = criterio;
+
+  document.querySelectorAll('.chip-filter').forEach(chip => {
+    chip.classList.remove('active', 'bg-sky-500', 'text-slate-950', 'shadow-sm');
+    chip.classList.add('bg-[#120c36]', 'text-slate-300');
+  });
+
+  const activeChip = document.getElementById(`chip-filtro-${criterio}`);
+  if (activeChip) {
+    activeChip.classList.add('active', 'bg-sky-500', 'text-slate-950', 'shadow-sm');
+    activeChip.classList.remove('bg-[#120c36]', 'text-slate-300');
+  }
+
+  poblarSelectorMapaCentros();
+
+  if (state.centrosListaMapa.length > 0) {
+    enfocarEnMapa(state.centrosListaMapa[0].id);
+  }
+}
+
+function conmutarCapaMapa(tipo) {
+  if (!state.mapaGeneral || !state.satLayer || !state.streetsLayer) return;
+
+  const btnSat = document.getElementById('btn-toggle-satelite');
+  const btnCalles = document.getElementById('btn-toggle-calles');
+
+  if (tipo === 'satelite') {
+    if (state.mapaGeneral.hasLayer(state.streetsLayer)) {
+      state.mapaGeneral.removeLayer(state.streetsLayer);
+    }
+    if (!state.mapaGeneral.hasLayer(state.satLayer)) {
+      state.satLayer.addTo(state.mapaGeneral);
+    }
+    if (btnSat) {
+      btnSat.className = 'px-2.5 py-1 rounded-lg bg-sky-500 text-slate-950 font-bold text-[11px] transition flex items-center gap-1 shadow';
+    }
+    if (btnCalles) {
+      btnCalles.className = 'px-2.5 py-1 rounded-lg text-slate-300 hover:text-white font-medium text-[11px] transition flex items-center gap-1';
+    }
+  } else {
+    if (state.mapaGeneral.hasLayer(state.satLayer)) {
+      state.mapaGeneral.removeLayer(state.satLayer);
+    }
+    if (!state.mapaGeneral.hasLayer(state.streetsLayer)) {
+      state.streetsLayer.addTo(state.mapaGeneral);
+    }
+    if (btnCalles) {
+      btnCalles.className = 'px-2.5 py-1 rounded-lg bg-sky-500 text-slate-950 font-bold text-[11px] transition flex items-center gap-1 shadow';
+    }
+    if (btnSat) {
+      btnSat.className = 'px-2.5 py-1 rounded-lg text-slate-300 hover:text-white font-medium text-[11px] transition flex items-center gap-1';
+    }
+  }
+}
+
+function enfocarEnMapa(id) {
+  cambiarPestana('tab-mapa');
+  initMapaGeneral();
+
+  const centro = state.centros.find(c => c.id === id);
+  if (!centro) return;
+
+  state.centroCalibrando = { ...centro };
+  state.coordsTempCalibracion = { lat: centro.lat, lng: centro.lng };
+
+  if (state.mapaGeneral) {
+    state.mapaGeneral.flyTo([centro.lat, centro.lng], 18, {
+      animate: true,
+      duration: 1.2
+    });
+  }
+
+  actualizarUICalibrador(centro);
+
+  const sel = document.getElementById('mapa-select-centro');
+  if (sel) sel.value = centro.id;
+  actualizarContadorNavMapa();
+}
+
+function calibrarEnMapa(id) {
+  enfocarEnMapa(id);
+}
+
+function actualizarUICalibrador(centro) {
+  const panel = document.getElementById('mapa-quick-calibrator');
+  if (!panel) return;
+
+  panel.classList.remove('hidden');
+
+  const elNombre = document.getElementById('calibrator-nombre');
+  if (elNombre) elNombre.textContent = centro.nombre;
+
+  const elUbic = document.getElementById('calibrator-ubicacion');
+  if (elUbic) {
+    const mun = (centro.municipio || '').replace('Municipio ', '');
+    elUbic.textContent = `${mun} • ${centro.parroquia || ''} • ${centro.sector || 'Casco Central'}`;
+  }
+
+  const badgePrec = document.getElementById('calibrator-badge-precision');
+  if (badgePrec) {
+    const esExacto = (centro.precision === 'exacta' || centro.precision === 'calibrada_usuario');
+    badgePrec.className = `px-2 py-0.5 rounded-full text-[10px] font-bold ${
+      esExacto ? 'bg-emerald-950 text-emerald-300 border border-emerald-700/60' : 'bg-amber-950 text-amber-300 border border-amber-700/60 animate-pulse'
+    }`;
+    badgePrec.innerHTML = esExacto 
+      ? '<span class="inline-block w-1.5 h-1.5 rounded-full bg-emerald-400 mr-1"></span> Coordenada Exacta'
+      : '<span class="inline-block w-1.5 h-1.5 rounded-full bg-amber-400 mr-1"></span> Requiere Calibración';
+  }
+
+  actualizarDisplayCoordsCalibrador(centro.lat, centro.lng);
+  desactivarModoArrastre();
+
+  if (window.lucide && typeof window.lucide.createIcons === 'function') {
+    lucide.createIcons();
+  }
+}
+
+function actualizarDisplayCoordsCalibrador(lat, lng) {
+  const elCoords = document.getElementById('calibrator-coords-display');
+  if (elCoords) {
+    elCoords.textContent = `${Number(lat).toFixed(5)}, ${Number(lng).toFixed(5)}`;
+  }
+}
+
+function toggleModoArrastrePin() {
+  if (!state.centroCalibrando || !state.mapaGeneral) return;
+
+  state.modoArrastreActivo = !state.modoArrastreActivo;
+  const btn = document.getElementById('btn-toggle-arrastre');
+  const label = document.getElementById('label-modo-arrastre');
+  const msg = document.getElementById('msg-modo-arrastre');
+
+  if (state.modoArrastreActivo) {
+    if (btn) {
+      btn.classList.add('bg-red-500/20', 'text-red-300', 'border-red-500');
+      btn.classList.remove('bg-amber-500/20', 'text-amber-300', 'border-amber-500/50');
+    }
+    if (label) label.textContent = '🛑 Desactivar Modo Arrastre';
+    if (msg) msg.classList.remove('hidden');
+
+    if (state.marcadorCalibracion) {
+      state.marcadorCalibracion.remove();
+    }
+
+    const iconPin = L.divIcon({
+      className: 'calibration-drag-pin',
+      html: `
+        <div style="width:38px; height:38px; border-radius:50% 50% 50% 0; background:linear-gradient(135deg, #ef4444, #991b1b); border:3px solid #ffffff; transform:rotate(-45deg); box-shadow:0 0 25px #ef4444; display:flex; align-items:center; justify-content:center; cursor:grab;">
+          <span style="transform:rotate(45deg); font-size:18px;">🎯</span>
+        </div>
+      `,
+      iconSize: [38, 38],
+      iconAnchor: [19, 38]
+    });
+
+    state.marcadorCalibracion = L.marker(
+      [state.coordsTempCalibracion.lat, state.coordsTempCalibracion.lng],
+      { icon: iconPin, draggable: true, zIndexOffset: 2500 }
+    ).addTo(state.mapaGeneral);
+
+    state.marcadorCalibracion.on('dragend', function(e) {
+      const pos = e.target.getLatLng();
+      state.coordsTempCalibracion = { lat: pos.lat, lng: pos.lng };
+      actualizarDisplayCoordsCalibrador(pos.lat, pos.lng);
+    });
+
+    mostrarNotificacion('🎯 Modo Arrastre ACTIVO: Haz clic en el mapa o arrastra el pin al techo del hospital.', 'exito');
+
+  } else {
+    desactivarModoArrastre();
+  }
+}
+
+function desactivarModoArrastre() {
+  state.modoArrastreActivo = false;
+  const btn = document.getElementById('btn-toggle-arrastre');
+  const label = document.getElementById('label-modo-arrastre');
+  const msg = document.getElementById('msg-modo-arrastre');
+
+  if (btn) {
+    btn.classList.remove('bg-red-500/20', 'text-red-300', 'border-red-500');
+    btn.classList.add('bg-amber-500/20', 'text-amber-300', 'border-amber-500/50');
+  }
+  if (label) label.textContent = '🎯 Activar Arrastre / Clic en el Mapa';
+  if (msg) msg.classList.add('hidden');
+
+  if (state.marcadorCalibracion) {
+    state.marcadorCalibracion.remove();
+    state.marcadorCalibracion = null;
+  }
+}
+
+function guardarCalibracionActual() {
+  if (!state.centroCalibrando || !state.coordsTempCalibracion) return;
+
+  const id = state.centroCalibrando.id;
+  const idx = state.centros.findIndex(c => c.id === id);
+  if (idx === -1) return;
+
+  const lat = parseFloat(state.coordsTempCalibracion.lat.toFixed(5));
+  const lng = parseFloat(state.coordsTempCalibracion.lng.toFixed(5));
+
+  state.centros[idx].lat = lat;
+  state.centros[idx].lng = lng;
+  state.centros[idx].precision = 'exacta';
+
+  guardarEnStorage();
+
+  actualizarMapaGeneral();
+  renderDirectorioTabla();
+  actualizarContadoresKPI();
+  poblarSelectorMapaCentros();
+
+  desactivarModoArrastre();
+  actualizarUICalibrador(state.centros[idx]);
+
+  mostrarNotificacion(`✅ Ubicación de "${state.centros[idx].nombre}" guardada con precisión exacta (${lat}, ${lng}).`, 'exito');
+}
+
+function abrirGmapsCalibradorActual() {
+  if (!state.centroCalibrando) return;
+  const c = state.centroCalibrando;
+  const query = `${c.nombre} ${c.sector || ''} ${c.municipio || ''} Monagas Venezuela`.replace(/\s+/g, ' ').trim();
+  window.open(`https://www.google.com/maps/search/${encodeURIComponent(query)}`, '_blank');
+}
+
+function aplicarGmapsEnCalibrador() {
+  const input = document.getElementById('calibrator-gmaps-input');
+  if (!input) return;
+  const val = input.value.trim();
+  if (!val) return;
+
+  const coords = procesarEnlaceOGoogleMaps(val);
+  if (coords) {
+    state.coordsTempCalibracion = { lat: coords.lat, lng: coords.lng };
+    if (state.mapaGeneral) {
+      state.mapaGeneral.flyTo([coords.lat, coords.lng], 18, { animate: true, duration: 1 });
+    }
+    
+    if (!state.modoArrastreActivo) {
+      toggleModoArrastrePin();
+    } else if (state.marcadorCalibracion) {
+      state.marcadorCalibracion.setLatLng([coords.lat, coords.lng]);
+    }
+    
+    actualizarDisplayCoordsCalibrador(coords.lat, coords.lng);
+    input.value = '';
+    mostrarNotificacion(`Coordenadas ${coords.lat.toFixed(5)}, ${coords.lng.toFixed(5)} aplicadas. Pulsa "Guardar Ubicación" para confirmar.`, 'exito');
+  } else {
+    mostrarNotificacion('No se encontraron coordenadas válidas en el texto pegado.', 'error');
+  }
+}
+
+function verFichaCalibradorActual() {
+  if (!state.centroCalibrando) return;
+  const centroActual = state.centros.find(c => c.id === state.centroCalibrando.id) || state.centroCalibrando;
+  renderFichaImprimible(centroActual);
+}
+
+function cerrarCalibradorRapido() {
+  desactivarModoArrastre();
+  const panel = document.getElementById('mapa-quick-calibrator');
+  if (panel) panel.classList.add('hidden');
+}
+
+function copiarCoordenadasCalibrador() {
+  if (!state.coordsTempCalibracion) return;
+  const txt = `${state.coordsTempCalibracion.lat.toFixed(5)}, ${state.coordsTempCalibracion.lng.toFixed(5)}`;
+  navigator.clipboard.writeText(txt).then(() => {
+    mostrarNotificacion(`Coordenadas copiadas: ${txt}`, 'exito');
+  }).catch(() => {
+    prompt('Copia las coordenadas manualmente:', txt);
+  });
+}
+
+function mostrarNotificacion(mensaje, tipo = 'exito') {
+  const toast = document.createElement('div');
+  toast.className = `fixed bottom-5 right-5 z-[999999] px-4 py-3 rounded-2xl shadow-2xl border flex items-center gap-2 text-xs font-bold transition-all transform duration-300 translate-y-8 opacity-0 ${
+    tipo === 'exito' ? 'bg-[#0f241a] border-emerald-500 text-emerald-200' : 'bg-[#290e14] border-red-500 text-red-200'
+  }`;
+  toast.innerHTML = `<span>${tipo === 'exito' ? '✅' : '⚠️'}</span> <span>${mensaje}</span>`;
+  document.body.appendChild(toast);
+  requestAnimationFrame(() => {
+    toast.classList.remove('translate-y-8', 'opacity-0');
+  });
+  setTimeout(() => {
+    toast.classList.add('translate-y-8', 'opacity-0');
+    setTimeout(() => toast.remove(), 400);
+  }, 3500);
 }
 
 function editarCentro(id) {
@@ -1288,6 +1677,10 @@ function renderDirectorioTabla() {
         </td>
         <td class="py-3 px-3 text-right">
           <div class="flex items-center justify-end gap-1.5">
+            <button onclick="window.enfocarEnMapa('${c.id}')" class="px-2 py-1.5 bg-emerald-500/20 hover:bg-emerald-500 text-emerald-300 hover:text-[#050814] font-bold rounded-lg text-[11px] border border-emerald-500/40 transition flex items-center gap-1 shadow-sm" title="Enfocar y Calibrar en el Mapa">
+              <i data-lucide="crosshair" class="w-3.5 h-3.5"></i>
+              <span>Calibrar</span>
+            </button>
             <button onclick="window.buscarCentroEnGoogleMaps('${c.id}')" class="p-1.5 bg-[#140e40] hover:bg-[#251b68] text-amber-400 hover:text-amber-300 rounded-lg border border-amber-500/40 transition" title="Buscar en Google Maps ↗">
               <i data-lucide="compass" class="w-3.5 h-3.5"></i>
             </button>
@@ -1611,13 +2004,57 @@ function configurarEventListeners() {
       const sector = document.getElementById('form-sector')?.value || '';
       const selMun = document.getElementById('form-municipio');
       const munNombre = selMun ? selMun.options[selMun.selectedIndex]?.text || '' : '';
-      const query = `${nombre} ${sector} ${munNombre} Monagas Venezuela`.replace(/\\s+/g, ' ').trim();
+      const query = `${nombre} ${sector} ${munNombre} Monagas Venezuela`.replace(/\s+/g, ' ').trim();
       window.open(`https://www.google.com/maps/search/${encodeURIComponent(query)}`, '_blank');
     });
   }
 
+  // Eventos del Buscador Táctico y Selector de Centros en el Mapa
+  const inputBusquedaMapa = document.getElementById('mapa-search-input');
+  if (inputBusquedaMapa) {
+    inputBusquedaMapa.addEventListener('input', (e) => {
+      state.busquedaMapa = e.target.value.trim();
+      poblarSelectorMapaCentros();
+    });
+    inputBusquedaMapa.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        if (state.centrosListaMapa.length > 0) {
+          enfocarEnMapa(state.centrosListaMapa[0].id);
+        }
+      }
+    });
+  }
+
+  const selCentroMapa = document.getElementById('mapa-select-centro');
+  if (selCentroMapa) {
+    selCentroMapa.addEventListener('change', (e) => {
+      const id = e.target.value;
+      if (id) enfocarEnMapa(id);
+    });
+  }
+
+  const btnPrev = document.getElementById('btn-mapa-prev');
+  if (btnPrev) btnPrev.addEventListener('click', () => navegarCentroMapa(-1));
+
+  const btnNext = document.getElementById('btn-mapa-next');
+  if (btnNext) btnNext.addEventListener('click', () => navegarCentroMapa(1));
+
+  const inputCalGmaps = document.getElementById('calibrator-gmaps-input');
+  if (inputCalGmaps) {
+    inputCalGmaps.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        aplicarGmapsEnCalibrador();
+      }
+    });
+  }
+
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') cerrarModalFicha();
+    if (e.key === 'Escape') {
+      cerrarModalFicha();
+      cerrarCalibradorRapido();
+    }
   });
 }
 
@@ -1680,10 +2117,20 @@ window.verFichaCentro = (id) => {
 };
 window.editarCentro = editarCentro;
 window.calibrarEnMapa = calibrarEnMapa;
+window.enfocarEnMapa = enfocarEnMapa;
+window.filtrarCentrosMapa = filtrarCentrosMapa;
+window.conmutarCapaMapa = conmutarCapaMapa;
+window.toggleModoArrastrePin = toggleModoArrastrePin;
+window.cerrarCalibradorRapido = cerrarCalibradorRapido;
+window.guardarCalibracionActual = guardarCalibracionActual;
+window.abrirGmapsCalibradorActual = abrirGmapsCalibradorActual;
+window.aplicarGmapsEnCalibrador = aplicarGmapsEnCalibrador;
+window.verFichaCalibradorActual = verFichaCalibradorActual;
+window.copiarCoordenadasCalibrador = copiarCoordenadasCalibrador;
 window.buscarCentroEnGoogleMaps = (id) => {
   const c = state.centros.find(item => item.id === id);
   if (!c) return;
-  const query = `${c.nombre} ${c.sector || ''} ${c.municipio || ''} Monagas Venezuela`.replace(/\\s+/g, ' ').trim();
+  const query = `${c.nombre} ${c.sector || ''} ${c.municipio || ''} Monagas Venezuela`.replace(/\s+/g, ' ').trim();
   window.open(`https://www.google.com/maps/search/${encodeURIComponent(query)}`, '_blank');
 };
 window.eliminarCentro = eliminarCentro;

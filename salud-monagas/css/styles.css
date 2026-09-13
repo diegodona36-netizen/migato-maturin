@@ -302,3 +302,35 @@ code, pre, .font-mono {
     height: 125px !important;
   }
 }
+
+/* ==============================================================
+   ESTILOS DEL CALIBRADOR RÁPIDO Y BUSCADOR DEL MAPA (MÓDULO 5)
+   ============================================================== */
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeInUp 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.calibration-drag-pin {
+  transition: transform 0.15s ease-out;
+}
+
+.calibration-drag-pin:hover {
+  transform: scale(1.15);
+}
+
+/* Ocultar control de capas nativo de Leaflet si usamos el conmutador custom */
+.leaflet-control-layers {
+  display: none !important;
+}

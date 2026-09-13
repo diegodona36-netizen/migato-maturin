@@ -38,7 +38,7 @@
   </script>
 
   <!-- Custom Stylesheet & Print Rules -->
-  <link rel="stylesheet" href="css/styles.css?v=154">
+  <link rel="stylesheet" href="css/styles.css?v=159">
 </head>
 <body class="bg-[#0a0620] text-slate-100 min-h-screen flex flex-col antialiased select-none sm:select-auto" style="background: radial-gradient(circle at 50% 15%, #18114a 0%, #0e092e 50%, #080518 100%);">
 
@@ -623,8 +623,153 @@
         </div>
       </div>
 
-      <!-- MAPA PRINCIPAL -->
-      <div id="mapa-general" class="w-full h-[600px] rounded-2xl overflow-hidden border border-[#2d1f85] shadow-2xl relative isolate z-0"></div>
+      <!-- BARRA DE BÚSQUEDA RÁPIDA, SELECTOR Y CONTROLES DEL MAPA -->
+      <div class="bg-[#18114a] border border-[#2d1f85] rounded-2xl p-3 sm:p-4 space-y-3 shadow-xl">
+        
+        <!-- Fila 1: Buscador y Selector -->
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-2.5 items-center">
+          
+          <!-- Buscador Predictivo -->
+          <div class="md:col-span-6 relative">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+              <i data-lucide="search" class="w-4 h-4"></i>
+            </div>
+            <input id="mapa-search-input" type="text" placeholder="🔍 Buscar por nombre, municipio o sector (ej. HUMNT, Caripito, Los Godos)..." class="w-full bg-[#100b33] border border-[#2d1f85] rounded-xl pl-9 pr-3 py-2 text-xs text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-500 transition">
+          </div>
+
+          <!-- Selector Desplegable de Centros -->
+          <div class="md:col-span-4">
+            <select id="mapa-select-centro" class="w-full bg-[#100b33] border border-[#2d1f85] rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:ring-2 focus:ring-sky-500 transition cursor-pointer">
+              <option value="">-- Seleccionar centro para enfocar (84) --</option>
+            </select>
+          </div>
+
+          <!-- Botones Anterior / Siguiente -->
+          <div class="md:col-span-2 flex items-center justify-between gap-1.5">
+            <button id="btn-mapa-prev" class="flex-1 py-2 px-2 bg-[#120c36] hover:bg-[#20155a] border border-[#2d1f85] text-slate-300 hover:text-white rounded-xl text-xs font-bold transition flex items-center justify-center gap-1 active:scale-95" title="Centro Anterior">
+              <i data-lucide="chevron-left" class="w-3.5 h-3.5"></i>
+              <span>Ant</span>
+            </button>
+            <span id="mapa-nav-counter" class="text-[11px] font-mono text-slate-400 shrink-0 px-1">1/84</span>
+            <button id="btn-mapa-next" class="flex-1 py-2 px-2 bg-[#120c36] hover:bg-[#20155a] border border-[#2d1f85] text-slate-300 hover:text-white rounded-xl text-xs font-bold transition flex items-center justify-center gap-1 active:scale-95" title="Centro Siguiente">
+              <span>Sig</span>
+              <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Fila 2: Chips de Filtrado Rápido y Selector de Capa Satelital -->
+        <div class="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-[#2d1f85]/50 text-xs">
+          
+          <!-- Chips de Filtrado -->
+          <div class="flex items-center gap-1.5 flex-wrap">
+            <span class="text-[11px] text-slate-400 mr-1 font-semibold">Mostrar:</span>
+            <button id="chip-filtro-todos" onclick="window.filtrarCentrosMapa('todos')" class="chip-filter active px-2.5 py-1 rounded-lg bg-sky-500 text-slate-950 font-bold text-[11px] transition shadow-sm">
+              Todos (84)
+            </button>
+            <button id="chip-filtro-calibrar" onclick="window.filtrarCentrosMapa('calibrar')" class="chip-filter px-2.5 py-1 rounded-lg bg-[#120c36] border border-amber-500/40 text-amber-300 hover:bg-amber-950/50 font-bold text-[11px] transition flex items-center gap-1">
+              <span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span>
+              <span>⚠️ Por Calibrar (42)</span>
+            </button>
+            <button id="chip-filtro-exactos" onclick="window.filtrarCentrosMapa('exactos')" class="chip-filter px-2.5 py-1 rounded-lg bg-[#120c36] border border-emerald-500/40 text-emerald-300 hover:bg-emerald-950/50 font-bold text-[11px] transition flex items-center gap-1">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+              <span>🟢 Exactos (42)</span>
+            </button>
+          </div>
+
+          <!-- Conmutador Directo Satélite / Calles -->
+          <div class="flex items-center gap-1 bg-[#100b33] p-1 rounded-xl border border-[#2d1f85]">
+            <button id="btn-toggle-satelite" onclick="window.conmutarCapaMapa('satelite')" class="px-2.5 py-1 rounded-lg bg-sky-500 text-slate-950 font-bold text-[11px] transition flex items-center gap-1 shadow">
+              <span>🛰️ Satélite HD</span>
+            </button>
+            <button id="btn-toggle-calles" onclick="window.conmutarCapaMapa('calles')" class="px-2.5 py-1 rounded-lg text-slate-300 hover:text-white font-medium text-[11px] transition flex items-center gap-1">
+              <span>🗺️ Mapa Urbano</span>
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- CONTENEDOR DEL MAPA Y PANEL CALIBRADOR FLOTANTE -->
+      <div class="relative w-full rounded-2xl overflow-hidden border border-[#2d1f85] shadow-2xl bg-[#080518]">
+        
+        <!-- MAPA TÁCTICO LEAFLET -->
+        <div id="mapa-general" class="w-full h-[620px] relative isolate z-0"></div>
+
+        <!-- PANEL / INSPECTOR FLOTANTE DE CALIBRACIÓN RÁPIDA -->
+        <div id="mapa-quick-calibrator" class="hidden absolute top-4 right-4 z-[400] max-w-[400px] w-[calc(100%-2rem)] bg-[#120c36]/95 backdrop-blur-md border-2 border-sky-500/90 rounded-2xl p-4 shadow-2xl text-xs space-y-3 max-h-[92%] overflow-y-auto">
+          
+          <!-- Cabecera -->
+          <div class="flex items-start justify-between gap-2 border-b border-[#2d1f85] pb-2">
+            <div class="min-w-0 flex-1">
+              <div class="flex items-center gap-1.5">
+                <span class="text-base shrink-0">🏥</span>
+                <h3 id="calibrator-nombre" class="font-bold text-white text-sm leading-tight truncate">Nombre del Centro</h3>
+              </div>
+              <div id="calibrator-ubicacion" class="text-[11px] text-sky-300/80 mt-0.5 font-medium truncate">Municipio • Parroquia • Sector</div>
+            </div>
+            <button onclick="window.cerrarCalibradorRapido()" class="p-1 rounded-lg bg-[#18114a] hover:bg-red-950 text-slate-400 hover:text-red-400 border border-[#2d1f85] transition shrink-0" title="Cerrar Inspector">
+              <i data-lucide="x" class="w-4 h-4"></i>
+            </button>
+          </div>
+
+          <!-- Estado de precisión y coordenadas actuales -->
+          <div class="bg-[#18114a] p-2.5 rounded-xl border border-[#2d1f85] space-y-1.5">
+            <div class="flex items-center justify-between">
+              <span id="calibrator-badge-precision" class="px-2 py-0.5 rounded-full text-[10px] font-bold">Estado</span>
+              <button onclick="window.copiarCoordenadasCalibrador()" class="text-[10px] text-slate-400 hover:text-white font-mono flex items-center gap-1 transition">
+                <i data-lucide="copy" class="w-3 h-3"></i>
+                <span>Copiar Coordenadas</span>
+              </button>
+            </div>
+            <div class="flex items-center justify-between font-mono text-[11px]">
+              <span class="text-slate-400">Coordenadas:</span>
+              <span id="calibrator-coords-display" class="font-bold text-amber-300">0.00000, 0.00000</span>
+            </div>
+          </div>
+
+          <!-- Herramientas de Calibración Rápida -->
+          <div class="space-y-2">
+            <!-- Botón Arrastre / Clic -->
+            <button id="btn-toggle-arrastre" onclick="window.toggleModoArrastrePin()" class="w-full py-2 px-3 bg-amber-500/20 hover:bg-amber-500 text-amber-300 hover:text-slate-950 border border-amber-500/50 font-black rounded-xl text-xs transition flex items-center justify-center gap-1.5 shadow">
+              <i data-lucide="move" class="w-3.5 h-3.5"></i>
+              <span id="label-modo-arrastre">🎯 Activar Arrastre / Clic en el Mapa</span>
+            </button>
+            
+            <p id="msg-modo-arrastre" class="hidden text-[11px] text-amber-200 bg-amber-950/90 p-2.5 rounded-xl border border-amber-500 leading-tight text-center shadow">
+              👆 <strong>Modo Arrastre ACTIVO:</strong> Haz clic en el techo del hospital o arrastra el marcador rojo al punto exacto.
+            </p>
+
+            <!-- Abrir en Google Maps -->
+            <button onclick="window.abrirGmapsCalibradorActual()" class="w-full py-1.5 px-3 bg-[#18114a] hover:bg-[#251b6a] text-sky-300 border border-sky-500/40 font-bold rounded-xl text-xs transition flex items-center justify-center gap-1.5 shadow-sm">
+              <i data-lucide="compass" class="w-3.5 h-3.5 text-amber-400"></i>
+              <span>Abrir en Google Maps (Nueva Pestaña) ↗</span>
+            </button>
+
+            <!-- Pegar URL o Coords de Google Maps -->
+            <div class="flex items-center gap-1.5">
+              <input id="calibrator-gmaps-input" type="text" placeholder="Pegar enlace o coords (ej: 9.7483, -63.1785)..." class="flex-1 bg-[#100b33] border border-[#2d1f85] rounded-xl px-2.5 py-1.5 text-xs text-white placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-sky-500">
+              <button onclick="window.aplicarGmapsEnCalibrador()" class="px-3 py-1.5 bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold rounded-xl text-xs transition shrink-0">
+                Aplicar
+              </button>
+            </div>
+          </div>
+
+          <!-- Botones de Acción -->
+          <div class="pt-1 flex flex-col gap-1.5">
+            <button id="btn-guardar-calibracion" onclick="window.guardarCalibracionActual()" class="w-full py-2.5 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black rounded-xl text-xs transition flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/20 active:scale-95">
+              <i data-lucide="check-circle" class="w-4 h-4"></i>
+              <span>💾 Guardar Ubicación Exacta</span>
+            </button>
+            <button onclick="window.verFichaCalibradorActual()" class="w-full py-1.5 bg-[#18114a] hover:bg-[#251b6a] text-slate-300 hover:text-white rounded-xl border border-[#2d1f85] text-xs transition flex items-center justify-center gap-1">
+              <i data-lucide="printer" class="w-3.5 h-3.5"></i>
+              <span>Ver Ficha Oficial 1:1</span>
+            </button>
+          </div>
+
+        </div>
+
+      </div>
 
     </div>
 
@@ -733,8 +878,8 @@
   </div>
 
   <!-- Scripts de Datos y Lógica (Carga universal estándar) -->
-  <script src="js/saludData.js?v=158"></script>
-  <script src="js/saludApp.js?v=158"></script>
+  <script src="js/saludData.js?v=159"></script>
+  <script src="js/saludApp.js?v=159"></script>
 
 </body>
 </html>
