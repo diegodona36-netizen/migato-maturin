@@ -14,10 +14,10 @@
   const CENTROS_SALUD_INICIALES = window.CENTROS_SALUD_INICIALES || [];
 const STORAGE_KEY = 'migato_salud_centros_v10';
 
-// Delimitación geográfica estricta del Estado Monagas (Caripe al Norte, Orinoco al Sur)
+// Delimitación amplia de navegación (permite recorrer cómodamente todo Monagas y sus extremos limítrofes)
 const BOUNDS_MONAGAS_COORDS = [
-  [8.30, -64.30], // Suroeste (Frontera Orinoco / Anzoátegui)
-  [10.50, -62.25] // Noreste (Frontera Sucre / Delta Amacuro)
+  [7.50, -64.80], // Suroeste (Frontera Orinoco / Bolívar / Anzoátegui con amplio margen)
+  [11.10, -61.00] // Noreste (Frontera Sucre / Golfo de Paria / Delta Amacuro con amplio margen)
 ];
 
 // Estado global de la aplicación
@@ -168,8 +168,8 @@ function initMapaFormulario() {
       zoomControl: true,
       attributionControl: false,
       maxBounds: boundsMonagas,
-      maxBoundsViscosity: 1.0,
-      minZoom: 8.5,
+      maxBoundsViscosity: 0.1,
+      minZoom: 7.5,
       maxZoom: 20
     }).setView(coordsIniciales, 13);
 
@@ -309,10 +309,10 @@ function initMapaGeneral() {
       zoomControl: true,
       attributionControl: false,
       maxBounds: boundsMonagas,
-      maxBoundsViscosity: 1.0,
-      minZoom: 8.5,
+      maxBoundsViscosity: 0.1,
+      minZoom: 7.5,
       maxZoom: 20
-    }).setView([9.7483, -63.1785], 9.5);
+    }).setView([9.45, -63.05], 8.5);
 
     // 1. Google Maps Calles (Roadmap con POIs, hospitales, vías y comercios de Monagas en español)
     state.googleRoadmapLayer = L.tileLayer('https://mt{s}.google.com/vt/lyrs=m&hl=es&gl=VE&x={x}&y={y}&z={z}', {
@@ -783,9 +783,11 @@ function copiarCoordsDesdeTarjetaFlotante() {
 
 function recentrarMapaMonagas() {
   if (!state.mapaGeneral) return;
-  state.mapaGeneral.flyTo([9.7483, -63.1785], 9.5, {
+  const boundsMonagasOficial = L.latLngBounds([[8.35, -64.10], [10.35, -61.95]]);
+  state.mapaGeneral.fitBounds(boundsMonagasOficial, {
+    padding: [20, 20],
     animate: true,
-    duration: 1.0
+    duration: 0.8
   });
 }
 
