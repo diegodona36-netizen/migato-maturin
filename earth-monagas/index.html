@@ -176,15 +176,16 @@
       }
     };
 
-    // Auto-actualización a la versión más reciente v=150
+    // Auto-actualización segura a la versión oficial v=150 (sin riesgo de bucle)
     (function() {
       try {
+        var TARGET_VERSION = "150";
         var p = new URLSearchParams(window.location.search);
         var curV = p.get('v');
         var isReset = p.get('reset') === '1';
         var paramP = p.get('p') || p.get('parroquia') || p.get('parish');
 
-        if (isReset || !curV || parseInt(curV) < 150) {
+        if (isReset || !curV || parseInt(curV, 10) < parseInt(TARGET_VERSION, 10)) {
           if (isReset) {
             try {
               localStorage.removeItem("migato_last_parish");
@@ -193,7 +194,7 @@
             p.delete('reset');
           }
 
-          p.set('v', '148');
+          p.set('v', TARGET_VERSION);
           if (!p.get('u')) p.set('u', 'admin-militancia');
           if (paramP) {
             p.set('p', paramP);
