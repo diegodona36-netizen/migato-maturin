@@ -2,8 +2,9 @@
  * Motor Cartográfico Acelerado por GPU — Google Earth Pro Web (Monagas)
  * Integrado con Capas Jerárquicas Oficiales (INE 2021) y Edición de Vértices
  */
-import { GEO_ESTADO_OFICIAL, GEO_MUNICIPIOS_OFICIAL, GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=146";
-import { CATALOGO_MONAGAS, PARISH_ALIAS_MAP, resolveParishId } from "./catalogoMonagas.js?v=146";
+import { GEO_ESTADO_OFICIAL, GEO_MUNICIPIOS_OFICIAL, GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=147";
+import { CATALOGO_MONAGAS, PARISH_ALIAS_MAP, resolveParishId } from "./catalogoMonagas.js?v=147";
+import { MONAGAS_DEMOGRAPHICS, getParishDemographics, getMunicipioDemographics } from "./monagasDemographics.js?v=147";
 
 export class EarthMapEngine {
   constructor(containerId, onCoordUpdate) {
@@ -297,9 +298,17 @@ export class EarthMapEngine {
         const parCount = stats ? stats.parroquiasCount : "—";
         const capName = stats ? stats.capital : munNom;
 
+        const hab = stats && stats.habitantes ? stats.habitantes.toLocaleString("es-VE") : "—";
+        const vot = stats && stats.votantes ? stats.votantes.toLocaleString("es-VE") : "—";
+        const cen = stats && stats.centros ? `${stats.centros} Centros` : "—";
+        const cas = stats && stats.casas ? stats.casas.toLocaleString("es-VE") : "—";
+
         layer.on({
           mouseover: () => {
             layer.setStyle({ weight: 3.5, color: "#38bdf8", fillOpacity: 0.35 });
+            if (window.earthApp?.showQuickStats && stats) {
+              window.earthApp.showQuickStats("municipio", stats);
+            }
           },
           mouseout: () => {
             layer.setStyle({ weight: 2, color: feature.properties?.color || "#38bdf8", fillOpacity: 0.12 });
@@ -313,8 +322,8 @@ export class EarthMapEngine {
         });
 
         layer.bindTooltip(`
-          <div style="font-family:system-ui, -apple-system, sans-serif; font-size:12px; color:#ffffff; line-height:1.4; padding:6px 10px; min-width:200px;">
-            <div style="display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid rgba(56,189,248,0.35); padding-bottom:4px; margin-bottom:4px;">
+          <div style="font-family:system-ui, -apple-system, sans-serif; font-size:12px; color:#ffffff; line-height:1.4; padding:6px 10px; min-width:215px;">
+            <div style="display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid rgba(56,189,248,0.35); padding-bottom:4px; margin-bottom:6px;">
               <span style="font-weight:900; font-size:13px; color:#38bdf8; display:flex; align-items:center; gap:4px;">
                 🏛️ ${munNom}
               </span>
@@ -322,7 +331,27 @@ export class EarthMapEngine {
                 ${parCount} Parroquias
               </span>
             </div>
-            <div style="font-size:10px; color:#cbd5e1; display:flex; align-items:center; justify-content:space-between;">
+
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:5px; margin-bottom:6px; font-size:11px;">
+              <div style="background:rgba(15,23,42,0.65); padding:4px 6px; border-radius:6px; border:1px solid rgba(255,255,255,0.08);">
+                <span style="color:#94a3b8; font-size:9px; display:block; text-transform:uppercase; font-weight:600;">Habitantes</span>
+                <strong style="color:#f8fafc; font-size:11px;">${hab}</strong>
+              </div>
+              <div style="background:rgba(15,23,42,0.65); padding:4px 6px; border-radius:6px; border:1px solid rgba(255,255,255,0.08);">
+                <span style="color:#94a3b8; font-size:9px; display:block; text-transform:uppercase; font-weight:600;">Electores CNE</span>
+                <strong style="color:#38bdf8; font-size:11px;">${vot}</strong>
+              </div>
+              <div style="background:rgba(15,23,42,0.65); padding:4px 6px; border-radius:6px; border:1px solid rgba(255,255,255,0.08);">
+                <span style="color:#94a3b8; font-size:9px; display:block; text-transform:uppercase; font-weight:600;">Centros CNE</span>
+                <strong style="color:#facc15; font-size:11px;">${cen}</strong>
+              </div>
+              <div style="background:rgba(15,23,42,0.65); padding:4px 6px; border-radius:6px; border:1px solid rgba(255,255,255,0.08);">
+                <span style="color:#94a3b8; font-size:9px; display:block; text-transform:uppercase; font-weight:600;">Viviendas</span>
+                <strong style="color:#34d399; font-size:11px;">${cas}</strong>
+              </div>
+            </div>
+
+            <div style="font-size:10px; color:#cbd5e1; display:flex; align-items:center; justify-content:space-between; border-top:1px dashed rgba(255,255,255,0.12); padding-top:4px;">
               <span style="color:#94a3b8;">Capital: <strong style="color:#ffffff;">${capName}</strong></span>
               <span style="color:#38bdf8; font-weight:700;">Clic para entrar ➔</span>
             </div>
@@ -355,9 +384,26 @@ export class EarthMapEngine {
         });
         const munDisplayName = munObj ? munObj.nombre : munId;
 
+        const pDem = getParishDemographics(munId, resolvedParishId);
+        const pHab = pDem && pDem.habitantes ? pDem.habitantes.toLocaleString("es-VE") : "—";
+        const pVot = pDem && pDem.votantes ? pDem.votantes.toLocaleString("es-VE") : "—";
+        const pCen = pDem && pDem.centros ? `${pDem.centros} Centros` : "—";
+        const pCas = pDem && pDem.casas ? pDem.casas.toLocaleString("es-VE") : "—";
+
         layer.on({
           mouseover: () => {
             layer.setStyle({ weight: 3, color: "#facc15", fillOpacity: 0.38 });
+            if (window.earthApp?.showQuickStats) {
+              const storeParish = window.earthApp?.store?.getParish(munId, resolvedParishId);
+              const parishData = storeParish || {
+                id: resolvedParishId,
+                nombre: pName,
+                municipioId: munId,
+                color: pProps.color || "#10b981",
+                ...(pDem || {})
+              };
+              window.earthApp.showQuickStats("parroquia", parishData);
+            }
           },
           mouseout: () => {
             layer.setStyle({ weight: 1.5, color: "#ffffff", fillOpacity: 0.14 });
@@ -371,8 +417,8 @@ export class EarthMapEngine {
         });
 
         layer.bindTooltip(`
-          <div style="font-family:system-ui, -apple-system, sans-serif; font-size:12px; color:#ffffff; line-height:1.4; padding:6px 10px; min-width:180px;">
-            <div style="display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid rgba(16,185,129,0.35); padding-bottom:4px; margin-bottom:4px;">
+          <div style="font-family:system-ui, -apple-system, sans-serif; font-size:12px; color:#ffffff; line-height:1.4; padding:6px 10px; min-width:215px;">
+            <div style="display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid rgba(16,185,129,0.35); padding-bottom:4px; margin-bottom:6px;">
               <span style="font-weight:900; font-size:13px; color:#10b981; display:flex; align-items:center; gap:4px;">
                 📍 ${pName}
               </span>
@@ -380,7 +426,27 @@ export class EarthMapEngine {
                 Parroquia
               </span>
             </div>
-            <div style="font-size:10px; color:#cbd5e1; display:flex; align-items:center; justify-content:space-between;">
+
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:5px; margin-bottom:6px; font-size:11px;">
+              <div style="background:rgba(15,23,42,0.65); padding:4px 6px; border-radius:6px; border:1px solid rgba(255,255,255,0.08);">
+                <span style="color:#94a3b8; font-size:9px; display:block; text-transform:uppercase; font-weight:600;">Habitantes</span>
+                <strong style="color:#f8fafc; font-size:11px;">${pHab}</strong>
+              </div>
+              <div style="background:rgba(15,23,42,0.65); padding:4px 6px; border-radius:6px; border:1px solid rgba(255,255,255,0.08);">
+                <span style="color:#94a3b8; font-size:9px; display:block; text-transform:uppercase; font-weight:600;">Electores CNE</span>
+                <strong style="color:#38bdf8; font-size:11px;">${pVot}</strong>
+              </div>
+              <div style="background:rgba(15,23,42,0.65); padding:4px 6px; border-radius:6px; border:1px solid rgba(255,255,255,0.08);">
+                <span style="color:#94a3b8; font-size:9px; display:block; text-transform:uppercase; font-weight:600;">Centros CNE</span>
+                <strong style="color:#facc15; font-size:11px;">${pCen}</strong>
+              </div>
+              <div style="background:rgba(15,23,42,0.65); padding:4px 6px; border-radius:6px; border:1px solid rgba(255,255,255,0.08);">
+                <span style="color:#94a3b8; font-size:9px; display:block; text-transform:uppercase; font-weight:600;">Viviendas</span>
+                <strong style="color:#34d399; font-size:11px;">${pCas}</strong>
+              </div>
+            </div>
+
+            <div style="font-size:10px; color:#cbd5e1; display:flex; align-items:center; justify-content:space-between; border-top:1px dashed rgba(255,255,255,0.12); padding-top:4px;">
               <span style="color:#94a3b8;">${munDisplayName}</span>
               <span style="color:#10b981; font-weight:700;">Clic para entrar ➔</span>
             </div>
@@ -398,21 +464,7 @@ export class EarthMapEngine {
    */
   getMunicipioStats(munId) {
     if (!munId) return null;
-    const cleanId = String(munId).toLowerCase().replace(/_/g, "-").trim();
-    const munObj = (typeof CATALOGO_MONAGAS !== "undefined" ? CATALOGO_MONAGAS : []).find(m => {
-      const mId = String(m.id).toLowerCase().replace(/_/g, "-").trim();
-      return mId === cleanId || mId.includes(cleanId) || cleanId.includes(mId);
-    });
-    const munNom = munObj ? munObj.nombre : munId;
-    const munCap = munObj ? (munObj.capital || munNom) : munNom;
-    const parroquias = munObj ? (munObj.parroquias || []) : [];
-
-    return {
-      id: cleanId,
-      nombre: munNom,
-      capital: munCap,
-      parroquiasCount: parroquias.length
-    };
+    return getMunicipioDemographics(munId);
   }
 
   toggleHierarchicalLayer(levelKey, visible, isUserManual = false) {
@@ -764,9 +816,27 @@ export class EarthMapEngine {
         }
       });
 
+      const resolvedParishId = (typeof PARISH_ALIAS_MAP !== "undefined" && PARISH_ALIAS_MAP[pId]) ? PARISH_ALIAS_MAP[pId] : pId;
+      const pDem = getParishDemographics(cleanMunId, resolvedParishId);
+      const pHab = pDem && pDem.habitantes ? pDem.habitantes.toLocaleString("es-VE") : "—";
+      const pVot = pDem && pDem.votantes ? pDem.votantes.toLocaleString("es-VE") : "—";
+      const pCen = pDem && pDem.centros ? `${pDem.centros} Centros` : "—";
+      const pCas = pDem && pDem.casas ? pDem.casas.toLocaleString("es-VE") : "—";
+
       layer.on({
         mouseover: () => {
           layer.setStyle({ weight: 3.5, color: "#facc15", fillOpacity: 0.45 });
+          if (window.earthApp?.showQuickStats) {
+            const storeParish = window.earthApp?.store?.getParish(cleanMunId, resolvedParishId);
+            const parishData = storeParish || {
+              id: resolvedParishId,
+              nombre: pName,
+              municipioId: cleanMunId,
+              color: pColor,
+              ...(pDem || {})
+            };
+            window.earthApp.showQuickStats("parroquia", parishData);
+          }
         },
         mouseout: () => {
           layer.setStyle({ weight: 2, color: "#ffffff", fillOpacity: 0.22 });
@@ -776,23 +846,39 @@ export class EarthMapEngine {
           if (document.activeElement?.blur) document.activeElement.blur();
           L.DomEvent.stopPropagation(e);
           if (window.earthApp?.selectParish) {
-            const resolvedParishId = PARISH_ALIAS_MAP[pId] || pId;
             window.earthApp.selectParish(cleanMunId, resolvedParishId, true);
           }
         }
       });
 
-      const resolvedParishId = (typeof PARISH_ALIAS_MAP !== "undefined" && PARISH_ALIAS_MAP[pId]) ? PARISH_ALIAS_MAP[pId] : pId;
-
       layer.bindTooltip(`
-        <div style="font-family:system-ui, -apple-system, sans-serif; font-size:12px; color:#ffffff; line-height:1.4; padding:6px 10px; min-width:180px;">
-          <div style="display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid rgba(16,185,129,0.35); padding-bottom:4px; margin-bottom:4px;">
+        <div style="font-family:system-ui, -apple-system, sans-serif; font-size:12px; color:#ffffff; line-height:1.4; padding:6px 10px; min-width:215px;">
+          <div style="display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid rgba(16,185,129,0.35); padding-bottom:4px; margin-bottom:6px;">
             <span style="font-weight:900; font-size:13px; color:#10b981; display:flex; align-items:center; gap:4px;">
               📍 ${pName}
             </span>
             <span style="font-size:9px; font-weight:800; background:rgba(16,185,129,0.25); color:#6ee7b7; border:1px solid rgba(16,185,129,0.4); padding:1px 5px; border-radius:4px;">
               Parroquia
             </span>
+          </div>
+
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:5px; margin-bottom:6px; font-size:11px;">
+            <div style="background:rgba(15,23,42,0.65); padding:4px 6px; border-radius:6px; border:1px solid rgba(255,255,255,0.08);">
+              <span style="color:#94a3b8; font-size:9px; display:block; text-transform:uppercase; font-weight:600;">Habitantes</span>
+              <strong style="color:#f8fafc; font-size:11px;">${pHab}</strong>
+            </div>
+            <div style="background:rgba(15,23,42,0.65); padding:4px 6px; border-radius:6px; border:1px solid rgba(255,255,255,0.08);">
+              <span style="color:#94a3b8; font-size:9px; display:block; text-transform:uppercase; font-weight:600;">Electores CNE</span>
+              <strong style="color:#38bdf8; font-size:11px;">${pVot}</strong>
+            </div>
+            <div style="background:rgba(15,23,42,0.65); padding:4px 6px; border-radius:6px; border:1px solid rgba(255,255,255,0.08);">
+              <span style="color:#94a3b8; font-size:9px; display:block; text-transform:uppercase; font-weight:600;">Centros CNE</span>
+              <strong style="color:#facc15; font-size:11px;">${pCen}</strong>
+            </div>
+            <div style="background:rgba(15,23,42,0.65); padding:4px 6px; border-radius:6px; border:1px solid rgba(255,255,255,0.08);">
+              <span style="color:#94a3b8; font-size:9px; display:block; text-transform:uppercase; font-weight:600;">Viviendas</span>
+              <strong style="color:#34d399; font-size:11px;">${pCas}</strong>
+            </div>
           </div>
 
           <div style="font-size:10px; color:#cbd5e1; border-top:1px dashed rgba(255,255,255,0.12); padding-top:4px; text-align:right;">

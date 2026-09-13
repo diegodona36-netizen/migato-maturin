@@ -2,15 +2,16 @@
  * Controlador Principal — Google Earth Pro Web (Edición Estado Monagas)
  * Robusto, 100% Operativo y Totalmente Individualizado
  */
-import { CATALOGO_MONAGAS, findParishInCatalog, PARISH_ALIAS_MAP, resolveParishId } from "./catalogoMonagas.js?v=146";
-import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=146";
-import { getAllParishesForSelector } from "./usersCatalog.js?v=146";
-import { EarthStore } from "./earthStore.js?v=146";
-import { EarthMapEngine } from "./mapEngine.js?v=146";
-import { PropertiesDialog } from "./propertiesDialog.js?v=146";
-import { ToolsManager } from "./toolsManager.js?v=146";
-import { detectParishFromGeometry, SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=146";
-import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=146";
+import { CATALOGO_MONAGAS, findParishInCatalog, PARISH_ALIAS_MAP, resolveParishId } from "./catalogoMonagas.js?v=147";
+import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=147";
+import { getAllParishesForSelector } from "./usersCatalog.js?v=147";
+import { EarthStore } from "./earthStore.js?v=147";
+import { EarthMapEngine } from "./mapEngine.js?v=147";
+import { PropertiesDialog } from "./propertiesDialog.js?v=147";
+import { ToolsManager } from "./toolsManager.js?v=147";
+import { detectParishFromGeometry, SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=147";
+import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=147";
+import { getParishDemographics, getMunicipioDemographics } from "./monagasDemographics.js?v=147";
 import { 
   getMunicipios, 
   getParroquiasByMun, 
@@ -676,7 +677,13 @@ class EarthMonagasApp {
     this.selectedParishId = null;
     this.activeSectorId = null;
     this.activeSubParroquiaId = null;
-    this.closeQuickStats();
+
+    const munStats = this.mapEngine?.getMunicipioStats(munId);
+    if (munStats) {
+      this.showQuickStats("municipio", munStats);
+    } else {
+      this.closeQuickStats();
+    }
 
     if (this.mapEngine) {
       this.mapEngine.showMunicipioBoundary(munId, flyCamera);
@@ -2482,11 +2489,29 @@ class EarthMonagasApp {
 
     const parish = this.store.getParish(this.selectedMunId, this.selectedParishId);
 
-    if (type === "parroquia") {
-      const munObj = CATALOGO_MONAGAS.find(m => m.id === this.selectedMunId);
+    if (type === "municipio") {
+      const munId = item.id || this.selectedMunId;
+      const munObj = (typeof CATALOGO_MONAGAS !== "undefined" ? CATALOGO_MONAGAS : []).find(m => m.id === munId) || item;
+      if (badge) badge.style.backgroundColor = item.color || munObj.color || "#0284c7";
+      if (subTitle) subTitle.textContent = "División Político-Territorial • Estado Monagas";
+      if (title) title.textContent = `🏛️ Municipio ${item.nombre || munObj.nombre || 'Municipio'}`;
+
+      if (elCasas) elCasas.textContent = (item.casas || 0).toLocaleString();
+      if (elFamilias) elFamilias.textContent = (item.familias || Math.round((item.casas || 0) * 1.15)).toLocaleString();
+      if (elHabitantes) elHabitantes.textContent = (item.habitantes || 0).toLocaleString();
+      if (elVotantes) elVotantes.textContent = (item.votantes || 0).toLocaleString();
+
+      if (elCentro) {
+        elCentro.textContent = `${item.centros || '—'} Centros CNE • ${item.parroquiasCount || (munObj.parroquias?.length) || 0} Parroquias`;
+      }
+      const spRow = document.getElementById("quick-stats-subparish-row");
+      if (spRow) spRow.style.display = "none";
+    } else if (type === "parroquia") {
+      const munId = item.municipioId || item.munId || this.selectedMunId;
+      const munObj = (typeof CATALOGO_MONAGAS !== "undefined" ? CATALOGO_MONAGAS : []).find(m => m.id === munId);
       if (badge) badge.style.backgroundColor = item.color || "#10b981";
       if (subTitle) subTitle.textContent = `Territorio Parroquial • Municipio ${munObj ? munObj.nombre : 'Monagas'}`;
-      if (title) title.textContent = `Parroquia ${item.nombre || 'Parroquia'}`;
+      if (title) title.textContent = `📍 Parroquia ${item.nombre || 'Parroquia'}`;
 
       const allPolys = item.poligonos || [];
       const allSub = item.subparroquias || [];
@@ -2508,14 +2533,28 @@ class EarthMonagasApp {
         });
       }
 
+      if (totCasas === 0 && totHab === 0 && totVot === 0) {
+        const dem = (typeof getParishDemographics === "function" ? getParishDemographics(munId, item.id) : null) || item;
+        totCasas = dem.casas || 0;
+        totFam = dem.familias || Math.round((totCasas || 0) * 1.15);
+        totHab = dem.habitantes || 0;
+        totVot = dem.votantes || 0;
+        if (elCentro) {
+          elCentro.textContent = `${dem.centros || '—'} Centros de Votación CNE`;
+        }
+      } else {
+        if (elCentro) {
+          const dem = typeof getParishDemographics === "function" ? getParishDemographics(munId, item.id) : null;
+          const numCentros = dem?.centros || (item.centrosCount || 1);
+          elCentro.textContent = `${allSub.length} Ejes • ${allPolys.length} Sectores • ${numCentros} Centros CNE`;
+        }
+      }
+
       if (elCasas) elCasas.textContent = totCasas.toLocaleString();
       if (elFamilias) elFamilias.textContent = totFam.toLocaleString();
       if (elHabitantes) elHabitantes.textContent = totHab.toLocaleString();
       if (elVotantes) elVotantes.textContent = totVot.toLocaleString();
 
-      if (elCentro) {
-        elCentro.textContent = `${allSub.length} Ejes Territoriales • ${allPolys.length} Sectores Mapeados`;
-      }
       const spRow = document.getElementById("quick-stats-subparish-row");
       if (spRow) spRow.style.display = "none";
     } else if (type === "subparroquia") {
@@ -2624,7 +2663,9 @@ class EarthMonagasApp {
 
     const linkDashboard = document.getElementById("btn-quick-stats-dashboard-link");
     if (linkDashboard) {
-      if (type === "sector" || type === "poligono") {
+      if (type === "municipio") {
+        linkDashboard.href = `../dashboard-campana/?mun=${item.id || this.selectedMunId}`;
+      } else if (type === "sector" || type === "poligono") {
         linkDashboard.href = `../dashboard-campana/?mun=${this.selectedMunId}&p=${this.selectedParishId}&search=${encodeURIComponent(item.nombre || "")}`;
       } else {
         linkDashboard.href = `../dashboard-campana/?mun=${this.selectedMunId}&p=${this.selectedParishId}`;
@@ -2653,8 +2694,12 @@ class EarthMonagasApp {
         const curMun = this.selectedMunId;
         const curPar = this.selectedParishId;
         this.closeQuickStats();
+        if (curType === "municipio") {
+          window.location.href = `../dashboard-campana/?mun=${curMun || curItem.id}`;
+          return;
+        }
         if (curType === "parroquia") {
-          window.location.href = `../caracterizacion-voto/?p=${curPar}`;
+          window.location.href = `../caracterizacion-voto/?p=${curPar || curItem.id}`;
           return;
         }
         setTimeout(() => {
