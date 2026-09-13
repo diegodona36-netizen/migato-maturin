@@ -393,58 +393,61 @@ code, pre, .font-mono {
 }
 
 /* ==============================================================
-   MODO OSCURO SUAVE / NOCHE EJECUTIVO (Gubernamental Amigable)
+   MODO OSCURO SUAVE / NOCHE EJECUTIVO (Palette Slate 800/900 Alta Definición)
    ============================================================== */
 
 html.modo-oscuro-suave,
 body.modo-oscuro-suave {
-  --bg-primary: #151f30;
-  --bg-secondary: #1c2a40;
-  --bg-card: #1e2c40;
-  --border-card: #2e4362;
+  --bg-primary: #0f172a;
+  --bg-secondary: #1e293b;
+  --bg-card: #1e293b;
+  --border-card: #334155;
   --text-main: #f8fafc;
   --text-muted: #94a3b8;
-  background-color: #151f30 !important;
+  background-color: #0f172a !important;
   color: #f8fafc !important;
 }
 
 body.modo-oscuro-suave ::-webkit-scrollbar-track {
-  background: #151f30;
+  background: #0f172a;
 }
 body.modo-oscuro-suave ::-webkit-scrollbar-thumb {
-  background: #2e4362;
+  background: #334155;
 }
 body.modo-oscuro-suave ::-webkit-scrollbar-thumb:hover {
-  background: #3b5278;
+  background: #475569;
 }
 
 /* Superficies y Tarjetas */
 body.modo-oscuro-suave .bg-white {
-  background-color: #1c2a40 !important;
+  background-color: #1e293b !important;
+  border-color: #334155 !important;
 }
 body.modo-oscuro-suave .bg-slate-50 {
-  background-color: #162234 !important;
+  background-color: #0f172a !important;
 }
 body.modo-oscuro-suave .bg-slate-100 {
-  background-color: #21324c !important;
+  background-color: #1e293b !important;
+  border-color: #334155 !important;
+  color: #cbd5e1 !important;
 }
 body.modo-oscuro-suave .bg-slate-100\/90 {
-  background-color: rgba(28, 42, 64, 0.95) !important;
+  background-color: rgba(30, 41, 59, 0.95) !important;
 }
 body.modo-oscuro-suave .bg-slate-200 {
-  background-color: #2b3e5c !important;
+  background-color: #334155 !important;
 }
 
 /* Bordes */
 body.modo-oscuro-suave .border-slate-200,
 body.modo-oscuro-suave .border-slate-300 {
-  border-color: #2b3e5c !important;
+  border-color: #334155 !important;
 }
 
-/* Textos */
+/* Textos principales */
 body.modo-oscuro-suave .text-slate-900,
 body.modo-oscuro-suave .text-slate-800 {
-  color: #f8fafc !important;
+  color: #ffffff !important;
 }
 body.modo-oscuro-suave .text-slate-700 {
   color: #e2e8f0 !important;
@@ -457,7 +460,7 @@ body.modo-oscuro-suave .text-slate-400 {
   color: #94a3b8 !important;
 }
 
-/* Azules y acentos institucionales en modo oscuro suave */
+/* Azules y acentos institucionales legibles */
 body.modo-oscuro-suave .text-blue-950,
 body.modo-oscuro-suave .text-blue-900 {
   color: #93c5fd !important;
@@ -471,123 +474,191 @@ body.modo-oscuro-suave .text-blue-700 {
 body.modo-oscuro-suave input:not([type="checkbox"]):not([type="radio"]),
 body.modo-oscuro-suave select,
 body.modo-oscuro-suave textarea {
-  background-color: #142032 !important;
-  border-color: #2e4465 !important;
+  background-color: #0f172a !important;
+  border-color: #334155 !important;
   color: #ffffff !important;
 }
 body.modo-oscuro-suave input::placeholder,
 body.modo-oscuro-suave textarea::placeholder {
-  color: #64748b !important;
+  color: #94a3b8 !important;
 }
 body.modo-oscuro-suave input:focus,
 body.modo-oscuro-suave select:focus,
 body.modo-oscuro-suave textarea:focus {
-  border-color: #60a5fa !important;
-  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.2) !important;
+  border-color: #3b82f6 !important;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25) !important;
 }
 body.modo-oscuro-suave select option {
-  background-color: #1c2a40 !important;
+  background-color: #0f172a !important;
   color: #ffffff !important;
+}
+
+/* Módulo de Búsqueda y Auto-relleno de la Sección 1 */
+body.modo-oscuro-suave .bg-blue-50\/80,
+body.modo-oscuro-suave .bg-blue-50 {
+  background-color: #0f172a !important;
+  border-color: #2563eb !important;
+}
+body.modo-oscuro-suave label[for="input-buscar-centro-form"] {
+  color: #f1f5f9 !important;
+}
+body.modo-oscuro-suave #input-buscar-centro-form {
+  background-color: #1e293b !important;
+  border-color: #3b82f6 !important;
+  color: #ffffff !important;
+}
+body.modo-oscuro-suave #input-buscar-centro-form::placeholder {
+  color: #94a3b8 !important;
+}
+body.modo-oscuro-suave #btn-modo-centro-nuevo {
+  background-color: #1e3a8a !important;
+  border-color: #3b82f6 !important;
+  color: #ffffff !important;
+}
+body.modo-oscuro-suave #btn-modo-centro-nuevo:hover {
+  background-color: #2563eb !important;
+}
+body.modo-oscuro-suave #dropdown-resultados-centro-form {
+  background-color: #0f172a !important;
+  border-color: #3b82f6 !important;
+  color: #ffffff !important;
+}
+body.modo-oscuro-suave #dropdown-resultados-centro-form button:hover {
+  background-color: #1e293b !important;
 }
 
 /* Casillas de opción institucional (gov-option-box) */
 body.modo-oscuro-suave .gov-option-box {
-  background-color: #172437 !important;
-  border-color: #2b3e5c !important;
+  background-color: #0f172a !important;
+  border-color: #334155 !important;
   color: #e2e8f0 !important;
 }
 body.modo-oscuro-suave .gov-option-box:hover {
-  background-color: #21334c !important;
+  background-color: #1e293b !important;
   border-color: #3b82f6 !important;
 }
 body.modo-oscuro-suave .gov-option-box.checked,
 body.modo-oscuro-suave .gov-option-box:has(input:checked) {
-  background-color: #1c365b !important;
+  background-color: #1e3a8a !important;
   border-color: #60a5fa !important;
+  color: #ffffff !important;
 }
 
 /* Pestañas de navegación superiores */
 body.modo-oscuro-suave .tab-btn:not(.active) {
   color: #cbd5e1 !important;
-  background-color: transparent !important;
-  border-color: transparent !important;
+  background-color: #1e293b !important;
+  border-color: #334155 !important;
 }
 body.modo-oscuro-suave .tab-btn:not(.active):hover {
-  background-color: #24354f !important;
+  background-color: #334155 !important;
   color: #ffffff !important;
-  border-color: #3b5074 !important;
 }
 body.modo-oscuro-suave .tab-btn.active {
   background-color: #2563eb !important;
   color: #ffffff !important;
   border-color: #60a5fa !important;
-  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3) !important;
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.4) !important;
 }
 
-/* Barra de KPIs en Modo Oscuro Suave */
+/* Barra de KPIs en Modo Oscuro Suave con MÁXIMO CONTRASTE */
+body.modo-oscuro-suave #kpi-total-centros {
+  color: #ffffff !important;
+}
 body.modo-oscuro-suave .bg-red-50 {
-  background-color: rgba(220, 38, 38, 0.18) !important;
-  border-color: rgba(239, 68, 68, 0.4) !important;
+  background-color: rgba(220, 38, 38, 0.22) !important;
+  border-color: rgba(239, 68, 68, 0.5) !important;
   color: #fca5a5 !important;
 }
+body.modo-oscuro-suave #kpi-criticos,
+body.modo-oscuro-suave .text-red-700,
+body.modo-oscuro-suave .text-red-800 {
+  color: #f87171 !important;
+}
+
 body.modo-oscuro-suave .bg-amber-50 {
-  background-color: rgba(217, 119, 6, 0.18) !important;
-  border-color: rgba(245, 158, 11, 0.4) !important;
+  background-color: rgba(217, 119, 6, 0.22) !important;
+  border-color: rgba(245, 158, 11, 0.5) !important;
   color: #fde68a !important;
 }
-body.modo-oscuro-suave .bg-emerald-50 {
-  background-color: rgba(5, 150, 105, 0.18) !important;
-  border-color: rgba(16, 185, 129, 0.4) !important;
-  color: #6ee7b7 !important;
+body.modo-oscuro-suave #kpi-alertas,
+body.modo-oscuro-suave .text-amber-700,
+body.modo-oscuro-suave .text-amber-800,
+body.modo-oscuro-suave .text-amber-900 {
+  color: #fbbf24 !important;
 }
-body.modo-oscuro-suave .bg-blue-50 {
-  background-color: rgba(37, 99, 235, 0.18) !important;
-  border-color: rgba(59, 130, 246, 0.4) !important;
-  color: #93c5fd !important;
+
+body.modo-oscuro-suave .bg-emerald-50 {
+  background-color: rgba(5, 150, 105, 0.22) !important;
+  border-color: rgba(16, 185, 129, 0.5) !important;
+  color: #a7f3d0 !important;
+}
+body.modo-oscuro-suave #kpi-estables,
+body.modo-oscuro-suave .text-emerald-700,
+body.modo-oscuro-suave .text-emerald-800,
+body.modo-oscuro-suave .text-emerald-900 {
+  color: #4ade80 !important;
 }
 
 /* Tabla del Directorio */
 body.modo-oscuro-suave table thead tr {
-  background-color: #172437 !important;
-  border-bottom: 1px solid #2b3e5c !important;
-  color: #94a3b8 !important;
+  background-color: #0f172a !important;
+  border-bottom: 1px solid #334155 !important;
+  color: #cbd5e1 !important;
 }
 body.modo-oscuro-suave table tbody tr {
-  border-bottom: 1px solid #23334a !important;
+  border-bottom: 1px solid #1e293b !important;
+  color: #f1f5f9 !important;
 }
 body.modo-oscuro-suave table tbody tr:hover {
-  background-color: #22344e !important;
+  background-color: #26354a !important;
 }
 
 /* Popups de Leaflet */
 body.modo-oscuro-suave .leaflet-popup-content-wrapper {
-  background-color: #1c2a40 !important;
+  background-color: #1e293b !important;
   color: #f8fafc !important;
-  border-color: #384d6b !important;
+  border: 1px solid #334155 !important;
 }
 body.modo-oscuro-suave .leaflet-popup-tip {
-  background-color: #1c2a40 !important;
-  border-color: #384d6b !important;
+  background-color: #1e293b !important;
+}
+body.modo-oscuro-suave .leaflet-popup-content-wrapper h4 {
+  color: #ffffff !important;
 }
 
 /* Inspector y calibrador flotante */
 body.modo-oscuro-suave #panel-coordenadas-gmaps,
 body.modo-oscuro-suave #gmaps-floating-pin-card,
 body.modo-oscuro-suave #mapa-quick-calibrator {
-  background-color: #1c2a40 !important;
+  background-color: #1e293b !important;
   border-color: #3b82f6 !important;
-  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.45) !important;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.6) !important;
+  color: #ffffff !important;
+}
+body.modo-oscuro-suave #gmaps-floating-search > div {
+  background-color: #1e293b !important;
+  border-color: #334155 !important;
+}
+body.modo-oscuro-suave #input-search-gmaps-overlay {
+  color: #ffffff !important;
+}
+body.modo-oscuro-suave #gmaps-input-lat,
+body.modo-oscuro-suave #gmaps-input-lng {
+  background-color: #0f172a !important;
+  border-color: #3b82f6 !important;
+  color: #60a5fa !important;
 }
 
 /* Modales */
 body.modo-oscuro-suave #modal-nuevo-centro-rapido > div {
-  background-color: #1c2a40 !important;
+  background-color: #1e293b !important;
   border-color: #3b82f6 !important;
   color: #f8fafc !important;
 }
 body.modo-oscuro-suave #printable-sheet-modal .no-print {
-  background-color: #1c2a40 !important;
-  border-color: #384d6b !important;
+  background-color: #1e293b !important;
+  border-color: #334155 !important;
 }
 
 /* Exclusión estricta de la Ficha Técnica 1:1 física (debe imprimirse en blanco y negro oficial) */

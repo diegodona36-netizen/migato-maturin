@@ -3169,9 +3169,8 @@ function aplicarModoOscuroSuave(activar) {
     if (icono) icono.textContent = '☀️';
     if (label) label.textContent = 'Modo Claro';
     if (btn) {
-      btn.classList.add('bg-sky-500', 'text-slate-950', 'border-sky-300');
-      btn.classList.remove('bg-blue-950/90', 'text-sky-200', 'border-sky-400/80');
-      btn.title = 'Cambiar a Modo Claro Gubernamental';
+      btn.className = 'px-2.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 border border-amber-400/80 text-amber-300 hover:text-white text-xs font-bold transition flex items-center gap-1.5 shadow-sm active:scale-95';
+      btn.title = 'Cambiar a Modo Claro Gubernamental (Blanco y Azul)';
     }
     localStorage.setItem('salud_modo_oscuro', 'true');
   } else {
@@ -3180,9 +3179,8 @@ function aplicarModoOscuroSuave(activar) {
     if (icono) icono.textContent = '🌙';
     if (label) label.textContent = 'Modo Noche';
     if (btn) {
-      btn.classList.remove('bg-sky-500', 'text-slate-950', 'border-sky-300');
-      btn.classList.add('bg-blue-950/90', 'text-sky-200', 'border-sky-400/80');
-      btn.title = 'Modo Noche Ejecutivo: Descanso visual sin ser excesivamente oscuro';
+      btn.className = 'px-2.5 py-1.5 rounded-xl bg-blue-950/90 hover:bg-blue-900 border border-sky-400/80 text-sky-200 hover:text-white text-xs font-bold transition flex items-center gap-1.5 shadow-sm active:scale-95';
+      btn.title = 'Modo Noche Ejecutivo: Descanso visual';
     }
     localStorage.setItem('salud_modo_oscuro', 'false');
   }
