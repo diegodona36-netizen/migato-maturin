@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>PROPUESTA Y PRESUPUESTO MÍNIMO OPERATIVO • MIGATO MONAGAS</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="assets/logo-migato.png">
+  <style>
+    @page {
+      size: letter;
+      margin: 18mm 18mm 18mm 18mm;
+      @top-left {
+        content: "REPÚBLICA BOLIVARIANA DE VENEZUELA • PARTIDO SOCIALISTA UNIDO DE VENEZUELA";
+        font-family: 'Liberation Sans', Arial, Helvetica, sans-serif;
+        font-size: 7.5pt;
+        font-weight: bold;
+        color: #991b1b;
+      }
+      @top-right {
+        content: "PROPUESTA TÉCNICO-POLÍTICA MIGATO 2026";
+        font-family: 'Liberation Sans', Arial, Helvetica, sans-serif;
+        font-size: 7.5pt;
+        font-weight: bold;
+        color: #0f172a;
+      }
+      @bottom-left {
+        content: "Plataforma Territorial MIGATO • Solicitud de Infraestructura Mínima (Fase 1)";
+        font-family: 'Liberation Sans', Arial, Helvetica, sans-serif;
+        font-size: 7.5pt;
+        font-style: italic;
+        color: #64748b;
+      }
+      @bottom-right {
+        content: "Página " counter(page);
+        font-family: 'Liberation Sans', Arial, Helvetica, sans-serif;
+        font-size: 7.5pt;
+        font-weight: bold;
+        color: #0f172a;
+      }
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Liberation Sans', Arial, Helvetica, sans-serif;
+      font-size: 11pt;
+      line-height: 1.5;
+      color: #0f172a;
+      background-color: #f1f5f9;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    /* BARRA SUPERIOR DE ACCIONES (NO SE IMPRIME) */
+    .no-print-bar {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: #0f172a;
+      color: white;
+      padding: 12px 24px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+      border-bottom: 3px solid #dc2626;
+    }
+    .no-print-bar .title-area {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .no-print-bar .badge {
+      background: #dc2626;
+      color: white;
+      font-size: 10px;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 4px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+    .no-print-bar h1 {
+      font-size: 15px;
+      font-weight: 800;
+      color: #f8fafc;
+    }
+    .no-print-bar .actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .btn-action {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #2563eb;
+      color: white;
+      text-decoration: none;
+      padding: 8px 16px;
+      font-size: 12.5px;
+      font-weight: 700;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .btn-action:hover {
+      background: #1d4ed8;
+      transform: translateY(-1px);
+    }
+    .btn-action.success {
+      background: #059669;
+    }
+    .btn-action.success:hover {
+      background: #047857;
+    }
+    .btn-action.secondary {
+      background: #334155;
+    }
+    .btn-action.secondary:hover {
+      background: #475569;
+    }
+
+    /* CONTENEDOR TIPO HOJA CARTA */
+    .paper-container {
+      max-width: 216mm;
+      margin: 24px auto;
+      background: white;
+      padding: 24mm 20mm;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+      border-radius: 4px;
+    }
+
+    /* MEMBRETE INSTITUCIONAL */
+    .official-header {
+      border-bottom: 2.5px solid #0f172a;
+      padding-bottom: 14px;
+      margin-bottom: 20px;
+    }
+    .republica-txt {
+      font-size: 8.5pt;
+      font-weight: 800;
+      color: #64748b;
+      text-align: center;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      line-height: 1.3;
+      margin-bottom: 8px;
+    }
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 10px;
+    }
+    .header-logo-title {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .header-logo-title img {
+      width: 54px;
+      height: 54px;
+    }
+    .main-doc-title {
+      font-size: 15pt;
+      font-weight: 900;
+      color: #0f172a;
+      line-height: 1.15;
+      letter-spacing: -0.3px;
+    }
+    .main-doc-subtitle {
+      font-size: 9.5pt;
+      font-weight: 600;
+      color: #991b1b;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-top: 2px;
+    }
+    .header-meta-box {
+      text-align: right;
+      font-size: 8.5pt;
+      background: #f8fafc;
+      padding: 6px 12px;
+      border: 1px solid #cbd5e1;
+      border-left: 3px solid #dc2626;
+      border-radius: 4px;
+    }
+
+    /* LLAMADO DE ATENCIÓN / HERO CALLOUT */
+    .hero-callout {
+      background: #eff6ff;
+      border-left: 5px solid #2563eb;
+      border-top: 1px solid #bfdbfe;
+      border-right: 1px solid #bfdbfe;
+      border-bottom: 1px solid #bfdbfe;
+      padding: 12px 16px;
+      margin-bottom: 20px;
+      font-size: 10.5pt;
+      border-radius: 0 4px 4px 0;
+    }
+    .hero-callout strong {
+      color: #1e3a8a;
+    }
+
+    /* SECCIONES Y ENCABEZADOS */
+    h2.section-title {
+      font-size: 12.5pt;
+      font-weight: 900;
+      color: #0f172a;
+      text-transform: uppercase;
+      border-bottom: 1.5px solid #cbd5e1;
+      padding-bottom: 4px;
+      margin-top: 24px;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    h2.section-title span.sec-num {
+      background: #0f172a;
+      color: white;
+      font-size: 10pt;
+      padding: 2px 7px;
+      border-radius: 3px;
+    }
+
+    p {
+      margin-bottom: 12px;
+      text-align: justify;
+      font-size: 10.5pt;
+      color: #334155;
+    }
+
+    /* CARDS DE MÓDULOS EN LENGUAJE SENCILLO */
+    .modules-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+      margin: 16px 0;
+    }
+    .module-card {
+      border: 1px solid #cbd5e1;
+      border-left: 5px solid #2563eb;
+      background: #ffffff;
+      padding: 12px 16px;
+      border-radius: 0 6px 6px 0;
+      page-break-inside: avoid;
+    }
+    .module-card.m1 { border-left-color: #059669; }
+    .module-card.m2 { border-left-color: #2563eb; }
+    .module-card.m3 { border-left-color: #d97706; }
+    .module-card.m4 { border-left-color: #4f46e5; }
+    .module-card.m5 { border-left-color: #dc2626; }
+
+    .module-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 4px;
+    }
+    .module-card-title {
+      font-size: 11pt;
+      font-weight: 800;
+      color: #0f172a;
+    }
+    .module-card-tag {
+      font-size: 7.5pt;
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 2px 6px;
+      border-radius: 3px;
+      background: #f1f5f9;
+      color: #475569;
+      border: 1px solid #e2e8f0;
+    }
+    .module-card-desc {
+      font-size: 9.8pt;
+      color: #334155;
+      line-height: 1.45;
+    }
+    .module-card-why {
+      font-size: 9pt;
+      font-weight: 700;
+      color: #1e3a8a;
+      margin-top: 6px;
+      display: block;
+      background: #f8fafc;
+      padding: 4px 8px;
+      border-radius: 4px;
+    }
+
+    /* TABLA DE PRESUPUESTO */
+    .budget-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0 20px 0;
+      font-size: 9.5pt;
+      page-break-inside: avoid;
+    }
+    .budget-table th {
+      background: #0f172a;
+      color: white;
+      text-align: left;
+      padding: 8px 12px;
+      font-size: 9pt;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+    .budget-table td {
+      padding: 8px 12px;
+      border-bottom: 1px solid #e2e8f0;
+      color: #1e293b;
+    }
+    .budget-table tr:nth-child(even) td {
+      background: #f8fafc;
+    }
+    .budget-table tr.total-row td {
+      background: #eff6ff;
+      border-top: 2px solid #2563eb;
+      border-bottom: 2px solid #2563eb;
+      font-weight: 800;
+      font-size: 10.5pt;
+      color: #1e3a8a;
+    }
+
+    /* CAJA DE COMPARATIVA DE MERCADO */
+    .market-box {
+      background: #fefce8;
+      border: 1px solid #fef08a;
+      border-left: 4.5px solid #ca8a04;
+      padding: 12px 16px;
+      border-radius: 0 4px 4px 0;
+      margin: 16px 0;
+      font-size: 9.8pt;
+      color: #713f12;
+    }
+    .market-box strong {
+      color: #854d0e;
+    }
+
+    /* COMPARACIÓN DE FASES (GRID) */
+    .phases-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin: 16px 0;
+      page-break-inside: avoid;
+    }
+    .phase-card {
+      border: 1px solid #cbd5e1;
+      padding: 14px;
+      border-radius: 6px;
+      background: #ffffff;
+    }
+    .phase-card.fase1 {
+      border-top: 4px solid #059669;
+      background: #f0fdf4;
+    }
+    .phase-card.fase2 {
+      border-top: 4px solid #64748b;
+      background: #f8fafc;
+    }
+    .phase-badge {
+      font-size: 8pt;
+      font-weight: 800;
+      padding: 2px 6px;
+      border-radius: 3px;
+      display: inline-block;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+    }
+    .phase-card.fase1 .phase-badge {
+      background: #059669;
+      color: white;
+    }
+    .phase-card.fase2 .phase-badge {
+      background: #64748b;
+      color: white;
+    }
+    .phase-title {
+      font-size: 11pt;
+      font-weight: 800;
+      color: #0f172a;
+      margin-bottom: 6px;
+    }
+    .phase-cost {
+      font-size: 13pt;
+      font-weight: 900;
+      color: #059669;
+      margin-bottom: 8px;
+    }
+    .phase-card.fase2 .phase-cost {
+      color: #475569;
+      font-size: 11pt;
+    }
+    .phase-list {
+      list-style: none;
+      padding-left: 0;
+      font-size: 9.2pt;
+      color: #334155;
+      line-height: 1.45;
+    }
+    .phase-list li {
+      margin-bottom: 6px;
+      padding-left: 14px;
+      position: relative;
+    }
+    .phase-list li::before {
+      content: "▪";
+      position: absolute;
+      left: 0;
+      color: #0f172a;
+    }
+
+    /* SEGURIDAD Y HACKING TEST */
+    .security-box {
+      background: #f1f5f9;
+      border-left: 4.5px solid #0f172a;
+      padding: 12px 16px;
+      margin: 16px 0;
+      font-size: 9.8pt;
+      border-radius: 0 4px 4px 0;
+    }
+
+    /* ÁREA DE FIRMAS */
+    .signatures-box {
+      margin-top: 40px;
+      display: flex;
+      justify-content: space-between;
+      gap: 40px;
+      page-break-inside: avoid;
+    }
+    .sig-col {
+      flex: 1;
+      text-align: center;
+    }
+    .sig-line {
+      border-top: 1.5px solid #0f172a;
+      margin-bottom: 8px;
+      padding-top: 8px;
+      font-size: 10pt;
+      font-weight: 800;
+      color: #0f172a;
+    }
+    .sig-cargo {
+      font-size: 8.5pt;
+      color: #64748b;
+      line-height: 1.3;
+    }
+
+    /* SALTO DE PÁGINA PARA IMPRESIÓN */
+    .page-break {
+      page-break-after: always;
+    }
+
+    @media print {
+      .no-print-bar {
+        display: none !important;
+      }
+      body {
+        background-color: white !important;
+      }
+      .paper-container {
+        margin: 0 !important;
+        padding: 0 !important;
+        box-shadow: none !important;
+        max-width: 100% !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- BARRA DE CONTROL SUPERIOR -->
+  <div class="no-print-bar">
+    <div class="title-area">
+      <span class="badge">PROPUESTA OFICIAL</span>
+      <h1>Plataforma MIGATO • Presupuesto Mínimo Operativo (VPS + Dominio)</h1>
+    </div>
+    <div class="actions">
+      <button class="btn-action success" onclick="window.print()">
+        <svg width="15" height="15" fill="currentColor" viewBox="0 0 16 16"><path d="M2.5 8a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1z"/><path d="M5 1a2 2 0 0 0-2 2v2H2a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h1v1a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-1h1a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1V3a2 2 0 0 0-2-2H5zM4 3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2H4V3zm1 5a2 2 0 0 0-2 2v1H2a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v-1a2 2 0 0 0-2-2H5zm7 2v3a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1z"/></svg>
+        Imprimir / Guardar PDF
+      </button>
+      <a class="btn-action" href="MIGATO_Propuesta_Presupuesto_Minimo_Partido.docx" download>
+        <svg width="15" height="15" fill="currentColor" viewBox="0 0 16 16"><path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/><path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/></svg>
+        Descargar Word (.docx)
+      </a>
+      <a class="btn-action secondary" href="presentacion.html">
+        <svg width="15" height="15" fill="currentColor" viewBox="0 0 16 16"><path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H8.5v1.5H10a.5.5 0 0 1 0 1H6a.5.5 0 0 1 0-1h1.5V14H2a2 2 0 0 1-2-2V2zm2-1a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H2z"/></svg>
+        Ver Presentación Diapositivas
+      </a>
+      <a class="btn-action secondary" href="index.html">
+        Portal MIGATO
+      </a>
+    </div>
+  </div>
+
+  <!-- DOCUMENTO FÍSICO IMPRESO -->
+  <div class="paper-container">
+
+    <!-- MEMBRETE OFICIAL -->
+    <div class="official-header">
+      <div class="republica-txt">
+        REPÚBLICA BOLIVARIANA DE VENEZUELA • ESTADO MONAGAS<br>
+        DIRECCIÓN POLÍTICA Y ELECTORAL • SALA SITUACIONAL Y DE MANDO
+      </div>
+      <div class="header-content">
+        <div class="header-logo-title">
+          <img src="assets/logo-migato.png" alt="MIGATO Logo" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'50\' height=\'50\'><rect width=\'50\' height=\'50\' fill=\'%230f172a\'/><text x=\'25\' y=\'30\' fill=\'%23fff\' font-size=\'12\' text-anchor=\'middle\'>MIGATO</text></svg>'">
+          <div>
+            <div class="main-doc-title">PROPUESTA TÉCNICO-POLÍTICA Y PRESUPUESTO MÍNIMO OPERATIVO</div>
+            <div class="main-doc-subtitle">PLATAFORMA MIGATO MONAGAS • FASE 1 DE DESPLIEGUE Y PRUEBAS</div>
+          </div>
+        </div>
+        <div class="header-meta-box">
+          <div><strong>Fecha:</strong> Septiembre 2026</div>
+          <div><strong>Destino:</strong> Dirección del Partido / Despacho</div>
+          <div><strong>Nivel:</strong> Operativo / Estratégico</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CALLOUT HERO DE SÍNTESIS -->
+    <div class="hero-callout">
+      <strong>RESUMEN EJECUTIVO EN 1 MINUTO:</strong> Esta propuesta solicita la aprobación de un <strong>presupuesto mínimo de ~$24.50 USD/mes ($294 USD/año)</strong> para contratar un Servidor Virtual Privado (VPS) soberano y un Dominio institucional. Con esto, pondremos en línea los 5 módulos territoriales ya programados de MIGATO, probaremos el tráfico real con las UBCh y realizaremos <strong>pruebas de seguridad y hacking ético</strong> para blindar los datos del partido antes del despliegue masivo. Las computadoras, pantallas e inversores de corriente para la Sala Situacional física se incorporarán más adelante en la Fase 2.
+    </div>
+
+    <!-- SECCIÓN 1: ¿POR QUÉ SE NECESITA? -->
+    <h2 class="section-title"><span class="sec-num">1</span> ¿Por qué el Partido necesita este sistema con urgencia?</h2>
+    <p>
+      En toda contienda electoral y en la gestión cotidiana de gobierno, el factor decisivo es la <strong>velocidad y la fidelidad de la información</strong>. Actualmente, la mayor parte de las UBCh, líderes comunitarios y enlaces parroquiales reportan a través de cuadernos manuscritos o grupos abiertos de WhatsApp. Esto provoca tres debilidades críticas:
+    </p>
+    <p>
+      <strong>1. Fugas de Información y Espionaje:</strong> En WhatsApp los números y listas de electores quedan expuestos en teléfonos personales que pueden ser extraviados, robados o incautados.<br>
+      <strong>2. Pérdida de Actas y Retraso en Cómputos:</strong> Esperar horas a que un acta electoral viaje físicamente desde Boquerón, El Furrial o Caripe genera incertidumbre y debilita la defensa del voto en caliente.<br>
+      <strong>3. Falta de Trazabilidad en Salud y Servicios:</strong> Los reportes de fallas eléctricas, falta de agua o reactivos en ambulatorios llegan tarde, cuando ya la crisis ha estallado públicamente.
+    </p>
+    <p>
+      <strong>MIGATO resuelve todo esto en un solo lugar:</strong> conecta a los 13 municipios y 44 parroquias de Monagas en una plataforma web ligera, segura y centralizada que funciona desde cualquier celular sencillo.
+    </p>
+
+    <!-- SECCIÓN 2: LOS 5 MÓDULOS EXPLICADOS EN SENCILLO -->
+    <h2 class="section-title"><span class="sec-num">2</span> Los 5 Módulos de MIGATO explicados para el Partido</h2>
+    
+    <div class="modules-grid">
+      <!-- M1 -->
+      <div class="module-card m1">
+        <div class="module-card-header">
+          <div class="module-card-title">Módulo 1 • Despacho Celular Seguro (/despacho/)</div>
+          <span class="module-card-tag">Comunicación y Enlaces</span>
+        </div>
+        <div class="module-card-desc">
+          Permite a la Sala de Mando enviar instrucciones directas y formularios de reporte a los 44 enlaces parroquiales mediante enlaces encriptados de un solo toque a WhatsApp. No se comparten claves maestras: cada enlace tiene acceso blindado e intransferible.
+        </div>
+        <span class="module-card-why">
+          💡 Beneficio Político: Control de mando directo con los cuadros territoriales sin depender de grupos masivos donde se filtra la información.
+        </span>
+      </div>
+
+      <!-- M2 -->
+      <div class="module-card m2">
+        <div class="module-card-header">
+          <div class="module-card-title">Módulo 2 • Censo Territorial y Protocolo de Buzón Ciego (/carga/)</div>
+          <span class="module-card-tag">Territorio y 1x10</span>
+        </div>
+        <div class="module-card-desc">
+          Formulario ultraligero para que los jefes de calle y UBCh registren necesidades familiares, casos de salud y compromisos electorales. Cuenta con la tecnología de <strong>Buzón Ciego (0-Bytes Residuales)</strong>: al presionar "Enviar", la memoria del teléfono se borra por completo.
+        </div>
+        <span class="module-card-why">
+          💡 Beneficio Político: Si un compañero es interceptado en la calle, nadie puede sacarle la lista de votantes ni los censos de su teléfono.
+        </span>
+      </div>
+
+      <!-- M3 -->
+      <div class="module-card m3">
+        <div class="module-card-header">
+          <div class="module-card-title">Módulo 3 • Padrón Electoral y Auditoría CNE con Actas QR (/centros-maturin/)</div>
+          <span class="module-card-tag">Defensa del Voto</span>
+        </div>
+        <div class="module-card-desc">
+          Geolocalización exacta de las 175 escuelas electorales de Maturín y sus 419.000 electores clasificados por intención de voto (voto duro, blando, indeciso). Incorpora un <strong>escáner de códigos QR de actas oficiales del CNE</strong> que valida los resultados mesa por mesa en solo 2 segundos.
+        </div>
+        <span class="module-card-why">
+          💡 Beneficio Político: Conteo rápido propio y defensa legal irrefutable de la victoria electoral minutos después del cierre de mesas.
+        </span>
+      </div>
+
+      <!-- M4 -->
+      <div class="module-card m4">
+        <div class="module-card-header">
+          <div class="module-card-title">Módulo 4 • Cartografía Satelital 3D y Efecto Velo Blanco (/earth-monagas/)</div>
+          <span class="module-card-tag">Estrategia Satelital</span>
+        </div>
+        <div class="module-card-desc">
+          Visualización táctica de Monagas en 3D sobre relieve satelital real. Al seleccionar una parroquia en disputa (ej. Las Cocuizas o San Simón), el sistema aplica un "Velo Blanco" que atenúa el resto del mapa para que el equipo se enfoque exclusivamente en la zona prioritaria.
+        </div>
+        <span class="module-card-why">
+          💡 Beneficio Político: Tomas de decisiones visuales, claras y sin distracciones durante las reuniones de Estado Mayor con el Gobernador.
+        </span>
+      </div>
+
+      <!-- M5 -->
+      <div class="module-card m5">
+        <div class="module-card-header">
+          <div class="module-card-title">Módulo 5 • Red Hospitalaria y Pre-Diagnóstico de Salud (/salud-monagas/)</div>
+          <span class="module-card-tag">Gestión Pública y Alerta</span>
+        </div>
+        <div class="module-card-desc">
+          Monitoreo permanente de los <strong>84 centros asistenciales de Monagas</strong> (Hospital Central Dr. Manuel Núñez Tovar, ambulatorios urbanos y CDIs). Posee un semáforo de riesgo (Crítico, Alerta, Operativo) que mide plantas eléctricas, agua, gases medicinales, quirófanos y camas.
+        </div>
+        <span class="module-card-why">
+          💡 Beneficio Político: Detecta una falla de planta o insumos antes de que se convierta en una matriz de opinión en redes sociales.
+        </span>
+      </div>
+    </div>
+
+    <div class="page-break"></div>
+
+    <!-- SECCIÓN 3: ¿POR QUÉ EL PRESUPUESTO MÍNIMO? -->
+    <h2 class="section-title"><span class="sec-num">3</span> ¿Por qué solicitamos HOY solo un Presupuesto Mínimo (VPS y Dominio)?</h2>
+    <p>
+      Para arrancar con responsabilidad política y administrativa, no estamos solicitando un desembolso costoso. El desarrollo del software ya fue completado íntegramente. Para encender los motores solo se requiere la infraestructura técnica básica:
+    </p>
+
+    <div class="security-box">
+      <strong>1. Servidor Virtual Privado (VPS Soberano Dedicado):</strong><br>
+      Es la "computadora central en la nube" donde se alojará el sistema con cifrado militar. Un VPS propio nos garantiza que la información no dependa de servidores compartidos ni de plataformas extranjeras con riesgo de bloqueo.<br><br>
+      <strong>2. ¿Por qué es urgente el VPS para pruebas de campo y test de hacking?</strong><br>
+      Antes de que miles de jefes de UBCh utilicen la herramienta el día de las elecciones o en el censo masivo, el equipo técnico debe someter el servidor a <strong>Pruebas de Estrés</strong> (simular miles de clics al mismo tiempo) y <strong>Test de Hacking Ético (Pentesting)</strong>. Esto nos permite comprobar que ningún hacker opositor, malware o ataque de denegación de servicio (DDoS) pueda tumbar la plataforma ni robar la base de datos.<br><br>
+      <strong>3. Dominio Institucional Oficial (.com o .org con candado SSL/HTTPS):</strong><br>
+      Un enlace profesional genera confianza absoluta en la militancia, protege las comunicaciones de extremo a extremo y evita que los navegadores muestren avisos de advertencia.
+    </div>
+
+    <!-- SECCIÓN 4: TABLA DE PRESUPUESTO MÍNIMO -->
+    <h2 class="section-title"><span class="sec-num">4</span> Presupuesto Mínimo Requerido (Fase 1 de Arranque)</h2>
+    <p>
+      El costo de esta fase es 100% transparente y directo de proveedores de infraestructura cloud de primer nivel:
+    </p>
+
+    <table class="budget-table">
+      <thead>
+        <tr>
+          <th>Concepto Técnico</th>
+          <th>Especificación / Justificación</th>
+          <th>Costo Mensual</th>
+          <th>Costo Anual</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Servidor Cloud VPS Dedicado</strong></td>
+          <td>4 vCPU, 8 GB RAM, 100 GB SSD NVMe, Red 1 Gbps, Protección Anti-DDoS. Aloja la base de datos y los 5 módulos.</td>
+          <td>$20.00 USD</td>
+          <td>$240.00 USD</td>
+        </tr>
+        <tr>
+          <td><strong>Dominio Institucional Oficial</strong></td>
+          <td>Nombre de dominio oficial propio con Cifrado SSL Wildcard (Certificado HTTPS de 256 bits).</td>
+          <td>$1.50 USD</td>
+          <td>$18.00 USD</td>
+        </tr>
+        <tr>
+          <td><strong>IP Pública Fija Dedicada</strong></td>
+          <td>Dirección IP exclusiva que no se comparte con otros sitios, vital para el firewall de seguridad y la Sala de Mando.</td>
+          <td>$3.00 USD</td>
+          <td>$36.00 USD</td>
+        </tr>
+        <tr>
+          <td><strong>Herramientas de Auditoría y Hacking Ético</strong></td>
+          <td>Software de pentesting, pruebas de penetración, cortafuegos iptables/Fail2ban y monitoreo de tráfico.</td>
+          <td>$0.00 (FOSS)</td>
+          <td>$0.00 (Incluido)</td>
+        </tr>
+        <tr class="total-row">
+          <td colspan="2">TOTAL MÍNIMO SOLICITADO PARA ARRANQUE Y PRUEBAS</td>
+          <td>~$24.50 USD / mes</td>
+          <td>$294.00 USD / AÑO</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="market-box">
+      <strong>COMPARATIVA DE AHORRO CON EL SECTOR PRIVADO:</strong> Desarrollar una plataforma integrada de 5 módulos como MIGATO cuesta en el mercado comercial privado entre <strong>$15.000 y $30.000 dólares</strong>. En este caso, el desarrollo técnico ya fue realizado por el equipo sin costo para el Partido. Únicamente se solicita el financiamiento del hospedaje técnico de <strong>menos de $25 dólares al mes</strong>.
+    </div>
+
+    <!-- SECCIÓN 5: ESTRATEGIA POR FASES -->
+    <h2 class="section-title"><span class="sec-num">5</span> Estrategia por Fases: Arranque Mínimo vs. Consolidación Física</h2>
+    <p>
+      Para no saturar el presupuesto del partido, la implementación se dividirá en dos etapas bien planificadas:
+    </p>
+
+    <div class="phases-grid">
+      <!-- FASE 1 -->
+      <div class="phase-card fase1">
+        <span class="phase-badge">FASE 1 • INMEDIATA (OBJETO DE ESTA SOLICITUD)</span>
+        <div class="phase-title">Arranque Técnico y Pruebas de Seguridad</div>
+        <div class="phase-cost">$294.00 USD (Presupuesto Total Anual)</div>
+        <ul class="phase-list">
+          <li>Contratación y configuración del VPS y Dominio Institucional.</li>
+          <li>Instalación de cortafuegos y bases de datos con encriptación militar.</li>
+          <li><strong>Test de hacking y pentesting ético:</strong> comprobación de resistencia ante intentos de intrusión y bloqueos.</li>
+          <li>Prueba piloto de carga con 3 parroquias clave (Las Cocuizas, San Simón y Los Godos).</li>
+          <li>Capacitación rápida de 15 minutos a los primeros enlaces parroquiales.</li>
+        </ul>
+      </div>
+
+      <!-- FASE 2 -->
+      <div class="phase-card fase2">
+        <span class="phase-badge">FASE 2 • CONSOLIDACIÓN (A MEDIANO PLAZO)</span>
+        <div class="phase-title">Equipamiento de Sala Situacional Física</div>
+        <div class="phase-cost">A determinar cuando el Partido lo disponga</div>
+        <ul class="phase-list">
+          <li>Asignación de 2 a 3 computadoras de escritorio dedicadas a los operadores de sala.</li>
+          <li>Pantallas de 55 pulgadas para videowall de monitoreo en tiempo real.</li>
+          <li><strong>Inversor de corriente y baterías UPS:</strong> para que la Sala Situacional nunca se apague ante fallas eléctricas imprevistas.</li>
+          <li>Conexión de internet de respaldo (fibra óptica o satelital).</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- SECCIÓN 6: CONCLUSIÓN Y SOLICITUD -->
+    <h2 class="section-title"><span class="sec-num">6</span> Conclusión y Solicitud de Aprobación</h2>
+    <p>
+      La plataforma MIGATO pone en manos de la Dirección del Partido y de la Gobernación de Monagas un instrumento soberano de vanguardia: control exacto de la maquinaria electoral, blindaje de actas de votación, monitoreo de la red hospitalaria y censos territoriales sin fugas de información.
+    </p>
+    <p>
+      Por un costo mínimo de <strong>$294.00 USD anuales</strong>, el Partido adquiere la capacidad de blindar su victoria y optimizar su gestión pública. Se eleva esta propuesta a la Dirección Política y al Despacho del Gobernador para su inmediata aprobación y desembolso del presupuesto de Fase 1.
+    </p>
+
+    <!-- FIRMAS -->
+    <div class="signatures-box">
+      <div class="sig-col">
+        <div class="sig-line">DIRECCIÓN POLÍTICA / ESTADO MAYOR</div>
+        <div class="sig-cargo">
+          Partido Socialista Unido de Venezuela (PSUV)<br>
+          Gobernación del Estado Monagas
+        </div>
+      </div>
+      <div class="sig-col">
+        <div class="sig-line">RESPONSABLE TÉCNICO Y DESARROLLO</div>
+        <div class="sig-cargo">
+          Equipo de Desarrollo Plataforma MIGATO<br>
+          Soberanía Tecnológica y Control Territorial
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</body>
+</html>

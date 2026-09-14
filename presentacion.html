@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MIGATO 2026 • Presentación Ejecutiva de Alta Dirección</title>
+  <title>MIGATO 2026 • Presentación Ejecutiva y Presupuesto Mínimo</title>
   <link rel="icon" type="image/png" href="assets/logo-migato.png">
 
   <!-- Tailwind CSS Local + Fallback CDN -->
@@ -23,7 +23,8 @@
               brand: "#0f172a",
               card: "#1e293b",
               accent: "#3b82f6",
-              gold: "#f59e0b"
+              gold: "#f59e0b",
+              psuv: "#dc2626"
             }
           }
         }
@@ -90,7 +91,7 @@
       .text-slate-300, .text-slate-400 {
         color: #475569 !important;
       }
-      .bg-slate-900, .bg-slate-950, .bg-slate-900\/80 {
+      .bg-slate-900, .bg-slate-950, .bg-slate-900\/80, .bg-slate-900\/90 {
         background: #f8fafc !important;
         border: 1px solid #e2e8f0 !important;
       }
@@ -118,10 +119,10 @@
     
     <!-- Info y Miniatura -->
     <div class="pointer-events-auto flex items-center gap-2 bg-slate-900/90 backdrop-blur-md border border-slate-800 px-3 py-1.5 rounded-2xl shadow-xl">
-      <img src="assets/logo-migato.png" alt="MIGATO" class="w-6 h-6 object-contain">
-      <span class="text-xs font-black tracking-tight text-white">MIGATO <span class="text-blue-500">2026</span></span>
+      <img src="assets/logo-migato.png" alt="MIGATO" class="w-6 h-6 object-contain" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'24\' height=\'24\'><rect width=\'24\' height=\'24\' fill=\'%23dc2626\'/></svg>'">
+      <span class="text-xs font-black tracking-tight text-white">MIGATO <span class="text-red-500">2026</span></span>
       <span class="text-slate-600">•</span>
-      <span class="text-[11px] font-bold text-slate-400">Presentación de Alta Dirección</span>
+      <span class="text-[11px] font-bold text-slate-400">Presentación Oficial Partido</span>
     </div>
 
     <!-- Controles Rápidos -->
@@ -129,7 +130,7 @@
       
       <!-- Contador de diapositiva -->
       <span id="slide-counter" class="font-mono text-xs font-bold text-blue-400 px-2">
-        1 / 8
+        1 / 10
       </span>
 
       <div class="h-4 w-px bg-slate-800"></div>
@@ -146,15 +147,26 @@
 
       <div class="h-4 w-px bg-slate-800"></div>
 
+      <!-- Ver Documento Oficial Web -->
+      <a href="documento_partido.html" title="Ver Documento Oficial Escrito" class="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold transition">
+        <i data-lucide="file-text" class="w-3.5 h-3.5 text-red-400"></i>
+        <span>Propuesta Web</span>
+      </a>
+
+      <!-- Descargar Word .docx -->
+      <a href="MIGATO_Propuesta_Presupuesto_Minimo_Partido.docx" download title="Descargar en formato Word" class="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold transition shadow-sm">
+        <i data-lucide="download" class="w-3.5 h-3.5"></i>
+        <span>Word (.docx)</span>
+      </a>
+
+      <!-- Imprimir / Guardar a PDF en Chrome -->
+      <button onclick="window.print()" title="Imprimir o Guardar en PDF (Ctrl+P)" class="p-1.5 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-white transition">
+        <i data-lucide="printer" class="w-4 h-4"></i>
+      </button>
+
       <!-- Pantalla completa -->
       <button onclick="toggleFullscreen()" title="Pantalla Completa (F)" class="p-1.5 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-white transition">
         <i data-lucide="maximize" class="w-4 h-4"></i>
-      </button>
-
-      <!-- Imprimir / Guardar a PDF en Chrome -->
-      <button onclick="window.print()" title="Imprimir o Guardar en PDF de Chrome (Ctrl+P)" class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold transition shadow-sm">
-        <i data-lucide="printer" class="w-3.5 h-3.5"></i>
-        <span>Guardar en PDF</span>
       </button>
 
       <!-- Volver a Sala de Mando -->
@@ -177,39 +189,39 @@
       <div class="flex items-center justify-between border-b border-slate-800/80 pb-4">
         <div class="flex items-center gap-3">
           <div class="w-12 h-12 rounded-2xl bg-slate-800 border border-slate-700 flex items-center justify-center p-2">
-            <img src="assets/logo-migato.png" class="w-full h-full object-contain" alt="">
+            <img src="assets/logo-migato.png" class="w-full h-full object-contain" alt="MIGATO" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'40\' height=\'40\'><rect width=\'40\' height=\'40\' fill=\'%23dc2626\'/></svg>'">
           </div>
           <div>
-            <h3 class="text-xs font-extrabold uppercase tracking-widest text-slate-400">Gobernación del Estado Monagas</h3>
-            <p class="text-[11px] text-blue-400 font-mono">ESTADO PRELIMINAR • ALTA GERENCIA 2026</p>
+            <h3 class="text-xs font-extrabold uppercase tracking-widest text-slate-300">Partido Socialista Unido de Venezuela • Estado Monagas</h3>
+            <p class="text-[11px] text-red-400 font-mono">SISTEMA INTEGRAL DE CONTROL TERRITORIAL Y ELECTORAL 2026</p>
           </div>
         </div>
-        <span class="px-3 py-1 rounded-full text-xs font-bold bg-amber-500/10 text-amber-400 border border-amber-500/20">
-          CONFIDENCIAL
+        <span class="px-3 py-1 rounded-full text-xs font-bold bg-red-500/10 text-red-400 border border-red-500/30">
+          PROPUESTA OFICIAL DE FINANCIAMIENTO
         </span>
       </div>
 
       <div class="my-auto max-w-3xl">
         <span class="inline-block px-3 py-1 rounded-full text-xs font-bold bg-blue-500/10 text-blue-400 border border-blue-500/30 mb-4">
-          SISTEMA INTEGRAL DE SOBERANÍA Y MONITOREO
+          FASE 1: INFRAESTRUCTURA MÍNIMA (VPS + DOMINIO)
         </span>
         <h1 class="text-3xl sm:text-5xl font-black text-white tracking-tight leading-tight">
-          Plataforma MIGATO <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-400">2026</span>
+          Plataforma MIGATO <span class="text-transparent bg-clip-text bg-gradient-to-r from-red-500 via-amber-400 to-blue-400">Monagas</span>
         </h1>
-        <p class="text-base sm:text-xl text-slate-300 mt-4 leading-relaxed font-normal">
-          Arquitectura de 4 Módulos Estratégicos para el Despacho Seguro, Censo Sectorial, Auditoría Electoral y Cartografía Satelital 3D.
+        <p class="text-base sm:text-lg text-slate-300 mt-4 leading-relaxed font-normal">
+          Presentación ejecutiva para la Dirección Política: Los 5 módulos en funcionamiento, blindaje de seguridad contra hackeos y presupuesto de arranque de <strong>~$24.50 USD/mes ($294 USD/año)</strong>.
         </p>
 
-        <div class="flex items-center gap-6 mt-8 pt-6 border-t border-slate-800/60 text-xs text-slate-400">
-          <div><strong class="text-white block">Destinatario:</strong> Gobernador del Estado Monagas</div>
-          <div><strong class="text-white block">Áreas:</strong> Despacho, Infraestructura, Alimentación, Sala Situacional</div>
-          <div><strong class="text-white block">Versión:</strong> Revisión 2 Oficial</div>
+        <div class="flex items-center gap-6 mt-6 pt-6 border-t border-slate-800/60 text-xs text-slate-400">
+          <div><strong class="text-white block">Destinatario:</strong> Dirección del Partido / Despacho Gobernador</div>
+          <div><strong class="text-white block">Meta:</strong> Aprobación VPS + Dominio para pruebas de penetración</div>
+          <div><strong class="text-white block">Estado:</strong> 5 Módulos Programados y Listos</div>
         </div>
       </div>
 
       <div class="flex items-center justify-between text-xs text-slate-500 pt-4 border-t border-slate-800/80">
-        <span>Usa las flechas [← / →] para avanzar</span>
-        <span class="font-mono">Página 1 de 8</span>
+        <span>Usa las flechas [← / →] o la barra espaciadora para avanzar</span>
+        <span class="font-mono">Página 1 de 10</span>
       </div>
     </div>
 
@@ -219,11 +231,11 @@
     <div id="slide-2" class="slide slide-inactive flex-col justify-between h-full">
       <div>
         <div class="flex items-center justify-between">
-          <span class="text-xs font-bold uppercase tracking-widest text-slate-400">Diagnóstico Estratégico</span>
-          <span class="font-mono text-xs text-blue-400">Página 2 de 8</span>
+          <span class="text-xs font-bold uppercase tracking-widest text-slate-400">Diagnóstico Político y Territorial</span>
+          <span class="font-mono text-xs text-blue-400">Página 2 de 10</span>
         </div>
         <h2 class="text-2xl sm:text-3xl font-black text-white mt-1">¿Qué Cuello de Botella Resuelve MIGATO?</h2>
-        <p class="text-sm text-slate-400 mt-1">De la dispersión ineficiente a la soberanía de datos en tiempo real.</p>
+        <p class="text-sm text-slate-400 mt-1">De la vulnerabilidad del WhatsApp a una plataforma soberana encriptada.</p>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6 my-auto">
@@ -231,24 +243,24 @@
         <div class="bg-rose-950/20 border border-rose-800/40 rounded-2xl p-6">
           <div class="flex items-center gap-2 text-rose-400 font-bold text-sm mb-3">
             <i data-lucide="alert-triangle" class="w-4 h-4"></i>
-            <span>ANTES (Vulnerabilidad Histórica)</span>
+            <span>ANTES (Riesgos y Cuadernos de Papel)</span>
           </div>
           <ul class="space-y-3 text-xs sm:text-sm text-slate-300">
             <li class="flex items-start gap-2">
               <span class="text-rose-500 font-bold">✕</span>
-              <span><strong>Claves compartidas:</strong> Enlaces de WhatsApp con contraseñas que se filtraban y borraban datos ajenos.</span>
+              <span><strong>Fugas en WhatsApp:</strong> Grupos abiertos donde se filtran nombres, números y listas de electores a la oposición.</span>
             </li>
             <li class="flex items-start gap-2">
               <span class="text-rose-500 font-bold">✕</span>
-              <span><strong>Riesgo en calle:</strong> Teléfonos de cuadros territoriales con censos guardados, vulnerables a decomisos.</span>
+              <span><strong>Riesgo de decomiso:</strong> Si a un jefe de UBCh le retienen el teléfono, pierden la data o queda expuesta la militancia.</span>
             </li>
             <li class="flex items-start gap-2">
               <span class="text-rose-500 font-bold">✕</span>
-              <span><strong>Ceguera electoral:</strong> Dificultad para auditar 175 escuelas simultáneamente sin un padrón sistematizado.</span>
+              <span><strong>Lentitud en actas CNE:</strong> Esperar horas a que un acta viaje en moto genera incertidumbre en el conteo de votos.</span>
             </li>
             <li class="flex items-start gap-2">
               <span class="text-rose-500 font-bold">✕</span>
-              <span><strong>Mapas saturados:</strong> Pantallas de Sala Situacional confusas con exceso de información periférica.</span>
+              <span><strong>Crisis de salud imprevistas:</strong> Los ambulatorios se quedan sin planta o agua y la noticia estalla en redes sociales antes del reporte oficial.</span>
             </li>
           </ul>
         </div>
@@ -257,32 +269,32 @@
         <div class="bg-emerald-950/20 border border-emerald-800/40 rounded-2xl p-6">
           <div class="flex items-center gap-2 text-emerald-400 font-bold text-sm mb-3">
             <i data-lucide="shield-check" class="w-4 h-4"></i>
-            <span>CON MIGATO 2026 (Control de Estado)</span>
+            <span>CON MIGATO (Control Territorial Total)</span>
           </div>
           <ul class="space-y-3 text-xs sm:text-sm text-slate-300">
             <li class="flex items-start gap-2">
               <span class="text-emerald-400 font-bold">✓</span>
-              <span><strong>Despacho Celular:</strong> 44 enlaces con token criptográfico único directo a su WhatsApp.</span>
+              <span><strong>Despacho Celular Seguro:</strong> 44 enlaces con token encriptado personal. Cero contraseñas compartidas.</span>
             </li>
             <li class="flex items-start gap-2">
               <span class="text-emerald-400 font-bold">✓</span>
-              <span><strong>Buzón Ciego:</strong> Al enviar el censo, el celular borra memoria local (0 bytes de riesgo).</span>
+              <span><strong>Buzón Ciego (0-Bytes):</strong> Al enviar el censo, el celular borra la memoria. No queda rastro si el teléfono es retenido.</span>
             </li>
             <li class="flex items-start gap-2">
               <span class="text-emerald-400 font-bold">✓</span>
-              <span><strong>Tablilla CNE & QR:</strong> Validación inmediata de 419k electores y actas oficiales en 2 seg.</span>
+              <span><strong>Auditoría QR en 2 Segundos:</strong> Conteo propio instantáneo de actas electorales para blindar la victoria legal.</span>
             </li>
             <li class="flex items-start gap-2">
               <span class="text-emerald-400 font-bold">✓</span>
-              <span><strong>Efecto Velo Blanco:</strong> Alumbrado de la parroquia activa y atenuación suave del resto.</span>
+              <span><strong>Semáforo de Salud:</strong> Monitoreo de 84 hospitales y CDIs en tiempo real para apagar crisis antes de que sucedan.</span>
             </li>
           </ul>
         </div>
       </div>
 
       <div class="text-xs text-slate-500 border-t border-slate-800/80 pt-3 flex justify-between">
-        <span>Gobernación del Estado Monagas</span>
-        <span>MIGATO 2026</span>
+        <span>Soberanía Tecnológica 100% Nacional</span>
+        <span>Página 2 de 10</span>
       </div>
     </div>
 
@@ -293,10 +305,10 @@
       <div>
         <div class="flex items-center justify-between">
           <span class="text-xs font-bold uppercase tracking-widest text-emerald-400">Módulo 01</span>
-          <span class="font-mono text-xs text-blue-400">Página 3 de 8</span>
+          <span class="font-mono text-xs text-blue-400">Página 3 de 10</span>
         </div>
-        <h2 class="text-2xl sm:text-3xl font-black text-white mt-1">Despacho Celular y Enlaces Parroquiales</h2>
-        <p class="text-sm text-slate-400 mt-1">Ruta segura: <code class="text-emerald-300 font-mono">/despacho/</code></p>
+        <h2 class="text-2xl sm:text-3xl font-black text-white mt-1">Módulo 1 • Despacho Celular Seguro</h2>
+        <p class="text-sm text-slate-400 mt-1">Ruta de control: <code class="text-emerald-300 font-mono">/despacho/</code></p>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4 my-auto">
@@ -305,12 +317,12 @@
             <div class="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center font-bold text-sm mb-3">
               01
             </div>
-            <h3 class="font-bold text-white text-base">Un Toque por WhatsApp</h3>
+            <h3 class="font-bold text-white text-base">Un Toque a WhatsApp</h3>
             <p class="text-xs text-slate-300 mt-2 leading-relaxed">
-              El director de Sala Situacional pulsa el botón verde junto a la parroquia. Se abre WhatsApp Web o móvil con el mensaje oficial preformateado.
+              La Sala de Mando pulsa el botón junto a la parroquia deseada. Se abre WhatsApp automáticamente con las instrucciones oficiales y el enlace de carga.
             </p>
           </div>
-          <span class="text-[11px] font-mono text-emerald-400 mt-4 block">Cero descargas de archivos</span>
+          <span class="text-[11px] font-mono text-emerald-400 mt-4 block">Sin instalar aplicaciones pesadas</span>
         </div>
 
         <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-5 flex flex-col justify-between">
@@ -318,12 +330,12 @@
             <div class="w-10 h-10 rounded-xl bg-blue-500/10 text-blue-400 flex items-center justify-center font-bold text-sm mb-3">
               02
             </div>
-            <h3 class="font-bold text-white text-base">Token y Blindaje Territorial</h3>
+            <h3 class="font-bold text-white text-base">Token de Encriptación</h3>
             <p class="text-xs text-slate-300 mt-2 leading-relaxed">
-              Cada enlace recibe un enlace cifrado (ej: <span class="text-blue-300 font-mono">?p=las-cocuizas</span>). Solo puede ver y cargar en su territorio asignado.
+              Cada enlace parroquial recibe un acceso cifrado exclusivo (ej. <span class="text-blue-300 font-mono">?p=las-cocuizas</span>). Solo puede operar en su jurisdicción sin ver datos ajenos.
             </p>
           </div>
-          <span class="text-[11px] font-mono text-blue-400 mt-4 block">Soberanía de jurisdicción</span>
+          <span class="text-[11px] font-mono text-blue-400 mt-4 block">Blindaje de compartimentación</span>
         </div>
 
         <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-5 flex flex-col justify-between">
@@ -331,18 +343,18 @@
             <div class="w-10 h-10 rounded-xl bg-purple-500/10 text-purple-400 flex items-center justify-center font-bold text-sm mb-3">
               03
             </div>
-            <h3 class="font-bold text-white text-base">Rotación Inmediata</h3>
+            <h3 class="font-bold text-white text-base">Relevo Inmediato</h3>
             <p class="text-xs text-slate-300 mt-2 leading-relaxed">
-              Si se reemplaza a un enlace parroquial, se regenera el token en 2 segundos desde el puesto de mando sin cambiar claves de servidor.
+              Si se designa a un nuevo responsable parroquial, se regenera su acceso en 2 segundos desde la sala sin tocar el servidor ni cambiar contraseñas a los demás.
             </p>
           </div>
-          <span class="text-[11px] font-mono text-purple-400 mt-4 block">Control político total</span>
+          <span class="text-[11px] font-mono text-purple-400 mt-4 block">Disciplina organizativa</span>
         </div>
       </div>
 
       <div class="flex items-center justify-between text-xs text-slate-500 border-t border-slate-800/80 pt-3">
-        <span>Cobertura: 44 Parroquias de Monagas</span>
-        <a href="despacho/" target="_blank" class="text-emerald-400 font-bold hover:underline">Ver Sistema en Vivo →</a>
+        <span>Conexión con los 44 Enlaces Parroquiales de Monagas</span>
+        <a href="despacho/" target="_blank" class="text-emerald-400 font-bold hover:underline">Abrir Despacho en Vivo →</a>
       </div>
     </div>
 
@@ -353,9 +365,9 @@
       <div>
         <div class="flex items-center justify-between">
           <span class="text-xs font-bold uppercase tracking-widest text-amber-400">Módulo 02</span>
-          <span class="font-mono text-xs text-blue-400">Página 4 de 8</span>
+          <span class="font-mono text-xs text-blue-400">Página 4 de 10</span>
         </div>
-        <h2 class="text-2xl sm:text-3xl font-black text-white mt-1">Censo Sectorial y Protocolo de Buzón Ciego</h2>
+        <h2 class="text-2xl sm:text-3xl font-black text-white mt-1">Módulo 2 • Censo Territorial y Buzón Ciego</h2>
         <p class="text-sm text-slate-400 mt-1">Ruta de carga: <code class="text-amber-300 font-mono">/carga/?p=alto-de-los-godos</code></p>
       </div>
 
@@ -364,10 +376,10 @@
           <div class="bg-slate-900/80 border border-slate-800 p-4 rounded-xl">
             <h4 class="font-bold text-white text-sm flex items-center gap-2">
               <i data-lucide="users" class="w-4 h-4 text-amber-400"></i>
-              <span>Levantamiento Territorial en Cascada</span>
+              <span>Levantamiento Comunal en Cascada</span>
             </h4>
             <p class="text-xs text-slate-300 mt-1">
-              Registro ágil de familias, carnet de la patria, CLAP, requerimientos médicos y servicios públicos directamente desde el barrio.
+              Registro ágil de familias, carnet de la patria, CLAP, 1x10 y requerimientos de salud directamente por los jefes de calle y UBCh.
             </p>
           </div>
 
@@ -377,7 +389,7 @@
               <span>Protocolo Forense «Buzón Ciego»</span>
             </h4>
             <p class="text-xs text-slate-300 mt-1">
-              Al pulsar "Registrar y Enviar", la pantalla se restablece en blanco y se borra la caché local. Si un cuadro de calle es retenido o pierde el teléfono, <strong>no hay base de datos que extraer</strong>.
+              Al pulsar "Registrar y Enviar", la memoria del teléfono se borra por completo. Si retienen el celular a un militante, <strong>no hay ninguna base de datos que extraer</strong>.
             </p>
           </div>
         </div>
@@ -390,15 +402,15 @@
           <h3 class="text-3xl font-black text-white font-mono">0 Bytes</h3>
           <p class="text-xs text-slate-300 mt-1 font-semibold">Residuo de datos en memoria tras el envío</p>
           <div class="mt-4 pt-4 border-t border-slate-800 text-[11px] text-slate-400 text-left space-y-1">
-            <p>✓ Cifrado en tránsito HTTPS hacia el Puesto de Mando</p>
-            <p>✓ Consolidación instantánea en Dashboard General</p>
-            <p>✓ Descarga ejecutiva en Excel en 1 clic</p>
+            <p>✓ Conexión encriptada SSL directa a la base de datos central</p>
+            <p>✓ Consolidación inmediata en la Sala de Mando del Partido</p>
+            <p>✓ Exportación instantánea a Excel para el Estado Mayor</p>
           </div>
         </div>
       </div>
 
       <div class="flex items-center justify-between text-xs text-slate-500 border-t border-slate-800/80 pt-3">
-        <span>Gobernanza Territorial Segura</span>
+        <span>Seguridad Operativa para la Militancia de Calle</span>
         <a href="carga/?p=alto-de-los-godos" target="_blank" class="text-amber-400 font-bold hover:underline">Ver Carga de Prueba →</a>
       </div>
     </div>
@@ -410,10 +422,10 @@
       <div>
         <div class="flex items-center justify-between">
           <span class="text-xs font-bold uppercase tracking-widest text-purple-400">Módulo 03</span>
-          <span class="font-mono text-xs text-blue-400">Página 5 de 8</span>
+          <span class="font-mono text-xs text-blue-400">Página 5 de 10</span>
         </div>
-        <h2 class="text-2xl sm:text-3xl font-black text-white mt-1">Auditoría Electoral CNE y Verificación QR</h2>
-        <p class="text-sm text-slate-400 mt-1">Ruta de control: <code class="text-purple-300 font-mono">/centros-maturin/</code></p>
+        <h2 class="text-2xl sm:text-3xl font-black text-white mt-1">Módulo 3 • Padrón Electoral y Auditoría CNE con QR</h2>
+        <p class="text-sm text-slate-400 mt-1">Ruta de auditoría: <code class="text-purple-300 font-mono">/centros-maturin/</code></p>
       </div>
 
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 my-auto">
@@ -421,30 +433,30 @@
           <span class="text-3xl sm:text-4xl font-black text-purple-400 font-mono">175</span>
           <h4 class="font-bold text-white text-sm mt-1">Escuelas Electorales</h4>
           <p class="text-xs text-slate-300 mt-2">
-            Maturín completo georreferenciado: ubicación exacta, mesas activas y datos del coordinador de centro.
+            Maturín georreferenciado: ubicación satelital exacta, mesas activas y datos del coordinador UBCh de cada centro.
           </p>
         </div>
 
         <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-5 text-center">
           <span class="text-3xl sm:text-4xl font-black text-blue-400 font-mono">419.000</span>
-          <h4 class="font-bold text-white text-sm mt-1">Padrón Caracterizado</h4>
+          <h4 class="font-bold text-white text-sm mt-1">Electores Caracterizados</h4>
           <p class="text-xs text-slate-300 mt-2">
-            Semáforo político del votante: Verde (Voto Duro leal), Amarillo (Voto Blando por convencer) y Azul (Jóvenes).
+            Semáforo de voto: Verde (Voto Duro leal), Amarillo (Voto Blando a convencer) y Azul (Juventud y nuevos votantes).
           </p>
         </div>
 
         <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-5 text-center">
           <span class="text-3xl sm:text-4xl font-black text-emerald-400 font-mono">2 Seg</span>
-          <h4 class="font-bold text-white text-sm mt-1">Validación de Actas QR</h4>
+          <h4 class="font-bold text-white text-sm mt-1">Auditoría QR de Actas</h4>
           <p class="text-xs text-slate-300 mt-2">
-            Escáner instantáneo de actas físicas CNE emitidas por la máquina, garantizando recuento auditable e irrebatible.
+            Escanea el código QR de las actas impresas por la máquina de votación y las computa al instante sin esperar transmisiones lentas.
           </p>
         </div>
       </div>
 
       <div class="flex items-center justify-between text-xs text-slate-500 border-t border-slate-800/80 pt-3">
-        <span>Padrón Electoral Oficial Monagas 2026</span>
-        <a href="centros-maturin/" target="_blank" class="text-purple-400 font-bold hover:underline">Ver Centros CNE →</a>
+        <span>Defensa Irrefutable del Voto y Cómputo Propio</span>
+        <a href="centros-maturin/" target="_blank" class="text-purple-400 font-bold hover:underline">Ver Mapa Electoral CNE →</a>
       </div>
     </div>
 
@@ -455,135 +467,273 @@
       <div>
         <div class="flex items-center justify-between">
           <span class="text-xs font-bold uppercase tracking-widest text-blue-400">Módulo 04</span>
-          <span class="font-mono text-xs text-blue-400">Página 6 de 8</span>
+          <span class="font-mono text-xs text-blue-400">Página 6 de 10</span>
         </div>
-        <h2 class="text-2xl sm:text-3xl font-black text-white mt-1">Cartografía Táctica 3D y Efecto «Velo Blanco»</h2>
+        <h2 class="text-2xl sm:text-3xl font-black text-white mt-1">Módulo 4 • Cartografía Satelital 3D y Velo Blanco</h2>
         <p class="text-sm text-slate-400 mt-1">Ruta satelital: <code class="text-blue-300 font-mono">/earth-monagas/</code></p>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6 my-auto items-center">
         <div>
           <h3 class="text-lg font-bold text-white leading-snug">
-            Cero Sobrecarga Cognitiva para el Gobernador
+            Cero Sobrecarga Mental para el Gobernador y el Mando
           </h3>
           <p class="text-xs sm:text-sm text-slate-300 mt-2 leading-relaxed">
-            En un mapa satelital común, las pantallas se saturan de líneas y puntos irrelevantes.
+            En un mapa satelital normal, la vista se cansa con miles de líneas, nombres y puntos irrelevantes.
           </p>
           <p class="text-xs sm:text-sm text-slate-300 mt-2 leading-relaxed">
-            El algoritmo de <strong>Velo Blanco</strong> cubre los 12 municipios restantes con una suave niebla blanca cuando se selecciona Maturín. Al bajar a una parroquia, apaga las demás. La atención del Estado Mayor queda 100% focalizada en la zona de acción.
+            El <strong>Efecto Velo Blanco</strong> atenúa suavemente con niebla los municipios que no están en análisis para que la atención del equipo se concentre al 100% en la parroquia o sector bajo inspección.
           </p>
           
           <div class="flex items-center gap-2 mt-4 text-xs font-mono text-blue-400">
-            <span>Municipio</span> ➔ <span>Parroquia</span> ➔ <span>Subparroquia</span> ➔ <span>Sector 3D</span>
+            <span>Municipio</span> ➔ <span>Parroquia</span> ➔ <span>Sector</span> ➔ <span>Centro de Votación</span>
           </div>
         </div>
 
         <div class="bg-[#100b33] border border-[#2d1f85] rounded-2xl p-6 relative overflow-hidden shadow-inner">
           <div class="flex items-center justify-between pb-3 border-b border-[#2d1f85] text-xs">
             <span class="font-bold text-slate-300">Monagas 3D Satelital</span>
-            <span class="text-emerald-400 font-mono font-bold">ALTO DE LOS GODOS</span>
+            <span class="text-emerald-400 font-mono font-bold">SAN SIMÓN / COCUÍZAS</span>
           </div>
           <div class="py-6 text-center">
             <div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-blue-500/10 border-2 border-blue-400 text-blue-400 shadow-[0_0_30px_rgba(59,130,246,0.3)] mb-2">
               <i data-lucide="focus" class="w-10 h-10 animate-pulse"></i>
             </div>
-            <p class="text-xs font-bold text-white mt-2">Haz de Alta Resolución Activo</p>
-            <p class="text-[11px] text-slate-400">Periferia atenuada con opacidad matemática blanca</p>
+            <p class="text-xs font-bold text-white mt-2">Foco Táctico de Alta Definición</p>
+            <p class="text-[11px] text-slate-400">Atenuación inteligente del entorno periférico</p>
           </div>
         </div>
       </div>
 
       <div class="flex items-center justify-between text-xs text-slate-500 border-t border-[#2d1f85]/80 pt-3">
-        <span>MapLibre 3D Vectorial</span>
+        <span>Cartografía Vectorial con MapLibre 3D</span>
         <a href="earth-monagas/?v=150" target="_blank" class="text-blue-400 font-bold hover:underline">Abrir Satélite 3D →</a>
       </div>
     </div>
 
     <!-- =====================================================
-         DIAPOSITIVA 7: MATRIZ DE MANDO Y TOMA DE DECISIONES
+         DIAPOSITIVA 7: MÓDULO 5 - RED HOSPITALARIA Y SALUD
     ===================================================== -->
     <div id="slide-7" class="slide slide-inactive flex-col justify-between h-full">
       <div>
         <div class="flex items-center justify-between">
-          <span class="text-xs font-bold uppercase tracking-widest text-cyan-400">Gobernanza</span>
-          <span class="font-mono text-xs text-blue-400">Página 7 de 8</span>
+          <span class="text-xs font-bold uppercase tracking-widest text-red-400">Módulo 05</span>
+          <span class="font-mono text-xs text-blue-400">Página 7 de 10</span>
         </div>
-        <h2 class="text-2xl sm:text-3xl font-black text-white mt-1">Matriz de Roles y Despliegue de Estado</h2>
-        <p class="text-sm text-slate-400 mt-1">¿Quién opera qué en el Estado Monagas?</p>
+        <h2 class="text-2xl sm:text-3xl font-black text-white mt-1">Módulo 5 • Red Hospitalaria y Pre-Diagnóstico</h2>
+        <p class="text-sm text-slate-400 mt-1">Ruta de salud: <code class="text-red-300 font-mono">/salud-monagas/</code></p>
       </div>
 
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 my-auto text-xs">
-        <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-4">
-          <span class="font-bold text-cyan-400 block mb-1">Gobernador / Estado Mayor</span>
-          <p class="text-slate-300">
-            Visualización estratégica global en pantalla gigante. Detección de zonas rojas y emisión de órdenes de movilización.
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 my-auto">
+        <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-5 text-center">
+          <span class="text-3xl sm:text-4xl font-black text-red-400 font-mono">84</span>
+          <h4 class="font-bold text-white text-sm mt-1">Centros de Salud Auditados</h4>
+          <p class="text-xs text-slate-300 mt-2">
+            Hospital Central HUMNT, ambulatorios urbanos tipo II/III y CDIs geolocalizados en los 13 municipios.
           </p>
         </div>
 
-        <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-4">
-          <span class="font-bold text-blue-400 block mb-1">Director Sala Situacional</span>
-          <p class="text-slate-300">
-            Control de despacho a los 44 enlaces vía WhatsApp. Exportación de consolidados a Excel y soporte técnico.
+        <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-5 text-center">
+          <div class="flex justify-center gap-2 mb-1">
+            <span class="w-3 h-3 rounded-full bg-red-500"></span>
+            <span class="w-3 h-3 rounded-full bg-amber-500"></span>
+            <span class="w-3 h-3 rounded-full bg-emerald-500"></span>
+          </div>
+          <h4 class="font-bold text-white text-sm mt-1">Semáforo de Servicios Críticos</h4>
+          <p class="text-xs text-slate-300 mt-2">
+            Supervisa plantas eléctricas, agua potable, gases medicinales, quirófanos y camas operativas en tiempo real.
           </p>
         </div>
 
-        <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-4">
-          <span class="font-bold text-amber-400 block mb-1">Enlaces Parroquiales</span>
-          <p class="text-slate-300">
-            Recepción de enlace WhatsApp. Asignación de calles a brigadistas y monitoreo territorial de avance.
-          </p>
-        </div>
-
-        <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-4">
-          <span class="font-bold text-emerald-400 block mb-1">Cuadros y Testigos CNE</span>
-          <p class="text-slate-300">
-            Carga de censo bajo protocolo de buzón ciego y escaneo de códigos QR de actas de escrutinio en escuelas.
+        <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-5 text-center">
+          <span class="text-3xl sm:text-4xl font-black text-blue-400 font-mono">100%</span>
+          <h4 class="font-bold text-white text-sm mt-1">Alerta Temprana de Gestión</h4>
+          <p class="text-xs text-slate-300 mt-2">
+            El Gobernador y el Director de Salud resuelven fallas antes de que se generen quejas o noticias en la prensa.
           </p>
         </div>
       </div>
 
       <div class="flex items-center justify-between text-xs text-slate-500 border-t border-slate-800/80 pt-3">
-        <span>Cadena de Mando Cerrada</span>
-        <span>Revisión 2 Oficial</span>
+        <span>Monitoreo Hospitalario Estado Monagas</span>
+        <a href="salud-monagas/?v=172" target="_blank" class="text-red-400 font-bold hover:underline">Abrir Red de Salud →</a>
       </div>
     </div>
 
     <!-- =====================================================
-         DIAPOSITIVA 8: PRÓXIMOS PASOS Y ACCIÓN INMEDIATA
+         DIAPOSITIVA 8: SEGURIDAD Y HACKING ÉTICO
     ===================================================== -->
     <div id="slide-8" class="slide slide-inactive flex-col justify-between h-full">
+      <div>
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-bold uppercase tracking-widest text-emerald-400">Seguridad Cibernética</span>
+          <span class="font-mono text-xs text-blue-400">Página 8 de 10</span>
+        </div>
+        <h2 class="text-2xl sm:text-3xl font-black text-white mt-1">¿Por qué un VPS Propio y Test de Hacking?</h2>
+        <p class="text-sm text-slate-400 mt-1">Blindaje de la base de datos contra ataques antes de lanzarlo a las UBCh.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 my-auto items-center">
+        <div class="space-y-3 text-xs sm:text-sm text-slate-300">
+          <div class="bg-slate-900/80 border border-slate-800 p-4 rounded-xl">
+            <h4 class="font-bold text-white flex items-center gap-2">
+              <i data-lucide="server" class="w-4 h-4 text-blue-400"></i>
+              <span>1. Servidor VPS Soberano (Cero Servidores Compartidos)</span>
+            </h4>
+            <p class="text-xs text-slate-400 mt-1">
+              La base de datos vive en un servidor privado dedicado con encriptación militar. No depende de plataformas gratuitas que puedan cerrar o suspender la cuenta arbitrariamente.
+            </p>
+          </div>
+
+          <div class="bg-slate-900/80 border border-slate-800 p-4 rounded-xl">
+            <h4 class="font-bold text-white flex items-center gap-2">
+              <i data-lucide="shield-check" class="w-4 h-4 text-emerald-400"></i>
+              <span>2. Test de Hacking Ético y Pruebas de Estrés</span>
+            </h4>
+            <p class="text-xs text-slate-400 mt-1">
+              Antes de que voten o carguen datos 5.000 cuadros de UBCh, realizamos pruebas de penetración (simulando ataques de hackers de la oposición) para tapar cualquier agujero de seguridad.
+            </p>
+          </div>
+
+          <div class="bg-slate-900/80 border border-slate-800 p-4 rounded-xl">
+            <h4 class="font-bold text-white flex items-center gap-2">
+              <i data-lucide="globe" class="w-4 h-4 text-purple-400"></i>
+              <span>3. Dominio Oficial con Candado SSL (HTTPS)</span>
+            </h4>
+            <p class="text-xs text-slate-400 mt-1">
+              Otorga seriedad institucional a la dirección web y cifra todos los envíos de los jefes de calle de extremo a extremo para evitar intercepciones de red.
+            </p>
+          </div>
+        </div>
+
+        <div class="bg-slate-900/90 border border-emerald-500/30 rounded-2xl p-6 text-center">
+          <div class="w-16 h-16 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 flex items-center justify-center mx-auto mb-3">
+            <i data-lucide="cpu" class="w-8 h-8"></i>
+          </div>
+          <h3 class="text-2xl font-black text-white">Infraestructura Blindada</h3>
+          <p class="text-xs text-emerald-400 font-semibold mt-1">Anti-DDoS • Firewall Avanzado • Fail2Ban</p>
+          <div class="mt-4 pt-4 border-t border-slate-800 text-xs text-slate-400 text-left space-y-1.5">
+            <p>▪ Protección contra caídas por exceso de visitas el día electoral.</p>
+            <p>▪ Bloqueo automático de intentos de acceso indebidos.</p>
+            <p>▪ Respaldos automáticos diarios fuera de línea.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-between text-xs text-slate-500 border-t border-slate-800/80 pt-3">
+        <span>Ciberseguridad y Soberanía Nacional</span>
+        <span>Página 8 de 10</span>
+      </div>
+    </div>
+
+    <!-- =====================================================
+         DIAPOSITIVA 9: PRESUPUESTO MÍNIMO VS CONSOLIDACIÓN
+    ===================================================== -->
+    <div id="slide-9" class="slide slide-inactive flex-col justify-between h-full">
+      <div>
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-bold uppercase tracking-widest text-amber-400">Presupuesto y Fases</span>
+          <span class="font-mono text-xs text-blue-400">Página 9 de 10</span>
+        </div>
+        <h2 class="text-2xl sm:text-3xl font-black text-white mt-1">Presupuesto Mínimo Requerido: $24.50 / mes</h2>
+        <p class="text-sm text-slate-400 mt-1">Arrancamos con lo indispensable: Fase 1 (Servidor) vs. Fase 2 (Equipos Físicos).</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 my-auto">
+        <!-- Fase 1 -->
+        <div class="bg-emerald-950/20 border-2 border-emerald-500/40 rounded-2xl p-6 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500 text-black uppercase">Fase 1 • Inmediata</span>
+              <span class="text-2xl font-black text-emerald-400 font-mono">$294 USD / AÑO</span>
+            </div>
+            <h3 class="text-lg font-black text-white">VPS Cloud + Dominio Oficial</h3>
+            <p class="text-xs text-slate-300 mt-2 leading-relaxed">
+              Lo mínimo necesario para encender la plataforma, realizar pruebas con 3 parroquias piloto y ejecutar los test de hacking.
+            </p>
+
+            <ul class="mt-4 space-y-1.5 text-xs text-slate-300">
+              <li>✓ <strong>Servidor VPS Dedicado:</strong> 4 vCPU / 8 GB RAM / 100 GB SSD ($20/mes)</li>
+              <li>✓ <strong>Dominio Institucional + SSL:</strong> Cifrado HTTPS 256 bits ($1.50/mes)</li>
+              <li>✓ <strong>IP Pública Fija Dedicada:</strong> Para la Sala de Mando ($3.00/mes)</li>
+              <li>✓ <strong>Software y Hacking Ético:</strong> Incluido 100% libre ($0)</li>
+            </ul>
+          </div>
+
+          <div class="mt-4 pt-3 border-t border-emerald-500/30 text-[11px] text-emerald-300 font-semibold">
+            ⚡ Costo total: Menos de $25 dólares al mes. Desarrollo ya terminado.
+          </div>
+        </div>
+
+        <!-- Fase 2 -->
+        <div class="bg-slate-900/60 border border-slate-800 rounded-2xl p-6 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-slate-700 text-slate-200 uppercase">Fase 2 • Consolidación</span>
+              <span class="text-sm font-bold text-slate-400">A futuro según partido</span>
+            </div>
+            <h3 class="text-lg font-black text-white">Sala Situacional Física</h3>
+            <p class="text-xs text-slate-300 mt-2 leading-relaxed">
+              Equipamiento físico que se incorporará más adelante cuando la Dirección lo disponga. No traba el arranque de hoy.
+            </p>
+
+            <ul class="mt-4 space-y-1.5 text-xs text-slate-400">
+              <li>▪ 2 a 3 computadoras de escritorio para operadores fijos.</li>
+              <li>▪ Pantallas de 55 pulgadas para videowall de seguimiento.</li>
+              <li>▪ <strong>Inversor de corriente y baterías UPS:</strong> para que la sala no se apague ante cortes de luz.</li>
+              <li>▪ Enlace secundario de internet satelital o fibra de respaldo.</li>
+            </ul>
+          </div>
+
+          <div class="mt-4 pt-3 border-t border-slate-800 text-[11px] text-slate-500">
+            ⏳ Se financiará en segunda etapa una vez probado el VPS en calle.
+          </div>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-between text-xs text-slate-500 border-t border-slate-800/80 pt-3">
+        <span>Ahorro: En el mercado privado este sistema cuesta más de $20.000 USD</span>
+        <span>Página 9 de 10</span>
+      </div>
+    </div>
+
+    <!-- =====================================================
+         DIAPOSITIVA 10: CONCLUSIÓN Y ACCIÓN INMEDIATA
+    ===================================================== -->
+    <div id="slide-10" class="slide slide-inactive flex-col justify-between h-full">
       <div class="text-center max-w-2xl mx-auto">
-        <span class="inline-block px-3 py-1 rounded-full text-xs font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 mb-3">
-          SISTEMA EN ESTADO PRELIMINAR LISTO PARA VALIDACIÓN
+        <span class="inline-block px-3 py-1 rounded-full text-xs font-bold bg-red-500/10 text-red-400 border border-red-500/30 mb-2">
+          LISTO PARA APROBACIÓN DE LA DIRECCIÓN POLÍTICA
         </span>
-        <h2 class="text-3xl sm:text-4xl font-black text-white">Despliegue Inmediato Monagas 2026</h2>
-        <p class="text-sm text-slate-300 mt-2">
-          Todo el código, servidores y datos se encuentran configurados localmente y en Vercel con respaldo offline 100%.
+        <h2 class="text-3xl sm:text-4xl font-black text-white">Próximo Paso: Activar el Servidor</h2>
+        <p class="text-xs sm:text-sm text-slate-300 mt-2">
+          Con la aprobación de los $294 USD anuales, el equipo técnico despliega en 24 horas el sistema en el VPS y comienza las pruebas de campo.
         </p>
       </div>
 
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-4xl mx-auto my-auto w-full">
-        <a href="index.html" class="bg-slate-900/90 hover:bg-slate-800 border border-slate-800 hover:border-blue-500 rounded-2xl p-5 text-center transition group">
-          <i data-lucide="layout-grid" class="w-8 h-8 text-blue-400 mx-auto mb-2 group-hover:scale-110 transition"></i>
-          <h4 class="font-bold text-white text-sm">Ir a la Sala de Mando</h4>
-          <p class="text-[11px] text-slate-400 mt-1">Plataforma operativa en vivo de Monagas</p>
+        <a href="MIGATO_Propuesta_Presupuesto_Minimo_Partido.docx" download class="bg-slate-900/90 hover:bg-slate-800 border border-blue-500/40 hover:border-blue-400 rounded-2xl p-5 text-center transition group shadow-lg">
+          <i data-lucide="file-text" class="w-8 h-8 text-blue-400 mx-auto mb-2 group-hover:scale-110 transition"></i>
+          <h4 class="font-bold text-white text-sm">Descargar Propuesta en Word</h4>
+          <p class="text-[11px] text-slate-400 mt-1">Archivo oficial .docx listo para imprimir o elevar</p>
         </a>
 
-        <a href="MIGATO_Dossiers_4_Modulos_Completos.zip" download class="bg-slate-900/90 hover:bg-slate-800 border border-slate-800 hover:border-emerald-500 rounded-2xl p-5 text-center transition group">
-          <i data-lucide="archive" class="w-8 h-8 text-emerald-400 mx-auto mb-2 group-hover:scale-110 transition"></i>
-          <h4 class="font-bold text-white text-sm">Descargar 4 PDFs en ZIP</h4>
-          <p class="text-[11px] text-slate-400 mt-1">Paquete completo para imprimir o enviar</p>
+        <a href="documento_partido.html" class="bg-slate-900/90 hover:bg-slate-800 border border-red-500/40 hover:border-red-400 rounded-2xl p-5 text-center transition group shadow-lg">
+          <i data-lucide="printer" class="w-8 h-8 text-red-400 mx-auto mb-2 group-hover:scale-110 transition"></i>
+          <h4 class="font-bold text-white text-sm">Ver Documento Web Oficial</h4>
+          <p class="text-[11px] text-slate-400 mt-1">Hoja membretada con tablas y firmas</p>
         </a>
 
-        <a href="https://notebooklm.google.com/notebook/1f6e403b-61d2-47d3-9613-1379197800d6" target="_blank" class="bg-slate-900/90 hover:bg-slate-800 border border-slate-800 hover:border-purple-500 rounded-2xl p-5 text-center transition group">
-          <i data-lucide="sparkles" class="w-8 h-8 text-purple-400 mx-auto mb-2 group-hover:scale-110 transition"></i>
-          <h4 class="font-bold text-white text-sm">Google NotebookLM</h4>
-          <p class="text-[11px] text-slate-400 mt-1">Preguntas y audio resumen ejecutivo</p>
+        <a href="index.html" class="bg-slate-900/90 hover:bg-slate-800 border border-emerald-500/40 hover:border-emerald-400 rounded-2xl p-5 text-center transition group shadow-lg">
+          <i data-lucide="layout-grid" class="w-8 h-8 text-emerald-400 mx-auto mb-2 group-hover:scale-110 transition"></i>
+          <h4 class="font-bold text-white text-sm">Entrar a la Sala de Mando</h4>
+          <p class="text-[11px] text-slate-400 mt-1">Portal con los 5 módulos funcionales</p>
         </a>
       </div>
 
-      <div class="text-center text-xs text-slate-500 border-t border-slate-800/80 pt-3">
-        <span>MIGATO • Plataforma de Inteligencia Territorial • Maturín, Monagas</span>
+      <div class="text-center text-xs text-slate-500 border-t border-slate-800/80 pt-3 flex justify-between items-center">
+        <span>Partido Socialista Unido de Venezuela (PSUV) • Gobernación de Monagas</span>
+        <span class="font-mono text-slate-400">Página 10 de 10</span>
       </div>
     </div>
 
@@ -593,7 +743,7 @@
        LÓGICA JAVASCRIPT DE CONTROL DE DIAPOSITIVAS
   ======================================================== -->
   <script>
-    const totalSlides = 8;
+    const totalSlides = 10;
     let currentSlide = 1;
 
     function showSlide(n) {
