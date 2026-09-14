@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mapa Mental Interactivo • Plataforma Territorial MIGATO</title>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <style>
+    :root {
+      --navy: #1E3A8A;
+      --blue: #0284C7;
+      --slate: #0F172A;
+      --bg: #F8FAFC;
+    }
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--slate);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+    header {
+      background: #FFFFFF;
+      border-bottom: 1px solid #E2E8F0;
+      padding: 12px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      z-index: 10;
+    }
+    .title-box h1 {
+      font-size: 16px;
+      margin: 0;
+      color: var(--navy);
+      font-weight: 800;
+    }
+    .title-box p {
+      font-size: 12px;
+      margin: 2px 0 0 0;
+      color: #64748B;
+    }
+    .btn-action {
+      background: var(--navy);
+      color: #FFFFFF;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+    }
+    #tree-container {
+      flex: 1;
+      width: 100%;
+      height: 100%;
+      cursor: grab;
+    }
+    #tree-container:active {
+      cursor: grabbing;
+    }
+    .node circle {
+      fill: #fff;
+      stroke: var(--navy);
+      stroke-width: 2.5px;
+      cursor: pointer;
+      transition: r 0.2s, stroke 0.2s;
+    }
+    .node circle:hover {
+      r: 9;
+      stroke: var(--blue);
+    }
+    .node--internal circle {
+      fill: var(--navy);
+    }
+    .node text {
+      font-size: 13px;
+      font-weight: 600;
+      fill: var(--slate);
+      text-shadow: 0 1px 4px #FFFFFF, 0 -1px 4px #FFFFFF, 1px 0 4px #FFFFFF, -1px 0 4px #FFFFFF;
+    }
+    .link {
+      fill: none;
+      stroke: #CBD5E1;
+      stroke-width: 1.8px;
+    }
+    .badge {
+      font-size: 10px;
+      font-weight: 700;
+      fill: var(--blue);
+    }
+    .controls {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #FFFFFF;
+      border: 1px solid #CBD5E1;
+      border-radius: 8px;
+      padding: 6px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+    .btn-ctrl {
+      background: #F1F5F9;
+      border: none;
+      width: 32px;
+      height: 32px;
+      border-radius: 4px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .btn-ctrl:hover {
+      background: var(--navy);
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="title-box">
+      <h1>MAPA MENTAL DE ARQUITECTURA TERRITORIAL • MIGATO MONAGAS</h1>
+      <p>Generado con NotebookLM Studio • 5 Módulos Operativos y Presupuesto de Inversión</p>
+    </div>
+    <div style="display: flex; gap: 10px;">
+      <a class="btn-action" href="presentacion/">Ver Presentación Ejecutiva</a>
+    </div>
+  </header>
+
+  <div id="tree-container"></div>
+
+  <div class="controls">
+    <button class="btn-ctrl" onclick="zoomIn()" title="Acercar">+</button>
+    <button class="btn-ctrl" onclick="zoomOut()" title="Alejar">−</button>
+    <button class="btn-ctrl" onclick="resetZoom()" title="Centrar">⟲</button>
+  </div>
+
+  <script>
+    const data = {"name": "Plataforma Territorial MIGATO Monagas", "children": [{"name": "Módulo 1: Despacho Celular Seguro", "tag": "Coordinación", "children": [{"name": "Canal de comunicación directo y radial"}, {"name": "Acceso instantáneo por Token Web único"}, {"name": "Compartimentación territorial estricta"}, {"name": "Revocación inmediata de credenciales"}, {"name": "Sin instalación de aplicaciones pesadas"}]}, {"name": "Módulo 2: Censo Territorial y Privacidad", "tag": "Comunidad", "children": [{"name": "Protocolo Zero-Byte Device Storage"}, {"name": "Diagnóstico cuantitativo de servicios críticos"}, {"name": "Protección total de datos personales (Sin cédulas)"}, {"name": "Formularios limpios al presionar enviar"}, {"name": "Métricas de familias y necesidades comunitarias"}]}, {"name": "Módulo 3: Padrón Electoral y Actas", "tag": "Electoral", "children": [{"name": "Georreferenciación de 175 centros y 361 mesas"}, {"name": "Priorización de los 40 centros neurálgicos"}, {"name": "Organización y seguimiento de testigos"}, {"name": "Respaldo fotográfico de actas y código QR"}, {"name": "Auditoría y cotejo interno sin intervenir al CNE"}]}, {"name": "Módulo 4: Cartografía Tridimensional 3D", "tag": "Logística", "children": [{"name": "Visor 3D de relieve, vialidad y servicios"}, {"name": "Filtro de Focalización Territorial periférica"}, {"name": "Planificación táctica de rutas y movilización"}, {"name": "Optimizado para proyección en Sala de Mando"}]}, {"name": "Módulo 5: Diagnóstico de Salud Regional", "tag": "Salud", "children": [{"name": "Supervisión técnica de 84 centros asistenciales"}, {"name": "Monitoreo de plantas eléctricas y agua continua"}, {"name": "Red de derivación médica ante colapsos locales"}, {"name": "Sustento técnico para planes de gobierno"}]}, {"name": "Infraestructura Cloud y Presupuesto", "tag": "Inversión", "children": [{"name": "Servidor Cloud VPS Dedicado (4 vCPU / 8 GB)"}, {"name": "Cifrado SSL/TLS de 256 bits y firewall"}, {"name": "Pruebas de estrés y concurrencia masiva"}, {"name": "Presupuesto: $24.50 USD/mes ($294 USD/año)"}, {"name": "Honorarios de ingeniería: $0.00 (Aporte militante)"}]}]};
+
+    const container = document.getElementById('tree-container');
+    const width = container.clientWidth;
+    const height = container.clientHeight;
+
+    const svg = d3.select("#tree-container").append("svg")
+      .attr("width", width)
+      .attr("height", height);
+
+    const g = svg.append("g");
+
+    const zoom = d3.zoom()
+      .scaleExtent([0.3, 3])
+      .on("zoom", (event) => {
+        g.attr("transform", event.transform);
+      });
+
+    svg.call(zoom);
+
+    const tree = d3.tree().size([height - 80, width - 420]);
+
+    const root = d3.hierarchy(data, d => d.children);
+    root.x0 = height / 2;
+    root.y0 = 0;
+
+    let i = 0;
+
+    function update(source) {
+      const treeData = tree(root);
+      const nodes = treeData.descendants();
+      const links = treeData.links();
+
+      nodes.forEach(d => {
+        d.y = d.depth * 280;
+      });
+
+      const node = g.selectAll('g.node')
+        .data(nodes, d => d.id || (d.id = ++i));
+
+      const nodeEnter = node.enter().append('g')
+        .attr('class', 'node')
+        .attr("transform", d => `translate(${source.y0},${source.x0})`)
+        .on('click', (event, d) => {
+          if (d.children) {
+            d._children = d.children;
+            d.children = null;
+          } else {
+            d.children = d._children;
+            d._children = null;
+          }
+          update(d);
+        });
+
+      nodeEnter.append('circle')
+        .attr('class', d => d.children || d._children ? 'node--internal' : '')
+        .attr('r', d => d.depth === 0 ? 10 : (d.depth === 1 ? 7.5 : 5))
+        .style('stroke', d => d.depth === 0 ? '#1E3A8A' : (d.depth === 1 ? '#0284C7' : '#64748B'))
+        .style('fill', d => d.children || d._children ? (d.depth === 0 ? '#1E3A8A' : '#0284C7') : '#fff');
+
+      nodeEnter.append('text')
+        .attr("dy", ".35em")
+        .attr("x", d => d.children || d._children ? -15 : 15)
+        .attr("text-anchor", d => d.children || d._children ? "end" : "start")
+        .text(d => d.data.name)
+        .style('font-size', d => d.depth === 0 ? '15px' : (d.depth === 1 ? '13.5px' : '12px'))
+        .style('font-weight', d => d.depth <= 1 ? '700' : '500');
+
+      const nodeUpdate = nodeEnter.merge(node);
+
+      nodeUpdate.transition().duration(350)
+        .attr("transform", d => `translate(${d.y},${d.x})`);
+
+      nodeUpdate.select('circle')
+        .style('fill', d => d._children ? '#0284C7' : (d.children ? (d.depth === 0 ? '#1E3A8A' : '#0284C7') : '#fff'));
+
+      const nodeExit = node.exit().transition().duration(350)
+        .attr("transform", d => `translate(${source.y},${source.x})`)
+        .remove();
+
+      const link = g.selectAll('path.link')
+        .data(links, d => d.target.id);
+
+      const linkEnter = link.enter().insert('path', "g")
+        .attr("class", "link")
+        .attr('d', d => {
+          const o = {x: source.x0, y: source.y0};
+          return diagonal(o, o);
+        });
+
+      const linkUpdate = linkEnter.merge(link);
+
+      linkUpdate.transition().duration(350)
+        .attr('d', d => diagonal(d.source, d.target));
+
+      link.exit().transition().duration(350)
+        .attr('d', d => {
+          const o = {x: source.x, y: source.y};
+          return diagonal(o, o);
+        })
+        .remove();
+
+      nodes.forEach(d => {
+        d.x0 = d.x;
+        d.y0 = d.y;
+      });
+    }
+
+    function diagonal(s, d) {
+      return `M ${s.y} ${s.x}
+              C ${(s.y + d.y) / 2} ${s.x},
+                ${(s.y + d.y) / 2} ${d.x},
+                ${d.y} ${d.x}`;
+    }
+
+    // Iniciar centrado
+    svg.call(zoom.transform, d3.zoomIdentity.translate(80, 40).scale(0.95));
+    update(root);
+
+    function zoomIn() { svg.transition().duration(250).call(zoom.scaleBy, 1.25); }
+    function zoomOut() { svg.transition().duration(250).call(zoom.scaleBy, 0.8); }
+    function resetZoom() { svg.transition().duration(300).call(zoom.transform, d3.zoomIdentity.translate(80, 40).scale(0.95)); }
+  </script>
+</body>
+</html>
