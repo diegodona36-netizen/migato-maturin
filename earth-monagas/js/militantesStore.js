@@ -1,6 +1,6 @@
 /**
  * Gestor de Persistencia y Carga de Militantes por Sector
- * Permite registrar líderes, jefes de calle, UBCh y militantes por sector,
+ * Permite registrar líderes, coordinadores de sector y activistas MIGATO por sector,
  * persistirlos en LocalStorage y exportarlos a formato CSV/Excel.
  */
 
