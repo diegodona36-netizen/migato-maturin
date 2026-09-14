@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Generador de Presentación Web Interactiva HTML5 para MIGATO
-10 Láminas Estratégicas - Basado en INFORME_TESIS_PRESUPUESTO_MIGATO_V3
+Generador de Presentación Web Corporativa / Gubernamental para MIGATO
+Estilo Business / Ejecutivo Institucional - Basado en INFORME_TESIS_PRESUPUESTO_MIGATO_V3
 """
 
 import os
@@ -22,22 +22,30 @@ def build_web_presentation():
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MIGATO • Presentación Ejecutiva y Presupuesto Mínimo VPS</title>
+  <title>MIGATO • Presentación Ejecutiva y Presupuesto de Inversión Tecnológica</title>
   <link rel="icon" type="image/png" href="data:image/png;base64,{logo_b64}">
   <style>
     :root {{
-      --bg-main: #0B1120;
-      --bg-card: #1E293B;
-      --bg-card-hover: #334155;
-      --border-card: #334155;
-      --primary: #0284C7;
-      --primary-light: #38BDF8;
-      --accent: #F59E0B;
-      --success: #10B981;
-      --danger: #EF4444;
-      --text-main: #FFFFFF;
-      --text-muted: #94A3B8;
-      --text-light: #E2E8F0;
+      --bg-page: #F8FAFC;
+      --bg-slide: #FFFFFF;
+      --bg-card: #FFFFFF;
+      --bg-subtle: #F1F5F9;
+      --border-light: #E2E8F0;
+      --border-card: #CBD5E1;
+      --navy-dark: #0F172A;
+      --navy-corp: #1E3A8A;
+      --blue-primary: #0284C7;
+      --blue-subtle: #E0F2FE;
+      --blue-accent: #0369A1;
+      --text-main: #0F172A;
+      --text-secondary: #334155;
+      --text-muted: #64748B;
+      --success: #059669;
+      --success-subtle: #ECFDF5;
+      --warning: #D97706;
+      --warning-subtle: #FFFBEB;
+      --danger: #DC2626;
+      --danger-subtle: #FEF2F2;
     }}
 
     * {{
@@ -48,8 +56,8 @@ def build_web_presentation():
     }}
 
     body {{
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
-      background-color: var(--bg-main);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background-color: var(--bg-page);
       color: var(--text-main);
       min-height: 100vh;
       overflow: hidden;
@@ -64,26 +72,26 @@ def build_web_presentation():
       top: 0;
       left: 0;
       width: 100%;
-      height: 5px;
-      background: rgba(255, 255, 255, 0.08);
+      height: 4px;
+      background: #E2E8F0;
       z-index: 100;
     }}
     .progress-bar {{
       height: 100%;
       width: 10%;
-      background: linear-gradient(90deg, #0284C7, #38BDF8);
+      background: var(--navy-corp);
       transition: width 0.3s ease;
     }}
 
-    /* HEADER DE CONTROL */
+    /* HEADER GUBERNAMENTAL Y CORPORATIVO */
     header {{
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 12px 24px;
-      background: rgba(15, 23, 42, 0.85);
-      backdrop-filter: blur(10px);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 10px 28px;
+      background: #FFFFFF;
+      border-bottom: 1px solid var(--border-light);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
       z-index: 90;
     }}
     .brand {{
@@ -92,20 +100,20 @@ def build_web_presentation():
       gap: 12px;
     }}
     .brand img {{
-      width: 38px;
-      height: 38px;
+      width: 36px;
+      height: 36px;
       object-fit: contain;
-      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
     }}
     .brand-title {{
-      font-size: 15px;
-      font-weight: 700;
-      letter-spacing: 0.5px;
-      color: var(--text-main);
+      font-size: 14px;
+      font-weight: 800;
+      letter-spacing: 0.4px;
+      color: var(--navy-corp);
+      line-height: 1.2;
     }}
     .brand-sub {{
       font-size: 11px;
-      color: var(--primary-light);
+      color: var(--text-muted);
       font-weight: 600;
     }}
 
@@ -115,28 +123,27 @@ def build_web_presentation():
       gap: 10px;
     }}
     .btn-action {{
-      background: var(--bg-card);
-      color: var(--text-light);
+      background: #FFFFFF;
+      color: var(--navy-corp);
       border: 1px solid var(--border-card);
-      padding: 8px 14px;
-      border-radius: 8px;
-      font-size: 13px;
+      padding: 7px 14px;
+      border-radius: 6px;
+      font-size: 12.5px;
       font-weight: 600;
       cursor: pointer;
       display: flex;
       align-items: center;
       gap: 6px;
-      transition: all 0.2s ease;
+      transition: all 0.15s ease;
     }}
     .btn-action:hover {{
-      background: var(--bg-card-hover);
-      border-color: var(--primary-light);
-      color: #fff;
+      background: var(--bg-subtle);
+      border-color: var(--navy-corp);
     }}
     .btn-action.active {{
-      background: var(--primary);
-      border-color: var(--primary-light);
-      color: #fff;
+      background: var(--navy-corp);
+      border-color: var(--navy-corp);
+      color: #FFFFFF;
     }}
 
     /* CONTENEDOR PRINCIPAL DE LÁMINAS */
@@ -144,31 +151,31 @@ def build_web_presentation():
       flex: 1;
       position: relative;
       width: 100%;
-      height: calc(100vh - 130px);
+      height: calc(100vh - 125px);
       overflow: hidden;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 20px;
+      padding: 16px;
     }}
 
     .slide {{
       position: absolute;
-      width: 92%;
-      max-width: 1280px;
-      height: 90%;
-      max-height: 720px;
-      background: radial-gradient(circle at 50% 0%, #1e293b 0%, #0f172a 100%);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 20px;
-      padding: 40px 50px;
+      width: 94%;
+      max-width: 1240px;
+      height: 92%;
+      max-height: 690px;
+      background: var(--bg-slide);
+      border: 1px solid var(--border-card);
+      border-radius: 12px;
+      padding: 36px 46px;
       display: flex;
       flex-direction: column;
       opacity: 0;
       pointer-events: none;
-      transform: scale(0.96) translateX(40px);
-      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-      box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.7);
+      transform: scale(0.98) translateX(25px);
+      transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.08);
       overflow-y: auto;
     }}
 
@@ -181,35 +188,35 @@ def build_web_presentation():
 
     /* SLIDE HEADER */
     .slide-header {{
-      margin-bottom: 24px;
-      border-bottom: 1px solid var(--border-card);
-      padding-bottom: 16px;
+      margin-bottom: 22px;
+      border-bottom: 2px solid var(--navy-corp);
+      padding-bottom: 12px;
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
     }}
     .slide-tag {{
       display: inline-block;
-      font-size: 12px;
+      font-size: 11.5px;
       font-weight: 700;
-      letter-spacing: 1px;
-      color: var(--primary-light);
+      letter-spacing: 0.8px;
+      color: var(--blue-primary);
       text-transform: uppercase;
-      margin-bottom: 6px;
+      margin-bottom: 4px;
     }}
     .slide-title {{
-      font-size: 30px;
+      font-size: 26px;
       font-weight: 800;
-      color: #FFFFFF;
+      color: var(--navy-dark);
       line-height: 1.25;
     }}
     .slide-watermark {{
-      width: 44px;
-      height: 44px;
-      opacity: 0.8;
+      width: 38px;
+      height: 38px;
+      opacity: 0.85;
     }}
 
-    /* SLIDE CONTENT */
+    /* SLIDE BODY */
     .slide-body {{
       flex: 1;
       display: flex;
@@ -221,157 +228,163 @@ def build_web_presentation():
     .grid-2 {{
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 24px;
+      gap: 22px;
       height: 100%;
     }}
     .grid-3 {{
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 20px;
+      gap: 18px;
       height: 100%;
     }}
     .grid-4 {{
       display: grid;
       grid-template-columns: 1fr 1fr;
       grid-template-rows: 1fr 1fr;
-      gap: 20px;
+      gap: 18px;
       height: 100%;
     }}
 
-    /* CARDS */
+    /* CARDS CORPORATIVAS */
     .card {{
-      background: rgba(30, 41, 59, 0.7);
-      border: 1px solid var(--border-card);
-      border-radius: 14px;
-      padding: 24px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: 8px;
+      padding: 22px;
       display: flex;
       flex-direction: column;
-      transition: transform 0.2s, border-color 0.2s;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+      transition: border-color 0.15s, box-shadow 0.15s;
     }}
     .card:hover {{
-      border-color: var(--primary-light);
+      border-color: var(--border-card);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
     }}
     .card.highlight {{
-      border-color: var(--primary);
-      background: rgba(2, 132, 199, 0.1);
+      border-color: #BAE6FD;
+      background: #F0F9FF;
     }}
-    .card.danger {{
-      border-color: rgba(239, 68, 68, 0.4);
-      background: rgba(239, 68, 68, 0.05);
+    .card.subtle {{
+      background: var(--bg-subtle);
+      border-color: var(--border-light);
     }}
     .card.success {{
-      border-color: rgba(16, 185, 129, 0.4);
-      background: rgba(16, 185, 129, 0.05);
+      border-color: #A7F3D0;
+      background: #F0FDF4;
+    }}
+    .card.warning {{
+      border-color: #FDE68A;
+      background: #FFFBEB;
     }}
 
     .card-title {{
-      font-size: 20px;
+      font-size: 17px;
       font-weight: 700;
-      color: #FFFFFF;
-      margin-bottom: 14px;
+      color: var(--navy-corp);
+      margin-bottom: 12px;
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
+      border-bottom: 1px solid rgba(0,0,0,0.06);
+      padding-bottom: 8px;
     }}
     .card-list {{
       list-style: none;
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 10px;
     }}
     .card-list li {{
-      font-size: 16px;
-      color: var(--text-light);
+      font-size: 14.5px;
+      color: var(--text-secondary);
       line-height: 1.5;
       position: relative;
-      padding-left: 20px;
+      padding-left: 18px;
     }}
     .card-list li::before {{
-      content: "•";
-      color: var(--primary-light);
+      content: "▪";
+      color: var(--navy-corp);
       position: absolute;
       left: 0;
-      font-size: 20px;
-      top: -2px;
-    }}
-    .card-list.danger li::before {{
-      color: var(--danger);
-    }}
-    .card-list.success li::before {{
-      color: var(--success);
+      font-size: 14px;
+      top: 0px;
     }}
 
-    /* TABLA PRESUPUESTO */
+    /* TABLA PRESUPUESTO BUSINESS */
     .table-container {{
       width: 100%;
       overflow-x: auto;
-      background: rgba(15, 23, 42, 0.6);
-      border-radius: 12px;
+      background: #FFFFFF;
+      border-radius: 8px;
       border: 1px solid var(--border-card);
-      margin-top: 10px;
+      margin-top: 6px;
     }}
     table {{
       width: 100%;
       border-collapse: collapse;
       text-align: left;
-      font-size: 15px;
+      font-size: 14.5px;
     }}
     th {{
-      background: #0F172A;
-      color: var(--primary-light);
-      padding: 14px 18px;
+      background: var(--navy-corp);
+      color: #FFFFFF;
+      padding: 12px 16px;
       font-weight: 700;
-      border-bottom: 2px solid var(--border-card);
+      letter-spacing: 0.3px;
+      font-size: 13.5px;
     }}
     td {{
-      padding: 13px 18px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-      color: var(--text-light);
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border-light);
+      color: var(--text-secondary);
+    }}
+    tr:nth-child(even) td {{
+      background: #F8FAFC;
     }}
     tr:last-child td {{
       border-bottom: none;
     }}
     .total-row td {{
-      background: rgba(2, 132, 199, 0.15);
+      background: #EFF6FF !important;
       font-weight: 800;
-      font-size: 17px;
-      color: #FFFFFF;
-      border-top: 2px solid var(--primary);
+      font-size: 15.5px;
+      color: var(--navy-dark);
+      border-top: 2px solid var(--navy-corp);
     }}
     .total-price {{
-      color: var(--success) !important;
-      font-size: 19px !important;
+      color: var(--navy-corp) !important;
+      font-size: 17px !important;
       font-weight: 800;
     }}
 
     /* BANNER DESTACADO */
     .banner-kpi {{
-      background: linear-gradient(135deg, rgba(2, 132, 199, 0.25), rgba(15, 23, 42, 0.9));
-      border: 1px solid var(--primary);
-      border-radius: 14px;
-      padding: 20px 24px;
+      background: #F0F9FF;
+      border: 1.5px solid var(--blue-primary);
+      border-radius: 8px;
+      padding: 16px 22px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 20px;
+      margin-bottom: 16px;
     }}
     .banner-kpi-text h3 {{
-      font-size: 22px;
+      font-size: 19px;
       font-weight: 800;
-      color: #FFF;
+      color: var(--navy-dark);
     }}
     .banner-kpi-text p {{
-      font-size: 14px;
+      font-size: 13.5px;
       color: var(--text-muted);
-      margin-top: 4px;
+      margin-top: 3px;
     }}
     .banner-kpi-badge {{
-      background: var(--primary);
-      color: #FFF;
-      font-size: 26px;
+      background: var(--navy-corp);
+      color: #FFFFFF;
+      font-size: 20px;
       font-weight: 800;
-      padding: 10px 22px;
-      border-radius: 10px;
+      padding: 8px 18px;
+      border-radius: 6px;
       letter-spacing: 0.5px;
     }}
 
@@ -380,84 +393,84 @@ def build_web_presentation():
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 14px 30px;
-      background: rgba(15, 23, 42, 0.95);
-      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 12px 28px;
+      background: #FFFFFF;
+      border-top: 1px solid var(--border-light);
       z-index: 90;
     }}
     .nav-controls {{
       display: flex;
       align-items: center;
-      gap: 16px;
+      gap: 14px;
     }}
     .btn-nav {{
-      background: var(--bg-card);
-      color: #FFF;
+      background: #FFFFFF;
+      color: var(--navy-dark);
       border: 1px solid var(--border-card);
-      padding: 10px 22px;
-      border-radius: 10px;
-      font-size: 15px;
+      padding: 8px 18px;
+      border-radius: 6px;
+      font-size: 14px;
       font-weight: 700;
       cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 8px;
-      transition: all 0.2s;
+      gap: 6px;
+      transition: all 0.15s;
     }}
     .btn-nav:hover:not(:disabled) {{
-      background: var(--primary);
-      border-color: var(--primary-light);
-      transform: translateY(-1px);
+      background: var(--navy-corp);
+      border-color: var(--navy-corp);
+      color: #FFFFFF;
     }}
     .btn-nav:disabled {{
-      opacity: 0.35;
+      opacity: 0.3;
       cursor: not-allowed;
     }}
     .slide-indicator {{
-      font-size: 15px;
+      font-size: 14px;
       font-weight: 700;
-      color: var(--text-light);
-      min-width: 90px;
+      color: var(--text-muted);
+      min-width: 80px;
       text-align: center;
     }}
 
     /* DOTS DE NAVEGACIÓN */
     .dots-container {{
       display: flex;
-      gap: 8px;
+      gap: 6px;
     }}
     .dot {{
-      width: 11px;
-      height: 11px;
+      width: 10px;
+      height: 10px;
       border-radius: 50%;
-      background: rgba(255, 255, 255, 0.2);
+      background: #CBD5E1;
       cursor: pointer;
       transition: all 0.2s ease;
     }}
     .dot.active {{
-      background: var(--primary-light);
-      width: 28px;
-      border-radius: 6px;
+      background: var(--navy-corp);
+      width: 24px;
+      border-radius: 4px;
     }}
 
     /* PANEL DEL GUION DEL ORADOR */
     .speaker-drawer {{
       position: fixed;
-      bottom: 75px;
+      bottom: 65px;
       left: 50%;
       transform: translateX(-50%) translateY(120%);
       width: 90%;
-      max-width: 1000px;
-      background: #0F172A;
-      border: 2px solid var(--primary);
-      border-radius: 16px;
-      padding: 20px 26px;
-      box-shadow: 0 15px 40px rgba(0,0,0,0.8);
+      max-width: 960px;
+      background: #FFFFFF;
+      border: 2px solid var(--navy-corp);
+      border-radius: 10px;
+      padding: 18px 24px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
       z-index: 150;
-      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 6px;
     }}
     .speaker-drawer.open {{
       transform: translateX(-50%) translateY(0);
@@ -466,85 +479,89 @@ def build_web_presentation():
       display: flex;
       justify-content: space-between;
       align-items: center;
-      border-bottom: 1px solid var(--border-card);
-      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border-light);
+      padding-bottom: 6px;
     }}
     .speaker-title {{
-      font-size: 14px;
-      font-weight: 700;
-      color: var(--primary-light);
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--navy-corp);
       display: flex;
       align-items: center;
       gap: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }}
     .speaker-close {{
       background: none;
       border: none;
       color: var(--text-muted);
-      font-size: 18px;
+      font-size: 16px;
       cursor: pointer;
     }}
     .speaker-text {{
-      font-size: 15px;
-      line-height: 1.6;
-      color: #FFFFFF;
+      font-size: 14.5px;
+      line-height: 1.55;
+      color: var(--text-secondary);
       font-style: italic;
     }}
 
-    /* PORTADA ESPECIAL */
+    /* PORTADA BUSINESS */
     .cover-slide {{
       text-align: center;
       justify-content: center;
       align-items: center;
       padding: 30px;
+      background: #FFFFFF;
     }}
     .cover-logo {{
-      width: 120px;
-      height: 120px;
+      width: 105px;
+      height: 105px;
       object-fit: contain;
-      margin-bottom: 20px;
-      filter: drop-shadow(0 4px 12px rgba(2, 132, 199, 0.4));
+      margin-bottom: 16px;
     }}
     .cover-badge {{
       display: inline-block;
-      padding: 6px 16px;
-      border-radius: 20px;
-      background: rgba(2, 132, 199, 0.15);
-      border: 1px solid var(--primary);
-      color: var(--primary-light);
-      font-size: 13px;
+      padding: 5px 14px;
+      border-radius: 4px;
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-card);
+      color: var(--navy-corp);
+      font-size: 12px;
       font-weight: 700;
       letter-spacing: 0.8px;
-      margin-bottom: 14px;
-    }}
-    .cover-title {{
-      font-size: 36px;
-      font-weight: 800;
-      color: #FFFFFF;
-      line-height: 1.25;
-      max-width: 900px;
       margin-bottom: 12px;
     }}
+    .cover-title {{
+      font-size: 30px;
+      font-weight: 900;
+      color: var(--navy-dark);
+      line-height: 1.28;
+      max-width: 900px;
+      margin-bottom: 10px;
+    }}
     .cover-sub {{
-      font-size: 18px;
-      color: var(--text-light);
-      max-width: 800px;
-      margin-bottom: 26px;
+      font-size: 16px;
+      color: var(--text-muted);
+      max-width: 780px;
+      margin-bottom: 24px;
+      font-weight: 500;
     }}
     .cover-footer {{
       font-size: 13px;
-      color: var(--text-muted);
-      border-top: 1px solid var(--border-card);
+      color: var(--text-secondary);
+      border-top: 1px solid var(--border-light);
       padding-top: 14px;
       width: 100%;
-      max-width: 600px;
+      max-width: 580px;
+      line-height: 1.6;
     }}
 
-    /* MEDIA PRINT (EXPORTAR A PDF DIAPOSITIVA POR PÁGINA) */
+    /* PRINT STYLES */
     @media print {{
       body {{
+        background: #FFFFFF;
         overflow: visible;
-        background: #000;
       }}
       header, footer, .progress-container, .speaker-drawer {{
         display: none !important;
@@ -566,45 +583,44 @@ def build_web_presentation():
         max-height: 100% !important;
         border-radius: 0 !important;
         border: none !important;
-        background: #0F172A !important;
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
-        padding: 40px !important;
+        background: #FFFFFF !important;
+        box-shadow: none !important;
+        padding: 30px !important;
       }}
     }}
 
     @media (max-width: 768px) {{
-      .slide {{ padding: 24px 20px; width: 96%; height: 95%; }}
-      .slide-title {{ font-size: 22px; }}
-      .grid-2, .grid-3, .grid-4 {{ grid-template-columns: 1fr; gap: 14px; }}
-      .card-title {{ font-size: 17px; }}
-      .card-list li {{ font-size: 14px; }}
-      .cover-title {{ font-size: 24px; }}
-      .cover-sub {{ font-size: 15px; }}
+      .slide {{ padding: 20px 16px; width: 96%; height: 95%; }}
+      .slide-title {{ font-size: 20px; }}
+      .grid-2, .grid-3, .grid-4 {{ grid-template-columns: 1fr; gap: 12px; }}
+      .card-title {{ font-size: 15.5px; }}
+      .card-list li {{ font-size: 13.5px; }}
+      .cover-title {{ font-size: 22px; }}
+      .cover-sub {{ font-size: 14px; }}
       .header-actions .btn-text {{ display: none; }}
     }}
   </style>
 </head>
 <body>
 
-  <!-- PROGRESO -->
+  <!-- BARRA DE PROGRESO -->
   <div class="progress-container">
     <div class="progress-bar" id="progressBar"></div>
   </div>
 
-  <!-- HEADER DE CONTROL -->
+  <!-- HEADER CORPORATIVO -->
   <header>
     <div class="brand">
       <img src="data:image/png;base64,{logo_b64}" alt="Logo MIGATO">
       <div>
-        <div class="brand-title">MIGATO • DIRECCIÓN ESTRATÉGICA</div>
-        <div class="brand-sub">Equipo Técnico de Sistemas y Arquitectura Digital</div>
+        <div class="brand-title">MOVIMIENTO INDEPENDIENTE GANAMOS TODOS (MIGATO)</div>
+        <div class="brand-sub">Equipo Técnico de Sistemas y Arquitectura Digital • Estado Monagas</div>
       </div>
     </div>
 
     <div class="header-actions">
       <button class="btn-action" id="btnNotes" onclick="toggleNotes()">
-        🎙️ <span class="btn-text">Guion Orador</span>
+        🎙️ <span class="btn-text">Guion del Orador</span>
       </button>
       <button class="btn-action" onclick="toggleFullScreen()">
         ⛶ <span class="btn-text">Pantalla Completa</span>
@@ -619,44 +635,50 @@ def build_web_presentation():
   <main class="deck-container" id="deckContainer">
 
     <!-- LÁMINA 1: PORTADA -->
-    <div class="slide active cover-slide" data-note="Saludos cordiales a toda la Dirección de MIGATO. Hoy venimos a presentar la solución tecnológica definitiva para coordinar nuestras 44 parroquias y resguardar el voto. Todo el software ya fue desarrollado por nuestro equipo de ingenieros sin costo alguno de honorarios para el partido; el objetivo de hoy es aprobar un presupuesto mínimo de $24.50 al mes para encender el servidor privado en la nube.">
+    <div class="slide active cover-slide" data-note="Estimados miembros de la Dirección General: les presentamos el dictamen técnico y la propuesta de factibilidad para la puesta en marcha de la Plataforma Territorial MIGATO. El desarrollo del software ha sido completado al 100% por nuestro equipo sin costo de honorarios para la organización. El objetivo de esta sesión ejecutiva es someter a su consideración la aprobación de un presupuesto operativo mínimo de $24.50 mensuales para la infraestructura cloud del servidor privado.">
       <div class="cover-badge">REPÚBLICA BOLIVARIANA DE VENEZUELA • ESTADO MONAGAS</div>
       <img class="cover-logo" src="data:image/png;base64,{logo_b64}" alt="Logo MIGATO">
-      <h1 class="cover-title">ARQUITECTURA DE GESTIÓN TERRITORIAL, SEGURIDAD Y PRESUPUESTO OPERATIVO</h1>
-      <p class="cover-sub">Evaluación Integral de los 5 Módulos de Control, Servidor Cloud VPS Privado y Plan de Despliegue Tecnológico</p>
+      <h1 class="cover-title">ARQUITECTURA DE GESTIÓN TERRITORIAL Y PROPUESTA DE FACTIBILIDAD TÉCNICA</h1>
+      <p class="cover-sub">Evaluación Integral de los Cinco Módulos de Mando, Servidor Cloud VPS Privado y Presupuesto Operativo</p>
       <div class="cover-footer">
         Presentado por el <strong>Equipo Técnico de Sistemas y Arquitectura Digital</strong><br>
+        A la Dirección General del Movimiento Independiente Ganamos Todos (MIGATO)<br>
         Maturín, Estado Monagas • Septiembre de 2026
       </div>
     </div>
 
     <!-- LÁMINA 2: EL DESAFÍO EN MONAGAS -->
-    <div class="slide" data-note="Compañeros, la administración de los servicios públicos en Monagas colapsó por pura improvisación burocrática. Hospitales a oscuras y apagones constantes. Frente a eso, nosotros en MIGATO representamos orden gerencial, competencia técnica y estándares corporativos. No podemos seguir organizando elecciones ni levantando censos vecinales por grupos de WhatsApp donde cualquiera se infiltra o la policía te revisa el celular en una alcabala.">
+    <div class="slide" data-note="La gestión pública en Monagas enfrenta una severa ineficiencia burocrática que ha deteriorado los servicios básicos y la confianza ciudadana. En el ámbito organizativo, operar mediante canales informales de mensajería genera dispersión, pérdida de datos y riesgos de seguridad para los equipos de campo. Frente a este panorama, MIGATO propone un modelo de gestión basado en la competencia técnica, la transparencia administrativa y la toma de decisiones fundamentada en indicadores reales y auditables.">
       <div class="slide-header">
         <div>
-          <div class="slide-tag">Diagnóstico y Visión Política</div>
-          <h2 class="slide-title">El Desafío en Monagas: Centralismo Ineficiente vs. Orden Técnico</h2>
+          <div class="slide-tag">Diagnóstico Institucional</div>
+          <h2 class="slide-title">Marco Estratégico: Superación del Centralismo Burocrático</h2>
         </div>
         <img class="slide-watermark" src="data:image/png;base64,{logo_b64}">
       </div>
       <div class="slide-body">
         <div class="grid-2">
-          <div class="card danger">
-            <div class="card-title" style="color: #F87171;">⚠️ La Realidad Actual (Improvisación y Colapso)</div>
-            <ul class="card-list danger">
-              <li><strong>Servicios públicos destrozados:</strong> Hospitales sin luz ni agua, comunidades sin transformadores y vías agrícolas destruidas.</li>
-              <li><strong>Manejo clientelar:</strong> Gestión pública ciega, carente de métricas y sin datos técnicos reales.</li>
-              <li><strong>Grupos masivos de WhatsApp:</strong> Información desordenada, fugas de datos y riesgo permanente de espionaje.</li>
-              <li><strong>Vulnerabilidad de la base:</strong> Exposición de activistas y testigos ante revisiones arbitrarias de teléfonos en la calle.</li>
+          <div class="card" style="border-left: 4px solid var(--danger);">
+            <div class="card-title" style="color: var(--danger);">
+              <span>⚠️ Limitaciones del Esquema Tradicional</span>
+            </div>
+            <ul class="card-list">
+              <li><strong>Precarización de servicios esenciales:</strong> Fallas sostenidas en la red eléctrica, suministro de agua y deterioro de la infraestructura pública.</li>
+              <li><strong>Gestión sin métricas objetivas:</strong> Ausencia de levantamiento técnico riguroso y decisiones basadas en criterios clientelares.</li>
+              <li><strong>Riesgos en canales informales:</strong> La dispersión en grupos de mensajería compromete la confidencialidad y dificulta la consolidación de datos.</li>
+              <li><strong>Vulnerabilidad operativa:</strong> Exposición de la dirigencia comunitaria ante revisiones no autorizadas de dispositivos en campo.</li>
             </ul>
           </div>
-          <div class="card highlight">
-            <div class="card-title" style="color: var(--primary-light);">🏛️ La Alternativa MIGATO (Gerencia y Eficiencia)</div>
+
+          <div class="card highlight" style="border-left: 4px solid var(--navy-corp);">
+            <div class="card-title" style="color: var(--navy-corp);">
+              <span>🏛️ La Propuesta Gerencial de MIGATO</span>
+            </div>
             <ul class="card-list">
-              <li><strong>Supremacía técnica:</strong> Demostrar que Monagas puede gobernarse con estándares corporativos de primer mundo.</li>
-              <li><strong>Decisiones con datos reales:</strong> Plataforma digital con indicadores auditables y modelos georreferenciados.</li>
-              <li><strong>Canales compartimentados:</strong> Comunicación radial directa y segura con cada parroquia.</li>
-              <li><strong>Soberanía informática:</strong> Bases de datos privadas alojadas en un servidor propio blindado.</li>
+              <li><strong>Estándares corporativos de primer nivel:</strong> Implementación de orden, método y rigurosidad técnica en la administración territorial.</li>
+              <li><strong>Decisiones respaldadas en datos:</strong> Información georreferenciada y métricas confiables de las comunidades en tiempo real.</li>
+              <li><strong>Comunicación estructurada y segura:</strong> Canales compartimentados por parroquia con trazabilidad institucional.</li>
+              <li><strong>Soberanía de la información:</strong> Bases de datos resguardadas en un servidor cloud dedicado bajo control exclusivo de la organización.</li>
             </ul>
           </div>
         </div>
@@ -664,126 +686,139 @@ def build_web_presentation():
     </div>
 
     <!-- LÁMINA 3: LA PLATAFORMA EN 5 MÓDULOS -->
-    <div class="slide" data-note="Esta plataforma no es una maqueta ni una promesa a futuro: ya está totalmente programada y probada. Integra cinco módulos neurálgicos: despacho celular sin claves para el coordinador, censo comunitario que se borra del teléfono, defensa del padrón con resguardo de actas, mapa 3D interactivo y diagnóstico de los 84 centros de salud. Todo en una sola plataforma unificada.">
+    <div class="slide" data-note="La plataforma constituye una solución tecnológica completa y operativa que articula cinco componentes complementarios: despacho parroquial por enlace web seguro, censo comunitario con resguardo de privacidad, seguimiento del padrón electoral con archivo de actas, consola cartográfica 3D y supervisión técnica de la red regional de salud. Todo el sistema opera bajo una arquitectura web unificada, accesible y sin intermediarios.">
       <div class="slide-header">
         <div>
-          <div class="slide-tag">Arquitectura del Sistema</div>
-          <h2 class="slide-title">La Solución: Plataforma Territorial MIGATO en 5 Módulos</h2>
+          <div class="slide-tag">Arquitectura de Software</div>
+          <h2 class="slide-title">Solución Integral: Plataforma Territorial en 5 Módulos</h2>
         </div>
         <img class="slide-watermark" src="data:image/png;base64,{logo_b64}">
       </div>
       <div class="slide-body">
-        <div style="display: flex; flex-direction: column; gap: 12px;">
-          <div class="card" style="padding: 16px 20px; flex-direction: row; align-items: center; justify-content: space-between; border-left: 5px solid var(--primary);">
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+          <div class="card" style="padding: 14px 18px; flex-direction: row; align-items: center; justify-content: space-between; border-left: 4px solid var(--navy-corp);">
             <div>
-              <strong style="color: var(--primary-light); font-size: 17px;">Módulo 1: Despacho Celular Seguro (/despacho/)</strong>
-              <p style="font-size: 14px; color: var(--text-light); margin-top: 4px;">Enlaces por token web directo al teléfono. Cero contraseñas que olvidar y compartimentación parroquial estricta.</p>
+              <strong style="color: var(--navy-corp); font-size: 16px;">Módulo 1: Despacho Celular Seguro (/despacho/)</strong>
+              <p style="font-size: 13.5px; color: var(--text-secondary); margin-top: 3px;">Enlaces cifrados por token web temporal directo al coordinador. Sin contraseñas complejas y con compartimentación territorial.</p>
             </div>
-            <span style="background: rgba(2, 132, 199, 0.2); color: var(--primary-light); padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 700;">ENLACES</span>
+            <span style="background: var(--bg-subtle); color: var(--navy-corp); padding: 4px 10px; border-radius: 4px; font-size: 11.5px; font-weight: 700; border: 1px solid var(--border-light);">COORDINACIÓN</span>
           </div>
 
-          <div class="card" style="padding: 16px 20px; flex-direction: row; align-items: center; justify-content: space-between; border-left: 5px solid var(--success);">
+          <div class="card" style="padding: 14px 18px; flex-direction: row; align-items: center; justify-content: space-between; border-left: 4px solid var(--blue-primary);">
             <div>
-              <strong style="color: var(--success); font-size: 17px;">Módulo 2: Censo Territorial "Buzón Ciego" (/carga/)</strong>
-              <p style="font-size: 14px; color: var(--text-light); margin-top: 4px;">Protocolo Zero-Byte Storage: no guarda nombres ni cédulas. Al enviar se restablece y en el celular queda CERO rastro.</p>
+              <strong style="color: var(--blue-primary); font-size: 16px;">Módulo 2: Censo Territorial y Privacidad (/carga/)</strong>
+              <p style="font-size: 13.5px; color: var(--text-secondary); margin-top: 3px;">Protocolo de Cero Residuos en Dispositivo: registra variables cuantitativas de servicios sin almacenar datos personales ni cédulas.</p>
             </div>
-            <span style="background: rgba(16, 185, 129, 0.2); color: var(--success); padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 700;">COMUNIDAD</span>
+            <span style="background: var(--bg-subtle); color: var(--blue-primary); padding: 4px 10px; border-radius: 4px; font-size: 11.5px; font-weight: 700; border: 1px solid var(--border-light);">COMUNITARIO</span>
           </div>
 
-          <div class="card" style="padding: 16px 20px; flex-direction: row; align-items: center; justify-content: space-between; border-left: 5px solid var(--accent);">
+          <div class="card" style="padding: 14px 18px; flex-direction: row; align-items: center; justify-content: space-between; border-left: 4px solid var(--warning);">
             <div>
-              <strong style="color: var(--accent); font-size: 17px;">Módulo 3: Padrón Electoral y Resguardo de Actas (/centros-maturin/)</strong>
-              <p style="font-size: 14px; color: var(--text-light); margin-top: 4px;">175 centros y 361 mesas mapeados. Asignación de testigos y respaldo fotográfico de actas y código QR para auditoría interna.</p>
+              <strong style="color: #B45309; font-size: 16px;">Módulo 3: Padrón Electoral y Resguardo de Actas (/centros-maturin/)</strong>
+              <p style="font-size: 13.5px; color: var(--text-secondary); margin-top: 3px;">Catálogo de 175 centros y 361 mesas de Maturín. Organización de testigos y respaldo fotográfico de actas y código QR para auditoría interna.</p>
             </div>
-            <span style="background: rgba(245, 158, 11, 0.2); color: var(--accent); padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 700;">ELECTORAL</span>
+            <span style="background: var(--bg-subtle); color: #B45309; padding: 4px 10px; border-radius: 4px; font-size: 11.5px; font-weight: 700; border: 1px solid var(--border-light);">ELECTORAL</span>
           </div>
 
-          <div class="card" style="padding: 16px 20px; flex-direction: row; align-items: center; justify-content: space-between; border-left: 5px solid #818CF8;">
+          <div class="card" style="padding: 14px 18px; flex-direction: row; align-items: center; justify-content: space-between; border-left: 4px solid #4F46E5;">
             <div>
-              <strong style="color: #818CF8; font-size: 17px;">Módulo 4: Cartografía Tridimensional 3D (/earth-monagas/)</strong>
-              <p style="font-size: 14px; color: var(--text-light); margin-top: 4px;">Consola 3D de relieve y vialidad con filtro de atenuación periférica para focalizar reuniones de comando.</p>
+              <strong style="color: #4F46E5; font-size: 16px;">Módulo 4: Cartografía Tridimensional (/earth-monagas/)</strong>
+              <p style="font-size: 13.5px; color: var(--text-secondary); margin-top: 3px;">Consola 3D de vialidad, relieve y servicios con filtro de focalización territorial para mesas de planificación estratégica.</p>
             </div>
-            <span style="background: rgba(129, 140, 248, 0.2); color: #818CF8; padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 700;">MAPA 3D</span>
+            <span style="background: var(--bg-subtle); color: #4F46E5; padding: 4px 10px; border-radius: 4px; font-size: 11.5px; font-weight: 700; border: 1px solid var(--border-light);">LOGÍSTICA</span>
           </div>
 
-          <div class="card" style="padding: 16px 20px; flex-direction: row; align-items: center; justify-content: space-between; border-left: 5px solid var(--primary-light);">
+          <div class="card" style="padding: 14px 18px; flex-direction: row; align-items: center; justify-content: space-between; border-left: 4px solid var(--success);">
             <div>
-              <strong style="color: var(--primary-light); font-size: 17px;">Módulo 5: Diagnóstico y Auditoría de Salud (/salud-monagas/)</strong>
-              <p style="font-size: 14px; color: var(--text-light); margin-top: 4px;">Supervisión de 84 centros de salud: plantas eléctricas, agua, quirófanos y base fehaciente para el plan de gobierno.</p>
+              <strong style="color: var(--success); font-size: 16px;">Módulo 5: Diagnóstico de la Red de Salud (/salud-monagas/)</strong>
+              <p style="font-size: 13.5px; color: var(--text-secondary); margin-top: 3px;">Supervisión técnica de 84 centros asistenciales: plantas eléctricas, agua, quirófanos y base fehaciente para planes de gobierno.</p>
             </div>
-            <span style="background: rgba(56, 189, 248, 0.2); color: var(--primary-light); padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 700;">SALUD</span>
+            <span style="background: var(--bg-subtle); color: var(--success); padding: 4px 10px; border-radius: 4px; font-size: 11.5px; font-weight: 700; border: 1px solid var(--border-light);">SALUD REGIONAL</span>
           </div>
         </div>
       </div>
     </div>
 
     <!-- LÁMINA 4: MÓDULOS 1 Y 2 -->
-    <div class="slide" data-note="El mayor miedo de nuestra gente en la calle es una alcabala donde les obliguen a desbloquear el teléfono. Por eso diseñamos seguridad por defecto: el coordinador entra con un enlace web único directo, sin claves. Y cuando llena el censo de una comunidad, no pide cédulas ni nombres. Al presionar Enviar, los datos van al servidor cifrados y la pantalla queda en blanco. En la memoria del teléfono queda CERO información sensible.">
+    <div class="slide" data-note="En el trabajo de campo, la seguridad de nuestros coordinadores y la privacidad ciudadana son prioritarias. Por ello, el Módulo 1 elimina contraseñas mediante tokens seguros que dan acceso exclusivo a la parroquia asignada. En el Módulo 2, el censo se enfoca en necesidades cuantitativas (familias, viviendas, transformadores) y, por principio ético, no recopila nombres ni cédulas. Al enviar el formulario, los datos viajan cifrados y el teléfono queda completamente limpio.">
       <div class="slide-header">
         <div>
           <div class="slide-tag">Operatividad en Terreno</div>
-          <h2 class="slide-title">Módulos 1 y 2: Coordinación Parroquial y Censo Seguro</h2>
+          <h2 class="slide-title">Módulos 1 y 2: Coordinación Parroquial y Protección de Datos</h2>
         </div>
         <img class="slide-watermark" src="data:image/png;base64,{logo_b64}">
       </div>
       <div class="slide-body">
         <div class="grid-2">
           <div class="card">
-            <div class="card-title" style="color: var(--primary-light);">📲 Despacho Celular Seguro (M1)</div>
+            <div class="card-title">
+              <span>📲 Módulo 1: Despacho Celular Seguro</span>
+            </div>
             <ul class="card-list">
-              <li><strong>Token Web Efímero:</strong> El operador central genera un link cifrado y se lo envía al coordinador. Entra con un toque sin memorizar claves complejas.</li>
-              <li><strong>Compartimentación Territorial:</strong> El coordinador de Las Cocuizas solo visualiza su parroquia; no tiene acceso al resto del estado.</li>
-              <li><strong>Revocación en Segundos:</strong> Si se sustituye a un responsable, la Sala de Mando anula su credencial de inmediato sin reiniciar el servidor.</li>
-              <li><strong>Cero Apps:</strong> Funciona directamente en Google Chrome o Safari en cualquier teléfono inteligente.</li>
+              <li><strong>Acceso Instantáneo por Token Web:</strong> Enlaces temporales cifrados enviados directamente al coordinador; ingreso inmediato sin necesidad de recordar contraseñas alfanuméricas complejas.</li>
+              <li><strong>Compartimentación Territorial:</strong> Cada enlace opera exclusivamente en su área asignada, garantizando estricta segmentación de responsabilidades.</li>
+              <li><strong>Revocación Inmediata de Credenciales:</strong> Ante cualquier relevo de personal, la credencial se desactiva desde la consola central sin interrumpir el servicio.</li>
+              <li><strong>Compatibilidad Universal:</strong> Funciona directamente en navegadores móviles estándar sin requerir instalación de aplicaciones adicionales.</li>
             </ul>
           </div>
-          <div class="card success">
-            <div class="card-title" style="color: var(--success);">🛡️ Censo "Buzón Ciego" (M2)</div>
-            <ul class="card-list success">
-              <li><strong>Protección de Datos Vecinales:</strong> Por principio ético, NO se registran nombres, cédulas ni números telefónicos de los vecinos.</li>
-              <li><strong>Variables Cuantitativas:</strong> Registra número de familias, viviendas, fuerza comunitaria y fallas críticas de luz, agua y vialidad.</li>
-              <li><strong>Protocolo Zero-Byte Storage:</strong> Al presionar enviar, los datos suben por HTTPS y el formulario se reinicia. En el teléfono no queda caché ni historial.</li>
-              <li><strong>Blindaje ante Alcabalas:</strong> Si inspeccionan el teléfono del activista en la calle, el dispositivo está 100% limpio.</li>
+
+          <div class="card highlight">
+            <div class="card-title" style="color: var(--navy-corp);">
+              <span>🛡️ Módulo 2: Censo Comunitario y Protocolo de Privacidad</span>
+            </div>
+            <ul class="card-list">
+              <li><strong>Protección de Identidad Ciudadana:</strong> Por directriz institucional, el sistema no solicita nombres, números de cédula ni teléfonos personales de los vecinos censados.</li>
+              <li><strong>Diagnóstico de Servicios Básicos:</strong> Levantamiento riguroso de familias, viviendas y fallas críticas en suministro eléctrico, agua potable y vialidad.</li>
+              <li><strong>Protocolo Zero-Byte Device Storage:</strong> Al presionar enviar, los datos se transmiten al servidor central vía HTTPS y el formulario se restablece. En el teléfono no se almacena historial ni borradores.</li>
+              <li><strong>Tranquilidad Operativa:</strong> Blindaje total del activista frente a revisiones no autorizadas de dispositivos en la vía pública.</li>
             </ul>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- LÁMINA 5: MÓDULO 3 (PADRÓN ELECTORAL Y ACTAS) -->
-    <div class="slide" data-note="Aclaramos que el Módulo 3 no es un intermediario del CNE ni promete cosas irreales. Es una herramienta de control y resguardo interno para el partido. Tenemos los 175 centros y 361 mesas de Maturín mapeados. Sabemos que 40 centros concentran más del 60% del padrón. Asignamos testigos y, al cerrar la mesa, el testigo sube el resultado y la foto nítida del acta y del comprobante impreso con su código QR. Así MIGATO tiene sus actas respaldadas e inexpugnables.">
+    <!-- LÁMINA 5: MÓDULO 3 (ELECTORAL Y ACTAS) -->
+    <div class="slide" data-note="El Módulo 3 está concebido como una herramienta de archivo y auditoría interna para la organización, respetando plenamente el marco institucional. Mapea la totalidad de los 175 centros y 361 mesas de Maturín, identificando los 40 centros que concentran más del 60% del padrón. Facilita la asignación de testigos y permite cargar los resultados con respaldo fotográfico del acta física y comprobante impreso con su código QR, asegurando un expediente fehaciente para nuestro cotejo interno.">
       <div class="slide-header">
         <div>
-          <div class="slide-tag">Defensa del Voto y Auditoría Interna</div>
-          <h2 class="slide-title">Módulo 3: Padrón Electoral, Testigos y Resguardo de Actas</h2>
+          <div class="slide-tag">Auditoría Electoral Interna</div>
+          <h2 class="slide-title">Módulo 3: Padrón Electoral, Centros de Votación y Resguardo de Actas</h2>
         </div>
         <img class="slide-watermark" src="data:image/png;base64,{logo_b64}">
       </div>
       <div class="slide-body">
         <div class="grid-3">
           <div class="card">
-            <div class="card-title" style="color: var(--primary-light); font-size: 18px;">🗺️ 175 Centros de Maturín</div>
+            <div class="card-title" style="font-size: 15.5px;">
+              <span>🗺️ Catálogo de Centros</span>
+            </div>
             <ul class="card-list">
-              <li>Georreferenciación exacta de la totalidad de los 175 centros y 361 mesas del Municipio Maturín.</li>
-              <li>Priorización de los 40 centros que concentran más del 60% del caudal electoral del municipio.</li>
-              <li>Rutas de acceso, vías de movilización y logística para el día de votación.</li>
+              <li>Georreferenciación completa de 175 centros y 361 mesas electorales del Municipio Maturín.</li>
+              <li>Identificación prioritaria de los 40 centros estratégicos que concentran más del 60% de los electores.</li>
+              <li>Mapeo de accesos viales y distancias logísticas para optimizar la movilización.</li>
             </ul>
           </div>
+
           <div class="card">
-            <div class="card-title" style="color: var(--accent); font-size: 18px;">👥 Organización de Testigos</div>
+            <div class="card-title" style="font-size: 15.5px;">
+              <span>👥 Estructura de Testigos</span>
+            </div>
             <ul class="card-list">
-              <li>Asignación organizada de testigos principales y suplentes con número de mesa correspondiente.</li>
-              <li>Segmentación de acompañamiento ciudadano a votantes mayores y nuevos votantes jóvenes.</li>
-              <li>Reporte de apertura de mesas e incidencias en tiempo real hacia la Sala Situacional.</li>
+              <li>Registro y acreditación organizada de testigos principales y suplentes por mesa electoral.</li>
+              <li>Segmentación de labores de asistencia ciudadana para adultos mayores y votantes jóvenes.</li>
+              <li>Canal de reporte de incidencias y apertura de mesas en comunicación con la Sala Situacional.</li>
             </ul>
           </div>
+
           <div class="card success">
-            <div class="card-title" style="color: var(--success); font-size: 18px;">📸 Archivo de Actas y QR</div>
-            <ul class="card-list success">
-              <li>Carga de resultados mesa por mesa por el testigo acreditado.</li>
-              <li>Almacenamiento de la fotografía de respaldo del acta física y comprobante impreso oficial.</li>
-              <li>Captura nítida del código QR impreso para auditoría y cotejo interno de MIGATO.</li>
-              <li>Sin intervenir ni suplantar las atribuciones del CNE.</li>
+            <div class="card-title" style="font-size: 15.5px; color: var(--success);">
+              <span>📄 Archivo de Evidencia</span>
+            </div>
+            <ul class="card-list">
+              <li>Carga ordenada de resultados numéricos por mesa emitida por los testigos del partido.</li>
+              <li>Almacenamiento de respaldo digital del acta física y del comprobante emitido por el sistema oficial.</li>
+              <li>Registro fotográfico del código QR para auditoría y cotejo interno de la organización.</li>
+              <li>Sin intervenir ni suplantar las competencias del Consejo Nacional Electoral.</li>
             </ul>
           </div>
         </div>
@@ -791,91 +826,107 @@ def build_web_presentation():
     </div>
 
     <!-- LÁMINA 6: MÓDULOS 4 Y 5 -->
-    <div class="slide" data-note="El Módulo 4 nos da una consola 3D de terreno para planificar caravanas y despliegues sin perder tiempo. Tiene un filtro visual de velo que atenúa lo que no estamos discutiendo para enfocar la mirada del equipo en la parroquia clave. Y el Módulo 5 es vital para la propuesta política: 84 centros de salud auditados con datos de si hay luz, agua o médicos. Es el sustento técnico para demostrarle a Monagas cómo vamos a rescatar la salud pública.">
+    <div class="slide" data-note="El Módulo 4 ofrece a la Dirección una consola geoespacial tridimensional para evaluar la topografía, la red de carreteras y los servicios públicos. Incorpora un filtro de focalización territorial que atenúa las áreas circundantes para centrar el debate ejecutivo en la parroquia evaluada. Por su parte, el Módulo 5 audita técnicamente 84 centros de salud de Monagas, registrando el estado de plantas eléctricas y quirófanos, lo que provee el fundamento técnico indispensable para nuestras propuestas de gobierno.">
       <div class="slide-header">
         <div>
           <div class="slide-tag">Planificación Territorial y Salud</div>
-          <h2 class="slide-title">Módulos 4 y 5: Cartografía Tridimensional y Red Asistencial</h2>
+          <h2 class="slide-title">Módulos 4 y 5: Cartografía Tridimensional y Auditoría Asistencial</h2>
         </div>
         <img class="slide-watermark" src="data:image/png;base64,{logo_b64}">
       </div>
       <div class="slide-body">
         <div class="grid-2">
           <div class="card">
-            <div class="card-title" style="color: #818CF8;">🌐 Cartografía 3D (/earth-monagas/)</div>
+            <div class="card-title">
+              <span>🌐 Cartografía 3D de Infraestructura (/earth-monagas/)</span>
+            </div>
             <ul class="card-list">
-              <li><strong>Consola Tridimensional Interactiva:</strong> Mapeo de relieve, elevaciones, vialidad, distribución comunitaria y servicios.</li>
-              <li><strong>Filtro de Focalización Territorial:</strong> Atenuación periférica suave que resalta la parroquia analizada durante reuniones ejecutivas de comando.</li>
-              <li><strong>Planificación Logística:</strong> Cálculo de distancias reales, tiempos de traslado de los equipos y evaluación de vías de penetración.</li>
-              <li><strong>Soporte en Pantalla Gigante:</strong> Diseñado para operar con fluidez en monitores de alta resolución.</li>
+              <li><strong>Análisis Geoespacial Interactivo:</strong> Representación tridimensional de relieve, vialidad, comunidades y equipamiento de servicios en la entidad.</li>
+              <li><strong>Herramienta de Focalización Territorial:</strong> Filtro visual que atenúa suavemente las zonas periféricas para concentrar el análisis en la parroquia o sector de interés.</li>
+              <li><strong>Planificación de Rutas y Despliegue:</strong> Medición precisa de distancias y estimación de tiempos de traslado para jornadas institucionales de trabajo.</li>
+              <li><strong>Optimizado para Sala de Mando:</strong> Interfaz adaptada para proyección en pantallas corporativas de alta definición.</li>
             </ul>
           </div>
+
           <div class="card highlight">
-            <div class="card-title" style="color: var(--primary-light);">🏥 Diagnóstico de Salud (/salud-monagas/)</div>
+            <div class="card-title" style="color: var(--navy-corp);">
+              <span>🏥 Diagnóstico de la Red Regional de Salud (/salud-monagas/)</span>
+            </div>
             <ul class="card-list">
-              <li><strong>84 Centros Monitoreados:</strong> Hospital Universitario Dr. Manuel Núñez Tovar, ambulatorios urbanos, rurales y centros integrales.</li>
-              <li><strong>Servicios Críticos:</strong> Estatus de operatividad de plantas eléctricas de emergencia, agua por tubería, gases medicinales y salas de parto.</li>
-              <li><strong>Red de Referencia Médica:</strong> Registro de derivación de pacientes cuando la atención primaria colapsa.</li>
-              <li><strong>Sustento para Propuesta de Gobierno:</strong> Datos de ingeniería sanitaria para presentar soluciones hospitalarias concretas al estado.</li>
+              <li><strong>Supervisión Integral de 84 Centros:</strong> Monitoreo técnico de hospitales universitarios, ambulatorios urbanos, rurales y centros de atención integral.</li>
+              <li><strong>Estado de Servicios Críticos:</strong> Operatividad de generadores eléctricos de emergencia, suministro continuo de agua y salas quirúrgicas.</li>
+              <li><strong>Red de Referencia y Traslado:</strong> Registro de las rutas de derivación de pacientes cuando la capacidad de resolución local se ve superada.</li>
+              <li><strong>Fundamento Técnico para Políticas Públicas:</strong> Base de datos auditable que sustenta propuestas de rehabilitación sanitaria con criterios de ingeniería.</li>
             </ul>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- LÁMINA 7: BLINDAJE INFORMÁTICO -->
-    <div class="slide" data-note="No podemos montar el cerebro de nuestro partido en un hosting compartido gratis de 2 dólares donde nos corten el servicio en medio de una campaña. Necesitamos un VPS dedicado, exclusivo para MIGATO. Toda la información viaja cifrada con algoritmos de 256 bits y haremos pruebas de estrés y concurrencia para certificar que el servidor soporte miles de peticiones simultáneas sin ponerse lento ni caerse jamás.">
+    <!-- LÁMINA 7: INFRAESTRUCTURA CLOUD Y SEGURIDAD -->
+    <div class="slide" data-note="Una solución estratégica de esta magnitud requiere una infraestructura profesional. A diferencia de los alojamientos compartidos que sufren caídas imprevistas y carecen de aislamiento, un Servidor Virtual Privado dedicado nos otorga independencia, procesamiento exclusivo y respaldo continuo. Implementamos cifrado SSL de 256 bits, reglas de cortafuegos y pruebas de estrés para asegurar que la plataforma mantenga tiempos de respuesta inferiores a un segundo durante picos de concurrencia.">
       <div class="slide-header">
         <div>
-          <div class="slide-tag">Seguridad de la Información</div>
-          <h2 class="slide-title">Blindaje Informático y Servidor Cloud VPS Dedicado</h2>
+          <div class="slide-tag">Infraestructura y Seguridad</div>
+          <h2 class="slide-title">Seguridad de la Información y Servidor Cloud VPS Dedicado</h2>
         </div>
         <img class="slide-watermark" src="data:image/png;base64,{logo_b64}">
       </div>
       <div class="slide-body">
         <div class="grid-4">
           <div class="card">
-            <div class="card-title" style="color: var(--primary-light); font-size: 18px;">🔒 Cifrado SSL 256 Bits</div>
-            <p style="font-size: 14px; color: var(--text-light); line-height: 1.5;">
-              Toda la comunicación entre los teléfonos de los coordinadores y la base de datos viaja bajo túnel HTTPS cifrado. Imposible de interceptar en redes WiFi o telefonía celular.
+            <div class="card-title" style="font-size: 15.5px;">
+              <span>🔒 Cifrado SSL/TLS de 256 Bits</span>
+            </div>
+            <p style="font-size: 13.5px; color: var(--text-secondary); line-height: 1.5;">
+              Encriptación completa de extremo a extremo en todas las sesiones web, impidiendo la intercepción de tráfico o fuga de datos en redes públicas o conexiones móviles.
             </p>
           </div>
+
           <div class="card">
-            <div class="card-title" style="color: var(--accent); font-size: 18px;">🛡️ Auditoría de Vulnerabilidades</div>
-            <p style="font-size: 14px; color: var(--text-light); line-height: 1.5;">
-              Cierre estricto de puertos no esenciales, cortafuegos iptables, protección Fail2ban contra ataques de fuerza bruta y consola de mando restringida a IPs autorizadas.
+            <div class="card-title" style="font-size: 15.5px;">
+              <span>🛡️ Auditoría de Vulnerabilidades</span>
+            </div>
+            <p style="font-size: 13.5px; color: var(--text-secondary); line-height: 1.5;">
+              Cierre estricto de puertos no esenciales, filtrado de conexiones mediante reglas iptables y mitigación automatizada de intentos de intrusión repetitivos (Fail2ban).
             </p>
           </div>
+
           <div class="card">
-            <div class="card-title" style="color: var(--success); font-size: 18px;">⚡ Pruebas de Estrés y Carga</div>
-            <p style="font-size: 14px; color: var(--text-light); line-height: 1.5;">
-              Simulaciones de concurrencia masiva para garantizar tiempos de respuesta inferiores a 1 segundo durante los momentos de mayor volumen de reportes en campo.
+            <div class="card-title" style="font-size: 15.5px;">
+              <span>⚡ Pruebas de Estrés y Concurrencia</span>
+            </div>
+            <p style="font-size: 13.5px; color: var(--text-secondary); line-height: 1.5;">
+              Simulaciones de alta demanda de tráfico para certificar que el servidor mantenga tiempos de respuesta óptimos (menores a 1 segundo) durante jornadas intensas de carga.
             </p>
           </div>
+
           <div class="card">
-            <div class="card-title" style="color: #A78BFA; font-size: 18px;">💾 Respaldos Automatizados</div>
-            <p style="font-size: 14px; color: var(--text-light); line-height: 1.5;">
-              Copias de seguridad periódicas encriptadas fuera del servidor para garantizar la recuperación inmediata e íntegra de la base de datos ante cualquier contingencia.
+            <div class="card-title" style="font-size: 15.5px;">
+              <span>💾 Respaldos Automatizados</span>
+            </div>
+            <p style="font-size: 13.5px; color: var(--text-secondary); line-height: 1.5;">
+              Generación periódica de copias de seguridad encriptadas fuera del servidor principal para asegurar la continuidad del servicio ante cualquier eventualidad técnica.
             </p>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- LÁMINA 8: PRESUPUESTO MÍNIMO -->
-    <div class="slide" data-note="Miren esta lámina con total atención y transparencia: la inversión que estamos solicitando son exactamente 294 dólares AL AÑO, es decir, 24 dólares y medio al mes. El equipo técnico no cobra ni un solo centavo de honorarios; el software ya está hecho. Esto es costo directo del fierro en la nube: el servidor VPS, el dominio oficial y la IP dedicada. Es una cifra perfectamente viable para cualquier organización seria.">
+    <!-- LÁMINA 8: PRESUPUESTO DE INVERSIÓN -->
+    <div class="slide" data-note="En esta lámina presentamos el análisis económico con estricta transparencia. El costo del desarrollo de software y arquitectura representa cero bolívares y cero dólares para la organización, habiendo sido aportado íntegramente por el equipo técnico. La inversión solicitada se limita exclusivamente a los costos directos de la nube: $20 mensuales por el VPS dedicado, $1.50 por el dominio y certificados SSL, y $3 por la IP fija. El total asciende a 24 dólares y medio mensuales, o 294 dólares anuales.">
       <div class="slide-header">
         <div>
           <div class="slide-tag">Estudio Económico y Factibilidad</div>
-          <h2 class="slide-title">Presupuesto Mínimo Operativo: Fase 1</h2>
+          <h2 class="slide-title">Presupuesto Operativo Mínimo: Fase 1</h2>
         </div>
         <img class="slide-watermark" src="data:image/png;base64,{logo_b64}">
       </div>
       <div class="slide-body">
         <div class="banner-kpi">
           <div class="banner-kpi-text">
-            <h3>TOTAL SOLICITADO: ~$24.50 USD / mes</h3>
-            <p>Inversión anual total de $294.00 USD • Costo de desarrollo técnico: $0.00 (Aporte militante)</p>
+            <h3>PRESUPUESTO SOLICITADO: ~$24.50 USD / mes</h3>
+            <p>Inversión anual de infraestructura cloud: $294.00 USD • Honorarios de ingeniería y desarrollo: $0.00</p>
           </div>
           <div class="banner-kpi-badge">$294.00 USD / AÑO</div>
         </div>
@@ -893,31 +944,31 @@ def build_web_presentation():
             <tbody>
               <tr>
                 <td><strong>Servidor Cloud VPS Dedicado</strong></td>
-                <td>4 vCPU / 8 GB RAM / 100 GB SSD NVMe / Red 1 Gbps / Protección Anti-DDoS</td>
+                <td>4 vCPU / 8 GB RAM / 100 GB SSD NVMe / Red 1 Gbps / Protección contra ataques</td>
                 <td style="text-align: center;">$20.00 USD</td>
                 <td style="text-align: center;">$240.00 USD</td>
               </tr>
               <tr>
                 <td><strong>Dominio Institucional Oficial</strong></td>
-                <td>Registro anual de dominio web + Certificado SSL Wildcard (HTTPS 256 bits)</td>
+                <td>Registro anual de dominio web corporativo + Certificado SSL Wildcard (256 bits)</td>
                 <td style="text-align: center;">$1.50 USD</td>
                 <td style="text-align: center;">$18.00 USD</td>
               </tr>
               <tr>
                 <td><strong>IP Pública Fija Dedicada</strong></td>
-                <td>Dirección IP estática exclusiva para filtrado seguro de conexiones a la consola</td>
+                <td>Dirección IP estática exclusiva para filtrado de seguridad y acceso a consola de mando</td>
                 <td style="text-align: center;">$3.00 USD</td>
                 <td style="text-align: center;">$36.00 USD</td>
               </tr>
               <tr>
                 <td><strong>Software de Servidor y Código</strong></td>
                 <td>Entorno Linux Ubuntu Server, Nginx, PostgreSQL, Fail2ban y módulos FOSS</td>
-                <td style="text-align: center;">$0.00 USD</td>
-                <td style="text-align: center;">$0.00 USD</td>
+                <td style="text-align: center; font-weight: bold; color: var(--success);">$0.00 USD</td>
+                <td style="text-align: center; font-weight: bold; color: var(--success);">$0.00 USD</td>
               </tr>
               <tr class="total-row">
                 <td>TOTAL MÍNIMO SOLICITADO (FASE 1):</td>
-                <td>Infraestructura cloud soberana para pruebas de estrés y validación piloto</td>
+                <td>Infraestructura cloud dedicada y certificada para las pruebas piloto</td>
                 <td style="text-align: center;" class="total-price">~$24.50 USD</td>
                 <td style="text-align: center;" class="total-price">$294.00 USD</td>
               </tr>
@@ -927,8 +978,8 @@ def build_web_presentation():
       </div>
     </div>
 
-    <!-- LÁMINA 9: PLAN DE DESPLIEGUE POR FASES -->
-    <div class="slide" data-note="No venimos a pedir un cheque en blanco para comprar computadoras caras o televisores ahora mismo. Hemos estructurado el proyecto en dos fases con criterio gerencial. Hoy solo pedimos la Fase 1: 294 dólares para contratar el VPS y arrancar las pruebas piloto en las tres parroquias con más votantes de Maturín: Las Cocuizas, San Simón y Los Godos. La Fase 2 vendrá después cuando el partido decida acondicionar físicamente la sala situacional.">
+    <!-- LÁMINA 9: PLAN DE DESPLIEGUE ESCALONADO -->
+    <div class="slide" data-note="Con un criterio gerencial responsable, proponemos una implementación escalonada en dos etapas. La presente solicitud corresponde exclusivamente a la Fase 1, con una inversión única de 294 dólares anuales para encender el servidor y validar la plataforma en tres parroquias piloto de Maturín: Las Cocuizas, San Simón y Alto de Los Godos. La Fase 2, relativa al equipamiento físico de la Sala Situacional, se evaluará posteriormente según la disponibilidad y planificación del partido.">
       <div class="slide-header">
         <div>
           <div class="slide-tag">Estrategia de Ejecución</div>
@@ -938,33 +989,33 @@ def build_web_presentation():
       </div>
       <div class="slide-body">
         <div class="grid-2">
-          <div class="card success">
+          <div class="card success" style="border-left: 4px solid var(--success);">
             <div class="card-title" style="color: var(--success);">
-              <span>🚀 FASE 1: Inmediata (Objeto de esta solicitud)</span>
+              <span>🚀 FASE 1: Inmediata (Objeto de esta Solicitud)</span>
             </div>
-            <p style="font-size: 14px; color: var(--text-muted); margin-bottom: 12px; font-style: italic;">
-              Inversión única requerida: <strong>$294.00 USD anuales</strong>
+            <p style="font-size: 13.5px; color: var(--text-muted); margin-bottom: 12px; font-style: italic;">
+              Inversión requerida: <strong>$294.00 USD anuales</strong>
             </p>
-            <ul class="card-list success">
-              <li>Contratación del VPS dedicado y registro del dominio oficial.</li>
-              <li>Instalación del stack tecnológico blindado (Linux, SSL 256 bits, firewall).</li>
-              <li>Pruebas de concurrencia, estrés y auditoría de vulnerabilidades.</li>
-              <li><strong>Validación en 3 parroquias piloto de Maturín:</strong> Las Cocuizas, San Simón y Alto de Los Godos con coordinadores reales.</li>
+            <ul class="card-list">
+              <li>Contratación del servidor cloud VPS y vinculación del dominio institucional.</li>
+              <li>Instalación de la arquitectura de seguridad, reglas de firewall y certificados SSL de 256 bits.</li>
+              <li>Ejecución de pruebas de carga, concurrencia y auditoría técnica de puertos.</li>
+              <li><strong>Validación operativa en 3 parroquias piloto de Maturín:</strong> Las Cocuizas, San Simón y Alto de Los Godos.</li>
             </ul>
           </div>
 
-          <div class="card">
-            <div class="card-title" style="color: var(--text-muted);">
-              <span>🏢 FASE 2: Consolidación de Sala Física</span>
+          <div class="card subtle" style="border-left: 4px solid var(--border-card);">
+            <div class="card-title" style="color: var(--navy-dark);">
+              <span>🏢 FASE 2: Consolidación de Sala Situacional Física</span>
             </div>
-            <p style="font-size: 14px; color: var(--text-muted); margin-bottom: 12px; font-style: italic;">
-              Sujeta a etapas posteriores y disponibilidad de recursos del partido:
+            <p style="font-size: 13.5px; color: var(--text-muted); margin-bottom: 12px; font-style: italic;">
+              Planificación diferida sujeta a disponibilidad de recursos del partido:
             </p>
             <ul class="card-list">
-              <li>Dotación física del espacio de comando y monitoreo territorial.</li>
-              <li>Computadoras dedicadas para los operadores de sala situacional.</li>
-              <li>Pantallas de visualización simultánea de los 5 módulos en tiempo real.</li>
-              <li>Sistemas de respaldo eléctrico (inversores / UPS) para operar durante fallas de luz regional.</li>
+              <li>Acondicionamiento físico del centro de seguimiento y monitoreo territorial.</li>
+              <li>Dotación de equipos de computación dedicados para operadores de consola.</li>
+              <li>Instalación de pantallas de visualización general para seguimiento en tiempo real.</li>
+              <li>Sistemas de respaldo eléctrico (inversores / UPS) para garantizar continuidad operativa ante fallas del servicio eléctrico regional.</li>
             </ul>
           </div>
         </div>
@@ -972,29 +1023,29 @@ def build_web_presentation():
     </div>
 
     <!-- LÁMINA 10: CONCLUSIÓN Y DICTAMEN -->
-    <div class="slide" data-note="Para concluir, señores de la Dirección: la plataforma está terminada. No hay que esperar meses de desarrollo ni contratar empresas privadas que cobran fortunas. Si hoy se aprueba este presupuesto de 294 dólares al año, en menos de 48 horas el servidor estará activo y comenzaremos las pruebas piloto. Estamos listos para responder cualquier pregunta técnica o financiera. Muchas gracias.">
+    <div class="slide" data-note="Para concluir, reiteramos que la herramienta se encuentra completamente terminada, probada y lista para entrar en operación. Ofrece una alta solvencia funcional y un protocolo estricto de resguardo para la militancia. Con una inversión mínima de 294 dólares anuales, MIGATO se dota de una plataforma corporativa soberana. El Equipo Técnico recomienda formalmente la aprobación de este presupuesto para iniciar el encendido de inmediato. Quedamos a su disposición.">
       <div class="slide-header">
         <div>
           <div class="slide-tag">Dictamen Técnico y Decisión</div>
-          <h2 class="slide-title">Conclusión: Plataforma Lista y Llamado a la Aprobación</h2>
+          <h2 class="slide-title">Conclusión y Recomendación Final del Equipo Técnico</h2>
         </div>
         <img class="slide-watermark" src="data:image/png;base64,{logo_b64}">
       </div>
       <div class="slide-body">
-        <div class="card highlight" style="padding: 28px;">
-          <div class="card-title" style="font-size: 22px; color: var(--primary-light); margin-bottom: 18px;">
-            ✅ Dictamen Técnico Favorable y Conclusiones
+        <div class="card highlight" style="padding: 24px; border: 1.5px solid var(--navy-corp);">
+          <div class="card-title" style="font-size: 19px; color: var(--navy-corp); margin-bottom: 14px;">
+            <span>✅ Dictamen Favorable y Factibilidad Técnica</span>
           </div>
-          <ul class="card-list" style="gap: 16px;">
-            <li><strong>Madurez Operativa Total:</strong> Los cinco módulos se encuentran programados y validados localmente. No existe riesgo de desarrollo.</li>
-            <li><strong>Protección Humana e Inexpugnabilidad:</strong> Los coordinadores y la militancia de base cuentan con un escudo de privacidad real (tokens web efímeros y formularios sin residuo en dispositivo).</li>
-            <li><strong>Máximo Retorno Político y Organizativo:</strong> Con una inversión mínima de $294.00 USD al año, MIGATO adquiere soberanía de datos y se posiciona en la cúspide tecnológica de Monagas.</li>
+          <ul class="card-list" style="gap: 12px;">
+            <li><strong>Madurez Funcional Comprobada:</strong> Los cinco módulos se encuentran programados y evaluados en entornos de prueba, garantizando plena operatividad sin riesgos de desarrollo.</li>
+            <li><strong>Seguridad y Protección Institucional:</strong> El esquema de tokens web efímeros y formularios sin almacenamiento residual en dispositivos brinda tranquilidad y resguardo absoluto a la militancia.</li>
+            <li><strong>Alta Rentabilidad de la Inversión:</strong> El monto solicitado ($294.00 USD anuales) cubre exclusivamente costos directos de servidor cloud, representando un valor mínimo frente a su alto impacto estratégico.</li>
           </ul>
 
-          <div style="background: rgba(16, 185, 129, 0.15); border-left: 4px solid var(--success); padding: 16px 20px; border-radius: 8px; margin-top: 24px;">
-            <strong style="color: var(--success); font-size: 16px;">RECOMENDACIÓN FINAL:</strong>
-            <p style="color: #FFFFFF; font-size: 15px; margin-top: 4px;">
-              El Equipo Técnico de Sistemas y Arquitectura Digital recomienda formalmente a la Dirección General de MIGATO <strong>aprobar el presupuesto operativo de $294.00 USD anuales</strong> para proceder de inmediato con el encendido formal del servidor cloud y la validación en parroquias piloto.
+          <div style="background: var(--navy-corp); color: #FFFFFF; padding: 14px 18px; border-radius: 6px; margin-top: 20px; display: flex; flex-direction: column; gap: 4px;">
+            <strong style="color: #BAE6FD; font-size: 14.5px; text-transform: uppercase; letter-spacing: 0.5px;">RECOMENDACIÓN FINAL DE LA DIRECCIÓN TÉCNICA:</strong>
+            <p style="font-size: 14px; line-height: 1.5; color: #FFFFFF;">
+              El Equipo Técnico de Sistemas y Arquitectura Digital recomienda formalmente a la Dirección General de MIGATO <strong>aprobar el presupuesto operativo de $294.00 USD anuales</strong> para proceder de inmediato con la contratación del servidor dedicado y el inicio formal de las pruebas piloto.
             </p>
           </div>
         </div>
@@ -1006,7 +1057,7 @@ def build_web_presentation():
   <!-- PANEL DE NOTAS DEL ORADOR (COLLAPSIBLE) -->
   <div class="speaker-drawer" id="speakerDrawer">
     <div class="speaker-header">
-      <div class="speaker-title">🎙️ GUION DEL ORADOR (QUÉ DECIR EN ESTA LÁMINA)</div>
+      <div class="speaker-title">🎙️ GUION DEL EXPOSITOR (DISCURSO SUGERIDO PARA ESTA LÁMINA)</div>
       <button class="speaker-close" onclick="toggleNotes()">✕</button>
     </div>
     <div class="speaker-text" id="speakerNotesText">
@@ -1024,7 +1075,7 @@ def build_web_presentation():
       <button class="btn-nav" id="btnPrev" onclick="prevSlide()" disabled>
         ← Anterior
       </button>
-      <div class="slide-indicator" id="slideIndicator">1 / 10</div>
+      <div class="slide-indicator" id="slideIndicator">01 / 10</div>
       <button class="btn-nav" id="btnNext" onclick="nextSlide()">
         Siguiente →
       </button>
@@ -1062,7 +1113,9 @@ def build_web_presentation():
         dot.classList.toggle('active', idx === currentSlide);
       }});
 
-      slideIndicator.textContent = `${{currentSlide + 1}} / ${{totalSlides}}`;
+      const slideNum = (currentSlide + 1).toString().padStart(2, '0');
+      const totalNum = totalSlides.toString().padStart(2, '0');
+      slideIndicator.textContent = `${{slideNum}} / ${{totalNum}}`;
       progressBar.style.width = `${{((currentSlide + 1) / totalSlides) * 100}}%`;
 
       btnPrev.disabled = currentSlide === 0;
@@ -1143,10 +1196,10 @@ def build_web_presentation():
     function handleSwipe() {{
       const threshold = 50;
       if (touchEndX < touchStartX - threshold) {{
-        nextSlide(); // Swipe izquierda -> siguiente
+        nextSlide();
       }}
       if (touchEndX > touchStartX + threshold) {{
-        prevSlide(); // Swipe derecha -> anterior
+        prevSlide();
       }}
     }}
 
@@ -1156,12 +1209,11 @@ def build_web_presentation():
 </body>
 </html>"""
 
-    # Guardar en presentacion/index.html y presentacion.html
     out_dir = PROJECT_ROOT / "presentacion"
     out_dir.mkdir(parents=True, exist_ok=True)
     (out_dir / "index.html").write_text(html_content, encoding="utf-8")
     (PROJECT_ROOT / "presentacion.html").write_text(html_content, encoding="utf-8")
-    print(f"[✓] Presentación Web generada exitosamente en:")
+    print(f"[✓] Presentación Web Corporativa / Business generada exitosamente en:")
     print(f"    - {out_dir / 'index.html'}")
     print(f"    - {PROJECT_ROOT / 'presentacion.html'}")
 
