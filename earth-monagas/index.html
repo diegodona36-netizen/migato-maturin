@@ -61,7 +61,7 @@
   <meta http-equiv="Expires" content="0" />
 
   <!-- Custom Styles -->
-  <link rel="stylesheet" href="css/styles.css?v=195">
+  <link rel="stylesheet" href="css/styles.css?v=200">
 
   <!-- Script de Autenticación Rápida y Control de Acceso Estricto (Exclusivo Regional) -->
   <script src="../js/auth.js"></script>
@@ -155,7 +155,7 @@
 
     // Reseteo Total de Fábrica global
     window.resetEarthFullData = function() {
-      if (confirm("¿Desea restaurar de fábrica toda la plataforma MIGATO Earth?\n\nSe limpiarán la memoria local, la caché y se recargarán los datos limpios de producción (v=195).")) {
+      if (confirm("¿Desea restaurar de fábrica toda la plataforma MIGATO Earth?\n\nSe limpiarán la memoria local, la caché y se recargarán los datos limpios de producción (v=200).")) {
         try {
           localStorage.clear();
           sessionStorage.clear();
@@ -171,15 +171,15 @@
           }).catch(function(){});
         }
         setTimeout(function() {
-          window.location.replace(window.location.pathname + '?v=195&u=admin-militancia');
+          window.location.replace(window.location.pathname + '?v=200&u=admin-militancia');
         }, 150);
       }
     };
 
-    // Auto-actualización segura a la versión oficial v=195 (sin riesgo de bucle)
+    // Auto-actualización segura a la versión oficial v=200 (sin riesgo de bucle)
     (function() {
       try {
-        var TARGET_VERSION = "195";
+        var TARGET_VERSION = "200";
         var p = new URLSearchParams(window.location.search);
         var curV = p.get('v');
         var isReset = p.get('reset') === '1';
@@ -577,7 +577,7 @@
       </button>
 
       <!-- 👁️ Velo Blanco Exterior (Botón para Sombrear/Enfocar la Parroquia) -->
-      <button type="button" id="btn-toggle-spotlight"
+      <button type="button" id="btn-toggle-spotlight" onclick="window.toggleSpotlight ? window.toggleSpotlight() : window.earthApp?.toggleSpotlight()"
         class="px-3 sm:px-3.5 py-2 rounded-xl bg-[#18114a] hover:bg-[#23176d] border border-[#2d1f85] hover:border-amber-400 text-xs sm:text-sm font-extrabold text-slate-100 transition flex items-center gap-2 active:scale-95 shadow-sm cursor-pointer shrink-0"
         title="Alternar Velo Blanco Exterior: sombrear en blanco las zonas de afuera del polígono para enfocar la parroquia">
         <i data-lucide="sun" id="icon-toggle-spotlight" class="w-4 h-4 text-slate-300 shrink-0"></i>
@@ -785,7 +785,7 @@
     <!-- LIENZO SATELITAL CENTRAL -->
     <main class="flex-1 h-full relative overflow-hidden">
       <!-- Botón flotante para restaurar listado de sectores en escritorio cuando esté colapsado -->
-      <button type="button" id="btn-desktop-expand-sidebar" onclick="window.earthApp?.toggleSidebar(true)" style="display: none;" class="hidden md:flex absolute top-3 left-3 z-[1000] px-3 py-2 rounded-xl bg-[#140e40]/95 hover:bg-[#23176d] text-sky-300 hover:text-white border border-[#2d1f85] hover:border-sky-400/60 shadow-2xl backdrop-blur-md items-center gap-2 font-bold text-xs active:scale-95 transition cursor-pointer" title="Abrir directorio de sectores de esta parroquia">
+      <button type="button" id="btn-desktop-expand-sidebar" onclick="window.earthApp?.toggleSidebar(true)" style="display: none;" class="hidden md:flex absolute top-[76px] left-3 z-[1000] px-3 py-2 rounded-xl bg-[#140e40]/95 hover:bg-[#23176d] text-sky-300 hover:text-white border border-[#2d1f85] hover:border-sky-400/60 shadow-2xl backdrop-blur-md items-center gap-2 font-bold text-xs active:scale-95 transition cursor-pointer" title="Abrir directorio de sectores de esta parroquia">
         <i data-lucide="list" class="w-4 h-4 text-sky-400"></i>
         <span>Ver Sectores</span>
       </button>
@@ -2092,7 +2092,7 @@
   </div>
 
   <!-- SCRIPT -->
-  <script type="module" src="js/app.js?v=195"></script>
+  <script type="module" src="js/app.js?v=200"></script>
   <script>
     if (window.lucide && typeof window.lucide.createIcons === 'function') {
       window.lucide.createIcons();

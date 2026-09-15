@@ -2,16 +2,16 @@
  * Controlador Principal — Google Earth Pro Web (Edición Estado Monagas)
  * Robusto, 100% Operativo y Totalmente Individualizado
  */
-import { CATALOGO_MONAGAS, findParishInCatalog, PARISH_ALIAS_MAP, resolveParishId } from "./catalogoMonagas.js?v=195";
-import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=195";
-import { getAllParishesForSelector } from "./usersCatalog.js?v=195";
-import { EarthStore } from "./earthStore.js?v=195";
-import { EarthMapEngine } from "./mapEngine.js?v=195";
-import { PropertiesDialog } from "./propertiesDialog.js?v=195";
-import { ToolsManager } from "./toolsManager.js?v=195";
-import { detectParishFromGeometry, SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=195";
-import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=195";
-import { getParishDemographics, getMunicipioDemographics } from "./monagasDemographics.js?v=195";
+import { CATALOGO_MONAGAS, findParishInCatalog, PARISH_ALIAS_MAP, resolveParishId } from "./catalogoMonagas.js?v=200";
+import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=200";
+import { getAllParishesForSelector } from "./usersCatalog.js?v=200";
+import { EarthStore } from "./earthStore.js?v=200";
+import { EarthMapEngine } from "./mapEngine.js?v=200";
+import { PropertiesDialog } from "./propertiesDialog.js?v=200";
+import { ToolsManager } from "./toolsManager.js?v=200";
+import { detectParishFromGeometry, SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=200";
+import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=200";
+import { getParishDemographics, getMunicipioDemographics } from "./monagasDemographics.js?v=200";
 import { 
   getMunicipios, 
   getParroquiasByMun, 
@@ -21,13 +21,13 @@ import {
   findSectorById, 
   searchSectores, 
   ALL_SECTORES_FLAT 
-} from "./monagasSectoresCatalog.js?v=195";
+} from "./monagasSectoresCatalog.js?v=200";
 import { 
   getSavedFirebaseConfig, 
   saveFirebaseConfig, 
   isFirebaseConfigured, 
   initFirebase 
-} from "./firebaseConfig.js?v=195";
+} from "./firebaseConfig.js?v=200";
 
 // Controladores globales infalibles accesibles en cualquier contexto
 window.closeParishSelectorModal = function() {
@@ -759,6 +759,9 @@ class EarthMonagasApp {
     this.renderPlacesTree();
     this.showToast(`🔄 Vista restablecida a Seleccionar Parroquia (sin dependencia municipal).`, "amber");
     this.updateTerritorialFocusUI();
+    if (this.mapEngine) {
+      this.updateSpotlightButtonUI(this.mapEngine.spotlightEnabled);
+    }
   }
 
   updateTerritorialFocusUI() {
@@ -782,7 +785,9 @@ class EarthMonagasApp {
     }
 
     if (this.mapEngine?.spotlightEnabled) {
-      this.syncVeloBlancoContent();
+      this.updateVeloBlancoOverlay(true);
+    } else {
+      this.updateVeloBlancoOverlay(false);
     }
 
     if (!hud || !hudContent) return;
@@ -1121,6 +1126,9 @@ class EarthMonagasApp {
     if (this.mapEngine) {
       const isEnabled = this.mapEngine.toggleSpotlight(enabled);
       this.updateSpotlightButtonUI(isEnabled);
+      if (isEnabled && window.innerWidth >= 768 && typeof this.toggleSidebar === "function") {
+        this.toggleSidebar(false);
+      }
       return isEnabled;
     }
     return false;
@@ -1170,12 +1178,6 @@ class EarthMonagasApp {
       overlay.style.setProperty("opacity", "1", "important");
       overlay.style.setProperty("visibility", "visible", "important");
       overlay.setAttribute("aria-hidden", "false");
-
-      // En pantallas medianas y grandes, replegar automáticamente el panel lateral
-      // para que la lámina cartográfica se despliegue limpia a pantalla completa
-      if (window.innerWidth >= 768 && typeof this.toggleSidebar === "function") {
-        this.toggleSidebar(false);
-      }
 
       this.syncVeloBlancoContent();
     } else {
@@ -1235,9 +1237,9 @@ class EarthMonagasApp {
         if (statCentros) statCentros.textContent = String(munObj.totalCentros || (munObj.id === 'maturin' ? 175 : 24));
         if (statElectores) statElectores.textContent = (munObj.totalElectores || (munObj.id === 'maturin' ? 346988 : 45000)).toLocaleString();
       } else {
-        // Nivel General: Maturín, Estado Monagas por defecto según directriz
-        if (titleEl) titleEl.textContent = `MATURÍN, ESTADO MONAGAS`;
-        if (subTitleEl) subTitleEl.textContent = `13 MUNICIPIOS • SALA SITUACIONAL Y CARTOGRAFÍA OFICIAL MIGATO 2026`;
+        // Nivel General: Estado Monagas por defecto según directriz
+        if (titleEl) titleEl.textContent = `ESTADO MONAGAS • SALA SITUACIONAL`;
+        if (subTitleEl) subTitleEl.textContent = `13 MUNICIPIOS • CARTOGRAFÍA OFICIAL DE GOBIERNO • MIGATO 2026`;
         if (statTerritorio) statTerritorio.textContent = `Estado Monagas (Capital Maturín)`;
         if (statSubdiv) statSubdiv.textContent = `13 Municipios • 45 Parroquias`;
         if (statCentros) statCentros.textContent = `536`;
@@ -3478,7 +3480,21 @@ class EarthMonagasApp {
     if (explicitParishParam) {
       const cleanParam = String(explicitParishParam).toLowerCase().trim();
       const resolvedParam = (typeof PARISH_ALIAS_MAP !== "undefined" && PARISH_ALIAS_MAP[cleanParam]) ? PARISH_ALIAS_MAP[cleanParam] : cleanParam;
-      const found = this.store.findParishById(cleanParam) || this.store.findParishById(resolvedParam);
+      let found = this.store?.findParishById(cleanParam) || this.store?.findParishById(resolvedParam);
+      if (!found && typeof CATALOGO_MONAGAS !== "undefined") {
+        for (const mun of CATALOGO_MONAGAS) {
+          const match = mun.parroquias?.find(p => 
+            p.id.toLowerCase() === cleanParam || 
+            p.id.toLowerCase() === resolvedParam ||
+            p.id.toLowerCase().includes(cleanParam) ||
+            p.nombre.toLowerCase().replace(/\s+/g, '-').includes(cleanParam)
+          );
+          if (match) {
+            found = { munId: mun.id, parishId: match.id, parish: match };
+            break;
+          }
+        }
+      }
       if (found) {
         this.selectedMunId = found.munId;
         this.selectedParishId = found.parishId;
