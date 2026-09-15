@@ -1162,6 +1162,7 @@ class EarthMonagasApp {
 
     if (spotlightActive) {
       overlay.classList.remove("hidden");
+      overlay.style.display = "block";
       requestAnimationFrame(() => {
         overlay.classList.remove("opacity-0");
         overlay.classList.add("opacity-100");
@@ -1173,6 +1174,7 @@ class EarthMonagasApp {
       setTimeout(() => {
         if (!this.mapEngine?.spotlightEnabled) {
           overlay.classList.add("hidden");
+          overlay.style.display = "none";
         }
       }, 300);
     }
