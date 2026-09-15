@@ -4,7 +4,7 @@
  * Garantiza que ninguna parroquia, eje territorial o sector muestre ceros.
  */
 
-import { CATALOGO_MONAGAS } from "./catalogoMonagas.js?v=150";
+import { CATALOGO_MONAGAS } from "./catalogoMonagas.js?v=185";
 
 export const MONAGAS_DEMOGRAPHICS = {
   "san-simon": {
