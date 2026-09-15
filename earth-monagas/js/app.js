@@ -2,16 +2,16 @@
  * Controlador Principal — Google Earth Pro Web (Edición Estado Monagas)
  * Robusto, 100% Operativo y Totalmente Individualizado
  */
-import { CATALOGO_MONAGAS, findParishInCatalog, PARISH_ALIAS_MAP, resolveParishId } from "./catalogoMonagas.js?v=210";
-import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=210";
-import { getAllParishesForSelector } from "./usersCatalog.js?v=210";
-import { EarthStore } from "./earthStore.js?v=210";
-import { EarthMapEngine } from "./mapEngine.js?v=210";
-import { PropertiesDialog } from "./propertiesDialog.js?v=210";
-import { ToolsManager } from "./toolsManager.js?v=210";
-import { detectParishFromGeometry, SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=210";
-import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=210";
-import { getParishDemographics, getMunicipioDemographics } from "./monagasDemographics.js?v=210";
+import { CATALOGO_MONAGAS, findParishInCatalog, PARISH_ALIAS_MAP, resolveParishId } from "./catalogoMonagas.js?v=215";
+import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=215";
+import { getAllParishesForSelector } from "./usersCatalog.js?v=215";
+import { EarthStore } from "./earthStore.js?v=215";
+import { EarthMapEngine } from "./mapEngine.js?v=215";
+import { PropertiesDialog } from "./propertiesDialog.js?v=215";
+import { ToolsManager } from "./toolsManager.js?v=215";
+import { detectParishFromGeometry, SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=215";
+import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=215";
+import { getParishDemographics, getMunicipioDemographics } from "./monagasDemographics.js?v=215";
 import { 
   getMunicipios, 
   getParroquiasByMun, 
@@ -21,13 +21,13 @@ import {
   findSectorById, 
   searchSectores, 
   ALL_SECTORES_FLAT 
-} from "./monagasSectoresCatalog.js?v=210";
+} from "./monagasSectoresCatalog.js?v=215";
 import { 
   getSavedFirebaseConfig, 
   saveFirebaseConfig, 
   isFirebaseConfigured, 
   initFirebase 
-} from "./firebaseConfig.js?v=210";
+} from "./firebaseConfig.js?v=215";
 
 // Controladores globales infalibles accesibles en cualquier contexto
 window.closeParishSelectorModal = function() {
@@ -148,10 +148,15 @@ class EarthMonagasApp {
     this.modalParishForAdvanced = null;
     this.modalSubParishFilter = "all";
     this.catalogViewMode = "cards";
+    this.lamina120Active = false;
     window.earthApp = this;
     window.toggleSpotlight = (e = null, enabled = null) => {
       if (e && e.preventDefault) e.preventDefault();
       return window.earthApp?.toggleSpotlight(enabled);
+    };
+    window.toggleLamina120 = (e = null, enabled = null) => {
+      if (e && e.preventDefault) e.preventDefault();
+      return window.earthApp?.toggleLamina120(enabled);
     };
     window.closeQuickStats = () => window.earthApp?.closeQuickStats();
     window.clearSubParishFocus = () => window.earthApp?.clearSubParishFocus();
@@ -787,10 +792,8 @@ class EarthMonagasApp {
       this.mapEngine.activeFocusLevel = focusLevel;
     }
 
-    if (this.mapEngine?.spotlightEnabled) {
-      this.updateVeloBlancoOverlay(true);
-    } else {
-      this.updateVeloBlancoOverlay(false);
+    if (this.lamina120Active) {
+      this.syncVeloBlancoContent();
     }
 
     if (!hud || !hudContent) return;
@@ -1135,9 +1138,6 @@ class EarthMonagasApp {
     if (this.mapEngine) {
       const isEnabled = this.mapEngine.toggleSpotlight(enabled);
       this.updateSpotlightButtonUI(isEnabled);
-      if (isEnabled && window.innerWidth >= 768 && typeof this.toggleSidebar === "function") {
-        this.toggleSidebar(false);
-      }
       return isEnabled;
     }
     return false;
@@ -1153,7 +1153,7 @@ class EarthMonagasApp {
         btn.classList.add("bg-white", "text-slate-900", "border-white", "shadow-md");
         txt.textContent = "Velo Blanco: ON";
         if (icon) {
-          icon.className = "w-3.5 h-3.5 text-amber-500 shrink-0";
+          icon.className = "w-4 h-4 text-amber-500 shrink-0";
           icon.setAttribute("data-lucide", "sun");
         }
         btn.title = "Velo blanco exterior ACTIVO (alrededores sombreados en blanco). Clic para quitar el velo y ver satélite 100% limpio.";
@@ -1162,7 +1162,7 @@ class EarthMonagasApp {
         btn.classList.add("bg-[#18114a]", "hover:bg-[#23176d]", "text-slate-100", "border-[#2d1f85]");
         txt.textContent = "Velo Blanco: OFF";
         if (icon) {
-          icon.className = "w-3.5 h-3.5 text-slate-300 shrink-0";
+          icon.className = "w-4 h-4 text-slate-300 shrink-0";
           icon.setAttribute("data-lucide", "sun");
         }
         btn.title = "Velo blanco exterior DESACTIVADO (satélite limpio sin sombras). Clic para sombrear el exterior en blanco y enfocar la parroquia.";
@@ -1171,17 +1171,38 @@ class EarthMonagasApp {
         window.lucide.createIcons();
       }
     }
-    // Sincronizar la lámina oficial de Velo Blanco (Membrete, Logo y Leyendas)
-    this.updateVeloBlancoOverlay(isEnabled);
   }
 
-  updateVeloBlancoOverlay(isEnabled = null) {
+  toggleLamina120(enabled = null) {
+    this.lamina120Active = (enabled !== null) ? !!enabled : !this.lamina120Active;
+    this.updateLamina120UI(this.lamina120Active);
+    return this.lamina120Active;
+  }
+
+  updateLamina120UI(isActive) {
+    const btn = document.getElementById("btn-toggle-lamina");
+    const txt = document.getElementById("text-toggle-lamina");
+    const icon = document.getElementById("icon-toggle-lamina");
     const overlay = document.getElementById("velo-blanco-executive-overlay");
+
+    if (btn) {
+      if (isActive) {
+        btn.classList.remove("bg-[#18114a]", "text-slate-100", "border-[#2d1f85]");
+        btn.classList.add("bg-amber-400", "text-slate-950", "border-amber-300", "shadow-md");
+        if (txt) txt.textContent = "Lámina: ON";
+        if (icon) icon.className = "w-4 h-4 text-slate-950 shrink-0";
+      } else {
+        btn.classList.remove("bg-amber-400", "text-slate-950", "border-amber-300", "shadow-md");
+        btn.classList.add("bg-[#18114a]", "text-slate-100", "border-[#2d1f85]");
+        if (txt) txt.textContent = "Lámina 120\"";
+        if (icon) icon.className = "w-4 h-4 text-amber-400 shrink-0";
+      }
+    }
+
     if (!overlay) return;
 
-    const spotlightActive = (isEnabled !== null) ? !!isEnabled : !!(this.mapEngine && this.mapEngine.spotlightEnabled);
-
-    if (spotlightActive) {
+    if (isActive) {
+      document.body.classList.add("lamina-120-active");
       if (typeof this.toggleSidebar === "function") {
         try { this.toggleSidebar(false); } catch(e) {}
       }
@@ -1191,13 +1212,24 @@ class EarthMonagasApp {
       overlay.style.setProperty("visibility", "visible", "important");
       overlay.setAttribute("aria-hidden", "false");
 
+      // Si el velo blanco en el mapa no estaba encendido, activarlo para dar el contraste cartográfico de sala de mando
+      if (this.mapEngine && !this.mapEngine.spotlightEnabled) {
+        this.toggleSpotlight(true);
+      }
+
       this.syncVeloBlancoContent();
     } else {
+      document.body.classList.remove("lamina-120-active");
+      document.body.classList.remove("clean-presentation-mode");
       overlay.classList.remove("active");
       overlay.style.setProperty("opacity", "0", "important");
       overlay.style.setProperty("visibility", "hidden", "important");
       overlay.setAttribute("aria-hidden", "true");
       overlay.style.setProperty("display", "none", "important");
+    }
+
+    if (window.lucide && typeof window.lucide.createIcons === 'function') {
+      try { window.lucide.createIcons(); } catch(e){}
     }
   }
 
@@ -1212,12 +1244,14 @@ class EarthMonagasApp {
 
       const focusLevel = this.mapEngine?.activeFocusLevel || "estado";
       const munObj = this.selectedMunId ? (CATALOGO_MONAGAS.find(m => m.id === this.selectedMunId) || { nombre: "Maturín" }) : null;
+      const rawMunName = munObj?.nombre || "Maturín";
+      const cleanMunName = rawMunName.replace(/^municipio\s+/i, '').trim();
       const parish = (this.selectedMunId && this.selectedParishId) ? this.store?.getParish(this.selectedMunId, this.selectedParishId) : null;
 
       if (focusLevel === "sector" && this.activeSectorId && parish) {
         const sec = (parish.poligonos || []).find(p => String(p.id) === String(this.activeSectorId));
         if (titleEl) titleEl.textContent = `${(sec ? sec.nombre : 'SECTOR').toUpperCase()}, ${(parish.nombre || 'PARROQUIA').toUpperCase()}`;
-        if (subTitleEl) subTitleEl.textContent = `MUNICIPIO ${munObj?.nombre ? munObj.nombre.toUpperCase() : 'MATURÍN'} • MIGATO 2026`;
+        if (subTitleEl) subTitleEl.textContent = `MUNICIPIO ${cleanMunName.toUpperCase()} • MIGATO 2026`;
         if (statTerritorio) statTerritorio.textContent = `Sector ${sec?.nombre || this.activeSectorId}`;
         if (statSubdiv) statSubdiv.textContent = `Parroquia ${parish.nombre}`;
         if (statCentros) statCentros.textContent = String(sec?.centros || 1);
@@ -1225,27 +1259,26 @@ class EarthMonagasApp {
       } else if (focusLevel === "subparroquia" && this.activeSubParroquiaId && parish) {
         const sp = (parish.subparroquias || []).find(s => String(s.id) === String(this.activeSubParroquiaId));
         if (titleEl) titleEl.textContent = `${(sp ? sp.nombre : 'EJE TERRITORIAL').toUpperCase()}, ${(parish.nombre || 'PARROQUIA').toUpperCase()}`;
-        if (subTitleEl) subTitleEl.textContent = `SALA DE MANDO DE EJE • MIGATO 2026`;
+        if (subTitleEl) subTitleEl.textContent = `MUNICIPIO ${cleanMunName.toUpperCase()} • SALA SITUACIONAL 2026`;
         if (statTerritorio) statTerritorio.textContent = `Eje ${sp?.nombre || this.activeSubParroquiaId}`;
         if (statSubdiv) statSubdiv.textContent = `Parroquia ${parish.nombre}`;
         if (statCentros) statCentros.textContent = String(sp?.centros || 3);
         if (statElectores) statElectores.textContent = (sp?.electores || 5400).toLocaleString();
       } else if (focusLevel === "parroquia" && parish) {
-        if (titleEl) titleEl.textContent = `${(parish.nombre || 'PARROQUIA').toUpperCase()}, ${(munObj ? munObj.nombre : 'MATURÍN').toUpperCase()}`;
+        if (titleEl) titleEl.textContent = `PARROQUIA ${(parish.nombre || 'PARROQUIA').toUpperCase()}, MUNICIPIO ${cleanMunName.toUpperCase()}`;
         if (subTitleEl) subTitleEl.textContent = `ESTADO MONAGAS • SALA SITUACIONAL MIGATO 2026`;
         if (statTerritorio) statTerritorio.textContent = `Parroquia ${parish.nombre}`;
-        if (statSubdiv) statSubdiv.textContent = `${(parish.poligonos || []).length} Sectores • Municipio ${munObj?.nombre || 'Maturín'}`;
+        if (statSubdiv) statSubdiv.textContent = `${(parish.poligonos || []).length} Sectores • Municipio ${cleanMunName}`;
         if (statCentros) statCentros.textContent = String(parish.centrosElectorales || 18);
         if (statElectores) statElectores.textContent = (parish.electores || 35000).toLocaleString();
       } else if ((focusLevel === "municipio" || this.selectedMunId) && munObj) {
-        if (titleEl) titleEl.textContent = `MUNICIPIO ${munObj.nombre.toUpperCase()}, ESTADO MONAGAS`;
+        if (titleEl) titleEl.textContent = `MUNICIPIO ${cleanMunName.toUpperCase()}, ESTADO MONAGAS`;
         if (subTitleEl) subTitleEl.textContent = `SALA DE MANDO TERRITORIAL OFICIAL • MIGATO 2026`;
-        if (statTerritorio) statTerritorio.textContent = `Municipio ${munObj.nombre}`;
+        if (statTerritorio) statTerritorio.textContent = `Municipio ${cleanMunName}`;
         if (statSubdiv) statSubdiv.textContent = `${(munObj.parroquias || []).length} Parroquias Oficiales`;
         if (statCentros) statCentros.textContent = String(munObj.totalCentros || (munObj.id === 'maturin' ? 175 : 24));
         if (statElectores) statElectores.textContent = (munObj.totalElectores || (munObj.id === 'maturin' ? 346988 : 45000)).toLocaleString();
       } else {
-        // Nivel General: Estado Monagas por defecto según directriz
         if (titleEl) titleEl.textContent = `ESTADO MONAGAS • SALA SITUACIONAL`;
         if (subTitleEl) subTitleEl.textContent = `13 MUNICIPIOS • CARTOGRAFÍA OFICIAL DE GOBIERNO • MIGATO 2026`;
         if (statTerritorio) statTerritorio.textContent = `Estado Monagas (Capital Maturín)`;
