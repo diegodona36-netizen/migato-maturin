@@ -61,7 +61,7 @@
   <meta http-equiv="Expires" content="0" />
 
   <!-- Custom Styles -->
-  <link rel="stylesheet" href="css/styles.css?v=185">
+  <link rel="stylesheet" href="css/styles.css?v=190">
 
   <!-- Script de Autenticación Rápida y Control de Acceso Estricto (Exclusivo Regional) -->
   <script src="../js/auth.js"></script>
@@ -155,7 +155,7 @@
 
     // Reseteo Total de Fábrica global
     window.resetEarthFullData = function() {
-      if (confirm("¿Desea restaurar de fábrica toda la plataforma MIGATO Earth?\n\nSe limpiarán la memoria local, la caché y se recargarán los datos limpios de producción (v=185).")) {
+      if (confirm("¿Desea restaurar de fábrica toda la plataforma MIGATO Earth?\n\nSe limpiarán la memoria local, la caché y se recargarán los datos limpios de producción (v=190).")) {
         try {
           localStorage.clear();
           sessionStorage.clear();
@@ -171,15 +171,15 @@
           }).catch(function(){});
         }
         setTimeout(function() {
-          window.location.replace(window.location.pathname + '?v=185&u=admin-militancia');
+          window.location.replace(window.location.pathname + '?v=190&u=admin-militancia');
         }, 150);
       }
     };
 
-    // Auto-actualización segura a la versión oficial v=185 (sin riesgo de bucle)
+    // Auto-actualización segura a la versión oficial v=190 (sin riesgo de bucle)
     (function() {
       try {
-        var TARGET_VERSION = "185";
+        var TARGET_VERSION = "190";
         var p = new URLSearchParams(window.location.search);
         var curV = p.get('v');
         var isReset = p.get('reset') === '1';
@@ -795,7 +795,7 @@
       <!-- ============================================================== -->
       <!-- 🌟 LÁMINA OFICIAL DE VELO BLANCO (MEMBRETE, LOGO GATO Y LEYENDAS) -->
       <!-- ============================================================== -->
-      <div id="velo-blanco-executive-overlay" class="absolute inset-0 pointer-events-none z-[490] transition-opacity duration-300 opacity-0 hidden" aria-hidden="true">
+      <div id="velo-blanco-executive-overlay" class="absolute inset-0 pointer-events-none z-[1200] transition-opacity duration-300 opacity-0 hidden" aria-hidden="true">
         
         <!-- 🏛️ 1. MEMBRETE CENTRAL SUPERIOR -->
         <div id="velo-membrete-box" class="absolute top-3 left-1/2 -translate-x-1/2 pointer-events-auto max-w-[92vw] sm:max-w-2xl w-full px-2 z-20">
@@ -817,7 +817,7 @@
         </div>
 
         <!-- 🐱 2. LOGO OFICIAL DEL PARTIDO (ESQUINA SUPERIOR IZQUIERDA) -->
-        <div id="velo-cat-logo-badge" class="absolute top-3 left-3 pointer-events-auto z-20 hidden sm:flex items-center gap-3 bg-white/95 backdrop-blur-md border-2 border-sky-700 rounded-2xl px-3.5 py-2 shadow-2xl transition hover:scale-102">
+        <div id="velo-cat-logo-badge" class="absolute top-3 left-3 pointer-events-auto z-20 flex items-center gap-3 bg-white/95 backdrop-blur-md border-2 border-sky-700 rounded-2xl px-3.5 py-2 shadow-2xl transition hover:scale-102">
           <img src="../assets/logo-migato.png" alt="Logo Oficial MIGATO" class="w-12 h-12 object-contain drop-shadow-md">
           <div class="leading-tight">
             <span class="text-[9px] font-black text-sky-600 uppercase tracking-wider block">MOVIMIENTO INDEPENDIENTE</span>
@@ -2092,7 +2092,7 @@
   </div>
 
   <!-- SCRIPT -->
-  <script type="module" src="js/app.js?v=185"></script>
+  <script type="module" src="js/app.js?v=190"></script>
   <script>
     if (window.lucide && typeof window.lucide.createIcons === 'function') {
       window.lucide.createIcons();

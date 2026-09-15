@@ -2,16 +2,16 @@
  * Controlador Principal — Google Earth Pro Web (Edición Estado Monagas)
  * Robusto, 100% Operativo y Totalmente Individualizado
  */
-import { CATALOGO_MONAGAS, findParishInCatalog, PARISH_ALIAS_MAP, resolveParishId } from "./catalogoMonagas.js?v=185";
-import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=185";
-import { getAllParishesForSelector } from "./usersCatalog.js?v=185";
-import { EarthStore } from "./earthStore.js?v=185";
-import { EarthMapEngine } from "./mapEngine.js?v=185";
-import { PropertiesDialog } from "./propertiesDialog.js?v=185";
-import { ToolsManager } from "./toolsManager.js?v=185";
-import { detectParishFromGeometry, SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=185";
-import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=185";
-import { getParishDemographics, getMunicipioDemographics } from "./monagasDemographics.js?v=185";
+import { CATALOGO_MONAGAS, findParishInCatalog, PARISH_ALIAS_MAP, resolveParishId } from "./catalogoMonagas.js?v=190";
+import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=190";
+import { getAllParishesForSelector } from "./usersCatalog.js?v=190";
+import { EarthStore } from "./earthStore.js?v=190";
+import { EarthMapEngine } from "./mapEngine.js?v=190";
+import { PropertiesDialog } from "./propertiesDialog.js?v=190";
+import { ToolsManager } from "./toolsManager.js?v=190";
+import { detectParishFromGeometry, SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=190";
+import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=190";
+import { getParishDemographics, getMunicipioDemographics } from "./monagasDemographics.js?v=190";
 import { 
   getMunicipios, 
   getParroquiasByMun, 
@@ -21,13 +21,13 @@ import {
   findSectorById, 
   searchSectores, 
   ALL_SECTORES_FLAT 
-} from "./monagasSectoresCatalog.js?v=185";
+} from "./monagasSectoresCatalog.js?v=190";
 import { 
   getSavedFirebaseConfig, 
   saveFirebaseConfig, 
   isFirebaseConfigured, 
   initFirebase 
-} from "./firebaseConfig.js?v=185";
+} from "./firebaseConfig.js?v=190";
 
 // Controladores globales infalibles accesibles en cualquier contexto
 window.closeParishSelectorModal = function() {
@@ -1181,43 +1181,47 @@ class EarthMonagasApp {
   }
 
   syncVeloBlancoContent() {
-    const titleEl = document.getElementById("velo-title-entity");
-    const subTitleEl = document.getElementById("velo-subtitle-entity");
-    const statTerritorio = document.getElementById("velo-stat-territorio");
-    const statSubdiv = document.getElementById("velo-stat-subdivision");
-    const statCentros = document.getElementById("velo-stat-centros");
-    const statElectores = document.getElementById("velo-stat-electores");
+    try {
+      const titleEl = document.getElementById("velo-title-entity");
+      const subTitleEl = document.getElementById("velo-subtitle-entity");
+      const statTerritorio = document.getElementById("velo-stat-territorio");
+      const statSubdiv = document.getElementById("velo-stat-subdivision");
+      const statCentros = document.getElementById("velo-stat-centros");
+      const statElectores = document.getElementById("velo-stat-electores");
 
-    const focusLevel = this.mapEngine?.activeFocusLevel || "estado";
-    const mun = this.store?.getMunicipio(this.selectedMunId);
-    const parish = this.store?.getParish(this.selectedMunId, this.selectedParishId);
+      const focusLevel = this.mapEngine?.activeFocusLevel || "estado";
+      const munObj = this.selectedMunId ? (CATALOGO_MONAGAS.find(m => m.id === this.selectedMunId) || { nombre: "Maturín" }) : null;
+      const parish = (this.selectedMunId && this.selectedParishId) ? this.store?.getParish(this.selectedMunId, this.selectedParishId) : null;
 
-    if (focusLevel === "parroquia" && parish) {
-      if (titleEl) titleEl.textContent = `${(parish.nombre || 'PARROQUIA').toUpperCase()}, ${(mun ? mun.nombre : 'MATURÍN').toUpperCase()}`;
-      if (subTitleEl) subTitleEl.textContent = `ESTADO MONAGAS • SALA SITUACIONAL MIGATO 2026`;
-      if (statTerritorio) statTerritorio.textContent = `Parroquia ${parish.nombre}`;
-      if (statSubdiv) statSubdiv.textContent = `${(parish.poligonos || []).length} Sectores • Municipio ${mun?.nombre || 'Maturín'}`;
-      if (statCentros) statCentros.textContent = String(parish.centrosElectorales || 18);
-      if (statElectores) statElectores.textContent = (parish.electores || 35000).toLocaleString();
-    } else if ((focusLevel === "municipio" || this.selectedMunId) && mun) {
-      if (titleEl) titleEl.textContent = `MUNICIPIO ${mun.nombre.toUpperCase()}, ESTADO MONAGAS`;
-      if (subTitleEl) subTitleEl.textContent = `SALA DE MANDO TERRITORIAL OFICIAL • MIGATO 2026`;
-      if (statTerritorio) statTerritorio.textContent = `Municipio ${mun.nombre}`;
-      if (statSubdiv) statSubdiv.textContent = `${(mun.parroquias || []).length} Parroquias Oficiales`;
-      if (statCentros) statCentros.textContent = String(mun.totalCentros || (mun.id === 'maturin' ? 175 : 24));
-      if (statElectores) statElectores.textContent = (mun.totalElectores || (mun.id === 'maturin' ? 346988 : 45000)).toLocaleString();
-    } else {
-      // Nivel General: Maturín, Estado Monagas por defecto según directriz
-      if (titleEl) titleEl.textContent = `MATURÍN, ESTADO MONAGAS`;
-      if (subTitleEl) subTitleEl.textContent = `13 MUNICIPIOS • SALA SITUACIONAL Y CARTOGRAFÍA OFICIAL MIGATO 2026`;
-      if (statTerritorio) statTerritorio.textContent = `Estado Monagas (Capital Maturín)`;
-      if (statSubdiv) statSubdiv.textContent = `13 Municipios • 45 Parroquias`;
-      if (statCentros) statCentros.textContent = `536`;
-      if (statElectores) statElectores.textContent = `678,920`;
-    }
+      if (focusLevel === "parroquia" && parish) {
+        if (titleEl) titleEl.textContent = `${(parish.nombre || 'PARROQUIA').toUpperCase()}, ${(munObj ? munObj.nombre : 'MATURÍN').toUpperCase()}`;
+        if (subTitleEl) subTitleEl.textContent = `ESTADO MONAGAS • SALA SITUACIONAL MIGATO 2026`;
+        if (statTerritorio) statTerritorio.textContent = `Parroquia ${parish.nombre}`;
+        if (statSubdiv) statSubdiv.textContent = `${(parish.poligonos || []).length} Sectores • Municipio ${munObj?.nombre || 'Maturín'}`;
+        if (statCentros) statCentros.textContent = String(parish.centrosElectorales || 18);
+        if (statElectores) statElectores.textContent = (parish.electores || 35000).toLocaleString();
+      } else if ((focusLevel === "municipio" || this.selectedMunId) && munObj) {
+        if (titleEl) titleEl.textContent = `MUNICIPIO ${munObj.nombre.toUpperCase()}, ESTADO MONAGAS`;
+        if (subTitleEl) subTitleEl.textContent = `SALA DE MANDO TERRITORIAL OFICIAL • MIGATO 2026`;
+        if (statTerritorio) statTerritorio.textContent = `Municipio ${munObj.nombre}`;
+        if (statSubdiv) statSubdiv.textContent = `${(munObj.parroquias || []).length} Parroquias Oficiales`;
+        if (statCentros) statCentros.textContent = String(munObj.totalCentros || (munObj.id === 'maturin' ? 175 : 24));
+        if (statElectores) statElectores.textContent = (munObj.totalElectores || (munObj.id === 'maturin' ? 346988 : 45000)).toLocaleString();
+      } else {
+        // Nivel General: Maturín, Estado Monagas por defecto según directriz
+        if (titleEl) titleEl.textContent = `MATURÍN, ESTADO MONAGAS`;
+        if (subTitleEl) subTitleEl.textContent = `13 MUNICIPIOS • SALA SITUACIONAL Y CARTOGRAFÍA OFICIAL MIGATO 2026`;
+        if (statTerritorio) statTerritorio.textContent = `Estado Monagas (Capital Maturín)`;
+        if (statSubdiv) statSubdiv.textContent = `13 Municipios • 45 Parroquias`;
+        if (statCentros) statCentros.textContent = `536`;
+        if (statElectores) statElectores.textContent = `678,920`;
+      }
 
-    if (window.lucide && typeof window.lucide.createIcons === 'function') {
-      window.lucide.createIcons();
+      if (window.lucide && typeof window.lucide.createIcons === 'function') {
+        window.lucide.createIcons();
+      }
+    } catch (err) {
+      console.warn("Aviso en syncVeloBlancoContent:", err);
     }
   }
 
