@@ -505,6 +505,10 @@
 
           <!-- Menú flotante de opciones -->
           <div id="menu-options-dropdown" class="hidden absolute right-0 mt-2 w-56 bg-[#140e40]/98 border border-[#2d1f85] rounded-2xl shadow-2xl p-1.5 z-50 flex flex-col gap-1 text-xs backdrop-blur-md">
+            <a href="../lamina-monagas/?v=230" class="px-3 py-2 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/40 text-amber-300 font-bold flex items-center gap-2.5 transition">
+              <i data-lucide="tv" class="w-4 h-4 text-amber-400"></i>
+              <span>Lámina Ejecutiva 120"</span>
+            </a>
             <a href="../" class="px-3 py-2 rounded-xl hover:bg-[#23176d] text-slate-200 font-bold flex items-center gap-2.5 transition">
               <i data-lucide="home" class="w-4 h-4 text-sky-400"></i>
               <span>Portal Central</span>
@@ -633,6 +637,14 @@
         <i data-lucide="award" id="icon-toggle-lamina" class="w-4 h-4 text-amber-400 shrink-0"></i>
         <span id="text-toggle-lamina" class="whitespace-nowrap font-extrabold text-xs sm:text-sm">Lámina 120"</span>
       </button>
+
+      <!-- 📺 Acceso Directo al Módulo Dedicado de Lámina 120" (Sala Situacional) -->
+      <a href="../lamina-monagas/?v=230"
+        class="px-2.5 sm:px-3 py-2 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 border border-amber-400 text-xs font-black text-amber-300 transition flex items-center gap-1.5 active:scale-95 shadow-sm cursor-pointer shrink-0"
+        title="Abrir Módulo Dedicado de Lámina Cartográfica 120 pulgadas (Sala Situacional)">
+        <i data-lucide="tv" class="w-4 h-4 text-amber-400 shrink-0"></i>
+        <span class="hidden md:inline whitespace-nowrap">Módulo Lámina</span>
+      </a>
 
       <!-- ↩ Botón Rápido Volver a Parroquia (aparece cuando hay un eje enfocado) -->
       <button type="button" id="btn-return-parish" style="display: none;" onclick="window.earthApp?.clearSubParishFocus?.()"

@@ -1,0 +1,282 @@
+/* ==========================================================================
+   LÁMINA CARTOGRÁFICA EJECUTIVA 120" — ESTADO MONAGAS • SALA SITUACIONAL 2026
+   Estilos Optimizados para Gran Formato, Proyección 4K y Exportación Oficial
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700;800&family=Outfit:wght@500;600;700;800;900&family=Public+Sans:wght@400;500;600;700;800;900&display=swap');
+
+:root {
+  --color-primary: #1e1261;
+  --color-accent: #0284c7;
+  --color-gold: #f59e0b;
+  --color-surface: #ffffff;
+  --font-sans: 'Public Sans', system-ui, -apple-system, sans-serif;
+  --font-display: 'Outfit', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  font-family: var(--font-sans);
+  background-color: #ffffff;
+  color: #0f172a;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.font-display {
+  font-family: var(--font-display);
+}
+
+.font-mono {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ==========================================================================
+   MAPA Y CAPAS BASE
+   ========================================================================== */
+
+#map-lamina {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #ffffff;
+  z-index: 1;
+}
+
+/* Supresión absoluta de tooltips adheridos al puntero en todo el módulo */
+.leaflet-tooltip,
+.earth-tooltip {
+  display: none !important;
+}
+
+/* Ocultar atribución y controles nativos intrusivos */
+.leaflet-control-attribution {
+  display: none !important;
+}
+
+/* ==========================================================================
+   ENCABEZADO OFICIAL DE GOBIERNO (TOP BANNER)
+   ========================================================================== */
+
+#lamina-header {
+  position: absolute;
+  top: 14px;
+  left: 20px;
+  right: 20px;
+  z-index: 1000;
+  pointer-events: none;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.lamina-header-card {
+  pointer-events: auto;
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(12px);
+  border: 1.5px solid rgba(15, 23, 42, 0.9);
+  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.18);
+  border-radius: 16px;
+  padding: 10px 18px;
+}
+
+/* Migas de pan de navegación jerárquica */
+.breadcrumb-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #64748b;
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+.breadcrumb-item:hover {
+  color: #0284c7;
+}
+.breadcrumb-item.active {
+  color: #0f172a;
+  font-weight: 900;
+}
+
+/* ==========================================================================
+   PANEL LATERAL DERECHO DE ESTADÍSTICAS Y LEYENDA
+   ========================================================================== */
+
+#lamina-side-panel {
+  position: absolute;
+  top: 88px;
+  bottom: 50px;
+  right: 20px;
+  width: 360px;
+  max-width: calc(100vw - 40px);
+  z-index: 1000;
+  pointer-events: auto;
+  background: rgba(255, 255, 255, 0.97);
+  backdrop-filter: blur(14px);
+  border: 1.5px solid #0f172a;
+  border-radius: 18px;
+  box-shadow: 0 16px 38px rgba(15, 23, 42, 0.22);
+  display: flex;
+  flex-direction: column;
+  padding: 14px;
+  box-sizing: border-box;
+  overflow: hidden;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+#lamina-side-panel.minimized {
+  bottom: auto;
+  height: 48px;
+  overflow: hidden;
+}
+#lamina-side-panel.minimized .side-panel-body {
+  display: none !important;
+}
+
+.side-panel-body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  gap: 10px;
+}
+
+/* Métricas destacadas en 4 tarjetas */
+.metric-card {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+}
+.metric-label {
+  font-size: 8.5px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #64748b;
+  margin-bottom: 2px;
+}
+.metric-value {
+  font-size: 15px;
+  font-weight: 900;
+  color: #0f172a;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Lista interactiva de entidades y sectores con colores asignados */
+.interactive-list-container {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.interactive-list-container::-webkit-scrollbar {
+  width: 5px;
+}
+.interactive-list-container::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 4px;
+}
+.interactive-list-container::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+.interactive-list-container::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+.territory-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 10px;
+  border-radius: 10px;
+  border: 1px solid #e2e8f0;
+  background: #ffffff;
+  cursor: pointer;
+  margin-bottom: 4px;
+  transition: all 0.15s ease;
+}
+.territory-row:hover {
+  background: #f8fafc;
+  border-color: #94a3b8;
+  transform: translateX(-2px);
+}
+.territory-row.active {
+  background: #f0f9ff;
+  border-color: #0284c7;
+  box-shadow: 0 0 0 1.5px #0284c7;
+}
+
+/* ==========================================================================
+   BARRA CARTOGRÁFICA INFERIOR (DATUM Y ESCALA)
+   ========================================================================== */
+
+#lamina-footer {
+  position: absolute;
+  bottom: 12px;
+  left: 20px;
+  right: 20px;
+  z-index: 1000;
+  pointer-events: auto;
+  background: rgba(255, 255, 255, 0.96);
+  border: 1.5px solid #0f172a;
+  border-radius: 10px;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.14);
+  padding: 6px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 10.5px;
+  font-weight: 800;
+  color: #334155;
+}
+
+/* ==========================================================================
+   ESTILOS DE IMPRESIÓN Y EXPORTACIÓN EN ALTA RESOLUCIÓN (PDF)
+   ========================================================================== */
+
+@media print {
+  body {
+    background: #ffffff !important;
+  }
+  .no-print {
+    display: none !important;
+  }
+  #lamina-side-panel {
+    border: 1.5px solid #000000 !important;
+    box-shadow: none !important;
+    background: #ffffff !important;
+  }
+  .lamina-header-card {
+    border: 1.5px solid #000000 !important;
+    box-shadow: none !important;
+    background: #ffffff !important;
+  }
+  #lamina-footer {
+    border: 1.5px solid #000000 !important;
+    box-shadow: none !important;
+    background: #ffffff !important;
+  }
+}
