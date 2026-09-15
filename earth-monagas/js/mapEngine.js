@@ -2,9 +2,9 @@
  * Motor Cartográfico Acelerado por GPU — Google Earth Pro Web (Monagas)
  * Integrado con Capas Jerárquicas Oficiales (INE 2021) y Edición de Vértices
  */
-import { GEO_ESTADO_OFICIAL, GEO_MUNICIPIOS_OFICIAL, GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=215";
-import { CATALOGO_MONAGAS, PARISH_ALIAS_MAP, resolveParishId } from "./catalogoMonagas.js?v=215";
-import { MONAGAS_DEMOGRAPHICS, getParishDemographics, getMunicipioDemographics } from "./monagasDemographics.js?v=215";
+import { GEO_ESTADO_OFICIAL, GEO_MUNICIPIOS_OFICIAL, GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=220";
+import { CATALOGO_MONAGAS, PARISH_ALIAS_MAP, resolveParishId } from "./catalogoMonagas.js?v=220";
+import { MONAGAS_DEMOGRAPHICS, getParishDemographics, getMunicipioDemographics } from "./monagasDemographics.js?v=220";
 
 export class EarthMapEngine {
   constructor(containerId, onCoordUpdate) {
@@ -215,6 +215,7 @@ export class EarthMapEngine {
     this.tempDrawingLayer = L.layerGroup().addTo(this.map);
 
     this.spotlightEnabled = false; // Modo Foco / Velo Blanco desactivado por defecto (satélite limpio)
+    this.spotlightScope = "municipio"; // "municipio" (por defecto, corta el municipio completo) | "parroquia" (aísla la parroquia)
     this.currentParishLimite = null;
     this.currentParishId = null;
     this.currentSubParishVertices = null;
@@ -638,16 +639,47 @@ export class EarthMapEngine {
     this.map.flyToBounds(bounds, { padding: [50, 50], duration: 1.0 });
   }
 
+  getMunicipioCoordinates(munId = null) {
+    const targetMun = munId || this.activeMunicipioId || window.earthApp?.selectedMunId || "maturin";
+    if (typeof GEO_MUNICIPIOS_OFICIAL !== "undefined" && GEO_MUNICIPIOS_OFICIAL && GEO_MUNICIPIOS_OFICIAL.features) {
+      const cleanId = String(targetMun).toLowerCase().replace(/_/g, "-").trim();
+      const feat = GEO_MUNICIPIOS_OFICIAL.features.find(f => {
+        if (!f.properties) return false;
+        const fId = String(f.properties.id || "").toLowerCase().replace(/_/g, "-").trim();
+        const fNom = String(f.properties.nombre || "").toLowerCase().trim();
+        return fId === cleanId || fNom === cleanId || fId.includes(cleanId) || cleanId.includes(fId);
+      });
+      if (feat && feat.geometry) {
+        if (feat.geometry.type === "Polygon") {
+          return feat.geometry.coordinates[0].map(c => [c[1], c[0]]);
+        } else if (feat.geometry.type === "MultiPolygon") {
+          const polygons = feat.geometry.coordinates.map(p => p[0].map(c => [c[1], c[0]]));
+          return polygons.sort((a, b) => b.length - a.length)[0];
+        }
+      }
+    }
+    return null;
+  }
+
   renderSpotlightMask(coords, strokeColor = "#0284c7", strokeDash = "6, 4", strokeWeight = 3, maskCoords = null) {
     if (!this.boundaryLayer) return null;
     this.boundaryLayer.clearLayers();
     if (!coords || coords.length < 3) return null;
 
-    // Regla de Experiencia Territorial:
-    // El velo blanco exterior (máscara invertida) se detiene como máximo a nivel Parroquia.
-    // Para sectores vecinales o sub-parroquias (ejes), la máscara cubre únicamente el exterior de la Parroquia,
-    // garantizando que toda la parroquia permanezca 100% visible con sus calles, satélite y sectores adyacentes.
-    const actualMaskCoords = (maskCoords && maskCoords.length >= 3) ? maskCoords : coords;
+    // Regla de Experiencia Territorial Calibrada:
+    // 1. Si spotlightScope === "municipio" y no estamos en estado global:
+    //    El velo blanco recorta el exterior del MUNICIPIO COMPLETO (las 10 parroquias de Maturín quedan abiertas y visibles en satélite).
+    // 2. Si spotlightScope === "parroquia":
+    //    El velo blanco recorta la PARROQUIA activa (o el exterior de la parroquia si estamos en sector/eje).
+    let actualMaskCoords = coords;
+    if (this.spotlightScope === "municipio" && this.activeFocusLevel !== "estado") {
+      const munCoords = this.getMunicipioCoordinates();
+      if (munCoords && munCoords.length >= 3) {
+        actualMaskCoords = munCoords;
+      }
+    } else if (maskCoords && maskCoords.length >= 3) {
+      actualMaskCoords = maskCoords;
+    }
 
     if (this.spotlightEnabled) {
       const worldBox = [
@@ -680,20 +712,20 @@ export class EarthMapEngine {
       });
       this.boundaryLayer.addLayer(maskPoly);
 
-      // Si el velo blanco está delimitado a nivel Parroquia pero enfocamos un Sector o Sub-Parroquia,
-      // trazamos un contorno sutil de la Parroquia como referencia visual contextual
-      if (maskCoords && maskCoords !== coords && maskCoords.length >= 3) {
-        const parishFrame = L.polygon(maskCoords, {
+      // Si el velo blanco está recortado a nivel Municipio pero enfocamos una Parroquia, Sector o Eje,
+      // trazamos un contorno sutil del Municipio o de la Parroquia como referencia visual contextual
+      if (actualMaskCoords !== coords && actualMaskCoords.length >= 3) {
+        const outerFrame = L.polygon(actualMaskCoords, {
           pane: "spotlightMaskPane",
-          color: "#0284c7",
-          weight: 2.5,
-          opacity: 0.75,
+          color: "#38bdf8",
+          weight: 2,
+          opacity: 0.8,
           fill: false,
           dashArray: "6, 4",
           interactive: false,
           renderer: this.spotlightSvgRenderer || this.svgRenderer
         });
-        this.boundaryLayer.addLayer(parishFrame);
+        this.boundaryLayer.addLayer(outerFrame);
       }
     }
 
@@ -1216,6 +1248,38 @@ export class EarthMapEngine {
     // Nivel 0: Estado Monagas (Fallback global garantizado)
     this.showStateBoundary(false);
     return this.spotlightEnabled;
+  }
+
+  setSpotlightScope(scope = null) {
+    if (scope) {
+      this.spotlightScope = (scope === "parroquia") ? "parroquia" : "municipio";
+    } else {
+      this.spotlightScope = (this.spotlightScope === "municipio") ? "parroquia" : "municipio";
+    }
+    if (this.spotlightEnabled) {
+      this.refreshSpotlightMask();
+    }
+    return this.spotlightScope;
+  }
+
+  refreshSpotlightMask() {
+    if (this.activeFocusLevel === "sector" && this.currentSectorVertices) {
+      this.showSectorBoundary(this.currentSectorVertices, false);
+    } else if (this.activeFocusLevel === "subparroquia" && this.currentSubParishVertices) {
+      this.showSubParishBoundary(this.currentSubParishVertices, false);
+    } else if (this.activeFocusLevel === "parroquia" || (!this.activeFocusLevel && window.earthApp?.selectedParishId)) {
+      const targetPId = this.currentParishId || window.earthApp?.selectedParishId;
+      const p = window.earthApp?.store?.getParish(window.earthApp?.selectedMunId, targetPId);
+      const parishLimite = this.currentParishLimite || p?.limite;
+      this.showParishBoundary(parishLimite, targetPId, false);
+    } else if (this.activeFocusLevel === "municipio" || (this.activeMunicipioId || window.earthApp?.selectedMunId)) {
+      const munId = this.activeMunicipioId || window.earthApp?.selectedMunId;
+      if (munId) {
+        this.showMunicipioBoundary(munId, false);
+      }
+    } else {
+      this.showStateBoundary(false);
+    }
   }
 
   setDrawingMode(isDrawing) {

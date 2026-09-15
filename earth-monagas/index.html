@@ -61,7 +61,7 @@
   <meta http-equiv="Expires" content="0" />
 
   <!-- Estilos Centrales -->
-  <link rel="stylesheet" href="css/styles.css?v=215">
+  <link rel="stylesheet" href="css/styles.css?v=220">
 
   <!-- Script de Autenticación Rápida y Control de Acceso Estricto (Exclusivo Regional) -->
   <script src="../js/auth.js"></script>
@@ -127,6 +127,17 @@
         return window.earthApp.toggleSpotlight(enabled);
       }
     };
+    window.toggleLamina120 = function(arg1, arg2) {
+      var enabled = null;
+      if (typeof arg1 === 'boolean') enabled = arg1;
+      else if (typeof arg2 === 'boolean') enabled = arg2;
+      if (arg1 && typeof arg1.preventDefault === 'function') {
+        try { arg1.preventDefault(); } catch(e){}
+      }
+      if (window.earthApp && typeof window.earthApp.toggleLamina120 === "function") {
+        return window.earthApp.toggleLamina120(enabled);
+      }
+    };
     window.closeQuickStats = function() {
       var card = document.getElementById("card-quick-stats");
       if (card) card.style.display = "none";
@@ -161,7 +172,7 @@
 
     // Reseteo Total de Fábrica global
     window.resetEarthFullData = function() {
-      if (confirm("¿Desea restaurar de fábrica toda la plataforma MIGATO Earth?\n\nSe limpiarán la memoria local, la caché y se recargarán los datos limpios de producción (v=215).")) {
+      if (confirm("¿Desea restaurar de fábrica toda la plataforma MIGATO Earth?\n\nSe limpiarán la memoria local, la caché y se recargarán los datos limpios de producción (v=220).")) {
         try {
           localStorage.clear();
           sessionStorage.clear();
@@ -177,15 +188,15 @@
           }).catch(function(){});
         }
         setTimeout(function() {
-          window.location.replace(window.location.pathname + '?v=215&u=admin-militancia');
+          window.location.replace(window.location.pathname + '?v=220&u=admin-militancia');
         }, 150);
       }
     };
 
-    // Auto-actualización segura a la versión oficial v=215 (sin riesgo de bucle)
+    // Auto-actualización segura a la versión oficial v=220 (sin riesgo de bucle)
     (function() {
       try {
-        var TARGET_VERSION = "215";
+        var TARGET_VERSION = "220";
         var p = new URLSearchParams(window.location.search);
         var curV = p.get('v');
         var isReset = p.get('reset') === '1';
@@ -590,6 +601,14 @@
         <span id="text-toggle-spotlight" class="whitespace-nowrap font-extrabold text-xs sm:text-sm">Velo Blanco: OFF</span>
       </button>
 
+      <!-- 📐 Selector de Alcance del Velo Blanco: Municipio (10 parroquias juntas) vs Parroquia (individual) -->
+      <button type="button" id="btn-toggle-velo-scope" onclick="window.earthApp?.toggleVeloScope?.(event)"
+        class="px-2.5 sm:px-3 py-2 rounded-xl bg-[#18114a] hover:bg-[#23176d] border border-[#2d1f85] hover:border-sky-400 text-xs sm:text-sm font-extrabold text-slate-100 transition flex items-center gap-1.5 active:scale-95 shadow-sm cursor-pointer shrink-0"
+        title="Alternar corte del Velo Blanco: Municipio (corta todo Maturín manteniendo las 10 parroquias visibles) vs Parroquia (aísla la parroquia activa)">
+        <i data-lucide="layers" class="w-4 h-4 text-sky-400 shrink-0"></i>
+        <span class="whitespace-nowrap text-xs">Corte: <strong id="text-velo-scope" class="text-sky-300 font-black">Municipio</strong></span>
+      </button>
+
       <!-- 🏛️ Lámina 120" / Modo Presentación (Marco, Membrete y Ficha Oficial para proyector y fotos) -->
       <button type="button" id="btn-toggle-lamina" onclick="window.toggleLamina120(event)"
         class="px-3 sm:px-3.5 py-2 rounded-xl bg-[#18114a] hover:bg-[#23176d] border border-[#2d1f85] hover:border-amber-400 text-xs sm:text-sm font-extrabold text-slate-100 transition flex items-center gap-2 active:scale-95 shadow-sm cursor-pointer shrink-0"
@@ -806,154 +825,7 @@
 
       <div id="earth-canvas"></div>
 
-      <!-- ============================================================== -->
-      <!-- ============================================================== -->
-      <!-- 🌟 LÁMINA CARTOGRÁFICA OFICIAL DE 120" (SOLO EN MODO PRESENTACIÓN) -->
-      <!-- ============================================================== -->
-      <div id="velo-blanco-executive-overlay" class="pointer-events-none" aria-hidden="true">
-        
-        <!-- 🖼️ MARCO CARTOGRÁFICO DOBLE LÍNEA DE 120" CON CRUCES DE RETÍCULA -->
-        <div id="velo-cartographic-frame"></div>
-        <div class="velo-frame-corner velo-frame-corner-tl"></div>
-        <div class="velo-frame-corner velo-frame-corner-tr"></div>
-        <div class="velo-frame-corner velo-frame-corner-bl"></div>
-        <div class="velo-frame-corner velo-frame-corner-br"></div>
 
-        <!-- 🏛️ 1. MEMBRETE UNIFICADO SUPERIOR (SLIM & EXECUTIVE) -->
-        <div id="velo-membrete-box" class="pointer-events-auto">
-          <div class="flex items-center justify-between gap-3 px-3 py-2 sm:px-5 sm:py-2.5">
-            
-            <!-- Izquierda: Insignia MIGATO -->
-            <div class="flex items-center gap-2.5 shrink-0">
-              <img src="assets/logo-migato.png" onerror="this.onerror=null; this.src='../assets/logo-migato.png';" alt="Logo MIGATO" class="w-8 h-8 sm:w-10 sm:h-10 object-contain drop-shadow">
-              <div class="leading-none hidden sm:block">
-                <span class="text-[8px] font-black text-sky-700 tracking-wider uppercase block">MIGATO</span>
-                <strong class="text-xs font-black text-slate-950 block tracking-tight">GANAMOS TODOS</strong>
-                <span class="text-[9px] font-extrabold text-amber-600 block">MONAGAS 2026</span>
-              </div>
-            </div>
-
-            <!-- Centro: Titulación Cartográfica Oficial -->
-            <div class="text-center flex-1 min-w-0 px-2">
-              <div class="flex items-center justify-center gap-1.5 mb-0.5">
-                <span class="w-2 h-2 rounded-full bg-amber-500 shrink-0"></span>
-                <span class="text-[9px] sm:text-[10px] font-black tracking-widest text-slate-600 uppercase truncate">
-                  REPÚBLICA BOLIVARIANA DE VENEZUELA • ESTADO MONAGAS
-                </span>
-                <span class="w-2 h-2 rounded-full bg-sky-600 shrink-0"></span>
-              </div>
-              <h1 id="velo-title-entity" class="text-sm sm:text-base md:text-lg font-black text-slate-950 uppercase tracking-tight leading-tight truncate">
-                MUNICIPIO MATURÍN, ESTADO MONAGAS
-              </h1>
-              <p id="velo-subtitle-entity" class="text-[9px] sm:text-[10px] font-black text-sky-800 tracking-wide uppercase truncate mt-0.5">
-                SALA SITUACIONAL Y CARTOGRAFÍA DE GOBIERNO • MIGATO 2026
-              </p>
-            </div>
-
-            <!-- Derecha: Botón Modo Foto y Botón Cerrar Lámina -->
-            <div class="flex items-center gap-2 shrink-0">
-              <button type="button" onclick="document.body.classList.toggle('clean-presentation-mode')" 
-                class="px-2.5 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-amber-400 border border-slate-700 text-[10px] sm:text-xs font-black flex items-center gap-1.5 shadow-sm transition active:scale-95 cursor-pointer" 
-                title="Ocultar barras del sistema para tomar fotos limpias de 120 pulgadas">
-                <i data-lucide="camera" class="w-3.5 h-3.5 text-amber-400"></i>
-                <span class="hidden sm:inline">Modo Foto</span>
-              </button>
-              <button type="button" onclick="window.toggleLamina120(false)" 
-                class="w-7 h-7 rounded-xl bg-slate-100 hover:bg-rose-100 text-slate-600 hover:text-rose-600 border border-slate-300 transition flex items-center justify-center font-black text-xs cursor-pointer" 
-                title="Cerrar modo lámina">
-                ✕
-              </button>
-            </div>
-
-          </div>
-        </div>
-
-        <!-- 📊 2. FICHA TERRITORIAL COMPACTA (ESQUINA INFERIOR IZQUIERDA) -->
-        <div id="velo-panel-left-stats" class="pointer-events-auto">
-          <div class="flex items-center justify-between gap-2 border-b border-slate-200 pb-1">
-            <div class="flex items-center gap-1.5">
-              <i data-lucide="bar-chart-3" class="w-3.5 h-3.5 text-sky-700"></i>
-              <strong class="text-[11px] font-black uppercase text-slate-900 tracking-wider">Ficha CNE</strong>
-            </div>
-            <button type="button" onclick="document.getElementById('velo-panel-left-stats').classList.toggle('minimized')" class="text-slate-400 hover:text-slate-700 text-xs font-black px-1 cursor-pointer" title="Minimizar / Expandir Ficha">
-              —
-            </button>
-          </div>
-          <div class="velo-stats-body space-y-1.5 pt-1.5">
-            <div>
-              <span class="text-[9px] font-black uppercase text-slate-500 block leading-none">Territorio</span>
-              <strong id="velo-stat-territorio" class="text-xs font-black text-slate-900 block leading-tight">Municipio Maturín</strong>
-              <span id="velo-stat-subdivision" class="text-[10px] font-bold text-sky-700 block">10 Parroquias</span>
-            </div>
-            <div class="grid grid-cols-2 gap-1.5">
-              <div class="bg-slate-50 border border-slate-200 rounded-lg p-1.5">
-                <span class="text-[8px] font-black uppercase text-slate-500 block leading-none">Centros</span>
-                <strong id="velo-stat-centros" class="text-sm font-black text-slate-900">175</strong>
-              </div>
-              <div class="bg-slate-50 border border-slate-200 rounded-lg p-1.5">
-                <span class="text-[8px] font-black uppercase text-slate-500 block leading-none">Electores</span>
-                <strong id="velo-stat-electores" class="text-sm font-black text-slate-900">346,988</strong>
-              </div>
-            </div>
-            <div class="text-[9px] font-bold text-indigo-900 bg-indigo-50 border border-indigo-200 rounded-lg px-1.5 py-0.5 flex justify-between">
-              <span>Cobertura:</span>
-              <span class="font-black text-indigo-700">100% Satelital</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- 🗺️ 3. LEYENDA CARTOGRÁFICA COMPACTA (ESQUINA INFERIOR DERECHA) -->
-        <div id="velo-panel-right-legend" class="pointer-events-auto">
-          <div class="flex items-center justify-between gap-2 border-b border-slate-200 pb-1">
-            <div class="flex items-center gap-1.5">
-              <i data-lucide="map" class="w-3.5 h-3.5 text-amber-600"></i>
-              <strong class="text-[11px] font-black uppercase text-slate-900 tracking-wider">Leyenda CNE</strong>
-            </div>
-            <button type="button" onclick="document.getElementById('velo-panel-right-legend').classList.toggle('minimized')" class="text-slate-400 hover:text-slate-700 text-xs font-black px-1 cursor-pointer" title="Minimizar / Expandir Leyenda">
-              —
-            </button>
-          </div>
-          <div class="velo-legend-body space-y-1 pt-1 text-[10px]">
-            <div class="flex items-center gap-2">
-              <span class="w-4 h-1 rounded-full bg-amber-500 shrink-0"></span>
-              <span class="font-bold text-slate-800">Límite Estadal</span>
-            </div>
-            <div class="flex items-center gap-2">
-              <span class="w-4 h-1 rounded-full bg-sky-600 shrink-0"></span>
-              <span class="font-bold text-slate-800">Límite Municipal</span>
-            </div>
-            <div class="flex items-center gap-2">
-              <span class="w-4 h-0.5 border-t border-dashed border-purple-600 shrink-0"></span>
-              <span class="font-bold text-slate-800">Límites Parroquiales</span>
-            </div>
-            <div class="flex items-center gap-2">
-              <span class="w-2.5 h-2.5 rounded-full bg-rose-600 text-[7px] text-white font-black flex items-center justify-center shrink-0">C</span>
-              <span class="font-bold text-slate-800">Centros CNE</span>
-            </div>
-            <div class="flex items-center gap-2">
-              <span class="w-3 h-3 rounded bg-emerald-500/30 border border-emerald-600 shrink-0"></span>
-              <span class="font-bold text-slate-800">Sectores Vecinales</span>
-            </div>
-            <button type="button" onclick="window.print()" class="w-full mt-1.5 py-1 px-2 bg-slate-950 hover:bg-slate-800 text-white rounded-lg font-black text-[9px] flex items-center justify-center gap-1 shadow transition cursor-pointer">
-              <i data-lucide="printer" class="w-3 h-3 text-amber-400"></i>
-              <span>Imprimir / PDF</span>
-            </button>
-          </div>
-        </div>
-
-        <!-- 🏷️ 4. PIE DE LÁMINA CARTOGRÁFICA OFICIAL (DATUM Y ESCALA) -->
-        <div id="velo-footer-cartographic-bar">
-          <div class="flex items-center gap-2">
-            <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-            <span>DATUM: WGS-84 / PROYECCIÓN CARTOGRÁFICA MERCATOR</span>
-          </div>
-          <div class="flex items-center gap-3 font-mono">
-            <span class="hidden sm:inline text-slate-600">SISTEMA INTEGRADO DE INFORMACIÓN GEOGRÁFICA</span>
-            <span class="text-sky-800 font-black">MONAGAS 2026</span>
-          </div>
-        </div>
-
-      </div>
 
       <!-- BARRA FLOTANTE MÓVIL OBSOLETA (OCULTA PERMANENTEMENTE PARA NO DUPLICAR BOTONES) -->
       <div id="mobile-field-actions" style="display: none !important;" class="hidden">
@@ -2104,8 +1976,157 @@
 
   </div>
 
+  <!-- ============================================================== -->
+  <!-- 🌟 LÁMINA CARTOGRÁFICA OFICIAL DE 120" (SOLO EN MODO PRESENTACIÓN) -->
+  <!-- Top-level fixed overlay a pantalla completa (120 pulgadas, sin colisión con sidebars) -->
+  <!-- ============================================================== -->
+  <div id="velo-blanco-executive-overlay" class="pointer-events-none" aria-hidden="true">
+    
+    <!-- 🖼️ MARCO CARTOGRÁFICO DOBLE LÍNEA DE 120" CON CRUCES DE RETÍCULA -->
+    <div id="velo-cartographic-frame"></div>
+    <div class="velo-frame-corner velo-frame-corner-tl"></div>
+    <div class="velo-frame-corner velo-frame-corner-tr"></div>
+    <div class="velo-frame-corner velo-frame-corner-bl"></div>
+    <div class="velo-frame-corner velo-frame-corner-br"></div>
+
+    <!-- 🏛️ 1. MEMBRETE UNIFICADO SUPERIOR (SLIM & EXECUTIVE) -->
+    <div id="velo-membrete-box" class="pointer-events-auto">
+      <div class="flex items-center justify-between gap-3 px-3 py-2 sm:px-5 sm:py-2.5">
+        
+        <!-- Izquierda: Insignia MIGATO -->
+        <div class="flex items-center gap-2.5 shrink-0">
+          <img src="assets/logo-migato.png" onerror="this.onerror=null; this.src='../assets/logo-migato.png';" alt="Logo MIGATO" class="w-8 h-8 sm:w-10 sm:h-10 object-contain drop-shadow">
+          <div class="leading-none hidden sm:block">
+            <span class="text-[8px] font-black text-sky-700 tracking-wider uppercase block">MIGATO</span>
+            <strong class="text-xs font-black text-slate-950 block tracking-tight">GANAMOS TODOS</strong>
+            <span class="text-[9px] font-extrabold text-amber-600 block">MONAGAS 2026</span>
+          </div>
+        </div>
+
+        <!-- Centro: Titulación Cartográfica Oficial -->
+        <div class="text-center flex-1 min-w-0 px-2">
+          <div class="flex items-center justify-center gap-1.5 mb-0.5">
+            <span class="w-2 h-2 rounded-full bg-amber-500 shrink-0"></span>
+            <span class="text-[9px] sm:text-[10px] font-black tracking-widest text-slate-600 uppercase truncate">
+              REPÚBLICA BOLIVARIANA DE VENEZUELA • ESTADO MONAGAS
+            </span>
+            <span class="w-2 h-2 rounded-full bg-sky-600 shrink-0"></span>
+          </div>
+          <h1 id="velo-title-entity" class="text-sm sm:text-base md:text-lg font-black text-slate-950 uppercase tracking-tight leading-tight truncate">
+            MUNICIPIO MATURÍN, ESTADO MONAGAS
+          </h1>
+          <p id="velo-subtitle-entity" class="text-[9px] sm:text-[10px] font-black text-sky-800 tracking-wide uppercase truncate mt-0.5">
+            SALA SITUACIONAL Y CARTOGRAFÍA DE GOBIERNO • MIGATO 2026
+          </p>
+        </div>
+
+        <!-- Derecha: Botón Modo Foto y Botón Cerrar Lámina -->
+        <div class="flex items-center gap-2 shrink-0">
+          <button type="button" onclick="document.body.classList.toggle('clean-presentation-mode')" 
+            class="px-2.5 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-amber-400 border border-slate-700 text-[10px] sm:text-xs font-black flex items-center gap-1.5 shadow-sm transition active:scale-95 cursor-pointer" 
+            title="Ocultar barras del sistema para tomar fotos limpias de 120 pulgadas">
+            <i data-lucide="camera" class="w-3.5 h-3.5 text-amber-400"></i>
+            <span class="hidden sm:inline">Modo Foto</span>
+          </button>
+          <button type="button" onclick="window.toggleLamina120(false)" 
+            class="w-7 h-7 rounded-xl bg-slate-100 hover:bg-rose-100 text-slate-600 hover:text-rose-600 border border-slate-300 transition flex items-center justify-center font-black text-xs cursor-pointer" 
+            title="Cerrar modo lámina">
+            ✕
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- 📊 2. FICHA TERRITORIAL COMPACTA (ESQUINA INFERIOR IZQUIERDA) -->
+    <div id="velo-panel-left-stats" class="pointer-events-auto">
+      <div class="flex items-center justify-between gap-2 border-b border-slate-200 pb-1">
+        <div class="flex items-center gap-1.5">
+          <i data-lucide="bar-chart-3" class="w-3.5 h-3.5 text-sky-700"></i>
+          <strong class="text-[11px] font-black uppercase text-slate-900 tracking-wider">Ficha CNE</strong>
+        </div>
+        <button type="button" onclick="document.getElementById('velo-panel-left-stats').classList.toggle('minimized')" class="text-slate-400 hover:text-slate-700 text-xs font-black px-1 cursor-pointer" title="Minimizar / Expandir Ficha">
+          —
+        </button>
+      </div>
+      <div class="velo-stats-body space-y-1.5 pt-1.5">
+        <div>
+          <span class="text-[9px] font-black uppercase text-slate-500 block leading-none">Territorio</span>
+          <strong id="velo-stat-territorio" class="text-xs font-black text-slate-900 block leading-tight">Municipio Maturín</strong>
+          <span id="velo-stat-subdivision" class="text-[10px] font-bold text-sky-700 block">10 Parroquias</span>
+        </div>
+        <div class="grid grid-cols-2 gap-1.5">
+          <div class="bg-slate-50 border border-slate-200 rounded-lg p-1.5">
+            <span class="text-[8px] font-black uppercase text-slate-500 block leading-none">Centros</span>
+            <strong id="velo-stat-centros" class="text-sm font-black text-slate-900">175</strong>
+          </div>
+          <div class="bg-slate-50 border border-slate-200 rounded-lg p-1.5">
+            <span class="text-[8px] font-black uppercase text-slate-500 block leading-none">Electores</span>
+            <strong id="velo-stat-electores" class="text-sm font-black text-slate-900">346,988</strong>
+          </div>
+        </div>
+        <div class="text-[9px] font-bold text-indigo-900 bg-indigo-50 border border-indigo-200 rounded-lg px-1.5 py-0.5 flex justify-between">
+          <span>Cobertura:</span>
+          <span class="font-black text-indigo-700">100% Satelital</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 🗺️ 3. LEYENDA CARTOGRÁFICA COMPACTA (ESQUINA INFERIOR DERECHA) -->
+    <div id="velo-panel-right-legend" class="pointer-events-auto">
+      <div class="flex items-center justify-between gap-2 border-b border-slate-200 pb-1">
+        <div class="flex items-center gap-1.5">
+          <i data-lucide="map" class="w-3.5 h-3.5 text-amber-600"></i>
+          <strong class="text-[11px] font-black uppercase text-slate-900 tracking-wider">Leyenda CNE</strong>
+        </div>
+        <button type="button" onclick="document.getElementById('velo-panel-right-legend').classList.toggle('minimized')" class="text-slate-400 hover:text-slate-700 text-xs font-black px-1 cursor-pointer" title="Minimizar / Expandir Leyenda">
+          —
+        </button>
+      </div>
+      <div class="velo-legend-body space-y-1 pt-1 text-[10px]">
+        <div class="flex items-center gap-2">
+          <span class="w-4 h-1 rounded-full bg-amber-500 shrink-0"></span>
+          <span class="font-bold text-slate-800">Límite Estadal</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="w-4 h-1 rounded-full bg-sky-600 shrink-0"></span>
+          <span class="font-bold text-slate-800">Límite Municipal</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="w-4 h-0.5 border-t border-dashed border-purple-600 shrink-0"></span>
+          <span class="font-bold text-slate-800">Límites Parroquiales</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-rose-600 text-[7px] text-white font-black flex items-center justify-center shrink-0">C</span>
+          <span class="font-bold text-slate-800">Centros CNE</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="w-3 h-3 rounded bg-emerald-500/30 border border-emerald-600 shrink-0"></span>
+          <span class="font-bold text-slate-800">Sectores Vecinales</span>
+        </div>
+        <button type="button" onclick="window.print()" class="w-full mt-1.5 py-1 px-2 bg-slate-950 hover:bg-slate-800 text-white rounded-lg font-black text-[9px] flex items-center justify-center gap-1 shadow transition cursor-pointer">
+          <i data-lucide="printer" class="w-3 h-3 text-amber-400"></i>
+          <span>Imprimir / PDF</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- 🏷️ 4. PIE DE LÁMINA CARTOGRÁFICA OFICIAL (DATUM Y ESCALA) -->
+    <div id="velo-footer-cartographic-bar">
+      <div class="flex items-center gap-2">
+        <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+        <span>DATUM: WGS-84 / PROYECCIÓN CARTOGRÁFICA MERCATOR</span>
+      </div>
+      <div class="flex items-center gap-3 font-mono">
+        <span class="hidden sm:inline text-slate-600">SISTEMA INTEGRADO DE INFORMACIÓN GEOGRÁFICA</span>
+        <span class="text-sky-800 font-black">MONAGAS 2026</span>
+      </div>
+    </div>
+
+  </div>
+
   <!-- SCRIPT -->
-  <script type="module" src="js/app.js?v=215"></script>
+  <script type="module" src="js/app.js?v=220"></script>
   <script>
     if (window.lucide && typeof window.lucide.createIcons === 'function') {
       window.lucide.createIcons();

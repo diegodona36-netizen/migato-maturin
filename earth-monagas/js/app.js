@@ -2,16 +2,16 @@
  * Controlador Principal — Google Earth Pro Web (Edición Estado Monagas)
  * Robusto, 100% Operativo y Totalmente Individualizado
  */
-import { CATALOGO_MONAGAS, findParishInCatalog, PARISH_ALIAS_MAP, resolveParishId } from "./catalogoMonagas.js?v=215";
-import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=215";
-import { getAllParishesForSelector } from "./usersCatalog.js?v=215";
-import { EarthStore } from "./earthStore.js?v=215";
-import { EarthMapEngine } from "./mapEngine.js?v=215";
-import { PropertiesDialog } from "./propertiesDialog.js?v=215";
-import { ToolsManager } from "./toolsManager.js?v=215";
-import { detectParishFromGeometry, SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=215";
-import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=215";
-import { getParishDemographics, getMunicipioDemographics } from "./monagasDemographics.js?v=215";
+import { CATALOGO_MONAGAS, findParishInCatalog, PARISH_ALIAS_MAP, resolveParishId } from "./catalogoMonagas.js?v=220";
+import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=220";
+import { getAllParishesForSelector } from "./usersCatalog.js?v=220";
+import { EarthStore } from "./earthStore.js?v=220";
+import { EarthMapEngine } from "./mapEngine.js?v=220";
+import { PropertiesDialog } from "./propertiesDialog.js?v=220";
+import { ToolsManager } from "./toolsManager.js?v=220";
+import { detectParishFromGeometry, SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=220";
+import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=220";
+import { getParishDemographics, getMunicipioDemographics } from "./monagasDemographics.js?v=220";
 import { 
   getMunicipios, 
   getParroquiasByMun, 
@@ -21,13 +21,13 @@ import {
   findSectorById, 
   searchSectores, 
   ALL_SECTORES_FLAT 
-} from "./monagasSectoresCatalog.js?v=215";
+} from "./monagasSectoresCatalog.js?v=220";
 import { 
   getSavedFirebaseConfig, 
   saveFirebaseConfig, 
   isFirebaseConfigured, 
   initFirebase 
-} from "./firebaseConfig.js?v=215";
+} from "./firebaseConfig.js?v=220";
 
 // Controladores globales infalibles accesibles en cualquier contexto
 window.closeParishSelectorModal = function() {
@@ -154,9 +154,18 @@ class EarthMonagasApp {
       if (e && e.preventDefault) e.preventDefault();
       return window.earthApp?.toggleSpotlight(enabled);
     };
-    window.toggleLamina120 = (e = null, enabled = null) => {
-      if (e && e.preventDefault) e.preventDefault();
+    window.toggleLamina120 = (arg1 = null, arg2 = null) => {
+      let enabled = null;
+      if (typeof arg1 === 'boolean') enabled = arg1;
+      else if (typeof arg2 === 'boolean') enabled = arg2;
+      if (arg1 && typeof arg1.preventDefault === 'function') {
+        try { arg1.preventDefault(); } catch(err){}
+      }
       return window.earthApp?.toggleLamina120(enabled);
+    };
+    window.toggleVeloScope = (e = null) => {
+      if (e && e.preventDefault) e.preventDefault();
+      return window.earthApp?.toggleVeloScope(e);
     };
     window.closeQuickStats = () => window.earthApp?.closeQuickStats();
     window.clearSubParishFocus = () => window.earthApp?.clearSubParishFocus();
@@ -1174,7 +1183,7 @@ class EarthMonagasApp {
   }
 
   toggleLamina120(enabled = null) {
-    this.lamina120Active = (enabled !== null) ? !!enabled : !this.lamina120Active;
+    this.lamina120Active = (enabled !== null && enabled !== undefined) ? !!enabled : !this.lamina120Active;
     this.updateLamina120UI(this.lamina120Active);
     return this.lamina120Active;
   }
@@ -1184,6 +1193,8 @@ class EarthMonagasApp {
     const txt = document.getElementById("text-toggle-lamina");
     const icon = document.getElementById("icon-toggle-lamina");
     const overlay = document.getElementById("velo-blanco-executive-overlay");
+    const sidebar = document.getElementById("earth-sidebar");
+    const backdrop = document.getElementById("sidebar-backdrop");
 
     if (btn) {
       if (isActive) {
@@ -1199,18 +1210,28 @@ class EarthMonagasApp {
       }
     }
 
-    if (!overlay) return;
-
     if (isActive) {
       document.body.classList.add("lamina-120-active");
+      if (sidebar) {
+        sidebar.classList.add("hidden");
+        sidebar.classList.remove("flex");
+        sidebar.style.display = "none";
+      }
+      if (backdrop) {
+        backdrop.classList.add("hidden");
+        backdrop.style.display = "none";
+      }
       if (typeof this.toggleSidebar === "function") {
         try { this.toggleSidebar(false); } catch(e) {}
       }
-      overlay.classList.add("active");
-      overlay.style.setProperty("display", "block", "important");
-      overlay.style.setProperty("opacity", "1", "important");
-      overlay.style.setProperty("visibility", "visible", "important");
-      overlay.setAttribute("aria-hidden", "false");
+
+      if (overlay) {
+        overlay.classList.add("active");
+        overlay.style.setProperty("display", "block", "important");
+        overlay.style.setProperty("opacity", "1", "important");
+        overlay.style.setProperty("visibility", "visible", "important");
+        overlay.setAttribute("aria-hidden", "false");
+      }
 
       // Si el velo blanco en el mapa no estaba encendido, activarlo para dar el contraste cartográfico de sala de mando
       if (this.mapEngine && !this.mapEngine.spotlightEnabled) {
@@ -1218,18 +1239,70 @@ class EarthMonagasApp {
       }
 
       this.syncVeloBlancoContent();
+
+      setTimeout(() => {
+        if (this.mapEngine?.map?.invalidateSize) {
+          this.mapEngine.map.invalidateSize();
+        }
+      }, 120);
     } else {
       document.body.classList.remove("lamina-120-active");
       document.body.classList.remove("clean-presentation-mode");
-      overlay.classList.remove("active");
-      overlay.style.setProperty("opacity", "0", "important");
-      overlay.style.setProperty("visibility", "hidden", "important");
-      overlay.setAttribute("aria-hidden", "true");
-      overlay.style.setProperty("display", "none", "important");
+      if (overlay) {
+        overlay.classList.remove("active");
+        overlay.style.setProperty("opacity", "0", "important");
+        overlay.style.setProperty("visibility", "hidden", "important");
+        overlay.setAttribute("aria-hidden", "true");
+        overlay.style.setProperty("display", "none", "important");
+      }
+      setTimeout(() => {
+        if (this.mapEngine?.map?.invalidateSize) {
+          this.mapEngine.map.invalidateSize();
+        }
+      }, 120);
     }
 
     if (window.lucide && typeof window.lucide.createIcons === 'function') {
       try { window.lucide.createIcons(); } catch(e){}
+    }
+  }
+
+  toggleVeloScope(e = null) {
+    if (e && typeof e.preventDefault === 'function') {
+      try { e.preventDefault(); } catch(err){}
+    }
+    const currentScope = this.mapEngine?.spotlightScope || "municipio";
+    const nextScope = (currentScope === "municipio") ? "parroquia" : "municipio";
+    
+    if (this.mapEngine) {
+      this.mapEngine.setSpotlightScope(nextScope);
+    }
+    this.updateVeloScopeUI(nextScope);
+
+    const labelScope = nextScope === "municipio" 
+      ? "🏛️ Corte: Municipio (las 10 parroquias de Maturín visibles en satélite)" 
+      : "📍 Corte: Parroquia (solo la parroquia activa aislada)";
+    this.showToast(labelScope, "sky");
+
+    this.syncVeloBlancoContent();
+    return nextScope;
+  }
+
+  updateVeloScopeUI(scope = null) {
+    const activeScope = scope || this.mapEngine?.spotlightScope || "municipio";
+    const txtScope = document.getElementById("text-velo-scope");
+    const btnScope = document.getElementById("btn-toggle-velo-scope");
+    if (txtScope) {
+      txtScope.textContent = activeScope === "municipio" ? "Municipio" : "Parroquia";
+    }
+    if (btnScope) {
+      if (activeScope === "municipio") {
+        btnScope.classList.remove("border-purple-400/60", "bg-purple-950/40");
+        btnScope.classList.add("border-[#2d1f85]");
+      } else {
+        btnScope.classList.remove("border-[#2d1f85]");
+        btnScope.classList.add("border-purple-400/60", "bg-purple-950/40");
+      }
     }
   }
 
