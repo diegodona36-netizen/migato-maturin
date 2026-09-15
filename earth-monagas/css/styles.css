@@ -402,31 +402,80 @@ body.lamina-120-active #velo-blanco-executive-overlay {
   display: none !important;
 }
 
-/* 🗺️ 3. CAJETÍN DE LEYENDA CARTOGRÁFICA (ESQUINA INFERIOR DERECHA COMPACTA) */
+/* 🗺️ 3. CAJETÍN DE LEYENDA Y ESTADÍSTICAS INTERACTIVAS (ESQUINA DERECHA) */
 #velo-panel-right-legend {
   pointer-events: auto !important;
   opacity: 1 !important;
   position: absolute;
-  bottom: 42px;
-  right: 20px;
-  width: 220px;
+  bottom: 44px;
+  right: 22px;
+  width: 340px;
+  max-width: calc(100vw - 44px);
+  max-height: calc(100vh - 120px);
   z-index: 30;
   display: flex !important;
   flex-direction: column;
-  box-shadow: 0 6px 20px rgba(15, 23, 42, 0.18), 0 0 0 1.5px #0f172a;
-  border-radius: 14px;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.22), 0 0 0 1.5px #0f172a;
+  border-radius: 16px;
   background: rgba(255, 255, 255, 0.98) !important;
-  backdrop-filter: blur(8px);
-  padding: 8px 12px;
-  transition: all 0.2s ease;
+  backdrop-filter: blur(10px);
+  padding: 10px 14px;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  box-sizing: border-box !important;
+  overflow: hidden;
 }
 
 #velo-panel-right-legend.minimized {
   width: auto;
-  padding: 4px 10px;
+  max-height: 44px;
+  padding: 6px 12px;
 }
-#velo-panel-right-legend.minimized .velo-legend-body {
+#velo-panel-right-legend.minimized .velo-panel-right-body {
   display: none !important;
+}
+
+/* Ocultar tooltips emergentes que persiguen el cursor en Modo Lámina 120" */
+body.lamina-120-active .earth-tooltip,
+body.lamina-120-active .leaflet-tooltip {
+  display: none !important;
+}
+
+/* Estilos de la lista interactiva de territorios en la leyenda */
+.velo-territory-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 8px;
+  border-radius: 8px;
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  background: #ffffff;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.velo-territory-item:hover {
+  background: #f1f5f9;
+  border-color: #94a3b8;
+  transform: translateX(-2px);
+}
+.velo-territory-item.active-territory {
+  background: #f0f9ff;
+  border-color: #0284c7;
+  box-shadow: 0 0 0 1.5px #0284c7;
+}
+
+#velo-right-interactive-list::-webkit-scrollbar {
+  width: 4px;
+}
+#velo-right-interactive-list::-webkit-scrollbar-track {
+  background: rgba(241, 245, 249, 0.6);
+  border-radius: 4px;
+}
+#velo-right-interactive-list::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+#velo-right-interactive-list::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
 }
 
 /* 🏷️ PIE DE LÁMINA CARTOGRÁFICA (DATUM Y ESCALA) */

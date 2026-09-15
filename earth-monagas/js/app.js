@@ -2,16 +2,16 @@
  * Controlador Principal — Google Earth Pro Web (Edición Estado Monagas)
  * Robusto, 100% Operativo y Totalmente Individualizado
  */
-import { CATALOGO_MONAGAS, findParishInCatalog, PARISH_ALIAS_MAP, resolveParishId } from "./catalogoMonagas.js?v=225";
-import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=225";
-import { getAllParishesForSelector } from "./usersCatalog.js?v=225";
-import { EarthStore } from "./earthStore.js?v=225";
-import { EarthMapEngine } from "./mapEngine.js?v=225";
-import { PropertiesDialog } from "./propertiesDialog.js?v=225";
-import { ToolsManager } from "./toolsManager.js?v=225";
-import { detectParishFromGeometry, SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=225";
-import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=225";
-import { getParishDemographics, getMunicipioDemographics } from "./monagasDemographics.js?v=225";
+import { CATALOGO_MONAGAS, findParishInCatalog, PARISH_ALIAS_MAP, resolveParishId } from "./catalogoMonagas.js?v=230";
+import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=230";
+import { getAllParishesForSelector } from "./usersCatalog.js?v=230";
+import { EarthStore } from "./earthStore.js?v=230";
+import { EarthMapEngine } from "./mapEngine.js?v=230";
+import { PropertiesDialog } from "./propertiesDialog.js?v=230";
+import { ToolsManager } from "./toolsManager.js?v=230";
+import { detectParishFromGeometry, SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=230";
+import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=230";
+import { getParishDemographics, getMunicipioDemographics, getParishColor, PARISH_COLORS } from "./monagasDemographics.js?v=230";
 import { 
   getMunicipios, 
   getParroquiasByMun, 
@@ -21,13 +21,13 @@ import {
   findSectorById, 
   searchSectores, 
   ALL_SECTORES_FLAT 
-} from "./monagasSectoresCatalog.js?v=225";
+} from "./monagasSectoresCatalog.js?v=230";
 import { 
   getSavedFirebaseConfig, 
   saveFirebaseConfig, 
   isFirebaseConfigured, 
   initFirebase 
-} from "./firebaseConfig.js?v=225";
+} from "./firebaseConfig.js?v=230";
 
 // Controladores globales infalibles accesibles en cualquier contexto
 window.closeParishSelectorModal = function() {
@@ -535,6 +535,8 @@ class EarthMonagasApp {
 
       // Mostrar la Ficha Flotante de Estadísticas con los datos reales de la parroquia
       this.showQuickStats("parroquia", parish);
+      this.syncVeloBlancoContent();
+      this.renderSideStatsPanel(parishId, munId);
 
     } catch (err) {
       console.warn("[selectParish] Error controlado:", err);
@@ -1420,11 +1422,184 @@ class EarthMonagasApp {
         if (statElectores) statElectores.textContent = `678,920`;
       }
 
+      // Sincronizar el Panel Lateral Ejecutivo Derecho de Estadísticas y Leyenda Interactiva
+      this.renderSideStatsPanel();
+
       if (window.lucide && typeof window.lucide.createIcons === 'function') {
         window.lucide.createIcons();
       }
     } catch (err) {
       console.warn("Aviso en syncVeloBlancoContent:", err);
+    }
+  }
+
+  /**
+   * Conmuta las pestañas del Panel Lateral Ejecutivo: Estadísticas vs Simbología CNE
+   */
+  toggleRightPanelTab() {
+    const statsSection = document.getElementById("velo-right-stats-section");
+    const symbolsSection = document.getElementById("velo-right-symbols-section");
+    const tabLabel = document.getElementById("velo-right-tab-label");
+    if (!statsSection || !symbolsSection) return;
+
+    const isSymbolsVisible = symbolsSection.style.display !== "none";
+    if (isSymbolsVisible) {
+      symbolsSection.style.display = "none";
+      statsSection.style.display = "block";
+      if (tabLabel) tabLabel.textContent = "Simbología";
+    } else {
+      statsSection.style.display = "none";
+      symbolsSection.style.display = "block";
+      if (tabLabel) tabLabel.textContent = "Estadísticas";
+    }
+  }
+
+  /**
+   * Renderiza el Panel Lateral Ejecutivo de Estadísticas y Leyenda Interactiva
+   * Permite explorar por color todas las parroquias y sectores sin tooltips molestos en pantalla
+   */
+  renderSideStatsPanel(customParishId = null, munId = null) {
+    try {
+      const badgeEl = document.getElementById("velo-right-badge-color");
+      const titleEl = document.getElementById("velo-right-title");
+      const typeEl = document.getElementById("velo-right-entity-type");
+      const codeEl = document.getElementById("velo-right-entity-code");
+      const habEl = document.getElementById("velo-stat-right-hab");
+      const votEl = document.getElementById("velo-stat-right-vot");
+      const cenEl = document.getElementById("velo-stat-right-cen");
+      const casEl = document.getElementById("velo-stat-right-cas");
+      const listTitleEl = document.getElementById("velo-right-list-title");
+      const listCountEl = document.getElementById("velo-right-list-count");
+      const listEl = document.getElementById("velo-right-interactive-list");
+
+      if (!titleEl || !habEl) return;
+
+      const targetMunId = munId || this.selectedMunId || "maturin";
+      const munObj = (typeof CATALOGO_MONAGAS !== "undefined" ? CATALOGO_MONAGAS : []).find(m => m.id === targetMunId) 
+                     || { id: "maturin", nombre: "Maturín", parroquias: [] };
+      const rawMunName = munObj.nombre || "Maturín";
+      const cleanMunName = rawMunName.replace(/^municipio\s+/i, '').trim();
+
+      const targetParishId = customParishId !== null ? customParishId : this.selectedParishId;
+
+      if (targetParishId) {
+        const resolvedPId = resolveParishId(targetParishId);
+        const pObj = (munObj.parroquias || []).find(p => p.id === targetParishId || resolveParishId(p.id) === resolvedPId) 
+                     || { id: targetParishId, nombre: targetParishId };
+        const pColor = getParishColor(resolvedPId);
+        const pDem = getParishDemographics(targetMunId, resolvedPId);
+
+        if (badgeEl) {
+          badgeEl.style.backgroundColor = pColor;
+          badgeEl.style.boxShadow = `0 0 8px ${pColor}88`;
+        }
+        if (titleEl) titleEl.textContent = (pObj.nombre || "PARROQUIA").toUpperCase();
+        if (typeEl) typeEl.textContent = `Parroquia • Municipio ${cleanMunName}`;
+        if (codeEl) codeEl.textContent = "OFICIAL CNE";
+
+        if (habEl) habEl.textContent = pDem?.habitantes ? pDem.habitantes.toLocaleString("es-VE") : "—";
+        if (votEl) votEl.textContent = pDem?.votantes ? pDem.votantes.toLocaleString("es-VE") : "—";
+        if (cenEl) cenEl.textContent = pDem?.centros ? `${pDem.centros} Centros` : "—";
+        if (casEl) casEl.textContent = pDem?.casas ? pDem.casas.toLocaleString("es-VE") : "—";
+
+        // Obtener sectores censados de la parroquia
+        const parishInStore = this.store?.getParish(targetMunId, targetParishId);
+        let sectores = (parishInStore?.poligonos && parishInStore.poligonos.length > 0) 
+                       ? parishInStore.poligonos 
+                       : (getSectoresByParish(targetMunId, resolvedPId) || []);
+
+        if (listTitleEl) listTitleEl.textContent = "Sectores Censados (Clic para enfocar)";
+        if (listCountEl) listCountEl.textContent = String(sectores.length);
+
+        if (listEl) {
+          let html = `
+            <div onclick="window.earthApp.renderSideStatsPanel(null, '${targetMunId}')" 
+                 class="flex items-center justify-between p-1.5 rounded-lg bg-sky-50 hover:bg-sky-100 text-sky-900 border border-sky-200/80 cursor-pointer mb-1.5 transition text-[10px] font-black"
+                 title="Ver todas las parroquias">
+              <span class="flex items-center gap-1">
+                <span>⬅</span>
+                <span>Ver todas las 11 parroquias</span>
+              </span>
+              <span class="bg-sky-200/80 text-sky-950 px-1.5 py-0.2 rounded font-mono text-[9px]">11</span>
+            </div>
+          `;
+
+          if (sectores && sectores.length > 0) {
+            html += sectores.map(sec => {
+              const sName = sec.nombre || "Sector";
+              const sVot = sec.electores ? `${sec.electores.toLocaleString("es-VE")} elect.` : "";
+              const isSecActive = (this.activeSectorId && String(this.activeSectorId) === String(sec.id));
+
+              return `
+                <div onclick="window.earthApp.selectSectorFromModal('${targetMunId}', '${targetParishId}', '${sec.id}')"
+                     class="velo-territory-item flex items-center justify-between p-1.5 rounded-lg border cursor-pointer transition text-[10px] ${isSecActive ? 'active-territory' : 'bg-slate-50 hover:bg-slate-100 border-slate-200/60'}"
+                     title="${sName} • Clic para enfocar">
+                  <div class="flex items-center gap-1.5 truncate">
+                    <span class="w-2 h-2 rounded-full shrink-0" style="background-color: ${pColor};"></span>
+                    <span class="font-bold text-slate-800 truncate">${sName}</span>
+                  </div>
+                  <span class="text-[9px] font-bold text-slate-700 shrink-0 ml-1">
+                    ${sVot || 'Sector'}
+                  </span>
+                </div>
+              `;
+            }).join("");
+          } else {
+            html += `
+              <div class="p-2 text-center text-[10px] text-slate-700 italic">
+                Sectores en fase de cartografía de detalle
+              </div>
+            `;
+          }
+          listEl.innerHTML = html;
+        }
+
+      } else {
+        // Vista Consolidada del Municipio (Maturín con sus 11 Parroquias)
+        const munDem = getMunicipioDemographics(targetMunId);
+        if (badgeEl) {
+          badgeEl.style.backgroundColor = "#2563eb";
+          badgeEl.style.boxShadow = "0 0 8px #2563eb88";
+        }
+        if (titleEl) titleEl.textContent = `MUNICIPIO ${cleanMunName.toUpperCase()}`;
+        if (typeEl) typeEl.textContent = "Resumen Territorial Consolidado";
+        if (codeEl) codeEl.textContent = `${(munObj.parroquias || []).length} PARROQUIAS`;
+
+        if (habEl) habEl.textContent = munDem?.habitantes ? munDem.habitantes.toLocaleString("es-VE") : "547,000";
+        if (votEl) votEl.textContent = munDem?.votantes ? munDem.votantes.toLocaleString("es-VE") : (munObj.totalElectores ? munObj.totalElectores.toLocaleString("es-VE") : "346,988");
+        if (cenEl) cenEl.textContent = munDem?.centros ? `${munDem.centros} Centros` : (munObj.totalCentros ? `${munObj.totalCentros} Centros` : "175 Centros");
+        if (casEl) casEl.textContent = munDem?.casas ? munDem.casas.toLocaleString("es-VE") : "153,600";
+
+        if (listTitleEl) listTitleEl.textContent = "Parroquias (Clic para enfocar)";
+        if (listCountEl) listCountEl.textContent = String((munObj.parroquias || []).length);
+
+        if (listEl) {
+          listEl.innerHTML = (munObj.parroquias || []).map(p => {
+            const pId = p.id;
+            const resolvedPId = resolveParishId(pId);
+            const pColor = getParishColor(resolvedPId);
+            const pDem = getParishDemographics(targetMunId, resolvedPId);
+            const votStr = pDem?.votantes ? `${pDem.votantes.toLocaleString("es-VE")} elect.` : '';
+            const isSelected = (this.selectedParishId === pId || this.selectedParishId === resolvedPId);
+
+            return `
+              <div onclick="window.earthApp.selectParish('${targetMunId}', '${pId}', true); window.earthApp.renderSideStatsPanel('${pId}', '${targetMunId}');"
+                   class="velo-territory-item flex items-center justify-between p-1.5 rounded-lg border cursor-pointer transition text-[10px] ${isSelected ? 'active-territory' : 'bg-slate-50 hover:bg-slate-100 border-slate-200/60'}"
+                   title="Clic para enfocar parroquia ${p.nombre}">
+                <div class="flex items-center gap-1.5 truncate">
+                  <span class="w-2.5 h-2.5 rounded-full shrink-0 shadow-xs" style="background-color: ${pColor};"></span>
+                  <span class="font-bold text-slate-800 truncate">${p.nombre}</span>
+                </div>
+                <span class="text-[9px] font-extrabold text-slate-700 shrink-0 ml-1">
+                  ${votStr || (pDem?.centros ? `${pDem.centros} c.` : 'Ver')}
+                </span>
+              </div>
+            `;
+          }).join("");
+        }
+      }
+    } catch (err) {
+      console.warn("Aviso en renderSideStatsPanel:", err);
     }
   }
 
@@ -2686,8 +2861,11 @@ class EarthMonagasApp {
 
       if (this.mapEngine && poly.id) {
         this.mapEngine.highlightPolygon(poly.id);
+        this.mapEngine.activeFocusLevel = "sector";
       }
 
+      this.activeSectorId = poly.id;
+      this.syncVeloBlancoContent();
       this.showQuickStats("poligono", poly);
       this.showToast(`🎯 Sector enfocado: ${poly.nombre}`, "sky");
     }

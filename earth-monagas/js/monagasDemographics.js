@@ -4,7 +4,27 @@
  * Garantiza que ninguna parroquia, eje territorial o sector muestre ceros.
  */
 
-import { CATALOGO_MONAGAS } from "./catalogoMonagas.js?v=225";
+import { CATALOGO_MONAGAS } from "./catalogoMonagas.js?v=230";
+
+export const PARISH_COLORS = {
+  "alto-de-los-godos": "#2563eb", // Azul Royal
+  "la-pica": "#ef4444",          // Rojo Carmesí
+  "san-simon": "#10b981",        // Verde Esmeralda
+  "boqueron": "#f59e0b",         // Ámbar Dorado
+  "las-cocuizas": "#8b5cf6",     // Violeta Intenso
+  "santa-cruz": "#06b6d4",       // Cian Océano
+  "san-vicente": "#ea580c",      // Naranja Vivo
+  "jusepin": "#ec4899",          // Rosa Magenta
+  "el-furrial": "#84cc16",       // Verde Lima
+  "el-corozo": "#6366f1",        // Índigo Profundo
+  "san-simon-rural": "#0d9488"   // Teal Petróleo
+};
+
+export function getParishColor(parishId) {
+  if (!parishId) return "#38bdf8";
+  const cleanId = String(parishId).toLowerCase().replace(/_/g, "-").trim();
+  return PARISH_COLORS[cleanId] || "#38bdf8";
+}
 
 export const MONAGAS_DEMOGRAPHICS = {
   "san-simon": {

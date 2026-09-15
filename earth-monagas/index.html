@@ -61,7 +61,7 @@
   <meta http-equiv="Expires" content="0" />
 
   <!-- Estilos Centrales -->
-  <link rel="stylesheet" href="css/styles.css?v=225">
+  <link rel="stylesheet" href="css/styles.css?v=230">
 
   <!-- Script de Autenticación Rápida y Control de Acceso Estricto (Exclusivo Regional) -->
   <script src="../js/auth.js"></script>
@@ -189,7 +189,7 @@
 
     // Reseteo Total de Fábrica global
     window.resetEarthFullData = function() {
-      if (confirm("¿Desea restaurar de fábrica toda la plataforma MIGATO Earth?\n\nSe limpiarán la memoria local, la caché y se recargarán los datos limpios de producción (v=225).")) {
+      if (confirm("¿Desea restaurar de fábrica toda la plataforma MIGATO Earth?\n\nSe limpiarán la memoria local, la caché y se recargarán los datos limpios de producción (v=230).")) {
         try {
           localStorage.clear();
           sessionStorage.clear();
@@ -205,15 +205,15 @@
           }).catch(function(){});
         }
         setTimeout(function() {
-          window.location.replace(window.location.pathname + '?v=225&u=admin-militancia');
+          window.location.replace(window.location.pathname + '?v=230&u=admin-militancia');
         }, 150);
       }
     };
 
-    // Auto-actualización segura a la versión oficial v=225 (sin riesgo de bucle)
+    // Auto-actualización segura a la versión oficial v=230 (sin riesgo de bucle)
     (function() {
       try {
-        var TARGET_VERSION = "225";
+        var TARGET_VERSION = "230";
         var p = new URLSearchParams(window.location.search);
         var curV = p.get('v');
         var isReset = p.get('reset') === '1';
@@ -2089,42 +2089,106 @@
       </div>
     </div>
 
-    <!-- 🗺️ 3. LEYENDA CARTOGRÁFICA COMPACTA (ESQUINA INFERIOR DERECHA) -->
+    <!-- 📊 3. PANEL LATERAL EJECUTIVO DE ESTADÍSTICAS Y LEYENDA INTERACTIVA (ESQUINA DERECHA) -->
     <div id="velo-panel-right-legend" class="pointer-events-auto">
-      <div class="flex items-center justify-between gap-2 border-b border-slate-200 pb-1">
-        <div class="flex items-center gap-1.5">
-          <i data-lucide="map" class="w-3.5 h-3.5 text-amber-600"></i>
-          <strong class="text-[11px] font-black uppercase text-slate-900 tracking-wider">Leyenda CNE</strong>
+      
+      <!-- Encabezado con Título, Insignia de Color y Botón Minimizar -->
+      <div class="flex items-center justify-between gap-2 border-b border-slate-200 pb-1.5 shrink-0">
+        <div class="flex items-center gap-1.5 min-w-0">
+          <span id="velo-right-badge-color" class="w-3 h-3 rounded-full bg-sky-500 shadow-sm shrink-0"></span>
+          <strong id="velo-right-title" class="text-xs font-black uppercase text-slate-950 tracking-wider truncate">
+            Maturín (11 Parroquias)
+          </strong>
         </div>
-        <button type="button" onclick="document.getElementById('velo-panel-right-legend').classList.toggle('minimized')" class="text-slate-400 hover:text-slate-700 text-xs font-black px-1 cursor-pointer" title="Minimizar / Expandir Leyenda">
-          —
-        </button>
+        <div class="flex items-center gap-1 shrink-0">
+          <button type="button" id="btn-toggle-right-tab" onclick="window.earthApp?.toggleRightPanelTab?.()" class="text-[10px] font-extrabold px-1.5 py-0.5 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 transition cursor-pointer" title="Alternar entre Estadísticas y Simbología CNE">
+            <span id="velo-right-tab-label">Simbología</span>
+          </button>
+          <button type="button" onclick="document.getElementById('velo-panel-right-legend').classList.toggle('minimized')" class="text-slate-400 hover:text-slate-700 text-xs font-black px-1.5 py-0.5 rounded hover:bg-slate-100 cursor-pointer" title="Minimizar / Expandir Panel">
+            —
+          </button>
+        </div>
       </div>
-      <div class="velo-legend-body space-y-1 pt-1 text-[10px]">
-        <div class="flex items-center gap-2">
-          <span class="w-4 h-1 rounded-full bg-amber-500 shrink-0"></span>
-          <span class="font-bold text-slate-800">Límite Estadal</span>
+
+      <!-- CUERPO PRINCIPAL DEL PANEL -->
+      <div class="velo-panel-right-body flex flex-col gap-2 pt-2">
+        
+        <!-- VISTA 1: FICHA DE ESTADÍSTICAS RESUMIDAS (Tipo Tooltip pero fija y elegante) -->
+        <div id="velo-right-stats-section" class="space-y-2">
+          
+          <!-- Subtítulo de Entidad / Nivel -->
+          <div class="flex items-center justify-between text-[10px] text-slate-600 font-bold">
+            <span id="velo-right-entity-type">Resumen Territorial</span>
+            <span id="velo-right-entity-code" class="font-mono text-sky-700">OFICIAL CNE</span>
+          </div>
+
+          <!-- Cuadrícula 4 Métricas Clave (Habitantes, Electores, Centros, Viviendas) -->
+          <div class="grid grid-cols-2 gap-1.5 text-slate-900">
+            <div class="bg-slate-50 border border-slate-200 rounded-xl p-2 shadow-xs">
+              <span class="text-[8px] font-black uppercase tracking-wider text-slate-500 block leading-none mb-0.5">Habitantes</span>
+              <strong id="velo-stat-right-hab" class="text-xs sm:text-sm font-black text-slate-950 block truncate">547,000</strong>
+            </div>
+            <div class="bg-sky-50/60 border border-sky-200 rounded-xl p-2 shadow-xs">
+              <span class="text-[8px] font-black uppercase tracking-wider text-sky-800 block leading-none mb-0.5">Electores CNE</span>
+              <strong id="velo-stat-right-vot" class="text-xs sm:text-sm font-black text-sky-950 block truncate">346,988</strong>
+            </div>
+            <div class="bg-amber-50/60 border border-amber-200 rounded-xl p-2 shadow-xs">
+              <span class="text-[8px] font-black uppercase tracking-wider text-amber-800 block leading-none mb-0.5">Centros CNE</span>
+              <strong id="velo-stat-right-cen" class="text-xs sm:text-sm font-black text-amber-950 block truncate">175</strong>
+            </div>
+            <div class="bg-emerald-50/60 border border-emerald-200 rounded-xl p-2 shadow-xs">
+              <span class="text-[8px] font-black uppercase tracking-wider text-emerald-800 block leading-none mb-0.5">Viviendas / Fam.</span>
+              <strong id="velo-stat-right-cas" class="text-xs sm:text-sm font-black text-emerald-950 block truncate">153,600</strong>
+            </div>
+          </div>
+
+          <!-- Línea Separadora y Título de Lista Interactiva -->
+          <div class="flex items-center justify-between pt-1 border-t border-slate-200">
+            <span id="velo-right-list-title" class="text-[10px] font-black uppercase text-slate-700 tracking-wider">
+              Parroquias (Clic para enfocar)
+            </span>
+            <span class="text-[9px] font-extrabold text-sky-700 bg-sky-100 px-1.5 py-0.2 rounded-full" id="velo-right-list-count">
+              11
+            </span>
+          </div>
+
+          <!-- Lista Interactiva con Colores Asignados (Scroll Suave) -->
+          <div id="velo-right-interactive-list" class="space-y-1 max-h-[30vh] overflow-y-auto pr-1">
+            <!-- Filas inyectadas dinámicamente por app.js -->
+          </div>
+
         </div>
-        <div class="flex items-center gap-2">
-          <span class="w-4 h-1 rounded-full bg-sky-600 shrink-0"></span>
-          <span class="font-bold text-slate-800">Límite Municipal</span>
+
+        <!-- VISTA 2: SIMBOLOGÍA CNE (Oculta por defecto, conmutable con pestaña) -->
+        <div id="velo-right-symbols-section" style="display: none;" class="space-y-1.5 pt-1 text-[10px]">
+          <div class="flex items-center gap-2 py-0.5">
+            <span class="w-4 h-1.5 rounded-full bg-amber-500 shrink-0"></span>
+            <span class="font-bold text-slate-800">Límite Estadal</span>
+          </div>
+          <div class="flex items-center gap-2 py-0.5">
+            <span class="w-4 h-1.5 rounded-full bg-sky-600 shrink-0"></span>
+            <span class="font-bold text-slate-800">Límite Municipal</span>
+          </div>
+          <div class="flex items-center gap-2 py-0.5">
+            <span class="w-4 h-1 border-t-2 border-dashed border-purple-600 shrink-0"></span>
+            <span class="font-bold text-slate-800">Límites Parroquiales</span>
+          </div>
+          <div class="flex items-center gap-2 py-0.5">
+            <span class="w-3 h-3 rounded-full bg-rose-600 text-[7px] text-white font-black flex items-center justify-center shrink-0">C</span>
+            <span class="font-bold text-slate-800">Centros de Votación CNE</span>
+          </div>
+          <div class="flex items-center gap-2 py-0.5">
+            <span class="w-3.5 h-3.5 rounded bg-emerald-500/30 border border-emerald-600 shrink-0"></span>
+            <span class="font-bold text-slate-800">Sectores Vecinales Censados</span>
+          </div>
         </div>
-        <div class="flex items-center gap-2">
-          <span class="w-4 h-0.5 border-t border-dashed border-purple-600 shrink-0"></span>
-          <span class="font-bold text-slate-800">Límites Parroquiales</span>
-        </div>
-        <div class="flex items-center gap-2">
-          <span class="w-2.5 h-2.5 rounded-full bg-rose-600 text-[7px] text-white font-black flex items-center justify-center shrink-0">C</span>
-          <span class="font-bold text-slate-800">Centros CNE</span>
-        </div>
-        <div class="flex items-center gap-2">
-          <span class="w-3 h-3 rounded bg-emerald-500/30 border border-emerald-600 shrink-0"></span>
-          <span class="font-bold text-slate-800">Sectores Vecinales</span>
-        </div>
-        <button type="button" onclick="window.print()" class="w-full mt-1.5 py-1 px-2 bg-slate-950 hover:bg-slate-800 text-white rounded-lg font-black text-[9px] flex items-center justify-center gap-1 shadow transition cursor-pointer">
-          <i data-lucide="printer" class="w-3 h-3 text-amber-400"></i>
-          <span>Imprimir / PDF</span>
+
+        <!-- Botón Imprimir / PDF -->
+        <button type="button" onclick="window.print()" class="w-full mt-1 py-1.5 px-3 bg-slate-950 hover:bg-slate-800 text-white rounded-xl font-black text-[10px] flex items-center justify-center gap-1.5 shadow transition cursor-pointer active:scale-95 shrink-0">
+          <i data-lucide="printer" class="w-3.5 h-3.5 text-amber-400"></i>
+          <span>Imprimir Lámina / Exportar PDF</span>
         </button>
+
       </div>
     </div>
 
@@ -2143,7 +2207,7 @@
   </div>
 
   <!-- SCRIPT -->
-  <script type="module" src="js/app.js?v=225"></script>
+  <script type="module" src="js/app.js?v=230"></script>
   <script>
     if (window.lucide && typeof window.lucide.createIcons === 'function') {
       window.lucide.createIcons();

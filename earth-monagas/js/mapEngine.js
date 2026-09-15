@@ -2,9 +2,9 @@
  * Motor Cartográfico Acelerado por GPU — Google Earth Pro Web (Monagas)
  * Integrado con Capas Jerárquicas Oficiales (INE 2021) y Edición de Vértices
  */
-import { GEO_ESTADO_OFICIAL, GEO_MUNICIPIOS_OFICIAL, GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=225";
-import { CATALOGO_MONAGAS, PARISH_ALIAS_MAP, resolveParishId } from "./catalogoMonagas.js?v=225";
-import { MONAGAS_DEMOGRAPHICS, getParishDemographics, getMunicipioDemographics } from "./monagasDemographics.js?v=225";
+import { GEO_ESTADO_OFICIAL, GEO_MUNICIPIOS_OFICIAL, GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=230";
+import { CATALOGO_MONAGAS, PARISH_ALIAS_MAP, resolveParishId } from "./catalogoMonagas.js?v=230";
+import { MONAGAS_DEMOGRAPHICS, getParishDemographics, getMunicipioDemographics, getParishColor } from "./monagasDemographics.js?v=230";
 
 export class EarthMapEngine {
   constructor(containerId, onCoordUpdate) {
@@ -439,20 +439,26 @@ export class EarthMapEngine {
     this.layerL3_Parroquias = L.geoJSON(GEO_PARROQUIAS_OFICIAL, {
       renderer: this.canvasRenderer,
       interactive: true,
-      style: (feature) => ({
-        color: "#ffffff",
-        weight: 1.5,
-        opacity: 0.85,
-        fillColor: feature.properties?.color || "#10b981",
-        fillOpacity: 0.14,
-        dashArray: "5, 4"
-      }),
+      style: (feature) => {
+        const pId = feature.properties?.id;
+        const resolvedParishId = (typeof PARISH_ALIAS_MAP !== "undefined" && PARISH_ALIAS_MAP[pId]) ? PARISH_ALIAS_MAP[pId] : pId;
+        const pColor = getParishColor(resolvedParishId);
+        return {
+          color: pColor,
+          weight: 2,
+          opacity: 0.9,
+          fillColor: pColor,
+          fillOpacity: 0.22,
+          dashArray: "5, 4"
+        };
+      },
       onEachFeature: (feature, layer) => {
         const pProps = feature.properties || {};
         const pName = pProps.nombre || "Parroquia";
         const pId = pProps.id;
         const munId = String(pProps.municipioId || pProps.ADM2_ES || "maturin").toLowerCase().replace(/_/g, "-").trim();
         const resolvedParishId = (typeof PARISH_ALIAS_MAP !== "undefined" && PARISH_ALIAS_MAP[pId]) ? PARISH_ALIAS_MAP[pId] : pId;
+        const pColor = getParishColor(resolvedParishId);
         const munObj = (typeof CATALOGO_MONAGAS !== "undefined" ? CATALOGO_MONAGAS : []).find(m => {
           const mId = String(m.id).toLowerCase().replace(/_/g, "-").trim();
           return mId === munId || mId.includes(munId) || munId.includes(mId);
@@ -467,13 +473,19 @@ export class EarthMapEngine {
 
         layer.on({
           mouseover: () => {
-            layer.setStyle({ weight: 3, color: "#facc15", fillOpacity: 0.38 });
+            layer.setStyle({ weight: 3.5, color: "#facc15", fillOpacity: 0.45 });
+            if (window.earthApp?.renderSideStatsPanel) {
+              window.earthApp.renderSideStatsPanel(resolvedParishId, munId);
+            }
           },
           mouseout: () => {
-            layer.setStyle({ weight: 1.5, color: "#ffffff", fillOpacity: 0.14 });
+            layer.setStyle({ weight: 2, color: pColor, fillOpacity: 0.22 });
           },
           click: (e) => {
             L.DomEvent.stopPropagation(e);
+            if (window.earthApp?.renderSideStatsPanel) {
+              window.earthApp.renderSideStatsPanel(resolvedParishId, munId);
+            }
             if (window.earthApp?.selectParish) {
               window.earthApp.selectParish(munId, resolvedParishId, true);
             }
@@ -894,15 +906,16 @@ export class EarthMapEngine {
 
     parishFeatures.forEach(feature => {
       const pProps = feature.properties || {};
-      const pColor = pProps.color || "#10b981";
       const pName = pProps.nombre || "Parroquia";
       const pId = pProps.id;
+      const resolvedParishId = (typeof PARISH_ALIAS_MAP !== "undefined" && PARISH_ALIAS_MAP[pId]) ? PARISH_ALIAS_MAP[pId] : pId;
+      const pColor = getParishColor(resolvedParishId);
 
       const layer = L.geoJSON(feature, {
         renderer: this.canvasRenderer,
         interactive: true,
         style: {
-          color: "#ffffff",
+          color: pColor,
           weight: 2,
           opacity: 0.9,
           fillColor: pColor,
@@ -911,7 +924,6 @@ export class EarthMapEngine {
         }
       });
 
-      const resolvedParishId = (typeof PARISH_ALIAS_MAP !== "undefined" && PARISH_ALIAS_MAP[pId]) ? PARISH_ALIAS_MAP[pId] : pId;
       const pDem = getParishDemographics(cleanMunId, resolvedParishId);
       const pHab = pDem && pDem.habitantes ? pDem.habitantes.toLocaleString("es-VE") : "—";
       const pVot = pDem && pDem.votantes ? pDem.votantes.toLocaleString("es-VE") : "—";
@@ -921,14 +933,20 @@ export class EarthMapEngine {
       layer.on({
         mouseover: () => {
           layer.setStyle({ weight: 3.5, color: "#facc15", fillOpacity: 0.45 });
+          if (window.earthApp?.renderSideStatsPanel) {
+            window.earthApp.renderSideStatsPanel(resolvedParishId, cleanMunId);
+          }
         },
         mouseout: () => {
-          layer.setStyle({ weight: 2, color: "#ffffff", fillOpacity: 0.22 });
+          layer.setStyle({ weight: 2, color: pColor, fillOpacity: 0.22 });
         },
         click: (e) => {
           if (e.originalEvent?.target?.blur) e.originalEvent.target.blur();
           if (document.activeElement?.blur) document.activeElement.blur();
           L.DomEvent.stopPropagation(e);
+          if (window.earthApp?.renderSideStatsPanel) {
+            window.earthApp.renderSideStatsPanel(resolvedParishId, cleanMunId);
+          }
           if (window.earthApp?.selectParish) {
             window.earthApp.selectParish(cleanMunId, resolvedParishId, true);
           }
