@@ -2,9 +2,9 @@
  * Motor Cartográfico Acelerado por GPU — Google Earth Pro Web (Monagas)
  * Integrado con Capas Jerárquicas Oficiales (INE 2021) y Edición de Vértices
  */
-import { GEO_ESTADO_OFICIAL, GEO_MUNICIPIOS_OFICIAL, GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=200";
-import { CATALOGO_MONAGAS, PARISH_ALIAS_MAP, resolveParishId } from "./catalogoMonagas.js?v=200";
-import { MONAGAS_DEMOGRAPHICS, getParishDemographics, getMunicipioDemographics } from "./monagasDemographics.js?v=200";
+import { GEO_ESTADO_OFICIAL, GEO_MUNICIPIOS_OFICIAL, GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=205";
+import { CATALOGO_MONAGAS, PARISH_ALIAS_MAP, resolveParishId } from "./catalogoMonagas.js?v=205";
+import { MONAGAS_DEMOGRAPHICS, getParishDemographics, getMunicipioDemographics } from "./monagasDemographics.js?v=205";
 
 export class EarthMapEngine {
   constructor(containerId, onCoordUpdate) {
@@ -651,10 +651,10 @@ export class EarthMapEngine {
 
     if (this.spotlightEnabled) {
       const worldBox = [
-        [-90, -180],
-        [-90, 180],
-        [90, 180],
-        [90, -180]
+        [-85.0511, -180],
+        [-85.0511, 180],
+        [85.0511, 180],
+        [85.0511, -180]
       ];
 
       // Máscara invertida con orificio para la zona activa (SVG con fill-rule: evenodd)
@@ -1157,7 +1157,16 @@ export class EarthMapEngine {
       this.spotlightEnabled = !this.spotlightEnabled;
     }
 
-    // Re-renderizar de inmediato el velo blanco según el nivel territorial activo en cascada:
+    // 1. Si ya tenemos coordenadas de enfoque activas, re-renderizar de inmediato la máscara:
+    if (this.activeFocusCoords && this.activeFocusCoords.length >= 3) {
+      const strokeColor = this.activeFocusLevel === "sector" ? "#eab308" :
+                          this.activeFocusLevel === "subparroquia" ? "#c084fc" :
+                          this.activeFocusLevel === "municipio" ? "#38bdf8" :
+                          this.activeFocusLevel === "estado" ? "#f59e0b" : "#0284c7";
+      this.renderSpotlightMask(this.activeFocusCoords, strokeColor, "6, 4", 3);
+      return this.spotlightEnabled;
+    }
+
     // Nivel 4: Sector Vecinal
     if (this.activeFocusLevel === "sector" && this.currentSectorVertices) {
       this.showSectorBoundary(this.currentSectorVertices, false);
@@ -1188,13 +1197,11 @@ export class EarthMapEngine {
 
     // Nivel 2: Parroquia
     if (this.activeFocusLevel === "parroquia" || (!this.activeFocusLevel && window.earthApp?.selectedParishId)) {
-      const p = window.earthApp?.store?.getParish(window.earthApp.selectedMunId, window.earthApp.selectedParishId);
+      const targetPId = this.currentParishId || window.earthApp?.selectedParishId;
+      const p = window.earthApp?.store?.getParish(window.earthApp?.selectedMunId, targetPId);
       const parishLimite = this.currentParishLimite || p?.limite;
-      if (parishLimite && parishLimite.length >= 3) {
-        this.showParishBoundary(parishLimite, this.currentParishId || window.earthApp?.selectedParishId, false);
-        return this.spotlightEnabled;
-      }
-      // Si no hay coordenadas de parroquia, continuar al fallback
+      this.showParishBoundary(parishLimite, targetPId, false);
+      return this.spotlightEnabled;
     }
 
     // Nivel 1: Municipio

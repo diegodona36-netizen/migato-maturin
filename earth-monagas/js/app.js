@@ -2,16 +2,16 @@
  * Controlador Principal — Google Earth Pro Web (Edición Estado Monagas)
  * Robusto, 100% Operativo y Totalmente Individualizado
  */
-import { CATALOGO_MONAGAS, findParishInCatalog, PARISH_ALIAS_MAP, resolveParishId } from "./catalogoMonagas.js?v=200";
-import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=200";
-import { getAllParishesForSelector } from "./usersCatalog.js?v=200";
-import { EarthStore } from "./earthStore.js?v=200";
-import { EarthMapEngine } from "./mapEngine.js?v=200";
-import { PropertiesDialog } from "./propertiesDialog.js?v=200";
-import { ToolsManager } from "./toolsManager.js?v=200";
-import { detectParishFromGeometry, SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=200";
-import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=200";
-import { getParishDemographics, getMunicipioDemographics } from "./monagasDemographics.js?v=200";
+import { CATALOGO_MONAGAS, findParishInCatalog, PARISH_ALIAS_MAP, resolveParishId } from "./catalogoMonagas.js?v=205";
+import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=205";
+import { getAllParishesForSelector } from "./usersCatalog.js?v=205";
+import { EarthStore } from "./earthStore.js?v=205";
+import { EarthMapEngine } from "./mapEngine.js?v=205";
+import { PropertiesDialog } from "./propertiesDialog.js?v=205";
+import { ToolsManager } from "./toolsManager.js?v=205";
+import { detectParishFromGeometry, SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=205";
+import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=205";
+import { getParishDemographics, getMunicipioDemographics } from "./monagasDemographics.js?v=205";
 import { 
   getMunicipios, 
   getParroquiasByMun, 
@@ -21,13 +21,13 @@ import {
   findSectorById, 
   searchSectores, 
   ALL_SECTORES_FLAT 
-} from "./monagasSectoresCatalog.js?v=200";
+} from "./monagasSectoresCatalog.js?v=205";
 import { 
   getSavedFirebaseConfig, 
   saveFirebaseConfig, 
   isFirebaseConfigured, 
   initFirebase 
-} from "./firebaseConfig.js?v=200";
+} from "./firebaseConfig.js?v=205";
 
 // Controladores globales infalibles accesibles en cualquier contexto
 window.closeParishSelectorModal = function() {
@@ -149,7 +149,10 @@ class EarthMonagasApp {
     this.modalSubParishFilter = "all";
     this.catalogViewMode = "cards";
     window.earthApp = this;
-    window.toggleSpotlight = (enabled = null) => window.earthApp?.toggleSpotlight(enabled);
+    window.toggleSpotlight = (e = null, enabled = null) => {
+      if (e && e.preventDefault) e.preventDefault();
+      return window.earthApp?.toggleSpotlight(enabled);
+    };
     window.closeQuickStats = () => window.earthApp?.closeQuickStats();
     window.clearSubParishFocus = () => window.earthApp?.clearSubParishFocus();
     window.clearSectorFocus = (toSub = true) => window.earthApp?.clearSectorFocus(toSub);
@@ -1123,6 +1126,12 @@ class EarthMonagasApp {
   }
 
   toggleSpotlight(enabled = null) {
+    const now = Date.now();
+    if (this._lastToggleSpotlightTime && (now - this._lastToggleSpotlightTime < 280) && enabled === null) {
+      return this.mapEngine?.spotlightEnabled;
+    }
+    this._lastToggleSpotlightTime = now;
+
     if (this.mapEngine) {
       const isEnabled = this.mapEngine.toggleSpotlight(enabled);
       this.updateSpotlightButtonUI(isEnabled);
@@ -1140,8 +1149,8 @@ class EarthMonagasApp {
     const icon = document.getElementById("icon-toggle-spotlight");
     if (btn && txt) {
       if (isEnabled) {
+        btn.classList.remove("bg-[#140e40]", "bg-[#18114a]", "hover:bg-[#23176d]", "text-slate-100", "text-slate-200", "border-[#2d1f85]", "border-white/20");
         btn.classList.add("bg-white", "text-slate-900", "border-white", "shadow-md");
-        btn.classList.remove("bg-[#140e40]", "hover:bg-[#23176d]", "text-slate-200", "border-white/20");
         txt.textContent = "Velo Blanco: ON";
         if (icon) {
           icon.className = "w-3.5 h-3.5 text-amber-500 shrink-0";
@@ -1150,10 +1159,10 @@ class EarthMonagasApp {
         btn.title = "Velo blanco exterior ACTIVO (alrededores sombreados en blanco). Clic para quitar el velo y ver satélite 100% limpio.";
       } else {
         btn.classList.remove("bg-white", "text-slate-900", "border-white", "shadow-md");
-        btn.classList.add("bg-[#140e40]", "hover:bg-[#23176d]", "text-slate-200", "border-white/20");
+        btn.classList.add("bg-[#18114a]", "hover:bg-[#23176d]", "text-slate-100", "border-[#2d1f85]");
         txt.textContent = "Velo Blanco: OFF";
         if (icon) {
-          icon.className = "w-3.5 h-3.5 text-slate-400 shrink-0";
+          icon.className = "w-3.5 h-3.5 text-slate-300 shrink-0";
           icon.setAttribute("data-lucide", "sun");
         }
         btn.title = "Velo blanco exterior DESACTIVADO (satélite limpio sin sombras). Clic para sombrear el exterior en blanco y enfocar la parroquia.";
@@ -1170,7 +1179,7 @@ class EarthMonagasApp {
     const overlay = document.getElementById("velo-blanco-executive-overlay");
     if (!overlay) return;
 
-    const spotlightActive = (isEnabled !== null) ? isEnabled : !!(this.mapEngine && this.mapEngine.spotlightEnabled);
+    const spotlightActive = (isEnabled !== null) ? !!isEnabled : !!(this.mapEngine && this.mapEngine.spotlightEnabled);
 
     if (spotlightActive) {
       overlay.classList.add("active");
@@ -1185,11 +1194,7 @@ class EarthMonagasApp {
       overlay.style.setProperty("opacity", "0", "important");
       overlay.style.setProperty("visibility", "hidden", "important");
       overlay.setAttribute("aria-hidden", "true");
-      setTimeout(() => {
-        if (!this.mapEngine?.spotlightEnabled) {
-          overlay.style.setProperty("display", "none", "important");
-        }
-      }, 250);
+      overlay.style.setProperty("display", "none", "important");
     }
   }
 
@@ -3658,12 +3663,13 @@ class EarthMonagasApp {
       });
     }
 
-    // 5.1. Botón Alternar Velo Blanco Exterior
+    // 5.1. Botón Alternar Velo Blanco Exterior (Gestionado de forma centralizada sin doble disparo)
     const btnSpotlight = document.getElementById("btn-toggle-spotlight");
-    if (btnSpotlight) {
-      btnSpotlight.addEventListener("click", () => {
+    if (btnSpotlight && !btnSpotlight.onclick) {
+      btnSpotlight.onclick = (e) => {
+        if (e && e.preventDefault) e.preventDefault();
         this.toggleSpotlight();
-      });
+      };
     }
 
     // 6. Brújula / Reset Norte

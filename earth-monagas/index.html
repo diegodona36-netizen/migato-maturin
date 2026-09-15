@@ -60,8 +60,8 @@
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
 
-  <!-- Custom Styles -->
-  <link rel="stylesheet" href="css/styles.css?v=200">
+  <!-- Estilos Centrales -->
+  <link rel="stylesheet" href="css/styles.css?v=205">
 
   <!-- Script de Autenticación Rápida y Control de Acceso Estricto (Exclusivo Regional) -->
   <script src="../js/auth.js"></script>
@@ -121,6 +121,12 @@
   </style>
   <script>
     // Controladores globales territoriales instantáneos (disponibles desde el milisegundo 0)
+    window.toggleSpotlight = function(e, enabled) {
+      if (e && e.preventDefault) e.preventDefault();
+      if (window.earthApp && typeof window.earthApp.toggleSpotlight === "function") {
+        return window.earthApp.toggleSpotlight(enabled);
+      }
+    };
     window.closeQuickStats = function() {
       var card = document.getElementById("card-quick-stats");
       if (card) card.style.display = "none";
@@ -155,7 +161,7 @@
 
     // Reseteo Total de Fábrica global
     window.resetEarthFullData = function() {
-      if (confirm("¿Desea restaurar de fábrica toda la plataforma MIGATO Earth?\n\nSe limpiarán la memoria local, la caché y se recargarán los datos limpios de producción (v=200).")) {
+      if (confirm("¿Desea restaurar de fábrica toda la plataforma MIGATO Earth?\n\nSe limpiarán la memoria local, la caché y se recargarán los datos limpios de producción (v=205).")) {
         try {
           localStorage.clear();
           sessionStorage.clear();
@@ -171,15 +177,15 @@
           }).catch(function(){});
         }
         setTimeout(function() {
-          window.location.replace(window.location.pathname + '?v=200&u=admin-militancia');
+          window.location.replace(window.location.pathname + '?v=205&u=admin-militancia');
         }, 150);
       }
     };
 
-    // Auto-actualización segura a la versión oficial v=200 (sin riesgo de bucle)
+    // Auto-actualización segura a la versión oficial v=205 (sin riesgo de bucle)
     (function() {
       try {
-        var TARGET_VERSION = "200";
+        var TARGET_VERSION = "205";
         var p = new URLSearchParams(window.location.search);
         var curV = p.get('v');
         var isReset = p.get('reset') === '1';
@@ -577,7 +583,7 @@
       </button>
 
       <!-- 👁️ Velo Blanco Exterior (Botón para Sombrear/Enfocar la Parroquia) -->
-      <button type="button" id="btn-toggle-spotlight" onclick="window.toggleSpotlight ? window.toggleSpotlight() : window.earthApp?.toggleSpotlight()"
+      <button type="button" id="btn-toggle-spotlight" onclick="window.toggleSpotlight(event)"
         class="px-3 sm:px-3.5 py-2 rounded-xl bg-[#18114a] hover:bg-[#23176d] border border-[#2d1f85] hover:border-amber-400 text-xs sm:text-sm font-extrabold text-slate-100 transition flex items-center gap-2 active:scale-95 shadow-sm cursor-pointer shrink-0"
         title="Alternar Velo Blanco Exterior: sombrear en blanco las zonas de afuera del polígono para enfocar la parroquia">
         <i data-lucide="sun" id="icon-toggle-spotlight" class="w-4 h-4 text-slate-300 shrink-0"></i>
@@ -2092,7 +2098,7 @@
   </div>
 
   <!-- SCRIPT -->
-  <script type="module" src="js/app.js?v=200"></script>
+  <script type="module" src="js/app.js?v=205"></script>
   <script>
     if (window.lucide && typeof window.lucide.createIcons === 'function') {
       window.lucide.createIcons();
