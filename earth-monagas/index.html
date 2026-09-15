@@ -61,7 +61,7 @@
   <meta http-equiv="Expires" content="0" />
 
   <!-- Estilos Centrales -->
-  <link rel="stylesheet" href="css/styles.css?v=220">
+  <link rel="stylesheet" href="css/styles.css?v=225">
 
   <!-- Script de Autenticación Rápida y Control de Acceso Estricto (Exclusivo Regional) -->
   <script src="../js/auth.js"></script>
@@ -136,6 +136,23 @@
       }
       if (window.earthApp && typeof window.earthApp.toggleLamina120 === "function") {
         return window.earthApp.toggleLamina120(enabled);
+      } else {
+        var b = document.body;
+        var willBeActive = (enabled !== null) ? !!enabled : !b.classList.contains("lamina-120-active");
+        if (willBeActive) b.classList.add("lamina-120-active");
+        else b.classList.remove("lamina-120-active");
+        var ov = document.getElementById("velo-blanco-executive-overlay");
+        if (ov) {
+          if (willBeActive) {
+            ov.classList.add("active");
+            ov.style.setProperty("display", "block", "important");
+            ov.style.setProperty("opacity", "1", "important");
+            ov.style.setProperty("visibility", "visible", "important");
+          } else {
+            ov.classList.remove("active");
+            ov.style.setProperty("display", "none", "important");
+          }
+        }
       }
     };
     window.closeQuickStats = function() {
@@ -172,7 +189,7 @@
 
     // Reseteo Total de Fábrica global
     window.resetEarthFullData = function() {
-      if (confirm("¿Desea restaurar de fábrica toda la plataforma MIGATO Earth?\n\nSe limpiarán la memoria local, la caché y se recargarán los datos limpios de producción (v=220).")) {
+      if (confirm("¿Desea restaurar de fábrica toda la plataforma MIGATO Earth?\n\nSe limpiarán la memoria local, la caché y se recargarán los datos limpios de producción (v=225).")) {
         try {
           localStorage.clear();
           sessionStorage.clear();
@@ -188,15 +205,15 @@
           }).catch(function(){});
         }
         setTimeout(function() {
-          window.location.replace(window.location.pathname + '?v=220&u=admin-militancia');
+          window.location.replace(window.location.pathname + '?v=225&u=admin-militancia');
         }, 150);
       }
     };
 
-    // Auto-actualización segura a la versión oficial v=220 (sin riesgo de bucle)
+    // Auto-actualización segura a la versión oficial v=225 (sin riesgo de bucle)
     (function() {
       try {
-        var TARGET_VERSION = "220";
+        var TARGET_VERSION = "225";
         var p = new URLSearchParams(window.location.search);
         var curV = p.get('v');
         var isReset = p.get('reset') === '1';
@@ -2126,7 +2143,7 @@
   </div>
 
   <!-- SCRIPT -->
-  <script type="module" src="js/app.js?v=220"></script>
+  <script type="module" src="js/app.js?v=225"></script>
   <script>
     if (window.lucide && typeof window.lucide.createIcons === 'function') {
       window.lucide.createIcons();

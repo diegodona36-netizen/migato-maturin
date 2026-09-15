@@ -1,9 +1,9 @@
 /**
  * Gestor de Estado y Árbol de Lugares (Places) — Google Earth Pro Web (Monagas)
  */
-import { SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=220";
-import { getEjesByParish, getSectoresByParish } from "./monagasSectoresCatalog.js?v=220";
-import { PARISH_ALIAS_MAP, resolveParishId } from "./catalogoMonagas.js?v=220";
+import { SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=225";
+import { getEjesByParish, getSectoresByParish } from "./monagasSectoresCatalog.js?v=225";
+import { PARISH_ALIAS_MAP, resolveParishId } from "./catalogoMonagas.js?v=225";
 import { 
   getSavedFirebaseConfig, 
   saveFirebaseConfig, 
@@ -13,7 +13,7 @@ import {
   fetchAllTerritoriesFromFirestore,
   subscribeToTerritories,
   mergeItemCollections
-} from "./firebaseConfig.js?v=220";
+} from "./firebaseConfig.js?v=225";
 
 const STORAGE_KEY = "earth_monagas_places_v10_prod";
 

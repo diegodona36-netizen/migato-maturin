@@ -325,7 +325,8 @@ svg.leaflet-zoom-animated:focus-visible,
   box-sizing: border-box !important;
 }
 
-#velo-blanco-executive-overlay.active {
+#velo-blanco-executive-overlay.active,
+body.lamina-120-active #velo-blanco-executive-overlay {
   display: block !important;
   opacity: 1 !important;
   visibility: visible !important;
@@ -455,6 +456,10 @@ body.lamina-120-active #sidebar-backdrop,
 body.lamina-120-active #btn-open-sidebar,
 body.lamina-120-active #btn-desktop-expand-sidebar {
   display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  width: 0 !important;
+  max-width: 0 !important;
 }
 
 /* Modo Presentación Limpia (Ocultar Header para Fotos de Prensa en Pantalla de 120") */

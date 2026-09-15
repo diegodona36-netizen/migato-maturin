@@ -2,16 +2,16 @@
  * Controlador Principal — Google Earth Pro Web (Edición Estado Monagas)
  * Robusto, 100% Operativo y Totalmente Individualizado
  */
-import { CATALOGO_MONAGAS, findParishInCatalog, PARISH_ALIAS_MAP, resolveParishId } from "./catalogoMonagas.js?v=220";
-import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=220";
-import { getAllParishesForSelector } from "./usersCatalog.js?v=220";
-import { EarthStore } from "./earthStore.js?v=220";
-import { EarthMapEngine } from "./mapEngine.js?v=220";
-import { PropertiesDialog } from "./propertiesDialog.js?v=220";
-import { ToolsManager } from "./toolsManager.js?v=220";
-import { detectParishFromGeometry, SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=220";
-import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=220";
-import { getParishDemographics, getMunicipioDemographics } from "./monagasDemographics.js?v=220";
+import { CATALOGO_MONAGAS, findParishInCatalog, PARISH_ALIAS_MAP, resolveParishId } from "./catalogoMonagas.js?v=225";
+import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=225";
+import { getAllParishesForSelector } from "./usersCatalog.js?v=225";
+import { EarthStore } from "./earthStore.js?v=225";
+import { EarthMapEngine } from "./mapEngine.js?v=225";
+import { PropertiesDialog } from "./propertiesDialog.js?v=225";
+import { ToolsManager } from "./toolsManager.js?v=225";
+import { detectParishFromGeometry, SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=225";
+import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=225";
+import { getParishDemographics, getMunicipioDemographics } from "./monagasDemographics.js?v=225";
 import { 
   getMunicipios, 
   getParroquiasByMun, 
@@ -21,13 +21,13 @@ import {
   findSectorById, 
   searchSectores, 
   ALL_SECTORES_FLAT 
-} from "./monagasSectoresCatalog.js?v=220";
+} from "./monagasSectoresCatalog.js?v=225";
 import { 
   getSavedFirebaseConfig, 
   saveFirebaseConfig, 
   isFirebaseConfigured, 
   initFirebase 
-} from "./firebaseConfig.js?v=220";
+} from "./firebaseConfig.js?v=225";
 
 // Controladores globales infalibles accesibles en cualquier contexto
 window.closeParishSelectorModal = function() {
@@ -1157,32 +1157,46 @@ class EarthMonagasApp {
     const txt = document.getElementById("text-toggle-spotlight");
     const icon = document.getElementById("icon-toggle-spotlight");
     if (btn && txt) {
-      if (isEnabled) {
-        btn.classList.remove("bg-[#140e40]", "bg-[#18114a]", "hover:bg-[#23176d]", "text-slate-100", "text-slate-200", "border-[#2d1f85]", "border-white/20");
-        btn.classList.add("bg-white", "text-slate-900", "border-white", "shadow-md");
-        txt.textContent = "Velo Blanco: ON";
-        if (icon) {
-          icon.className = "w-4 h-4 text-amber-500 shrink-0";
-          icon.setAttribute("data-lucide", "sun");
+      try {
+        if (isEnabled) {
+          btn.classList.remove("bg-[#140e40]", "bg-[#18114a]", "hover:bg-[#23176d]", "text-slate-100", "text-slate-200", "border-[#2d1f85]", "border-white/20");
+          btn.classList.add("bg-white", "text-slate-900", "border-white", "shadow-md");
+          txt.textContent = "Velo Blanco: ON";
+          if (icon) {
+            try {
+              icon.setAttribute("class", "w-4 h-4 text-amber-500 shrink-0");
+              icon.setAttribute("data-lucide", "sun");
+            } catch(e){}
+          }
+          btn.title = "Velo blanco exterior ACTIVO (alrededores sombreados en blanco). Clic para quitar el velo y ver satélite 100% limpio.";
+        } else {
+          btn.classList.remove("bg-white", "text-slate-900", "border-white", "shadow-md");
+          btn.classList.add("bg-[#18114a]", "hover:bg-[#23176d]", "text-slate-100", "border-[#2d1f85]");
+          txt.textContent = "Velo Blanco: OFF";
+          if (icon) {
+            try {
+              icon.setAttribute("class", "w-4 h-4 text-slate-300 shrink-0");
+              icon.setAttribute("data-lucide", "sun");
+            } catch(e){}
+          }
+          btn.title = "Velo blanco exterior DESACTIVADO (satélite limpio sin sombras). Clic para sombrear el exterior en blanco y enfocar la parroquia.";
         }
-        btn.title = "Velo blanco exterior ACTIVO (alrededores sombreados en blanco). Clic para quitar el velo y ver satélite 100% limpio.";
-      } else {
-        btn.classList.remove("bg-white", "text-slate-900", "border-white", "shadow-md");
-        btn.classList.add("bg-[#18114a]", "hover:bg-[#23176d]", "text-slate-100", "border-[#2d1f85]");
-        txt.textContent = "Velo Blanco: OFF";
-        if (icon) {
-          icon.className = "w-4 h-4 text-slate-300 shrink-0";
-          icon.setAttribute("data-lucide", "sun");
-        }
-        btn.title = "Velo blanco exterior DESACTIVADO (satélite limpio sin sombras). Clic para sombrear el exterior en blanco y enfocar la parroquia.";
+      } catch(err) {
+        console.warn("Error updating spotlight button UI:", err);
       }
       if (window.lucide && typeof window.lucide.createIcons === 'function') {
-        window.lucide.createIcons();
+        try { window.lucide.createIcons(); } catch(e){}
       }
     }
   }
 
   toggleLamina120(enabled = null) {
+    const now = Date.now();
+    if (this._lastToggleLaminaTime && (now - this._lastToggleLaminaTime < 250) && enabled === null) {
+      return this.lamina120Active;
+    }
+    this._lastToggleLaminaTime = now;
+
     this.lamina120Active = (enabled !== null && enabled !== undefined) ? !!enabled : !this.lamina120Active;
     this.updateLamina120UI(this.lamina120Active);
     return this.lamina120Active;
@@ -1197,68 +1211,114 @@ class EarthMonagasApp {
     const backdrop = document.getElementById("sidebar-backdrop");
 
     if (btn) {
-      if (isActive) {
-        btn.classList.remove("bg-[#18114a]", "text-slate-100", "border-[#2d1f85]");
-        btn.classList.add("bg-amber-400", "text-slate-950", "border-amber-300", "shadow-md");
-        if (txt) txt.textContent = "Lámina: ON";
-        if (icon) icon.className = "w-4 h-4 text-slate-950 shrink-0";
-      } else {
-        btn.classList.remove("bg-amber-400", "text-slate-950", "border-amber-300", "shadow-md");
-        btn.classList.add("bg-[#18114a]", "text-slate-100", "border-[#2d1f85]");
-        if (txt) txt.textContent = "Lámina 120\"";
-        if (icon) icon.className = "w-4 h-4 text-amber-400 shrink-0";
+      try {
+        if (isActive) {
+          btn.classList.remove("bg-[#18114a]", "text-slate-100", "border-[#2d1f85]");
+          btn.classList.add("bg-amber-400", "text-slate-950", "border-amber-300", "shadow-md");
+          if (txt) txt.textContent = "Lámina: ON";
+          if (icon) {
+            try { icon.setAttribute("class", "w-4 h-4 text-slate-950 shrink-0"); } catch(e){}
+          }
+        } else {
+          btn.classList.remove("bg-amber-400", "text-slate-950", "border-amber-300", "shadow-md");
+          btn.classList.add("bg-[#18114a]", "text-slate-100", "border-[#2d1f85]");
+          if (txt) txt.textContent = "Lámina 120\"";
+          if (icon) {
+            try { icon.setAttribute("class", "w-4 h-4 text-amber-400 shrink-0"); } catch(e){}
+          }
+        }
+      } catch(err) {
+        console.warn("Error updating lamina button styles:", err);
       }
     }
 
     if (isActive) {
-      document.body.classList.add("lamina-120-active");
-      if (sidebar) {
-        sidebar.classList.add("hidden");
-        sidebar.classList.remove("flex");
-        sidebar.style.display = "none";
-      }
-      if (backdrop) {
-        backdrop.classList.add("hidden");
-        backdrop.style.display = "none";
-      }
-      if (typeof this.toggleSidebar === "function") {
-        try { this.toggleSidebar(false); } catch(e) {}
-      }
+      try {
+        document.body.classList.add("lamina-120-active");
+      } catch(e) {}
 
-      if (overlay) {
-        overlay.classList.add("active");
-        overlay.style.setProperty("display", "block", "important");
-        overlay.style.setProperty("opacity", "1", "important");
-        overlay.style.setProperty("visibility", "visible", "important");
-        overlay.setAttribute("aria-hidden", "false");
-      }
+      try {
+        if (sidebar) {
+          sidebar.classList.add("hidden");
+          sidebar.classList.remove("flex");
+          sidebar.style.setProperty("display", "none", "important");
+        }
+        if (backdrop) {
+          backdrop.classList.add("hidden");
+          backdrop.style.setProperty("display", "none", "important");
+        }
+        const expandBtn = document.getElementById("btn-desktop-expand-sidebar");
+        if (expandBtn) {
+          expandBtn.classList.add("hidden");
+          expandBtn.style.setProperty("display", "none", "important");
+        }
+      } catch(e) {}
+
+      try {
+        if (typeof this.toggleSidebar === "function") {
+          this.toggleSidebar(false);
+        }
+      } catch(e) {}
+
+      try {
+        if (overlay) {
+          overlay.classList.add("active");
+          overlay.style.setProperty("display", "block", "important");
+          overlay.style.setProperty("opacity", "1", "important");
+          overlay.style.setProperty("visibility", "visible", "important");
+          overlay.setAttribute("aria-hidden", "false");
+        }
+      } catch(e) {}
 
       // Si el velo blanco en el mapa no estaba encendido, activarlo para dar el contraste cartográfico de sala de mando
-      if (this.mapEngine && !this.mapEngine.spotlightEnabled) {
-        this.toggleSpotlight(true);
-      }
+      try {
+        if (this.mapEngine && !this.mapEngine.spotlightEnabled) {
+          this.toggleSpotlight(true);
+        }
+      } catch(e) {}
 
-      this.syncVeloBlancoContent();
+      try {
+        this.syncVeloBlancoContent();
+      } catch(e) {}
 
       setTimeout(() => {
-        if (this.mapEngine?.map?.invalidateSize) {
-          this.mapEngine.map.invalidateSize();
-        }
+        try {
+          if (this.mapEngine?.map?.invalidateSize) {
+            this.mapEngine.map.invalidateSize();
+          }
+        } catch(e) {}
       }, 120);
     } else {
-      document.body.classList.remove("lamina-120-active");
-      document.body.classList.remove("clean-presentation-mode");
-      if (overlay) {
-        overlay.classList.remove("active");
-        overlay.style.setProperty("opacity", "0", "important");
-        overlay.style.setProperty("visibility", "hidden", "important");
-        overlay.setAttribute("aria-hidden", "true");
-        overlay.style.setProperty("display", "none", "important");
-      }
-      setTimeout(() => {
-        if (this.mapEngine?.map?.invalidateSize) {
-          this.mapEngine.map.invalidateSize();
+      try {
+        document.body.classList.remove("lamina-120-active");
+        document.body.classList.remove("clean-presentation-mode");
+      } catch(e) {}
+
+      try {
+        if (overlay) {
+          overlay.classList.remove("active");
+          overlay.style.setProperty("opacity", "0", "important");
+          overlay.style.setProperty("visibility", "hidden", "important");
+          overlay.setAttribute("aria-hidden", "true");
+          overlay.style.setProperty("display", "none", "important");
         }
+      } catch(e) {}
+
+      try {
+        if (sidebar && !this.userExplicitlyCollapsedSidebar && window.innerWidth >= 768) {
+          sidebar.classList.remove("hidden");
+          sidebar.classList.add("flex");
+          sidebar.style.removeProperty("display");
+          sidebar.style.display = "flex";
+        }
+      } catch(e) {}
+
+      setTimeout(() => {
+        try {
+          if (this.mapEngine?.map?.invalidateSize) {
+            this.mapEngine.map.invalidateSize();
+          }
+        } catch(e) {}
       }, 120);
     }
 
@@ -3780,6 +3840,25 @@ class EarthMonagasApp {
         this.toggleSpotlight();
       };
     }
+
+    // 5.2. Botón Alternar Lámina 120" Oficial
+    const btnLamina = document.getElementById("btn-toggle-lamina");
+    if (btnLamina) {
+      btnLamina.onclick = (e) => {
+        if (e && e.preventDefault) e.preventDefault();
+        this.toggleLamina120();
+      };
+    }
+
+    // 5.3. Botón Alternar Alcance del Velo Blanco
+    const btnScope = document.getElementById("btn-toggle-velo-scope");
+    if (btnScope) {
+      btnScope.onclick = (e) => {
+        if (e && e.preventDefault) e.preventDefault();
+        this.toggleVeloScope();
+      };
+    }
+
 
     // 6. Brújula / Reset Norte
     const btnCompass = document.getElementById("btn-compass-north");
