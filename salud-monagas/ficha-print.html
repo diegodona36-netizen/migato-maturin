@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MIGATO • Ficha Oficial de Salud (Impresión 1:1)</title>
+  <link rel="icon" type="image/png" href="../assets/logo-migato.png">
+  
+  <link rel="stylesheet" href="../vendor/leaflet.css">
+  <script src="../vendor/leaflet.js"></script>
+  <link rel="stylesheet" href="css/styles.css">
+
+  <style>
+    @page {
+      size: letter portrait;
+      margin: 3mm 5mm 3mm 5mm;
+    }
+    html, body {
+      background: #f1f5f9;
+      color: #0f172a;
+      margin: 0;
+      padding: 16px 8px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+    .top-action-bar {
+      max-width: 790px;
+      margin: 0 auto 16px;
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      border-radius: 12px;
+      padding: 10px 16px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+    }
+    .ficha-wrapper {
+      max-width: 790px;
+      margin: 0 auto;
+    }
+    .ficha-tecnica-salud {
+      background: #ffffff !important;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+      margin: 0 auto !important;
+      width: 100% !important;
+      max-width: 100% !important;
+      border: 2px solid #000000 !important;
+    }
+    @media print {
+      html, body {
+        background: #ffffff !important;
+        padding: 0 !important;
+        margin: 0 !important;
+      }
+      .top-action-bar {
+        display: none !important;
+      }
+      .ficha-tecnica-salud {
+        box-shadow: none !important;
+      }
+      .leaflet-pane {
+        transform: none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="top-action-bar no-print">
+    <div style="display: flex; align-items: center; gap: 10px;">
+      <img src="../assets/logo-migato.png" alt="MIGATO" style="width: 32px; height: 32px; object-fit: contain;">
+      <div>
+        <strong style="font-size: 13px; color: #0f172a; display: block; line-height: 1.2;">Vista de Impresión Oficial 1:1</strong>
+        <span id="centro-subtitulo" style="font-size: 11px; color: #0284c7; font-weight: bold;">Cargando centro...</span>
+      </div>
+    </div>
+
+    <div style="display: flex; gap: 8px;">
+      <button onclick="window.print()" style="background: #16a34a; color: #ffffff; border: none; padding: 8px 18px; border-radius: 8px; font-weight: bold; font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 6px; box-shadow: 0 2px 6px rgba(22,163,74,0.3);">
+        <span>🖨️ Imprimir / Guardar como PDF</span>
+      </button>
+      <button onclick="window.location.href='./'" style="background: #e2e8f0; color: #334155; border: none; padding: 8px 14px; border-radius: 8px; font-weight: bold; font-size: 12px; cursor: pointer;">
+        <span>← Volver al Módulo 5</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="ficha-wrapper" id="ficha-container">
+    <!-- Inyectado dinámicamente -->
+  </div>
+
+  <!-- Scripts de datos y renderizado -->
+  <script src="js/saludData.js"></script>
+  <script>
+    (function() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const centroId = urlParams.get('id');
+      const container = document.getElementById('ficha-container');
+      const subtitulo = document.getElementById('centro-subtitulo');
+
+      let centros = window.CENTROS_SALUD_MONAGAS || [];
+      try {
+        const local = localStorage.getItem('migato_salud_centros');
+        if (local) {
+          const parsed = jsonParseSafe(local);
+          if (Array.isArray(parsed) && parsed.length) centros = parsed;
+        }
+      } catch(e) {}
+
+      function jsonParseSafe(str) {
+        try { return JSON.parse(str); } catch(e) { return null; }
+      }
+
+      let centro = null;
+      if (centroId) {
+        centro = centros.find(c => c.id.toLowerCase() === centroId.toLowerCase());
+      }
+      if (!centro && centros.length) {
+        centro = centros[0];
+      }
+
+      if (!centro) {
+        container.innerHTML = '<div style="text-align:center; padding: 40px; color:#ef4444; font-weight:bold;">No se encontró el centro solicitado.</div>';
+        return;
+      }
+
+      subtitulo.textContent = centro.nombre + ' • ' + (centro.municipio || 'Monagas');
+
+      const box = (isChecked) => `<span class="ficha-box-check ${isChecked ? 'checked-x font-mono font-bold' : ''}">${isChecked ? 'X' : '&nbsp;'}</span>`;
+      const hasFalla = (cat, fid) => (centro.fallas && centro.fallas[cat] && centro.fallas[cat].includes(fid));
+      const hasArea = (aid) => (centro.areasServicios && centro.areasServicios.includes(aid));
+
+      const html = `
+        <div class="ficha-tecnica-salud">
+          <table class="ficha-table">
+            <tr>
+              <td width="14%" style="text-align: center; vertical-align: middle; padding: 4px 6px; background-color: #ffffff;">
+                <img src="../assets/logo-migato.png" alt="Logo MIGATO" style="height: 48px; max-width: 58px; object-fit: contain; margin: 0 auto; display: block;">
+              </td>
+              <td width="72%" class="ficha-header-title" style="vertical-align: middle; padding: 4px 8px; border-left: 1.5px solid #000; border-right: 1.5px solid #000; background-color: #f8fafc;">
+                <div style="font-size: 7.5pt; font-weight: 800; letter-spacing: 1px; color: #334155; text-transform: uppercase;">MOVIMIENTO INDEPENDIENTE GANAMOS TODOS • ESTADO MONAGAS</div>
+                <div style="font-size: 11pt; font-weight: 900; letter-spacing: 0.5px; color: #000000; margin: 1px 0;">PRE DIAGNÓSTICO DE INFRAESTRUCTURA SANITARIA</div>
+                <div style="font-size: 7pt; font-weight: 700; color: #475569; letter-spacing: 0.5px;">PLAN INTEGRAL DE SALUD • SISTEMA ASISTENCIAL DE MONAGAS</div>
+              </td>
+              <td width="14%" style="text-align: center; vertical-align: middle; padding: 4px 6px; background-color: #ffffff; font-size: 7pt;">
+                <span style="display: block; font-size: 6pt; color: #64748b; font-weight: 800; text-transform: uppercase;">N° FICHA</span>
+                <span style="font-family: monospace; font-size: 8pt; font-weight: 900; color: #0f172a;">${(centro.id || 'CS-000').toUpperCase()}</span>
+              </td>
+            </tr>
+          </table>
+
+          <table class="ficha-table">
+            <tr>
+              <td width="20%">
+                <span class="ficha-label">Estado:</span><br>
+                <strong class="ficha-value text-xs">MONAGAS</strong>
+              </td>
+              <td width="20%">
+                <span class="ficha-label">Municipio:</span><br>
+                <span class="ficha-value text-xs">${(centro.municipio || '').replace('Municipio ', '')}</span>
+              </td>
+              <td width="20%">
+                <span class="ficha-label">Parroquia:</span><br>
+                <span class="ficha-value text-xs">${centro.parroquia || ''}</span>
+              </td>
+              <td width="20%">
+                <span class="ficha-label">Sector:</span><br>
+                <span class="ficha-value text-xs">${centro.sector || 'Casco Central'}</span>
+              </td>
+              <td width="20%">
+                <span class="ficha-label">Área / Módulo:</span><br>
+                <strong class="ficha-value text-xs">SALUD (MOD. 5)</strong>
+              </td>
+            </tr>
+            <tr>
+              <td colspan="5" style="background-color: #f8fafc; padding: 4px 8px;">
+                <span class="ficha-label" style="font-size: 8pt;">Nombre del Centro de Salud:</span>
+                <strong style="font-size: 10pt; color: #000; margin-left: 6px;">${centro.nombre}</strong>
+              </td>
+            </tr>
+          </table>
+
+          <table class="ficha-table">
+            <tr>
+              <td style="background-color: #f1f5f9; text-align: center; font-weight: 800; font-size: 7.5pt; padding: 3px 6px; border-top: none;">
+                <span>PLANO DE UBICACIÓN Y ACCESO VIAL</span> 
+                <span style="font-family: monospace; color: #1e293b; margin-left: 8px;">(Coordenadas: ${(centro.lat || 9.7483).toFixed(5)}, ${(centro.lng || -63.1785).toFixed(5)})</span>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding: 0;">
+                <div id="mapa-print-standalone" class="ficha-map-container" style="height: 125px; width: 100%;"></div>
+              </td>
+            </tr>
+          </table>
+
+          <table class="ficha-table">
+            <tr>
+              <td width="24%" class="ficha-label" style="vertical-align: middle; background-color: #f8fafc;">Tipo de Establecimiento</td>
+              <td width="76%">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 4px;">
+                  <div>${box(centro.tipoEstablecimiento === 'Red Comunal / Barrio Adentro')} Red Comunal / Barrio Adentro (CPT, CDI, SRI)</div>
+                  <div>${box(centro.tipoEstablecimiento === 'Red Ambulatoria Tradicional')} Red Ambulatoria Tradicional (Rural I-II, Urbano I-III)</div>
+                  <div>${box(centro.tipoEstablecimiento === 'Red Hospitalaria Especializada')} Red Hospitalaria Especializada (Tipo I, II, III, IV)</div>
+                  <div>${box(centro.tipoEstablecimiento === 'Otro')} Otro: _____________________________________</div>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td class="ficha-label" style="vertical-align: middle; background-color: #f8fafc;">Clasificación Específica (MPPS)</td>
+              <td>
+                <div style="display: flex; flex-direction: column; gap: 3px; font-size: 6.8pt;">
+                  <div>
+                    <strong>Red Comunal:</strong>
+                    <span style="margin-left:6px;">${box(centro.clasificacionEspecifica === 'CPT I')} CPT I</span>
+                    <span style="margin-left:6px;">${box(centro.clasificacionEspecifica === 'CPT II')} CPT II</span>
+                    <span style="margin-left:6px;">${box(centro.clasificacionEspecifica === 'CPT III')} CPT III</span>
+                    <span style="margin-left:6px;">${box(centro.clasificacionEspecifica === 'CDI')} CDI</span>
+                    <span style="margin-left:6px;">${box(centro.clasificacionEspecifica === 'SRI')} SRI</span>
+                  </div>
+                  <div>
+                    <strong>Ambulatoria:</strong>
+                    <span style="margin-left:6px;">${box(centro.clasificacionEspecifica === 'Amb. Rural I')} Amb. Rural I</span>
+                    <span style="margin-left:6px;">${box(centro.clasificacionEspecifica === 'Amb. Rural II')} Amb. Rural II</span>
+                    <span style="margin-left:6px;">${box(centro.clasificacionEspecifica === 'Amb. Urbano I')} Amb. Urbano I</span>
+                    <span style="margin-left:6px;">${box(centro.clasificacionEspecifica === 'Amb. Urbano II')} Amb. Urbano II</span>
+                    <span style="margin-left:6px;">${box(centro.clasificacionEspecifica === 'Amb. Urbano III')} Amb. Urbano III</span>
+                  </div>
+                  <div>
+                    <strong>Hospitalaria:</strong>
+                    <span style="margin-left:6px;">${box(centro.clasificacionEspecifica === 'Hospital Tipo I')} Hospital Tipo I</span>
+                    <span style="margin-left:6px;">${box(centro.clasificacionEspecifica === 'Hospital Tipo II')} Hospital Tipo II</span>
+                    <span style="margin-left:6px;">${box(centro.clasificacionEspecifica === 'Hospital Tipo III')} Hospital Tipo III</span>
+                    <span style="margin-left:6px;">${box(centro.clasificacionEspecifica === 'Hospital Tipo IV')} Hospital Tipo IV</span>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </table>
+
+          <table class="ficha-table">
+            <tr>
+              <td width="24%" class="ficha-label" style="vertical-align: middle; background-color: #f8fafc;">Áreas / Servicios Evaluados</td>
+              <td width="76%">
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px 4px; font-size: 6.8pt;">
+                  <div>${box(hasArea('triaje'))} Triaje / Sala de Espera</div>
+                  <div>${box(hasArea('quirofano'))} Quirófanos (N°: ${centro.quirofanosTotales || 0} | Op: ${centro.quirofanosOperativos || 0})</div>
+                  <div>${box(hasArea('observacion'))} Sala de Observación</div>
+                  <div>${box(hasArea('consulta'))} Consulta Externa</div>
+                  <div>${box(hasArea('camas'))} Hospitalización (N° Camas: ${centro.camasTotales || 0})</div>
+                  <div>${box(hasArea('morgue'))} Área de Morgue</div>
+                  <div>${box(hasArea('emergencia_adulto'))} Emergencia Adultos</div>
+                  <div>${box(hasArea('aislamiento'))} Área de Aislamiento</div>
+                  <div>${box(hasArea('cocina'))} Cocina / Nutrición</div>
+                  <div>${box(hasArea('emergencia_pediatrica'))} Emergencia Pediátrica</div>
+                  <div>${box(hasArea('inmunizacion'))} Sala de Inmunización (PAI)</div>
+                  <div>${box(hasArea('esterilizacion'))} Central de Esterilización</div>
+                  <div>${box(hasArea('partos'))} Sala de Partos</div>
+                  <div>${box(hasArea('laboratorio'))} Laboratorio Clínico</div>
+                  <div>${box(hasArea('sala_cura'))} Sala de Cura / Yeso</div>
+                  <div>${box(hasArea('imagenologia'))} Imagenología (Rayos X / Eco)</div>
+                  <div>${box(hasArea('sangre'))} Banco de Sangre</div>
+                  <div>${box(hasArea('farmacia'))} Farmacia Comunitaria</div>
+                  <div>${box(hasArea('desechos'))} Depósito de Desechos</div>
+                  <div>${box(hasArea('lavanderia'))} Área de Lavandería</div>
+                  <div>${box(hasArea('ambulancia'))} Puesto de Ambulancia</div>
+                </div>
+              </td>
+            </tr>
+          </table>
+
+          <table class="ficha-table">
+            <tr style="background-color: #f8fafc;">
+              <td width="33%" class="ficha-label" style="text-align:center; font-size:7pt;">1. Servicios Básicos y Soporte Vital</td>
+              <td width="33%" class="ficha-label" style="text-align:center; font-size:7pt;">2. Infraestructura y Edificación</td>
+              <td width="34%" class="ficha-label" style="text-align:center; font-size:7pt;">3. Equipamiento y Dotación Crítica</td>
+            </tr>
+            <tr>
+              <td style="vertical-align: top; font-size: 6.8pt; line-height: 1.4;">
+                <div>${box(hasFalla('servicios', 'electricidad'))} Falla suministro eléctrico comercial</div>
+                <div>${box(hasFalla('servicios', 'planta'))} Planta eléctrica inoperativa / sin comb.</div>
+                <div>${box(hasFalla('servicios', 'agua'))} Sin agua directa de red pública</div>
+                <div>${box(hasFalla('servicios', 'tanque'))} Tanques de agua dañados / contaminados</div>
+                <div>${box(hasFalla('servicios', 'gases'))} Sin sistema de oxígeno / gases medicinales</div>
+                <div>${box(hasFalla('servicios', 'climatizacion'))} Falla de aire acondicionado en áreas crít.</div>
+                <div>${box(hasFalla('servicios', 'biomedicos'))} Inadecuada disposición desechos biopeligrosos</div>
+              </td>
+              <td style="vertical-align: top; font-size: 6.8pt; line-height: 1.4;">
+                <div>${box(hasFalla('infraestructura', 'filtraciones'))} Filtraciones severas en techos / losas</div>
+                <div>${box(hasFalla('infraestructura', 'paredes'))} Grietas estructurales / desprendimiento</div>
+                <div>${box(hasFalla('infraestructura', 'bano'))} Baños públicos / personal inoperativos</div>
+                <div>${box(hasFalla('infraestructura', 'aguas_negras'))} Colapso de tuberías de aguas servidas</div>
+                <div>${box(hasFalla('infraestructura', 'puertas'))} Puertas / ventanas deterioradas o rotas</div>
+                <div>${box(hasFalla('infraestructura', 'pintura'))} Deterioro general de pintura y asepsia</div>
+                <div>${box(hasFalla('infraestructura', 'perimetral'))} Falta de cerca perimetral / alumbrado ext.</div>
+              </td>
+              <td style="vertical-align: top; font-size: 6.8pt; line-height: 1.4;">
+                <div>${box(hasFalla('equipamiento', 'tensiómetro'))} Sin tensiómetros / estetoscopios operativ.</div>
+                <div>${box(hasFalla('equipamiento', 'camillas'))} Déficit crítico de camillas / camas de hospital.</div>
+                <div>${box(hasFalla('equipamiento', 'desfibrilador'))} Desfibrilador / carro de paro inoperativo</div>
+                <div>${box(hasFalla('equipamiento', 'nebulizador'))} Sin nebulizadores ni aspiradores de flema</div>
+                <div>${box(hasFalla('equipamiento', 'insumos'))} Cero stock de insumos médicos descartables</div>
+                <div>${box(hasFalla('equipamiento', 'farmacos'))} Desabastecimiento de fármacos esenciales</div>
+                <div>${box(hasFalla('equipamiento', 'cadena_frio'))} Falla en refrigerador de cadena de frío</div>
+              </td>
+            </tr>
+          </table>
+
+          <table class="ficha-table">
+            <tr>
+              <td width="24%" class="ficha-label" style="vertical-align: middle; background-color: #f8fafc;">Diagnóstico Técnico Consolidado</td>
+              <td width="76%">
+                <div style="font-size: 7pt; line-height: 1.4;">
+                  <strong>Nivel de Riesgo Operativo:</strong> <u>${(centro.nivelRiesgo || 'ALERTA').toUpperCase()}</u> • 
+                  <strong>Estado General:</strong> <u>${centro.estadoGeneral || 'Regular'}</u> • 
+                  <strong>Índice de Afectación:</strong> <u>${centro.porcentajeAfectacion || 50}%</u>
+                  <p style="margin: 3px 0 0; font-size: 6.8pt; color: #1e293b;">
+                    <strong>Observaciones / Diagnóstico de Campo:</strong> ${centro.observaciones || 'Se requiere intervención prioritaria en climatización de áreas críticas, recuperación de planta eléctrica y dotación de insumos de soporte vital.'}
+                  </p>
+                </div>
+              </td>
+            </tr>
+          </table>
+
+          <table class="ficha-table">
+            <tr>
+              <td width="24%" class="ficha-label" style="vertical-align: middle; background-color: #f8fafc;">Responsable del Levantamiento</td>
+              <td width="76%">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 3px 12px; font-size: 6.8pt;">
+                  <div><strong>Nombre:</strong> <u>${centro.elaboradoPor?.nombre || 'Dr. Carlos Mendoza'}</u></div>
+                  <div><strong>C.I.:</strong> <u>${centro.elaboradoPor?.ci || 'V-14.892.410'}</u></div>
+                  <div><strong>Cargo / Enlace:</strong> <u>${centro.elaboradoPor?.cargo || 'Director Médico'}</u></div>
+                  <div><strong>Teléfono:</strong> <u>${centro.elaboradoPor?.telefono || '0414-7654321'}</u></div>
+                  <div><strong>Fecha:</strong> <u>${centro.elaboradoPor?.fecha || '2026-09-15'}</u></div>
+                  <div><strong>Firma / Sello:</strong> <u>_________________________</u></div>
+                </div>
+              </td>
+            </tr>
+          </table>
+        </div>
+      `;
+
+      container.innerHTML = html;
+
+      // Inicializar mapa estático
+      setTimeout(() => {
+        try {
+          const lat = centro.lat || 9.7483;
+          const lng = centro.lng || -63.1785;
+          const map = L.map('mapa-print-standalone', {
+            zoomControl: false,
+            attributionControl: false,
+            dragging: false,
+            scrollWheelZoom: false,
+            doubleClickZoom: false
+          }).setView([lat, lng], 16);
+
+          L.tileLayer('https://mt{s}.google.com/vt/lyrs=m&hl=es&gl=VE&x={x}&y={y}&z={z}', {
+            subdomains: ['0', '1', '2', '3'],
+            maxZoom: 20
+          }).addTo(map);
+
+          const pin = L.divIcon({
+            className: 'custom-print-pin',
+            html: `
+              <div style="position:relative; width:28px; height:28px; display:flex; align-items:center; justify-content:center;">
+                <div style="position:absolute; width:24px; height:24px; border:2px solid #b91c1c; border-radius:50%; background:rgba(239,68,68,0.25);"></div>
+                <div style="position:absolute; width:1.5px; height:28px; background:#b91c1c;"></div>
+                <div style="position:absolute; width:28px; height:1.5px; background:#b91c1c;"></div>
+                <div style="width:8px; height:8px; background:#dc2626; border:2px solid #ffffff; border-radius:50%; box-shadow:0 1px 3px rgba(0,0,0,0.7);"></div>
+              </div>
+            `,
+            iconSize: [28, 28],
+            iconAnchor: [14, 14]
+          });
+
+          L.marker([lat, lng], { icon: pin }).addTo(map);
+        } catch(e) {
+          console.warn('Mini mapa no disponible offline');
+        }
+      }, 100);
+
+      // Auto imprimir si viene el parámetro autoprint=1
+      if (urlParams.get('autoprint') === '1') {
+        setTimeout(() => {
+          window.print();
+        }, 500);
+      }
+    })();
+  </script>
+</body>
+</html>

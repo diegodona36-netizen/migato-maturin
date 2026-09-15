@@ -257,19 +257,55 @@ class MigatoServerHandler(http.server.SimpleHTTPRequestHandler):
 
 def run():
     global PORT
+    import threading
+    import webbrowser
+    import time
+    import socket
+
+    def auto_open_browser(target_port):
+        time.sleep(0.8)
+        try:
+            webbrowser.open(f"http://localhost:{target_port}/")
+        except Exception:
+            pass
+
     socketserver.TCPServer.allow_reuse_address = True
     max_port = PORT + 50
     while PORT < max_port:
         try:
             with socketserver.TCPServer(("", PORT), MigatoServerHandler) as httpd:
-                print("=" * 65)
-                print(f"🚀 SISTEMA MIGATO - SERVIDOR Y API BACKEND ACTIVO")
-                print(f"📍 Servidor corriendo en: http://localhost:{PORT}")
-                print(f"🔐 API Auth segura: http://localhost:{PORT}/api/auth/login")
-                print(f"📊 API Censo Sync: http://localhost:{PORT}/api/censo/sincronizar")
-                print(f"📁 Directorio base: {DIRECTORY}")
-                print("=" * 65)
-                print("Presiona Ctrl + C para detener el servidor.\n")
+                local_ip = "127.0.0.1"
+                try:
+                    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+                    s.connect(("8.8.8.8", 80))
+                    local_ip = s.getsockname()[0]
+                    s.close()
+                except Exception:
+                    pass
+
+                print("\n" + "═" * 70)
+                print("   🏛️  PLATAFORMA TERRITORIAL MIGATO • ESTADO MONAGAS 2026")
+                print("   🚀  SERVIDOR LOCAL ACTIVO (100% SOBERANO Y OFFLINE READY)")
+                print("═" * 70)
+                print(f"  👉 Portal Principal:         http://localhost:{PORT}/")
+                print(f"  📊 Presentación Ejecutiva:   http://localhost:{PORT}/presentacion.html")
+                print(f"  🏢 Módulo 1 (Enlaces):       http://localhost:{PORT}/despacho/")
+                print(f"  📝 Módulo 2 (Censo Buzón):   http://localhost:{PORT}/carga/")
+                print(f"  🗳️  Módulo 3 (Padrón CNE):    http://localhost:{PORT}/centros-maturin/")
+                print(f"  🛰️  Módulo 4 (Cartografía):   http://localhost:{PORT}/earth-monagas/")
+                print(f"  🏥 Módulo 5 (Salud Monagas): http://localhost:{PORT}/salud-monagas/")
+                print(f"  📄 Propuesta Presupuesto V3: http://localhost:{PORT}/documento_partido.html")
+                print("─" * 70)
+                if local_ip != "127.0.0.1":
+                    print(f"  📱 Acceso desde teléfonos/tablets en la misma red WiFi:")
+                    print(f"     👉 http://{local_ip}:{PORT}/")
+                    print("─" * 70)
+                print(f"  📁 Directorio: {DIRECTORY}")
+                print("  💡 Abriendo navegador automáticamente...")
+                print("  🛑 Presiona Ctrl + C para detener el servidor.")
+                print("═" * 70 + "\n")
+
+                threading.Thread(target=auto_open_browser, args=(PORT,), daemon=True).start()
                 httpd.serve_forever()
                 break
         except OSError:

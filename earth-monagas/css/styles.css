@@ -303,3 +303,155 @@ svg.leaflet-zoom-animated:focus-visible,
   display: none !important;
 }
 
+/* ==========================================================================
+   🏛️ LÁMINA EJECUTIVA DE VELO BLANCO (MEMBRETE, LOGO GATO Y LEYENDAS)
+   ========================================================================== */
+#velo-blanco-executive-overlay {
+  pointer-events: none;
+  transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+#velo-membrete-box {
+  animation: veloSlideDown 0.4s ease-out forwards;
+}
+
+#velo-cat-logo-badge {
+  animation: veloSlideRight 0.4s ease-out forwards;
+}
+
+#velo-panel-left-stats {
+  animation: veloFadeInLeft 0.45s ease-out forwards;
+}
+
+#velo-panel-right-legend {
+  animation: veloFadeInRight 0.45s ease-out forwards;
+}
+
+@keyframes veloSlideDown {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -16px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+@keyframes veloSlideRight {
+  from {
+    opacity: 0;
+    transform: translateX(-16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes veloFadeInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes veloFadeInRight {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* ==========================================================================
+   👴 ERGONOMÍA VISUAL Y ACCESIBILIDAD PARA PERSONAS MAYORES Y ALCALDES
+   ========================================================================== */
+/* Botones principales con mayor contraste, relieve táctil y legibilidad */
+.btn-earth-tool,
+#btn-toggle-basemap,
+#btn-toggle-spotlight,
+#btn-open-parish-modal,
+#btn-toggle-sidebar {
+  font-size: 13px !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.01em;
+  transition: all 0.15s ease;
+}
+
+/* Aumento de contraste en textos del selector de parroquia y barra superior */
+#nav-current-location {
+  font-size: 13px !important;
+  font-weight: 800 !important;
+  color: #e0f2fe !important;
+}
+
+/* ==========================================================================
+   🖨️ ESTILOS DE IMPRESIÓN DIRECTA DE LA LÁMINA OFICIAL EN PAPEL CARTA
+   ========================================================================== */
+@media print {
+  @page {
+    size: letter landscape;
+    margin: 5mm;
+  }
+
+  body, html {
+    background: #ffffff !important;
+    color: #000000 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: visible !important;
+  }
+
+  /* Ocultar barras de navegación, sidebars y botones de control en la hoja impresa */
+  header,
+  #toolbar-tools-row,
+  #earth-sidebar,
+  .earth-status-bar,
+  .leaflet-control-zoom,
+  #btn-desktop-expand-sidebar,
+  #btn-return-parish,
+  #sidebar-backdrop,
+  #card-quick-stats,
+  button {
+    display: none !important;
+  }
+
+  /* Expandir el lienzo central al 100% de la hoja */
+  main,
+  #earth-canvas {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    z-index: 10 !important;
+  }
+
+  /* Forzar visibilidad nítida de la lámina oficial, membrete y leyendas */
+  #velo-blanco-executive-overlay {
+    display: block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    z-index: 9999 !important;
+  }
+
+  #velo-panel-left-stats,
+  #velo-panel-right-legend,
+  #velo-cat-logo-badge,
+  #velo-membrete-box {
+    display: flex !important;
+    opacity: 1 !important;
+    box-shadow: none !important;
+    border-color: #000000 !important;
+  }
+}
+
+

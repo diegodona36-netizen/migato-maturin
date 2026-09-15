@@ -286,15 +286,22 @@ code, pre, .font-mono {
 @media print {
   @page {
     size: letter portrait;
-    margin: 4mm 6mm 4mm 6mm;
+    margin: 3mm 5mm 3mm 5mm;
   }
 
-  /* Ocultar absolutamente todo en la página web */
-  body {
+  /* Reset total para forzar paginación completa sin flex ni overflow */
+  html, body {
     background: #ffffff !important;
     color: #000000 !important;
     padding: 0 !important;
     margin: 0 !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+    display: block !important;
+    overflow: visible !important;
+    overflow-y: visible !important;
+    overflow-x: visible !important;
   }
 
   body > *:not(#printable-sheet-modal) {
@@ -303,17 +310,27 @@ code, pre, .font-mono {
 
   #printable-sheet-modal {
     position: static !important;
+    display: block !important;
     width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
     margin: 0 !important;
     padding: 0 !important;
     background: #ffffff !important;
-    display: block !important;
     visibility: visible !important;
     box-shadow: none !important;
+    backdrop-filter: none !important;
+    overflow: visible !important;
+    overflow-y: visible !important;
+    overflow-x: visible !important;
   }
 
-  #printable-sheet-modal * {
-    visibility: visible !important;
+  #printable-sheet-body {
+    display: block !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
   }
 
   .no-print {
@@ -321,6 +338,7 @@ code, pre, .font-mono {
   }
 
   .ficha-tecnica-salud {
+    display: block !important;
     border: 2px solid #000000 !important;
     box-shadow: none !important;
     width: 100% !important;
@@ -329,6 +347,13 @@ code, pre, .font-mono {
     page-break-inside: avoid !important;
     background-color: #ffffff !important;
     color: #000000 !important;
+  }
+
+  .ficha-table {
+    width: 100% !important;
+    max-width: 100% !important;
+    border-collapse: collapse !important;
+    page-break-inside: avoid !important;
   }
 
   .ficha-table th, 
@@ -345,6 +370,7 @@ code, pre, .font-mono {
     print-color-adjust: exact !important;
     height: 125px !important;
     overflow: hidden !important;
+    page-break-inside: avoid !important;
   }
 
   .leaflet-tile-container img,
@@ -352,6 +378,10 @@ code, pre, .font-mono {
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
     filter: none !important;
+  }
+
+  .leaflet-pane {
+    transform: none !important;
   }
 
   .ficha-tecnica-salud img {

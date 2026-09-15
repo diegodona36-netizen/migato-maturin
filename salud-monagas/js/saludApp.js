@@ -2910,9 +2910,150 @@ window.verFichaCentro = (id) => {
 
 window.editarCentro = editarCentro;
 window.eliminarCentro = eliminarCentro;
+
 window.imprimirFichaActual = () => {
-  window.print();
+  const fichaEl = document.querySelector('.ficha-tecnica-salud');
+  if (!fichaEl) {
+    window.print();
+    return;
+  }
+
+  // Motor 1: Iframe Aislado (Garantiza que no herede overflow ni flex que bloqueen en Firefox)
+  try {
+    let printIframe = document.getElementById('iframe-impresion-ficha');
+    if (!printIframe) {
+      printIframe = document.createElement('iframe');
+      printIframe.id = 'iframe-impresion-ficha';
+      printIframe.style.position = 'fixed';
+      printIframe.style.right = '0';
+      printIframe.style.bottom = '0';
+      printIframe.style.width = '0';
+      printIframe.style.height = '0';
+      printIframe.style.border = 'none';
+      printIframe.style.zIndex = '-999';
+      document.body.appendChild(printIframe);
+    }
+
+    const doc = printIframe.contentWindow.document;
+    doc.open();
+    doc.write(`
+      <!DOCTYPE html>
+      <html lang="es">
+      <head>
+        <meta charset="UTF-8">
+        <title>Ficha Oficial MIGATO - ${state.centroSeleccionado?.nombre || 'Centro de Salud'}</title>
+        <link rel="stylesheet" href="../vendor/leaflet.css">
+        <link rel="stylesheet" href="css/styles.css">
+        <style>
+          @page { size: letter portrait; margin: 3mm 5mm 3mm 5mm; }
+          html, body { background: #ffffff !important; color: #000000 !important; margin: 0 !important; padding: 0 !important; font-family: Arial, sans-serif; }
+          .ficha-tecnica-salud { margin: 0 auto !important; width: 100% !important; max-width: 100% !important; border: 2px solid #000 !important; box-shadow: none !important; }
+          .leaflet-pane { transform: none !important; }
+        </style>
+      </head>
+      <body>
+        ${fichaEl.outerHTML}
+      </body>
+      </html>
+    `);
+    doc.close();
+
+    // Dar tiempo para renderizado de fuentes e imágenes y lanzar print
+    setTimeout(() => {
+      try {
+        printIframe.contentWindow.focus();
+        printIframe.contentWindow.print();
+      } catch (errPrint) {
+        console.warn('Iframe print bloqueado, usando fallback nativo:', errPrint);
+        window.print();
+      }
+    }, 250);
+  } catch (e) {
+    console.error('Error en iframe print, usando window.print():', e);
+    window.print();
+  }
 };
+
+window.abrirFichaEnVentanaLimpia = (autoPrint = true) => {
+  const centro = state.centroSeleccionado;
+  if (centro && centro.id) {
+    window.open(`ficha-print.html?id=${encodeURIComponent(centro.id)}&autoprint=${autoPrint ? 1 : 0}`, '_blank');
+    return;
+  }
+  const fichaEl = document.querySelector('.ficha-tecnica-salud');
+  if (!fichaEl) return;
+
+  const win = window.open('', '_blank');
+  if (!win) {
+    window.imprimirFichaActual();
+    return;
+  }
+
+  win.document.open();
+  win.document.write(`
+    <!DOCTYPE html>
+    <html lang="es">
+    <head>
+      <meta charset="UTF-8">
+      <title>FICHA_SALUD_${(centro?.id || 'CENTRO').toUpperCase()}_${(centro?.nombre || '').replace(/[^a-zA-Z0-9]/g, '_')}</title>
+      <link rel="stylesheet" href="../vendor/leaflet.css">
+      <link rel="stylesheet" href="css/styles.css">
+      <style>
+        @page { size: letter portrait; margin: 3mm 5mm 3mm 5mm; }
+        html, body { background: #f8fafc; color: #0f172a; margin: 0; padding: 12px 0; font-family: Arial, sans-serif; }
+        .control-bar {
+          max-width: 790px;
+          margin: 0 auto 12px;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          background: #ffffff;
+          padding: 10px 16px;
+          border-radius: 8px;
+          border: 1px solid #cbd5e1;
+          box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .ficha-tecnica-salud { margin: 0 auto !important; width: 100% !important; max-width: 790px !important; box-shadow: 0 4px 12px rgba(0,0,0,0.08) !important; background: #fff !important; }
+        @media print {
+          html, body { background: #fff !important; padding: 0 !important; }
+          .control-bar { display: none !important; }
+          .ficha-tecnica-salud { box-shadow: none !important; border: 2px solid #000 !important; }
+          .leaflet-pane { transform: none !important; }
+        }
+      </style>
+    </head>
+    <body>
+      <div class="control-bar">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <strong style="font-size:13px; color:#0f172a;">Vista Oficial de Impresión 1:1</strong>
+          <span style="font-size:11px; color:#0284c7; font-weight:bold;">${centro?.nombre || ''}</span>
+        </div>
+        <div style="display:flex; gap:8px;">
+          <button onclick="window.print()" style="background:#16a34a; color:#ffffff; border:none; padding:8px 16px; border-radius:6px; font-weight:bold; font-size:12px; cursor:pointer;">
+            🖨️ Imprimir / Guardar como PDF
+          </button>
+          <button onclick="window.close()" style="background:#e2e8f0; color:#334155; border:none; padding:8px 12px; border-radius:6px; font-weight:bold; font-size:12px; cursor:pointer;">
+            Cerrar
+          </button>
+        </div>
+      </div>
+      ${fichaEl.outerHTML}
+      <script>
+        ${autoPrint ? `
+        window.onload = function() {
+          setTimeout(function() {
+            window.focus();
+            window.print();
+          }, 350);
+        };
+        ` : ''}
+      <\/script>
+    </body>
+    </html>
+  `);
+  win.document.close();
+};
+
 window.cerrarModalFicha = cerrarModalFicha;
 window.cambiarPestana = cambiarPestana;
 

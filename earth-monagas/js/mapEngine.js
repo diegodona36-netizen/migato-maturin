@@ -219,7 +219,7 @@ export class EarthMapEngine {
     this.currentParishId = null;
     this.currentSubParishVertices = null;
     this.currentSectorVertices = null;
-    this.activeFocusLevel = "parroquia"; // 'estado', 'municipio', 'parroquia', 'subparroquia', 'sector'
+    this.activeFocusLevel = "estado"; // 'estado', 'municipio', 'parroquia', 'subparroquia', 'sector'
     this.activeFocusCoords = null;
     this.activeMunicipioId = null;
 
@@ -1189,22 +1189,25 @@ export class EarthMapEngine {
     // Nivel 2: Parroquia
     if (this.activeFocusLevel === "parroquia" || (!this.activeFocusLevel && window.earthApp?.selectedParishId)) {
       const p = window.earthApp?.store?.getParish(window.earthApp.selectedMunId, window.earthApp.selectedParishId);
-      this.showParishBoundary(this.currentParishLimite || p?.limite || null, this.currentParishId || window.earthApp?.selectedParishId, false);
-      return this.spotlightEnabled;
+      const parishLimite = this.currentParishLimite || p?.limite;
+      if (parishLimite && parishLimite.length >= 3) {
+        this.showParishBoundary(parishLimite, this.currentParishId || window.earthApp?.selectedParishId, false);
+        return this.spotlightEnabled;
+      }
+      // Si no hay coordenadas de parroquia, continuar al fallback
     }
 
     // Nivel 1: Municipio
-    if (this.activeFocusLevel === "municipio") {
-      this.showMunicipioBoundary(this.activeMunicipioId || window.earthApp?.selectedMunId, false);
-      return this.spotlightEnabled;
+    if (this.activeFocusLevel === "municipio" || (this.activeMunicipioId || window.earthApp?.selectedMunId)) {
+      const munId = this.activeMunicipioId || window.earthApp?.selectedMunId;
+      if (munId) {
+        this.showMunicipioBoundary(munId, false);
+        return this.spotlightEnabled;
+      }
     }
 
-    // Nivel 0: Estado Monagas
-    if (this.activeFocusLevel === "estado") {
-      this.showStateBoundary(false);
-      return this.spotlightEnabled;
-    }
-
+    // Nivel 0: Estado Monagas (Fallback global garantizado)
+    this.showStateBoundary(false);
     return this.spotlightEnabled;
   }
 

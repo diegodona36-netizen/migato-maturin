@@ -868,6 +868,9 @@ class EarthMonagasApp {
       <span class="font-black text-emerald-200 text-xs truncate">🗺️ Estado Monagas</span>
       <span class="text-slate-400 text-[11px] font-semibold hidden sm:inline">• 13 Municipios</span>
     `;
+
+    // Sincronizar automáticamente la lámina de Velo Blanco
+    this.syncVeloBlancoContent();
   }
 
   startSectorInSubParish(subParishId) {
@@ -1146,6 +1149,73 @@ class EarthMonagasApp {
       if (window.lucide && typeof window.lucide.createIcons === 'function') {
         window.lucide.createIcons();
       }
+    }
+    // Sincronizar la lámina oficial de Velo Blanco (Membrete, Logo y Leyendas)
+    this.updateVeloBlancoOverlay(isEnabled);
+  }
+
+  updateVeloBlancoOverlay(isEnabled = null) {
+    const overlay = document.getElementById("velo-blanco-executive-overlay");
+    if (!overlay) return;
+
+    const spotlightActive = (isEnabled !== null) ? isEnabled : !!(this.mapEngine && this.mapEngine.spotlightEnabled);
+
+    if (spotlightActive) {
+      overlay.classList.remove("hidden");
+      requestAnimationFrame(() => {
+        overlay.classList.remove("opacity-0");
+        overlay.classList.add("opacity-100");
+      });
+      this.syncVeloBlancoContent();
+    } else {
+      overlay.classList.remove("opacity-100");
+      overlay.classList.add("opacity-0");
+      setTimeout(() => {
+        if (!this.mapEngine?.spotlightEnabled) {
+          overlay.classList.add("hidden");
+        }
+      }, 300);
+    }
+  }
+
+  syncVeloBlancoContent() {
+    const titleEl = document.getElementById("velo-title-entity");
+    const subTitleEl = document.getElementById("velo-subtitle-entity");
+    const statTerritorio = document.getElementById("velo-stat-territorio");
+    const statSubdiv = document.getElementById("velo-stat-subdivision");
+    const statCentros = document.getElementById("velo-stat-centros");
+    const statElectores = document.getElementById("velo-stat-electores");
+
+    const focusLevel = this.mapEngine?.activeFocusLevel || "estado";
+    const mun = this.store?.getMunicipio(this.selectedMunId);
+    const parish = this.store?.getParish(this.selectedMunId, this.selectedParishId);
+
+    if (focusLevel === "parroquia" && parish) {
+      if (titleEl) titleEl.textContent = `${(parish.nombre || 'PARROQUIA').toUpperCase()}, ${(mun ? mun.nombre : 'MATURÍN').toUpperCase()}`;
+      if (subTitleEl) subTitleEl.textContent = `ESTADO MONAGAS • SALA SITUACIONAL MIGATO 2026`;
+      if (statTerritorio) statTerritorio.textContent = `Parroquia ${parish.nombre}`;
+      if (statSubdiv) statSubdiv.textContent = `${(parish.poligonos || []).length} Sectores • Municipio ${mun?.nombre || 'Maturín'}`;
+      if (statCentros) statCentros.textContent = String(parish.centrosElectorales || 18);
+      if (statElectores) statElectores.textContent = (parish.electores || 35000).toLocaleString();
+    } else if ((focusLevel === "municipio" || this.selectedMunId) && mun) {
+      if (titleEl) titleEl.textContent = `MUNICIPIO ${mun.nombre.toUpperCase()}, ESTADO MONAGAS`;
+      if (subTitleEl) subTitleEl.textContent = `SALA DE MANDO TERRITORIAL OFICIAL • MIGATO 2026`;
+      if (statTerritorio) statTerritorio.textContent = `Municipio ${mun.nombre}`;
+      if (statSubdiv) statSubdiv.textContent = `${(mun.parroquias || []).length} Parroquias Oficiales`;
+      if (statCentros) statCentros.textContent = String(mun.totalCentros || (mun.id === 'maturin' ? 175 : 24));
+      if (statElectores) statElectores.textContent = (mun.totalElectores || (mun.id === 'maturin' ? 346988 : 45000)).toLocaleString();
+    } else {
+      // Nivel General: Maturín, Estado Monagas por defecto según directriz
+      if (titleEl) titleEl.textContent = `MATURÍN, ESTADO MONAGAS`;
+      if (subTitleEl) subTitleEl.textContent = `13 MUNICIPIOS • SALA SITUACIONAL Y CARTOGRAFÍA OFICIAL MIGATO 2026`;
+      if (statTerritorio) statTerritorio.textContent = `Estado Monagas (Capital Maturín)`;
+      if (statSubdiv) statSubdiv.textContent = `13 Municipios • 45 Parroquias`;
+      if (statCentros) statCentros.textContent = `536`;
+      if (statElectores) statElectores.textContent = `678,920`;
+    }
+
+    if (window.lucide && typeof window.lucide.createIcons === 'function') {
+      window.lucide.createIcons();
     }
   }
 
