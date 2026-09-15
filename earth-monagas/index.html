@@ -61,7 +61,7 @@
   <meta http-equiv="Expires" content="0" />
 
   <!-- Estilos Centrales -->
-  <link rel="stylesheet" href="css/styles.css?v=205">
+  <link rel="stylesheet" href="css/styles.css?v=210">
 
   <!-- Script de Autenticación Rápida y Control de Acceso Estricto (Exclusivo Regional) -->
   <script src="../js/auth.js"></script>
@@ -161,7 +161,7 @@
 
     // Reseteo Total de Fábrica global
     window.resetEarthFullData = function() {
-      if (confirm("¿Desea restaurar de fábrica toda la plataforma MIGATO Earth?\n\nSe limpiarán la memoria local, la caché y se recargarán los datos limpios de producción (v=205).")) {
+      if (confirm("¿Desea restaurar de fábrica toda la plataforma MIGATO Earth?\n\nSe limpiarán la memoria local, la caché y se recargarán los datos limpios de producción (v=210).")) {
         try {
           localStorage.clear();
           sessionStorage.clear();
@@ -177,15 +177,15 @@
           }).catch(function(){});
         }
         setTimeout(function() {
-          window.location.replace(window.location.pathname + '?v=205&u=admin-militancia');
+          window.location.replace(window.location.pathname + '?v=210&u=admin-militancia');
         }, 150);
       }
     };
 
-    // Auto-actualización segura a la versión oficial v=205 (sin riesgo de bucle)
+    // Auto-actualización segura a la versión oficial v=210 (sin riesgo de bucle)
     (function() {
       try {
-        var TARGET_VERSION = "205";
+        var TARGET_VERSION = "210";
         var p = new URLSearchParams(window.location.search);
         var curV = p.get('v');
         var isReset = p.get('reset') === '1';
@@ -803,9 +803,16 @@
       <!-- ============================================================== -->
       <div id="velo-blanco-executive-overlay" class="pointer-events-none" aria-hidden="true">
         
-        <!-- 🏛️ 1. MEMBRETE CENTRAL SUPERIOR -->
-        <div id="velo-membrete-box" class="absolute top-3 left-1/2 -translate-x-1/2 pointer-events-auto max-w-[92vw] sm:max-w-lg md:max-w-xl w-full px-2 z-20">
-          <div class="bg-white/95 backdrop-blur-md border-2 border-slate-900 rounded-2xl shadow-2xl px-4 sm:px-6 py-2 sm:py-3 text-center transition-transform transform">
+        <!-- 🖼️ MARCO CARTOGRÁFICO DOBLE LÍNEA DE 120" CON CRUCES DE RETÍCULA -->
+        <div id="velo-cartographic-frame"></div>
+        <div class="velo-frame-corner velo-frame-corner-tl"></div>
+        <div class="velo-frame-corner velo-frame-corner-tr"></div>
+        <div class="velo-frame-corner velo-frame-corner-bl"></div>
+        <div class="velo-frame-corner velo-frame-corner-br"></div>
+
+        <!-- 🏛️ 1. MEMBRETE CENTRAL SUPERIOR (PANTALLAS GIGANTES DE 120") -->
+        <div id="velo-membrete-box" class="pointer-events-auto">
+          <div class="bg-white/95 backdrop-blur-md border-2 border-slate-900 rounded-2xl shadow-2xl px-4 sm:px-6 py-2.5 text-center transition-transform transform">
             <div class="flex items-center justify-center gap-2 mb-0.5">
               <span class="w-2.5 h-2.5 rounded-full bg-amber-500 border border-slate-900 shrink-0"></span>
               <span class="text-[10px] sm:text-[11px] font-black tracking-widest text-slate-700 uppercase">
@@ -813,34 +820,40 @@
               </span>
               <span class="w-2.5 h-2.5 rounded-full bg-sky-600 border border-slate-900 shrink-0"></span>
             </div>
-            <h1 id="velo-title-entity" class="text-base sm:text-lg md:text-xl font-black text-slate-900 uppercase tracking-tight leading-tight">
+            <h1 id="velo-title-entity" class="text-base sm:text-xl md:text-2xl font-black text-slate-950 uppercase tracking-tight leading-tight">
               MATURÍN, ESTADO MONAGAS
             </h1>
-            <p id="velo-subtitle-entity" class="text-[10px] sm:text-xs font-black text-sky-800 tracking-wide uppercase mt-0.5">
-              SALA SITUACIONAL Y CARTOGRAFÍA OFICIAL DE GOBIERNO • MIGATO 2026
-            </p>
+            <div class="flex items-center justify-center gap-3 mt-1">
+              <p id="velo-subtitle-entity" class="text-[10px] sm:text-xs font-black text-sky-800 tracking-wide uppercase">
+                SALA SITUACIONAL Y CARTOGRAFÍA OFICIAL DE GOBIERNO • MIGATO 2026
+              </p>
+              <button type="button" onclick="document.body.classList.toggle('clean-presentation-mode')" class="px-2.5 py-0.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-amber-400 border border-slate-700 text-[10px] font-black flex items-center gap-1 shadow-sm transition active:scale-95 cursor-pointer" title="Ocultar barras para ruedas de prensa y fotos de 120 pulgadas">
+                <i data-lucide="camera" class="w-3.5 h-3.5 text-amber-400"></i>
+                <span>📸 Modo Foto</span>
+              </button>
+            </div>
           </div>
         </div>
 
-        <!-- 🐱 2. LOGO OFICIAL DEL PARTIDO (ESQUINA SUPERIOR IZQUIERDA) -->
-        <div id="velo-cat-logo-badge" class="absolute top-3 left-3 pointer-events-auto z-20 flex items-center gap-2.5 bg-white/95 backdrop-blur-md border-2 border-sky-700 rounded-2xl px-3 py-1.5 shadow-2xl transition hover:scale-102">
-          <img src="assets/logo-migato.png" onerror="this.onerror=null; this.src='../assets/logo-migato.png';" alt="Logo Oficial MIGATO" class="w-10 h-10 sm:w-12 sm:h-12 object-contain drop-shadow-md">
+        <!-- 🐱 2. LOGO OFICIAL DE MIGATO CON RELIEVE INSTITUCIONAL -->
+        <div id="velo-cat-logo-badge" class="pointer-events-auto flex items-center gap-2.5 bg-white/95 backdrop-blur-md border-2 border-slate-900 rounded-2xl px-3 py-2 shadow-2xl transition hover:scale-102">
+          <img src="assets/logo-migato.png" onerror="this.onerror=null; this.src='../assets/logo-migato.png';" alt="Logo Oficial MIGATO" class="w-11 h-11 sm:w-12 sm:h-12 object-contain drop-shadow-md">
           <div class="leading-tight">
-            <span class="text-[9px] font-black text-sky-600 uppercase tracking-wider block">MOVIMIENTO INDEPENDIENTE</span>
+            <span class="text-[9px] font-black text-sky-700 uppercase tracking-wider block">MOVIMIENTO INDEPENDIENTE</span>
             <strong class="text-sm sm:text-base font-black text-slate-950 block tracking-tight">GANAMOS TODOS</strong>
             <span class="text-[10px] sm:text-[11px] font-black text-amber-600 block">MIGATO 2026</span>
           </div>
         </div>
 
         <!-- 📊 3. LEYENDA / FICHA TERRITORIAL (LATERAL IZQUIERDO) -->
-        <div id="velo-panel-left-stats" class="absolute left-3 top-24 bottom-10 w-72 pointer-events-auto z-20 hidden md:flex flex-col gap-2 overflow-y-auto">
-          <div class="bg-white/95 backdrop-blur-md border-2 border-slate-800 rounded-2xl p-3.5 shadow-2xl text-slate-900 space-y-2.5">
+        <div id="velo-panel-left-stats" class="pointer-events-auto">
+          <div class="bg-white/95 backdrop-blur-md border-2 border-slate-900 rounded-2xl p-3.5 shadow-2xl text-slate-900 space-y-2.5">
             <div class="flex items-center justify-between border-b-2 border-slate-100 pb-2">
               <div class="flex items-center gap-1.5">
                 <i data-lucide="bar-chart-3" class="w-4 h-4 text-sky-700"></i>
                 <span class="text-xs font-black uppercase text-slate-900 tracking-wider">Ficha Territorial</span>
               </div>
-              <span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-black uppercase border border-emerald-300">Oficial</span>
+              <span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-black uppercase border border-emerald-300">Oficial CNE</span>
             </div>
 
             <div class="space-y-2">
@@ -881,8 +894,8 @@
         </div>
 
         <!-- 🗺️ 4. LEYENDA CARTOGRÁFICA OFICIAL (LATERAL DERECHO) -->
-        <div id="velo-panel-right-legend" class="absolute right-3 top-24 bottom-10 w-72 pointer-events-auto z-20 hidden md:flex flex-col gap-2 overflow-y-auto">
-          <div class="bg-white/95 backdrop-blur-md border-2 border-slate-800 rounded-2xl p-3.5 shadow-2xl text-slate-900 space-y-2.5">
+        <div id="velo-panel-right-legend" class="pointer-events-auto">
+          <div class="bg-white/95 backdrop-blur-md border-2 border-slate-900 rounded-2xl p-3.5 shadow-2xl text-slate-900 space-y-2.5">
             <div class="flex items-center justify-between border-b-2 border-slate-100 pb-2">
               <div class="flex items-center gap-1.5">
                 <i data-lucide="map" class="w-4 h-4 text-amber-600"></i>
@@ -939,10 +952,22 @@
             </div>
 
             <!-- Botón de Imprimir Lámina Ejecutiva -->
-            <button type="button" onclick="window.print()" class="w-full mt-2 py-2.5 px-3 bg-slate-950 hover:bg-slate-800 text-white rounded-xl font-black text-xs flex items-center justify-center gap-2 shadow-lg transition active:scale-95 cursor-pointer border border-slate-700">
+            <button type="button" onclick="window.print()" class="w-full mt-2 py-2 px-3 bg-slate-950 hover:bg-slate-800 text-white rounded-xl font-black text-xs flex items-center justify-center gap-2 shadow-lg transition active:scale-95 cursor-pointer border border-slate-700">
               <i data-lucide="printer" class="w-4 h-4 text-amber-400"></i>
               <span>Imprimir Lámina / PDF</span>
             </button>
+          </div>
+        </div>
+
+        <!-- 🏷️ 5. PIE DE LÁMINA CARTOGRÁFICA OFICIAL (DATUM Y ESCALA) -->
+        <div id="velo-footer-cartographic-bar">
+          <div class="flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+            <span>DATUM: WGS-84 / PROYECCIÓN CARTOGRÁFICA MERCATOR</span>
+          </div>
+          <div class="flex items-center gap-3 font-mono">
+            <span class="hidden sm:inline text-slate-600">SISTEMA INTEGRADO DE INFORMACIÓN GEOGRÁFICA</span>
+            <span class="text-sky-800 font-black">MONAGAS 2026</span>
           </div>
         </div>
 
@@ -2098,7 +2123,7 @@
   </div>
 
   <!-- SCRIPT -->
-  <script type="module" src="js/app.js?v=205"></script>
+  <script type="module" src="js/app.js?v=210"></script>
   <script>
     if (window.lucide && typeof window.lucide.createIcons === 'function') {
       window.lucide.createIcons();

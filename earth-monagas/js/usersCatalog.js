@@ -3,7 +3,7 @@
  * Comando Regional MIGATO Monagas • Plataforma Cartográfica Territorial
  */
 
-import { CATALOGO_MONAGAS } from "./catalogoMonagas.js?v=205";
+import { CATALOGO_MONAGAS } from "./catalogoMonagas.js?v=210";
 
 /**
  * Función de hashing criptográfico sincrónica SHA-256 (FIPS 180-4)

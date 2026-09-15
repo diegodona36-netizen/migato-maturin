@@ -2,16 +2,16 @@
  * Controlador Principal — Google Earth Pro Web (Edición Estado Monagas)
  * Robusto, 100% Operativo y Totalmente Individualizado
  */
-import { CATALOGO_MONAGAS, findParishInCatalog, PARISH_ALIAS_MAP, resolveParishId } from "./catalogoMonagas.js?v=205";
-import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=205";
-import { getAllParishesForSelector } from "./usersCatalog.js?v=205";
-import { EarthStore } from "./earthStore.js?v=205";
-import { EarthMapEngine } from "./mapEngine.js?v=205";
-import { PropertiesDialog } from "./propertiesDialog.js?v=205";
-import { ToolsManager } from "./toolsManager.js?v=205";
-import { detectParishFromGeometry, SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=205";
-import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=205";
-import { getParishDemographics, getMunicipioDemographics } from "./monagasDemographics.js?v=205";
+import { CATALOGO_MONAGAS, findParishInCatalog, PARISH_ALIAS_MAP, resolveParishId } from "./catalogoMonagas.js?v=210";
+import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=210";
+import { getAllParishesForSelector } from "./usersCatalog.js?v=210";
+import { EarthStore } from "./earthStore.js?v=210";
+import { EarthMapEngine } from "./mapEngine.js?v=210";
+import { PropertiesDialog } from "./propertiesDialog.js?v=210";
+import { ToolsManager } from "./toolsManager.js?v=210";
+import { detectParishFromGeometry, SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=210";
+import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=210";
+import { getParishDemographics, getMunicipioDemographics } from "./monagasDemographics.js?v=210";
 import { 
   getMunicipios, 
   getParroquiasByMun, 
@@ -21,13 +21,13 @@ import {
   findSectorById, 
   searchSectores, 
   ALL_SECTORES_FLAT 
-} from "./monagasSectoresCatalog.js?v=205";
+} from "./monagasSectoresCatalog.js?v=210";
 import { 
   getSavedFirebaseConfig, 
   saveFirebaseConfig, 
   isFirebaseConfigured, 
   initFirebase 
-} from "./firebaseConfig.js?v=205";
+} from "./firebaseConfig.js?v=210";
 
 // Controladores globales infalibles accesibles en cualquier contexto
 window.closeParishSelectorModal = function() {
@@ -1182,6 +1182,9 @@ class EarthMonagasApp {
     const spotlightActive = (isEnabled !== null) ? !!isEnabled : !!(this.mapEngine && this.mapEngine.spotlightEnabled);
 
     if (spotlightActive) {
+      if (typeof this.toggleSidebar === "function") {
+        try { this.toggleSidebar(false); } catch(e) {}
+      }
       overlay.classList.add("active");
       overlay.style.setProperty("display", "block", "important");
       overlay.style.setProperty("opacity", "1", "important");
