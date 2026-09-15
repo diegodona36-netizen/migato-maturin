@@ -2,16 +2,16 @@
  * Controlador Principal — Google Earth Pro Web (Edición Estado Monagas)
  * Robusto, 100% Operativo y Totalmente Individualizado
  */
-import { CATALOGO_MONAGAS, findParishInCatalog, PARISH_ALIAS_MAP, resolveParishId } from "./catalogoMonagas.js?v=190";
-import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=190";
-import { getAllParishesForSelector } from "./usersCatalog.js?v=190";
-import { EarthStore } from "./earthStore.js?v=190";
-import { EarthMapEngine } from "./mapEngine.js?v=190";
-import { PropertiesDialog } from "./propertiesDialog.js?v=190";
-import { ToolsManager } from "./toolsManager.js?v=190";
-import { detectParishFromGeometry, SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=190";
-import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=190";
-import { getParishDemographics, getMunicipioDemographics } from "./monagasDemographics.js?v=190";
+import { CATALOGO_MONAGAS, findParishInCatalog, PARISH_ALIAS_MAP, resolveParishId } from "./catalogoMonagas.js?v=195";
+import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=195";
+import { getAllParishesForSelector } from "./usersCatalog.js?v=195";
+import { EarthStore } from "./earthStore.js?v=195";
+import { EarthMapEngine } from "./mapEngine.js?v=195";
+import { PropertiesDialog } from "./propertiesDialog.js?v=195";
+import { ToolsManager } from "./toolsManager.js?v=195";
+import { detectParishFromGeometry, SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=195";
+import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=195";
+import { getParishDemographics, getMunicipioDemographics } from "./monagasDemographics.js?v=195";
 import { 
   getMunicipios, 
   getParroquiasByMun, 
@@ -21,13 +21,13 @@ import {
   findSectorById, 
   searchSectores, 
   ALL_SECTORES_FLAT 
-} from "./monagasSectoresCatalog.js?v=190";
+} from "./monagasSectoresCatalog.js?v=195";
 import { 
   getSavedFirebaseConfig, 
   saveFirebaseConfig, 
   isFirebaseConfigured, 
   initFirebase 
-} from "./firebaseConfig.js?v=190";
+} from "./firebaseConfig.js?v=195";
 
 // Controladores globales infalibles accesibles en cualquier contexto
 window.closeParishSelectorModal = function() {
@@ -781,6 +781,10 @@ class EarthMonagasApp {
       this.mapEngine.activeFocusLevel = focusLevel;
     }
 
+    if (this.mapEngine?.spotlightEnabled) {
+      this.syncVeloBlancoContent();
+    }
+
     if (!hud || !hudContent) return;
 
     hud.style.display = "flex";
@@ -1161,22 +1165,29 @@ class EarthMonagasApp {
     const spotlightActive = (isEnabled !== null) ? isEnabled : !!(this.mapEngine && this.mapEngine.spotlightEnabled);
 
     if (spotlightActive) {
-      overlay.classList.remove("hidden");
-      overlay.style.display = "block";
-      requestAnimationFrame(() => {
-        overlay.classList.remove("opacity-0");
-        overlay.classList.add("opacity-100");
-      });
+      overlay.classList.add("active");
+      overlay.style.setProperty("display", "block", "important");
+      overlay.style.setProperty("opacity", "1", "important");
+      overlay.style.setProperty("visibility", "visible", "important");
+      overlay.setAttribute("aria-hidden", "false");
+
+      // En pantallas medianas y grandes, replegar automáticamente el panel lateral
+      // para que la lámina cartográfica se despliegue limpia a pantalla completa
+      if (window.innerWidth >= 768 && typeof this.toggleSidebar === "function") {
+        this.toggleSidebar(false);
+      }
+
       this.syncVeloBlancoContent();
     } else {
-      overlay.classList.remove("opacity-100");
-      overlay.classList.add("opacity-0");
+      overlay.classList.remove("active");
+      overlay.style.setProperty("opacity", "0", "important");
+      overlay.style.setProperty("visibility", "hidden", "important");
+      overlay.setAttribute("aria-hidden", "true");
       setTimeout(() => {
         if (!this.mapEngine?.spotlightEnabled) {
-          overlay.classList.add("hidden");
-          overlay.style.display = "none";
+          overlay.style.setProperty("display", "none", "important");
         }
-      }, 300);
+      }, 250);
     }
   }
 
@@ -1193,7 +1204,23 @@ class EarthMonagasApp {
       const munObj = this.selectedMunId ? (CATALOGO_MONAGAS.find(m => m.id === this.selectedMunId) || { nombre: "Maturín" }) : null;
       const parish = (this.selectedMunId && this.selectedParishId) ? this.store?.getParish(this.selectedMunId, this.selectedParishId) : null;
 
-      if (focusLevel === "parroquia" && parish) {
+      if (focusLevel === "sector" && this.activeSectorId && parish) {
+        const sec = (parish.poligonos || []).find(p => String(p.id) === String(this.activeSectorId));
+        if (titleEl) titleEl.textContent = `${(sec ? sec.nombre : 'SECTOR').toUpperCase()}, ${(parish.nombre || 'PARROQUIA').toUpperCase()}`;
+        if (subTitleEl) subTitleEl.textContent = `MUNICIPIO ${munObj?.nombre ? munObj.nombre.toUpperCase() : 'MATURÍN'} • MIGATO 2026`;
+        if (statTerritorio) statTerritorio.textContent = `Sector ${sec?.nombre || this.activeSectorId}`;
+        if (statSubdiv) statSubdiv.textContent = `Parroquia ${parish.nombre}`;
+        if (statCentros) statCentros.textContent = String(sec?.centros || 1);
+        if (statElectores) statElectores.textContent = (sec?.electores || 1200).toLocaleString();
+      } else if (focusLevel === "subparroquia" && this.activeSubParroquiaId && parish) {
+        const sp = (parish.subparroquias || []).find(s => String(s.id) === String(this.activeSubParroquiaId));
+        if (titleEl) titleEl.textContent = `${(sp ? sp.nombre : 'EJE TERRITORIAL').toUpperCase()}, ${(parish.nombre || 'PARROQUIA').toUpperCase()}`;
+        if (subTitleEl) subTitleEl.textContent = `SALA DE MANDO DE EJE • MIGATO 2026`;
+        if (statTerritorio) statTerritorio.textContent = `Eje ${sp?.nombre || this.activeSubParroquiaId}`;
+        if (statSubdiv) statSubdiv.textContent = `Parroquia ${parish.nombre}`;
+        if (statCentros) statCentros.textContent = String(sp?.centros || 3);
+        if (statElectores) statElectores.textContent = (sp?.electores || 5400).toLocaleString();
+      } else if (focusLevel === "parroquia" && parish) {
         if (titleEl) titleEl.textContent = `${(parish.nombre || 'PARROQUIA').toUpperCase()}, ${(munObj ? munObj.nombre : 'MATURÍN').toUpperCase()}`;
         if (subTitleEl) subTitleEl.textContent = `ESTADO MONAGAS • SALA SITUACIONAL MIGATO 2026`;
         if (statTerritorio) statTerritorio.textContent = `Parroquia ${parish.nombre}`;

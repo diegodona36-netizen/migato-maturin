@@ -61,7 +61,7 @@
   <meta http-equiv="Expires" content="0" />
 
   <!-- Custom Styles -->
-  <link rel="stylesheet" href="css/styles.css?v=190">
+  <link rel="stylesheet" href="css/styles.css?v=195">
 
   <!-- Script de Autenticación Rápida y Control de Acceso Estricto (Exclusivo Regional) -->
   <script src="../js/auth.js"></script>
@@ -155,7 +155,7 @@
 
     // Reseteo Total de Fábrica global
     window.resetEarthFullData = function() {
-      if (confirm("¿Desea restaurar de fábrica toda la plataforma MIGATO Earth?\n\nSe limpiarán la memoria local, la caché y se recargarán los datos limpios de producción (v=190).")) {
+      if (confirm("¿Desea restaurar de fábrica toda la plataforma MIGATO Earth?\n\nSe limpiarán la memoria local, la caché y se recargarán los datos limpios de producción (v=195).")) {
         try {
           localStorage.clear();
           sessionStorage.clear();
@@ -171,15 +171,15 @@
           }).catch(function(){});
         }
         setTimeout(function() {
-          window.location.replace(window.location.pathname + '?v=190&u=admin-militancia');
+          window.location.replace(window.location.pathname + '?v=195&u=admin-militancia');
         }, 150);
       }
     };
 
-    // Auto-actualización segura a la versión oficial v=190 (sin riesgo de bucle)
+    // Auto-actualización segura a la versión oficial v=195 (sin riesgo de bucle)
     (function() {
       try {
-        var TARGET_VERSION = "190";
+        var TARGET_VERSION = "195";
         var p = new URLSearchParams(window.location.search);
         var curV = p.get('v');
         var isReset = p.get('reset') === '1';
@@ -795,10 +795,10 @@
       <!-- ============================================================== -->
       <!-- 🌟 LÁMINA OFICIAL DE VELO BLANCO (MEMBRETE, LOGO GATO Y LEYENDAS) -->
       <!-- ============================================================== -->
-      <div id="velo-blanco-executive-overlay" class="absolute inset-0 pointer-events-none z-[1200] transition-opacity duration-300 opacity-0 hidden" aria-hidden="true">
+      <div id="velo-blanco-executive-overlay" class="pointer-events-none" aria-hidden="true">
         
         <!-- 🏛️ 1. MEMBRETE CENTRAL SUPERIOR -->
-        <div id="velo-membrete-box" class="absolute top-3 left-1/2 -translate-x-1/2 pointer-events-auto max-w-[92vw] sm:max-w-2xl w-full px-2 z-20">
+        <div id="velo-membrete-box" class="absolute top-3 left-1/2 -translate-x-1/2 pointer-events-auto max-w-[92vw] sm:max-w-lg md:max-w-xl w-full px-2 z-20">
           <div class="bg-white/95 backdrop-blur-md border-2 border-slate-900 rounded-2xl shadow-2xl px-4 sm:px-6 py-2 sm:py-3 text-center transition-transform transform">
             <div class="flex items-center justify-center gap-2 mb-0.5">
               <span class="w-2.5 h-2.5 rounded-full bg-amber-500 border border-slate-900 shrink-0"></span>
@@ -807,22 +807,22 @@
               </span>
               <span class="w-2.5 h-2.5 rounded-full bg-sky-600 border border-slate-900 shrink-0"></span>
             </div>
-            <h1 id="velo-title-entity" class="text-base sm:text-xl md:text-2xl font-black text-slate-900 uppercase tracking-tight leading-tight">
+            <h1 id="velo-title-entity" class="text-base sm:text-lg md:text-xl font-black text-slate-900 uppercase tracking-tight leading-tight">
               MATURÍN, ESTADO MONAGAS
             </h1>
-            <p id="velo-subtitle-entity" class="text-[11px] sm:text-xs font-black text-sky-800 tracking-wide uppercase mt-0.5">
+            <p id="velo-subtitle-entity" class="text-[10px] sm:text-xs font-black text-sky-800 tracking-wide uppercase mt-0.5">
               SALA SITUACIONAL Y CARTOGRAFÍA OFICIAL DE GOBIERNO • MIGATO 2026
             </p>
           </div>
         </div>
 
         <!-- 🐱 2. LOGO OFICIAL DEL PARTIDO (ESQUINA SUPERIOR IZQUIERDA) -->
-        <div id="velo-cat-logo-badge" class="absolute top-3 left-3 pointer-events-auto z-20 flex items-center gap-3 bg-white/95 backdrop-blur-md border-2 border-sky-700 rounded-2xl px-3.5 py-2 shadow-2xl transition hover:scale-102">
-          <img src="../assets/logo-migato.png" alt="Logo Oficial MIGATO" class="w-12 h-12 object-contain drop-shadow-md">
+        <div id="velo-cat-logo-badge" class="absolute top-3 left-3 pointer-events-auto z-20 flex items-center gap-2.5 bg-white/95 backdrop-blur-md border-2 border-sky-700 rounded-2xl px-3 py-1.5 shadow-2xl transition hover:scale-102">
+          <img src="assets/logo-migato.png" onerror="this.onerror=null; this.src='../assets/logo-migato.png';" alt="Logo Oficial MIGATO" class="w-10 h-10 sm:w-12 sm:h-12 object-contain drop-shadow-md">
           <div class="leading-tight">
             <span class="text-[9px] font-black text-sky-600 uppercase tracking-wider block">MOVIMIENTO INDEPENDIENTE</span>
-            <strong class="text-base font-black text-slate-950 block tracking-tight">GANAMOS TODOS</strong>
-            <span class="text-[11px] font-black text-amber-600 block">MIGATO 2026</span>
+            <strong class="text-sm sm:text-base font-black text-slate-950 block tracking-tight">GANAMOS TODOS</strong>
+            <span class="text-[10px] sm:text-[11px] font-black text-amber-600 block">MIGATO 2026</span>
           </div>
         </div>
 
@@ -2092,7 +2092,7 @@
   </div>
 
   <!-- SCRIPT -->
-  <script type="module" src="js/app.js?v=190"></script>
+  <script type="module" src="js/app.js?v=195"></script>
   <script>
     if (window.lucide && typeof window.lucide.createIcons === 'function') {
       window.lucide.createIcons();
