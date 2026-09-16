@@ -3133,6 +3133,8 @@ class EarthMonagasApp {
       } else {
         linkDashboard.href = `../dashboard-campana/?mun=${this.selectedMunId}&p=${this.selectedParishId}`;
       }
+      // Asegurar que el enlace siempre se abra en nueva ventana
+      linkDashboard.target = "_blank";
     }
 
     const btnAddSectorInCard = document.getElementById("btn-quick-stats-action-sector");
@@ -3158,11 +3160,13 @@ class EarthMonagasApp {
         const curPar = this.selectedParishId;
         this.closeQuickStats();
         if (curType === "municipio") {
-          window.location.href = `../dashboard-campana/?mun=${curMun || curItem.id}`;
+          // Abrir dashboard en nueva ventana
+          window.open(`../dashboard-campana/?mun=${curMun || curItem.id}`, '_blank');
           return;
         }
         if (curType === "parroquia") {
-          window.location.href = `../caracterizacion-voto/?p=${curPar || curItem.id}`;
+          // Abrir caracterización de voto en nueva ventana
+          window.open(`../caracterizacion-voto/?p=${curPar || curItem.id}`, '_blank');
           return;
         }
         setTimeout(() => {
