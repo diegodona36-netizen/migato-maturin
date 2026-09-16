@@ -497,6 +497,12 @@
           <span class="hidden sm:inline font-bold">Sectores</span>
         </button>
 
+        <!-- BOTÓN ALTO CONTRASTE (ACCESIBILIDAD) -->
+        <button type="button" id="btn-toggle-contrast" class="px-2.5 py-1.5 rounded-xl bg-[#1d1554] hover:bg-[#23176d] text-amber-400 border border-amber-500/40 text-sm font-bold flex items-center gap-1.5 shadow transition active:scale-95 cursor-pointer" title="Alto contraste" aria-label="Activar modo alto contraste">
+          <span aria-hidden="true">◐</span>
+          <span class="hidden sm:inline">Contraste</span>
+        </button>
+
         <!-- MENÚ DE OPCIONES EXTERNAS Y HERRAMIENTAS SECUNDARIAS -->
         <div class="relative" id="dropdown-options-wrapper">
           <button id="btn-toggle-options-menu" type="button" class="p-1.5 sm:px-2.5 sm:py-1.5 rounded-xl bg-[#18114a] hover:bg-[#23176d] border border-[#2d1f85] text-slate-300 hover:text-white text-sm font-bold flex items-center gap-1 transition active:scale-95 cursor-pointer shadow-sm shrink-0" title="Menú de Navegación y Opciones">
@@ -514,10 +520,7 @@
               <i data-lucide="home" class="w-4 h-4 text-sky-400"></i>
               <span>Portal Central</span>
             </a>
-            <a href="../carga/" id="menu-link-carga" class="px-3 py-2 rounded-xl hover:bg-[#23176d] text-sky-200 font-bold flex items-center gap-2.5 transition">
-              <i data-lucide="clipboard-edit" class="w-4 h-4 text-sky-400"></i>
-              <span>Formulario Móvil de Carga</span>
-            </a>
+
             <a href="../centros-maturin/" class="px-3 py-2 rounded-xl hover:bg-[#23176d] text-indigo-200 font-bold flex items-center gap-2.5 transition">
               <i data-lucide="school" class="w-4 h-4 text-indigo-400"></i>
               <span>Centros Electorales CNE</span>
@@ -559,10 +562,6 @@
       </div>
 
     </div>
-            <button type="button" id="btn-toggle-contrast" class="px-2.5 py-1.5 rounded-xl bg-[#1d1554] hover:bg-[#23176d] text-amber-400 border border-amber-500/40 text-sm font-bold flex items-center gap-1.5 shadow transition active:scale-95" title="Alto contraste" aria-label="Activar modo alto contraste">
-            <span aria-hidden="true">◐</span>
-            <span class="hidden sm:inline">Contraste</span>
-          </button>
         </header>
 
   <!-- ============================================================== -->
@@ -590,14 +589,6 @@
         <span class="font-black text-base whitespace-nowrap">+ Sector</span>
         <span id="bar-tally-sectores" class="px-1.5 py-0.2 rounded-md bg-[#140e40] border border-sky-400/40 text-base font-mono text-sky-300 font-bold ml-0.5" title="Total de Sectores en esta parroquia">0</span>
       </button>
-
-      <!-- 📋 FORMULARIO DE CARGA DIRECTO -->
-      <a href="../carga/" id="btn-quick-form-carga" target="_blank"
-        class="px-2.5 sm:px-3 py-1.5 rounded-xl bg-[#18114a] hover:bg-[#23176d] text-sky-200 hover:text-white border border-sky-400/40 text-base font-bold transition flex items-center gap-1.5 active:scale-95 shadow-sm cursor-pointer shrink-0 select-none"
-        title="Abrir Formulario Móvil de Carga de Datos en Terreno">
-        <i data-lucide="clipboard-edit" class="w-3.5 h-3.5 text-sky-400 shrink-0"></i>
-        <span class="font-bold text-base whitespace-nowrap">Formulario Carga</span>
-      </a>
 
     </div>
 
@@ -643,28 +634,12 @@
         <span id="text-toggle-lamina" class="whitespace-nowrap font-extrabold text-base sm:text-base">Lámina 120"</span>
       </button>
 
-      <!-- 📺 Acceso Directo al Módulo Dedicado de Lámina 120" (Sala Situacional) -->
-      <a href="../lamina-monagas/?v=230"
-        class="px-2.5 sm:px-3 py-2 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 border border-amber-400 text-base font-black text-amber-300 transition flex items-center gap-1.5 active:scale-95 shadow-sm cursor-pointer shrink-0"
-        title="Abrir Módulo Dedicado de Lámina Cartográfica 120 pulgadas (Sala Situacional)">
-        <i data-lucide="tv" class="w-4 h-4 text-amber-400 shrink-0"></i>
-        <span class="hidden md:inline whitespace-nowrap">Módulo Lámina</span>
-      </a>
-
       <!-- ↩ Botón Rápido Volver a Parroquia (aparece cuando hay un eje enfocado) -->
       <button type="button" id="btn-return-parish" style="display: none;" onclick="window.earthApp?.clearSubParishFocus?.()"
         class="px-2.5 py-1.5 rounded-xl bg-purple-900/90 hover:bg-purple-800 border border-purple-400/60 text-sm font-black text-purple-100 transition flex items-center gap-1.5 active:scale-95 shadow-lg cursor-pointer shrink-0 animate-pulse"
         title="Devolver vista y velo blanco a toda la parroquia">
         <i data-lucide="arrow-left-circle" class="w-3.5 h-3.5 text-purple-300 shrink-0"></i>
         <span class="whitespace-nowrap font-bold text-base">Volver a Parroquia</span>
-      </button>
-
-      <!-- Botón Capas Directo -->
-      <button type="button" id="btn-bar-layers" onclick="window.earthApp?.openLayers ? window.earthApp.openLayers() : (document.getElementById('btn-sidebar-tab-layers')?.click(), window.earthApp?.toggleSidebar?.(true));"
-        class="px-2 py-1 rounded-lg bg-[#140e40] hover:bg-[#23176d] text-sm text-slate-300 hover:text-white border border-[#2d1f85] transition flex items-center gap-1 cursor-pointer"
-        title="Ver Jerarquía y Capas de Territorio">
-        <i data-lucide="layers" class="w-3.5 h-3.5 text-sky-400"></i>
-        <span class="hidden sm:inline font-semibold">Capas</span>
       </button>
 
       <!-- Restablecer Norte -->
