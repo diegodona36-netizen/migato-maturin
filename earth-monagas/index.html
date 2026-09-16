@@ -61,7 +61,7 @@
   <meta http-equiv="Expires" content="0" />
 
   <!-- Estilos Centrales -->
-  <link rel="stylesheet" href="css/styles.css?v=230">
+  <link rel="stylesheet" href="css/styles.css?v=236">
 
   <!-- Script de Autenticación Rápida y Control de Acceso Estricto (Exclusivo Regional) -->
   <script src="../js/auth.js"></script>
@@ -205,7 +205,7 @@
           }).catch(function(){});
         }
         setTimeout(function() {
-          window.location.replace(window.location.pathname + '?v=230&u=admin-militancia');
+          window.location.replace(window.location.pathname + '?v=236&u=admin-militancia');
         }, 150);
       }
     };
@@ -512,7 +512,7 @@
 
           <!-- Menú flotante de opciones -->
           <div id="menu-options-dropdown" class="hidden absolute right-0 mt-2 w-56 bg-[#140e40]/98 border border-[#2d1f85] rounded-2xl shadow-2xl p-1.5 z-50 flex flex-col gap-1 text-base backdrop-blur-md">
-            <a href="../lamina-monagas/?v=230" class="px-3 py-2 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/40 text-amber-300 font-bold flex items-center gap-2.5 transition">
+            <a href="../lamina-monagas/?v=236" class="px-3 py-2 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/40 text-amber-300 font-bold flex items-center gap-2.5 transition">
               <i data-lucide="tv" class="w-4 h-4 text-amber-400"></i>
               <span>Lámina Ejecutiva 120"</span>
             </a>
@@ -592,8 +592,8 @@
 
     </div>
 
-    <!-- 📍 INDICADOR CENTRAL: ESTADO TERRITORIAL DEL MAPA (ENTRE FORMULARIO CARGA Y SATÉLITE) -->
-    <div id="hud-territorial-focus" class="flex items-center justify-center shrink min-w-0 px-1 pointer-events-auto">
+    <!-- 📍 INDICADOR CENTRAL: ESTADO TERRITORIAL DEL MAPA (SOLO ACTIVO EN SUB-PARROQUIA Y SECTOR) -->
+    <div id="hud-territorial-focus" style="display: none;" class="flex items-center justify-center shrink min-w-0 px-1 pointer-events-auto">
       <div id="hud-territorial-content" class="flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-xl bg-[#140e40]/90 border border-indigo-500/40 text-base whitespace-nowrap overflow-hidden shadow-sm">
         <!-- Contenido dinámico inyectado por updateTerritorialFocusUI() -->
       </div>
@@ -2199,7 +2199,7 @@
   </div>
 
   <!-- SCRIPT -->
-  <script type="module" src="js/app.js?v=235"></script>
+  <script type="module" src="js/app.js?v=236"></script>
   <script>
     if (window.lucide && typeof window.lucide.createIcons === 'function') {
       window.lucide.createIcons();

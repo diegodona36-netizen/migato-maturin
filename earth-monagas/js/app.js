@@ -2,16 +2,16 @@
  * Controlador Principal — Google Earth Pro Web (Edición Estado Monagas)
  * Robusto, 100% Operativo y Totalmente Individualizado
  */
-import { CATALOGO_MONAGAS, findParishInCatalog, PARISH_ALIAS_MAP, resolveParishId } from "./catalogoMonagas.js?v=230";
-import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=230";
-import { getAllParishesForSelector } from "./usersCatalog.js?v=230";
-import { EarthStore } from "./earthStore.js?v=230";
-import { EarthMapEngine } from "./mapEngine.js?v=230";
-import { PropertiesDialog } from "./propertiesDialog.js?v=230";
-import { ToolsManager } from "./toolsManager.js?v=230";
-import { detectParishFromGeometry, SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=230";
-import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=230";
-import { getParishDemographics, getMunicipioDemographics, getParishColor, PARISH_COLORS } from "./monagasDemographics.js?v=230";
+import { CATALOGO_MONAGAS, findParishInCatalog, PARISH_ALIAS_MAP, resolveParishId } from "./catalogoMonagas.js?v=236";
+import { AuthManager, forceCleanCacheAndReload } from "./authManager.js?v=236";
+import { getAllParishesForSelector } from "./usersCatalog.js?v=236";
+import { EarthStore } from "./earthStore.js?v=236";
+import { EarthMapEngine } from "./mapEngine.js?v=236";
+import { PropertiesDialog } from "./propertiesDialog.js?v=236";
+import { ToolsManager } from "./toolsManager.js?v=236";
+import { detectParishFromGeometry, SECTORES_LAPUENTE, SUBPARROQUIAS_GODOS } from "./geoMonagas.js?v=236";
+import { GEO_PARROQUIAS_OFICIAL } from "./geoOficialMonagas.js?v=236";
+import { getParishDemographics, getMunicipioDemographics, getParishColor, PARISH_COLORS } from "./monagasDemographics.js?v=236";
 import { 
   getMunicipios, 
   getParroquiasByMun, 
@@ -21,13 +21,13 @@ import {
   findSectorById, 
   searchSectores, 
   ALL_SECTORES_FLAT 
-} from "./monagasSectoresCatalog.js?v=230";
+} from "./monagasSectoresCatalog.js?v=236";
 import { 
   getSavedFirebaseConfig, 
   saveFirebaseConfig, 
   isFirebaseConfigured, 
   initFirebase 
-} from "./firebaseConfig.js?v=230";
+} from "./firebaseConfig.js?v=236";
 
 // Controladores globales infalibles accesibles en cualquier contexto
 window.closeParishSelectorModal = function() {
@@ -360,7 +360,9 @@ class EarthMonagasApp {
       this.activeSectorId = null;
       if (this.mapEngine) {
         this.mapEngine.activeFocusLevel = "parroquia";
+        this.mapEngine.spotlightScope = "parroquia";
       }
+      this.updateVeloScopeUI("parroquia");
 
       // Normalizar identificadores y resolver alias
       if (munId) munId = String(munId).toLowerCase().trim();
@@ -851,51 +853,26 @@ class EarthMonagasApp {
 
     // 3. Nivel Parroquia
     if (focusLevel === "parroquia") {
-      const pNom = parish?.nombre || this.selectedParishId || "Parroquia";
+      hud.style.display = "none";
       if (btnQuickBackMun) {
         btnQuickBackMun.style.display = "flex";
         btnQuickBackMun.title = `Volver a la vista del ${displayMunName}`;
       }
-      hudContent.className = "flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-xl bg-[#140e40]/90 border border-sky-500/50 shadow-sm text-sm whitespace-nowrap overflow-hidden max-w-full";
-      hudContent.innerHTML = `
-        <span class="w-2 h-2 rounded-full bg-sky-400 shrink-0 animate-pulse"></span>
-        <span class="font-black text-sky-200 text-sm truncate max-w-[140px] sm:max-w-[220px]" title="Parroquia: ${pNom}">📍 ${pNom}</span>
-        <button type="button" onclick="window.earthApp?.focusMunicipio('${this.selectedMunId}', true)" 
-          class="ml-1 px-2 py-0.5 rounded-lg bg-indigo-500/20 hover:bg-indigo-500/40 text-indigo-200 hover:text-white font-bold text-sm flex items-center gap-0.5 border border-indigo-400/40 transition active:scale-95 cursor-pointer shrink-0"
-          title="Regresar a todo el ${displayMunName}">
-          <span>↩ ${cleanMunNom}</span>
-        </button>
-      `;
+      this.syncVeloBlancoContent();
       return;
     }
 
     // 4. Nivel Municipio
     if (focusLevel === "municipio" && this.selectedMunId) {
+      hud.style.display = "none";
       if (btnQuickBackMun) btnQuickBackMun.style.display = "none";
-      hudContent.className = "flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-xl bg-[#140e40]/90 border border-indigo-500/40 shadow-sm text-sm whitespace-nowrap overflow-hidden max-w-full";
-      hudContent.innerHTML = `
-        <span class="w-2 h-2 rounded-full bg-indigo-400 shrink-0 animate-pulse"></span>
-        <span class="font-black text-indigo-200 text-sm truncate max-w-[160px] sm:max-w-[220px]" title="${displayMunName}">🏛️ ${displayMunName}</span>
-        <span class="text-slate-400 text-sm font-semibold hidden sm:inline">(${parishCount} Parr.)</span>
-        <button type="button" onclick="window.earthApp?.focusEstado(true)" 
-          class="ml-1 px-2 py-0.5 rounded-lg bg-amber-500/20 hover:bg-amber-500/40 text-amber-200 hover:text-white font-bold text-sm flex items-center gap-0.5 border border-amber-500/40 transition active:scale-95 cursor-pointer shrink-0"
-          title="Ver todo el Estado Monagas">
-          <span>↩ Estado</span>
-        </button>
-      `;
+      this.syncVeloBlancoContent();
       return;
     }
 
     // 5. Nivel Estado (Vista Global)
+    hud.style.display = "none";
     if (btnQuickBackMun) btnQuickBackMun.style.display = "none";
-    hudContent.className = "flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-xl bg-[#140e40]/90 border border-emerald-500/40 shadow-sm text-sm whitespace-nowrap overflow-hidden max-w-full";
-    hudContent.innerHTML = `
-      <span class="w-2 h-2 rounded-full bg-emerald-400 shrink-0"></span>
-      <span class="font-black text-emerald-200 text-sm truncate">🗺️ Estado Monagas</span>
-      <span class="text-slate-400 text-sm font-semibold hidden sm:inline">• 13 Municipios</span>
-    `;
-
-    // Sincronizar automáticamente la lámina de Velo Blanco
     this.syncVeloBlancoContent();
   }
 
@@ -3269,7 +3246,7 @@ class EarthMonagasApp {
       document.body.appendChild(toast);
     }
     const bgClass = type === "purple" ? "bg-purple-950/95 border-purple-500/80 text-purple-200 shadow-purple-950/50" : (type === "sky" ? "bg-sky-950/95 border-sky-500/80 text-sky-200 shadow-sky-950/50" : "bg-emerald-950/95 border-emerald-500/80 text-emerald-200 shadow-emerald-950/50");
-    toast.className = `fixed top-14 left-1/2 -translate-x-1/2 z-[2500] px-4 py-2.5 rounded-2xl shadow-2xl border text-sm font-bold flex items-center gap-2 transition-all duration-300 pointer-events-none opacity-100 scale-100 backdrop-blur-md ${bgClass}`;
+    toast.className = `fixed bottom-12 left-1/2 -translate-x-1/2 z-[2500] px-4 py-2.5 rounded-2xl shadow-2xl border text-sm font-bold flex items-center gap-2 transition-all duration-300 pointer-events-none opacity-100 scale-100 backdrop-blur-md ${bgClass}`;
     toast.innerHTML = message;
 
     clearTimeout(this._toastTimeout);
@@ -3277,7 +3254,7 @@ class EarthMonagasApp {
       if (toast) {
         toast.classList.add("opacity-0", "scale-95");
       }
-    }, 5000);
+    }, 4000);
   }
 
   async handleFinishedDrawing(type, newItem) {

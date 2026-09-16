@@ -4,7 +4,7 @@
  * Garantiza que ninguna parroquia, eje territorial o sector muestre ceros.
  */
 
-import { CATALOGO_MONAGAS } from "./catalogoMonagas.js?v=230";
+import { CATALOGO_MONAGAS } from "./catalogoMonagas.js?v=236";
 
 export const PARISH_COLORS = {
   "alto-de-los-godos": "#2563eb", // Azul Royal
