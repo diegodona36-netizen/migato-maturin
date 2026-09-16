@@ -267,7 +267,7 @@ class EarthMonagasApp {
         targetParish = recent.parishId;
       }
 
-      const shouldFly = (targetMun !== this.selectedMunId || targetParish !== this.selectedParishId);
+      const shouldFly = Boolean(paramParish) || (targetMun !== this.selectedMunId || targetParish !== this.selectedParishId);
       this.selectParish(targetMun, targetParish, shouldFly);
       this.renderQuickParishBar();
       this.renderPlacesTree();
@@ -1333,17 +1333,17 @@ class EarthMonagasApp {
     if (e && typeof e.preventDefault === 'function') {
       try { e.preventDefault(); } catch(err){}
     }
-    const currentScope = this.mapEngine?.spotlightScope || "municipio";
-    const nextScope = (currentScope === "municipio") ? "parroquia" : "municipio";
+    const currentScope = this.mapEngine?.spotlightScope || "parroquia";
+    const nextScope = (currentScope === "parroquia") ? "municipio" : "parroquia";
     
     if (this.mapEngine) {
       this.mapEngine.setSpotlightScope(nextScope);
     }
     this.updateVeloScopeUI(nextScope);
 
-    const labelScope = nextScope === "municipio" 
-      ? "🏛️ Corte: Municipio (las 10 parroquias de Maturín visibles en satélite)" 
-      : "📍 Corte: Parroquia (solo la parroquia activa aislada)";
+    const labelScope = nextScope === "parroquia" 
+      ? "📍 Corte: Parroquia (solo la parroquia activa aislada en satélite)" 
+      : "🏛️ Corte: Municipio (las 10 parroquias de Maturín visibles en satélite)";
     this.showToast(labelScope, "sky");
 
     this.syncVeloBlancoContent();
@@ -1351,19 +1351,19 @@ class EarthMonagasApp {
   }
 
   updateVeloScopeUI(scope = null) {
-    const activeScope = scope || this.mapEngine?.spotlightScope || "municipio";
+    const activeScope = scope || this.mapEngine?.spotlightScope || "parroquia";
     const txtScope = document.getElementById("text-velo-scope");
     const btnScope = document.getElementById("btn-toggle-velo-scope");
     if (txtScope) {
-      txtScope.textContent = activeScope === "municipio" ? "Municipio" : "Parroquia";
+      txtScope.textContent = activeScope === "parroquia" ? "Parroquia" : "Municipio";
     }
     if (btnScope) {
-      if (activeScope === "municipio") {
-        btnScope.classList.remove("border-purple-400/60", "bg-purple-950/40");
-        btnScope.classList.add("border-[#2d1f85]");
-      } else {
+      if (activeScope === "parroquia") {
         btnScope.classList.remove("border-[#2d1f85]");
-        btnScope.classList.add("border-purple-400/60", "bg-purple-950/40");
+        btnScope.classList.add("border-sky-400/60", "bg-sky-950/40");
+      } else {
+        btnScope.classList.remove("border-sky-400/60", "bg-sky-950/40");
+        btnScope.classList.add("border-[#2d1f85]");
       }
     }
   }

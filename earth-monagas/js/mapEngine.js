@@ -215,7 +215,7 @@ export class EarthMapEngine {
     this.tempDrawingLayer = L.layerGroup().addTo(this.map);
 
     this.spotlightEnabled = false; // Modo Foco / Velo Blanco desactivado por defecto (satélite limpio)
-    this.spotlightScope = "municipio"; // "municipio" (por defecto, corta el municipio completo) | "parroquia" (aísla la parroquia)
+    this.spotlightScope = "parroquia"; // "parroquia" (por defecto, aísla la parroquia activa) | "municipio" (corta el municipio completo)
     this.currentParishLimite = null;
     this.currentParishId = null;
     this.currentSubParishVertices = null;
@@ -1041,6 +1041,17 @@ export class EarthMapEngine {
       }
     }
 
+    if (parishId && typeof CATALOGO_MONAGAS !== "undefined") {
+      for (const mun of CATALOGO_MONAGAS) {
+        const pFound = (mun.parroquias || []).find(p => p.id === parishId);
+        if (pFound && pFound.limite && pFound.limite.length >= 3) {
+          this.currentParishCoords = pFound.limite;
+          this.currentParishId = parishId;
+          return pFound.limite;
+        }
+      }
+    }
+
     return this.currentParishCoords || null;
   }
 
@@ -1099,6 +1110,16 @@ export class EarthMapEngine {
 
     if (!coords && limite && limite.length > 0) {
       coords = limite;
+    }
+
+    if (!coords && parishId && typeof CATALOGO_MONAGAS !== "undefined") {
+      for (const mun of CATALOGO_MONAGAS) {
+        const pFound = (mun.parroquias || []).find(p => p.id === parishId);
+        if (pFound && pFound.limite && pFound.limite.length >= 3) {
+          coords = pFound.limite;
+          break;
+        }
+      }
     }
 
     if (!coords || coords.length < 3) return;

@@ -618,12 +618,12 @@
         <span id="text-toggle-spotlight" class="whitespace-nowrap font-extrabold text-base sm:text-base">Velo Blanco: OFF</span>
       </button>
 
-      <!-- 📐 Selector de Alcance del Velo Blanco: Municipio (10 parroquias juntas) vs Parroquia (individual) -->
+      <!-- 📐 Selector de Alcance del Velo Blanco: Parroquia (individual) vs Municipio (10 parroquias juntas) -->
       <button type="button" id="btn-toggle-velo-scope" onclick="window.earthApp?.toggleVeloScope?.(event)"
-        class="px-2.5 sm:px-3 py-2 rounded-xl bg-[#18114a] hover:bg-[#23176d] border border-[#2d1f85] hover:border-sky-400 text-sm sm:text-base font-extrabold text-slate-100 transition flex items-center gap-1.5 active:scale-95 shadow-sm cursor-pointer shrink-0"
-        title="Alternar corte del Velo Blanco: Municipio (corta todo Maturín manteniendo las 10 parroquias visibles) vs Parroquia (aísla la parroquia activa)">
+        class="px-2.5 sm:px-3 py-2 rounded-xl bg-[#18114a] hover:bg-[#23176d] border border-sky-400/60 bg-sky-950/40 text-sm sm:text-base font-extrabold text-slate-100 transition flex items-center gap-1.5 active:scale-95 shadow-sm cursor-pointer shrink-0"
+        title="Alternar corte del Velo Blanco: Parroquia (aísla la parroquia activa) vs Municipio (corta todo Maturín manteniendo las 10 parroquias visibles)">
         <i data-lucide="layers" class="w-4 h-4 text-sky-400 shrink-0"></i>
-        <span class="whitespace-nowrap text-base">Corte: <strong id="text-velo-scope" class="text-sky-300 font-black">Municipio</strong></span>
+        <span class="whitespace-nowrap text-base">Corte: <strong id="text-velo-scope" class="text-sky-300 font-black">Parroquia</strong></span>
       </button>
 
       <!-- 🏛️ Lámina 120" / Modo Presentación (Marco, Membrete y Ficha Oficial para proyector y fotos) -->
@@ -2199,7 +2199,7 @@
   </div>
 
   <!-- SCRIPT -->
-  <script type="module" src="js/app.js?v=230"></script>
+  <script type="module" src="js/app.js?v=235"></script>
   <script>
     if (window.lucide && typeof window.lucide.createIcons === 'function') {
       window.lucide.createIcons();
