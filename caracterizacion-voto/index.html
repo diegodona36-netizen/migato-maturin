@@ -87,6 +87,7 @@
   </style>
 </head>
 <body class="min-h-screen flex flex-col selection:bg-amber-500 selection:text-white pb-16 bg-[#0e092e]" style="background: radial-gradient(circle at 50% -10%, #201763 0%, #140e40 45%, #0c0828 100%);">
+  <a href="#main-content" class="skip-link">Saltar al contenido principal</a>
 
   <!-- ============================================================== -->
   <!-- 1. HEADER INSTITUCIONAL MIGATO                                 -->
@@ -102,10 +103,10 @@
           </div>
           <div>
             <div class="flex items-center gap-1.5">
-              <span class="text-xs font-black text-white uppercase tracking-wider">MIGATO</span>
-              <span class="text-[10px] font-bold text-amber-400 font-mono uppercase bg-amber-950/80 border border-amber-500/40 px-1.5 py-0.2 rounded">Técnica Electoral</span>
+              <span class="text-base font-black text-white uppercase tracking-wider">MIGATO</span>
+              <span class="text-base font-bold text-amber-400 font-mono uppercase bg-amber-950/80 border border-amber-500/40 px-1.5 py-0.2 rounded">Técnica Electoral</span>
             </div>
-            <h1 class="text-xs sm:text-sm font-black text-slate-200 tracking-tight flex items-center gap-1">
+            <h1 class="text-base sm:text-base font-black text-slate-200 tracking-tight flex items-center gap-1">
               <span>Caracterización Del Voto</span>
               <span class="text-sky-400 font-normal">| Alto de Los Godos</span>
             </h1>
@@ -115,15 +116,15 @@
 
       <!-- Accesos Rápidos y Enlaces -->
       <div class="flex items-center gap-2">
-        <a href="../despacho/" class="px-2.5 py-1.5 rounded-xl bg-[#18114a] hover:bg-[#23176d] text-xs font-bold text-blue-200 hover:text-white border border-[#2d1f85] transition flex items-center gap-1.5" title="Ir a Despacho de Enlaces">
+        <a href="../despacho/" class="px-2.5 py-1.5 rounded-xl bg-[#18114a] hover:bg-[#23176d] text-base font-bold text-blue-200 hover:text-white border border-[#2d1f85] transition flex items-center gap-1.5" title="Ir a Despacho de Enlaces">
           <i data-lucide="send" class="w-3.5 h-3.5 text-emerald-400"></i>
           <span class="hidden sm:inline">Despacho</span>
         </a>
-        <a href="../carga/?p=alto-de-los-godos" class="px-2.5 py-1.5 rounded-xl bg-[#18114a] hover:bg-[#23176d] text-xs font-bold text-blue-200 hover:text-white border border-[#2d1f85] transition flex items-center gap-1.5" title="Ir al Buzón Móvil de Carga">
+        <a href="../carga/?p=alto-de-los-godos" class="px-2.5 py-1.5 rounded-xl bg-[#18114a] hover:bg-[#23176d] text-base font-bold text-blue-200 hover:text-white border border-[#2d1f85] transition flex items-center gap-1.5" title="Ir al Buzón Móvil de Carga">
           <i data-lucide="clipboard-list" class="w-3.5 h-3.5 text-sky-400"></i>
           <span class="hidden sm:inline">Buzón Carga</span>
         </a>
-        <button type="button" id="btn-imprimir-planilla" class="px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-[#0e092e] font-black text-xs transition flex items-center gap-1.5 shadow-md shadow-amber-500/20 active:scale-95 cursor-pointer">
+        <button type="button" id="btn-imprimir-planilla" class="px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-[#0e092e] font-black text-sm transition flex items-center gap-1.5 shadow-md shadow-amber-500/20 active:scale-95 cursor-pointer">
           <i data-lucide="printer" class="w-3.5 h-3.5"></i>
           <span class="hidden sm:inline">Imprimir Planilla</span>
           <span class="sm:hidden">Imprimir</span>
@@ -136,27 +137,31 @@
     <div class="bg-[#100b33]/90 border-t border-[#2d1f85] px-4">
       <div class="max-w-7xl mx-auto flex items-center justify-between">
         <nav class="flex space-x-1" aria-label="Vistas">
-          <button type="button" id="tab-btn-captura" class="py-2 px-3.5 border-b-2 border-amber-400 text-amber-400 bg-[#23176d] font-bold text-xs rounded-t-xl transition flex items-center gap-1.5 cursor-pointer">
+          <button type="button" id="tab-btn-captura" class="py-2 px-3.5 border-b-2 border-amber-400 text-amber-400 bg-[#23176d] font-bold text-sm rounded-t-xl transition flex items-center gap-1.5 cursor-pointer">
             <i data-lucide="user-plus" class="w-4 h-4"></i>
             <span>1. Captura en Calle</span>
           </button>
-          <button type="button" id="tab-btn-sabana" class="py-2 px-3.5 border-b-2 border-transparent text-blue-200 hover:text-white hover:bg-[#1d1554] font-bold text-xs rounded-t-xl transition flex items-center gap-1.5 cursor-pointer">
+          <button type="button" id="tab-btn-sabana" class="py-2 px-3.5 border-b-2 border-transparent text-blue-200 hover:text-white hover:bg-[#1d1554] font-bold text-sm rounded-t-xl transition flex items-center gap-1.5 cursor-pointer">
             <i data-lucide="table-2" class="w-4 h-4"></i>
             <span>2. Sábana Electoral</span>
           </button>
-          <button type="button" id="tab-btn-impresion" class="py-2 px-3.5 border-b-2 border-transparent text-blue-200 hover:text-white hover:bg-[#1d1554] font-bold text-xs rounded-t-xl transition flex items-center gap-1.5 cursor-pointer">
+          <button type="button" id="tab-btn-impresion" class="py-2 px-3.5 border-b-2 border-transparent text-blue-200 hover:text-white hover:bg-[#1d1554] font-bold text-sm rounded-t-xl transition flex items-center gap-1.5 cursor-pointer">
             <i data-lucide="file-text" class="w-4 h-4"></i>
             <span>3. Formato Papelógrafo</span>
           </button>
         </nav>
 
-        <div class="hidden md:flex items-center gap-2 py-1 text-[11px] text-blue-300 font-mono">
+        <div class="hidden md:flex items-center gap-2 py-1 text-sm text-blue-300 font-mono">
           <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
           <span>10 Campos Oficiales • Mesa Técnica Godos</span>
         </div>
       </div>
     </div>
-  </header>
+            <button type="button" id="btn-toggle-contrast" class="px-2.5 py-1.5 rounded-xl bg-[#1d1554] hover:bg-[#23176d] text-amber-400 border border-amber-500/40 text-sm font-bold flex items-center gap-1.5 shadow transition active:scale-95" title="Alto contraste" aria-label="Activar modo alto contraste">
+            <span aria-hidden="true">◐</span>
+            <span class="hidden sm:inline">Contraste</span>
+          </button>
+        </header>
 
   <!-- ============================================================== -->
   <!-- 2. RESUMEN DE INDICADORES (KPIS)                               -->
@@ -170,49 +175,49 @@
           <i data-lucide="users" class="w-5 h-5"></i>
         </div>
         <div class="min-w-0">
-          <span class="text-[10px] font-bold text-blue-200 uppercase tracking-wider block">Caracterizados</span>
+          <span class="text-base font-bold text-blue-200 uppercase tracking-wider block">Caracterizados</span>
           <strong id="kpi-total-electores" class="text-xl font-black text-white font-mono leading-none">0</strong>
         </div>
       </div>
 
       <!-- Voto Duro -->
       <div class="bg-emerald-950/40 border border-emerald-500/40 rounded-2xl p-3 shadow-md flex items-center gap-3">
-        <div class="w-10 h-10 rounded-xl bg-emerald-900/60 border border-emerald-500/60 flex items-center justify-center text-emerald-400 shrink-0 font-black text-xs">
+        <div class="w-10 h-10 rounded-xl bg-emerald-900/60 border border-emerald-500/60 flex items-center justify-center text-emerald-400 shrink-0 font-black text-base">
           Duro
         </div>
         <div class="min-w-0">
-          <span class="text-[10px] font-bold text-emerald-300 uppercase tracking-wider block">Voto Duro</span>
+          <span class="text-base font-bold text-emerald-300 uppercase tracking-wider block">Voto Duro</span>
           <div class="flex items-baseline gap-1.5">
             <strong id="kpi-voto-duro" class="text-xl font-black text-white font-mono leading-none">0</strong>
-            <span id="kpi-voto-duro-pct" class="text-xs font-bold text-emerald-400 font-mono">0%</span>
+            <span id="kpi-voto-duro-pct" class="text-base font-bold text-emerald-400 font-mono">0%</span>
           </div>
         </div>
       </div>
 
       <!-- Voto Blando -->
       <div class="bg-amber-950/40 border border-amber-500/40 rounded-2xl p-3 shadow-md flex items-center gap-3">
-        <div class="w-10 h-10 rounded-xl bg-amber-900/60 border border-amber-500/60 flex items-center justify-center text-amber-400 shrink-0 font-black text-xs">
+        <div class="w-10 h-10 rounded-xl bg-amber-900/60 border border-amber-500/60 flex items-center justify-center text-amber-400 shrink-0 font-black text-base">
           Blando
         </div>
         <div class="min-w-0">
-          <span class="text-[10px] font-bold text-amber-300 uppercase tracking-wider block">Voto Blando</span>
+          <span class="text-base font-bold text-amber-300 uppercase tracking-wider block">Voto Blando</span>
           <div class="flex items-baseline gap-1.5">
             <strong id="kpi-voto-blando" class="text-xl font-black text-white font-mono leading-none">0</strong>
-            <span id="kpi-voto-blando-pct" class="text-xs font-bold text-amber-400 font-mono">0%</span>
+            <span id="kpi-voto-blando-pct" class="text-base font-bold text-amber-400 font-mono">0%</span>
           </div>
         </div>
       </div>
 
       <!-- Voto Nuevo -->
       <div class="bg-sky-950/40 border border-sky-500/40 rounded-2xl p-3 shadow-md flex items-center gap-3">
-        <div class="w-10 h-10 rounded-xl bg-sky-900/60 border border-sky-500/60 flex items-center justify-center text-sky-400 shrink-0 font-black text-xs">
+        <div class="w-10 h-10 rounded-xl bg-sky-900/60 border border-sky-500/60 flex items-center justify-center text-sky-400 shrink-0 font-black text-base">
           Nuevo
         </div>
         <div class="min-w-0">
-          <span class="text-[10px] font-bold text-sky-300 uppercase tracking-wider block">Voto Nuevo</span>
+          <span class="text-base font-bold text-sky-300 uppercase tracking-wider block">Voto Nuevo</span>
           <div class="flex items-baseline gap-1.5">
             <strong id="kpi-voto-nuevo" class="text-xl font-black text-white font-mono leading-none">0</strong>
-            <span id="kpi-voto-nuevo-pct" class="text-xs font-bold text-sky-400 font-mono">0%</span>
+            <span id="kpi-voto-nuevo-pct" class="text-base font-bold text-sky-400 font-mono">0%</span>
           </div>
         </div>
       </div>
@@ -223,7 +228,7 @@
           <i data-lucide="cake" class="w-5 h-5"></i>
         </div>
         <div class="min-w-0">
-          <span class="text-[10px] font-bold text-blue-200 uppercase tracking-wider block">Edad Promedio</span>
+          <span class="text-base font-bold text-blue-200 uppercase tracking-wider block">Edad Promedio</span>
           <strong id="kpi-edad-promedio" class="text-lg font-black text-white font-mono leading-none">--</strong>
         </div>
       </div>
@@ -244,15 +249,15 @@
       <!-- Banner Informativo con Membrete Oficial -->
       <div class="bg-gradient-to-br from-[#18114a] via-[#1d1554] to-[#251b68] border-2 border-[#2d1f85] rounded-3xl p-5 shadow-xl shadow-indigo-950/50 relative overflow-hidden space-y-2">
         <div class="flex items-center justify-between">
-          <span class="text-[10px] font-black uppercase text-amber-400 font-mono bg-amber-950/80 border border-amber-500/40 px-2.5 py-0.5 rounded-full">
+          <span class="text-base font-black uppercase text-amber-400 font-mono bg-amber-950/80 border border-amber-500/40 px-2.5 py-0.5 rounded-full">
             Instrumento Oficial de Campo
           </span>
-          <span class="text-xs text-blue-200 font-bold">Maturín • Monagas</span>
+          <span class="text-base text-blue-200 font-bold">Maturín • Monagas</span>
         </div>
         <h2 class="text-base sm:text-lg font-black text-white tracking-tight">
           Formulario de Caracterización del Voto
         </h2>
-        <p class="text-xs text-blue-100/80 leading-relaxed">
+        <p class="text-base text-blue-100/80 leading-relaxed">
           Diseñado para registrar a cada elector en la calle con el mismo formato del papelógrafo. Al guardar, el formulario conserva automáticamente la <strong>Sub-Parroquia</strong>, <strong>Sector</strong> y <strong>Centro Electoral</strong> para facilitar la carga continua de familias y vecinos.
         </p>
       </div>
@@ -264,7 +269,7 @@
 
           <!-- 1. IDENTIFICACIÓN TERRITORIAL (Sub-Parroquia + Sector + Centro) -->
           <div class="bg-[#140e40]/80 p-4 rounded-2xl border border-[#2d1f85] space-y-3">
-            <div class="flex items-center gap-2 text-xs font-bold text-sky-400 uppercase tracking-wider">
+            <div class="flex items-center gap-2 text-base font-bold text-sky-400 uppercase tracking-wider">
               <i data-lucide="map-pin" class="w-4 h-4"></i>
               <span>Territorio y Centro Electoral CNE</span>
             </div>
@@ -272,20 +277,20 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <!-- Sub-Parroquia -->
               <div>
-                <label class="block text-[11px] font-bold text-blue-200 uppercase mb-1">
+                <label class="block text-sm font-bold text-blue-200 uppercase mb-1">
                   5. Sub-Parroquia *
                 </label>
-                <select id="form-subparroquia" required class="w-full px-3.5 py-2.5 bg-[#0e092e] border border-[#2d1f85] rounded-xl text-xs sm:text-sm text-white font-bold focus:border-amber-400 focus:outline-none">
+                <select id="form-subparroquia" required class="w-full px-3.5 py-2.5 bg-[#0e092e] border border-[#2d1f85] rounded-xl text-sm sm:text-base text-white font-bold focus:border-amber-400 ">
                   <!-- Inyectado dinámicamente -->
                 </select>
               </div>
 
               <!-- Sector -->
               <div>
-                <label class="block text-[11px] font-bold text-blue-200 uppercase mb-1">
+                <label class="block text-sm font-bold text-blue-200 uppercase mb-1">
                   7. Sector o Comunidad *
                 </label>
-                <select id="form-sector" required class="w-full px-3.5 py-2.5 bg-[#0e092e] border border-[#2d1f85] rounded-xl text-xs sm:text-sm text-white font-bold focus:border-amber-400 focus:outline-none">
+                <select id="form-sector" required class="w-full px-3.5 py-2.5 bg-[#0e092e] border border-[#2d1f85] rounded-xl text-sm sm:text-base text-white font-bold focus:border-amber-400 ">
                   <!-- Inyectado dinámicamente -->
                 </select>
               </div>
@@ -293,19 +298,19 @@
 
             <!-- Campo si eligió 'Otro Sector' -->
             <div id="wrapper-otro-sector" class="hidden">
-              <label class="block text-[10px] font-bold text-amber-400 uppercase mb-1">
+              <label class="block text-sm font-bold text-amber-400 uppercase mb-1">
                 Escribe el nombre del sector:
               </label>
-              <input type="text" id="input-otro-sector" placeholder="Ej: Calle Nueva 3..." class="w-full px-3.5 py-2 bg-[#0e092e] border border-amber-500/60 rounded-xl text-xs text-white">
+              <input type="text" id="input-otro-sector" placeholder="Ej: Calle Nueva 3..." class="w-full px-3.5 py-2 bg-[#0e092e] border border-amber-500/60 rounded-xl text-sm text-white">
             </div>
 
             <!-- Centro Electoral CNE -->
             <div>
-              <label class="block text-[11px] font-bold text-blue-200 uppercase mb-1 flex items-center justify-between">
+              <label class="block text-sm font-bold text-blue-200 uppercase mb-1 flex items-center justify-between">
                 <span>6. Centro Electoral CNE *</span>
-                <span class="text-[10px] text-sky-400 font-mono">Escuela Asignada</span>
+                <span class="text-base text-sky-400 font-mono">Escuela Asignada</span>
               </label>
-              <select id="form-centro" required class="w-full px-3.5 py-2.5 bg-[#0e092e] border border-[#2d1f85] rounded-xl text-xs sm:text-sm text-white font-medium focus:border-sky-400 focus:outline-none">
+              <select id="form-centro" required class="w-full px-3.5 py-2.5 bg-[#0e092e] border border-[#2d1f85] rounded-xl text-sm sm:text-base text-white font-medium focus:border-sky-400 ">
                 <!-- Inyectado dinámicamente con los centros CNE oficiales -->
               </select>
             </div>
@@ -316,10 +321,10 @@
             
             <!-- Nombre y Apellido -->
             <div>
-              <label class="block text-[11px] font-bold text-blue-200 uppercase mb-1">
+              <label class="block text-sm font-bold text-blue-200 uppercase mb-1">
                 2. Nombre y Apellido del Elector *
               </label>
-              <input type="text" id="form-nombre" required placeholder="Ej: Carlos Eduardo Rondón" class="w-full px-3.5 py-2.5 bg-[#0e092e] border border-[#2d1f85] rounded-xl text-sm text-white font-bold focus:border-amber-400 focus:outline-none">
+              <input type="text" id="form-nombre" required placeholder="Ej: Carlos Eduardo Rondón" class="w-full px-3.5 py-2.5 bg-[#0e092e] border border-[#2d1f85] rounded-xl text-sm text-white font-bold focus:border-amber-400 ">
             </div>
 
             <!-- Cédula y Teléfono -->
@@ -327,24 +332,24 @@
               
               <!-- Cédula -->
               <div>
-                <label class="block text-[11px] font-bold text-blue-200 uppercase mb-1">
+                <label class="block text-sm font-bold text-blue-200 uppercase mb-1">
                   3. Cédula de Identidad *
                 </label>
                 <div class="flex">
-                  <select id="form-tipo-doc" class="px-2.5 py-2.5 bg-[#140e40] border border-r-0 border-[#2d1f85] rounded-l-xl text-xs text-white font-mono font-bold focus:outline-none">
+                  <select id="form-tipo-doc" class="px-2.5 py-2.5 bg-[#140e40] border border-r-0 border-[#2d1f85] rounded-l-xl text-sm text-white font-mono font-bold ">
                     <option value="V">V-</option>
                     <option value="E">E-</option>
                   </select>
-                  <input type="text" id="form-cedula" required placeholder="14.892.410" class="w-full px-3 py-2.5 bg-[#0e092e] border border-[#2d1f85] rounded-r-xl text-xs sm:text-sm text-white font-mono font-bold focus:border-sky-400 focus:outline-none">
+                  <input type="text" id="form-cedula" required placeholder="14.892.410" class="w-full px-3 py-2.5 bg-[#0e092e] border border-[#2d1f85] rounded-r-xl text-sm sm:text-base text-white font-mono font-bold focus:border-sky-400 ">
                 </div>
               </div>
 
               <!-- Teléfono -->
               <div>
-                <label class="block text-[11px] font-bold text-blue-200 uppercase mb-1">
+                <label class="block text-sm font-bold text-blue-200 uppercase mb-1">
                   4. Teléfono (WhatsApp)
                 </label>
-                <input type="tel" id="form-telefono" placeholder="Ej: 0414-7629182" class="w-full px-3.5 py-2.5 bg-[#0e092e] border border-[#2d1f85] rounded-xl text-xs sm:text-sm text-white font-mono focus:border-emerald-400 focus:outline-none">
+                <input type="tel" id="form-telefono" placeholder="Ej: 0414-7629182" class="w-full px-3.5 py-2.5 bg-[#0e092e] border border-[#2d1f85] rounded-xl text-sm sm:text-base text-white font-mono focus:border-emerald-400 ">
               </div>
 
             </div>
@@ -354,18 +359,18 @@
               
               <!-- Edad -->
               <div>
-                <label class="block text-[11px] font-bold text-blue-200 uppercase mb-1">
+                <label class="block text-sm font-bold text-blue-200 uppercase mb-1">
                   8. Edad *
                 </label>
-                <input type="number" id="form-edad" required min="16" max="110" placeholder="Ej: 34" inputmode="numeric" class="w-full px-3.5 py-2.5 bg-[#0e092e] border border-[#2d1f85] rounded-xl text-sm text-white font-mono font-bold focus:border-amber-400 focus:outline-none">
+                <input type="number" id="form-edad" required min="16" max="110" placeholder="Ej: 34" inputmode="numeric" class="w-full px-3.5 py-2.5 bg-[#0e092e] border border-[#2d1f85] rounded-xl text-sm text-white font-mono font-bold focus:border-amber-400 ">
               </div>
 
               <!-- Profesión -->
               <div>
-                <label class="block text-[11px] font-bold text-blue-200 uppercase mb-1">
+                <label class="block text-sm font-bold text-blue-200 uppercase mb-1">
                   9. Profesión u Oficio
                 </label>
-                <input type="text" id="form-profesion" placeholder="Ej: Docente, Comerciante, Albañil..." class="w-full px-3.5 py-2.5 bg-[#0e092e] border border-[#2d1f85] rounded-xl text-xs sm:text-sm text-white focus:border-amber-400 focus:outline-none">
+                <input type="text" id="form-profesion" placeholder="Ej: Docente, Comerciante, Albañil..." class="w-full px-3.5 py-2.5 bg-[#0e092e] border border-[#2d1f85] rounded-xl text-sm sm:text-base text-white focus:border-amber-400 ">
               </div>
 
             </div>
@@ -374,7 +379,7 @@
 
           <!-- 3. CLASIFICACIÓN DEL VOTO (DURO / BLANDO / NUEVO) -->
           <div class="space-y-2 pt-2 border-t border-[#2d1f85]">
-            <label class="block text-xs font-black uppercase text-amber-400 tracking-wider">
+            <label class="block text-sm font-black uppercase text-amber-400 tracking-wider">
               10. Clasificación del Voto (Selecciona 1 opción) *
             </label>
             
@@ -382,29 +387,29 @@
               
               <!-- Voto Duro -->
               <button type="button" id="btn-voto-duro" class="p-3 rounded-2xl bg-emerald-950/70 border-2 border-emerald-500 text-center space-y-1 transition active:scale-95 cursor-pointer">
-                <div class="w-6 h-6 mx-auto rounded-full bg-emerald-500 text-[#0e092e] flex items-center justify-center font-black text-xs">
+                <div class="w-6 h-6 mx-auto rounded-full bg-emerald-500 text-[#0e092e] flex items-center justify-center font-black text-base">
                   ✓
                 </div>
-                <strong class="block text-xs font-black text-emerald-300 uppercase tracking-tight">Duro</strong>
-                <span class="block text-[9px] text-emerald-400 font-medium">Militante Leal</span>
+                <strong class="block text-base font-black text-emerald-300 uppercase tracking-tight">Duro</strong>
+                <span class="block text-base text-emerald-400 font-medium">Militante Leal</span>
               </button>
 
               <!-- Voto Blando -->
               <button type="button" id="btn-voto-blando" class="p-3 rounded-2xl bg-amber-950/70 border-2 border-amber-500 text-center space-y-1 transition active:scale-95 cursor-pointer">
-                <div class="w-6 h-6 mx-auto rounded-full bg-amber-500 text-[#0e092e] flex items-center justify-center font-black text-xs">
+                <div class="w-6 h-6 mx-auto rounded-full bg-amber-500 text-[#0e092e] flex items-center justify-center font-black text-base">
                   ?
                 </div>
-                <strong class="block text-xs font-black text-amber-300 uppercase tracking-tight">Blando</strong>
-                <span class="block text-[9px] text-amber-400 font-medium">Persuadible</span>
+                <strong class="block text-base font-black text-amber-300 uppercase tracking-tight">Blando</strong>
+                <span class="block text-base text-amber-400 font-medium">Persuadible</span>
               </button>
 
               <!-- Voto Nuevo -->
               <button type="button" id="btn-voto-nuevo" class="p-3 rounded-2xl bg-sky-950/70 border-2 border-sky-500 text-center space-y-1 transition active:scale-95 cursor-pointer">
-                <div class="w-6 h-6 mx-auto rounded-full bg-sky-400 text-[#0e092e] flex items-center justify-center font-black text-xs">
+                <div class="w-6 h-6 mx-auto rounded-full bg-sky-400 text-[#0e092e] flex items-center justify-center font-black text-base">
                   ★
                 </div>
-                <strong class="block text-xs font-black text-sky-300 uppercase tracking-tight">Nuevo</strong>
-                <span class="block text-[9px] text-sky-400 font-medium">Joven / 1er Voto</span>
+                <strong class="block text-base font-black text-sky-300 uppercase tracking-tight">Nuevo</strong>
+                <span class="block text-base text-sky-400 font-medium">Joven / 1er Voto</span>
               </button>
 
             </div>
@@ -439,21 +444,21 @@
               type="text" 
               id="filtro-busqueda" 
               placeholder="Buscar por nombre, cédula, teléfono, sector o profesión..."
-              class="w-full pl-10 pr-4 py-2 bg-[#0e092e] border border-[#2d1f85] rounded-xl text-xs text-white placeholder-blue-300/50 focus:border-amber-400 focus:outline-none"
+              class="w-full pl-10 pr-4 py-2 bg-[#0e092e] border border-[#2d1f85] rounded-xl text-sm text-white placeholder-blue-300/50 focus:border-amber-400 "
             >
           </div>
 
           <!-- Botones de Acción -->
           <div class="flex items-center gap-2 shrink-0">
-            <button type="button" id="btn-importar-csv" class="px-3 py-2 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-bold text-xs transition flex items-center gap-1.5 shadow active:scale-95 cursor-pointer" title="Carga Masiva desde Excel, CSV o Portapapeles">
+            <button type="button" id="btn-importar-csv" class="px-3 py-2 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-bold text-sm transition flex items-center gap-1.5 shadow active:scale-95 cursor-pointer" title="Carga Masiva desde Excel, CSV o Portapapeles">
               <i data-lucide="file-up" class="w-4 h-4"></i>
               <span>Importar Excel</span>
             </button>
-            <button type="button" id="btn-exportar-csv" class="px-3 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs transition flex items-center gap-1.5 shadow active:scale-95 cursor-pointer" title="Exportar a formato Excel / CSV">
+            <button type="button" id="btn-exportar-csv" class="px-3 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm transition flex items-center gap-1.5 shadow active:scale-95 cursor-pointer" title="Exportar a formato Excel / CSV">
               <i data-lucide="file-spreadsheet" class="w-4 h-4"></i>
               <span>Exportar Excel</span>
             </button>
-            <button type="button" id="btn-limpiar-todos" class="px-2.5 py-2 rounded-xl bg-rose-950/60 hover:bg-rose-900 text-rose-300 border border-rose-800 font-bold text-xs transition flex items-center gap-1 active:scale-95 cursor-pointer" title="Vaciar toda la lista">
+            <button type="button" id="btn-limpiar-todos" class="px-2.5 py-2 rounded-xl bg-rose-950/60 hover:bg-rose-900 text-rose-300 border border-rose-800 font-bold text-sm transition flex items-center gap-1 active:scale-95 cursor-pointer" title="Vaciar toda la lista">
               <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
             </button>
           </div>
@@ -461,33 +466,33 @@
         </div>
 
         <!-- Filtros Rápidos de Clasificación de Voto -->
-        <div class="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-[#2d1f85] text-xs">
+        <div class="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-[#2d1f85] text-base">
           
           <div id="filtro-voto-group" class="flex items-center gap-1.5 flex-wrap">
-            <span class="text-[10px] font-bold text-blue-200 uppercase mr-1">Filtrar Voto:</span>
+            <span class="text-base font-bold text-blue-200 uppercase mr-1">Filtrar Voto:</span>
             <button type="button" data-filter-voto="todos" class="px-2.5 py-1 rounded-lg bg-sky-600 text-white font-black flex items-center gap-1">
               <span>Todos</span>
-              <span id="badge-count-todos" class="text-[10px] bg-[#0e092e]/60 px-1 rounded">0</span>
+              <span id="badge-count-todos" class="text-base bg-[#0e092e]/60 px-1 rounded">0</span>
             </button>
             <button type="button" data-filter-voto="duro" class="px-2.5 py-1 rounded-lg bg-[#140e40] border border-[#2d1f85] text-emerald-400 font-bold flex items-center gap-1 hover:bg-emerald-950">
               <span>🟢 Duros</span>
-              <span id="badge-count-duros" class="text-[10px] bg-[#0e092e]/60 px-1 rounded">0</span>
+              <span id="badge-count-duros" class="text-base bg-[#0e092e]/60 px-1 rounded">0</span>
             </button>
             <button type="button" data-filter-voto="blando" class="px-2.5 py-1 rounded-lg bg-[#140e40] border border-[#2d1f85] text-amber-400 font-bold flex items-center gap-1 hover:bg-amber-950">
               <span>🟡 Blandos (Persuasión)</span>
-              <span id="badge-count-blandos" class="text-[10px] bg-[#0e092e]/60 px-1 rounded">0</span>
+              <span id="badge-count-blandos" class="text-base bg-[#0e092e]/60 px-1 rounded">0</span>
             </button>
             <button type="button" data-filter-voto="nuevo" class="px-2.5 py-1 rounded-lg bg-[#140e40] border border-[#2d1f85] text-sky-400 font-bold flex items-center gap-1 hover:bg-sky-950">
               <span>🔵 Nuevos (Juventud)</span>
-              <span id="badge-count-nuevos" class="text-[10px] bg-[#0e092e]/60 px-1 rounded">0</span>
+              <span id="badge-count-nuevos" class="text-base bg-[#0e092e]/60 px-1 rounded">0</span>
             </button>
           </div>
 
           <div class="flex items-center gap-2">
-            <select id="filtro-subparroquia" class="px-2 py-1 bg-[#0e092e] border border-[#2d1f85] rounded-lg text-xs text-blue-200 font-medium">
+            <select id="filtro-subparroquia" class="px-2 py-1 bg-[#0e092e] border border-[#2d1f85] rounded-lg text-sm text-blue-200 font-medium">
               <!-- Inyectado -->
             </select>
-            <select id="filtro-centro" class="px-2 py-1 bg-[#0e092e] border border-[#2d1f85] rounded-lg text-xs text-blue-200 font-medium max-w-[200px] truncate">
+            <select id="filtro-centro" class="px-2 py-1 bg-[#0e092e] border border-[#2d1f85] rounded-lg text-sm text-blue-200 font-medium max-w-[200px] truncate">
               <!-- Inyectado -->
             </select>
           </div>
@@ -502,11 +507,11 @@
         <div class="p-4 border-b border-[#2d1f85] flex items-center justify-between">
           <div class="flex items-center gap-2">
             <div class="w-3 h-3 rounded-full bg-amber-400"></div>
-            <h3 class="font-black text-sm text-white uppercase tracking-wider">
+            <h3 class="font-black text-base text-white uppercase tracking-wider">
               Sábana Oficial • Caracterización Del Voto
             </h3>
           </div>
-          <span id="count-registros-filtrados" class="text-xs font-mono font-bold text-blue-300">
+          <span id="count-registros-filtrados" class="text-base font-mono font-bold text-blue-300">
             Cargando...
           </span>
         </div>
@@ -514,7 +519,7 @@
         <div class="overflow-x-auto">
           <table class="w-full text-left border-collapse">
             <thead>
-              <tr class="bg-[#140e40] border-b-2 border-[#2d1f85] text-[10px] sm:text-[11px] font-black uppercase text-blue-200 tracking-wider">
+              <tr class="bg-[#140e40] border-b-2 border-[#2d1f85] text-base sm:text-base font-black uppercase text-blue-200 tracking-wider">
                 <th class="py-3 px-3 text-center">N°</th>
                 <th class="py-3 px-3">Nombre y Apellido</th>
                 <th class="py-3 px-3">Cédula</th>
@@ -526,7 +531,7 @@
                 <th class="py-3 px-3">Profesión</th>
                 <th class="py-3 px-3 text-center">
                   <div class="border-b border-[#2d1f85] pb-1 mb-1">Clasificación Voto</div>
-                  <div class="flex items-center justify-center gap-3 text-[9px]">
+                  <div class="flex items-center justify-center gap-3 text-base">
                     <span class="text-emerald-400">Duro</span>
                     <span class="text-amber-400">Blando</span>
                     <span class="text-sky-400">Nuevo</span>
@@ -553,10 +558,10 @@
       <div class="border-b-2 border-black pb-4 flex items-center justify-between gap-4">
         
         <div class="text-center flex-1 space-y-0.5">
-          <h2 class="text-xs sm:text-sm font-black tracking-widest uppercase">
+          <h2 class="text-base sm:text-base font-black tracking-widest uppercase">
             MOVIMIENTO INDEPENDIENTE GANAMOS TODOS
           </h2>
-          <h3 class="text-sm sm:text-base font-extrabold uppercase">
+          <h3 class="text-base sm:text-base font-extrabold uppercase">
             MATURÍN ESTADO MONAGAS • TÉCNICA ELECTORAL
           </h3>
           <h4 class="text-base sm:text-lg font-black uppercase text-indigo-950">
@@ -576,7 +581,7 @@
       </div>
 
       <!-- Ficha de Datos de la Jornada -->
-      <div class="grid grid-cols-4 gap-2 text-xs font-mono border-b-2 border-black pb-2">
+      <div class="grid grid-cols-4 gap-2 text-base font-mono border-b-2 border-black pb-2">
         <div><strong>Sub-Parroquia:</strong> ___________________</div>
         <div><strong>Centro Electoral:</strong> _________________</div>
         <div><strong>Sector:</strong> _________________________</div>
@@ -585,9 +590,9 @@
 
       <!-- Tabla Cuadriculada Idéntica a la Lámina -->
       <div class="overflow-x-auto">
-        <table class="w-full border-2 border-black text-left text-xs">
+        <table class="w-full border-2 border-black text-left text-base">
           <thead>
-            <tr class="border-b-2 border-black bg-slate-100 font-black text-[10px] uppercase">
+            <tr class="border-b-2 border-black bg-slate-100 font-black text-base uppercase">
               <th class="border-r border-black p-1 text-center w-8">N°</th>
               <th class="border-r border-black p-1">Nombre y Apellido</th>
               <th class="border-r border-black p-1 text-center w-24">Cédula</th>
@@ -599,7 +604,7 @@
               <th class="border-r border-black p-1">Profesión</th>
               <th colspan="3" class="border-b border-black text-center p-0">
                 <div class="p-1 border-b border-black">Clasificación del Voto</div>
-                <div class="grid grid-cols-3 text-[9px]">
+                <div class="grid grid-cols-3 text-base">
                   <div class="border-r border-black p-0.5">Duro</div>
                   <div class="border-r border-black p-0.5">Blando</div>
                   <div class="p-0.5">Nuevo</div>
@@ -614,7 +619,7 @@
       </div>
 
       <!-- Pie de Firma -->
-      <div class="pt-6 grid grid-cols-3 gap-8 text-center text-xs font-mono">
+      <div class="pt-6 grid grid-cols-3 gap-8 text-center text-base font-mono">
         <div>
           <div class="border-b border-black mb-1 h-8"></div>
           <strong>Responsable de Sector / Brigadista</strong>
@@ -646,8 +651,8 @@
             <i data-lucide="file-up" class="w-5 h-5"></i>
           </span>
           <div>
-            <h3 class="text-sm font-black text-white uppercase tracking-wider">Carga Masiva de Electores</h3>
-            <p class="text-[11px] text-blue-200/80">Importar directamente desde Excel, Google Sheets o CSV a la Central</p>
+            <h3 class="text-base font-black text-white uppercase tracking-wider">Carga Masiva de Electores</h3>
+            <p class="text-base text-blue-200/80">Importar directamente desde Excel, Google Sheets o CSV a la Central</p>
           </div>
         </div>
         <button type="button" id="btn-cerrar-modal-importar" class="p-1.5 rounded-xl hover:bg-white/10 text-slate-400 hover:text-white transition cursor-pointer">
@@ -660,11 +665,11 @@
         
         <!-- Botón de Descarga de Plantilla -->
         <div class="flex items-center justify-between bg-[#0e092e] p-3 rounded-2xl border border-[#2d1f85]">
-          <div class="text-xs">
+          <div class="text-base">
             <span class="font-bold text-white block">¿No tienes el formato de columnas?</span>
-            <span class="text-[10px] text-slate-400">Descarga la plantilla con las columnas oficiales de la técnica electoral.</span>
+            <span class="text-base text-slate-400">Descarga la plantilla con las columnas oficiales de la técnica electoral.</span>
           </div>
-          <button type="button" id="btn-modal-descargar-plantilla" class="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs transition flex items-center gap-1.5 shadow cursor-pointer shrink-0">
+          <button type="button" id="btn-modal-descargar-plantilla" class="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm transition flex items-center gap-1.5 shadow cursor-pointer shrink-0">
             <i data-lucide="download" class="w-3.5 h-3.5"></i>
             <span>Descargar Plantilla CSV</span>
           </button>
@@ -672,13 +677,13 @@
 
         <!-- Zona Drag & Drop de Archivo -->
         <div>
-          <label class="block text-[11px] font-bold uppercase text-blue-200 mb-1">1. Subir archivo (.csv, .tsv o .txt)</label>
+          <label class="block text-sm font-bold uppercase text-blue-200 mb-1">1. Subir archivo (.csv, .tsv o .txt)</label>
           <div id="dropzone-modal-importar" class="relative border-2 border-dashed border-[#2d1f85] hover:border-sky-400 rounded-2xl p-4 text-center bg-[#0e092e]/60 transition cursor-pointer">
             <input type="file" id="input-modal-archivo" accept=".csv,.tsv,.txt" class="absolute inset-0 opacity-0 cursor-pointer w-full h-full">
             <div class="flex flex-col items-center gap-1.5 pointer-events-none">
               <i data-lucide="upload-cloud" class="w-6 h-6 text-sky-400"></i>
-              <span class="text-xs text-slate-200 font-bold" id="label-modal-archivo">Haz clic o arrastra tu archivo aquí</span>
-              <span class="text-[10px] text-slate-400 font-mono">Formatos: .csv, .txt (delimitado por comas o tabulador)</span>
+              <span class="text-base text-slate-200 font-bold" id="label-modal-archivo">Haz clic o arrastra tu archivo aquí</span>
+              <span class="text-base text-slate-400 font-mono">Formatos: .csv, .txt (delimitado por comas o tabulador)</span>
             </div>
           </div>
         </div>
@@ -686,37 +691,37 @@
         <!-- Pegado Directo (Ctrl+V) -->
         <div>
           <div class="flex items-center justify-between mb-1">
-            <label class="text-[11px] font-bold uppercase text-blue-200">2. O pega directamente celdas de Excel (Ctrl+V)</label>
-            <button type="button" id="btn-modal-limpiar-texto" class="text-[10px] text-slate-400 hover:text-amber-300 underline font-mono">Limpiar</button>
+            <label class="text-sm font-bold uppercase text-blue-200">2. O pega directamente celdas de Excel (Ctrl+V)</label>
+            <button type="button" id="btn-modal-limpiar-texto" class="text-sm text-slate-400 hover:text-amber-300 underline font-mono">Limpiar</button>
           </div>
-          <textarea id="textarea-modal-pegado" rows="4" placeholder="Copia de tu Excel las columnas (Nombre, Cédula, Teléfono...) y pégalas aquí con Ctrl+V..." class="w-full px-3 py-2 bg-[#0e092e] border border-[#2d1f85] rounded-xl text-xs font-mono text-slate-200 placeholder-slate-500 focus:outline-none focus:border-sky-400 custom-scrollbar"></textarea>
+          <textarea id="textarea-modal-pegado" rows="4" placeholder="Copia de tu Excel las columnas (Nombre, Cédula, Teléfono...) y pégalas aquí con Ctrl+V..." class="w-full px-3 py-2 bg-[#0e092e] border border-[#2d1f85] rounded-xl text-sm font-mono text-slate-200 placeholder-slate-500 focus:border-sky-400 custom-scrollbar"></textarea>
         </div>
 
-        <button type="button" id="btn-modal-analizar" class="w-full py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs uppercase tracking-wider rounded-xl shadow transition flex items-center justify-center gap-2 cursor-pointer">
+        <button type="button" id="btn-modal-analizar" class="w-full py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-sm uppercase tracking-wider rounded-xl shadow transition flex items-center justify-center gap-2 cursor-pointer">
           <i data-lucide="scan-line" class="w-4 h-4 text-sky-300"></i>
           <span>Analizar y Validar Datos</span>
         </button>
 
         <!-- Previsualización y KPIs -->
         <div id="wrapper-modal-preview" class="hidden space-y-3 pt-2 border-t border-[#2d1f85]">
-          <div class="grid grid-cols-3 gap-2 text-center text-xs">
+          <div class="grid grid-cols-3 gap-2 text-center text-base">
             <div class="bg-[#0e092e] p-2.5 rounded-xl border border-emerald-500/40">
-              <span class="text-[10px] uppercase font-bold text-emerald-400 block">Válidos</span>
+              <span class="text-base uppercase font-bold text-emerald-400 block">Válidos</span>
               <span id="kpi-modal-validos" class="text-base font-black text-white font-mono">0</span>
             </div>
             <div class="bg-[#0e092e] p-2.5 rounded-xl border border-amber-500/40">
-              <span class="text-[10px] uppercase font-bold text-amber-400 block">Duplicados</span>
+              <span class="text-base uppercase font-bold text-amber-400 block">Duplicados</span>
               <span id="kpi-modal-duplicados" class="text-base font-black text-amber-300 font-mono">0</span>
             </div>
             <div class="bg-[#0e092e] p-2.5 rounded-xl border border-rose-500/40">
-              <span class="text-[10px] uppercase font-bold text-rose-400 block">Inválidos</span>
+              <span class="text-base uppercase font-bold text-rose-400 block">Inválidos</span>
               <span id="kpi-modal-invalidos" class="text-base font-black text-rose-300 font-mono">0</span>
             </div>
           </div>
 
           <div class="max-h-40 overflow-y-auto border border-[#2d1f85] rounded-xl bg-[#0e092e] custom-scrollbar">
-            <table class="w-full text-[11px] text-left text-slate-300">
-              <thead class="bg-[#18114a] text-blue-200 sticky top-0 text-[10px] uppercase font-bold">
+            <table class="w-full text-base text-left text-slate-300">
+              <thead class="bg-[#18114a] text-blue-200 sticky top-0text-base uppercase font-bold">
                 <tr>
                   <th class="p-2 text-center w-8">#</th>
                   <th class="p-2">Cédula</th>
@@ -735,10 +740,10 @@
 
       <!-- Footer Modal -->
       <div class="p-4 border-t border-[#2d1f85] bg-[#18114a] flex items-center justify-end gap-3">
-        <button type="button" id="btn-modal-cancelar" class="px-4 py-2 rounded-xl text-xs font-bold text-slate-300 hover:text-white hover:bg-white/10 transition cursor-pointer">
+        <button type="button" id="btn-modal-cancelar" class="px-4 py-2 rounded-xl text-sm font-bold text-slate-300 hover:text-white hover:bg-white/10 transition cursor-pointer">
           Cancelar
         </button>
-        <button type="button" id="btn-modal-confirmar-inyeccion" disabled class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black text-xs uppercase tracking-wider shadow-lg transition flex items-center gap-2 cursor-pointer opacity-50 pointer-events-none">
+        <button type="button" id="btn-modal-confirmar-inyeccion" disabled class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black text-sm uppercase tracking-wider shadow-lg transition flex items-center gap-2 cursor-pointer opacity-50 pointer-events-none">
           <i data-lucide="check-check" class="w-4 h-4"></i>
           <span id="text-modal-confirmar">Inyectar a la Central</span>
         </button>
@@ -751,7 +756,7 @@
   <!-- TOAST DE NOTIFICACIÓN FLOTANTE                                 -->
   <!-- ============================================================== -->
   <div id="voto-toast" class="no-print fixed bottom-4 inset-x-4 max-w-md mx-auto z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
-    <div class="bg-[#18114a] border-2 border-amber-400 rounded-2xl p-4 shadow-2xl shadow-indigo-950/80 flex items-center gap-3 text-white font-bold text-xs">
+    <div class="bg-[#18114a] border-2 border-amber-400 rounded-2xl p-4 shadow-2xl shadow-indigo-950/80 flex items-center gap-3 text-white font-bold text-base">
       <i data-lucide="check-circle" class="w-5 h-5 text-amber-400 shrink-0"></i>
       <span id="voto-toast-text" class="flex-1">Operación realizada con éxito</span>
     </div>
@@ -763,5 +768,6 @@
   <!-- Controlador Principal -->
   <script type="module" src="js/votoApp.js"></script>
 
+  <script src="js/a11y.js"></script>
 </body>
 </html>

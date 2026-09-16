@@ -285,7 +285,7 @@ export class ToolsManager {
       this.points.forEach((pt, idx) => {
         const vertexIcon = L.divIcon({
           className: "earth-vertex-marker-wrapper",
-          html: `<div class="w-5 h-5 ${vertexBg} border-2 ${vertexBorder} rounded-full shadow-[0_0_12px_rgba(255,255,255,0.95)] cursor-move hover:scale-125 active:scale-95 transition flex items-center justify-center text-[10px] font-black text-white leading-none">${idx + 1}</div>`,
+          html: `<div class="w-5 h-5 ${vertexBg} border-2 ${vertexBorder} rounded-full shadow-[0_0_12px_rgba(255,255,255,0.95)] cursor-move hover:scale-125 active:scale-95 transition flex items-center justify-center text-sm font-black text-white leading-none">${idx + 1}</div>`,
           iconSize: [20, 20],
           iconAnchor: [10, 10]
         });
@@ -392,7 +392,7 @@ export class ToolsManager {
       const vertexBorder = isSub ? "border-purple-200" : "border-white";
       const vertexIcon = L.divIcon({
         className: "earth-vertex-marker-wrapper",
-        html: `<div class="w-5 h-5 ${vertexBg} border-2 ${vertexBorder} rounded-full shadow-[0_0_12px_rgba(255,255,255,0.95)] cursor-move hover:scale-125 active:scale-95 transition flex items-center justify-center text-[10px] font-black text-white leading-none">${this.points.length}</div>`,
+        html: `<div class="w-5 h-5 ${vertexBg} border-2 ${vertexBorder} rounded-full shadow-[0_0_12px_rgba(255,255,255,0.95)] cursor-move hover:scale-125 active:scale-95 transition flex items-center justify-center text-sm font-black text-white leading-none">${this.points.length}</div>`,
         iconSize: [20, 20],
         iconAnchor: [10, 10]
       });

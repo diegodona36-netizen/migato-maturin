@@ -145,10 +145,10 @@ export class MaturinMap {
         <div class="p-3 max-w-xs font-sans text-slate-800">
           <div class="flex items-center justify-between border-b pb-2 mb-2">
             <div>
-              <span class="text-xs font-bold uppercase tracking-wider text-slate-400 block">${sec.parroquia}</span>
+              <span class="text-sm font-bold uppercase tracking-wider text-slate-400 block">${sec.parroquia}</span>
               <h4 class="font-bold text-base text-slate-900 leading-tight">${sec.nombre}</h4>
             </div>
-            <span class="px-2 py-0.5 rounded-full text-xs font-semibold bg-slate-100 text-slate-700">
+            <span class="px-2 py-0.5 rounded-full text-sm font-semibold bg-slate-100 text-slate-700">
               ${sec.totalEncuestas} ${sec.totalEncuestas === 1 ? 'encuesta' : 'encuestas'}
             </span>
           </div>
@@ -156,10 +156,10 @@ export class MaturinMap {
           <div class="space-y-2 mb-3">
             <!-- Estado Agua -->
             <div class="flex items-center justify-between p-2 rounded-lg bg-slate-50 border border-slate-100">
-              <span class="text-xs font-medium text-slate-600 flex items-center gap-1.5">
+              <span class="text-sm font-medium text-slate-600 flex items-center gap-1.5">
                 <span>🚰</span> Agua:
               </span>
-              <span class="inline-flex items-center gap-1 text-xs font-bold ${this.getTextColorClass(sec.aguaEstadoDominante)}">
+              <span class="inline-flex items-center gap-1 text-sm font-bold ${this.getTextColorClass(sec.aguaEstadoDominante)}">
                 <span class="w-2.5 h-2.5 rounded-full ${this.getBgColorClass(sec.aguaEstadoDominante)}"></span>
                 ${this.capitalize(sec.aguaEstadoDominante)}
               </span>
@@ -167,10 +167,10 @@ export class MaturinMap {
 
             <!-- Estado Vialidad -->
             <div class="flex items-center justify-between p-2 rounded-lg bg-slate-50 border border-slate-100">
-              <span class="text-xs font-medium text-slate-600 flex items-center gap-1.5">
+              <span class="text-sm font-medium text-slate-600 flex items-center gap-1.5">
                 <span>🛣️</span> Carreteras:
               </span>
-              <span class="inline-flex items-center gap-1 text-xs font-bold ${this.getTextColorClass(sec.vialidadEstadoDominante)}">
+              <span class="inline-flex items-center gap-1 text-sm font-bold ${this.getTextColorClass(sec.vialidadEstadoDominante)}">
                 <span class="w-2.5 h-2.5 rounded-full ${this.getBgColorClass(sec.vialidadEstadoDominante)}"></span>
                 ${this.capitalize(sec.vialidadEstadoDominante)}
               </span>
@@ -178,20 +178,20 @@ export class MaturinMap {
           </div>
 
           ${sec.ultimaEncuesta && (sec.ultimaEncuesta.aguaObs || sec.ultimaEncuesta.vialidadObs) ? `
-            <div class="text-xs text-slate-500 italic bg-amber-50 p-2 rounded border border-amber-200/60 mb-2">
+            <div class="text-sm text-slate-500 italic bg-amber-50 p-2 rounded border border-amber-200/60 mb-2">
               "${sec.ultimaEncuesta.aguaObs || sec.ultimaEncuesta.vialidadObs}"
             </div>
           ` : ''}
 
-          <button onclick="window.maturinMapInstance.focusSector(${sec.lat}, ${sec.lng}, 18)" class="w-full mt-2 py-2 px-3 bg-blue-700 hover:bg-blue-800 text-white font-bold rounded-lg text-xs flex items-center justify-center gap-1.5 shadow-sm transition-all">
+          <button onclick="window.maturinMapInstance.focusSector(${sec.lat}, ${sec.lng}, 18)" class="w-full mt-2 py-2 px-3 bg-blue-700 hover:bg-blue-800 text-white font-bold rounded-lg text-sm flex items-center justify-center gap-1.5 shadow-sm transition-all">
             🔍 Acercar al punto exacto (Zoom Máximo)
           </button>
 
           <div class="pt-2 mt-2 border-t border-slate-100 flex items-center justify-between">
-            <a href="https://www.google.com/maps/search/?api=1&query=${sec.lat},${sec.lng}" target="_blank" rel="noopener" class="inline-flex items-center gap-1 text-xs font-bold text-blue-600 hover:text-blue-800 hover:underline">
+            <a href="https://www.google.com/maps/search/?api=1&query=${sec.lat},${sec.lng}" target="_blank" rel="noopener" class="inline-flex items-center gap-1 text-sm font-bold text-blue-600 hover:text-blue-800 hover:underline">
               <span>📍</span> Ver en Google Maps
             </a>
-            <span class="text-[10px] text-slate-400">
+            <span class="text-sm text-slate-400">
               ${sec.ultimaEncuesta ? sec.ultimaEncuesta.fecha : 'Reciente'}
             </span>
           </div>

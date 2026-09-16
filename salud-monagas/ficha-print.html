@@ -67,6 +67,7 @@
   </style>
 </head>
 <body>
+  <a href="#main-content" class="skip-link">Saltar al contenido principal</a>
 
   <div class="top-action-bar no-print">
     <div style="display: flex; align-items: center; gap: 10px;">
@@ -155,23 +156,23 @@
             <tr>
               <td width="20%">
                 <span class="ficha-label">Estado:</span><br>
-                <strong class="ficha-value text-xs">MONAGAS</strong>
+                <strong class="ficha-value text-base">MONAGAS</strong>
               </td>
               <td width="20%">
                 <span class="ficha-label">Municipio:</span><br>
-                <span class="ficha-value text-xs">${(centro.municipio || '').replace('Municipio ', '')}</span>
+                <span class="ficha-value text-base">${(centro.municipio || '').replace('Municipio ', '')}</span>
               </td>
               <td width="20%">
                 <span class="ficha-label">Parroquia:</span><br>
-                <span class="ficha-value text-xs">${centro.parroquia || ''}</span>
+                <span class="ficha-value text-base">${centro.parroquia || ''}</span>
               </td>
               <td width="20%">
                 <span class="ficha-label">Sector:</span><br>
-                <span class="ficha-value text-xs">${centro.sector || 'Casco Central'}</span>
+                <span class="ficha-value text-base">${centro.sector || 'Casco Central'}</span>
               </td>
               <td width="20%">
                 <span class="ficha-label">Área / Módulo:</span><br>
-                <strong class="ficha-value text-xs">SALUD (MOD. 5)</strong>
+                <strong class="ficha-value text-base">SALUD (MOD. 5)</strong>
               </td>
             </tr>
             <tr>
@@ -390,5 +391,10 @@
       }
     })();
   </script>
+          <button type="button" id="btn-toggle-contrast" class="px-2.5 py-1.5 rounded-xl bg-[#1d1554] hover:bg-[#23176d] text-amber-400 border border-amber-500/40 text-sm font-bold flex items-center gap-1.5 shadow transition active:scale-95" title="Alto contraste" aria-label="Activar modo alto contraste">
+            <span aria-hidden="true">◐</span>
+            <span class="hidden sm:inline">Contraste</span>
+          </button>
+      <script src="js/a11y.js"></script>
 </body>
 </html>

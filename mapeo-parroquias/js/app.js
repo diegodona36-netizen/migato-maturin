@@ -70,7 +70,7 @@ class ParishMappingApp {
 
     if (sectoresList) {
       sectoresList.innerHTML = this.currentParish.sectoresReferencia
-        .map(s => `<span class="px-2 py-0.5 rounded-md bg-slate-800 text-slate-300 text-[11px] font-medium">${s}</span>`)
+        .map(s => `<span class="px-2 py-0.5 rounded-md bg-slate-800 text-slate-300 text-sm font-medium">${s}</span>`)
         .join("");
     }
 
@@ -125,7 +125,7 @@ class ParishMappingApp {
     if (lblArea) lblArea.textContent = `${hex.areaHa} Hectáreas`;
     if (lblEstado) {
       lblEstado.textContent = hex.activo ? "ASIGNADO / ACTIVO" : "DISPONIBLE";
-      lblEstado.className = `font-bold text-xs ${hex.activo ? 'text-emerald-400' : 'text-amber-400'}`;
+      lblEstado.className = `font-bold text-sm ${hex.activo ? 'text-emerald-400' : 'text-amber-400'}`;
     }
   }
 
@@ -236,7 +236,7 @@ class ParishMappingApp {
       
       const kmlInfo = document.getElementById("kml-file-status");
       if (kmlInfo) {
-        kmlInfo.innerHTML = `<span class="text-emerald-400 font-bold font-mono text-[11px]">✓ ${file.name} (${features.length} zonas)</span>`;
+        kmlInfo.innerHTML = `<span class="text-emerald-400 font-bold font-mono text-sm">✓ ${file.name} (${features.length} zonas)</span>`;
       }
     } catch (err) {
       console.error("Error leyendo KML:", err);
@@ -278,7 +278,7 @@ class ParishMappingApp {
 
   showToast(message, isError = false) {
     const toast = document.createElement("div");
-    toast.className = `fixed bottom-6 right-6 z-50 px-4 py-3 rounded-2xl shadow-2xl text-xs font-bold text-white transition-all transform duration-200 border ${
+    toast.className = `fixed bottom-6 right-6 z-50 px-4 py-3 rounded-2xl shadow-2xl text-sm font-bold text-white transition-all transform duration-200 border ${
       isError ? 'bg-red-600 border-red-500' : 'bg-[#18114a] border-[#2d1f85] text-amber-400'
     }`;
     toast.textContent = message;

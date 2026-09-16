@@ -105,6 +105,7 @@
   </style>
 </head>
 <body class="min-h-screen flex flex-col antialiased">
+  <a href="#main-content" class="skip-link">Saltar al contenido principal</a>
 
   <!-- ============================================================== -->
   <!-- 1. ENCABEZADO INSTITUCIONAL GUBERNAMENTAL (SIN COSAS RARAS)    -->
@@ -122,11 +123,11 @@
             <h1 class="text-base sm:text-lg font-black uppercase tracking-wide text-white leading-none">
               SALA DE CONTROL Y AUDITORÍA ELECTORAL
             </h1>
-            <span class="text-[11px] bg-slate-800 text-amber-400 border border-amber-500/60 font-black px-2 py-0.5 rounded font-mono">
+            <span class="text-base bg-slate-800 text-amber-400 border border-amber-500/60 font-black px-2 py-0.5 rounded font-mono">
               MONAGAS 2026
             </span>
           </div>
-          <p class="text-xs text-slate-400 font-bold mt-1">
+          <p class="text-base text-slate-400 font-bold mt-1">
             Despacho Central de Verificación y Padrón Territorial
           </p>
         </div>
@@ -151,32 +152,36 @@
       </div>
 
     </div>
-  </header>
+            <button type="button" id="btn-toggle-contrast" class="px-2.5 py-1.5 rounded-xl bg-[#1d1554] hover:bg-[#23176d] text-amber-400 border border-amber-500/40 text-sm font-bold flex items-center gap-1.5 shadow transition active:scale-95" title="Alto contraste" aria-label="Activar modo alto contraste">
+            <span aria-hidden="true">◐</span>
+            <span class="hidden sm:inline">Contraste</span>
+          </button>
+        </header>
 
   <!-- ============================================================== -->
   <!-- 2. FRANJA RESUMEN DEL PADRÓN REGIONAL                          -->
   <!-- ============================================================== -->
   <div class="bg-[#070b13] border-b border-[#1e2f4a] py-2 px-4 sm:px-8">
-    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3 text-xs font-bold text-slate-300">
+    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3 text-base font-bold text-slate-300">
       <div class="flex items-center gap-4 flex-wrap">
         <div>
-          <span class="text-slate-400 uppercase text-[11px]">VOTANTES CERTIFICADOS:</span>
-          <strong id="kpi-certificados" class="text-emerald-400 font-mono text-sm ml-1">0</strong>
+          <span class="text-slate-400 uppercase text-base">VOTANTES CERTIFICADOS:</span>
+          <strong id="kpi-certificados" class="text-emerald-400 font-mono text-base ml-1">0</strong>
         </div>
         <span class="text-slate-700">|</span>
         <div>
-          <span class="text-slate-400 uppercase text-[11px]">COBERTURA PARROQUIAL:</span>
-          <strong id="kpi-cobertura" class="text-sky-400 font-mono text-sm ml-1">0 / 44</strong>
-          <span id="kpi-cobertura-pct" class="text-[10px] bg-sky-950 text-sky-300 border border-sky-800 px-1.5 py-0.5 rounded ml-1 font-mono">0%</span>
+          <span class="text-slate-400 uppercase text-base">COBERTURA PARROQUIAL:</span>
+          <strong id="kpi-cobertura" class="text-sky-400 font-mono text-base ml-1">0 / 44</strong>
+          <span id="kpi-cobertura-pct" class="text-base bg-sky-950 text-sky-300 border border-sky-800 px-1.5 py-0.5 rounded ml-1 font-mono">0%</span>
         </div>
         <span class="text-slate-700">|</span>
         <div>
-          <span class="text-slate-400 uppercase text-[11px]">TOTAL EXPEDIENTES:</span>
-          <strong id="kpi-total-planillas" class="text-white font-mono text-sm ml-1">0</strong>
+          <span class="text-slate-400 uppercase text-base">TOTAL EXPEDIENTES:</span>
+          <strong id="kpi-total-planillas" class="text-white font-mono text-base ml-1">0</strong>
         </div>
       </div>
 
-      <div class="text-[11px] font-bold text-emerald-400 flex items-center gap-2">
+      <div class="text-base font-bold text-emerald-400 flex items-center gap-2">
         <span class="w-2 h-2 bg-emerald-500 rounded-full inline-block"></span>
         <span>CANAL BOT WHATSAPP ACTIVO • RECEPCIÓN REGIONAL</span>
       </div>
@@ -195,26 +200,26 @@
       <div class="w-full md:w-5/12">
         <input type="text" id="input-search" oninput="handleSearchDebounce()" 
                placeholder="Buscar por expediente, parroquia, sector, coordinador o cédula..." 
-               class="w-full bg-[#080e18] border border-[#334155] px-3.5 py-2 text-sm font-bold text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 rounded">
+               class="w-full bg-[#080e18] border border-[#334155] px-3.5 py-2 text-sm font-bold text-white placeholder-slate-500 focus:border-blue-500 rounded">
       </div>
 
       <!-- Filtros Planos (Sin emojis, 100% funcionales) -->
       <div class="flex items-center gap-2 w-full md:w-auto flex-wrap">
-        <span class="text-xs font-black text-slate-400 uppercase mr-1">ESTADO:</span>
+        <span class="text-base font-black text-slate-400 uppercase mr-1">ESTADO:</span>
         
-        <button onclick="setFilterStatus('todos')" id="btn-filter-todos" class="btn-excel bg-slate-200 text-black font-black text-xs uppercase rounded">
+        <button onclick="setFilterStatus('todos')" id="btn-filter-todos" class="btn-excel bg-slate-200 text-black font-black text-sm uppercase rounded">
           TODAS (<span id="count-filter-todos">0</span>)
         </button>
 
-        <button onclick="setFilterStatus('pendiente')" id="btn-filter-pendientes" class="btn-excel bg-[#1e293b] hover:bg-[#334155] text-amber-300 border border-amber-500/50 font-black text-xs uppercase rounded">
+        <button onclick="setFilterStatus('pendiente')" id="btn-filter-pendientes" class="btn-excel bg-[#1e293b] hover:bg-[#334155] text-amber-300 border border-amber-500/50 font-black text-sm uppercase rounded">
           PENDIENTES (<span id="count-filter-pendientes">0</span>)
         </button>
 
-        <button onclick="setFilterStatus('certificado')" id="btn-filter-certificados" class="btn-excel bg-[#1e293b] hover:bg-[#334155] text-emerald-300 border border-emerald-500/50 font-black text-xs uppercase rounded">
+        <button onclick="setFilterStatus('certificado')" id="btn-filter-certificados" class="btn-excel bg-[#1e293b] hover:bg-[#334155] text-emerald-300 border border-emerald-500/50 font-black text-sm uppercase rounded">
           APROBADAS (<span id="count-filter-certificados">0</span>)
         </button>
 
-        <button onclick="showWhitelistModal()" class="btn-excel bg-[#1e293b] hover:bg-[#334155] text-slate-300 border border-slate-600 font-black text-xs uppercase rounded" title="Ver enlaces autorizados">
+        <button onclick="showWhitelistModal()" class="btn-excel bg-[#1e293b] hover:bg-[#334155] text-slate-300 border border-slate-600 font-black text-sm uppercase rounded" title="Ver enlaces autorizados">
           LÍNEAS WHITELIST
         </button>
       </div>
@@ -242,15 +247,15 @@
     </div>
 
     <!-- Barra de Paginación y Resumen Gubernamental (Estilo Excel / ERP) -->
-    <div class="bg-[#0f172a] border border-[#1e293b] p-3 rounded flex flex-col sm:flex-row items-center justify-between gap-3 text-xs font-bold text-slate-300">
+    <div class="bg-[#0f172a] border border-[#1e293b] p-3 rounded flex flex-col sm:flex-row items-center justify-between gap-3 text-base font-bold text-slate-300">
       
       <!-- Contador y Selector de Filas por Página -->
       <div class="flex items-center gap-3 flex-wrap">
         <span id="label-table-count" class="font-mono text-white">Mostrando 0 expedientes</span>
         <span class="text-slate-600">|</span>
         <div class="flex items-center gap-1.5">
-          <span class="text-slate-400 uppercase text-[11px]">FILAS:</span>
-          <select id="select-per-page" onchange="changePerPage(this.value)" class="bg-[#080e18] border border-[#334155] text-white text-xs font-mono font-bold px-2 py-1 rounded focus:outline-none focus:border-blue-500">
+          <span class="text-slate-400 uppercase text-base">FILAS:</span>
+          <select id="select-per-page" onchange="changePerPage(this.value)" class="bg-[#080e18] border border-[#334155] text-white text-sm font-mono font-bold px-2 py-1 rounded focus:border-blue-500">
             <option value="15">15</option>
             <option value="25" selected>25</option>
             <option value="50">50</option>
@@ -261,19 +266,19 @@
 
       <!-- Controles de Paginado Sobrios -->
       <div class="flex items-center gap-1.5">
-        <button id="btn-page-first" onclick="goToPage(1)" class="btn-excel bg-[#1e293b] hover:bg-[#334155] text-slate-200 border border-slate-700 text-xs px-2.5 h-8" title="Primera página">
+        <button id="btn-page-first" onclick="goToPage(1)" class="btn-excel bg-[#1e293b] hover:bg-[#334155] text-slate-200 border border-slate-700 text-sm px-2.5 h-8" title="Primera página">
           «
         </button>
-        <button id="btn-page-prev" onclick="goToPrevPage()" class="btn-excel bg-[#1e293b] hover:bg-[#334155] text-slate-200 border border-slate-700 text-xs px-3 h-8">
+        <button id="btn-page-prev" onclick="goToPrevPage()" class="btn-excel bg-[#1e293b] hover:bg-[#334155] text-slate-200 border border-slate-700 text-sm px-3 h-8">
           ◀ ANTERIOR
         </button>
-        <span id="label-page-current" class="px-3 py-1.5 bg-[#080e18] border border-[#334155] rounded font-mono text-xs font-black text-amber-300">
+        <span id="label-page-current" class="px-3 py-1.5 bg-[#080e18] border border-[#334155] rounded font-mono text-base font-black text-amber-300">
           PÁGINA 1 DE 1
         </span>
-        <button id="btn-page-next" onclick="goToNextPage()" class="btn-excel bg-[#1e293b] hover:bg-[#334155] text-slate-200 border border-slate-700 text-xs px-3 h-8">
+        <button id="btn-page-next" onclick="goToNextPage()" class="btn-excel bg-[#1e293b] hover:bg-[#334155] text-slate-200 border border-slate-700 text-sm px-3 h-8">
           SIGUIENTE ▶
         </button>
-        <button id="btn-page-last" onclick="goToLastPage()" class="btn-excel bg-[#1e293b] hover:bg-[#334155] text-slate-200 border border-slate-700 text-xs px-2.5 h-8" title="Última página">
+        <button id="btn-page-last" onclick="goToLastPage()" class="btn-excel bg-[#1e293b] hover:bg-[#334155] text-slate-200 border border-slate-700 text-sm px-2.5 h-8" title="Última página">
           »
         </button>
       </div>
@@ -291,56 +296,56 @@
       <!-- Encabezado del Expediente (Limpio y Soberano) -->
       <div class="bg-[#090f1d] text-white px-5 py-3 flex items-center justify-between border-b border-[#1e293b] shrink-0">
         <div class="flex items-center gap-3">
-          <span class="text-xs bg-amber-500 text-black font-black uppercase font-mono px-2 py-0.5 rounded">
+          <span class="text-base bg-amber-500 text-black font-black uppercase font-mono px-2 py-0.5 rounded">
             EXPEDIENTE
           </span>
           <h2 id="modal-report-id" class="text-xl sm:text-2xl font-black text-white font-mono leading-none">
             REP-2026-001
           </h2>
           <span class="text-slate-600">|</span>
-          <p id="modal-report-title" class="text-sm text-slate-200 font-bold truncate">
+          <p id="modal-report-title" class="text-base text-slate-200 font-bold truncate">
             ALTO DE LOS GODOS • Sector Morichal 1
           </p>
         </div>
         
         <div class="flex items-center gap-2.5">
           <!-- Botón de Alternar Foto de Evidencia -->
-          <button onclick="togglePhotoView()" id="btn-toggle-photo" class="btn-excel bg-[#1e3a5f] hover:bg-[#284e80] text-sky-200 border-sky-500 text-xs">
+          <button onclick="togglePhotoView()" id="btn-toggle-photo" class="btn-excel bg-[#1e3a5f] hover:bg-[#284e80] text-sky-200 border-sky-500 text-sm">
             <i data-lucide="image" class="w-4 h-4"></i>
             <span id="btn-toggle-photo-text">MOSTRAR COMPROBANTE (FOTO)</span>
           </button>
 
-          <button onclick="closeAuditModal()" class="btn-excel bg-[#881337] hover:bg-[#9f1239] text-rose-100 border-rose-800 text-xs">
+          <button onclick="closeAuditModal()" class="btn-excel bg-[#881337] hover:bg-[#9f1239] text-rose-100 border-rose-800 text-sm">
             <span>CERRAR</span> [ ✕ ]
           </button>
         </div>
       </div>
 
       <!-- Ficha Territorial y CNE (Soberbia y Simplificada en 1 sola franja) -->
-      <div class="bg-[#0b1322] border-b border-[#1e293b] px-5 py-2.5 text-xs font-bold text-slate-300 flex flex-wrap items-center justify-between gap-3 shrink-0">
+      <div class="bg-[#0b1322] border-b border-[#1e293b] px-5 py-2.5 text-base font-bold text-slate-300 flex flex-wrap items-center justify-between gap-3 shrink-0">
         <div class="flex items-center gap-4 flex-wrap">
           <div>
-            <span class="text-slate-400 uppercase text-[11px]">PARROQUIA:</span>
+            <span class="text-slate-400 uppercase text-base">PARROQUIA:</span>
             <strong id="modal-info-parroquia" class="text-white font-black ml-1">Alto de Los Godos (Maturín)</strong>
           </div>
           <span class="text-slate-700">|</span>
           <div>
-            <span class="text-slate-400 uppercase text-[11px]">SUB-PARROQUIA:</span>
+            <span class="text-slate-400 uppercase text-base">SUB-PARROQUIA:</span>
             <strong id="modal-info-subparroquia" class="text-amber-300 font-bold ml-1">Sub-Parroquia 2 • Morichal</strong>
           </div>
           <span class="text-slate-700">|</span>
           <div>
-            <span class="text-slate-400 uppercase text-[11px]">SECTOR:</span>
+            <span class="text-slate-400 uppercase text-base">SECTOR:</span>
             <strong id="modal-info-sector" class="text-sky-300 font-bold ml-1">Morichal Sector 1</strong>
           </div>
           <span class="text-slate-700">|</span>
           <div>
-            <span class="text-slate-400 uppercase text-[11px]">CENTRO CNE:</span>
+            <span class="text-slate-400 uppercase text-base">CENTRO CNE:</span>
             <strong id="modal-info-centro" class="text-emerald-400 font-bold ml-1">Centro De Votación Brisas De Venezuela</strong>
           </div>
         </div>
 
-        <div class="flex items-center gap-3 text-[11px]">
+        <div class="flex items-center gap-3 text-base">
           <div>RESPONSABLE: <strong id="modal-sender" class="text-white">Carlos Gómez</strong></div>
           <div class="text-sky-400 font-mono" id="modal-phone">+58 414-7891234</div>
         </div>
@@ -348,8 +353,8 @@
 
       <!-- Barra de Dictamen y Conformidad (Sin saturar) -->
       <div class="bg-[#070b13] border-b border-[#1e293b] px-5 py-2 flex flex-wrap items-center justify-between gap-2 shrink-0">
-        <div class="flex items-center gap-3 text-xs font-bold">
-          <span class="text-slate-400 uppercase text-[10px]">DICTAMEN:</span>
+        <div class="flex items-center gap-3 text-base font-bold">
+          <span class="text-slate-400 uppercase text-base">DICTAMEN:</span>
           <span id="badge-dictamen-territorio" class="px-2.5 py-0.5 rounded bg-emerald-950/80 text-emerald-300 border border-emerald-500/50">
             ✓ Territorio Conforme
           </span>
@@ -361,7 +366,7 @@
           </span>
         </div>
 
-        <div class="text-xs font-black font-mono text-amber-400" id="modal-total-renglones-badge">
+        <div class="text-base font-black font-mono text-amber-400" id="modal-total-renglones-badge">
           25 ELECTORES EN ESTA HOJA
         </div>
       </div>
@@ -372,11 +377,11 @@
         <!-- Panel Izquierdo de Evidencia (Ocultable a 1 clic para no apretar la tabla) -->
         <div id="photo-panel" class="hidden w-[38%] bg-[#0f172a] border border-[#1e293b] p-3 flex-col justify-between rounded shrink-0">
           <div class="border-b border-[#1e293b] pb-2 mb-2 flex items-center justify-between shrink-0">
-            <span class="text-xs font-black uppercase text-amber-400 tracking-wide flex items-center gap-1.5">
+            <span class="text-base font-black uppercase text-amber-400 tracking-wide flex items-center gap-1.5">
               <i data-lucide="file-text" class="w-4 h-4"></i>
               <span>COMPROBANTE ORIGINAL</span>
             </span>
-            <span id="modal-img-caption" class="text-xs font-mono font-bold text-slate-400">foto.jpg</span>
+            <span id="modal-img-caption" class="text-base font-mono font-bold text-slate-400">foto.jpg</span>
           </div>
 
           <!-- Marco de la Foto -->
@@ -384,7 +389,7 @@
             <img id="modal-img-preview" src="../assets/logo-migato.png" alt="Planilla Original" class="max-h-[100%] w-auto object-contain bg-white rounded p-1 shadow">
           </div>
 
-          <p class="text-[11px] font-bold text-slate-400 mt-2 text-center shrink-0">
+          <p class="text-base font-bold text-slate-400 mt-2 text-center shrink-0">
             Coteje la caligrafía manuscrita de la hoja con cada columna del padrón
           </p>
         </div>
@@ -393,20 +398,20 @@
         <div id="table-panel" class="flex-1 bg-[#0f172a] border border-[#1e293b] p-3 flex flex-col justify-between rounded overflow-hidden">
           
           <div class="border-b border-[#1e293b] pb-2 mb-2 flex items-center justify-between shrink-0">
-            <span class="text-xs font-black uppercase text-emerald-400 tracking-wide flex items-center gap-1.5">
+            <span class="text-base font-black uppercase text-emerald-400 tracking-wide flex items-center gap-1.5">
               <i data-lucide="table" class="w-4 h-4"></i>
               <span>MATRIZ DE CARACTERIZACIÓN (25 A 30 RENGLONES TIPO EXCEL)</span>
             </span>
-            <button onclick="addElectorRow()" class="btn-excel bg-[#1e293b] hover:bg-[#334155] text-sky-200 border-sky-600 text-xs h-7 px-3">
+            <button onclick="addElectorRow()" class="btn-excel bg-[#1e293b] hover:bg-[#334155] text-sky-200 border-sky-600 text-sm h-7 px-3">
               <span>+ AGREGAR RENGLÓN</span>
             </button>
           </div>
 
           <!-- Tabla con espacio amplio donde NADA se corta -->
           <div class="flex-1 border border-[#1e293b] rounded overflow-x-auto overflow-y-auto custom-scroll bg-[#080e18]">
-            <table class="w-full text-left font-bold text-xs border-collapse min-w-[1050px]">
+            <table class="w-full text-left font-bold text-base border-collapse min-w-[1050px]">
               <thead class="sticky top-0 bg-[#090f1d] z-20 shadow">
-                <tr class="text-slate-300 text-[11px] uppercase border-b border-[#1e293b]">
+                <tr class="text-slate-300 text-base uppercase border-b border-[#1e293b]">
                   <th class="w-10 text-center p-2.5">#</th>
                   <th class="p-2.5 min-w-[240px]">NOMBRES Y APELLIDOS</th>
                   <th class="w-32 p-2.5">CÉDULA</th>
@@ -426,9 +431,9 @@
           </div>
 
           <!-- Franja de Resumen Estadístico de la Hoja -->
-          <div class="bg-[#090f1d] border border-[#1e293b] rounded px-4 py-2 mt-2 flex flex-wrap items-center justify-between gap-3 text-xs shrink-0">
+          <div class="bg-[#090f1d] border border-[#1e293b] rounded px-4 py-2 mt-2 flex flex-wrap items-center justify-between gap-3 text-base shrink-0">
             <div class="flex items-center gap-4 text-slate-300 font-bold">
-              <span class="text-slate-400 uppercase text-[10px]">VOTOS:</span>
+              <span class="text-slate-400 uppercase text-base">VOTOS:</span>
               <span class="text-emerald-400 font-mono font-black" id="summary-voto-duro">17 Duro</span>
               <span class="text-slate-700">|</span>
               <span class="text-amber-400 font-mono font-black" id="summary-voto-blando">5 Blando</span>
@@ -436,7 +441,7 @@
               <span class="text-sky-400 font-mono font-black" id="summary-voto-nuevo">3 Nuevo</span>
             </div>
 
-            <div class="flex items-center gap-4 font-mono text-xs">
+            <div class="flex items-center gap-4 font-mono text-base">
               <span class="text-slate-400 font-bold">Edad Promedio: <strong id="summary-edad-promedio" class="text-white">39.4 años</strong></span>
               <span class="text-slate-700">|</span>
               <span id="summary-conformidad" class="text-emerald-400 font-black">25/25 Conformes</span>
@@ -445,8 +450,8 @@
 
           <!-- Barra de Decisión Oficial -->
           <div class="pt-3 border-t border-[#1e293b] flex flex-col sm:flex-row items-center justify-between gap-3 mt-2 shrink-0">
-            <div class="text-xs font-bold text-slate-300">
-              <span id="modal-status-summary" class="text-emerald-400 font-black text-sm">25 electores conformados</span> para certificación oficial.
+            <div class="text-base font-bold text-slate-300">
+              <span id="modal-status-summary" class="text-emerald-400 font-black text-base">25 electores conformados</span> para certificación oficial.
             </div>
 
             <div class="flex items-center gap-3 w-full sm:w-auto">
@@ -476,16 +481,16 @@
         <h2 class="text-base font-black uppercase text-white">
           LÍNEAS DE WHATSAPP AUTORIZADAS (WHITELIST)
         </h2>
-        <button onclick="closeWhitelistModal()" class="btn-excel bg-slate-800 text-slate-200 text-xs h-7 px-3">
+        <button onclick="closeWhitelistModal()" class="btn-excel bg-slate-800 text-slate-200 text-sm h-7 px-3">
           ✕
         </button>
       </div>
-      <p class="text-xs font-bold text-slate-400">
+      <p class="text-base font-bold text-slate-400">
         Solo los reportes procedentes de estos números acreditados son procesados por el Bot.
       </p>
 
       <div class="border border-[#1e293b] max-h-[350px] overflow-y-auto rounded bg-[#080e18] custom-scroll">
-        <table class="w-full text-xs font-bold border-collapse">
+        <table class="w-full text-base font-bold border-collapse">
           <thead>
             <tr class="bg-[#090f1d] text-slate-300">
               <th class="p-2.5 text-center w-10">#</th>
@@ -504,7 +509,7 @@
   </div>
 
   <!-- Toast -->
-  <div id="toast" class="fixed bottom-6 right-6 z-50 transform transition-all duration-150 translate-y-20 opacity-0 pointer-events-none bg-[#090f1d] text-white px-5 py-3 border-2 border-emerald-500 text-sm font-black flex items-center gap-2 rounded shadow-2xl">
+  <div id="toast" class="fixed bottom-6 right-6 z-50 transform transition-all duration-150 translate-y-20 opacity-0 pointer-events-none bg-[#090f1d] text-white px-5 py-3 border-2 border-emerald-500 text-base font-black flex items-center gap-2 rounded shadow-2xl">
     <span id="toast-icon">ℹ</span>
     <span id="toast-text">Acción completada.</span>
   </div>
@@ -575,17 +580,17 @@
       // Resetear estilos a estado inactivo plano
       [btnTodos, btnPend, btnCert].forEach(b => {
         if (b) {
-          b.className = "btn-excel bg-[#1e293b] hover:bg-[#334155] text-slate-300 border border-slate-700 font-black text-xs uppercase rounded";
+          b.className = "btn-excel bg-[#1e293b] hover:bg-[#334155] text-slate-300 border border-slate-700 font-black text-base uppercase rounded";
         }
       });
 
       // Aplicar estilo activo sólido
       if (status === 'todos' && btnTodos) {
-        btnTodos.className = "btn-excel bg-slate-200 text-black font-black text-xs uppercase rounded";
+        btnTodos.className = "btn-excel bg-slate-200 text-black font-black text-base uppercase rounded";
       } else if (status === 'pendiente' && btnPend) {
-        btnPend.className = "btn-excel bg-amber-500 text-black font-black text-xs uppercase rounded";
+        btnPend.className = "btn-excel bg-amber-500 text-black font-black text-base uppercase rounded";
       } else if (status === 'certificado' && btnCert) {
-        btnCert.className = "btn-excel bg-emerald-600 text-white font-black text-xs uppercase rounded";
+        btnCert.className = "btn-excel bg-emerald-600 text-white font-black text-base uppercase rounded";
       }
 
       renderSimpleTable();
@@ -677,7 +682,7 @@
                     <i data-lucide="inbox" class="w-6 h-6"></i>
                   </div>
                   <h4 class="text-white text-base font-black uppercase tracking-tight">Sin expedientes en cola</h4>
-                  <p class="text-xs text-slate-400 leading-relaxed font-normal">
+                  <p class="text-base text-slate-400 leading-relaxed font-normal">
                     Los reportes y planillas de caracterización enviados por los enlaces parroquiales vía WhatsApp o Buzón Territorial aparecerán aquí automáticamente para su auditoría y certificación oficial.
                   </p>
                 </div>
@@ -687,7 +692,7 @@
         } else {
           tbody.innerHTML = `
             <tr>
-              <td colspan="7" class="text-center py-10 text-slate-400 font-bold text-sm bg-[#0f172a]">
+              <td colspan="7" class="text-center py-10 text-slate-400 font-boldtext-base bg-[#0f172a]">
                 No se encontraron expedientes con los filtros seleccionados.
               </td>
             </tr>
@@ -703,35 +708,35 @@
         const isCertificado = r.estado === 'certificado';
         
         const statusBadge = isPendiente 
-          ? `<span class="px-3 py-1 bg-amber-500/15 text-amber-300 border border-amber-500/50 font-black text-xs rounded uppercase inline-block">PENDIENTE</span>`
+          ? `<span class="px-3 py-1 bg-amber-500/15 text-amber-300 border border-amber-500/50 font-black text-base rounded uppercase inline-block">PENDIENTE</span>`
           : isCertificado 
-            ? `<span class="px-3 py-1 bg-emerald-500/15 text-emerald-300 border border-emerald-500/50 font-black text-xs rounded uppercase inline-block">APROBADA</span>`
-            : `<span class="px-3 py-1 bg-rose-500/15 text-rose-300 border border-rose-500/50 font-black text-xs rounded uppercase inline-block">RECHAZADA</span>`;
+            ? `<span class="px-3 py-1 bg-emerald-500/15 text-emerald-300 border border-emerald-500/50 font-black text-base rounded uppercase inline-block">APROBADA</span>`
+            : `<span class="px-3 py-1 bg-rose-500/15 text-rose-300 border border-rose-500/50 font-black text-base rounded uppercase inline-block">RECHAZADA</span>`;
 
         const countElectores = Array.isArray(r.electores) ? r.electores.length : 0;
         const subInfo = r.subparroquia ? `${r.subparroquia} • ` : '';
 
         return `
           <tr>
-            <td class="font-black font-mono text-sky-400 text-sm">${r.id}</td>
+            <td class="font-black font-mono text-sky-400text-base">${r.id}</td>
             <td>
-              <span class="text-sm font-black text-white block leading-tight">${r.parroquiaNombre.toUpperCase()}</span>
-              <span class="text-xs font-bold text-slate-400">${subInfo}${r.sector || ''}</span>
+              <span class="text-base font-black text-white block leading-tight">${r.parroquiaNombre.toUpperCase()}</span>
+              <span class="text-base font-bold text-slate-400">${subInfo}${r.sector || ''}</span>
             </td>
             <td>
-              <span class="text-xs font-bold text-emerald-300 block">${r.centroElectoral || 'Centro por verificar'}</span>
-              <span class="text-[11px] font-mono text-slate-400">${r.munNombre || 'Maturín'}</span>
+              <span class="text-base font-bold text-emerald-300 block">${r.centroElectoral || 'Centro por verificar'}</span>
+              <span class="text-base font-mono text-slate-400">${r.munNombre || 'Maturín'}</span>
             </td>
             <td>
-              <span class="text-xs font-black text-slate-200 block">${r.remitenteNombre}</span>
-              <span class="text-xs font-mono text-sky-400">${r.remitenteTlf}</span>
+              <span class="text-base font-black text-slate-200 block">${r.remitenteNombre}</span>
+              <span class="text-base font-mono text-sky-400">${r.remitenteTlf}</span>
             </td>
-            <td class="text-center font-black font-mono text-base text-white">
+            <td class="text-center font-black font-monotext-sm text-white">
               ${countElectores}
             </td>
             <td class="text-center">${statusBadge}</td>
             <td class="text-center">
-              <button onclick="openAuditModal('${r.id}')" class="btn-excel bg-blue-700 hover:bg-blue-600 text-white text-xs border-blue-500 shadow">
+              <button onclick="openAuditModal('${r.id}')" class="btn-excel bg-blue-700 hover:bg-blue-600 text-white text-sm border-blue-500 shadow">
                 AUDITAR →
               </button>
             </td>
@@ -852,41 +857,41 @@
 
         return `
           <tr class="bg-[#0f172a] hover:bg-[#131d33] row-elector" data-idx="${idx}">
-            <td class="text-center font-black text-slate-400 p-2 text-xs">${idx + 1}</td>
+            <td class="text-center font-black text-slate-400 p-2text-base">${idx + 1}</td>
             
             <!-- Nombres y Apellidos (Amplitud completa sin recortes) -->
             <td class="p-1.5 min-w-[240px]">
-              <input type="text" value="${e.nombre || ''}" oninput="auditCorrespondenciaLive()" placeholder="Nombres y Apellidos" class="w-full bg-[#080e18] border border-[#25334d] p-1.5 text-xs font-bold text-white rounded focus:border-sky-400 focus:outline-none elector-field-nombre">
+              <input type="text" value="${e.nombre || ''}" oninput="auditCorrespondenciaLive()" placeholder="Nombres y Apellidos" class="w-full bg-[#080e18] border border-[#25334d] p-1.5 text-sm font-bold text-white rounded focus:border-sky-400 elector-field-nombre">
             </td>
 
             <!-- Cédula -->
             <td class="p-1.5 w-32">
-              <input type="text" value="${e.cedula || ''}" oninput="auditCorrespondenciaLive()" placeholder="V-00.000.000" class="w-full bg-[#080e18] border border-[#25334d] p-1.5 text-xs font-black font-mono text-sky-300 rounded focus:border-sky-400 focus:outline-none elector-field-cedula">
+              <input type="text" value="${e.cedula || ''}" oninput="auditCorrespondenciaLive()" placeholder="V-00.000.000" class="w-full bg-[#080e18] border border-[#25334d] p-1.5 text-sm font-black font-mono text-sky-300 rounded focus:border-sky-400 elector-field-cedula">
             </td>
 
             <!-- Teléfono -->
             <td class="p-1.5 w-32">
-              <input type="text" value="${e.telefono || ''}" placeholder="0414-0000000" class="w-full bg-[#080e18] border border-[#25334d] p-1.5 text-xs font-bold font-mono text-slate-200 rounded focus:border-sky-400 focus:outline-none elector-field-telefono">
+              <input type="text" value="${e.telefono || ''}" placeholder="0414-0000000" class="w-full bg-[#080e18] border border-[#25334d] p-1.5 text-sm font-bold font-mono text-slate-200 rounded focus:border-sky-400 elector-field-telefono">
             </td>
 
             <!-- Centro Electoral CNE -->
             <td class="p-1.5 min-w-[200px]">
-              <input type="text" value="${centroVal}" oninput="auditCorrespondenciaLive()" placeholder="Centro Electoral CNE" class="w-full bg-[#080e18] border border-[#25334d] p-1.5 text-xs font-bold text-emerald-300 rounded focus:border-emerald-400 focus:outline-none elector-field-centro">
+              <input type="text" value="${centroVal}" oninput="auditCorrespondenciaLive()" placeholder="Centro Electoral CNE" class="w-full bg-[#080e18] border border-[#25334d] p-1.5 text-sm font-bold text-emerald-300 rounded focus:border-emerald-400 elector-field-centro">
             </td>
 
             <!-- Edad -->
             <td class="p-1.5 w-16 text-center">
-              <input type="number" min="16" max="110" value="${e.edad || ''}" oninput="auditCorrespondenciaLive()" placeholder="Edad" class="w-14 text-center bg-[#080e18] border border-[#25334d] p-1.5 text-xs font-black font-mono text-white rounded focus:border-amber-400 focus:outline-none elector-field-edad">
+              <input type="number" min="16" max="110" value="${e.edad || ''}" oninput="auditCorrespondenciaLive()" placeholder="Edad" class="w-14 text-center bg-[#080e18] border border-[#25334d] p-1.5 text-sm font-black font-mono text-white rounded focus:border-amber-400 elector-field-edad">
             </td>
 
             <!-- Profesión -->
             <td class="p-1.5 w-36">
-              <input type="text" value="${e.profesion || ''}" placeholder="Oficio..." class="w-full bg-[#080e18] border border-[#25334d] p-1.5 text-xs font-bold text-slate-200 rounded focus:border-sky-400 focus:outline-none elector-field-profesion">
+              <input type="text" value="${e.profesion || ''}" placeholder="Oficio..." class="w-full bg-[#080e18] border border-[#25334d] p-1.5 text-sm font-bold text-slate-200 rounded focus:border-sky-400 elector-field-profesion">
             </td>
 
             <!-- Voto (Duro, Blando, Nuevo) -->
             <td class="p-1.5 w-28 text-center">
-              <select onchange="auditCorrespondenciaLive()" class="bg-[#080e18] border border-[#25334d] p-1.5 text-xs font-black rounded focus:outline-none elector-field-voto ${voto === 'duro' ? 'text-emerald-400' : voto === 'blando' ? 'text-amber-400' : 'text-sky-400'}">
+              <select onchange="auditCorrespondenciaLive()" class="bg-[#080e18] border border-[#25334d] p-1.5 text-sm font-black rounded elector-field-voto ${voto === 'duro' ? 'text-emerald-400' : voto === 'blando' ? 'text-amber-400' : 'text-sky-400'}">
                 <option value="duro" ${voto === 'duro' ? 'selected' : ''} class="text-emerald-400 font-bold">Duro</option>
                 <option value="blando" ${voto === 'blando' ? 'selected' : ''} class="text-amber-400 font-bold">Blando</option>
                 <option value="nuevo" ${voto === 'nuevo' ? 'selected' : ''} class="text-sky-400 font-bold">Nuevo</option>
@@ -895,14 +900,14 @@
 
             <!-- Estado de Cotejo -->
             <td class="p-1.5 w-28 text-center">
-              <span class="badge-row-status text-[11px] font-black uppercase px-2 py-0.5 rounded bg-emerald-950/80 text-emerald-400 border border-emerald-500/40 inline-block">
+              <span class="badge-row-status text-sm font-black uppercase px-2 py-0.5 rounded bg-emerald-950/80 text-emerald-400 border border-emerald-500/40 inline-block">
                 ✓ CONFORME
               </span>
             </td>
 
             <!-- Eliminar -->
             <td class="p-1.5 w-10 text-center">
-              <button onclick="removeElectorRow(${idx})" class="text-slate-500 hover:text-rose-400 font-bold text-xs p-1 cursor-pointer" title="Eliminar este renglón">
+              <button onclick="removeElectorRow(${idx})" class="text-slate-500 hover:text-rose-400 font-bold text-sm p-1 cursor-pointer" title="Eliminar este renglón">
                 ✕
               </button>
             </td>
@@ -982,11 +987,11 @@
         const cedulaInput = f.querySelector('.elector-field-cedula');
         if (badgeRow && itemAudit) {
           if (itemAudit.valido) {
-            badgeRow.className = "badge-row-status text-[11px] font-black uppercase px-2 py-0.5 rounded bg-emerald-950/80 text-emerald-400 border border-emerald-500/40 inline-block";
+            badgeRow.className = "badge-row-status text-base font-black uppercase px-2 py-0.5 rounded bg-emerald-950/80 text-emerald-400 border border-emerald-500/40 inline-block";
             badgeRow.innerText = "✓ CONFORME";
             if (cedulaInput) cedulaInput.classList.remove('border-rose-500', 'bg-rose-950/30');
           } else {
-            badgeRow.className = "badge-row-status text-[10px] font-black uppercase px-1.5 py-0.5 rounded bg-rose-950/90 text-rose-300 border border-rose-500 inline-block";
+            badgeRow.className = "badge-row-status text-base font-black uppercase px-1.5 py-0.5 rounded bg-rose-950/90 text-rose-300 border border-rose-500 inline-block";
             badgeRow.innerText = itemAudit.alerta ? itemAudit.alerta.slice(0, 16) : "ALERTA";
             badgeRow.title = itemAudit.alerta || "Dato inválido";
             if (cedulaInput) cedulaInput.classList.add('border-rose-500', 'bg-rose-950/30');
@@ -1155,5 +1160,6 @@
       showToast("Archivo Excel descargado.");
     }
   </script>
+  <script src="js/a11y.js"></script>
 </body>
 </html>

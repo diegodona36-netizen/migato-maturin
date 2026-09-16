@@ -835,7 +835,7 @@ export class TerritorialDashboardApp {
           <td class="py-2.5 px-3 text-right text-emerald-400 font-black font-mono">${this.nf.format(s.habitantes)}</td>
           <td class="py-2.5 px-3 text-right text-purple-300 font-black font-mono">${this.nf.format(s.votantes)}</td>
           <td class="py-2.5 px-3 text-right text-emerald-400 font-bold font-mono">${this.nf.format(s.votoDuro)}</td>
-          <td class="py-2.5 px-3 text-slate-300 truncate max-w-[220px] font-sans text-[11px]" title="${s.centroVotacion}">
+          <td class="py-2.5 px-3 text-slate-300 truncate max-w-[220px] font-sans text-sm" title="${s.centroVotacion}">
             ${s.centroVotacion ? '🏫 ' + s.centroVotacion : '<span class="text-slate-600">Sin asignar</span>'}
           </td>
         </tr>
@@ -1085,16 +1085,16 @@ export class TerritorialDashboardApp {
       const nPct = ((nuevo / total) * 100).toFixed(0);
       summaryEl.innerHTML = `
         <div class="p-1.5 rounded-xl bg-emerald-950/40 border border-emerald-500/30 text-emerald-300">
-          <span class="block text-[9px] text-slate-400">🟢 Duro</span>
-          <strong class="text-xs font-black">${dPct}%</strong>
+          <span class="block text-sm text-slate-400">🟢 Duro</span>
+          <strong class="text-sm font-black">${dPct}%</strong>
         </div>
         <div class="p-1.5 rounded-xl bg-amber-950/40 border border-amber-500/30 text-amber-300">
-          <span class="block text-[9px] text-slate-400">🟡 Blando</span>
-          <strong class="text-xs font-black">${bPct}%</strong>
+          <span class="block text-sm text-slate-400">🟡 Blando</span>
+          <strong class="text-sm font-black">${bPct}%</strong>
         </div>
         <div class="p-1.5 rounded-xl bg-sky-950/40 border border-sky-500/30 text-sky-300">
-          <span class="block text-[9px] text-slate-400">🔵 Nuevo</span>
-          <strong class="text-xs font-black">${nPct}%</strong>
+          <span class="block text-sm text-slate-400">🔵 Nuevo</span>
+          <strong class="text-sm font-black">${nPct}%</strong>
         </div>
       `;
     }
@@ -1164,16 +1164,16 @@ export class TerritorialDashboardApp {
 
       summaryEl.innerHTML = `
         <div class="p-1.5 rounded-xl bg-emerald-950/40 border border-emerald-500/30 text-emerald-300">
-          <span class="block text-[9px] text-slate-400">🟢 Óptimo</span>
-          <strong class="text-xs font-black">${high.length}</strong> <span class="text-[9px] text-slate-400">(${highPct}%)</span>
+          <span class="block text-sm text-slate-400">🟢 Óptimo</span>
+          <strong class="text-sm font-black">${high.length}</strong> <span class="text-sm text-slate-400">(${highPct}%)</span>
         </div>
         <div class="p-1.5 rounded-xl bg-amber-950/40 border border-amber-500/30 text-amber-300">
-          <span class="block text-[9px] text-slate-400">🟡 Medio</span>
-          <strong class="text-xs font-black">${mid.length}</strong> <span class="text-[9px] text-slate-400">(${midPct}%)</span>
+          <span class="block text-sm text-slate-400">🟡 Medio</span>
+          <strong class="text-sm font-black">${mid.length}</strong> <span class="text-sm text-slate-400">(${midPct}%)</span>
         </div>
         <div class="p-1.5 rounded-xl bg-rose-950/40 border border-rose-500/30 text-rose-300">
-          <span class="block text-[9px] text-slate-400">🔴 Crítico</span>
-          <strong class="text-xs font-black">${low.length}</strong> <span class="text-[9px] text-slate-400">(${lowPct}%)</span>
+          <span class="block text-sm text-slate-400">🔴 Crítico</span>
+          <strong class="text-sm font-black">${low.length}</strong> <span class="text-sm text-slate-400">(${lowPct}%)</span>
         </div>
       `;
     }
@@ -1203,32 +1203,32 @@ export class TerritorialDashboardApp {
             
             <div class="p-4 flex flex-col md:flex-row md:items-center justify-between gap-3 hover:bg-[#23176d]/40 transition cursor-pointer" onclick="window.dashboardApp.toggleParish('${p.id}')">
               <div class="flex items-center gap-3 min-w-0">
-                <button type="button" class="text-sky-400 hover:text-white text-xs font-mono font-bold p-1 shrink-0">
+                <button type="button" class="text-sky-400 hover:text-white text-sm font-mono font-bold p-1 shrink-0">
                   ${isParishExpanded ? '▼' : '▶'}
                 </button>
                 <div class="truncate">
                   <div class="flex items-center gap-2">
-                    <span class="text-[10px] font-mono font-bold uppercase text-sky-400">Municipio ${p.munNombre}</span>
+                    <span class="text-sm font-mono font-bold uppercase text-sky-400">Municipio ${p.munNombre}</span>
                   </div>
                   <h3 class="text-base font-black text-white mt-0.5 truncate">${p.nombre}</h3>
                 </div>
               </div>
 
-              <div class="flex flex-wrap items-center gap-2 text-xs font-mono shrink-0">
+              <div class="flex flex-wrap items-center gap-2 text-sm font-mono shrink-0">
                 <div class="bg-[#0e092e] px-2.5 py-1.5 rounded-xl border border-[#2d1f85] text-center">
-                  <span class="text-[9px] text-slate-400 block uppercase">Casas</span>
+                  <span class="text-sm text-slate-400 block uppercase">Casas</span>
                   <strong class="text-amber-400 font-black">${this.nf.format(p.totCasas)}</strong>
                 </div>
                 <div class="bg-[#0e092e] px-2.5 py-1.5 rounded-xl border border-[#2d1f85] text-center">
-                  <span class="text-[9px] text-slate-400 block uppercase">Habitantes</span>
+                  <span class="text-sm text-slate-400 block uppercase">Habitantes</span>
                   <strong class="text-emerald-400 font-black">${this.nf.format(p.totHab)}</strong>
                 </div>
                 <div class="bg-[#0e092e] px-2.5 py-1.5 rounded-xl border border-[#2d1f85] text-center">
-                  <span class="text-[9px] text-purple-300 block uppercase font-bold">Votantes</span>
+                  <span class="text-sm text-purple-300 block uppercase font-bold">Votantes</span>
                   <strong class="text-purple-300 font-black">${this.nf.format(p.totVot)}</strong>
                 </div>
                 <div class="bg-emerald-950/60 px-2 py-1.5 rounded-xl border border-emerald-500/30 text-center">
-                  <span class="text-[9px] text-emerald-400 block uppercase font-bold">🟢 Duro</span>
+                  <span class="text-sm text-emerald-400 block uppercase font-bold">🟢 Duro</span>
                   <strong class="text-emerald-300 font-black">${this.nf.format(p.totDuro || 0)}</strong>
                 </div>
               </div>
@@ -1244,35 +1244,35 @@ export class TerritorialDashboardApp {
                       
                       <div class="p-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2 hover:bg-[#23176d]/40 transition cursor-pointer" onclick="window.dashboardApp.toggleSubparroquia('${eje.id}')">
                         <div class="flex items-center gap-2.5 min-w-0">
-                          <button type="button" class="text-purple-400 hover:text-white text-xs font-mono font-bold p-0.5 shrink-0">
+                          <button type="button" class="text-purple-400 hover:text-white text-sm font-mono font-bold p-0.5 shrink-0">
                             ${isEjeExpanded ? '▼' : '▶'}
                           </button>
                           <span class="text-base select-none shrink-0">${isEjeExpanded ? '📂' : '📁'}</span>
                           <div class="truncate">
-                            <span class="text-xs font-black text-white truncate block">${eje.nombre}</span>
-                            <span class="text-[10px] text-slate-400 font-mono">${eje.sectores.length} sectores</span>
+                            <span class="text-sm font-black text-white truncate block">${eje.nombre}</span>
+                            <span class="text-sm text-slate-400 font-mono">${eje.sectores.length} sectores</span>
                           </div>
                         </div>
 
-                        <div class="flex flex-wrap items-center gap-2 text-xs font-mono shrink-0">
-                          <span class="text-amber-400 font-bold text-[11px]">🏠 ${eje.casas}</span>
+                        <div class="flex flex-wrap items-center gap-2 text-sm font-mono shrink-0">
+                          <span class="text-amber-400 font-bold text-sm">🏠 ${eje.casas}</span>
                           <span class="text-slate-500">•</span>
-                          <span class="text-emerald-400 font-bold text-[11px]">👥 ${eje.habitantes}</span>
+                          <span class="text-emerald-400 font-bold text-sm">👥 ${eje.habitantes}</span>
                           <span class="text-slate-500">•</span>
-                          <span class="text-purple-300 font-black text-[11px]">🗳️ ${eje.votantes}</span>
+                          <span class="text-purple-300 font-black text-sm">🗳️ ${eje.votantes}</span>
                         </div>
                       </div>
 
                       ${isEjeExpanded ? `
                         <div class="px-3 pb-3 pt-1 border-t border-[#2d1f85]/80 overflow-x-auto">
                           ${eje.sectores.length === 0 ? `
-                            <p class="text-xs text-slate-400 italic py-2 text-center">
+                            <p class="text-sm text-slate-400 italic py-2 text-center">
                               No hay sectores trazados aún dentro de este eje.
                             </p>
                           ` : `
-                            <table class="w-full text-left border-collapse text-xs font-mono">
+                            <table class="w-full text-left border-collapse text-sm font-mono">
                               <thead>
-                                <tr class="text-[10px] uppercase text-slate-400 border-b border-[#2d1f85]/80">
+                                <tr class="text-sm uppercase text-slate-400 border-b border-[#2d1f85]/80">
                                   <th class="py-2 px-2">Sector</th>
                                   <th class="py-2 px-2 text-right">Casas</th>
                                   <th class="py-2 px-2 text-right">Habitantes</th>

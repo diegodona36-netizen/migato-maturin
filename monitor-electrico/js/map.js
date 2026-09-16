@@ -77,15 +77,15 @@ export class VenezuelaOutageMap {
         });
 
         const tooltipContent = `
-          <div class="text-xs font-sans p-1.5 min-w-[140px]">
+          <div class="text-sm font-sans p-1.5 min-w-[140px]">
             <div class="flex items-center justify-between gap-2 border-b pb-1 mb-1">
               <strong class="text-slate-900 font-black">${state.nombre}</strong>
-              <span class="text-[9px] font-bold px-1 rounded bg-red-100 text-red-700">${state.tier}</span>
+              <span class="text-sm font-bold px-1 rounded bg-red-100 text-red-700">${state.tier}</span>
             </div>
-            <div class="text-slate-600 text-[11px] space-y-0.5">
+            <div class="text-slate-600 text-sm space-y-0.5">
               <p>⚡ Electricidad: <strong style="color: ${color}">${state.electricidadPct}%</strong></p>
               <p>🌐 Conectividad: <strong class="text-slate-800">${state.conectividadPct}%</strong></p>
-              <p class="text-slate-400 text-[10px]">Score: ${state.score.toLocaleString()}</p>
+              <p class="text-slate-400 text-sm">Score: ${state.score.toLocaleString()}</p>
             </div>
           </div>
         `;

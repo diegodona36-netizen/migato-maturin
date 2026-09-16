@@ -57,9 +57,10 @@
   </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between antialiased">
+  <a href="#main-content" class="skip-link">Saltar al contenido principal</a>
 
   <!-- Cintillo Institucional Superior -->
-  <div class="bg-[#0c2340] text-slate-200 text-[11px] font-bold px-4 py-1.5 flex flex-wrap items-center justify-between border-b border-[#1e3a5f]">
+  <div class="bg-[#0c2340] text-slate-200 text-base font-bold px-4 py-1.5 flex flex-wrap items-center justify-between border-b border-[#1e3a5f]">
     <div class="flex items-center gap-2">
       <span class="text-amber-300">REPÚBLICA BOLIVARIANA DE VENEZUELA</span>
       <span class="text-slate-500">|</span>
@@ -67,7 +68,7 @@
       <span class="text-slate-500">|</span>
       <span class="text-slate-300">COMANDO REGIONAL DE CONTROL ELECTORAL</span>
     </div>
-    <div class="font-mono text-[10px] text-slate-300">
+    <div class="font-mono text-sm text-slate-300">
       PORTAL OFICIAL DE AUTENTICACIÓN • SICAT-v2.6
     </div>
   </div>
@@ -81,35 +82,35 @@
         <div class="w-12 h-12 bg-white p-1 border border-slate-300 mx-auto mb-2 flex items-center justify-center">
           <img src="assets/logo-migato.png" alt="MIGATO" class="w-full h-full object-contain">
         </div>
-        <p class="text-[10px] text-amber-300 font-bold uppercase tracking-wider font-mono">
+        <p class="text-base text-amber-300 font-bold uppercase tracking-wider font-mono">
           MOVIMIENTO INDEPENDIENTE GANAMOS TODOS • ESTADO MONAGAS
         </p>
         <h1 class="text-base font-black uppercase tracking-tight mt-0.5">
           SALA DE CONTROL Y AUDITORÍA TERRITORIAL (SICAT)
         </h1>
-        <p class="text-[11px] text-slate-200 mt-0.5 font-mono">
+        <p class="text-base text-slate-200 mt-0.5 font-mono">
           Ingreso a la Sala de Mando, Padrón y Validación Forense de Actas
         </p>
       </div>
 
       <div class="p-5 space-y-4">
         <!-- Advertencia Institucional de Uso Interno -->
-        <div class="bg-[#f8fafc] border border-amber-300 p-2.5 text-[11px] text-amber-900 font-mono">
+        <div class="bg-[#f8fafc] border border-amber-300 p-2.5 text-base text-amber-900 font-mono">
           <strong>AVISO OFICIAL:</strong> Este terminal es para uso exclusivo de funcionarios y coordinadores debidamente acreditados. Toda consulta queda foliada y auditada en el servidor central.
         </div>
 
         <!-- Formulario de Acceso -->
         <form id="login-form" class="space-y-3">
           <div>
-            <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Cédula de Identidad o Usuario:</label>
+            <label class="block text-sm font-bold text-slate-700 uppercase mb-1">Cédula de Identidad o Usuario:</label>
             <input type="text" id="username" value="V-18450123" required class="gov-input font-mono">
           </div>
 
           <div>
-            <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Contraseña de Seguridad:</label>
+            <label class="block text-sm font-bold text-slate-700 uppercase mb-1">Contraseña de Seguridad:</label>
             <div class="relative">
               <input type="password" id="password" value="migato2026" required class="gov-input font-mono pr-8">
-              <button type="button" onclick="togglePasswordVisibility()" class="absolute inset-y-0 right-0 px-2.5 flex items-center text-slate-600 hover:text-slate-900 text-xs">
+              <button type="button" onclick="togglePasswordVisibility()" class="absolute inset-y-0 right-0 px-2.5 flex items-center text-slate-600 hover:text-slate-900 text-sm">
                 <i id="eye-icon" class="fa-solid fa-eye"></i>
               </button>
             </div>
@@ -125,14 +126,14 @@
 
         <!-- Tabla Formal de Perfiles de Demostración -->
         <div class="pt-3 border-t border-slate-300">
-          <p class="text-[11px] font-bold text-slate-800 uppercase mb-2 font-mono">
+          <p class="text-base font-bold text-slate-800 uppercase mb-2 font-mono">
             Directorio de Acceso por Nivel de Mando:
           </p>
           
           <div class="border border-slate-300 overflow-x-auto">
-            <table class="w-full text-left font-mono text-[11px] border-collapse">
+            <table class="w-full text-left font-mono text-base border-collapse">
               <thead>
-                <tr class="bg-[#2c3e50] text-white text-[10px] uppercase font-bold">
+                <tr class="bg-[#2c3e50] text-white text-base uppercase font-bold">
                   <th class="p-1.5 border-r border-slate-600">NIVEL</th>
                   <th class="p-1.5 border-r border-slate-600">JURISDICCIÓN</th>
                   <th class="p-1.5 border-r border-slate-600">MÓDULO 4</th>
@@ -145,7 +146,7 @@
                   <td class="p-1.5 text-slate-700 border-r border-slate-300">13 Municipios / 44 Parr.</td>
                   <td class="p-1.5 text-emerald-800 font-bold border-r border-slate-300">HABILITADO</td>
                   <td class="p-1 text-center">
-                    <button onclick="loginAs('gobernador', 'Comando de Dirección Regional')" class="bg-slate-700 hover:bg-slate-900 text-white px-2 py-0.5 font-bold text-[10px]">
+                    <button onclick="loginAs('gobernador', 'Comando de Dirección Regional')" class="bg-slate-700 hover:bg-slate-900 text-white px-2 py-0.5 font-bold text-sm">
                       ENTRAR
                     </button>
                   </td>
@@ -155,7 +156,7 @@
                   <td class="p-1.5 text-slate-700 border-r border-slate-300">Maturín (Local)</td>
                   <td class="p-1.5 text-red-800 font-bold border-r border-slate-300">BLOQUEADO</td>
                   <td class="p-1 text-center">
-                    <button onclick="loginAs('municipal', 'Comando Municipal Maturín')" class="bg-slate-700 hover:bg-slate-900 text-white px-2 py-0.5 font-bold text-[10px]">
+                    <button onclick="loginAs('municipal', 'Comando Municipal Maturín')" class="bg-slate-700 hover:bg-slate-900 text-white px-2 py-0.5 font-bold text-sm">
                       ENTRAR
                     </button>
                   </td>
@@ -165,7 +166,7 @@
                   <td class="p-1.5 text-slate-700 border-r border-slate-300">Alto de Los Godos</td>
                   <td class="p-1.5 text-red-800 font-bold border-r border-slate-300">BLOQUEADO</td>
                   <td class="p-1 text-center">
-                    <button onclick="loginAs('parroquial', 'Enlace Parroquial Los Godos')" class="bg-slate-700 hover:bg-slate-900 text-white px-2 py-0.5 font-bold text-[10px]">
+                    <button onclick="loginAs('parroquial', 'Enlace Parroquial Los Godos')" class="bg-slate-700 hover:bg-slate-900 text-white px-2 py-0.5 font-bold text-sm">
                       ENTRAR
                     </button>
                   </td>
@@ -176,7 +177,7 @@
         </div>
 
         <div class="pt-2 text-center">
-          <a href="index.html" class="text-xs text-blue-900 font-bold hover:underline font-mono">
+          <a href="index.html" class="text-base text-blue-900 font-bold hover:underline font-mono">
             ← Volver a la Sala de Mando Central
           </a>
         </div>
@@ -187,7 +188,7 @@
   </main>
 
   <!-- Pie de Página Institucional -->
-  <footer class="bg-[#cbd5e1] border-t border-[#94a3b8] py-1.5 px-4 text-center text-[10px] text-slate-700 font-mono">
+  <footer class="bg-[#cbd5e1] border-t border-[#94a3b8] py-1.5 px-4 text-centertext-sm text-slate-700 font-mono">
     DIRECCIÓN DE TECNOLOGÍA Y AUDITORÍA ELECTORAL • COMANDO MONAGAS 2026 • ACCESO AUDITADO
   </footer>
 
@@ -249,5 +250,10 @@
       }
     });
   </script>
+          <button type="button" id="btn-toggle-contrast" class="px-2.5 py-1.5 rounded-xl bg-[#1d1554] hover:bg-[#23176d] text-amber-400 border border-amber-500/40 text-sm font-bold flex items-center gap-1.5 shadow transition active:scale-95" title="Alto contraste" aria-label="Activar modo alto contraste">
+            <span aria-hidden="true">◐</span>
+            <span class="hidden sm:inline">Contraste</span>
+          </button>
+      <script src="js/a11y.js"></script>
 </body>
 </html>

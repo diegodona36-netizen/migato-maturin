@@ -22,6 +22,7 @@
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body class="bg-slate-100 text-slate-800 min-h-screen flex flex-col antialiased">
+  <a href="#main-content" class="skip-link">Saltar al contenido principal</a>
 
   <!-- ============================================================== -->
   <!-- TOP GLOBAL HEADER -->
@@ -38,9 +39,9 @@
           <div>
             <h1 class="text-base sm:text-lg font-black tracking-tight text-white flex items-center gap-2 flex-wrap">
               <span>Maturín • Diagnóstico Hidráulico de Drenajes</span>
-              <span class="text-[10px] font-bold bg-sky-500/20 text-sky-300 border border-sky-500/30 px-2 py-0.5 rounded-full uppercase">OFICIAL • 68 CAÑOS</span>
+              <span class="text-base font-bold bg-sky-500/20 text-sky-300 border border-sky-500/30 px-2 py-0.5 rounded-full uppercase">OFICIAL • 68 CAÑOS</span>
             </h1>
-            <p class="text-xs text-slate-400 font-medium">Modelado HEC-RAS 2D • 41 Mecanizados (Jumbo) • 27 Manuales</p>
+            <p class="text-base text-slate-400 font-medium">Modelado HEC-RAS 2D • 41 Mecanizados (Jumbo) • 27 Manuales</p>
           </div>
         </div>
 
@@ -49,19 +50,19 @@
           
           <!-- Selector de Lluvia / Tormenta -->
           <div class="inline-flex rounded-xl border border-[#2d1f85] p-0.5 bg-[#0e092e] shadow-inner">
-            <button data-intensity="20" class="storm-btn px-2.5 sm:px-3 py-1.5 text-xs font-semibold rounded-lg text-slate-300 hover:bg-[#23176d] transition" title="Lluvia Moderada 20 mm/h">
+            <button data-intensity="20" class="storm-btn px-2.5 sm:px-3 py-1.5 text-sm font-semibold rounded-lg text-slate-300 hover:bg-[#23176d] transition" title="Lluvia Moderada 20 mm/h">
               🟢 20 mm/h
             </button>
-            <button data-intensity="50" class="storm-btn px-2.5 sm:px-3 py-1.5 text-xs font-bold rounded-lg bg-sky-600 text-white transition shadow-sm" title="Tormenta 5 Años 50 mm/h">
+            <button data-intensity="50" class="storm-btn px-2.5 sm:px-3 py-1.5 text-sm font-bold rounded-lg bg-sky-600 text-white transition shadow-sm" title="Tormenta 5 Años 50 mm/h">
               🟡 50 mm/h
             </button>
-            <button data-intensity="90" class="storm-btn px-2.5 sm:px-3 py-1.5 text-xs font-bold rounded-lg text-slate-300 hover:bg-[#23176d] transition" title="Vaguada Torrencial 90 mm/h">
+            <button data-intensity="90" class="storm-btn px-2.5 sm:px-3 py-1.5 text-sm font-bold rounded-lg text-slate-300 hover:bg-[#23176d] transition" title="Vaguada Torrencial 90 mm/h">
               🔴 90 mm/h
             </button>
           </div>
 
           <!-- Botón Ficha Técnica (PIN) -->
-          <button id="btn-open-inspection-modal" class="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-xs font-bold shadow-md transition flex items-center gap-1.5">
+          <button id="btn-open-inspection-modal" class="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-sm font-bold shadow-md transition flex items-center gap-1.5">
             <i data-lucide="clipboard-check" class="w-4 h-4"></i>
             <span>+ Ficha Técnica (PIN)</span>
           </button>
@@ -78,28 +79,32 @@
     <!-- Navigation Tabs Bar -->
     <div class="bg-[#100b33] border-t border-[#2d1f85] px-4 sm:px-6">
       <div class="max-w-7xl mx-auto flex items-center overflow-x-auto no-scrollbar gap-1.5 py-1.5">
-        <button data-tab="tab-visor" class="nav-tab-btn px-3.5 py-2 text-xs sm:text-sm font-bold rounded-lg bg-sky-600 text-white transition flex items-center gap-1.5 shrink-0 shadow-sm">
+        <button data-tab="tab-visor" class="nav-tab-btn px-3.5 py-2 text-sm sm:text-base font-bold rounded-lg bg-sky-600 text-white transition flex items-center gap-1.5 shrink-0 shadow-sm">
           <i data-lucide="map-pin" class="w-4 h-4"></i>
           <span>Visor de Caños y Cuencas (68)</span>
         </button>
 
-        <button data-tab="tab-simulador" class="nav-tab-btn px-3.5 py-2 text-xs sm:text-sm font-medium rounded-lg text-slate-400 hover:bg-[#23176d] transition flex items-center gap-1.5 shrink-0">
+        <button data-tab="tab-simulador" class="nav-tab-btn px-3.5 py-2 text-sm sm:text-base font-medium rounded-lg text-slate-400 hover:bg-[#23176d] transition flex items-center gap-1.5 shrink-0">
           <i data-lucide="gauge" class="w-4 h-4"></i>
           <span>Simulador HEC-RAS 2D</span>
         </button>
 
-        <button data-tab="tab-puntos" class="nav-tab-btn px-3.5 py-2 text-xs sm:text-sm font-medium rounded-lg text-slate-400 hover:bg-[#23176d] transition flex items-center gap-1.5 shrink-0">
+        <button data-tab="tab-puntos" class="nav-tab-btn px-3.5 py-2 text-sm sm:text-base font-medium rounded-lg text-slate-400 hover:bg-[#23176d] transition flex items-center gap-1.5 shrink-0">
           <i data-lucide="alert-triangle" class="w-4 h-4"></i>
           <span>Puntos Críticos y Alcantarillas</span>
         </button>
 
-        <button data-tab="tab-obras" class="nav-tab-btn px-3.5 py-2 text-xs sm:text-sm font-medium rounded-lg text-slate-400 hover:bg-[#23176d] transition flex items-center gap-1.5 shrink-0">
+        <button data-tab="tab-obras" class="nav-tab-btn px-3.5 py-2 text-sm sm:text-base font-medium rounded-lg text-slate-400 hover:bg-[#23176d] transition flex items-center gap-1.5 shrink-0">
           <i data-lucide="truck" class="w-4 h-4"></i>
           <span>Plan de Obras y Dragado</span>
         </button>
       </div>
     </div>
-  </header>
+            <button type="button" id="btn-toggle-contrast" class="px-2.5 py-1.5 rounded-xl bg-[#1d1554] hover:bg-[#23176d] text-amber-400 border border-amber-500/40 text-sm font-bold flex items-center gap-1.5 shadow transition active:scale-95" title="Alto contraste" aria-label="Activar modo alto contraste">
+            <span aria-hidden="true">◐</span>
+            <span class="hidden sm:inline">Contraste</span>
+          </button>
+        </header>
 
   <!-- ============================================================== -->
   <!-- SUMMARY KPIS BAR -->
@@ -111,20 +116,20 @@
       
       <!-- Parroquias Pills -->
       <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5">
-        <span class="text-[11px] font-black text-slate-400 uppercase tracking-wider pl-1 shrink-0">Parroquia:</span>
-        <button data-parroquia="todas" class="parroquia-pill px-2.5 py-1 text-xs font-bold rounded-lg bg-sky-600 text-white transition shrink-0">Todas (68)</button>
-        <button data-parroquia="san-simon" class="parroquia-pill px-2.5 py-1 text-xs font-medium rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 transition shrink-0">San Simón (18)</button>
-        <button data-parroquia="los-godos" class="parroquia-pill px-2.5 py-1 text-xs font-medium rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 transition shrink-0">Los Godos (16)</button>
-        <button data-parroquia="las-cocuizas" class="parroquia-pill px-2.5 py-1 text-xs font-medium rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 transition shrink-0">Las Cocuizas (14)</button>
-        <button data-parroquia="boqueron" class="parroquia-pill px-2.5 py-1 text-xs font-medium rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 transition shrink-0">Boquerón (12)</button>
-        <button data-parroquia="santa-cruz" class="parroquia-pill px-2.5 py-1 text-xs font-medium rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 transition shrink-0">Santa Cruz (8)</button>
+        <span class="text-base font-black text-slate-400 uppercase tracking-wider pl-1 shrink-0">Parroquia:</span>
+        <button data-parroquia="todas" class="parroquia-pill px-2.5 py-1 text-sm font-bold rounded-lg bg-sky-600 text-white transition shrink-0">Todas (68)</button>
+        <button data-parroquia="san-simon" class="parroquia-pill px-2.5 py-1 text-sm font-medium rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 transition shrink-0">San Simón (18)</button>
+        <button data-parroquia="los-godos" class="parroquia-pill px-2.5 py-1 text-sm font-medium rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 transition shrink-0">Los Godos (16)</button>
+        <button data-parroquia="las-cocuizas" class="parroquia-pill px-2.5 py-1 text-sm font-medium rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 transition shrink-0">Las Cocuizas (14)</button>
+        <button data-parroquia="boqueron" class="parroquia-pill px-2.5 py-1 text-sm font-medium rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 transition shrink-0">Boquerón (12)</button>
+        <button data-parroquia="santa-cruz" class="parroquia-pill px-2.5 py-1 text-sm font-medium rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 transition shrink-0">Santa Cruz (8)</button>
       </div>
 
       <!-- Tipo Intervención -->
       <div class="flex items-center gap-1.5 shrink-0 pt-1 sm:pt-0 border-t sm:border-t-0 border-slate-100">
-        <button data-tipo="todos" class="tipo-intervencion-pill px-2 py-1 text-xs font-bold rounded-lg bg-purple-600 text-white transition">Todos</button>
-        <button data-tipo="MECANIZADO" class="tipo-intervencion-pill px-2 py-1 text-xs font-medium rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 transition">🚜 Mecanizado (41)</button>
-        <button data-tipo="MANUAL" class="tipo-intervencion-pill px-2 py-1 text-xs font-medium rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 transition">🧤 Manual (27)</button>
+        <button data-tipo="todos" class="tipo-intervencion-pill px-2 py-1 text-sm font-bold rounded-lg bg-purple-600 text-white transition">Todos</button>
+        <button data-tipo="MECANIZADO" class="tipo-intervencion-pill px-2 py-1 text-sm font-medium rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 transition">🚜 Mecanizado (41)</button>
+        <button data-tipo="MANUAL" class="tipo-intervencion-pill px-2 py-1 text-sm font-medium rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 transition">🧤 Manual (27)</button>
       </div>
 
     </div>
@@ -137,7 +142,7 @@
           <i data-lucide="alert-octagon" class="w-6 h-6"></i>
         </div>
         <div>
-          <p class="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Desborde de Caños</p>
+          <p class="text-base font-semibold text-slate-500 uppercase tracking-wider">Desborde de Caños</p>
           <h3 id="kpi-canales-desbordados" class="text-xl sm:text-2xl font-black text-red-600">Calculando...</h3>
         </div>
       </div>
@@ -147,7 +152,7 @@
           <i data-lucide="home" class="w-6 h-6"></i>
         </div>
         <div>
-          <p class="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Familias en Riesgo</p>
+          <p class="text-base font-semibold text-slate-500 uppercase tracking-wider">Familias en Riesgo</p>
           <h3 id="kpi-viviendas-afectadas" class="text-xl sm:text-2xl font-black text-slate-900">0</h3>
         </div>
       </div>
@@ -157,15 +162,15 @@
           <i data-lucide="layers" class="w-6 h-6"></i>
         </div>
         <div>
-          <p class="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Dragado Requerido</p>
+          <p class="text-base font-semibold text-slate-500 uppercase tracking-wider">Dragado Requerido</p>
           <h3 id="kpi-dragado-total" class="text-xl sm:text-2xl font-black text-sky-600">0 m³</h3>
         </div>
       </div>
 
       <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
         <div>
-          <p class="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Nivel de Alerta</p>
-          <span id="kpi-alerta-global" class="text-xs font-black px-2.5 py-1 rounded-full border bg-emerald-100 text-emerald-800 border-emerald-300 mt-1 inline-block">NORMAL</span>
+          <p class="text-base font-semibold text-slate-500 uppercase tracking-wider">Nivel de Alerta</p>
+          <span id="kpi-alerta-global" class="text-base font-black px-2.5 py-1 rounded-full border bg-emerald-100 text-emerald-800 border-emerald-300 mt-1 inline-block">NORMAL</span>
         </div>
         <div class="w-9 h-9 rounded-xl bg-slate-50 flex items-center justify-center text-slate-400">
           <i data-lucide="shield-alert" class="w-5 h-5"></i>
@@ -190,10 +195,10 @@
         <div class="lg:col-span-2 bg-white rounded-2xl border border-slate-200 shadow-sm p-4 sm:p-5 flex flex-col">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-slate-100 gap-2">
             <div>
-              <h2 class="text-sm font-black text-slate-900 tracking-wide uppercase flex items-center gap-2">
+              <h2 class="text-base font-black text-slate-900 tracking-wide uppercase flex items-center gap-2">
                 <span>Mapa Hidráulico de Drenajes • Red 68 Caños</span>
               </h2>
-              <p class="text-[11px] text-slate-500 flex items-center gap-1.5 flex-wrap mt-0.5">
+              <p class="text-base text-slate-500 flex items-center gap-1.5 flex-wrap mt-0.5">
                 <span>Haz clic en un caño para ver su cálculo hidráulico</span>
                 <span class="text-slate-300">•</span>
                 <span class="inline-flex items-center gap-1 text-sky-600 font-bold"><span class="w-2 h-2 rounded-full bg-sky-500"></span> Normal</span>
@@ -202,7 +207,7 @@
               </p>
             </div>
             <div class="flex items-center gap-2">
-              <button onclick="window.drainageApp.runSimulation()" class="px-2.5 py-1 text-[11px] font-bold text-slate-600 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-lg transition flex items-center gap-1">
+              <button onclick="window.drainageApp.runSimulation()" class="px-2.5 py-1 text-sm font-bold text-slate-600 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-lg transition flex items-center gap-1">
                 <i data-lucide="refresh-cw" class="w-3 h-3"></i> Recalcular
               </button>
             </div>
@@ -212,7 +217,7 @@
           <div id="maturin-drainage-map" class="w-full h-[460px] sm:h-[520px] rounded-xl mt-3 border border-slate-100 shadow-inner z-10"></div>
           
           <div class="pt-2 text-right">
-            <span class="text-[10px] text-slate-400 font-mono">© RED OFICIAL DE 68 CAÑOS • MODELO HEC-RAS 2D</span>
+            <span class="text-base text-slate-400 font-mono">© RED OFICIAL DE 68 CAÑOS • MODELO HEC-RAS 2D</span>
           </div>
         </div>
 
@@ -230,11 +235,11 @@
           <!-- Perfil Longitudinal HEC-RAS -->
           <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 space-y-3">
             <div class="flex items-center justify-between border-b pb-2">
-              <h3 class="text-xs font-black text-slate-900 tracking-wider uppercase flex items-center gap-1.5">
+              <h3 class="text-base font-black text-slate-900 tracking-wider uppercase flex items-center gap-1.5">
                 <i data-lucide="trending-up" class="w-4 h-4 text-sky-600"></i>
                 <span>Perfil Longitudinal de Agua</span>
               </h3>
-              <span class="text-[10px] text-slate-400 font-mono">Cota vs Distancia</span>
+              <span class="text-base text-slate-400 font-mono">Cota vs Distancia</span>
             </div>
 
             <div class="h-48 relative">
@@ -259,7 +264,7 @@
               <i data-lucide="gauge" class="w-5 h-5 text-sky-600"></i>
               <span>Simulación Hidráulica HEC-RAS: Capacidad vs Caudal de Tormenta</span>
             </h2>
-            <p class="text-xs text-slate-500">
+            <p class="text-base text-slate-500">
               Evaluación del comportamiento de los caños de Maturín ante lluvias torrenciales.
             </p>
           </div>
@@ -270,18 +275,18 @@
           <canvas id="capacity-comparison-chart"></canvas>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4 border-t border-slate-100 text-xs">
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4 border-t border-slate-100 text-base">
           <div class="p-3 bg-sky-50 rounded-xl border border-sky-100">
             <p class="font-bold text-sky-950">📐 68 Caños Priorizados</p>
-            <p class="text-slate-600 text-[11px] mt-1">Censo oficial municipal dividido en 41 caños mecanizados (Jumbo) y 27 de saneamiento manual.</p>
+            <p class="text-slate-600text-sm mt-1">Censo oficial municipal dividido en 41 caños mecanizados (Jumbo) y 27 de saneamiento manual.</p>
           </div>
           <div class="p-3 bg-amber-50 rounded-xl border border-amber-100">
             <p class="font-bold text-amber-950">🌊 Modelado de Manchas 2D</p>
-            <p class="text-slate-600 text-[11px] mt-1">Proyecta la inundación sobre las calles cuando el nivel del agua supera la profundidad del cauce.</p>
+            <p class="text-slate-600text-sm mt-1">Proyecta la inundación sobre las calles cuando el nivel del agua supera la profundidad del cauce.</p>
           </div>
           <div class="p-3 bg-emerald-50 rounded-xl border border-emerald-100">
             <p class="font-bold text-emerald-950">🚜 Mitigación por Dragado</p>
-            <p class="text-slate-600 text-[11px] mt-1">Calcula los metros cúbicos de tierra y basura a remover con maquinaria pesada.</p>
+            <p class="text-slate-600text-sm mt-1">Calcula los metros cúbicos de tierra y basura a remover con maquinaria pesada.</p>
           </div>
         </div>
 
@@ -300,13 +305,13 @@
               <i data-lucide="alert-triangle" class="w-5 h-5 text-amber-500"></i>
               <span>Matriz de Puntos Críticos y Alcantarillas Colapsadas</span>
             </h2>
-            <p class="text-xs text-slate-500">
+            <p class="text-base text-slate-500">
               Inventario de puentes, cajones de paso y sumideros inspeccionados por las brigadas técnicas en Maturín.
             </p>
           </div>
 
           <div class="flex items-center gap-2">
-            <button id="btn-export-drenajes-csv" class="px-4 py-2 text-xs font-bold text-slate-700 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-xl transition flex items-center gap-1.5 shadow-sm">
+            <button id="btn-export-drenajes-csv" class="px-4 py-2 text-sm font-bold text-slate-700 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-xl transition flex items-center gap-1.5 shadow-sm">
               <i data-lucide="download" class="w-4 h-4 text-emerald-600"></i>
               <span>Exportar Matriz (CSV)</span>
             </button>
@@ -315,8 +320,8 @@
 
         <!-- Table -->
         <div class="overflow-x-auto border border-slate-200 rounded-xl">
-          <table class="w-full text-xs text-left">
-            <thead class="bg-slate-50 border-b border-slate-200 text-slate-500 font-bold uppercase text-[10px]">
+          <table class="w-full text-base text-left">
+            <thead class="bg-slate-50 border-b border-slate-200 text-slate-500 font-bold uppercasetext-base">
               <tr>
                 <th class="px-4 py-3">Código</th>
                 <th class="px-4 py-3">Punto de Inspección / Parroquia</th>
@@ -347,7 +352,7 @@
             <i data-lucide="truck" class="w-5 h-5 text-sky-600"></i>
             <span>Plan Ejecutivo de Obras y Dragado de Maturín (68 Caños)</span>
           </h2>
-          <p class="text-xs text-slate-600 mt-1">
+          <p class="text-base text-slate-600 mt-1">
             Recomendaciones de ingeniería civil con volúmenes de dragado y maquinaria requerida para mitigar inundaciones en el municipio.
           </p>
         </div>
@@ -375,8 +380,8 @@
             <i data-lucide="shield-check" class="w-5 h-5"></i>
           </div>
           <div>
-            <h3 class="font-bold text-sm sm:text-base text-white">Ficha Técnica de Inspección</h3>
-            <p class="text-[11px] text-slate-400">Levantamiento de Campo • Brigada Técnica Interna</p>
+            <h3 class="font-bold text-base sm:text-base text-white">Ficha Técnica de Inspección</h3>
+            <p class="text-base text-slate-400">Levantamiento de Campo • Brigada Técnica Interna</p>
           </div>
         </div>
         <button id="btn-close-inspection-modal" class="text-slate-400 hover:text-white transition p-1">
@@ -390,21 +395,21 @@
         <!-- PIN de Seguridad de Brigada -->
         <div class="p-3 bg-amber-50 border border-amber-200 rounded-xl flex items-center justify-between gap-2">
           <div>
-            <label class="block text-xs font-bold text-amber-950 uppercase">PIN de Brigada / Equipo Político *</label>
-            <p class="text-[10px] text-amber-700">Protege la base de datos técnica (PIN: 2026)</p>
+            <label class="block text-sm font-bold text-amber-950 uppercase">PIN de Brigada / Equipo Político *</label>
+            <p class="text-base text-amber-700">Protege la base de datos técnica (PIN: 2026)</p>
           </div>
-          <input type="password" id="insp-pin" required placeholder="PIN" value="2026" class="w-24 px-3 py-1.5 text-xs text-center font-mono font-bold bg-white border border-amber-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:outline-none">
+          <input type="password" id="insp-pin" required placeholder="PIN" value="2026" class="w-24 px-3 py-1.5 text-sm text-center font-mono font-bold bg-white border border-amber-300 rounded-lg focus:ring-2 focus:ring-amber-500 ">
         </div>
 
         <!-- Inspector y Parroquia -->
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
-            <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Nombre del Inspector / Brigadista *</label>
-            <input type="text" id="insp-inspector" required placeholder="Ej: Ing. Carlos Mendoza" class="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-300 rounded-xl text-slate-800 focus:ring-2 focus:ring-sky-500 focus:outline-none">
+            <label class="block text-sm font-bold text-slate-700 uppercase mb-1">Nombre del Inspector / Brigadista *</label>
+            <input type="text" id="insp-inspector" required placeholder="Ej: Ing. Carlos Mendoza" class="w-full px-3 py-2 text-sm bg-slate-50 border border-slate-300 rounded-xl text-slate-800 focus:ring-2 focus:ring-sky-500 ">
           </div>
           <div>
-            <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Parroquia *</label>
-            <select id="insp-parroquia" required class="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-300 rounded-xl text-slate-800 focus:ring-2 focus:ring-sky-500 focus:outline-none">
+            <label class="block text-sm font-bold text-slate-700 uppercase mb-1">Parroquia *</label>
+            <select id="insp-parroquia" required class="w-full px-3 py-2 text-sm bg-slate-50 border border-slate-300 rounded-xl text-slate-800 focus:ring-2 focus:ring-sky-500 ">
               <option value="San Simón">San Simón (18 caños)</option>
               <option value="Alto de Los Godos">Alto de Los Godos (16 caños)</option>
               <option value="Las Cocuizas">Las Cocuizas (14 caños)</option>
@@ -417,22 +422,22 @@
         <!-- Caño Asignado (Selección de los 68 caños) y Nombre del Punto -->
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
-            <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Caño / Eje (Catálogo de 68) *</label>
-            <select id="insp-cano-id" required class="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-300 rounded-xl text-slate-800 focus:ring-2 focus:ring-sky-500 focus:outline-none">
+            <label class="block text-sm font-bold text-slate-700 uppercase mb-1">Caño / Eje (Catálogo de 68) *</label>
+            <select id="insp-cano-id" required class="w-full px-3 py-2 text-sm bg-slate-50 border border-slate-300 rounded-xl text-slate-800 focus:ring-2 focus:ring-sky-500 ">
               <!-- Inyectado dinámicamente con los 68 caños agrupados -->
             </select>
           </div>
           <div>
-            <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Punto / Sector Específico *</label>
-            <input type="text" id="insp-nombre-punto" required placeholder="Ej: Puente Calle 10 Brisas del Orinoco" class="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-300 rounded-xl text-slate-800 focus:ring-2 focus:ring-sky-500 focus:outline-none">
+            <label class="block text-sm font-bold text-slate-700 uppercase mb-1">Punto / Sector Específico *</label>
+            <input type="text" id="insp-nombre-punto" required placeholder="Ej: Puente Calle 10 Brisas del Orinoco" class="w-full px-3 py-2 text-sm bg-slate-50 border border-slate-300 rounded-xl text-slate-800 focus:ring-2 focus:ring-sky-500 ">
           </div>
         </div>
 
         <!-- Tipo de Estructura y % Sedimentación -->
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
-            <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Tipo de Estructura Hidráulica *</label>
-            <select id="insp-tipo-estructura" required class="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-300 rounded-xl text-slate-800 focus:ring-2 focus:ring-sky-500 focus:outline-none">
+            <label class="block text-sm font-bold text-slate-700 uppercase mb-1">Tipo de Estructura Hidráulica *</label>
+            <select id="insp-tipo-estructura" required class="w-full px-3 py-2 text-sm bg-slate-50 border border-slate-300 rounded-xl text-slate-800 focus:ring-2 focus:ring-sky-500 ">
               <option value="Cajón Doble Concreto">Cajón Doble Concreto</option>
               <option value="Cajón Simple Concreto">Cajón Simple Concreto</option>
               <option value="Alcantarilla Tubular Metálica/Concreto">Alcantarilla Tubular</option>
@@ -443,20 +448,20 @@
             </select>
           </div>
           <div>
-            <label class="block text-xs font-bold text-slate-700 uppercase mb-1">% Obstrucción / Basura (0-100%) *</label>
-            <input type="number" id="insp-sedimentacion" min="0" max="100" required value="70" class="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-300 rounded-xl text-slate-800 focus:ring-2 focus:ring-sky-500 focus:outline-none">
+            <label class="block text-sm font-bold text-slate-700 uppercase mb-1">% Obstrucción / Basura (0-100%) *</label>
+            <input type="number" id="insp-sedimentacion" min="0" max="100" required value="70" class="w-full px-3 py-2 text-sm bg-slate-50 border border-slate-300 rounded-xl text-slate-800 focus:ring-2 focus:ring-sky-500 ">
           </div>
         </div>
 
         <!-- Estado de Talud y Nivel de Riesgo -->
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
-            <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Estado de Taludes / Muros</label>
-            <input type="text" id="insp-talud" placeholder="Ej: Erosión en bases, maleza abundante" class="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-300 rounded-xl text-slate-800 focus:ring-2 focus:ring-sky-500 focus:outline-none">
+            <label class="block text-sm font-bold text-slate-700 uppercase mb-1">Estado de Taludes / Muros</label>
+            <input type="text" id="insp-talud" placeholder="Ej: Erosión en bases, maleza abundante" class="w-full px-3 py-2 text-sm bg-slate-50 border border-slate-300 rounded-xl text-slate-800 focus:ring-2 focus:ring-sky-500 ">
           </div>
           <div>
-            <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Nivel de Riesgo *</label>
-            <select id="insp-riesgo" required class="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-300 rounded-xl text-slate-800 focus:ring-2 focus:ring-sky-500 focus:outline-none">
+            <label class="block text-sm font-bold text-slate-700 uppercase mb-1">Nivel de Riesgo *</label>
+            <select id="insp-riesgo" required class="w-full px-3 py-2 text-sm bg-slate-50 border border-slate-300 rounded-xl text-slate-800 focus:ring-2 focus:ring-sky-500 ">
               <option value="CRÍTICO">🔴 CRÍTICO (Desborde inminente)</option>
               <option value="ALTO">🟠 ALTO (Bordo libre < 30cm)</option>
               <option value="MEDIO">🟡 MEDIO (Riesgo moderado)</option>
@@ -468,22 +473,22 @@
         <!-- Familias en Riesgo y Obra Requerida -->
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
-            <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Familias en Riesgo Directo *</label>
-            <input type="number" id="insp-familias" min="0" required placeholder="Ej: 120" class="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-300 rounded-xl text-slate-800 focus:ring-2 focus:ring-sky-500 focus:outline-none">
+            <label class="block text-sm font-bold text-slate-700 uppercase mb-1">Familias en Riesgo Directo *</label>
+            <input type="number" id="insp-familias" min="0" required placeholder="Ej: 120" class="w-full px-3 py-2 text-sm bg-slate-50 border border-slate-300 rounded-xl text-slate-800 focus:ring-2 focus:ring-sky-500 ">
           </div>
           <div>
-            <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Obra / Acción Requerida *</label>
-            <input type="text" id="insp-obra" required placeholder="Ej: Dragado con Jumbo (200m³) y desmalezamiento" class="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-300 rounded-xl text-slate-800 focus:ring-2 focus:ring-sky-500 focus:outline-none">
+            <label class="block text-sm font-bold text-slate-700 uppercase mb-1">Obra / Acción Requerida *</label>
+            <input type="text" id="insp-obra" required placeholder="Ej: Dragado con Jumbo (200m³) y desmalezamiento" class="w-full px-3 py-2 text-sm bg-slate-50 border border-slate-300 rounded-xl text-slate-800 focus:ring-2 focus:ring-sky-500 ">
           </div>
         </div>
 
         <!-- GPS Coordenadas -->
         <div class="p-3 bg-slate-100 rounded-xl border border-slate-200 flex items-center justify-between gap-2">
           <div>
-            <span class="text-xs font-bold text-slate-800 block">Geolocalización GPS</span>
-            <span class="text-[10px] text-slate-500">Captura la coordenada exacta del puente o caño</span>
+            <span class="text-base font-bold text-slate-800 block">Geolocalización GPS</span>
+            <span class="text-base text-slate-500">Captura la coordenada exacta del puente o caño</span>
           </div>
-          <button type="button" id="btn-insp-gps" class="px-3 py-1.5 bg-white hover:bg-slate-50 border border-slate-300 rounded-lg text-xs font-bold text-slate-700 transition flex items-center gap-1">
+          <button type="button" id="btn-insp-gps" class="px-3 py-1.5 bg-white hover:bg-slate-50 border border-slate-300 rounded-lg text-sm font-bold text-slate-700 transition flex items-center gap-1">
             <i data-lucide="crosshair" class="w-3.5 h-3.5 text-sky-600"></i>
             <span>Obtener GPS</span>
           </button>
@@ -493,10 +498,10 @@
 
         <!-- Botones de Acción -->
         <div class="pt-3 border-t border-slate-100 flex items-center justify-end gap-2 shrink-0">
-          <button type="button" id="btn-cancel-inspection" class="px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-xl transition">
+          <button type="button" id="btn-cancel-inspection" class="px-4 py-2 text-sm font-semibold text-slate-600 hover:bg-slate-100 rounded-xl transition">
             Cancelar
           </button>
-          <button type="submit" class="px-6 py-2.5 text-xs font-bold text-white bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 rounded-xl shadow-md transition flex items-center gap-1.5">
+          <button type="submit" class="px-6 py-2.5 text-sm font-bold text-white bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 rounded-xl shadow-md transition flex items-center gap-1.5">
             <i data-lucide="save" class="w-4 h-4"></i>
             <span>Guardar Inspección</span>
           </button>
@@ -508,14 +513,15 @@
   </div>
 
   <!-- FOOTER -->
-  <footer class="bg-[#100b33] text-slate-400 border-t border-[#2d1f85] py-4 text-center text-xs">
+  <footer class="bg-[#100b33] text-slate-400 border-t border-[#2d1f85] py-4 text-centertext-sm">
     <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
       <p>Sistema Oficial de Diagnóstico Hidráulico y Drenajes de Maturín • 68 Caños Priorizados</p>
-      <p class="font-mono text-[11px] text-slate-400">Modelado HEC-RAS 2D • QGIS Open Source</p>
+      <p class="font-monotext-sm text-slate-400">Modelado HEC-RAS 2D • QGIS Open Source</p>
     </div>
   </footer>
 
   <!-- MAIN SCRIPT -->
   <script type="module" src="js/app.js?v=2"></script>
+  <script src="js/a11y.js"></script>
 </body>
 </html>

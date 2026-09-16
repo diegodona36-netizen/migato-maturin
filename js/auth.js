@@ -100,7 +100,7 @@ const MIGATO_AUTH = (function() {
     if (!badgeEl) {
       badgeEl = document.createElement("div");
       badgeEl.id = "migato-user-badge";
-      badgeEl.className = "fixed bottom-4 right-4 z-50 flex items-center gap-3 bg-[#140e40]/95 backdrop-blur border border-[#2d1f85] rounded-full px-4 py-2 shadow-2xl text-xs font-medium text-slate-200";
+      badgeEl.className = "fixed bottom-4 right-4 z-50 flex items-center gap-3 bg-[#140e40]/95 backdrop-blur border border-[#2d1f85] rounded-full px-4 py-2 shadow-2xl text-sm font-medium text-slate-200";
       document.body.appendChild(badgeEl);
     }
 
@@ -113,7 +113,7 @@ const MIGATO_AUTH = (function() {
         <span class="text-slate-300 font-mono hidden sm:inline">${roleDef.level}:</span>
         <span class="font-bold text-white">${session.name}</span>
       </div>
-      <span class="px-2 py-0.5 border text-[11px] font-mono ${roleDef.badgeColor}">
+      <span class="px-2 py-0.5 border text-sm font-mono ${roleDef.badgeColor}">
         ${roleDef.title}
       </span>
       <a href="${loginUrl}" title="Cambiar rol o usuario" class="text-slate-300 hover:text-white transition px-1.5 py-0.5 border border-slate-600 bg-slate-800">

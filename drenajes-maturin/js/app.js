@@ -121,7 +121,7 @@ class DrainageAppController {
     if (kpiDragado) kpiDragado.textContent = `${resumen.totalDragadoM3.toLocaleString()} m³`;
     if (kpiAlerta) {
       kpiAlerta.textContent = resumen.nivelAlertaGlobal;
-      kpiAlerta.className = "text-xs font-black px-2.5 py-1 rounded-full border " + 
+      kpiAlerta.className = "text-sm font-black px-2.5 py-1 rounded-full border " + 
         (resumen.canalesDesbordados >= 8 ? "bg-red-100 text-red-700 border-red-300" : (resumen.canalesDesbordados >= 3 ? "bg-amber-100 text-amber-800 border-amber-300" : "bg-emerald-100 text-emerald-800 border-emerald-300"));
     }
   }
@@ -159,31 +159,31 @@ class DrainageAppController {
           <div>
             <div class="flex items-center gap-2">
               <h3 class="text-base font-black text-slate-900">${c.nombre}</h3>
-              <span class="text-[9px] font-bold px-1.5 py-0.5 rounded ${tipoBadge}">${c.tipoIntervencion}</span>
+              <span class="text-sm font-bold px-1.5 py-0.5 rounded ${tipoBadge}">${c.tipoIntervencion}</span>
             </div>
-            <p class="text-xs text-slate-500 font-medium">${c.parroquia} • ${c.longitudKm} km</p>
+            <p class="text-sm text-slate-500 font-medium">${c.parroquia} • ${c.longitudKm} km</p>
           </div>
-          <span class="px-2.5 py-1 rounded-lg text-[10px] font-black border uppercase ${badgeColor}">
+          <span class="px-2.5 py-1 rounded-lg text-sm font-black border uppercase ${badgeColor}">
             ${isDesborda ? "⚠️ Desborde Inminente" : "Flujo Controlado"}
           </span>
         </div>
 
         <!-- Indicadores Hidráulicos HEC-RAS -->
-        <div class="grid grid-cols-2 gap-3 text-xs">
+        <div class="grid grid-cols-2 gap-3 text-sm">
           <div class="p-3 bg-slate-50 rounded-xl border border-slate-200">
-            <span class="text-slate-500 text-[10px] font-semibold uppercase block">Caudal Generado Q</span>
-            <span class="text-2xl font-black text-sky-600">${hid.caudalQ} <span class="text-xs font-normal">m³/s</span></span>
-            <span class="text-[10px] text-slate-400 block">Capacidad: ${c.capacidadDisenoM3s} m³/s</span>
+            <span class="text-slate-500 text-sm font-semibold uppercase block">Caudal Generado Q</span>
+            <span class="text-2xl font-black text-sky-600">${hid.caudalQ} <span class="text-sm font-normal">m³/s</span></span>
+            <span class="text-sm text-slate-400 block">Capacidad: ${c.capacidadDisenoM3s} m³/s</span>
           </div>
 
           <div class="p-3 bg-slate-50 rounded-xl border border-slate-200">
-            <span class="text-slate-500 text-[10px] font-semibold uppercase block">Tirante de Agua</span>
+            <span class="text-slate-500 text-sm font-semibold uppercase block">Tirante de Agua</span>
             <span class="text-2xl font-black ${isDesborda ? "text-red-600" : "text-slate-800"}">${hid.tiranteM}m</span>
-            <span class="text-[10px] text-slate-400 block">Cauce: ${c.profundidadM || 2.0}m prof.</span>
+            <span class="text-sm text-slate-400 block">Cauce: ${c.profundidadM || 2.0}m prof.</span>
           </div>
         </div>
 
-        <div class="space-y-2 text-xs">
+        <div class="space-y-2 text-sm">
           <div class="flex items-center justify-between p-2 rounded-lg bg-slate-50 border border-slate-100">
             <span class="text-slate-600 font-medium">Velocidad del Flujo</span>
             <span class="font-mono font-bold text-slate-900">${hid.velocidadMs} m/s</span>
@@ -205,9 +205,9 @@ class DrainageAppController {
           </div>
         </div>
 
-        <div class="p-3 bg-sky-50/70 rounded-xl border border-sky-100 text-xs text-sky-950">
+        <div class="p-3 bg-sky-50/70 rounded-xl border border-sky-100 text-sm text-sky-950">
           <p class="font-bold">Diagnóstico Técnico:</p>
-          <p class="text-[11px] text-slate-600 mt-0.5 leading-relaxed">${c.descripcion}</p>
+          <p class="text-sm text-slate-600 mt-0.5 leading-relaxed">${c.descripcion}</p>
         </div>
       </div>
     `;
@@ -224,7 +224,7 @@ class DrainageAppController {
     tbody.innerHTML = "";
     this.inspecciones.forEach(p => {
       const tr = document.createElement("tr");
-      tr.className = "border-b border-slate-100 hover:bg-slate-50 text-xs transition";
+      tr.className = "border-b border-slate-100 hover:bg-slate-50 text-sm transition";
       
       const badgeColor = p.nivelRiesgo === "CRÍTICO" ? "text-red-600 font-black" : (p.nivelRiesgo === "ALTO" ? "text-orange-600 font-bold" : "text-emerald-600 font-bold");
       const colapsoColor = p.colapsoSedimentacionPct >= 75 ? "text-red-600 font-bold" : "text-amber-600 font-bold";
@@ -233,13 +233,13 @@ class DrainageAppController {
         <td class="px-4 py-3 font-mono font-semibold text-slate-900">${p.id}</td>
         <td class="px-4 py-3">
           <div class="font-bold text-slate-900">${p.nombrePunto}</div>
-          <div class="text-[10px] text-slate-400 font-medium">${p.parroquia} • ${p.inspector}</div>
+          <div class="text-sm text-slate-400 font-medium">${p.parroquia} • ${p.inspector}</div>
         </td>
         <td class="px-4 py-3 text-slate-700">${p.tipoEstructura}</td>
         <td class="px-4 py-3 font-mono ${colapsoColor}">${p.colapsoSedimentacionPct}%</td>
         <td class="px-4 py-3 ${badgeColor}">${p.nivelRiesgo}</td>
         <td class="px-4 py-3 font-mono font-bold text-red-600">${p.familiasRiesgo}</td>
-        <td class="px-4 py-3 text-slate-600 text-[11px]">${p.obraRequerida}</td>
+        <td class="px-4 py-3 text-slate-600 text-sm">${p.obraRequerida}</td>
       `;
       tbody.appendChild(tr);
     });
@@ -260,16 +260,16 @@ class DrainageAppController {
       card.innerHTML = `
         <div class="space-y-2">
           <div class="flex items-center justify-between">
-            <span class="text-[10px] font-bold px-2 py-0.5 rounded ${isUrgent ? "bg-red-100 text-red-700" : "bg-sky-100 text-sky-700"}">
+            <span class="text-sm font-bold px-2 py-0.5 rounded ${isUrgent ? "bg-red-100 text-red-700" : "bg-sky-100 text-sky-700"}">
               ${isUrgent ? "PRIORIDAD 1 (URGENTE)" : "MANTENIMIENTO"}
             </span>
-            <span class="text-xs font-mono font-bold text-slate-400">${d.parroquia}</span>
+            <span class="text-sm font-mono font-bold text-slate-400">${d.parroquia}</span>
           </div>
           <h4 class="font-black text-sm text-slate-900">${d.nombre}</h4>
-          <p class="text-xs text-slate-500">${canalOriginal?.descripcion || ""}</p>
+          <p class="text-sm text-slate-500">${canalOriginal?.descripcion || ""}</p>
         </div>
 
-        <div class="pt-3 border-t border-slate-100 space-y-2 text-xs">
+        <div class="pt-3 border-t border-slate-100 space-y-2 text-sm">
           <div class="flex items-center justify-between">
             <span class="text-slate-600 font-medium">Dragado Estimado:</span>
             <span class="font-mono font-black text-sky-600 text-sm">${d.dragadoRequeridoM3.toLocaleString()} m³</span>
@@ -280,7 +280,7 @@ class DrainageAppController {
           </div>
           <div class="flex items-center justify-between">
             <span class="text-slate-600 font-medium">Intervención:</span>
-            <span class="font-bold text-slate-800 text-[11px]">${tipoIcon}</span>
+            <span class="font-bold text-slate-800 text-sm">${tipoIcon}</span>
           </div>
         </div>
       `;

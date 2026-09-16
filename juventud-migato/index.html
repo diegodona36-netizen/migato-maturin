@@ -18,6 +18,7 @@
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body class="bg-slate-100 text-slate-800 min-h-screen flex flex-col antialiased">
+  <a href="#main-content" class="skip-link">Saltar al contenido principal</a>
 
   <!-- ============================================================== -->
   <!-- TOP GLOBAL HEADER -->
@@ -34,21 +35,21 @@
           <div>
             <h1 class="text-base sm:text-lg font-black tracking-tight text-white flex items-center gap-2 flex-wrap">
               <span>Secretaría Regional Juvenil MIGATO</span>
-              <span class="text-[10px] font-bold bg-amber-500/20 text-amber-400 border border-amber-500/30 px-2 py-0.5 rounded-full uppercase">MONAGAS</span>
+              <span class="text-base font-bold bg-amber-500/20 text-amber-400 border border-amber-500/30 px-2 py-0.5 rounded-full uppercase">MONAGAS</span>
             </h1>
-            <p class="text-xs text-slate-400 font-medium">Línea de Evaluación y Reporte Semanal • Albany Ydrogo</p>
+            <p class="text-base text-slate-400 font-medium">Línea de Evaluación y Reporte Semanal • Albany Ydrogo</p>
           </div>
         </div>
 
         <!-- Acciones: Botón Nuevo Reporte & Exportar -->
         <div class="flex flex-wrap items-center gap-2">
           
-          <a href="formulario.html" class="px-4 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-[#0e092e] text-xs font-black shadow-md transition flex items-center gap-1.5">
+          <a href="formulario.html" class="px-4 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-[#0e092e] text-base font-black shadow-md transition flex items-center gap-1.5">
             <i data-lucide="plus-circle" class="w-4 h-4"></i>
             <span>+ Cargar Informe Semanal</span>
           </a>
 
-          <button id="btn-export-youth-csv" class="px-3 py-2 text-xs font-bold text-slate-300 hover:text-white bg-[#0e092e] hover:bg-[#23176d] border border-[#2d1f85] rounded-xl transition flex items-center gap-1.5">
+          <button id="btn-export-youth-csv" class="px-3 py-2 text-sm font-bold text-slate-300 hover:text-white bg-[#0e092e] hover:bg-[#23176d] border border-[#2d1f85] rounded-xl transition flex items-center gap-1.5">
             <i data-lucide="download" class="w-4 h-4 text-emerald-400"></i>
             <span>Exportar (CSV)</span>
           </button>
@@ -64,33 +65,37 @@
     <!-- Navigation Tabs Bar -->
     <div class="bg-[#100b33] border-t border-[#2d1f85] px-4 sm:px-6">
       <div class="max-w-7xl mx-auto flex items-center overflow-x-auto no-scrollbar gap-1.5 py-1.5">
-        <button data-tab="tab-consolidado" class="nav-tab-btn px-3.5 py-2 text-xs sm:text-sm font-bold rounded-lg bg-amber-500 text-[#0e092e] transition flex items-center gap-1.5 shrink-0 shadow-sm">
+        <button data-tab="tab-consolidado" class="nav-tab-btn px-3.5 py-2 text-sm sm:text-base font-bold rounded-lg bg-amber-500 text-[#0e092e] transition flex items-center gap-1.5 shrink-0 shadow-sm">
           <i data-lucide="layout-grid" class="w-4 h-4"></i>
           <span>Fichas Municipales & Fotos</span>
         </button>
 
-        <button data-tab="tab-graficos" class="nav-tab-btn px-3.5 py-2 text-xs sm:text-sm font-medium rounded-lg text-slate-400 hover:bg-[#23176d] transition flex items-center gap-1.5 shrink-0">
+        <button data-tab="tab-graficos" class="nav-tab-btn px-3.5 py-2 text-sm sm:text-base font-medium rounded-lg text-slate-400 hover:bg-[#23176d] transition flex items-center gap-1.5 shrink-0">
           <i data-lucide="bar-chart-3" class="w-4 h-4"></i>
           <span>Comparativo por Ejes</span>
         </button>
 
-        <button data-tab="tab-ranking" class="nav-tab-btn px-3.5 py-2 text-xs sm:text-sm font-medium rounded-lg text-slate-400 hover:bg-[#23176d] transition flex items-center gap-1.5 shrink-0">
+        <button data-tab="tab-ranking" class="nav-tab-btn px-3.5 py-2 text-sm sm:text-base font-medium rounded-lg text-slate-400 hover:bg-[#23176d] transition flex items-center gap-1.5 shrink-0">
           <i data-lucide="trophy" class="w-4 h-4"></i>
           <span>Ranking Territorial</span>
         </button>
 
-        <button data-tab="tab-galeria" class="nav-tab-btn px-3.5 py-2 text-xs sm:text-sm font-medium rounded-lg text-slate-400 hover:bg-slate-800 transition flex items-center gap-1.5 shrink-0">
+        <button data-tab="tab-galeria" class="nav-tab-btn px-3.5 py-2 text-sm sm:text-base font-medium rounded-lg text-slate-400 hover:bg-slate-800 transition flex items-center gap-1.5 shrink-0">
           <i data-lucide="images" class="w-4 h-4"></i>
           <span>Galería de Evidencias</span>
         </button>
 
-        <button data-tab="tab-imprimir" class="nav-tab-btn px-3.5 py-2 text-xs sm:text-sm font-medium rounded-lg text-slate-400 hover:bg-slate-800 transition flex items-center gap-1.5 shrink-0">
+        <button data-tab="tab-imprimir" class="nav-tab-btn px-3.5 py-2 text-sm sm:text-base font-medium rounded-lg text-slate-400 hover:bg-slate-800 transition flex items-center gap-1.5 shrink-0">
           <i data-lucide="file-check" class="w-4 h-4"></i>
           <span>Acta para Reunión Lunes</span>
         </button>
       </div>
     </div>
-  </header>
+            <button type="button" id="btn-toggle-contrast" class="px-2.5 py-1.5 rounded-xl bg-[#1d1554] hover:bg-[#23176d] text-amber-400 border border-amber-500/40 text-sm font-bold flex items-center gap-1.5 shadow transition active:scale-95" title="Alto contraste" aria-label="Activar modo alto contraste">
+            <span aria-hidden="true">◐</span>
+            <span class="hidden sm:inline">Contraste</span>
+          </button>
+        </header>
 
   <!-- ============================================================== -->
   <!-- SUMMARY KPIS BAR -->
@@ -104,7 +109,7 @@
           <i data-lucide="user-plus" class="w-6 h-6"></i>
         </div>
         <div>
-          <p class="text-[11px] font-bold text-amber-800 uppercase tracking-wider">🟡 Captación Total</p>
+          <p class="text-base font-bold text-amber-800 uppercase tracking-wider">🟡 Captación Total</p>
           <h3 id="kpi-total-captacion" class="text-xl sm:text-2xl font-black text-amber-600">0 jóvenes</h3>
         </div>
       </div>
@@ -115,7 +120,7 @@
           <i data-lucide="messages-square" class="w-6 h-6"></i>
         </div>
         <div>
-          <p class="text-[11px] font-bold text-sky-800 uppercase tracking-wider">🗣️ Conversatorios</p>
+          <p class="text-base font-bold text-sky-800 uppercase tracking-wider">🗣️ Conversatorios</p>
           <h3 id="kpi-total-conversatorios" class="text-xl sm:text-2xl font-black text-sky-600">0</h3>
         </div>
       </div>
@@ -126,7 +131,7 @@
           <i data-lucide="footprints" class="w-6 h-6"></i>
         </div>
         <div>
-          <p class="text-[11px] font-bold text-emerald-800 uppercase tracking-wider">🚶‍♂️ Caminatas / Casas</p>
+          <p class="text-base font-bold text-emerald-800 uppercase tracking-wider">🚶‍♂️ Caminatas / Casas</p>
           <h3 id="kpi-total-caminatas" class="text-xl sm:text-2xl font-black text-emerald-600">0</h3>
         </div>
       </div>
@@ -134,9 +139,9 @@
       <!-- KPI 4: Semáforo de Entrega -->
       <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
         <div>
-          <p class="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Entrega de Lunes</p>
+          <p class="text-base font-semibold text-slate-500 uppercase tracking-wider">Entrega de Lunes</p>
           <h3 id="kpi-semaforo-entrega" class="text-lg font-black text-slate-900 mt-0.5">0 / 13 Municipios</h3>
-          <span class="text-[10px] text-emerald-700 font-bold">✓ Cedeño, Acosta y Piar activos</span>
+          <span class="text-base text-emerald-700 font-bold">✓ Cedeño, Acosta y Piar activos</span>
         </div>
         <div class="w-9 h-9 rounded-xl bg-slate-50 flex items-center justify-center text-slate-400">
           <i data-lucide="calendar-check" class="w-5 h-5"></i>
@@ -160,10 +165,10 @@
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white p-3.5 rounded-2xl border border-slate-200 shadow-sm">
         <div class="flex items-center gap-2">
           <i data-lucide="filter" class="w-4 h-4 text-amber-500"></i>
-          <span class="text-xs font-bold text-slate-700 uppercase">Filtrar por Municipio:</span>
+          <span class="text-base font-bold text-slate-700 uppercase">Filtrar por Municipio:</span>
         </div>
 
-        <select id="filter-municipio-select" class="px-3 py-1.5 text-xs bg-slate-50 border border-slate-300 rounded-xl text-slate-800 font-bold focus:ring-2 focus:ring-amber-500 focus:outline-none">
+        <select id="filter-municipio-select" class="px-3 py-1.5 text-sm bg-slate-50 border border-slate-300 rounded-xl text-slate-800 font-bold focus:ring-2 focus:ring-amber-500 ">
           <!-- Inyectado con JS -->
         </select>
       </div>
@@ -182,11 +187,11 @@
         
         <div class="lg:col-span-2 bg-white rounded-2xl border border-slate-200 shadow-sm p-6 space-y-4">
           <div class="border-b pb-3">
-            <h3 class="text-sm font-black text-slate-900 uppercase tracking-wide flex items-center gap-2">
+            <h3 class="text-base font-black text-slate-900 uppercase tracking-wide flex items-center gap-2">
               <i data-lucide="bar-chart-2" class="w-4 h-4 text-amber-500"></i>
               <span>Comparativo de Impacto Territorial por Municipio</span>
             </h3>
-            <p class="text-xs text-slate-500">Desglose de jóvenes captados, asistentes a conversatorios y casas visitadas.</p>
+            <p class="text-base text-slate-500">Desglose de jóvenes captados, asistentes a conversatorios y casas visitadas.</p>
           </div>
           <div class="h-72 w-full relative">
             <canvas id="municipal-comparison-chart"></canvas>
@@ -195,16 +200,16 @@
 
         <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 space-y-4 flex flex-col justify-between">
           <div class="border-b pb-3">
-            <h3 class="text-sm font-black text-slate-900 uppercase tracking-wide flex items-center gap-2">
+            <h3 class="text-base font-black text-slate-900 uppercase tracking-wide flex items-center gap-2">
               <i data-lucide="pie-chart" class="w-4 h-4 text-sky-600"></i>
               <span>Distribución por Ejes</span>
             </h3>
-            <p class="text-xs text-slate-500">Balance del esfuerzo en los 3 ejes prioritarios.</p>
+            <p class="text-base text-slate-500">Balance del esfuerzo en los 3 ejes prioritarios.</p>
           </div>
           <div class="h-56 relative flex items-center justify-center">
             <canvas id="axes-summary-doughnut"></canvas>
           </div>
-          <div class="text-[11px] text-slate-400 text-center font-mono">
+          <div class="text-base text-slate-400 text-center font-mono">
             Meta Regional: 100% de municipios activos
           </div>
         </div>
@@ -224,15 +229,15 @@
               <i data-lucide="trophy" class="w-5 h-5 text-amber-500"></i>
               <span>Ranking de Desempeño y Cumplimiento Semanal</span>
             </h2>
-            <p class="text-xs text-slate-500">
+            <p class="text-base text-slate-500">
               Evaluación continua del trabajo, compromiso y presencia real de cada secretaría municipal en su territorio.
             </p>
           </div>
         </div>
 
         <div class="overflow-x-auto border border-slate-200 rounded-xl">
-          <table class="w-full text-xs text-left">
-            <thead class="bg-slate-50 border-b border-slate-200 text-slate-500 font-bold uppercase text-[10px]">
+          <table class="w-full text-base text-left">
+            <thead class="bg-slate-50 border-b border-slate-200 text-slate-500 font-bold uppercasetext-base">
               <tr>
                 <th class="px-4 py-3">Posición</th>
                 <th class="px-4 py-3">Municipio / Parroquia</th>
@@ -263,7 +268,7 @@
               <i data-lucide="images" class="w-5 h-5 text-amber-500"></i>
               <span>Mural de Evidencias Fotográficas • Monagas</span>
             </h2>
-            <p class="text-xs text-slate-500">Fotos reales subidas por los secretarios juveniles en sus recorridos.</p>
+            <p class="text-base text-slate-500">Fotos reales subidas por los secretarios juveniles en sus recorridos.</p>
           </div>
         </div>
 
@@ -278,7 +283,7 @@
     <!-- ------------------------------------------------------------ -->
     <div id="tab-imprimir" class="tab-content hidden space-y-4">
       <div class="flex justify-end no-print">
-        <button onclick="window.print()" class="px-4 py-2 bg-[#140e40] hover:bg-[#1d1554] border border-[#2d1f85] text-white font-bold text-xs rounded-xl shadow transition flex items-center gap-1.5">
+        <button onclick="window.print()" class="px-4 py-2 bg-[#140e40] hover:bg-[#1d1554] border border-[#2d1f85] text-white font-bold text-sm rounded-xl shadow transition flex items-center gap-1.5">
           <i data-lucide="printer" class="w-4 h-4 text-amber-400"></i>
           <span>Imprimir / Guardar como PDF</span>
         </button>
@@ -296,8 +301,8 @@
     <div class="relative max-w-3xl w-full bg-[#140e40] rounded-3xl overflow-hidden shadow-2xl border border-[#2d1f85] animate-in fade-in zoom-in-95 duration-150 flex flex-col">
       <div class="p-4 bg-[#18114a] border-b border-[#2d1f85] flex items-center justify-between text-white">
         <div>
-          <h3 id="photo-modal-title" class="text-sm font-bold">Foto de Evidencia</h3>
-          <p id="photo-modal-mun" class="text-[11px] text-amber-400 font-mono">Municipio</p>
+          <h3 id="photo-modal-title" class="text-base font-bold">Foto de Evidencia</h3>
+          <p id="photo-modal-mun" class="text-base text-amber-400 font-mono">Municipio</p>
         </div>
         <button id="btn-close-photo-modal" class="text-slate-400 hover:text-white p-1">
           <i data-lucide="x" class="w-5 h-5"></i>
@@ -310,14 +315,15 @@
   </div>
 
   <!-- FOOTER -->
-  <footer class="bg-[#100b33] text-slate-400 border-t border-[#2d1f85] py-4 text-center text-xs">
+  <footer class="bg-[#100b33] text-slate-400 border-t border-[#2d1f85] py-4 text-centertext-sm">
     <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
       <p>Secretaría Regional Juvenil MIGATO • Monagas</p>
-      <p class="font-mono text-[11px] text-slate-400">Sistema de Evaluación y Despliegue Territorial</p>
+      <p class="font-monotext-sm text-slate-400">Sistema de Evaluación y Despliegue Territorial</p>
     </div>
   </footer>
 
   <!-- SCRIPT -->
   <script type="module" src="js/app.js?v=1"></script>
+  <script src="js/a11y.js"></script>
 </body>
 </html>

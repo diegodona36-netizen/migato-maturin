@@ -61,16 +61,16 @@ export class MaturinDrainageMap {
         });
 
         const tooltipHtml = `
-          <div class="p-1.5 text-xs font-sans">
+          <div class="p-1.5 text-sm font-sans">
             <div class="flex items-center justify-between gap-2 border-b pb-1 mb-1">
               <strong class="text-slate-900 font-bold">${p.nombrePunto}</strong>
-              <span class="text-[9px] font-bold px-1 rounded bg-red-100 text-red-700">${p.prioridad || "ALTA"}</span>
+              <span class="text-sm font-bold px-1 rounded bg-red-100 text-red-700">${p.prioridad || "ALTA"}</span>
             </div>
-            <p class="text-slate-500 text-[11px]">${p.parroquia} • ${p.tipoEstructura}</p>
-            <div class="mt-1 space-y-0.5 border-t pt-1 text-[11px]">
+            <p class="text-slate-500 text-sm">${p.parroquia} • ${p.tipoEstructura}</p>
+            <div class="mt-1 space-y-0.5 border-t pt-1 text-sm">
               <p>⚠️ Obstrucción: <strong style="color: ${color}">${p.colapsoSedimentacionPct}%</strong></p>
               <p>🏠 Familias en Riesgo: <strong class="text-red-600">${p.familiasRiesgo}</strong></p>
-              <p class="text-slate-600 text-[10px]">🚜 ${p.obraRequerida}</p>
+              <p class="text-slate-600 text-sm">🚜 ${p.obraRequerida}</p>
             </div>
           </div>
         `;

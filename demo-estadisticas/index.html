@@ -80,6 +80,7 @@
   </style>
 </head>
 <body class="bg-[#0e092e] text-slate-100 min-h-screen flex flex-col antialiased selection:bg-amber-500 selection:text-[#0e092e] max-w-full overflow-x-hidden">
+  <a href="#main-content" class="skip-link">Saltar al contenido principal</a>
 
   <!-- ============================================================== -->
   <!-- 1. CABECERA PRINCIPAL (TEMA ANARANJADO / ÁMBAR)                 -->
@@ -89,23 +90,23 @@
       
       <!-- Lado Izquierdo: Branding y Título -->
       <div class="flex items-center gap-3 min-w-0">
-        <a href="../" class="p-2 rounded-xl bg-[#18114a] hover:bg-[#23176d] text-slate-300 hover:text-white border border-[#2d1f85] transition flex items-center gap-1 text-xs font-bold shrink-0" title="Volver al Portal Central">
+        <a href="../" class="p-2 rounded-xl bg-[#18114a] hover:bg-[#23176d] text-slate-300 hover:text-white border border-[#2d1f85] transition flex items-center gap-1 text-base font-bold shrink-0" title="Volver al Portal Central">
           <i data-lucide="home" class="w-4 h-4"></i>
         </a>
 
         <div class="truncate">
           <div class="flex items-center gap-2">
-            <span class="w-6 h-6 rounded-lg bg-amber-500 text-[#0e092e] font-black flex items-center justify-center text-xs shadow-md shadow-amber-500/20 shrink-0">
+            <span class="w-6 h-6 rounded-lg bg-amber-500 text-[#0e092e] font-black flex items-center justify-center text-base shadow-md shadow-amber-500/20 shrink-0">
               📊
             </span>
-            <h1 class="text-sm sm:text-base font-black text-white uppercase tracking-tight truncate">
+            <h1 class="text-base sm:text-base font-black text-white uppercase tracking-tight truncate">
               MIGATO • Estadísticas y Censo Territorial
             </h1>
-            <span class="px-2 py-0.5 rounded-md bg-amber-950 text-amber-300 border border-amber-500/40 text-[10px] font-mono font-bold hidden md:inline-block">
+            <span class="px-2 py-0.5 rounded-md bg-amber-950 text-amber-300 border border-amber-500/40 text-base font-mono font-bold hidden md:inline-block">
               🧪 MODO DEMO • AISLADO
             </span>
           </div>
-          <p id="demo-territory-subtitle" class="text-[11px] text-slate-400 truncate">
+          <p id="demo-territory-subtitle" class="text-base text-slate-400 truncate">
             Estado Monagas Completo • 13 Municipios • 44 Parroquias • Censo en Cascada
           </p>
         </div>
@@ -114,32 +115,36 @@
       <!-- Lado Derecho: Acciones y Exportaciones -->
       <div class="flex items-center gap-2 shrink-0">
         <!-- Botón Caracterización Voto (10 Campos) -->
-        <a href="../caracterizacion-voto/?v=102" class="px-3 py-1.5 rounded-xl bg-[#18114a] hover:bg-[#23176d] border border-amber-500/40 text-amber-300 hover:text-white font-bold text-xs transition flex items-center gap-1.5 active:scale-95" title="Ir a Caracterización del Voto (10 Campos)">
-          <span class="text-xs">📋</span>
+        <a href="../caracterizacion-voto/?v=102" class="px-3 py-1.5 rounded-xl bg-[#18114a] hover:bg-[#23176d] border border-amber-500/40 text-amber-300 hover:text-white font-bold text-base transition flex items-center gap-1.5 active:scale-95" title="Ir a Caracterización del Voto (10 Campos)">
+          <span class="text-base">📋</span>
           <span class="hidden sm:inline">Caracterización Voto</span>
         </a>
 
         <!-- Botón Informe Sala Situacional -->
-        <button id="btn-demo-situational-report" type="button" class="px-3 py-1.5 rounded-xl bg-[#18114a] hover:bg-[#23176d] border border-amber-500/40 text-amber-300 hover:text-white font-bold text-xs transition flex items-center gap-1.5 active:scale-95 cursor-pointer" title="Ver Resumen de Sala Situacional">
+        <button id="btn-demo-situational-report" type="button" class="px-3 py-1.5 rounded-xl bg-[#18114a] hover:bg-[#23176d] border border-amber-500/40 text-amber-300 hover:text-white font-bold text-sm transition flex items-center gap-1.5 active:scale-95 cursor-pointer" title="Ver Resumen de Sala Situacional">
           <i data-lucide="file-text" class="w-3.5 h-3.5 text-amber-400"></i>
           <span class="hidden lg:inline">Informe Ejecutivo</span>
         </button>
 
         <!-- Botón Exportar JSON -->
-        <button id="btn-demo-export-json" type="button" class="px-2.5 py-1.5 rounded-xl bg-[#18114a] hover:bg-[#23176d] border border-[#2d1f85] text-slate-300 hover:text-white font-bold text-xs transition flex items-center gap-1 active:scale-95 cursor-pointer" title="Descargar Dataset Completo en JSON">
+        <button id="btn-demo-export-json" type="button" class="px-2.5 py-1.5 rounded-xl bg-[#18114a] hover:bg-[#23176d] border border-[#2d1f85] text-slate-300 hover:text-white font-bold text-sm transition flex items-center gap-1 active:scale-95 cursor-pointer" title="Descargar Dataset Completo en JSON">
           <i data-lucide="code" class="w-3.5 h-3.5 text-sky-400"></i>
           <span class="hidden sm:inline">JSON</span>
         </button>
 
         <!-- Botón Exportar CSV / Excel -->
-        <button id="btn-demo-export-csv" type="button" class="px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-[#0e092e] font-black text-xs transition flex items-center gap-1.5 shadow-lg shadow-amber-500/20 active:scale-95 cursor-pointer" title="Descargar Censo Completo en CSV / Excel">
+        <button id="btn-demo-export-csv" type="button" class="px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-[#0e092e] font-black text-sm transition flex items-center gap-1.5 shadow-lg shadow-amber-500/20 active:scale-95 cursor-pointer" title="Descargar Censo Completo en CSV / Excel">
           <i data-lucide="download" class="w-3.5 h-3.5"></i>
           <span class="hidden sm:inline">Excel (CSV)</span>
         </button>
       </div>
 
     </div>
-  </header>
+            <button type="button" id="btn-toggle-contrast" class="px-2.5 py-1.5 rounded-xl bg-[#1d1554] hover:bg-[#23176d] text-amber-400 border border-amber-500/40 text-sm font-bold flex items-center gap-1.5 shadow transition active:scale-95" title="Alto contraste" aria-label="Activar modo alto contraste">
+            <span aria-hidden="true">◐</span>
+            <span class="hidden sm:inline">Contraste</span>
+          </button>
+        </header>
 
   <!-- ============================================================== -->
   <!-- 2. CONTENEDOR PRINCIPAL                                         -->
@@ -152,11 +157,11 @@
         
         <!-- Selector de Municipio -->
         <div class="flex items-center gap-2 shrink-0">
-          <label for="demo-filter-municipio" class="text-xs font-black text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
+          <label for="demo-filter-municipio" class="text-sm font-black text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
             <i data-lucide="map-pin" class="w-3.5 h-3.5"></i>
             <span>Municipio:</span>
           </label>
-          <select id="demo-filter-municipio" class="px-3 py-2 bg-[#0e092e] border border-[#2d1f85] rounded-xl text-xs font-black text-white focus:outline-none focus:border-sky-400 cursor-pointer">
+          <select id="demo-filter-municipio" class="px-3 py-2 bg-[#0e092e] border border-[#2d1f85] rounded-xl text-sm font-black text-white focus:border-sky-400 cursor-pointer">
             <option value="todos" selected>🌐 Todo el Estado Monagas (13 Municipios)</option>
             <option value="maturin">Maturín (Capital)</option>
             <option value="bolivar">Bolívar (Caripito)</option>
@@ -179,7 +184,7 @@
           <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
             <i data-lucide="search" class="w-4 h-4"></i>
           </div>
-          <input type="text" id="demo-filter-search" placeholder="Buscar sector, eje, escuela CNE o ID..." class="w-full pl-9 pr-3.5 py-2 bg-[#0e092e] border border-[#2d1f85] rounded-xl text-xs text-white placeholder-slate-400 focus:outline-none focus:border-sky-400 transition">
+          <input type="text" id="demo-filter-search" placeholder="Buscar sector, eje, escuela CNE o ID..." class="w-full pl-9 pr-3.5 py-2 bg-[#0e092e] border border-[#2d1f85] rounded-xl text-sm text-white placeholder-slate-400 focus:border-sky-400 transition">
         </div>
 
       </div>
@@ -199,71 +204,71 @@
           <i data-lucide="home" class="w-24 h-24"></i>
         </div>
         <div class="flex items-center justify-between mb-1">
-          <span class="text-[10px] font-black uppercase text-amber-400 flex items-center gap-1">
+          <span class="text-base font-black uppercase text-amber-400 flex items-center gap-1">
             <span>🏠</span> Casas Censadas
           </span>
-          <span id="demo-kpi-ratio-hab" class="text-[9px] text-slate-300 bg-[#0e092e] px-1.5 py-0.5 rounded border border-[#2d1f85]">3.64 hab/casa</span>
+          <span id="demo-kpi-ratio-hab" class="text-base text-slate-300 bg-[#0e092e] px-1.5 py-0.5 rounded border border-[#2d1f85]">3.64 hab/casa</span>
         </div>
         <div>
           <span id="demo-kpi-casas" class="text-2xl sm:text-3xl font-black text-amber-400">0</span>
-          <span class="text-[10px] text-slate-300 block mt-0.5 font-sans">Viviendas unifamiliares</span>
+          <span class="text-base text-slate-300 block mt-0.5 font-sans">Viviendas unifamiliares</span>
         </div>
       </div>
 
       <!-- 2. Total Familias -->
       <div class="bg-[#18114a] border border-[#2d1f85] p-4 rounded-2xl shadow-lg flex flex-col justify-between relative overflow-hidden group">
         <div class="flex items-center justify-between mb-1">
-          <span class="text-[10px] font-black uppercase text-sky-400 flex items-center gap-1">
+          <span class="text-base font-black uppercase text-sky-400 flex items-center gap-1">
             <span>👨‍👩‍👧</span> Familias
           </span>
-          <span class="text-[9px] text-sky-400 font-bold bg-[#0e092e] px-1.5 py-0.5 rounded border border-sky-800/40">Núcleos</span>
+          <span class="text-base text-sky-400 font-bold bg-[#0e092e] px-1.5 py-0.5 rounded border border-sky-800/40">Núcleos</span>
         </div>
         <div>
           <span id="demo-kpi-familias" class="text-2xl sm:text-3xl font-black text-sky-300">0</span>
-          <span class="text-[10px] text-slate-300 block mt-0.5 font-sans">Hogares registrados</span>
+          <span class="text-base text-slate-300 block mt-0.5 font-sans">Hogares registrados</span>
         </div>
       </div>
 
       <!-- 3. Total Habitantes -->
       <div class="bg-[#18114a] border border-[#2d1f85] p-4 rounded-2xl shadow-lg flex flex-col justify-between relative overflow-hidden group">
         <div class="flex items-center justify-between mb-1">
-          <span class="text-[10px] font-black uppercase text-emerald-400 flex items-center gap-1">
+          <span class="text-base font-black uppercase text-emerald-400 flex items-center gap-1">
             <span>👥</span> Habitantes
           </span>
-          <span class="text-[9px] text-emerald-400 font-bold bg-[#0e092e] px-1.5 py-0.5 rounded border border-emerald-800/40">Población</span>
+          <span class="text-base text-emerald-400 font-bold bg-[#0e092e] px-1.5 py-0.5 rounded border border-emerald-800/40">Población</span>
         </div>
         <div>
           <span id="demo-kpi-habitantes" class="text-2xl sm:text-3xl font-black text-emerald-400">0</span>
-          <span class="text-[10px] text-slate-300 block mt-0.5 font-sans">Censo demográfico</span>
+          <span class="text-base text-slate-300 block mt-0.5 font-sans">Censo demográfico</span>
         </div>
       </div>
 
       <!-- 4. Total Votantes -->
       <div class="bg-[#18114a] border border-[#2d1f85] p-4 rounded-2xl shadow-lg flex flex-col justify-between relative overflow-hidden group">
         <div class="flex items-center justify-between mb-1">
-          <span class="text-[10px] font-black uppercase text-purple-400 flex items-center gap-1">
+          <span class="text-base font-black uppercase text-purple-400 flex items-center gap-1">
             <span>🗳️</span> Padrón Votantes
           </span>
-          <span id="demo-kpi-padron-pct" class="text-[9px] text-purple-300 font-bold bg-[#0e092e] px-1.5 py-0.5 rounded border border-purple-800/40">63%</span>
+          <span id="demo-kpi-padron-pct" class="text-base text-purple-300 font-bold bg-[#0e092e] px-1.5 py-0.5 rounded border border-purple-800/40">63%</span>
         </div>
         <div>
           <span id="demo-kpi-votantes" class="text-2xl sm:text-3xl font-black text-purple-300">0</span>
-          <span class="text-[10px] text-slate-300 block mt-0.5 font-sans">Electores convocados</span>
+          <span class="text-base text-slate-300 block mt-0.5 font-sans">Electores convocados</span>
         </div>
       </div>
 
       <!-- 5. Cobertura de Sectores y Ejes -->
       <div class="bg-[#18114a] border border-[#2d1f85] p-4 rounded-2xl shadow-lg flex flex-col justify-between col-span-2 md:col-span-1">
         <div class="flex items-center justify-between mb-1">
-          <span class="text-[10px] font-black uppercase text-amber-400">🔷 Cobertura</span>
-          <span id="demo-kpi-centros" class="text-[9px] text-slate-300">Centros CNE</span>
+          <span class="text-base font-black uppercase text-amber-400">🔷 Cobertura</span>
+          <span id="demo-kpi-centros" class="text-base text-slate-300">Centros CNE</span>
         </div>
         <div>
           <div class="flex items-baseline gap-1.5">
             <span id="demo-kpi-sectores" class="text-2xl sm:text-3xl font-black text-white">0</span>
-            <span class="text-xs text-slate-300 font-sans">sectores</span>
+            <span class="text-base text-slate-300 font-sans">sectores</span>
           </div>
-          <span id="demo-kpi-ejes" class="text-[10px] text-purple-300 block mt-0.5 font-bold font-mono">0 Ejes Territoriales</span>
+          <span id="demo-kpi-ejes" class="text-base text-purple-300 block mt-0.5 font-bold font-mono">0 Ejes Territoriales</span>
         </div>
       </div>
 
@@ -273,18 +278,18 @@
     <section class="bg-[#140e40]/90 border border-[#2d1f85] p-4 sm:p-5 rounded-3xl shadow-xl space-y-3">
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#2d1f85] pb-2.5">
         <div class="flex items-center gap-2">
-          <span class="p-1 rounded-lg bg-emerald-500/20 text-emerald-400 text-sm">🗳️</span>
+          <span class="p-1 rounded-lg bg-emerald-500/20 text-emerald-400 text-base">🗳️</span>
           <div>
-            <h2 class="text-xs sm:text-sm font-black text-white uppercase tracking-wider">
+            <h2 class="text-base sm:text-base font-black text-white uppercase tracking-wider">
               Clasificación Oficial del Voto • Estándar MIGATO
             </h2>
-            <p class="text-[11px] text-slate-300">
+            <p class="text-base text-slate-300">
               Desglose de la militancia según el instrumento físico: Voto Duro, Blando y Nuevo
             </p>
           </div>
         </div>
         <div class="flex items-center gap-2">
-          <a href="../caracterizacion-voto/?v=102" class="px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-[#0e092e] font-black text-xs transition flex items-center gap-1.5 shadow-md shadow-amber-500/20 active:scale-95">
+          <a href="../caracterizacion-voto/?v=102" class="px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-[#0e092e] font-black text-base transition flex items-center gap-1.5 shadow-md shadow-amber-500/20 active:scale-95">
             <span>📋</span>
             <span>Ver Sábana Nominal (10 Campos)</span>
           </a>
@@ -295,56 +300,56 @@
         <!-- 1. Voto Duro -->
         <div class="bg-[#18114a] border border-emerald-500/40 p-3.5 rounded-2xl flex flex-col justify-between shadow-sm">
           <div class="flex items-center justify-between mb-1">
-            <span class="text-[10px] font-black uppercase text-emerald-400 flex items-center gap-1">
+            <span class="text-base font-black uppercase text-emerald-400 flex items-center gap-1">
               <span>🟢</span> Voto Duro
             </span>
-            <span id="demo-kpi-voto-duro-pct" class="text-[9px] font-bold text-emerald-300 bg-emerald-950 px-1.5 py-0.5 rounded border border-emerald-700/50">0%</span>
+            <span id="demo-kpi-voto-duro-pct" class="text-base font-bold text-emerald-300 bg-emerald-950 px-1.5 py-0.5 rounded border border-emerald-700/50">0%</span>
           </div>
           <div>
             <span id="demo-kpi-voto-duro" class="text-2xl sm:text-3xl font-black text-emerald-400">0</span>
-            <span class="text-[10px] text-slate-300 block mt-0.5 font-sans">Militancia leal comprometida</span>
+            <span class="text-base text-slate-300 block mt-0.5 font-sans">Militancia leal comprometida</span>
           </div>
         </div>
 
         <!-- 2. Voto Blando -->
         <div class="bg-[#18114a] border border-amber-500/40 p-3.5 rounded-2xl flex flex-col justify-between shadow-sm">
           <div class="flex items-center justify-between mb-1">
-            <span class="text-[10px] font-black uppercase text-amber-400 flex items-center gap-1">
+            <span class="text-base font-black uppercase text-amber-400 flex items-center gap-1">
               <span>🟡</span> Voto Blando
             </span>
-            <span id="demo-kpi-voto-blando-pct" class="text-[9px] font-bold text-amber-300 bg-amber-950 px-1.5 py-0.5 rounded border border-amber-700/50">0%</span>
+            <span id="demo-kpi-voto-blando-pct" class="text-base font-bold text-amber-300 bg-amber-950 px-1.5 py-0.5 rounded border border-amber-700/50">0%</span>
           </div>
           <div>
             <span id="demo-kpi-voto-blando" class="text-2xl sm:text-3xl font-black text-amber-400">0</span>
-            <span class="text-[10px] text-slate-300 block mt-0.5 font-sans">Meta de persuasión y contacto</span>
+            <span class="text-base text-slate-300 block mt-0.5 font-sans">Meta de persuasión y contacto</span>
           </div>
         </div>
 
         <!-- 3. Voto Nuevo -->
         <div class="bg-[#18114a] border border-sky-500/40 p-3.5 rounded-2xl flex flex-col justify-between shadow-sm">
           <div class="flex items-center justify-between mb-1">
-            <span class="text-[10px] font-black uppercase text-sky-400 flex items-center gap-1">
+            <span class="text-base font-black uppercase text-sky-400 flex items-center gap-1">
               <span>🔵</span> Voto Nuevo
             </span>
-            <span id="demo-kpi-voto-nuevo-pct" class="text-[9px] font-bold text-sky-300 bg-sky-950 px-1.5 py-0.5 rounded border border-sky-700/50">0%</span>
+            <span id="demo-kpi-voto-nuevo-pct" class="text-base font-bold text-sky-300 bg-sky-950 px-1.5 py-0.5 rounded border border-sky-700/50">0%</span>
           </div>
           <div>
             <span id="demo-kpi-voto-nuevo" class="text-2xl sm:text-3xl font-black text-sky-300">0</span>
-            <span class="text-[10px] text-slate-300 block mt-0.5 font-sans">Juventud y primer voto</span>
+            <span class="text-base text-slate-300 block mt-0.5 font-sans">Juventud y primer voto</span>
           </div>
         </div>
 
         <!-- 4. Electores Nominales -->
         <div class="bg-[#18114a] border border-purple-500/40 p-3.5 rounded-2xl flex flex-col justify-between shadow-sm">
           <div class="flex items-center justify-between mb-1">
-            <span class="text-[10px] font-black uppercase text-purple-400 flex items-center gap-1">
+            <span class="text-base font-black uppercase text-purple-400 flex items-center gap-1">
               <span>📋</span> Electores Nominales
             </span>
-            <span class="text-[9px] font-bold text-purple-300 bg-purple-950 px-1.5 py-0.5 rounded border border-purple-700/50">Cédula + Tlf</span>
+            <span class="text-base font-bold text-purple-300 bg-purple-950 px-1.5 py-0.5 rounded border border-purple-700/50">Cédula + Tlf</span>
           </div>
           <div>
             <span id="demo-kpi-electores-nominales" class="text-2xl sm:text-3xl font-black text-purple-300">0</span>
-            <span class="text-[10px] text-slate-300 block mt-0.5 font-sans">Con 10 campos completos</span>
+            <span class="text-base text-slate-300 block mt-0.5 font-sans">Con 10 campos completos</span>
           </div>
         </div>
       </div>
@@ -352,22 +357,22 @@
 
     <!-- BARRA DE PESTAÑAS ESPECIALIZADAS PARA INGENIERÍA -->
     <nav class="flex items-center gap-2 overflow-x-auto no-scrollbar border-b border-[#2d1f85] pb-2">
-      <button type="button" data-tab="stats" class="demo-tab-btn px-4 py-2.5 rounded-xl bg-amber-500 text-[#0e092e] font-black text-xs shadow-lg shadow-amber-500/20 flex items-center gap-2 transition cursor-pointer">
+      <button type="button" data-tab="stats" class="demo-tab-btn px-4 py-2.5 rounded-xl bg-amber-500 text-[#0e092e] font-black text-sm shadow-lg shadow-amber-500/20 flex items-center gap-2 transition cursor-pointer">
         <i data-lucide="table-2" class="w-4 h-4"></i>
         <span>Tablas Estadísticas y Ratios</span>
       </button>
 
-      <button type="button" data-tab="sectors" class="demo-tab-btn px-4 py-2.5 rounded-xl bg-[#140e40] hover:bg-[#18114a] text-slate-300 hover:text-white font-bold text-xs border border-[#2d1f85] flex items-center gap-2 transition cursor-pointer">
+      <button type="button" data-tab="sectors" class="demo-tab-btn px-4 py-2.5 rounded-xl bg-[#140e40] hover:bg-[#18114a] text-slate-300 hover:text-white font-bold text-sm border border-[#2d1f85] flex items-center gap-2 transition cursor-pointer">
         <i data-lucide="list" class="w-4 h-4"></i>
         <span>Explorador de Sectores (Capa 5)</span>
       </button>
 
-      <button type="button" data-tab="cascade" class="demo-tab-btn px-4 py-2.5 rounded-xl bg-[#140e40] hover:bg-[#18114a] text-slate-300 hover:text-white font-bold text-xs border border-[#2d1f85] flex items-center gap-2 transition cursor-pointer">
+      <button type="button" data-tab="cascade" class="demo-tab-btn px-4 py-2.5 rounded-xl bg-[#140e40] hover:bg-[#18114a] text-slate-300 hover:text-white font-bold text-sm border border-[#2d1f85] flex items-center gap-2 transition cursor-pointer">
         <i data-lucide="folder-tree" class="w-4 h-4"></i>
         <span>Árbol Jerárquico en Cascada</span>
       </button>
 
-      <button type="button" data-tab="architecture" class="demo-tab-btn px-4 py-2.5 rounded-xl bg-[#140e40] hover:bg-[#18114a] text-slate-300 hover:text-white font-bold text-xs border border-[#2d1f85] flex items-center gap-2 transition cursor-pointer">
+      <button type="button" data-tab="architecture" class="demo-tab-btn px-4 py-2.5 rounded-xl bg-[#140e40] hover:bg-[#18114a] text-slate-300 hover:text-white font-bold text-sm border border-[#2d1f85] flex items-center gap-2 transition cursor-pointer">
         <i data-lucide="cpu" class="w-4 h-4"></i>
         <span>Ficha Técnica para Ingenieros</span>
       </button>
@@ -384,15 +389,15 @@
       <div class="space-y-4">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <div>
-            <h2 class="text-sm sm:text-base font-black text-white uppercase tracking-wider flex items-center gap-2">
-              <span class="p-1 rounded-lg bg-amber-500/20 text-amber-400 text-sm">🎯</span>
+            <h2 class="text-base sm:text-base font-black text-white uppercase tracking-wider flex items-center gap-2">
+              <span class="p-1 rounded-lg bg-amber-500/20 text-amber-400 text-base">🎯</span>
               <span>Centro de Diagnóstico y Toma de Decisiones Estratégicas</span>
             </h2>
-            <p class="text-xs text-slate-400 mt-0.5">
+            <p class="text-base text-slate-400 mt-0.5">
               Análisis visual de concentración de votantes, semáforo de riesgo territorial y ratios ejecutivos de movilización
             </p>
           </div>
-          <span class="text-xs font-mono text-emerald-400 font-bold bg-emerald-950/80 px-2.5 py-1 rounded-xl border border-emerald-500/40 flex items-center gap-1.5 self-start sm:self-auto">
+          <span class="text-base font-mono text-emerald-400 font-bold bg-emerald-950/80 px-2.5 py-1 rounded-xl border border-emerald-500/40 flex items-center gap-1.5 self-start sm:self-auto">
             <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
             <span>Motor Analítico Activo</span>
           </span>
@@ -407,15 +412,15 @@
               <div class="flex items-center justify-between border-b border-[#2d1f85] pb-2.5 mb-3">
                 <div class="flex items-center gap-2">
                   <i data-lucide="pie-chart" class="w-4 h-4 text-amber-400"></i>
-                  <h3 class="text-xs sm:text-sm font-black text-white uppercase tracking-wider">
+                  <h3 class="text-base sm:text-base font-black text-white uppercase tracking-wider">
                     Distribución Territorial
                   </h3>
                 </div>
-                <span id="chart-electoral-subtitle" class="text-[10px] font-mono font-bold text-amber-300 bg-amber-950/60 px-2 py-0.5 rounded-md border border-amber-500/30">
+                <span id="chart-electoral-subtitle" class="text-base font-mono font-bold text-amber-300 bg-amber-950/60 px-2 py-0.5 rounded-md border border-amber-500/30">
                   13 Municipios
                 </span>
               </div>
-              <p class="text-[11px] text-slate-300 mb-2">
+              <p class="text-base text-slate-300 mb-2">
                 Participación porcentual de cada jurisdicción sobre el padrón total.
               </p>
               
@@ -424,7 +429,7 @@
               </div>
             </div>
 
-            <div id="chart-electoral-summary" class="mt-3 pt-3 border-t border-[#2d1f85] text-xs flex items-center justify-between text-slate-300 font-mono">
+            <div id="chart-electoral-summary" class="mt-3 pt-3 border-t border-[#2d1f85] text-base flex items-center justify-between text-slate-300 font-mono">
               <!-- Inyectado por JS -->
             </div>
           </div>
@@ -435,15 +440,15 @@
               <div class="flex items-center justify-between border-b border-[#2d1f85] pb-2.5 mb-3">
                 <div class="flex items-center gap-2">
                   <i data-lucide="vote" class="w-4 h-4 text-emerald-400"></i>
-                  <h3 class="text-xs sm:text-sm font-black text-white uppercase tracking-wider">
+                  <h3 class="text-base sm:text-base font-black text-white uppercase tracking-wider">
                     Composición del Voto
                   </h3>
                 </div>
-                <span class="text-[10px] font-mono font-bold text-emerald-300 bg-emerald-950/60 px-2 py-0.5 rounded-md border border-emerald-500/30">
+                <span class="text-base font-mono font-bold text-emerald-300 bg-emerald-950/60 px-2 py-0.5 rounded-md border border-emerald-500/30">
                   Estándar MIGATO
                 </span>
               </div>
-              <p class="text-[11px] text-slate-300 mb-2">
+              <p class="text-base text-slate-300 mb-2">
                 Distribución de la militancia entre Voto Duro, Blando y Nuevo.
               </p>
 
@@ -452,7 +457,7 @@
               </div>
             </div>
 
-            <div id="chart-political-summary-demo" class="mt-3 pt-3 border-t border-[#2d1f85] grid grid-cols-3 gap-1 text-center text-xs font-mono">
+            <div id="chart-political-summary-demo" class="mt-3 pt-3 border-t border-[#2d1f85] grid grid-cols-3 gap-1 text-center text-base font-mono">
               <!-- Inyectado por JS -->
             </div>
           </div>
@@ -463,15 +468,15 @@
               <div class="flex items-center justify-between border-b border-[#2d1f85] pb-2.5 mb-3">
                 <div class="flex items-center gap-2">
                   <i data-lucide="activity" class="w-4 h-4 text-sky-400"></i>
-                  <h3 class="text-xs sm:text-sm font-black text-white uppercase tracking-wider">
+                  <h3 class="text-base sm:text-base font-black text-white uppercase tracking-wider">
                     Semáforo de Riesgo
                   </h3>
                 </div>
-                <span class="text-[10px] font-mono font-bold text-sky-300 bg-sky-950/60 px-2 py-0.5 rounded-md border border-sky-500/30">
+                <span class="text-base font-mono font-bold text-sky-300 bg-sky-950/60 px-2 py-0.5 rounded-md border border-sky-500/30">
                   Salud Territorial
                 </span>
               </div>
-              <p class="text-[11px] text-slate-300 mb-2">
+              <p class="text-base text-slate-300 mb-2">
                 Sectores según avance censal: consolidado, en progreso o crítico.
               </p>
 
@@ -480,7 +485,7 @@
               </div>
             </div>
 
-            <div id="chart-coverage-summary" class="mt-3 pt-3 border-t border-[#2d1f85] grid grid-cols-3 gap-1 text-center text-xs font-mono">
+            <div id="chart-coverage-summary" class="mt-3 pt-3 border-t border-[#2d1f85] grid grid-cols-3 gap-1 text-center text-base font-mono">
               <!-- Inyectado por JS -->
             </div>
           </div>
@@ -493,16 +498,16 @@
           <!-- Decisión 1: Pareto de Concentración -->
           <div class="bg-[#18114a] border border-amber-500/30 rounded-2xl p-3.5 space-y-1.5 shadow-md">
             <div class="flex items-center justify-between">
-              <span class="text-[10px] font-black uppercase text-amber-400 flex items-center gap-1">
+              <span class="text-base font-black uppercase text-amber-400 flex items-center gap-1">
                 <span>🎯</span> Regla de Pareto
               </span>
-              <span class="text-[9px] font-mono bg-amber-950 text-amber-300 px-1.5 py-0.5 rounded border border-amber-700/50">Top 3</span>
+              <span class="text-base font-mono bg-amber-950 text-amber-300 px-1.5 py-0.5 rounded border border-amber-700/50">Top 3</span>
             </div>
             <div class="flex items-baseline gap-1.5">
               <strong id="decision-pareto-pct" class="text-2xl font-black text-amber-300">0%</strong>
-              <span class="text-[11px] text-slate-300">del padrón</span>
+              <span class="text-base text-slate-300">del padrón</span>
             </div>
-            <p id="decision-pareto-desc" class="text-[11px] text-slate-300 leading-snug">
+            <p id="decision-pareto-desc" class="text-base text-slate-300 leading-snug">
               Concentrado en los 3 territorios líderes.
             </p>
           </div>
@@ -510,16 +515,16 @@
           <!-- Decisión 2: Sectores en Riesgo Operativo -->
           <div class="bg-[#18114a] border border-rose-500/30 rounded-2xl p-3.5 space-y-1.5 shadow-md">
             <div class="flex items-center justify-between">
-              <span class="text-[10px] font-black uppercase text-rose-400 flex items-center gap-1">
+              <span class="text-base font-black uppercase text-rose-400 flex items-center gap-1">
                 <span>🚨</span> Alerta Operativa
               </span>
-              <span class="text-[9px] font-mono bg-rose-950 text-rose-300 px-1.5 py-0.5 rounded border border-rose-700/50">&lt; 50%</span>
+              <span class="text-base font-mono bg-rose-950 text-rose-300 px-1.5 py-0.5 rounded border border-rose-700/50">&lt; 50%</span>
             </div>
             <div class="flex items-baseline gap-1.5">
               <strong id="decision-risk-count" class="text-2xl font-black text-rose-400">0</strong>
-              <span class="text-[11px] text-slate-300">sectores críticos</span>
+              <span class="text-base text-slate-300">sectores críticos</span>
             </div>
-            <p id="decision-risk-desc" class="text-[11px] text-slate-300 leading-snug">
+            <p id="decision-risk-desc" class="text-base text-slate-300 leading-snug">
               Requieren despliegue inmediato de equipos territoriales.
             </p>
           </div>
@@ -527,16 +532,16 @@
           <!-- Decisión 3: Presión Social / Familias por Casa -->
           <div class="bg-[#18114a] border border-sky-500/30 rounded-2xl p-3.5 space-y-1.5 shadow-md">
             <div class="flex items-center justify-between">
-              <span class="text-[10px] font-black uppercase text-sky-400 flex items-center gap-1">
+              <span class="text-base font-black uppercase text-sky-400 flex items-center gap-1">
                 <span>🏠</span> Presión Social
               </span>
-              <span class="text-[9px] font-mono bg-sky-950 text-sky-300 px-1.5 py-0.5 rounded border border-sky-700/50">Fam/Casa</span>
+              <span class="text-base font-mono bg-sky-950 text-sky-300 px-1.5 py-0.5 rounded border border-sky-700/50">Fam/Casa</span>
             </div>
             <div class="flex items-baseline gap-1.5">
               <strong id="decision-cohabit-ratio" class="text-2xl font-black text-sky-300">1.00</strong>
-              <span class="text-[11px] text-slate-300">familias/vivienda</span>
+              <span class="text-base text-slate-300">familias/vivienda</span>
             </div>
-            <p id="decision-cohabit-desc" class="text-[11px] text-slate-300 leading-snug">
+            <p id="decision-cohabit-desc" class="text-base text-slate-300 leading-snug">
               Déficit habitacional e índice de vulnerabilidad social.
             </p>
           </div>
@@ -544,16 +549,16 @@
           <!-- Decisión 4: Ratio Logístico por Centro CNE -->
           <div class="bg-[#18114a] border border-purple-500/30 rounded-2xl p-3.5 space-y-1.5 shadow-md">
             <div class="flex items-center justify-between">
-              <span class="text-[10px] font-black uppercase text-purple-400 flex items-center gap-1">
+              <span class="text-base font-black uppercase text-purple-400 flex items-center gap-1">
                 <span>🏫</span> Carga por Centro
               </span>
-              <span class="text-[9px] font-mono bg-purple-950 text-purple-300 px-1.5 py-0.5 rounded border border-purple-700/50">Electores</span>
+              <span class="text-base font-mono bg-purple-950 text-purple-300 px-1.5 py-0.5 rounded border border-purple-700/50">Electores</span>
             </div>
             <div class="flex items-baseline gap-1.5">
               <strong id="decision-school-load" class="text-2xl font-black text-purple-300">0</strong>
-              <span class="text-[11px] text-slate-300">electores/escuela</span>
+              <span class="text-base text-slate-300">electores/escuela</span>
             </div>
-            <p id="decision-school-desc" class="text-[11px] text-slate-300 leading-snug">
+            <p id="decision-school-desc" class="text-base text-slate-300 leading-snug">
               Planificación de logística de transporte, testigos y refrigerio.
             </p>
           </div>
@@ -565,15 +570,15 @@
       <div class="bg-[#140e40]/90 border border-[#2d1f85] rounded-3xl p-4 sm:p-5 shadow-xl space-y-3">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#2d1f85] pb-3">
           <div>
-            <h2 class="text-sm sm:text-base font-black text-white uppercase tracking-wider flex items-center gap-2">
+            <h2 class="text-base sm:text-base font-black text-white uppercase tracking-wider flex items-center gap-2">
               <i data-lucide="scale" class="w-4 h-4 text-amber-400"></i>
               <span>Matriz Comparativa Inter-Municipal del Estado Monagas</span>
             </h2>
-            <p class="text-xs text-slate-300 mt-0.5">
+            <p class="text-base text-slate-300 mt-0.5">
               Haz clic en cualquier encabezado para ordenar ascendente o descendentemente. Haz clic en una fila para filtrar.
             </p>
           </div>
-          <span class="text-xs font-mono text-amber-400 font-bold bg-amber-500/10 px-2.5 py-1 rounded-xl border border-amber-500/30">
+          <span class="text-base font-mono text-amber-400 font-bold bg-amber-500/10 px-2.5 py-1 rounded-xl border border-amber-500/30">
             13 Municipios Oficiales
           </span>
         </div>
@@ -581,7 +586,7 @@
         <div class="overflow-x-auto">
           <table class="w-full text-left border-collapse">
             <thead>
-              <tr class="border-b border-[#2d1f85] text-[11px] font-black uppercase text-slate-300 select-none">
+              <tr class="border-b border-[#2d1f85] text-base font-black uppercase text-slate-300 select-none">
                 <th class="px-3 py-2.5 cursor-pointer demo-sort-header hover:text-amber-400 transition" data-sort="nombre">Municipio ↕</th>
                 <th class="px-3 py-2.5 text-center cursor-pointer demo-sort-header hover:text-amber-400 transition" data-sort="parroquiasCount">Parroquias ↕</th>
                 <th class="px-3 py-2.5 text-center cursor-pointer demo-sort-header hover:text-purple-300 transition" data-sort="subCount">Ejes ↕</th>
@@ -610,15 +615,15 @@
       <div class="bg-[#140e40]/90 border border-[#2d1f85] rounded-3xl p-4 sm:p-5 shadow-xl space-y-3">
         <div class="flex items-center justify-between border-b border-[#2d1f85] pb-3">
           <div>
-            <h3 class="text-sm sm:text-base font-black text-white uppercase tracking-wider flex items-center gap-2">
+            <h3 class="text-base sm:text-base font-black text-white uppercase tracking-wider flex items-center gap-2">
               <i data-lucide="flame" class="w-4 h-4 text-orange-400"></i>
               <span>Top Sectores con Mayor Padrón y Prioridad Operativa</span>
             </h3>
-            <p class="text-xs text-slate-300 mt-0.5">
+            <p class="text-base text-slate-300 mt-0.5">
               Polígonos estratégicos ordenados por volumen de votantes para despliegue de brigadas
             </p>
           </div>
-          <span class="text-xs font-mono text-purple-300 font-bold bg-purple-950/60 px-2.5 py-1 rounded-xl border border-purple-500/40">
+          <span class="text-base font-mono text-purple-300 font-bold bg-purple-950/60 px-2.5 py-1 rounded-xl border border-purple-500/40">
             Top 12 Monagas
           </span>
         </div>
@@ -638,15 +643,15 @@
         
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#2d1f85] pb-3">
           <div>
-            <h2 class="text-sm sm:text-base font-black text-white uppercase tracking-wider flex items-center gap-2">
+            <h2 class="text-base sm:text-base font-black text-white uppercase tracking-wider flex items-center gap-2">
               <i data-lucide="layers" class="w-4 h-4 text-sky-400"></i>
               <span>Catálogo Maestro de Polígonos y Sectores Vecinales</span>
             </h2>
-            <p class="text-xs text-slate-300 mt-0.5">
+            <p class="text-base text-slate-300 mt-0.5">
               Registro unitario de cada polígono vectorial trazado con sus métricas censales y centro CNE
             </p>
           </div>
-          <div class="flex items-center gap-3 font-mono text-xs">
+          <div class="flex items-center gap-3 font-mono text-base">
             <span id="demo-sectors-count-label" class="text-amber-400 font-bold">0 sectores</span>
             <span id="demo-sectors-page-label" class="text-slate-400">Pág. 1 de 1</span>
           </div>
@@ -655,7 +660,7 @@
         <div class="overflow-x-auto">
           <table class="w-full text-left border-collapse">
             <thead>
-              <tr class="border-b border-[#2d1f85] text-[10px] font-black uppercase text-slate-300">
+              <tr class="border-b border-[#2d1f85] text-base font-black uppercase text-slate-300">
                 <th class="px-3 py-2">ID Polígono</th>
                 <th class="px-3 py-2">Sector Vecinal</th>
                 <th class="px-3 py-2">Eje Territorial (Subparroquia)</th>
@@ -678,11 +683,11 @@
         </div>
 
         <!-- Paginación -->
-        <div class="flex items-center justify-between pt-2 border-t border-[#2d1f85] text-xs">
+        <div class="flex items-center justify-between pt-2 border-t border-[#2d1f85] text-base">
           <button id="btn-demo-sectors-prev" class="px-3 py-1.5 rounded-xl bg-[#18114a] hover:bg-[#23176d] border border-[#2d1f85] text-slate-200 font-bold disabled:opacity-40 disabled:pointer-events-none transition cursor-pointer">
             ◀ Anterior
           </button>
-          <span class="text-slate-400 font-mono text-[11px]">Navegación fluida en memoria</span>
+          <span class="text-slate-400 font-mono text-base">Navegación fluida en memoria</span>
           <button id="btn-demo-sectors-next" class="px-3 py-1.5 rounded-xl bg-[#18114a] hover:bg-[#23176d] border border-[#2d1f85] text-slate-200 font-bold disabled:opacity-40 disabled:pointer-events-none transition cursor-pointer">
             Siguiente ▶
           </button>
@@ -698,11 +703,11 @@
       <div class="bg-[#140e40]/90 border border-[#2d1f85] rounded-3xl p-4 sm:p-5 shadow-xl space-y-4">
         
         <div class="border-b border-[#2d1f85] pb-3">
-          <h2 class="text-sm sm:text-base font-black text-white uppercase tracking-wider flex items-center gap-2">
+          <h2 class="text-base sm:text-base font-black text-white uppercase tracking-wider flex items-center gap-2">
             <i data-lucide="git-merge" class="w-4 h-4 text-amber-400"></i>
             <span>Visualizador de Jerarquía Territorial en Cascada (5 Niveles)</span>
           </h2>
-          <p class="text-xs text-slate-300 mt-0.5">
+          <p class="text-base text-slate-300 mt-0.5">
             Estructura anidada completa: Municipio ➔ Parroquia ➔ Eje Territorial ➔ Sector Vecinal (Polígono). Toca para desplegar.
           </p>
         </div>
@@ -725,63 +730,63 @@
           <i data-lucide="layers" class="w-5 h-5 text-amber-400"></i>
           <div>
             <h3 class="text-base font-black text-white uppercase tracking-wider">Arquitectura Técnica del Modelo de Censo</h3>
-            <p class="text-xs text-slate-300">Explicación del flujo de datos entre capas cartográficas y cómputo distribuido</p>
+            <p class="text-base text-slate-300">Explicación del flujo de datos entre capas cartográficas y cómputo distribuido</p>
           </div>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-5 gap-3 font-mono text-xs">
+        <div class="grid grid-cols-1 md:grid-cols-5 gap-3 font-mono text-base">
           
           <div class="bg-[#18114a] p-3.5 rounded-2xl border border-amber-500/30 space-y-2">
-            <span class="px-2 py-0.5 rounded bg-amber-500/20 text-amber-400 font-bold text-[10px]">CAPA 1 • ESTADO</span>
-            <h4 class="font-black text-white text-sm">Monagas</h4>
-            <p class="text-slate-300 text-[11px] font-sans">
+            <span class="px-2 py-0.5 rounded bg-amber-500/20 text-amber-400 font-bold text-base">CAPA 1 • ESTADO</span>
+            <h4 class="font-black text-white text-base">Monagas</h4>
+            <p class="text-slate-300text-sm font-sans">
               Entidad federal autoritativa. Consolida los 13 municipios y el padrón electoral global.
             </p>
-            <div class="text-[10px] text-amber-300 pt-1 border-t border-[#2d1f85]">
+            <div class="text-base text-amber-300 pt-1 border-t border-[#2d1f85]">
               ID: "monagas"
             </div>
           </div>
 
           <div class="bg-[#18114a] p-3.5 rounded-2xl border border-sky-500/30 space-y-2">
-            <span class="px-2 py-0.5 rounded bg-sky-500/20 text-sky-400 font-bold text-[10px]">CAPA 2 • MUNICIPIO</span>
-            <h4 class="font-black text-white text-sm">13 Municipios</h4>
-            <p class="text-slate-300 text-[11px] font-sans">
+            <span class="px-2 py-0.5 rounded bg-sky-500/20 text-sky-400 font-bold text-base">CAPA 2 • MUNICIPIO</span>
+            <h4 class="font-black text-white text-base">13 Municipios</h4>
+            <p class="text-slate-300text-sm font-sans">
               División político-administrativa primaria. Maturín agrupa el 60%+ del electorado.
             </p>
-            <div class="text-[10px] text-sky-300 pt-1 border-t border-[#2d1f85]">
+            <div class="text-base text-sky-300 pt-1 border-t border-[#2d1f85]">
               Campo: <code>munId</code>
             </div>
           </div>
 
           <div class="bg-[#18114a] p-3.5 rounded-2xl border border-emerald-500/30 space-y-2">
-            <span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 font-bold text-[10px]">CAPA 3 • PARROQUIA</span>
-            <h4 class="font-black text-white text-sm">44 Parroquias</h4>
-            <p class="text-slate-300 text-[11px] font-sans">
+            <span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 font-bold text-base">CAPA 3 • PARROQUIA</span>
+            <h4 class="font-black text-white text-base">44 Parroquias</h4>
+            <p class="text-slate-300text-sm font-sans">
               Perímetro geográfico oficial delimitado con polígonos GeoJSON y coordenadas oficiales.
             </p>
-            <div class="text-[10px] text-emerald-300 pt-1 border-t border-[#2d1f85]">
+            <div class="text-base text-emerald-300 pt-1 border-t border-[#2d1f85]">
               Campo: <code>parishId</code>
             </div>
           </div>
 
           <div class="bg-[#18114a] p-3.5 rounded-2xl border border-purple-500/30 space-y-2">
-            <span class="px-2 py-0.5 rounded bg-purple-500/20 text-purple-400 font-bold text-[10px]">CAPA 4 • EJE TERRITORIAL</span>
-            <h4 class="font-black text-white text-sm">120+ Ejes</h4>
-            <p class="text-slate-300 text-[11px] font-sans">
+            <span class="px-2 py-0.5 rounded bg-purple-500/20 text-purple-400 font-bold text-base">CAPA 4 • EJE TERRITORIAL</span>
+            <h4 class="font-black text-white text-base">120+ Ejes</h4>
+            <p class="text-slate-300text-sm font-sans">
               Sub-parroquia o circuito territorial organizativo. Agrupa entre 3 y 8 sectores adyacentes.
             </p>
-            <div class="text-[10px] text-purple-300 pt-1 border-t border-[#2d1f85]">
+            <div class="text-base text-purple-300 pt-1 border-t border-[#2d1f85]">
               Campo: <code>subParroquiaId</code>
             </div>
           </div>
 
           <div class="bg-[#18114a] p-3.5 rounded-2xl border border-orange-500/30 space-y-2">
-            <span class="px-2 py-0.5 rounded bg-orange-500/20 text-orange-400 font-bold text-[10px]">CAPA 5 • SECTOR</span>
-            <h4 class="font-black text-white text-sm">350+ Polígonos</h4>
-            <p class="text-slate-300 text-[11px] font-sans">
+            <span class="px-2 py-0.5 rounded bg-orange-500/20 text-orange-400 font-bold text-base">CAPA 5 • SECTOR</span>
+            <h4 class="font-black text-white text-base">350+ Polígonos</h4>
+            <p class="text-slate-300text-sm font-sans">
               Unidad atómica trazada en satélite 3D. Contiene los 4 datos censales y el centro CNE.
             </p>
-            <div class="text-[10px] text-orange-300 pt-1 border-t border-[#2d1f85]">
+            <div class="text-base text-orange-300 pt-1 border-t border-[#2d1f85]">
               Polígono Leaflet/GE
             </div>
           </div>
@@ -791,12 +796,12 @@
 
       <!-- Esquema JSON y Modelo de Datos -->
       <div class="bg-[#140e40]/90 border border-[#2d1f85] rounded-3xl p-5 shadow-xl space-y-3">
-        <h4 class="text-xs font-black uppercase text-amber-400 tracking-wider flex items-center gap-2">
+        <h4 class="text-base font-black uppercase text-amber-400 tracking-wider flex items-center gap-2">
           <i data-lucide="database" class="w-4 h-4"></i>
           <span>Esquema de Datos de un Sector Vecinal (JSON Schema)</span>
         </h4>
         
-        <pre class="bg-[#0e092e] border border-[#2d1f85] p-4 rounded-2xl font-mono text-xs text-amber-300/90 overflow-x-auto">
+        <pre class="bg-[#0e092e] border border-[#2d1f85] p-4 rounded-2xl font-monotext-sm text-amber-300/90 overflow-x-auto">
 {
   "id": "POL-GOD-001",
   "nombre": "La Puente Sector 1 (Plaza)",
@@ -821,8 +826,8 @@
       </div>
 
       <!-- Explicación de Integración para Ingenieros -->
-      <div class="bg-[#140e40]/90 border border-[#2d1f85] rounded-3xl p-5 shadow-xl space-y-3 text-xs text-slate-300 leading-relaxed">
-        <h4 class="text-xs font-black uppercase text-sky-400 tracking-wider flex items-center gap-2">
+      <div class="bg-[#140e40]/90 border border-[#2d1f85] rounded-3xl p-5 shadow-xl space-y-3 text-sm text-slate-300 leading-relaxed">
+        <h4 class="text-base font-black uppercase text-sky-400 tracking-wider flex items-center gap-2">
           <i data-lucide="check-circle-2" class="w-4 h-4"></i>
           <span>Garantías de Aislamiento y Resiliencia</span>
         </h4>
@@ -845,7 +850,7 @@
       <div class="flex items-center justify-between border-b border-[#2d1f85] pb-2.5">
         <div class="flex items-center gap-2">
           <span class="text-amber-400 text-lg">📑</span>
-          <h3 class="text-sm font-black text-white uppercase tracking-wider">Informe de Sala Situacional</h3>
+          <h3 class="text-base font-black text-white uppercase tracking-wider">Informe de Sala Situacional</h3>
         </div>
         <button type="button" id="btn-close-report-modal" class="p-1 rounded-lg text-slate-400 hover:text-white hover:bg-[#18114a] transition cursor-pointer">
           <i data-lucide="x" class="w-4 h-4"></i>
@@ -857,10 +862,10 @@
       </div>
 
       <div class="flex items-center justify-end gap-2 pt-2 border-t border-[#2d1f85]">
-        <button type="button" onclick="window.print()" class="px-4 py-2 bg-[#18114a] hover:bg-[#23176d] border border-[#2d1f85] text-slate-200 rounded-xl font-bold text-xs transition cursor-pointer">
+        <button type="button" onclick="window.print()" class="px-4 py-2 bg-[#18114a] hover:bg-[#23176d] border border-[#2d1f85] text-slate-200 rounded-xl font-bold text-sm transition cursor-pointer">
           🖨️ Imprimir
         </button>
-        <button type="button" onclick="document.getElementById('modal-situational-report').style.display='none'" class="px-4 py-2 bg-amber-500 hover:bg-amber-400 text-[#0e092e] rounded-xl font-black text-xs transition cursor-pointer">
+        <button type="button" onclick="document.getElementById('modal-situational-report').style.display='none'" class="px-4 py-2 bg-amber-500 hover:bg-amber-400 text-[#0e092e] rounded-xl font-black text-sm transition cursor-pointer">
           Cerrar
         </button>
       </div>
@@ -870,12 +875,13 @@
   <!-- ============================================================== -->
   <!-- PIE DE PÁGINA                                                  -->
   <!-- ============================================================== -->
-  <footer class="bg-[#100b33] border-t border-[#2d1f85] py-4 text-center text-xs text-slate-400 font-mono shrink-0">
+  <footer class="bg-[#100b33] border-t border-[#2d1f85] py-4 text-centertext-sm text-slate-400 font-mono shrink-0">
     <p>MIGATO • Plataforma de Inteligencia Territorial del Estado Monagas • Modo Demostración de Ingeniería</p>
   </footer>
 
   <!-- Script Principal de la Demo (v=103 cache buster) -->
   <script type="module" src="./js/demoApp.js?v=103"></script>
 
+  <script src="js/a11y.js"></script>
 </body>
 </html>

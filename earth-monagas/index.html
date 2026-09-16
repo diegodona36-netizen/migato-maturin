@@ -347,6 +347,7 @@
   </script>
 </head>
 <body class="bg-[#0e092e] text-slate-100 h-screen flex flex-col antialiased select-none overflow-hidden max-w-full">
+  <a href="#main-content" class="skip-link">Saltar al contenido principal</a>
 
   <!-- ============================================================== -->
   <!-- ============================================================== -->
@@ -369,9 +370,9 @@
           <i data-lucide="shield-check" class="w-8 h-8 text-sky-200"></i>
         </div>
         <div>
-          <span class="text-[10px] font-black text-amber-400 uppercase tracking-widest block">Comando Regional MIGATO Monagas</span>
+          <span class="text-base font-black text-amber-400 uppercase tracking-widest block">Comando Regional MIGATO Monagas</span>
           <h2 class="text-xl font-black text-white tracking-tight">Plataforma Territorial • MIGATO</h2>
-          <p class="text-xs text-slate-400 font-medium mt-0.5">
+          <p class="text-base text-slate-400 font-medium mt-0.5">
             Sistema Integrado de Información Cartográfica y Monitoreo Sectorial
           </p>
         </div>
@@ -387,23 +388,23 @@
 
         <!-- Campo 1: Usuario Institucional -->
         <div class="space-y-1.5">
-          <label class="block text-[10px] font-black text-slate-300 uppercase tracking-wider">
+          <label class="block text-sm font-black text-slate-300 uppercase tracking-wider">
             Usuario Asignado
           </label>
           <div class="relative">
             <i data-lucide="user" class="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2"></i>
-            <input type="text" id="auth-input-user" value="" class="w-full pl-9 pr-3 py-2.5 bg-[#0e092e] border border-[#2d1f85] rounded-xl text-white font-mono text-xs focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500/50 transition" placeholder="Ingrese su usuario asignado" required autocomplete="username">
+            <input type="text" id="auth-input-user" value="" class="w-full pl-9 pr-3 py-2.5 bg-[#0e092e] border border-[#2d1f85] rounded-xl text-white font-mono text-sm focus:border-sky-500 focus:ring-1 focus:ring-sky-500/50 transition" placeholder="Ingrese su usuario asignado" required autocomplete="username">
           </div>
         </div>
 
         <!-- Campo 2: Contraseña con Toggle de Visibilidad -->
         <div class="space-y-1.5">
-          <label class="block text-[10px] font-black text-slate-300 uppercase tracking-wider">
+          <label class="block text-sm font-black text-slate-300 uppercase tracking-wider">
             Contraseña de Acceso
           </label>
           <div class="relative">
             <i data-lucide="lock" class="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2"></i>
-            <input type="password" id="auth-input-pass" value="" class="w-full pl-9 pr-10 py-2.5 bg-[#0e092e] border border-[#2d1f85] rounded-xl text-white font-mono text-xs focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500/50 transition" placeholder="••••••••" required autocomplete="current-password">
+            <input type="password" id="auth-input-pass" value="" class="w-full pl-9 pr-10 py-2.5 bg-[#0e092e] border border-[#2d1f85] rounded-xl text-white font-mono text-sm focus:border-sky-500 focus:ring-1 focus:ring-sky-500/50 transition" placeholder="••••••••" required autocomplete="current-password">
             <button type="button" id="btn-toggle-pass-visibility" class="absolute right-2.5 top-1/2 -translate-y-1/2 p-1 text-slate-400 hover:text-slate-200 transition cursor-pointer" title="Mostrar/Ocultar Contraseña">
               <i data-lucide="eye" id="icon-pass-visibility" class="w-4 h-4"></i>
             </button>
@@ -411,22 +412,22 @@
         </div>
 
         <!-- Checkbox Recordar Sesión -->
-        <div class="flex items-center justify-between text-[11px] text-slate-400 pt-0.5">
+        <div class="flex items-center justify-between text-sm text-slate-400 pt-0.5">
           <label class="flex items-center gap-2 cursor-pointer select-none">
             <input type="checkbox" id="auth-chk-remember" checked class="rounded bg-[#0e092e] border-[#2d1f85] text-sky-500 focus:ring-0 w-3.5 h-3.5 cursor-pointer">
             <span class="font-medium text-slate-300">Mantener sesión activa</span>
           </label>
-          <span class="text-emerald-400 text-[10px] font-bold flex items-center gap-1">
+          <span class="text-emerald-400 text-base font-bold flex items-center gap-1">
             <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
             Seguridad SSL
           </span>
         </div>
 
         <!-- Mensaje de Error Institucional -->
-        <div id="auth-error-msg" class="hidden text-xs text-red-300 bg-red-950/60 border border-red-800/80 p-2.5 rounded-xl font-medium text-center"></div>
+        <div id="auth-error-msg" class="hidden text-base text-red-300 bg-red-950/60 border border-red-800/80 p-2.5 rounded-xl font-medium text-center"></div>
 
         <!-- Botón Principal: Acceder -->
-        <button type="submit" id="btn-submit-auth" class="w-full py-3 bg-gradient-to-r from-sky-600 via-blue-600 to-indigo-700 hover:from-sky-500 hover:to-indigo-600 text-white font-black text-xs sm:text-sm rounded-xl shadow-lg shadow-sky-600/30 active:scale-95 transition flex items-center justify-center gap-2 border border-sky-400/40 cursor-pointer uppercase tracking-wider">
+        <button type="submit" id="btn-submit-auth" class="w-full py-3 bg-gradient-to-r from-sky-600 via-blue-600 to-indigo-700 hover:from-sky-500 hover:to-indigo-600 text-white font-black text-sm sm:text-base rounded-xl shadow-lg shadow-sky-600/30 active:scale-95 transition flex items-center justify-center gap-2 border border-sky-400/40 cursor-pointer uppercase tracking-wider">
           <i data-lucide="shield-check" class="w-4 h-4 text-sky-200"></i>
           <span>Acceder a la Plataforma</span>
         </button>
@@ -434,9 +435,9 @@
       </form>
 
       <!-- Pie Institucional -->
-      <div class="pt-3 border-t border-[#2d1f85] text-center text-[10px] text-slate-400 space-y-0.5">
+      <div class="pt-3 border-t border-[#2d1f85] text-center text-sm text-slate-400 space-y-0.5">
         <p class="font-medium">Dirección General de Organización • Comando Regional MIGATO Monagas</p>
-        <p class="font-mono text-slate-500 text-[9px]">Acceso restringido y auditado • Edición 2026</p>
+        <p class="font-mono text-slate-500text-sm">Acceso restringido y auditado • Edición 2026</p>
       </div>
 
     </div>
@@ -450,32 +451,32 @@
       
       <!-- LADO IZQUIERDO: Identidad MIGATO + Selector Territorial -->
       <div class="flex items-center gap-2 shrink min-w-0">
-        <a href="./" class="flex items-center gap-2 shrink-0 group focus:outline-none" title="MIGATO • Módulo 4">
+        <a href="./" class="flex items-center gap-2 shrink-0 group " title="MIGATO • Módulo 4">
           <div class="w-8 h-8 rounded-lg bg-[#23176d] p-0.5 border border-white/20 flex items-center justify-center shrink-0 shadow-sm">
             <img src="../assets/logo-migato.png" alt="MIGATO" class="w-full h-full object-contain">
           </div>
-          <span class="font-display text-xs sm:text-sm font-black text-white tracking-wide whitespace-nowrap hidden sm:inline">
-            MÓDULO 4 <span class="text-sky-400 font-bold text-[11px]">• MAPA TERRITORIAL</span>
+          <span class="font-display text-base sm:text-base font-black text-white tracking-wide whitespace-nowrap hidden sm:inline">
+            MÓDULO 4 <span class="text-sky-400 font-bold text-base">• MAPA TERRITORIAL</span>
           </span>
         </a>
 
         <div class="h-4 w-[1px] bg-[#2d1f85] shrink-0 hidden sm:block"></div>
 
         <!-- Selector Territorial (Parroquia Activa con buen ancho en móvil) -->
-        <button id="btn-open-parish-modal" type="button" onclick="window.openParishSelectorGlobal()" class="px-3 sm:px-4 py-2 rounded-xl bg-[#18114a] hover:bg-[#23176d] border-2 border-sky-400/60 text-white text-xs sm:text-sm font-black flex items-center gap-2 transition active:scale-95 cursor-pointer max-w-[220px] sm:max-w-xs shrink min-w-0 shadow-md" style="pointer-events: auto !important; cursor: pointer !important;" title="Seleccionar Parroquia de Trabajo y Ver Sectores (Clic para abrir panel)">
+        <button id="btn-open-parish-modal" type="button" onclick="window.openParishSelectorGlobal()" class="px-3 sm:px-4 py-2 rounded-xl bg-[#18114a] hover:bg-[#23176d] border-2 border-sky-400/60 text-white text-sm sm:text-base font-black flex items-center gap-2 transition active:scale-95 cursor-pointer max-w-[220px] sm:max-w-xs shrink min-w-0 shadow-md" style="pointer-events: auto !important; cursor: pointer !important;" title="Seleccionar Parroquia de Trabajo y Ver Sectores (Clic para abrir panel)">
           <i data-lucide="map-pin" class="w-4 h-4 text-amber-400 shrink-0 pointer-events-none"></i>
-          <span id="nav-current-location" class="truncate font-black text-xs sm:text-sm text-sky-100 cursor-pointer" onclick="event.stopPropagation(); window.openParishSelectorGlobal()">📍 Seleccionar Parroquia / Municipio ▾</span>
+          <span id="nav-current-location" class="truncate font-black text-base sm:text-base text-sky-100 cursor-pointer" onclick="event.stopPropagation(); window.openParishSelectorGlobal()">📍 Seleccionar Parroquia / Municipio ▾</span>
           <i id="nav-arrow-icon" data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-300 shrink-0 pointer-events-none"></i>
         </button>
 
         <!-- Botón Rápido: Volver al Municipio Completo (Oculto por defecto en estado/reset) -->
-        <button id="btn-quick-back-mun" style="display: none;" type="button" onclick="if(window.earthApp?.selectedMunId) { window.earthApp.focusMunicipio(window.earthApp.selectedMunId, true); }" class="px-2.5 py-1.5 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/40 text-amber-300 hover:text-amber-100 text-xs font-extrabold flex items-center gap-1.5 transition active:scale-95 cursor-pointer shrink-0 shadow-sm" title="Volver a la vista del Municipio completo">
+        <button id="btn-quick-back-mun" style="display: none;" type="button" onclick="if(window.earthApp?.selectedMunId) { window.earthApp.focusMunicipio(window.earthApp.selectedMunId, true); }" class="px-2.5 py-1.5 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/40 text-amber-300 hover:text-amber-100 text-sm font-extrabold flex items-center gap-1.5 transition active:scale-95 cursor-pointer shrink-0 shadow-sm" title="Volver a la vista del Municipio completo">
           <i data-lucide="corner-up-left" class="w-3.5 h-3.5 text-amber-400"></i>
           <span class="hidden sm:inline">Municipio</span>
         </button>
 
         <!-- Botón Rápido: Reset a Seleccionar Parroquia -->
-        <button id="btn-quick-reset-all" type="button" onclick="window.earthApp?.focusEstado(true)" class="p-1.5 sm:px-2.5 sm:py-1.5 rounded-xl bg-[#18114a] hover:bg-[#23176d] border border-slate-600 text-slate-300 hover:text-white text-xs font-bold flex items-center gap-1 transition active:scale-95 cursor-pointer shrink-0 shadow-sm" title="Restablecer a Seleccionar Parroquia (sin dependencias)">
+        <button id="btn-quick-reset-all" type="button" onclick="window.earthApp?.focusEstado(true)" class="p-1.5 sm:px-2.5 sm:py-1.5 rounded-xl bg-[#18114a] hover:bg-[#23176d] border border-slate-600 text-slate-300 hover:text-white text-sm font-bold flex items-center gap-1 transition active:scale-95 cursor-pointer shrink-0 shadow-sm" title="Restablecer a Seleccionar Parroquia (sin dependencias)">
           <i data-lucide="rotate-ccw" class="w-3.5 h-3.5 text-slate-400"></i>
           <span class="hidden sm:inline">Reset</span>
         </button>
@@ -491,20 +492,20 @@
       <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
 
         <!-- BOTÓN DIRECTORIO DE SECTORES (TOGGLE DEL SIDEBAR) -->
-        <button id="btn-toggle-sidebar" type="button" class="px-2.5 sm:px-3 py-1.5 rounded-xl bg-[#18114a] hover:bg-[#23176d] border border-[#2d1f85] text-slate-200 hover:text-white text-xs font-bold flex items-center gap-1.5 transition active:scale-95 cursor-pointer shadow-sm shrink-0" title="Ver listado de sectores de esta parroquia">
+        <button id="btn-toggle-sidebar" type="button" class="px-2.5 sm:px-3 py-1.5 rounded-xl bg-[#18114a] hover:bg-[#23176d] border border-[#2d1f85] text-slate-200 hover:text-white text-sm font-bold flex items-center gap-1.5 transition active:scale-95 cursor-pointer shadow-sm shrink-0" title="Ver listado de sectores de esta parroquia">
           <i data-lucide="list" class="w-3.5 h-3.5 text-sky-400 shrink-0"></i>
           <span class="hidden sm:inline font-bold">Sectores</span>
         </button>
 
         <!-- MENÚ DE OPCIONES EXTERNAS Y HERRAMIENTAS SECUNDARIAS -->
         <div class="relative" id="dropdown-options-wrapper">
-          <button id="btn-toggle-options-menu" type="button" class="p-1.5 sm:px-2.5 sm:py-1.5 rounded-xl bg-[#18114a] hover:bg-[#23176d] border border-[#2d1f85] text-slate-300 hover:text-white text-xs font-bold flex items-center gap-1 transition active:scale-95 cursor-pointer shadow-sm shrink-0" title="Menú de Navegación y Opciones">
+          <button id="btn-toggle-options-menu" type="button" class="p-1.5 sm:px-2.5 sm:py-1.5 rounded-xl bg-[#18114a] hover:bg-[#23176d] border border-[#2d1f85] text-slate-300 hover:text-white text-sm font-bold flex items-center gap-1 transition active:scale-95 cursor-pointer shadow-sm shrink-0" title="Menú de Navegación y Opciones">
             <i data-lucide="more-vertical" class="w-4 h-4"></i>
             <span class="hidden md:inline">Opciones</span>
           </button>
 
           <!-- Menú flotante de opciones -->
-          <div id="menu-options-dropdown" class="hidden absolute right-0 mt-2 w-56 bg-[#140e40]/98 border border-[#2d1f85] rounded-2xl shadow-2xl p-1.5 z-50 flex flex-col gap-1 text-xs backdrop-blur-md">
+          <div id="menu-options-dropdown" class="hidden absolute right-0 mt-2 w-56 bg-[#140e40]/98 border border-[#2d1f85] rounded-2xl shadow-2xl p-1.5 z-50 flex flex-col gap-1 text-base backdrop-blur-md">
             <a href="../lamina-monagas/?v=230" class="px-3 py-2 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/40 text-amber-300 font-bold flex items-center gap-2.5 transition">
               <i data-lucide="tv" class="w-4 h-4 text-amber-400"></i>
               <span>Lámina Ejecutiva 120"</span>
@@ -558,7 +559,11 @@
       </div>
 
     </div>
-  </header>
+            <button type="button" id="btn-toggle-contrast" class="px-2.5 py-1.5 rounded-xl bg-[#1d1554] hover:bg-[#23176d] text-amber-400 border border-amber-500/40 text-sm font-bold flex items-center gap-1.5 shadow transition active:scale-95" title="Alto contraste" aria-label="Activar modo alto contraste">
+            <span aria-hidden="true">◐</span>
+            <span class="hidden sm:inline">Contraste</span>
+          </button>
+        </header>
 
   <!-- ============================================================== -->
   <!-- 1.1. LA BARRA TERRITORIAL (SUB-PARROQUIA Y SECTORES)            -->
@@ -570,35 +575,35 @@
       
       <!-- 🟪 SUB-PARROQUIA (EJE TERRITORIAL - NIVEL 4) -->
       <button data-tool="subparroquia" id="btn-tool-subparish" onclick="window.activateEarthTool('subparroquia')"
-        class="btn-earth-tool px-2.5 sm:px-3 py-1.5 rounded-xl bg-[#18114a] hover:bg-[#251b66] text-purple-200 hover:text-white border border-purple-500/50 text-xs font-bold transition flex items-center gap-1.5 active:scale-95 shadow-sm cursor-pointer shrink-0 select-none"
+        class="btn-earth-tool px-2.5 sm:px-3 py-1.5 rounded-xl bg-[#18114a] hover:bg-[#251b66] text-purple-200 hover:text-white border border-purple-500/50 text-sm font-bold transition flex items-center gap-1.5 active:scale-95 shadow-sm cursor-pointer shrink-0 select-none"
         title="Dibujar o Delimitar Sub-Parroquia / Eje Territorial (Nivel 4)">
         <i data-lucide="shield" class="w-3.5 h-3.5 text-purple-400 shrink-0"></i>
-        <span class="font-black text-xs whitespace-nowrap">+ Sub-Parroquia</span>
-        <span id="bar-tally-ejes" class="px-1.5 py-0.2 rounded-md bg-purple-950/90 border border-purple-400/40 text-[10px] font-mono text-purple-300 font-bold ml-0.5" title="Total de Ejes en esta parroquia">0</span>
+        <span class="font-black text-base whitespace-nowrap">+ Sub-Parroquia</span>
+        <span id="bar-tally-ejes" class="px-1.5 py-0.2 rounded-md bg-purple-950/90 border border-purple-400/40 text-base font-mono text-purple-300 font-bold ml-0.5" title="Total de Ejes en esta parroquia">0</span>
       </button>
 
       <!-- 🔷 SECTORES (COMUNIDAD - NIVEL 5) -->
       <button data-tool="poligono" id="btn-tool-polygon" onclick="window.activateEarthTool('poligono')"
-        class="btn-earth-tool px-2.5 sm:px-3 py-1.5 rounded-xl bg-gradient-to-r from-[#23176d] to-[#3825a6] hover:from-[#2e1f8e] hover:to-[#4530c8] text-white border border-sky-400/60 text-xs font-bold transition flex items-center gap-1.5 active:scale-95 shadow-md shadow-[#23176d]/50 cursor-pointer shrink-0 select-none"
+        class="btn-earth-tool px-2.5 sm:px-3 py-1.5 rounded-xl bg-gradient-to-r from-[#23176d] to-[#3825a6] hover:from-[#2e1f8e] hover:to-[#4530c8] text-white border border-sky-400/60 text-sm font-bold transition flex items-center gap-1.5 active:scale-95 shadow-md shadow-[#23176d]/50 cursor-pointer shrink-0 select-none"
         title="Dibujar Sector Vecinal con Caracterización y Votantes (Nivel 5)">
         <i data-lucide="home" class="w-3.5 h-3.5 text-sky-300 shrink-0"></i>
-        <span class="font-black text-xs whitespace-nowrap">+ Sector</span>
-        <span id="bar-tally-sectores" class="px-1.5 py-0.2 rounded-md bg-[#140e40] border border-sky-400/40 text-[10px] font-mono text-sky-300 font-bold ml-0.5" title="Total de Sectores en esta parroquia">0</span>
+        <span class="font-black text-base whitespace-nowrap">+ Sector</span>
+        <span id="bar-tally-sectores" class="px-1.5 py-0.2 rounded-md bg-[#140e40] border border-sky-400/40 text-base font-mono text-sky-300 font-bold ml-0.5" title="Total de Sectores en esta parroquia">0</span>
       </button>
 
       <!-- 📋 FORMULARIO DE CARGA DIRECTO -->
       <a href="../carga/" id="btn-quick-form-carga" target="_blank"
-        class="px-2.5 sm:px-3 py-1.5 rounded-xl bg-[#18114a] hover:bg-[#23176d] text-sky-200 hover:text-white border border-sky-400/40 text-xs font-bold transition flex items-center gap-1.5 active:scale-95 shadow-sm cursor-pointer shrink-0 select-none"
+        class="px-2.5 sm:px-3 py-1.5 rounded-xl bg-[#18114a] hover:bg-[#23176d] text-sky-200 hover:text-white border border-sky-400/40 text-base font-bold transition flex items-center gap-1.5 active:scale-95 shadow-sm cursor-pointer shrink-0 select-none"
         title="Abrir Formulario Móvil de Carga de Datos en Terreno">
         <i data-lucide="clipboard-edit" class="w-3.5 h-3.5 text-sky-400 shrink-0"></i>
-        <span class="font-bold text-xs whitespace-nowrap">Formulario Carga</span>
+        <span class="font-bold text-base whitespace-nowrap">Formulario Carga</span>
       </a>
 
     </div>
 
     <!-- 📍 INDICADOR CENTRAL: ESTADO TERRITORIAL DEL MAPA (ENTRE FORMULARIO CARGA Y SATÉLITE) -->
     <div id="hud-territorial-focus" class="flex items-center justify-center shrink min-w-0 px-1 pointer-events-auto">
-      <div id="hud-territorial-content" class="flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-xl bg-[#140e40]/90 border border-indigo-500/40 text-xs whitespace-nowrap overflow-hidden shadow-sm">
+      <div id="hud-territorial-content" class="flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-xl bg-[#140e40]/90 border border-indigo-500/40 text-base whitespace-nowrap overflow-hidden shadow-sm">
         <!-- Contenido dinámico inyectado por updateTerritorialFocusUI() -->
       </div>
     </div>
@@ -608,39 +613,39 @@
       
       <!-- 🗺️ Alternar Vista: Satélite HD vs Callejero -->
       <button type="button" id="btn-toggle-basemap" onclick="window.earthApp?.toggleBaseMapType?.()"
-        class="px-3 sm:px-3.5 py-2 rounded-xl bg-[#18114a] hover:bg-[#23176d] border border-[#2d1f85] hover:border-sky-400 text-xs sm:text-sm font-extrabold text-slate-100 transition flex items-center gap-2 active:scale-95 shadow-sm cursor-pointer shrink-0"
+        class="px-3 sm:px-3.5 py-2 rounded-xl bg-[#18114a] hover:bg-[#23176d] border border-[#2d1f85] hover:border-sky-400 text-sm sm:text-base font-extrabold text-slate-100 transition flex items-center gap-2 active:scale-95 shadow-sm cursor-pointer shrink-0"
         title="Alternar entre Satélite HD y Callejero">
         <i data-lucide="map" class="w-4 h-4 text-sky-400 shrink-0"></i>
-        <span id="text-toggle-basemap" class="whitespace-nowrap font-extrabold text-xs sm:text-sm">Satélite HD</span>
+        <span id="text-toggle-basemap" class="whitespace-nowrap font-extrabold text-base sm:text-base">Satélite HD</span>
       </button>
 
       <!-- 👁️ Velo Blanco Exterior (Botón para Sombrear/Enfocar la Parroquia) -->
       <button type="button" id="btn-toggle-spotlight" onclick="window.toggleSpotlight(event)"
-        class="px-3 sm:px-3.5 py-2 rounded-xl bg-[#18114a] hover:bg-[#23176d] border border-[#2d1f85] hover:border-amber-400 text-xs sm:text-sm font-extrabold text-slate-100 transition flex items-center gap-2 active:scale-95 shadow-sm cursor-pointer shrink-0"
+        class="px-3 sm:px-3.5 py-2 rounded-xl bg-[#18114a] hover:bg-[#23176d] border border-[#2d1f85] hover:border-amber-400 text-sm sm:text-base font-extrabold text-slate-100 transition flex items-center gap-2 active:scale-95 shadow-sm cursor-pointer shrink-0"
         title="Alternar Velo Blanco Exterior: sombrear en blanco las zonas de afuera del polígono para enfocar la parroquia">
         <i data-lucide="sun" id="icon-toggle-spotlight" class="w-4 h-4 text-slate-300 shrink-0"></i>
-        <span id="text-toggle-spotlight" class="whitespace-nowrap font-extrabold text-xs sm:text-sm">Velo Blanco: OFF</span>
+        <span id="text-toggle-spotlight" class="whitespace-nowrap font-extrabold text-base sm:text-base">Velo Blanco: OFF</span>
       </button>
 
       <!-- 📐 Selector de Alcance del Velo Blanco: Municipio (10 parroquias juntas) vs Parroquia (individual) -->
       <button type="button" id="btn-toggle-velo-scope" onclick="window.earthApp?.toggleVeloScope?.(event)"
-        class="px-2.5 sm:px-3 py-2 rounded-xl bg-[#18114a] hover:bg-[#23176d] border border-[#2d1f85] hover:border-sky-400 text-xs sm:text-sm font-extrabold text-slate-100 transition flex items-center gap-1.5 active:scale-95 shadow-sm cursor-pointer shrink-0"
+        class="px-2.5 sm:px-3 py-2 rounded-xl bg-[#18114a] hover:bg-[#23176d] border border-[#2d1f85] hover:border-sky-400 text-sm sm:text-base font-extrabold text-slate-100 transition flex items-center gap-1.5 active:scale-95 shadow-sm cursor-pointer shrink-0"
         title="Alternar corte del Velo Blanco: Municipio (corta todo Maturín manteniendo las 10 parroquias visibles) vs Parroquia (aísla la parroquia activa)">
         <i data-lucide="layers" class="w-4 h-4 text-sky-400 shrink-0"></i>
-        <span class="whitespace-nowrap text-xs">Corte: <strong id="text-velo-scope" class="text-sky-300 font-black">Municipio</strong></span>
+        <span class="whitespace-nowrap text-base">Corte: <strong id="text-velo-scope" class="text-sky-300 font-black">Municipio</strong></span>
       </button>
 
       <!-- 🏛️ Lámina 120" / Modo Presentación (Marco, Membrete y Ficha Oficial para proyector y fotos) -->
       <button type="button" id="btn-toggle-lamina" onclick="window.toggleLamina120(event)"
-        class="px-3 sm:px-3.5 py-2 rounded-xl bg-[#18114a] hover:bg-[#23176d] border border-[#2d1f85] hover:border-amber-400 text-xs sm:text-sm font-extrabold text-slate-100 transition flex items-center gap-2 active:scale-95 shadow-sm cursor-pointer shrink-0"
+        class="px-3 sm:px-3.5 py-2 rounded-xl bg-[#18114a] hover:bg-[#23176d] border border-[#2d1f85] hover:border-amber-400 text-sm sm:text-base font-extrabold text-slate-100 transition flex items-center gap-2 active:scale-95 shadow-sm cursor-pointer shrink-0"
         title="Activar Lámina Cartográfica Oficial de 120 pulgadas (Marco, Membrete y Ficha para proyección y fotos)">
         <i data-lucide="award" id="icon-toggle-lamina" class="w-4 h-4 text-amber-400 shrink-0"></i>
-        <span id="text-toggle-lamina" class="whitespace-nowrap font-extrabold text-xs sm:text-sm">Lámina 120"</span>
+        <span id="text-toggle-lamina" class="whitespace-nowrap font-extrabold text-base sm:text-base">Lámina 120"</span>
       </button>
 
       <!-- 📺 Acceso Directo al Módulo Dedicado de Lámina 120" (Sala Situacional) -->
       <a href="../lamina-monagas/?v=230"
-        class="px-2.5 sm:px-3 py-2 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 border border-amber-400 text-xs font-black text-amber-300 transition flex items-center gap-1.5 active:scale-95 shadow-sm cursor-pointer shrink-0"
+        class="px-2.5 sm:px-3 py-2 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 border border-amber-400 text-base font-black text-amber-300 transition flex items-center gap-1.5 active:scale-95 shadow-sm cursor-pointer shrink-0"
         title="Abrir Módulo Dedicado de Lámina Cartográfica 120 pulgadas (Sala Situacional)">
         <i data-lucide="tv" class="w-4 h-4 text-amber-400 shrink-0"></i>
         <span class="hidden md:inline whitespace-nowrap">Módulo Lámina</span>
@@ -648,15 +653,15 @@
 
       <!-- ↩ Botón Rápido Volver a Parroquia (aparece cuando hay un eje enfocado) -->
       <button type="button" id="btn-return-parish" style="display: none;" onclick="window.earthApp?.clearSubParishFocus?.()"
-        class="px-2.5 py-1.5 rounded-xl bg-purple-900/90 hover:bg-purple-800 border border-purple-400/60 text-xs font-black text-purple-100 transition flex items-center gap-1.5 active:scale-95 shadow-lg cursor-pointer shrink-0 animate-pulse"
+        class="px-2.5 py-1.5 rounded-xl bg-purple-900/90 hover:bg-purple-800 border border-purple-400/60 text-sm font-black text-purple-100 transition flex items-center gap-1.5 active:scale-95 shadow-lg cursor-pointer shrink-0 animate-pulse"
         title="Devolver vista y velo blanco a toda la parroquia">
         <i data-lucide="arrow-left-circle" class="w-3.5 h-3.5 text-purple-300 shrink-0"></i>
-        <span class="whitespace-nowrap font-bold text-xs">Volver a Parroquia</span>
+        <span class="whitespace-nowrap font-bold text-base">Volver a Parroquia</span>
       </button>
 
       <!-- Botón Capas Directo -->
       <button type="button" id="btn-bar-layers" onclick="window.earthApp?.openLayers ? window.earthApp.openLayers() : (document.getElementById('btn-sidebar-tab-layers')?.click(), window.earthApp?.toggleSidebar?.(true));"
-        class="px-2 py-1 rounded-lg bg-[#140e40] hover:bg-[#23176d] text-[11px] text-slate-300 hover:text-white border border-[#2d1f85] transition flex items-center gap-1 cursor-pointer"
+        class="px-2 py-1 rounded-lg bg-[#140e40] hover:bg-[#23176d] text-sm text-slate-300 hover:text-white border border-[#2d1f85] transition flex items-center gap-1 cursor-pointer"
         title="Ver Jerarquía y Capas de Territorio">
         <i data-lucide="layers" class="w-3.5 h-3.5 text-sky-400"></i>
         <span class="hidden sm:inline font-semibold">Capas</span>
@@ -664,7 +669,7 @@
 
       <!-- Restablecer Norte -->
       <button type="button" id="btn-compass-north" onclick="window.earthApp?.resetNorth ? window.earthApp.resetNorth() : window.earthApp?.toolsManager?.resetNorth?.()"
-        class="px-2 py-1 rounded-lg bg-[#140e40] hover:bg-[#23176d] text-[11px] text-slate-400 hover:text-sky-300 border border-[#2d1f85] transition flex items-center gap-1 cursor-pointer"
+        class="px-2 py-1 rounded-lg bg-[#140e40] hover:bg-[#23176d] text-sm text-slate-400 hover:text-sky-300 border border-[#2d1f85] transition flex items-center gap-1 cursor-pointer"
         title="Restablecer Vista hacia el Norte">
         <i data-lucide="compass" class="w-3.5 h-3.5"></i>
         <span class="hidden md:inline font-semibold">Norte</span>
@@ -686,7 +691,7 @@
     <aside id="earth-sidebar" style="z-index: 1500;" class="w-80 sm:w-96 max-w-[88vw] sm:max-w-none bg-[#0e092e] border-r border-[#2d1f85] flex flex-col justify-between overflow-hidden shrink-0 shadow-2xl absolute md:relative inset-y-0 left-0 z-40 hidden md:flex transition-all">
       
       <!-- Pestañas del Panel: Sectores vs Capas del Mapa -->
-      <div class="flex border-b border-[#2d1f85] bg-[#100b33] text-xs font-bold shrink-0">
+      <div class="flex border-b border-[#2d1f85] bg-[#100b33] text-base font-bold shrink-0">
         <button id="btn-sidebar-tab-places" class="flex-1 py-2.5 text-center text-sky-300 border-b-2 border-sky-400 bg-[#140e40] flex items-center justify-center gap-1.5 transition cursor-pointer" title="Directorio de sectores de la parroquia activa">
           <i data-lucide="map-pin" class="w-3.5 h-3.5 text-sky-400"></i>
           <span>Sectores</span>
@@ -697,7 +702,7 @@
         </button>
         <button id="btn-close-sidebar" type="button" class="px-2 py-1 text-slate-400 hover:text-white hover:bg-[#18114a] rounded-lg transition cursor-pointer flex items-center gap-1 shrink-0" title="Ocultar o Colapsar Panel (Ampliar Mapa)">
           <i data-lucide="chevron-left" class="w-4 h-4 hidden md:inline text-sky-400"></i>
-          <span class="text-[10px] font-bold uppercase hidden md:inline text-slate-400">Ocultar</span>
+          <span class="text-base font-bold uppercase hidden md:inline text-slate-400">Ocultar</span>
           <i data-lucide="x" class="w-4 h-4 md:hidden"></i>
         </button>
       </div>
@@ -708,7 +713,7 @@
         <div class="p-2.5 border-b border-[#2d1f85] bg-[#140e40]">
           <div class="relative">
             <i data-lucide="search" class="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-1/2 -translate-y-1/2"></i>
-            <input type="text" id="input-search-places" placeholder="Buscar sector o comunidad..." class="w-full pl-8 pr-2.5 py-1.5 text-xs bg-[#0e092e] border border-[#2d1f85] rounded-xl text-white placeholder-slate-400 focus:outline-none focus:border-sky-400 focus:ring-1 focus:ring-sky-400/30 transition">
+            <input type="text" id="input-search-places" placeholder="Buscar sector o comunidad..." class="w-full pl-8 pr-2.5 py-1.5 text-sm bg-[#0e092e] border border-[#2d1f85] rounded-xl text-white placeholder-slate-400 focus:border-sky-400 focus:ring-1 focus:ring-sky-400/30 transition">
           </div>
         </div>
 
@@ -727,25 +732,25 @@
             <div class="flex items-center gap-2">
               <span class="text-base">⚡</span>
               <div>
-                <strong class="text-xs font-black text-sky-300 block">Zoom Inteligente</strong>
-                <span class="text-[10px] text-slate-300 block leading-tight">Abre y cierra niveles automáticamente al acercarte</span>
+                <strong class="text-base font-black text-sky-300 block">Zoom Inteligente</strong>
+                <span class="text-base text-slate-300 block leading-tight">Abre y cierra niveles automáticamente al acercarte</span>
               </div>
             </div>
             <label class="relative inline-flex items-center cursor-pointer">
               <input type="checkbox" id="chk-auto-zoom-lod" class="sr-only peer">
-              <div class="w-9 h-5 bg-[#0e092e] border border-[#2d1f85] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-sky-500"></div>
+              <div class="w-9 h-5 bg-[#0e092e] border border-[#2d1f85] peer-rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-sky-500"></div>
             </label>
           </div>
-          <div id="status-auto-zoom-indicator" class="text-[10px] font-mono text-sky-400 bg-[#0e092e] px-2.5 py-1.5 rounded-xl border border-[#2d1f85] flex items-center justify-between">
+          <div id="status-auto-zoom-indicator" class="text-base font-mono text-sky-400 bg-[#0e092e] px-2.5 py-1.5 rounded-xl border border-[#2d1f85] flex items-center justify-between">
             <span>Nivel: <strong id="lbl-active-lod-name" class="text-white">Control Manual • Sectores Activos</strong></span>
             <span id="lbl-active-zoom-val" class="text-sky-300 font-bold">Zoom 14</span>
           </div>
         </div>
 
         <div class="border-b border-[#2d1f85] pb-2">
-          <span class="text-[10px] font-black text-amber-400 uppercase tracking-wider block">Jerarquía Territorial</span>
-          <h4 class="text-xs font-black text-white">5 Niveles Cartográficos</h4>
-          <p class="text-[10px] text-slate-400 mt-0.5">Se abren y cierran según tu acercamiento satelital:</p>
+          <span class="text-base font-black text-amber-400 uppercase tracking-wider block">Jerarquía Territorial</span>
+          <h4 class="text-base font-black text-white">5 Niveles Cartográficos</h4>
+          <p class="text-base text-slate-400 mt-0.5">Se abren y cierran según tu acercamiento satelital:</p>
         </div>
 
         <div class="space-y-2">
@@ -755,11 +760,11 @@
               <input type="checkbox" id="chk-layer-l1" class="w-4 h-4 rounded bg-[#0e092e] border-[#2d1f85] text-amber-500 focus:ring-0 cursor-pointer">
               <span class="w-2.5 h-2.5 rounded-full bg-amber-400 shrink-0"></span>
               <div class="truncate cursor-pointer group" onclick="event.preventDefault(); window.earthApp?.mapEngine?.focusHierarchicalLayer('l1')" title="Clic para hacer zoom a Estado Monagas">
-                <span class="text-xs font-bold text-white group-hover:text-amber-300 block truncate transition">Nivel 1: Estado Monagas</span>
-                <span class="text-[10px] text-slate-400">Oficial INE • Macro-Límite</span>
+                <span class="text-base font-bold text-white group-hover:text-amber-300 block truncate transition">Nivel 1: Estado Monagas</span>
+                <span class="text-base text-slate-400">Oficial INE • Macro-Límite</span>
               </div>
             </label>
-            <button onclick="window.earthApp.mapEngine.focusHierarchicalLayer('l1')" class="px-2 py-1 bg-[#18114a] hover:bg-[#23176d] border border-[#2d1f85] text-amber-400 rounded-lg text-[10px] font-bold shrink-0 active:scale-95 transition" title="Volar a Estado Monagas">
+            <button onclick="window.earthApp.mapEngine.focusHierarchicalLayer('l1')" class="px-2 py-1 bg-[#18114a] hover:bg-[#23176d] border border-[#2d1f85] text-amber-400 rounded-lg text-sm font-bold shrink-0 active:scale-95 transition" title="Volar a Estado Monagas">
               🎯
             </button>
           </div>
@@ -770,11 +775,11 @@
               <input type="checkbox" id="chk-layer-l2" class="w-4 h-4 rounded bg-[#0e092e] border-[#2d1f85] text-sky-500 focus:ring-0 cursor-pointer">
               <span class="w-2.5 h-2.5 rounded-full bg-sky-400 shrink-0"></span>
               <div class="truncate cursor-pointer group" onclick="event.preventDefault(); window.earthApp?.mapEngine?.focusHierarchicalLayer('l2')" title="Clic para hacer zoom a Municipios">
-                <span class="text-xs font-bold text-white group-hover:text-sky-300 block truncate transition">Nivel 2: 13 Municipios</span>
-                <span class="text-[10px] text-slate-400">Oficial INE • Polígonos Cantonales</span>
+                <span class="text-base font-bold text-white group-hover:text-sky-300 block truncate transition">Nivel 2: 13 Municipios</span>
+                <span class="text-base text-slate-400">Oficial INE • Polígonos Cantonales</span>
               </div>
             </label>
-            <button onclick="window.earthApp.mapEngine.focusHierarchicalLayer('l2')" class="px-2 py-1 bg-[#18114a] hover:bg-[#23176d] border border-[#2d1f85] text-sky-400 rounded-lg text-[10px] font-bold shrink-0 active:scale-95 transition" title="Volar a Municipios">
+            <button onclick="window.earthApp.mapEngine.focusHierarchicalLayer('l2')" class="px-2 py-1 bg-[#18114a] hover:bg-[#23176d] border border-[#2d1f85] text-sky-400 rounded-lg text-sm font-bold shrink-0 active:scale-95 transition" title="Volar a Municipios">
               🎯
             </button>
           </div>
@@ -785,11 +790,11 @@
               <input type="checkbox" id="chk-layer-l3" class="w-4 h-4 rounded bg-[#0e092e] border-[#2d1f85] text-emerald-500 focus:ring-0 cursor-pointer">
               <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 shrink-0"></span>
               <div class="truncate cursor-pointer group" onclick="event.preventDefault(); window.earthApp?.mapEngine?.focusHierarchicalLayer('l3')" title="Clic para hacer zoom a Parroquias">
-                <span class="text-xs font-bold text-white group-hover:text-emerald-300 block truncate transition">Nivel 3: 44 Parroquias</span>
-                <span class="text-[10px] text-slate-400">Oficial INE 2021 • 11 de Maturín</span>
+                <span class="text-base font-bold text-white group-hover:text-emerald-300 block truncate transition">Nivel 3: 44 Parroquias</span>
+                <span class="text-base text-slate-400">Oficial INE 2021 • 11 de Maturín</span>
               </div>
             </label>
-            <button onclick="window.earthApp.mapEngine.focusHierarchicalLayer('l3')" class="px-2 py-1 bg-[#18114a] hover:bg-[#23176d] border border-[#2d1f85] text-emerald-400 rounded-lg text-[10px] font-bold shrink-0 active:scale-95 transition" title="Volar a Parroquias">
+            <button onclick="window.earthApp.mapEngine.focusHierarchicalLayer('l3')" class="px-2 py-1 bg-[#18114a] hover:bg-[#23176d] border border-[#2d1f85] text-emerald-400 rounded-lg text-sm font-bold shrink-0 active:scale-95 transition" title="Volar a Parroquias">
               🎯
             </button>
           </div>
@@ -800,11 +805,11 @@
               <input type="checkbox" id="chk-layer-l4" checked class="w-4 h-4 rounded bg-[#0e092e] border-[#2d1f85] text-purple-500 focus:ring-0 cursor-pointer">
               <span class="w-2.5 h-2.5 rounded-full bg-purple-400 shrink-0"></span>
               <div class="truncate cursor-pointer group" onclick="event.preventDefault(); window.earthApp?.mapEngine?.focusHierarchicalLayer('l4')" title="Clic para hacer zoom a Ejes Territoriales">
-                <span class="text-xs font-black text-purple-300 group-hover:text-purple-200 block truncate transition">Nivel 4: Sub-Parroquias (Ejes)</span>
-                <span class="text-[10px] text-slate-400">Ejes y circuitos territoriales</span>
+                <span class="text-base font-black text-purple-300 group-hover:text-purple-200 block truncate transition">Nivel 4: Sub-Parroquias (Ejes)</span>
+                <span class="text-base text-slate-400">Ejes y circuitos territoriales</span>
               </div>
             </label>
-            <button onclick="window.earthApp.mapEngine.focusHierarchicalLayer('l4')" class="px-2 py-1 bg-purple-900/80 hover:bg-purple-800 text-purple-200 rounded-lg text-[10px] font-bold shrink-0 active:scale-95 transition cursor-pointer" title="Volar a Ejes Territoriales">
+            <button onclick="window.earthApp.mapEngine.focusHierarchicalLayer('l4')" class="px-2 py-1 bg-purple-900/80 hover:bg-purple-800 text-purple-200 rounded-lg text-sm font-bold shrink-0 active:scale-95 transition cursor-pointer" title="Volar a Ejes Territoriales">
               🎯
             </button>
           </div>
@@ -815,30 +820,30 @@
               <input type="checkbox" id="chk-layer-l5" checked class="w-4 h-4 rounded bg-[#0e092e] border-[#2d1f85] text-sky-500 focus:ring-0 cursor-pointer">
               <span class="w-2.5 h-2.5 rounded-full bg-sky-400 shrink-0"></span>
               <div class="truncate">
-                <span class="text-xs font-black text-sky-300 block truncate">Nivel 5: Sectores Vecinales</span>
-                <span class="text-[10px] text-slate-400">Sectores y comunidades mapeadas</span>
+                <span class="text-base font-black text-sky-300 block truncate">Nivel 5: Sectores Vecinales</span>
+                <span class="text-base text-slate-400">Sectores y comunidades mapeadas</span>
               </div>
             </label>
-            <button onclick="window.earthApp.mapEngine.focusHierarchicalLayer('l5')" class="px-2 py-1 bg-sky-600 hover:bg-sky-500 text-white rounded-lg text-[10px] font-bold shrink-0 active:scale-95 transition cursor-pointer" title="Volar a Sectores Vecinales">
+            <button onclick="window.earthApp.mapEngine.focusHierarchicalLayer('l5')" class="px-2 py-1 bg-sky-600 hover:bg-sky-500 text-white rounded-lg text-sm font-bold shrink-0 active:scale-95 transition cursor-pointer" title="Volar a Sectores Vecinales">
               🎯
             </button>
           </div>
 
         </div>
 
-        <div class="bg-[#140e40]/70 p-2.5 rounded-xl border border-[#2d1f85] text-[11px] text-slate-400 space-y-1">
-          <span class="font-bold text-slate-300 uppercase text-[10px] block">💡 Control Libre de Satélite:</span>
-          <p class="text-[10px] text-slate-400 leading-relaxed">
+        <div class="bg-[#140e40]/70 p-2.5 rounded-xl border border-[#2d1f85] text-sm text-slate-400 space-y-1">
+          <span class="font-bold text-slate-300 uppercase text-base block">💡 Control Libre de Satélite:</span>
+          <p class="text-base text-slate-400 leading-relaxed">
             Puedes hacer zoom libremente con la rueda del ratón o los botones táctiles sin que las capas se desconfiguren.
           </p>
         </div>
       </div>
 
       <!-- Pie del Panel: Capa Base -->
-      <div class="p-2.5 border-t border-[#2d1f85] bg-[#100b33] text-xs space-y-1">
-        <div class="flex items-center justify-between text-[11px] text-slate-300">
-          <span class="font-bold text-slate-400 uppercase text-[10px]">Capa Satelital:</span>
-          <span class="text-sky-400 font-mono text-[10px] font-bold">Google Satélite HD</span>
+      <div class="p-2.5 border-t border-[#2d1f85] bg-[#100b33] text-base space-y-1">
+        <div class="flex items-center justify-between text-sm text-slate-300">
+          <span class="font-bold text-slate-400 uppercase text-base">Capa Satelital:</span>
+          <span class="text-sky-400 font-mono text-base font-bold">Google Satélite HD</span>
         </div>
       </div>
 
@@ -847,7 +852,7 @@
     <!-- LIENZO SATELITAL CENTRAL -->
     <main class="flex-1 h-full relative overflow-hidden">
       <!-- Botón flotante para restaurar listado de sectores en escritorio cuando esté colapsado -->
-      <button type="button" id="btn-desktop-expand-sidebar" onclick="window.earthApp?.toggleSidebar(true)" style="display: none;" class="hidden md:flex absolute top-[76px] left-3 z-[1000] px-3 py-2 rounded-xl bg-[#140e40]/95 hover:bg-[#23176d] text-sky-300 hover:text-white border border-[#2d1f85] hover:border-sky-400/60 shadow-2xl backdrop-blur-md items-center gap-2 font-bold text-xs active:scale-95 transition cursor-pointer" title="Abrir directorio de sectores de esta parroquia">
+      <button type="button" id="btn-desktop-expand-sidebar" onclick="window.earthApp?.toggleSidebar(true)" style="display: none;" class="hidden md:flex absolute top-[76px] left-3 z-[1000] px-3 py-2 rounded-xl bg-[#140e40]/95 hover:bg-[#23176d] text-sky-300 hover:text-white border border-[#2d1f85] hover:border-sky-400/60 shadow-2xl backdrop-blur-md items-center gap-2 font-bold text-sm active:scale-95 transition cursor-pointer" title="Abrir directorio de sectores de esta parroquia">
         <i data-lucide="list" class="w-4 h-4 text-sky-400"></i>
         <span>Ver Sectores</span>
       </button>
@@ -859,31 +864,31 @@
       <!-- BARRA FLOTANTE MÓVIL OBSOLETA (OCULTA PERMANENTEMENTE PARA NO DUPLICAR BOTONES) -->
       <div id="mobile-field-actions" style="display: none !important;" class="hidden">
         <!-- Botón Lugares Móvil -->
-        <button type="button" onclick="document.getElementById('btn-toggle-sidebar').click()" class="pointer-events-auto px-3 py-2 rounded-2xl bg-[#140e40]/95 hover:bg-[#1d1554] text-amber-400 border border-amber-500/40 shadow-2xl backdrop-blur-md flex items-center gap-1.5 font-bold text-xs active:scale-95 transition cursor-pointer">
+        <button type="button" onclick="document.getElementById('btn-toggle-sidebar').click()" class="pointer-events-auto px-3 py-2 rounded-2xl bg-[#140e40]/95 hover:bg-[#1d1554] text-amber-400 border border-amber-500/40 shadow-2xl backdrop-blur-md flex items-center gap-1.5 font-bold text-sm active:scale-95 transition cursor-pointer">
           <i data-lucide="folder" class="w-4 h-4 text-amber-400"></i>
           <span>Lugares</span>
         </button>
 
         <!-- Botón + Eje Móvil -->
-        <button type="button" data-tool="subparroquia" id="btn-mobile-subparish" onclick="window.activateEarthTool('subparroquia')" class="btn-earth-tool pointer-events-auto px-3 py-2 rounded-2xl bg-[#140e40]/95 hover:bg-purple-900 text-purple-300 border border-purple-500/50 shadow-2xl backdrop-blur-md flex items-center gap-1.5 font-bold text-xs active:scale-95 transition cursor-pointer" title="Dibujar Límite de Sub-Parroquia o Eje Territorial">
+        <button type="button" data-tool="subparroquia" id="btn-mobile-subparish" onclick="window.activateEarthTool('subparroquia')" class="btn-earth-tool pointer-events-auto px-3 py-2 rounded-2xl bg-[#140e40]/95 hover:bg-purple-900 text-purple-300 border border-purple-500/50 shadow-2xl backdrop-blur-md flex items-center gap-1.5 font-bold text-sm active:scale-95 transition cursor-pointer" title="Dibujar Límite de Sub-Parroquia o Eje Territorial">
           <i data-lucide="shield" class="w-4 h-4 text-purple-400"></i>
           <span>+ Eje</span>
         </button>
 
         <!-- Botón + Sector Vecinal Móvil -->
-        <button type="button" data-tool="poligono" id="btn-mobile-polygon" onclick="window.activateEarthTool('poligono')" class="btn-earth-tool pointer-events-auto px-3.5 py-2 rounded-2xl bg-[#140e40]/95 hover:bg-sky-900 text-sky-300 border border-sky-500/50 shadow-2xl backdrop-blur-md flex items-center gap-1.5 font-black text-xs active:scale-95 transition cursor-pointer" title="Dibujar Sector Vecinal">
+        <button type="button" data-tool="poligono" id="btn-mobile-polygon" onclick="window.activateEarthTool('poligono')" class="btn-earth-tool pointer-events-auto px-3.5 py-2 rounded-2xl bg-[#140e40]/95 hover:bg-sky-900 text-sky-300 border border-sky-500/50 shadow-2xl backdrop-blur-md flex items-center gap-1.5 font-black text-sm active:scale-95 transition cursor-pointer" title="Dibujar Sector Vecinal">
           <i data-lucide="home" class="w-4 h-4 text-sky-400"></i>
           <span>+ Sector</span>
         </button>
 
         <!-- Botón + Ruta Móvil -->
-        <button type="button" data-tool="ruta" id="btn-mobile-path" onclick="window.activateEarthTool('ruta')" class="btn-earth-tool pointer-events-auto px-3 py-2 rounded-2xl bg-[#140e40]/95 hover:bg-emerald-900 text-emerald-300 border border-emerald-500/50 shadow-2xl backdrop-blur-md flex items-center gap-1 font-bold text-xs active:scale-95 transition cursor-pointer" title="Trazar Calle o Ruta">
+        <button type="button" data-tool="ruta" id="btn-mobile-path" onclick="window.activateEarthTool('ruta')" class="btn-earth-tool pointer-events-auto px-3 py-2 rounded-2xl bg-[#140e40]/95 hover:bg-emerald-900 text-emerald-300 border border-emerald-500/50 shadow-2xl backdrop-blur-md flex items-center gap-1 font-bold text-sm active:scale-95 transition cursor-pointer" title="Trazar Calle o Ruta">
           <i data-lucide="git-commit" class="w-4 h-4 text-emerald-400"></i>
           <span>+ Ruta</span>
         </button>
 
         <!-- Botón + Marca Móvil -->
-        <button type="button" data-tool="marca" id="btn-mobile-placemark" onclick="window.activateEarthTool('marca')" class="btn-earth-tool pointer-events-auto px-3 py-2 rounded-2xl bg-[#140e40]/95 hover:bg-rose-900 text-rose-300 border border-rose-500/50 shadow-2xl backdrop-blur-md flex items-center gap-1 font-bold text-xs active:scale-95 transition cursor-pointer" title="Punto de Interés">
+        <button type="button" data-tool="marca" id="btn-mobile-placemark" onclick="window.activateEarthTool('marca')" class="btn-earth-tool pointer-events-auto px-3 py-2 rounded-2xl bg-[#140e40]/95 hover:bg-rose-900 text-rose-300 border border-rose-500/50 shadow-2xl backdrop-blur-md flex items-center gap-1 font-bold text-sm active:scale-95 transition cursor-pointer" title="Punto de Interés">
           <i data-lucide="map-pin" class="w-4 h-4 text-rose-400"></i>
           <span>+ Marca</span>
         </button>
@@ -898,10 +903,10 @@
   <!-- ============================================================== -->
   <footer class="earth-status-bar h-7 px-2.5 sm:px-3 hidden sm:flex items-center justify-between font-mono shrink-0 select-text w-full overflow-hidden bg-[#100b33] border-t border-[#2d1f85] text-slate-400">
     <div class="flex items-center gap-2 truncate">
-      <span id="status-coords" class="text-slate-300 font-bold text-[10px] sm:text-xs truncate">9°44'51.2"N 63°11'05.4"W</span>
+      <span id="status-coords" class="text-slate-300 font-bold text-base sm:text-base truncate">9°44'51.2"N 63°11'05.4"W</span>
     </div>
 
-    <div class="flex items-center gap-3 text-[9px] sm:text-[10px] shrink-0">
+    <div class="flex items-center gap-3 text-base sm:text-base shrink-0">
       <span id="status-user-role" class="text-amber-300 font-bold hidden sm:inline-flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span>Máxima Autoridad MIGATO</span>
       <span class="hidden sm:inline text-slate-600">|</span>
       <span id="status-eye-alt">Ojo: 8.5 km</span>
@@ -922,10 +927,10 @@
         <div class="flex items-center gap-2.5 min-w-0">
           <span id="quick-stats-type-badge" class="w-3.5 h-3.5 rounded-md border shrink-0 bg-yellow-400 border-white shadow"></span>
           <div class="min-w-0">
-            <span id="quick-stats-subtitle" class="text-[9px] font-black uppercase tracking-wider text-yellow-400 block truncate">
+            <span id="quick-stats-subtitle" class="text-base font-black uppercase tracking-wider text-yellow-400 block truncate">
               Sector Vecinal
             </span>
-            <h3 id="quick-stats-title" class="text-sm sm:text-base font-black text-white truncate">
+            <h3 id="quick-stats-title" class="text-base sm:text-base font-black text-white truncate">
               Sector
             </h3>
           </div>
@@ -938,39 +943,39 @@
       <!-- Cuadrícula de KPIs Rápidos (2x2 en móvil, 4x1 en desktop) -->
       <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center font-mono">
         <div class="bg-[#0e092e] p-2 sm:p-2.5 rounded-xl border border-amber-500/30 min-w-0">
-          <span class="text-[10px] sm:text-[9px] text-amber-400 font-bold block uppercase truncate">🏠 Casas</span>
-          <span id="quick-stats-casas" class="text-sm font-black text-amber-300 block truncate">0</span>
+          <span class="text-base sm:text-base text-amber-400 font-bold block uppercase truncate">🏠 Casas</span>
+          <span id="quick-stats-casas" class="text-base font-black text-amber-300 block truncate">0</span>
         </div>
         <div class="bg-[#0e092e] p-2 sm:p-2.5 rounded-xl border border-sky-500/30 min-w-0">
-          <span class="text-[10px] sm:text-[9px] text-sky-400 font-bold block uppercase truncate">👨‍👩‍👧 Familias</span>
-          <span id="quick-stats-familias" class="text-sm font-black text-sky-300 block truncate">0</span>
+          <span class="text-base sm:text-base text-sky-400 font-bold block uppercase truncate">👨‍👩‍👧 Familias</span>
+          <span id="quick-stats-familias" class="text-base font-black text-sky-300 block truncate">0</span>
         </div>
         <div class="bg-[#0e092e] p-2 sm:p-2.5 rounded-xl border border-emerald-500/30 min-w-0">
-          <span class="text-[10px] sm:text-[9px] text-emerald-400 font-bold block uppercase truncate">👥 Habitantes</span>
-          <span id="quick-stats-habitantes" class="text-sm font-black text-emerald-300 block truncate">0</span>
+          <span class="text-base sm:text-base text-emerald-400 font-bold block uppercase truncate">👥 Habitantes</span>
+          <span id="quick-stats-habitantes" class="text-base font-black text-emerald-300 block truncate">0</span>
         </div>
         <div class="bg-[#0e092e] p-2 sm:p-2.5 rounded-xl border border-purple-500/30 min-w-0">
-          <span class="text-[10px] sm:text-[9px] text-purple-400 font-bold block uppercase truncate">🗳️ Votantes</span>
-          <span id="quick-stats-votantes" class="text-sm font-black text-purple-300 block truncate">0</span>
+          <span class="text-base sm:text-base text-purple-400 font-bold block uppercase truncate">🗳️ Votantes</span>
+          <span id="quick-stats-votantes" class="text-base font-black text-purple-300 block truncate">0</span>
         </div>
       </div>
 
       <!-- Información Adicional: Centro de Votación / Eje -->
-      <div id="quick-stats-details-box" class="bg-[#0e092e] p-2.5 rounded-xl border border-[#2d1f85] space-y-1 text-xs">
-        <div id="quick-stats-voting-row" class="flex items-center justify-between text-[11px]">
+      <div id="quick-stats-details-box" class="bg-[#0e092e] p-2.5 rounded-xl border border-[#2d1f85] space-y-1 text-base">
+        <div id="quick-stats-voting-row" class="flex items-center justify-between text-base">
           <span class="text-purple-300 font-bold flex items-center gap-1">
             <span>🗳️</span> Centro:
           </span>
           <span id="quick-stats-centro" class="text-white font-bold truncate flex-1 text-right">No asignado</span>
         </div>
         <!-- Fila de Eje Territorial con retorno directo a parroquia -->
-        <div id="quick-stats-subparish-row" style="display: none;" class="flex items-center justify-between text-[11px] pt-1.5 border-t border-[#2d1f85]">
+        <div id="quick-stats-subparish-row" style="display: none;" class="flex items-center justify-between text-base pt-1.5 border-t border-[#2d1f85]">
           <span class="text-purple-300 font-bold flex items-center gap-1 shrink-0">
             <span>🟪</span> Eje Territorial:
           </span>
           <div class="flex items-center gap-1.5 truncate max-w-[70%] justify-end">
             <span id="quick-stats-subparish-name" class="text-purple-100 font-extrabold truncate">Eje</span>
-            <button type="button" onclick="window.earthApp?.clearSubParishFocus?.()" class="text-[10px] text-purple-200 hover:text-white bg-purple-900/90 hover:bg-purple-800 px-1.5 py-0.5 rounded-lg border border-purple-400/50 transition font-bold shrink-0 cursor-pointer" title="Ver toda la parroquia">
+            <button type="button" onclick="window.earthApp?.clearSubParishFocus?.()" class="text-sm text-purple-200 hover:text-white bg-purple-900/90 hover:bg-purple-800 px-1.5 py-0.5 rounded-lg border border-purple-400/50 transition font-bold shrink-0 cursor-pointer" title="Ver toda la parroquia">
               ↩ Parroquia
             </button>
           </div>
@@ -979,19 +984,19 @@
 
       <!-- Barra de Acciones de la Ficha -->
       <div class="flex items-center gap-2 pt-0.5">
-        <a id="btn-quick-stats-dashboard-link" href="../dashboard-campana/" class="py-2 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-black text-xs flex items-center justify-center gap-1.5 shadow-lg active:scale-95 transition cursor-pointer" title="Abrir en Tablero Estadístico del Censo">
+        <a id="btn-quick-stats-dashboard-link" href="../dashboard-campana/" class="py-2 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-black text-base flex items-center justify-center gap-1.5 shadow-lg active:scale-95 transition cursor-pointer" title="Abrir en Tablero Estadístico del Censo">
           <i data-lucide="bar-chart-2" class="w-3.5 h-3.5"></i>
           <span>Estadísticas 📊</span>
         </a>
-        <button type="button" id="btn-quick-stats-action-sector" style="display: none;" class="py-2 px-3 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-black text-xs flex items-center justify-center gap-1.5 shadow-lg active:scale-95 transition cursor-pointer">
+        <button type="button" id="btn-quick-stats-action-sector" style="display: none;" class="py-2 px-3 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-black text-sm flex items-center justify-center gap-1.5 shadow-lg active:scale-95 transition cursor-pointer">
           <i data-lucide="plus-circle" class="w-3.5 h-3.5"></i>
           <span>+ Trazar Sector</span>
         </button>
-        <button type="button" id="btn-quick-stats-edit" class="flex-1 py-2 px-3 rounded-xl bg-gradient-to-r from-sky-600 to-blue-600 hover:from-sky-500 hover:to-blue-500 text-white font-black text-xs flex items-center justify-center gap-1.5 shadow-lg active:scale-95 transition cursor-pointer">
+        <button type="button" id="btn-quick-stats-edit" class="flex-1 py-2 px-3 rounded-xl bg-gradient-to-r from-sky-600 to-blue-600 hover:from-sky-500 hover:to-blue-500 text-white font-black text-sm flex items-center justify-center gap-1.5 shadow-lg active:scale-95 transition cursor-pointer">
           <i data-lucide="edit-2" class="w-3.5 h-3.5"></i>
           <span>✏️ Modificar Datos</span>
         </button>
-        <button type="button" onclick="window.earthApp?.closeQuickStats()" class="py-2 px-3 rounded-xl bg-[#140e40] hover:bg-[#23176d] border border-[#2d1f85] text-slate-300 font-medium text-xs transition cursor-pointer" title="Cerrar">
+        <button type="button" onclick="window.earthApp?.closeQuickStats()" class="py-2 px-3 rounded-xl bg-[#140e40] hover:bg-[#23176d] border border-[#2d1f85] text-slate-300 font-medium text-sm transition cursor-pointer" title="Cerrar">
           ✕
         </button>
       </div>
@@ -1009,7 +1014,7 @@
       <div class="bg-[#140e40] px-4 py-3 border-b border-[#2d1f85] flex items-center justify-between shrink-0">
         <div class="flex items-center gap-2">
           <i data-lucide="sliders" class="w-4 h-4 text-sky-400"></i>
-          <h3 id="prop-dialog-title" class="text-xs font-black text-white uppercase tracking-wider">
+          <h3 id="prop-dialog-title" class="text-base font-black text-white uppercase tracking-wider">
             MIGATO — Ficha Técnica y Caracterización Territorial
           </h3>
         </div>
@@ -1019,7 +1024,7 @@
       </div>
 
       <!-- Pestañas de Navegación -->
-      <div class="flex border-b border-[#2d1f85] bg-[#100b33] text-xs font-bold shrink-0 overflow-x-auto scrollbar-none">
+      <div class="flex border-b border-[#2d1f85] bg-[#100b33] text-base font-bold shrink-0 overflow-x-auto scrollbar-none">
         <button type="button" data-tab="desc" class="prop-tab-btn flex-1 min-w-[90px] py-2.5 text-center text-sky-400 border-b-2 border-sky-500 bg-[#140e40] flex items-center justify-center gap-1.5 whitespace-nowrap">
           <i data-lucide="map-pin" class="w-3.5 h-3.5 text-sky-400"></i>
           <span><span class="sm:hidden">Ficha</span><span class="hidden sm:inline">Ficha Sector</span></span>
@@ -1046,20 +1051,20 @@
           
           <!-- Nombre del Sector / Comunidad / Eje -->
           <div>
-            <label id="prop-name-label" class="block text-[11px] font-bold text-slate-300 uppercase mb-1">Nombre del Sector / Comunidad *</label>
-            <input type="text" id="prop-name" placeholder="Ej: Sector La Florida, Sector 1, Central..." class="w-full px-3.5 py-2.5 text-xs sm:text-sm bg-[#0e092e] border border-[#2d1f85] rounded-xl text-white font-black focus:outline-none focus:border-sky-500 shadow-inner">
+            <label id="prop-name-label" class="block text-sm font-bold text-slate-300 uppercase mb-1">Nombre del Sector / Comunidad *</label>
+            <input type="text" id="prop-name" placeholder="Ej: Sector La Florida, Sector 1, Central..." class="w-full px-3.5 py-2.5 text-sm sm:text-base bg-[#0e092e] border border-[#2d1f85] rounded-xl text-white font-black focus:border-sky-500 shadow-inner">
           </div>
 
           <!-- Eje Territorial / Sub-Parroquia Obligatoria -->
           <div id="wrapper-prop-select-subparish" class="bg-[#140e40] p-3 rounded-2xl border border-purple-500/50 space-y-1.5">
             <div class="flex items-center justify-between">
-              <label class="text-[11px] font-black text-purple-300 uppercase flex items-center gap-1.5">
+              <label class="text-sm font-black text-purple-300 uppercase flex items-center gap-1.5">
                 <i data-lucide="shield" class="w-3.5 h-3.5 text-purple-400"></i>
                 <span>Sub-Parroquia / Eje Territorial * (Pote Obligatorio)</span>
               </label>
-              <span class="text-[9px] text-purple-400 font-mono font-bold">Nivel 4</span>
+              <span class="text-base text-purple-400 font-mono font-bold">Nivel 4</span>
             </div>
-            <select id="prop-select-subparish" class="w-full px-3 py-2 bg-[#0e092e] border border-purple-600/50 rounded-xl text-purple-100 font-bold text-xs focus:outline-none focus:border-purple-400 cursor-pointer">
+            <select id="prop-select-subparish" class="w-full px-3 py-2 bg-[#0e092e] border border-purple-600/50 rounded-xl text-purple-100 font-bold text-sm focus:border-purple-400 cursor-pointer">
               <option value="">-- Selecciona el Eje Contenedor * --</option>
             </select>
           </div>
@@ -1067,31 +1072,31 @@
           <!-- Acciones Exclusivas y Consolidado de Sub-Parroquia / Eje Territorial -->
           <div id="box-prop-subparish-info" class="hidden bg-[#140e40] p-3.5 rounded-2xl border border-purple-500/60 space-y-3 shadow-lg">
             <div class="flex items-center justify-between border-b border-purple-800/60 pb-2">
-              <span class="text-[11px] font-black text-purple-300 uppercase flex items-center gap-1.5">
+              <span class="text-base font-black text-purple-300 uppercase flex items-center gap-1.5">
                 <i data-lucide="shield" class="w-4 h-4 text-purple-400"></i>
                 <span>Consolidado del Eje Territorial (Suma Viva)</span>
               </span>
-              <span id="prop-subparish-sectors-count" class="text-[10px] font-mono font-bold text-purple-300 bg-purple-900/80 px-2 py-0.5 rounded-md border border-purple-700">0 Sectores</span>
+              <span id="prop-subparish-sectors-count" class="text-base font-mono font-bold text-purple-300 bg-purple-900/80 px-2 py-0.5 rounded-md border border-purple-700">0 Sectores</span>
             </div>
             <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center font-mono">
               <div class="bg-[#0e092e] p-2 rounded-xl border border-amber-500/30">
-                <span class="text-[9px] text-amber-400 font-bold block uppercase">Casas</span>
-                <span id="prop-subparish-total-casas" class="text-sm font-black text-amber-300">0</span>
+                <span class="text-base text-amber-400 font-bold block uppercase">Casas</span>
+                <span id="prop-subparish-total-casas" class="text-base font-black text-amber-300">0</span>
               </div>
               <div class="bg-[#0e092e] p-2 rounded-xl border border-sky-500/30">
-                <span class="text-[9px] text-sky-400 font-bold block uppercase">Familias</span>
-                <span id="prop-subparish-total-familias" class="text-sm font-black text-sky-300">0</span>
+                <span class="text-base text-sky-400 font-bold block uppercase">Familias</span>
+                <span id="prop-subparish-total-familias" class="text-base font-black text-sky-300">0</span>
               </div>
               <div class="bg-[#0e092e] p-2 rounded-xl border border-emerald-500/30">
-                <span class="text-[9px] text-emerald-400 font-bold block uppercase">Habitantes</span>
-                <span id="prop-subparish-total-habitantes" class="text-sm font-black text-emerald-300">0</span>
+                <span class="text-base text-emerald-400 font-bold block uppercase">Habitantes</span>
+                <span id="prop-subparish-total-habitantes" class="text-base font-black text-emerald-300">0</span>
               </div>
               <div class="bg-[#0e092e] p-2 rounded-xl border border-purple-500/30">
-                <span class="text-[9px] text-purple-400 font-bold block uppercase">Votantes</span>
-                <span id="prop-subparish-total-votantes" class="text-sm font-black text-purple-300">0</span>
+                <span class="text-base text-purple-400 font-bold block uppercase">Votantes</span>
+                <span id="prop-subparish-total-votantes" class="text-base font-black text-purple-300">0</span>
               </div>
             </div>
-            <button type="button" id="btn-prop-add-sector-to-subparish" class="w-full py-2.5 px-3 rounded-xl bg-gradient-to-r from-sky-600 to-blue-600 hover:from-sky-500 hover:to-blue-500 text-white font-black text-xs flex items-center justify-center gap-2 shadow-lg active:scale-95 transition cursor-pointer">
+            <button type="button" id="btn-prop-add-sector-to-subparish" class="w-full py-2.5 px-3 rounded-xl bg-gradient-to-r from-sky-600 to-blue-600 hover:from-sky-500 hover:to-blue-500 text-white font-black text-sm flex items-center justify-center gap-2 shadow-lg active:scale-95 transition cursor-pointer">
               <i data-lucide="plus-circle" class="w-4 h-4"></i>
               <span>➕ Trazar Nuevo Sector dentro de este Eje</span>
             </button>
@@ -1100,73 +1105,73 @@
           <!-- FICHA SOCIO-POLÍTICA / ELECTORAL (LÁMINA OFICIAL DE CAMPO) -->
           <div id="box-prop-field-metrics" class="bg-[#140e40] p-3 rounded-2xl border border-sky-500/40 space-y-3">
             <div class="flex items-center justify-between border-b border-[#2d1f85] pb-2">
-              <span class="text-[11px] font-black text-sky-400 uppercase tracking-wide flex items-center gap-1.5">
+              <span class="text-base font-black text-sky-400 uppercase tracking-wide flex items-center gap-1.5">
                 <i data-lucide="clipboard-list" class="w-3.5 h-3.5 text-sky-400"></i>
                 <span>Caracterización Socio-Política (Ficha de Campo)</span>
               </span>
-              <span class="text-[10px] font-mono text-emerald-400 font-bold bg-emerald-950/80 px-2 py-0.5 rounded border border-emerald-800/50">Base Sectorial</span>
+              <span class="text-base font-mono text-emerald-400 font-bold bg-emerald-950/80 px-2 py-0.5 rounded border border-emerald-800/50">Base Sectorial</span>
             </div>
 
             <!-- Fila 1: Centro de Votación / Escuela Oficial (Ancho Completo) -->
             <div class="bg-[#18114a] p-2.5 rounded-xl border border-[#2d1f85]">
-              <label class="block text-[10px] font-bold text-purple-300 uppercase mb-1">🗳️ Centro de Votación / Escuela Oficial CNE</label>
-              <input type="text" id="prop-centro-votacion" list="centros-votacion-datalist" placeholder="Escribe o selecciona escuela oficial..." class="w-full px-3 py-2 text-xs bg-[#0e092e] border border-[#2d1f85] rounded-lg text-white font-bold focus:outline-none focus:border-purple-400">
+              <label class="block text-sm font-bold text-purple-300 uppercase mb-1">🗳️ Centro de Votación / Escuela Oficial CNE</label>
+              <input type="text" id="prop-centro-votacion" list="centros-votacion-datalist" placeholder="Escribe o selecciona escuela oficial..." class="w-full px-3 py-2 text-sm bg-[#0e092e] border border-[#2d1f85] rounded-lg text-white font-bold focus:border-purple-400">
               <datalist id="centros-votacion-datalist"></datalist>
             </div>
 
             <!-- Fila 2: Las 4 Métricas Clave (2x2 en móvil, 4x1 en tablet/desktop) -->
             <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
               <div class="bg-[#18114a] p-2 sm:p-2.5 rounded-xl border border-amber-500/30 min-w-0">
-                <label class="block text-[10px] font-bold text-amber-300 uppercase mb-1 truncate">🏠 Casas</label>
-                <input type="number" id="prop-casas" min="0" placeholder="0" inputmode="numeric" class="w-full px-2.5 py-2 text-xs sm:text-sm bg-[#0e092e] border border-[#2d1f85] rounded-lg text-amber-200 font-mono font-black focus:outline-none focus:border-amber-400">
+                <label class="block text-sm font-bold text-amber-300 uppercase mb-1 truncate">🏠 Casas</label>
+                <input type="number" id="prop-casas" min="0" placeholder="0" inputmode="numeric" class="w-full px-2.5 py-2 text-sm sm:text-base bg-[#0e092e] border border-[#2d1f85] rounded-lg text-amber-200 font-mono font-black focus:border-amber-400">
               </div>
               <div class="bg-[#18114a] p-2 sm:p-2.5 rounded-xl border border-sky-500/30 min-w-0">
-                <label class="block text-[10px] font-bold text-sky-300 uppercase mb-1 truncate">👨‍👩‍👧 Familias</label>
-                <input type="number" id="prop-familias" min="0" placeholder="0" inputmode="numeric" class="w-full px-2.5 py-2 text-xs sm:text-sm bg-[#0e092e] border border-[#2d1f85] rounded-lg text-sky-200 font-mono font-black focus:outline-none focus:border-sky-400">
+                <label class="block text-sm font-bold text-sky-300 uppercase mb-1 truncate">👨‍👩‍👧 Familias</label>
+                <input type="number" id="prop-familias" min="0" placeholder="0" inputmode="numeric" class="w-full px-2.5 py-2 text-sm sm:text-base bg-[#0e092e] border border-[#2d1f85] rounded-lg text-sky-200 font-mono font-black focus:border-sky-400">
               </div>
               <div class="bg-[#18114a] p-2 sm:p-2.5 rounded-xl border border-emerald-500/30 min-w-0">
-                <label class="block text-[10px] font-bold text-emerald-300 uppercase mb-1 truncate">👥 Habitantes</label>
-                <input type="number" id="prop-habitantes" min="0" placeholder="0" inputmode="numeric" class="w-full px-2.5 py-2 text-xs sm:text-sm bg-[#0e092e] border border-[#2d1f85] rounded-lg text-emerald-200 font-mono font-black focus:outline-none focus:border-emerald-400">
+                <label class="block text-sm font-bold text-emerald-300 uppercase mb-1 truncate">👥 Habitantes</label>
+                <input type="number" id="prop-habitantes" min="0" placeholder="0" inputmode="numeric" class="w-full px-2.5 py-2 text-sm sm:text-base bg-[#0e092e] border border-[#2d1f85] rounded-lg text-emerald-200 font-mono font-black focus:border-emerald-400">
               </div>
               <div class="bg-[#18114a] p-2 sm:p-2.5 rounded-xl border border-purple-500/30 min-w-0">
-                <label class="block text-[10px] font-bold text-purple-300 uppercase mb-1 truncate">🗳️ Votantes</label>
-                <input type="number" id="prop-militantes" min="0" placeholder="0" inputmode="numeric" class="w-full px-2.5 py-2 text-xs sm:text-sm bg-[#0e092e] border border-[#2d1f85] rounded-lg text-purple-200 font-mono font-black focus:outline-none focus:border-purple-400">
+                <label class="block text-sm font-bold text-purple-300 uppercase mb-1 truncate">🗳️ Votantes</label>
+                <input type="number" id="prop-militantes" min="0" placeholder="0" inputmode="numeric" class="w-full px-2.5 py-2 text-sm sm:text-base bg-[#0e092e] border border-[#2d1f85] rounded-lg text-purple-200 font-mono font-black focus:border-purple-400">
               </div>
             </div>
 
             <!-- NUEVO ESTÁNDAR: CLASIFICACIÓN POLÍTICA DEL VOTO (DURO / BLANDO / NUEVO) -->
             <div class="p-2.5 rounded-2xl bg-[#18114a] border-2 border-amber-500/50 space-y-2">
               <div class="flex items-center justify-between">
-                <span class="text-[10px] font-black uppercase text-amber-400 font-mono tracking-wider flex items-center gap-1">
+                <span class="text-base font-black uppercase text-amber-400 font-mono tracking-wider flex items-center gap-1">
                   <span>★ Caracterización Del Voto</span>
                 </span>
-                <span class="text-[9px] font-bold text-slate-400 font-mono">Nuevo Estándar Oficial</span>
+                <span class="text-base font-bold text-slate-400 font-mono">Nuevo Estándar Oficial</span>
               </div>
 
               <div class="grid grid-cols-3 gap-2 text-center">
                 <!-- Voto Duro -->
                 <div class="bg-emerald-950/70 border border-emerald-500/60 p-2 rounded-xl">
-                  <span class="text-[9px] font-black uppercase text-emerald-300 block">🟢 Duro</span>
-                  <input type="number" id="prop-voto-duro" min="0" placeholder="0" class="w-full bg-[#0e092e] text-white font-mono font-black text-center text-sm py-1 rounded border border-emerald-600 focus:outline-none focus:border-emerald-400">
+                  <span class="text-base font-black uppercase text-emerald-300 block">🟢 Duro</span>
+                  <input type="number" id="prop-voto-duro" min="0" placeholder="0" class="w-full bg-[#0e092e] text-white font-mono font-black text-center text-sm py-1 rounded border border-emerald-600 focus:border-emerald-400">
                   <span class="text-[8px] text-emerald-400 block mt-0.5">Leal</span>
                 </div>
 
                 <!-- Voto Blando -->
                 <div class="bg-amber-950/70 border border-amber-500/60 p-2 rounded-xl">
-                  <span class="text-[9px] font-black uppercase text-amber-300 block">🟡 Blando</span>
-                  <input type="number" id="prop-voto-blando" min="0" placeholder="0" class="w-full bg-[#0e092e] text-white font-mono font-black text-center text-sm py-1 rounded border border-amber-600 focus:outline-none focus:border-amber-400">
+                  <span class="text-base font-black uppercase text-amber-300 block">🟡 Blando</span>
+                  <input type="number" id="prop-voto-blando" min="0" placeholder="0" class="w-full bg-[#0e092e] text-white font-mono font-black text-center text-sm py-1 rounded border border-amber-600 focus:border-amber-400">
                   <span class="text-[8px] text-amber-400 block mt-0.5">Persuasión</span>
                 </div>
 
                 <!-- Voto Nuevo -->
                 <div class="bg-sky-950/70 border border-sky-500/60 p-2 rounded-xl">
-                  <span class="text-[9px] font-black uppercase text-sky-300 block">🔵 Nuevo</span>
-                  <input type="number" id="prop-voto-nuevo" min="0" placeholder="0" class="w-full bg-[#0e092e] text-white font-mono font-black text-center text-sm py-1 rounded border border-sky-600 focus:outline-none focus:border-sky-400">
+                  <span class="text-base font-black uppercase text-sky-300 block">🔵 Nuevo</span>
+                  <input type="number" id="prop-voto-nuevo" min="0" placeholder="0" class="w-full bg-[#0e092e] text-white font-mono font-black text-center text-sm py-1 rounded border border-sky-600 focus:border-sky-400">
                   <span class="text-[8px] text-sky-400 block mt-0.5">Juventud</span>
                 </div>
               </div>
 
-              <div class="pt-1 flex items-center justify-between text-[10px]">
+              <div class="pt-1 flex items-center justify-between text-base">
                 <a href="../caracterizacion-voto/" target="_blank" class="text-amber-300 hover:text-amber-200 font-bold flex items-center gap-1 underline">
                   <i data-lucide="external-link" class="w-3 h-3"></i>
                   <span>Abrir Sábana Electoral</span>
@@ -1179,11 +1184,11 @@
           <!-- Paleta Rápida de Colores (Accesible en la pantalla principal con 1 toque) -->
           <div class="bg-[#140e40] p-3 rounded-2xl border border-[#2d1f85] space-y-2">
             <div class="flex items-center justify-between">
-              <span class="text-[10px] font-black text-amber-400 uppercase tracking-wider flex items-center gap-1">
+              <span class="text-base font-black text-amber-400 uppercase tracking-wider flex items-center gap-1">
                 <i data-lucide="palette" class="w-3 h-3 text-amber-400"></i>
                 <span>Color del Sector:</span>
               </span>
-              <span id="palette-color-name" class="text-[10px] font-mono text-slate-400">Azul Celeste</span>
+              <span id="palette-color-name" class="text-base font-mono text-slate-400">Azul Celeste</span>
             </div>
             
             <div class="grid grid-cols-7 gap-1.5 sm:gap-2 pt-0.5">
@@ -1213,8 +1218,8 @@
 
           <!-- Observaciones / Calles -->
           <div>
-            <label class="block text-[11px] font-bold text-slate-300 uppercase mb-1">Observaciones / Calles del Sector</label>
-            <textarea id="prop-desc" rows="2" placeholder="Límites de calles, referencias o notas..." class="w-full px-3 py-2 text-xs bg-[#0e092e] border border-[#2d1f85] rounded-xl text-white focus:outline-none focus:border-sky-500"></textarea>
+            <label class="block text-sm font-bold text-slate-300 uppercase mb-1">Observaciones / Calles del Sector</label>
+            <textarea id="prop-desc" rows="2" placeholder="Límites de calles, referencias o notas..." class="w-full px-3 py-2 text-sm bg-[#0e092e] border border-[#2d1f85] rounded-xl text-white focus:border-sky-500"></textarea>
           </div>
 
           <!-- Elementos Ocultos de Compatibilidad y Jurisdicción (Para scripts existentes) -->
@@ -1233,30 +1238,30 @@
           
           <div class="flex items-center justify-between border-b border-[#2d1f85] pb-2">
             <div>
-              <h4 class="text-xs font-black text-white uppercase tracking-wider flex items-center gap-1.5">
+              <h4 class="text-base font-black text-white uppercase tracking-wider flex items-center gap-1.5">
                 <i data-lucide="user-check" class="w-4 h-4 text-amber-400"></i>
                 <span>Padrón Nominal del Sector</span>
               </h4>
-              <p class="text-[10px] text-slate-400">Electores caracterizados con los 10 campos del papelógrafo</p>
+              <p class="text-base text-slate-400">Electores caracterizados con los 10 campos del papelógrafo</p>
             </div>
-            <a href="../caracterizacion-voto/" target="_blank" class="px-2.5 py-1 bg-amber-500 hover:bg-amber-400 text-[#0e092e] font-black text-[10px] rounded-lg shadow transition flex items-center gap-1 active:scale-95">
+            <a href="../caracterizacion-voto/" target="_blank" class="px-2.5 py-1 bg-amber-500 hover:bg-amber-400 text-[#0e092e] font-black text-base rounded-lg shadow transition flex items-center gap-1 active:scale-95">
               <i data-lucide="plus" class="w-3 h-3"></i>
               <span>Cargar Elector</span>
             </a>
           </div>
 
           <!-- Semáforo Rápido del Sector -->
-          <div class="grid grid-cols-3 gap-2 text-center text-xs font-mono">
+          <div class="grid grid-cols-3 gap-2 text-center text-base font-mono">
             <div class="bg-[#140e40] border border-emerald-500/50 p-2 rounded-xl">
-              <span class="text-[9px] text-emerald-400 font-bold block uppercase">🟢 Voto Duro</span>
+              <span class="text-base text-emerald-400 font-bold block uppercase">🟢 Voto Duro</span>
               <strong id="tab-mil-count-duro" class="text-base text-white font-black">0</strong>
             </div>
             <div class="bg-[#140e40] border border-amber-500/50 p-2 rounded-xl">
-              <span class="text-[9px] text-amber-400 font-bold block uppercase">🟡 Voto Blando</span>
+              <span class="text-base text-amber-400 font-bold block uppercase">🟡 Voto Blando</span>
               <strong id="tab-mil-count-blando" class="text-base text-white font-black">0</strong>
             </div>
             <div class="bg-[#140e40] border border-sky-500/50 p-2 rounded-xl">
-              <span class="text-[9px] text-sky-400 font-bold block uppercase">🔵 Voto Nuevo</span>
+              <span class="text-base text-sky-400 font-bold block uppercase">🔵 Voto Nuevo</span>
               <strong id="tab-mil-count-nuevo" class="text-base text-white font-black">0</strong>
             </div>
           </div>
@@ -1264,8 +1269,8 @@
           <!-- Tabla de Electores -->
           <div class="border border-[#2d1f85] rounded-xl overflow-hidden bg-[#0e092e]">
             <div class="max-h-64 overflow-y-auto">
-              <table class="w-full text-left text-xs border-collapse">
-                <thead class="bg-[#140e40] sticky top-0 text-[10px] font-bold text-slate-300 uppercase tracking-wider">
+              <table class="w-full text-left text-base border-collapse">
+                <thead class="bg-[#140e40] sticky top-0text-base font-bold text-slate-300 uppercase tracking-wider">
                   <tr class="border-b border-[#2d1f85]">
                     <th class="p-2">Elector</th>
                     <th class="p-2 text-center">Cédula</th>
@@ -1274,7 +1279,7 @@
                     <th class="p-2 text-center">Voto</th>
                   </tr>
                 </thead>
-                <tbody id="tab-mil-tbody" class="divide-y divide-[#2d1f85] text-[11px]">
+                <tbody id="tab-mil-tbody" class="divide-y divide-[#2d1f85] text-base">
                   <tr>
                     <td colspan="5" class="p-4 text-center text-slate-400">
                       Cargando electores del sector...
@@ -1293,10 +1298,10 @@
           <!-- PALETA RÁPIDA DE COLORES (1 TOQUE) -->
           <div class="bg-[#140e40] p-3 rounded-xl border border-[#2d1f85] space-y-2">
             <div class="flex items-center justify-between">
-              <span class="text-[11px] font-black text-amber-400 uppercase tracking-wider">
+              <span class="text-base font-black text-amber-400 uppercase tracking-wider">
                 🎨 Colores Rápidos (Toca uno para aplicar):
               </span>
-              <span id="palette-color-name" class="text-[10px] font-mono text-slate-400">Azul Celeste</span>
+              <span id="palette-color-name" class="text-base font-mono text-slate-400">Azul Celeste</span>
             </div>
             
             <div class="grid grid-cols-7 gap-1.5 sm:gap-2 pt-1">
@@ -1326,29 +1331,29 @@
 
           <!-- Líneas / Borde -->
           <div class="bg-[#140e40] p-3 rounded-xl border border-[#2d1f85] space-y-2">
-            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Líneas / Contorno</span>
+            <span class="text-base font-bold text-slate-400 uppercase tracking-wider block">Líneas / Contorno</span>
             <div class="grid grid-cols-2 gap-3 items-center">
               <div>
-                <label class="block text-[10px] text-slate-400 mb-1">Color Personalizado</label>
+                <label class="block text-sm text-slate-400 mb-1">Color Personalizado</label>
                 <input type="color" id="prop-border-color" value="#38bdf8" class="w-full h-8 bg-[#0e092e] border border-[#2d1f85] rounded-lg cursor-pointer">
               </div>
               <div>
-                <label class="block text-[10px] text-slate-400 mb-1">Ancho de Línea (px)</label>
-                <input type="number" id="prop-border-width" value="2" min="1" max="15" class="w-full px-2 py-1.5 text-xs bg-[#0e092e] border border-[#2d1f85] rounded-lg text-white font-mono">
+                <label class="block text-sm text-slate-400 mb-1">Ancho de Línea (px)</label>
+                <input type="number" id="prop-border-width" value="2" min="1" max="15" class="w-full px-2 py-1.5 text-sm bg-[#0e092e] border border-[#2d1f85] rounded-lg text-white font-mono">
               </div>
             </div>
           </div>
 
           <!-- Relleno de Área -->
           <div id="box-poly-fill-style" class="bg-[#140e40] p-3 rounded-xl border border-[#2d1f85] space-y-2">
-            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Área de Relleno (Translúcida)</span>
+            <span class="text-base font-bold text-slate-400 uppercase tracking-wider block">Área de Relleno (Translúcida)</span>
             <div class="grid grid-cols-2 gap-3 items-center">
               <div>
-                <label class="block text-[10px] text-slate-400 mb-1">Color de Relleno</label>
+                <label class="block text-sm text-slate-400 mb-1">Color de Relleno</label>
                 <input type="color" id="prop-fill-color" value="#38bdf8" class="w-full h-8 bg-[#0e092e] border border-[#2d1f85] rounded-lg cursor-pointer">
               </div>
               <div>
-                <div class="flex justify-between text-[10px] text-slate-400 mb-1">
+                <div class="flex justify-between text-sm text-slate-400 mb-1">
                   <span>Opacidad</span>
                   <span id="prop-poly-opacity-val" class="font-mono text-sky-400 font-bold">38%</span>
                 </div>
@@ -1360,12 +1365,12 @@
         </div>
 
         <!-- PESTAÑA 4: MEDIDAS -->
-        <div class="prop-tab-content hidden space-y-2.5 font-mono text-xs" data-tab="measure">
+        <div class="prop-tab-content hidden space-y-2.5 font-mono text-base" data-tab="measure">
           <div id="row-measure-area" class="bg-[#140e40] p-3 rounded-xl border border-[#2d1f85] flex items-center justify-between">
             <span class="text-slate-400">Área Estimada:</span>
             <div class="text-right">
-              <strong id="val-measure-area-ha" class="text-sky-400 font-black text-sm block">0 Ha</strong>
-              <span id="val-measure-area-m2" class="text-[10px] text-slate-400">0 m²</span>
+              <strong id="val-measure-area-ha" class="text-sky-400 font-black text-base block">0 Ha</strong>
+              <span id="val-measure-area-m2" class="text-base text-slate-400">0 m²</span>
             </div>
           </div>
 
@@ -1377,24 +1382,24 @@
           <div id="row-measure-length" class="bg-[#140e40] p-3 rounded-xl border border-[#2d1f85] flex items-center justify-between hidden">
             <span class="text-slate-400">Longitud de Ruta:</span>
             <div class="text-right">
-              <strong id="val-measure-length-m" class="text-emerald-400 font-black text-sm block">0 m</strong>
-              <span id="val-measure-length-km" class="text-[10px] text-slate-400">0 km</span>
+              <strong id="val-measure-length-m" class="text-emerald-400 font-black text-base block">0 m</strong>
+              <span id="val-measure-length-km" class="text-base text-slate-400">0 km</span>
             </div>
           </div>
         </div>
 
         <!-- Botones de Acción y Ajuste de Vértices (Sticky al fondo en móviles) -->
         <div class="sticky bottom-0 bg-[#100b33]/95 backdrop-blur-md pt-3 pb-1 flex items-center justify-between border-t border-[#2d1f85] shrink-0 gap-2 mt-auto">
-          <button type="button" id="btn-prop-edit-geometry" class="px-3.5 py-2 text-xs font-black bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 rounded-xl flex items-center gap-1.5 active:scale-95 transition" title="Arrastrar y modificar vértices directamente sobre la foto satelital">
+          <button type="button" id="btn-prop-edit-geometry" class="px-3.5 py-2 text-sm font-black bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 rounded-xl flex items-center gap-1.5 active:scale-95 transition" title="Arrastrar y modificar vértices directamente sobre la foto satelital">
             <i data-lucide="move" class="w-3.5 h-3.5"></i>
             <span><span class="sm:hidden">Vértices</span><span class="hidden sm:inline">Ajustar Vértices</span></span>
           </button>
 
           <div class="flex items-center gap-2">
-            <button type="button" id="btn-prop-cancel" class="px-3 sm:px-4 py-2 text-xs font-semibold text-slate-400 hover:text-white cursor-pointer">
+            <button type="button" id="btn-prop-cancel" class="px-3 sm:px-4 py-2 text-sm font-semibold text-slate-400 hover:text-white cursor-pointer">
               Cancelar
             </button>
-            <button type="button" id="btn-prop-save" class="px-4 sm:px-5 py-2.5 text-xs font-black bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 text-white rounded-xl shadow-lg flex items-center gap-1.5 active:scale-95 transition cursor-pointer">
+            <button type="button" id="btn-prop-save" class="px-4 sm:px-5 py-2.5 text-sm font-black bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 text-white rounded-xl shadow-lg flex items-center gap-1.5 active:scale-95 transition cursor-pointer">
               <i data-lucide="check" class="w-4 h-4"></i>
               <span>Guardar Datos</span>
             </button>
@@ -1417,8 +1422,8 @@
             <i data-lucide="shield" class="w-4 h-4"></i>
           </div>
           <div>
-            <span class="text-[9px] font-black uppercase tracking-wider text-purple-400 block">Estructura Jerárquica</span>
-            <h3 id="modal-subparish-title" class="text-sm font-black text-white">Sub-Parroquia / Eje Territorial (Nivel 4)</h3>
+            <span class="text-base font-black uppercase tracking-wider text-purple-400 block">Estructura Jerárquica</span>
+            <h3 id="modal-subparish-title" class="text-base font-black text-white">Sub-Parroquia / Eje Territorial (Nivel 4)</h3>
           </div>
         </div>
         <button type="button" onclick="window.earthApp?.closeSubParishModal()" class="p-1 rounded-lg text-slate-400 hover:text-white hover:bg-[#140e40] transition">
@@ -1443,8 +1448,8 @@
             <i data-lucide="cloud" class="w-4 h-4"></i>
           </div>
           <div>
-            <span class="text-[9px] font-black uppercase tracking-wider text-sky-400 block">Sincronización en la Red</span>
-            <h3 class="text-sm font-black text-white">Base de Datos Firebase Firestore</h3>
+            <span class="text-base font-black uppercase tracking-wider text-sky-400 block">Sincronización en la Red</span>
+            <h3 class="text-base font-black text-white">Base de Datos Firebase Firestore</h3>
           </div>
         </div>
         <button type="button" onclick="window.earthApp?.closeFirebaseConfigModal()" class="p-1 rounded-lg text-slate-400 hover:text-white hover:bg-[#140e40] transition cursor-pointer">
@@ -1452,21 +1457,21 @@
         </button>
       </div>
 
-      <div class="space-y-3 overflow-y-auto pr-1 flex-1 text-xs">
+      <div class="space-y-3 overflow-y-auto pr-1 flex-1 text-base">
         <div id="firebase-status-banner" class="p-3 rounded-xl bg-[#0e092e] border border-[#2d1f85] flex items-center justify-between gap-2">
           <div class="flex items-center gap-2">
             <span id="firebase-modal-dot" class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
             <div>
               <span class="font-bold text-white block" id="firebase-modal-status-title">Estado de Conexión</span>
-              <span class="text-[11px] text-slate-400 font-mono" id="firebase-modal-status-desc">Comprobando...</span>
+              <span class="text-base text-slate-400 font-mono" id="firebase-modal-status-desc">Comprobando...</span>
             </div>
           </div>
-          <button type="button" onclick="window.earthApp?.forceSyncCloud()" class="px-2.5 py-1.5 rounded-lg bg-[#140e40] hover:bg-[#23176d] text-sky-300 border border-[#2d1f85] font-bold text-[11px] active:scale-95 transition cursor-pointer">
+          <button type="button" onclick="window.earthApp?.forceSyncCloud()" class="px-2.5 py-1.5 rounded-lg bg-[#140e40] hover:bg-[#23176d] text-sky-300 border border-[#2d1f85] font-bold text-sm active:scale-95 transition cursor-pointer">
             🔄 Sincronizar Ahora
           </button>
         </div>
 
-        <div class="bg-[#140e40]/70 border border-[#2d1f85] rounded-xl p-3 text-[11px] text-sky-100 space-y-1 leading-relaxed">
+        <div class="bg-[#140e40]/70 border border-[#2d1f85] rounded-xl p-3 text-base text-sky-100 space-y-1 leading-relaxed">
           <strong class="text-sky-300 block font-bold">📋 Instrucciones para conectar tu proyecto gratuito:</strong>
           <ol class="list-decimal list-inside space-y-1 text-slate-200">
             <li>Entra en <a href="https://console.firebase.google.com" target="_blank" class="text-amber-400 underline font-bold">console.firebase.google.com</a> con tu cuenta Google.</li>
@@ -1478,28 +1483,28 @@
 
         <div class="space-y-2">
           <div>
-            <label class="block text-[10px] font-bold text-slate-300 uppercase mb-0.5">Pegar JSON Completo (Rápido)</label>
-            <textarea id="firebase-input-json" rows="3" placeholder='{ "apiKey": "AIzaSy...", "projectId": "migato-...", ... }' class="w-full px-2.5 py-1.5 bg-[#0e092e] border border-[#2d1f85] rounded-xl text-[11px] text-white font-mono focus:outline-none focus:border-sky-500 shadow-inner resize-none"></textarea>
+            <label class="block text-sm font-bold text-slate-300 uppercase mb-0.5">Pegar JSON Completo (Rápido)</label>
+            <textarea id="firebase-input-json" rows="3" placeholder='{ "apiKey": "AIzaSy...", "projectId": "migato-...", ... }' class="w-full px-2.5 py-1.5 bg-[#0e092e] border border-[#2d1f85] rounded-xl text-sm text-white font-mono focus:border-sky-500 shadow-inner resize-none"></textarea>
           </div>
 
           <div class="grid grid-cols-2 gap-2">
             <div>
-              <label class="block text-[10px] font-bold text-slate-400 mb-0.5">Project ID *</label>
-              <input type="text" id="firebase-input-projectid" placeholder="mi-proyecto" class="w-full px-2 py-1 bg-[#0e092e] border border-[#2d1f85] rounded-lg text-xs text-white font-mono focus:outline-none focus:border-sky-500">
+              <label class="block text-sm font-bold text-slate-400 mb-0.5">Project ID *</label>
+              <input type="text" id="firebase-input-projectid" placeholder="mi-proyecto" class="w-full px-2 py-1 bg-[#0e092e] border border-[#2d1f85] rounded-lg text-sm text-white font-mono focus:border-sky-500">
             </div>
             <div>
-              <label class="block text-[10px] font-bold text-slate-400 mb-0.5">API Key *</label>
-              <input type="text" id="firebase-input-apikey" placeholder="AIzaSy..." class="w-full px-2 py-1 bg-[#0e092e] border border-[#2d1f85] rounded-lg text-xs text-white font-mono focus:outline-none focus:border-sky-500">
+              <label class="block text-sm font-bold text-slate-400 mb-0.5">API Key *</label>
+              <input type="text" id="firebase-input-apikey" placeholder="AIzaSy..." class="w-full px-2 py-1 bg-[#0e092e] border border-[#2d1f85] rounded-lg text-sm text-white font-mono focus:border-sky-500">
             </div>
           </div>
         </div>
       </div>
 
       <div class="pt-2 border-t border-[#2d1f85] flex items-center justify-between gap-2">
-        <button type="button" onclick="window.earthApp?.closeFirebaseConfigModal()" class="px-3 py-2 rounded-xl bg-[#140e40] hover:bg-[#23176d] border border-[#2d1f85] text-slate-300 font-medium text-xs transition cursor-pointer">
+        <button type="button" onclick="window.earthApp?.closeFirebaseConfigModal()" class="px-3 py-2 rounded-xl bg-[#140e40] hover:bg-[#23176d] border border-[#2d1f85] text-slate-300 font-medium text-sm transition cursor-pointer">
           Cerrar
         </button>
-        <button type="button" onclick="window.earthApp?.saveFirebaseConfigFromUI()" class="px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-[#050814] font-black text-xs shadow-lg flex items-center gap-1.5 active:scale-95 transition cursor-pointer">
+        <button type="button" onclick="window.earthApp?.saveFirebaseConfigFromUI()" class="px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-[#050814] font-black text-sm shadow-lg flex items-center gap-1.5 active:scale-95 transition cursor-pointer">
           <i data-lucide="check" class="w-4 h-4"></i>
           <span>Guardar y Conectar en Tiempo Real</span>
         </button>
@@ -1518,8 +1523,8 @@
             <i data-lucide="map-pin" class="w-4 h-4"></i>
           </div>
           <div>
-            <span class="text-[10px] font-black text-amber-400 uppercase tracking-wider">Estado Monagas • Navegador Oficial</span>
-            <h3 class="text-sm sm:text-base font-black text-white">Navegador Territorial: Municipios ➔ Parroquias</h3>
+            <span class="text-base font-black text-amber-400 uppercase tracking-wider">Estado Monagas • Navegador Oficial</span>
+            <h3 class="text-base sm:text-base font-black text-white">Navegador Territorial: Municipios ➔ Parroquias</h3>
           </div>
         </div>
         <button type="button" id="btn-close-parish-modal" data-action="close-parish-modal" onclick="if(window.earthApp?.closeParishSelector) window.earthApp.closeParishSelector(); else { const m = document.getElementById('modal-select-parish'); if (m) { m.style.display = 'none'; m.classList.add('hidden'); } }" class="p-1.5 rounded-lg text-slate-400 hover:text-white bg-[#140e40] hover:bg-[#23176d] border border-[#2d1f85] transition cursor-pointer" title="Cerrar ventana">
@@ -1531,86 +1536,86 @@
       <div class="relative shrink-0">
         <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none"></i>
         <input type="text" id="input-filter-parish-modal" placeholder="🔍 Buscar municipio, parroquia o sector vecinal (ej. La Puente, Caripe, Caripito, Punta de Mata, Casco)..." autocomplete="off" oninput="if(window.earthApp?.renderParishesCatalog) window.earthApp.renderParishesCatalog(this.value)"
-          class="w-full bg-[#0e092e] border border-[#2d1f85] focus:border-sky-400 text-xs text-white rounded-xl pl-9 pr-3 py-2.5 focus:outline-none placeholder-slate-400 font-medium transition shadow-inner">
+          class="w-full bg-[#0e092e] border border-[#2d1f85] focus:border-sky-400 text-sm text-white rounded-xl pl-9 pr-3 py-2.5 placeholder-slate-400 font-medium transition shadow-inner">
       </div>
 
       <div id="modal-parishes-catalog" class="space-y-3 overflow-hidden flex flex-col flex-1 min-h-0 pr-0.5">
         <div class="flex flex-col md:flex-row gap-3 sm:gap-4 h-full min-h-0 flex-1 overflow-hidden">
           <!-- Pestaña Rápida de Municipios en Móvil (< md:) -->
           <div class="md:hidden flex items-center gap-1.5 overflow-x-auto no-scrollbar py-1 border-b border-[#2d1f85]/60 pb-2 shrink-0">
-            <button type="button" onclick="window.setTerritoryModalMunGlobal('maturin')" class="px-3 py-1.5 rounded-xl text-xs font-bold transition shrink-0 cursor-pointer flex items-center gap-1.5 bg-amber-500 text-slate-950 font-black shadow-md"><span>🏛️ Maturín</span><span class="text-[10px] font-mono opacity-80 font-normal">(11)</span></button>
-            <button type="button" onclick="window.setTerritoryModalMunGlobal('piar')" class="px-3 py-1.5 rounded-xl text-xs font-bold transition shrink-0 cursor-pointer flex items-center gap-1.5 bg-[#140e40] text-slate-300 hover:text-white border border-[#2d1f85]"><span>🏛️ Piar</span><span class="text-[10px] font-mono opacity-80 font-normal">(7)</span></button>
-            <button type="button" onclick="window.setTerritoryModalMunGlobal('caripe')" class="px-3 py-1.5 rounded-xl text-xs font-bold transition shrink-0 cursor-pointer flex items-center gap-1.5 bg-[#140e40] text-slate-300 hover:text-white border border-[#2d1f85]"><span>🏛️ Caripe</span><span class="text-[10px] font-mono opacity-80 font-normal">(6)</span></button>
-            <button type="button" onclick="window.setTerritoryModalMunGlobal('cedeno')" class="px-3 py-1.5 rounded-xl text-xs font-bold transition shrink-0 cursor-pointer flex items-center gap-1.5 bg-[#140e40] text-slate-300 hover:text-white border border-[#2d1f85]"><span>🏛️ Cedeño</span><span class="text-[10px] font-mono opacity-80 font-normal">(4)</span></button>
-            <button type="button" onclick="window.setTerritoryModalMunGlobal('libertador')" class="px-3 py-1.5 rounded-xl text-xs font-bold transition shrink-0 cursor-pointer flex items-center gap-1.5 bg-[#140e40] text-slate-300 hover:text-white border border-[#2d1f85]"><span>🏛️ Libertador</span><span class="text-[10px] font-mono opacity-80 font-normal">(4)</span></button>
-            <button type="button" onclick="window.setTerritoryModalMunGlobal('ezequiel-zamora')" class="px-3 py-1.5 rounded-xl text-xs font-bold transition shrink-0 cursor-pointer flex items-center gap-1.5 bg-[#140e40] text-slate-300 hover:text-white border border-[#2d1f85]"><span>🏛️ Ezequiel Zamora</span><span class="text-[10px] font-mono opacity-80 font-normal">(2)</span></button>
-            <button type="button" onclick="window.setTerritoryModalMunGlobal('acosta')" class="px-3 py-1.5 rounded-xl text-xs font-bold transition shrink-0 cursor-pointer flex items-center gap-1.5 bg-[#140e40] text-slate-300 hover:text-white border border-[#2d1f85]"><span>🏛️ Acosta</span><span class="text-[10px] font-mono opacity-80 font-normal">(2)</span></button>
-            <button type="button" onclick="window.setTerritoryModalMunGlobal('punceres')" class="px-3 py-1.5 rounded-xl text-xs font-bold transition shrink-0 cursor-pointer flex items-center gap-1.5 bg-[#140e40] text-slate-300 hover:text-white border border-[#2d1f85]"><span>🏛️ Punceres</span><span class="text-[10px] font-mono opacity-80 font-normal">(2)</span></button>
-            <button type="button" onclick="window.setTerritoryModalMunGlobal('santa-barbara')" class="px-3 py-1.5 rounded-xl text-xs font-bold transition shrink-0 cursor-pointer flex items-center gap-1.5 bg-[#140e40] text-slate-300 hover:text-white border border-[#2d1f85]"><span>🏛️ Santa Bárbara</span><span class="text-[10px] font-mono opacity-80 font-normal">(2)</span></button>
-            <button type="button" onclick="window.setTerritoryModalMunGlobal('sotillo')" class="px-3 py-1.5 rounded-xl text-xs font-bold transition shrink-0 cursor-pointer flex items-center gap-1.5 bg-[#140e40] text-slate-300 hover:text-white border border-[#2d1f85]"><span>🏛️ Sotillo</span><span class="text-[10px] font-mono opacity-80 font-normal">(2)</span></button>
-            <button type="button" onclick="window.setTerritoryModalMunGlobal('bolivar')" class="px-3 py-1.5 rounded-xl text-xs font-bold transition shrink-0 cursor-pointer flex items-center gap-1.5 bg-[#140e40] text-slate-300 hover:text-white border border-[#2d1f85]"><span>🏛️ Bolívar</span><span class="text-[10px] font-mono opacity-80 font-normal">(1)</span></button>
-            <button type="button" onclick="window.setTerritoryModalMunGlobal('aguasay')" class="px-3 py-1.5 rounded-xl text-xs font-bold transition shrink-0 cursor-pointer flex items-center gap-1.5 bg-[#140e40] text-slate-300 hover:text-white border border-[#2d1f85]"><span>🏛️ Aguasay</span><span class="text-[10px] font-mono opacity-80 font-normal">(1)</span></button>
-            <button type="button" onclick="window.setTerritoryModalMunGlobal('uracoa')" class="px-3 py-1.5 rounded-xl text-xs font-bold transition shrink-0 cursor-pointer flex items-center gap-1.5 bg-[#140e40] text-slate-300 hover:text-white border border-[#2d1f85]"><span>🏛️ Uracoa</span><span class="text-[10px] font-mono opacity-80 font-normal">(1)</span></button>
+            <button type="button" onclick="window.setTerritoryModalMunGlobal('maturin')" class="px-3 py-1.5 rounded-xl text-sm font-bold transition shrink-0 cursor-pointer flex items-center gap-1.5 bg-amber-500 text-slate-950 font-black shadow-md"><span>🏛️ Maturín</span><span class="text-base font-mono opacity-80 font-normal">(11)</span></button>
+            <button type="button" onclick="window.setTerritoryModalMunGlobal('piar')" class="px-3 py-1.5 rounded-xl text-sm font-bold transition shrink-0 cursor-pointer flex items-center gap-1.5 bg-[#140e40] text-slate-300 hover:text-white border border-[#2d1f85]"><span>🏛️ Piar</span><span class="text-base font-mono opacity-80 font-normal">(7)</span></button>
+            <button type="button" onclick="window.setTerritoryModalMunGlobal('caripe')" class="px-3 py-1.5 rounded-xl text-sm font-bold transition shrink-0 cursor-pointer flex items-center gap-1.5 bg-[#140e40] text-slate-300 hover:text-white border border-[#2d1f85]"><span>🏛️ Caripe</span><span class="text-base font-mono opacity-80 font-normal">(6)</span></button>
+            <button type="button" onclick="window.setTerritoryModalMunGlobal('cedeno')" class="px-3 py-1.5 rounded-xl text-sm font-bold transition shrink-0 cursor-pointer flex items-center gap-1.5 bg-[#140e40] text-slate-300 hover:text-white border border-[#2d1f85]"><span>🏛️ Cedeño</span><span class="text-base font-mono opacity-80 font-normal">(4)</span></button>
+            <button type="button" onclick="window.setTerritoryModalMunGlobal('libertador')" class="px-3 py-1.5 rounded-xl text-sm font-bold transition shrink-0 cursor-pointer flex items-center gap-1.5 bg-[#140e40] text-slate-300 hover:text-white border border-[#2d1f85]"><span>🏛️ Libertador</span><span class="text-base font-mono opacity-80 font-normal">(4)</span></button>
+            <button type="button" onclick="window.setTerritoryModalMunGlobal('ezequiel-zamora')" class="px-3 py-1.5 rounded-xl text-sm font-bold transition shrink-0 cursor-pointer flex items-center gap-1.5 bg-[#140e40] text-slate-300 hover:text-white border border-[#2d1f85]"><span>🏛️ Ezequiel Zamora</span><span class="text-base font-mono opacity-80 font-normal">(2)</span></button>
+            <button type="button" onclick="window.setTerritoryModalMunGlobal('acosta')" class="px-3 py-1.5 rounded-xl text-sm font-bold transition shrink-0 cursor-pointer flex items-center gap-1.5 bg-[#140e40] text-slate-300 hover:text-white border border-[#2d1f85]"><span>🏛️ Acosta</span><span class="text-base font-mono opacity-80 font-normal">(2)</span></button>
+            <button type="button" onclick="window.setTerritoryModalMunGlobal('punceres')" class="px-3 py-1.5 rounded-xl text-sm font-bold transition shrink-0 cursor-pointer flex items-center gap-1.5 bg-[#140e40] text-slate-300 hover:text-white border border-[#2d1f85]"><span>🏛️ Punceres</span><span class="text-base font-mono opacity-80 font-normal">(2)</span></button>
+            <button type="button" onclick="window.setTerritoryModalMunGlobal('santa-barbara')" class="px-3 py-1.5 rounded-xl text-sm font-bold transition shrink-0 cursor-pointer flex items-center gap-1.5 bg-[#140e40] text-slate-300 hover:text-white border border-[#2d1f85]"><span>🏛️ Santa Bárbara</span><span class="text-base font-mono opacity-80 font-normal">(2)</span></button>
+            <button type="button" onclick="window.setTerritoryModalMunGlobal('sotillo')" class="px-3 py-1.5 rounded-xl text-sm font-bold transition shrink-0 cursor-pointer flex items-center gap-1.5 bg-[#140e40] text-slate-300 hover:text-white border border-[#2d1f85]"><span>🏛️ Sotillo</span><span class="text-base font-mono opacity-80 font-normal">(2)</span></button>
+            <button type="button" onclick="window.setTerritoryModalMunGlobal('bolivar')" class="px-3 py-1.5 rounded-xl text-sm font-bold transition shrink-0 cursor-pointer flex items-center gap-1.5 bg-[#140e40] text-slate-300 hover:text-white border border-[#2d1f85]"><span>🏛️ Bolívar</span><span class="text-base font-mono opacity-80 font-normal">(1)</span></button>
+            <button type="button" onclick="window.setTerritoryModalMunGlobal('aguasay')" class="px-3 py-1.5 rounded-xl text-sm font-bold transition shrink-0 cursor-pointer flex items-center gap-1.5 bg-[#140e40] text-slate-300 hover:text-white border border-[#2d1f85]"><span>🏛️ Aguasay</span><span class="text-base font-mono opacity-80 font-normal">(1)</span></button>
+            <button type="button" onclick="window.setTerritoryModalMunGlobal('uracoa')" class="px-3 py-1.5 rounded-xl text-sm font-bold transition shrink-0 cursor-pointer flex items-center gap-1.5 bg-[#140e40] text-slate-300 hover:text-white border border-[#2d1f85]"><span>🏛️ Uracoa</span><span class="text-base font-mono opacity-80 font-normal">(1)</span></button>
           </div>
 
           <!-- Columna 1: 13 Municipios (Desktop) -->
           <div class="hidden md:flex flex-col w-56 lg:w-64 shrink-0 border-r border-[#2d1f85]/70 pr-3 space-y-1.5 overflow-y-auto max-h-[72vh]">
-            <div class="text-[11px] font-black text-amber-400 uppercase tracking-wider px-1 pb-1 flex items-center justify-between border-b border-[#2d1f85]/50">
+            <div class="text-base font-black text-amber-400 uppercase tracking-wider px-1 pb-1 flex items-center justify-between border-b border-[#2d1f85]/50">
               <span>1. MUNICIPIOS</span>
-              <span class="text-[10px] text-slate-400 font-mono">13 Total</span>
+              <span class="text-base text-slate-400 font-mono">13 Total</span>
             </div>
             <div class="space-y-1 pt-1">
               <button type="button" onclick="window.setTerritoryModalMunGlobal('maturin')" class="w-full text-left p-2.5 rounded-xl transition flex items-center justify-between gap-2 cursor-pointer group bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 font-black shadow-md shadow-amber-500/20">
-                <div class="flex items-center gap-2 truncate min-w-0"><span class="text-sm shrink-0">🏛️</span><span class="text-xs truncate font-bold">Maturín</span></div>
-                <span class="text-[10px] font-mono px-2 py-0.5 rounded-md shrink-0 bg-slate-950/20 text-slate-950 font-black">11</span>
+                <div class="flex items-center gap-2 truncate min-w-0"><span class="text-base shrink-0">🏛️</span><span class="text-base truncate font-bold">Maturín</span></div>
+                <span class="text-base font-mono px-2 py-0.5 rounded-md shrink-0 bg-slate-950/20 text-slate-950 font-black">11</span>
               </button>
               <button type="button" onclick="window.setTerritoryModalMunGlobal('piar')" class="w-full text-left p-2.5 rounded-xl transition flex items-center justify-between gap-2 cursor-pointer group bg-[#140e40] hover:bg-[#23176d] text-slate-300 hover:text-white border border-[#2d1f85]">
-                <div class="flex items-center gap-2 truncate min-w-0"><span class="text-sm shrink-0">🏛️</span><span class="text-xs truncate font-bold">Piar</span></div>
-                <span class="text-[10px] font-mono px-2 py-0.5 rounded-md shrink-0 bg-[#0e092e] text-slate-400 border border-[#2d1f85]">7</span>
+                <div class="flex items-center gap-2 truncate min-w-0"><span class="text-base shrink-0">🏛️</span><span class="text-base truncate font-bold">Piar</span></div>
+                <span class="text-base font-mono px-2 py-0.5 rounded-md shrink-0 bg-[#0e092e] text-slate-400 border border-[#2d1f85]">7</span>
               </button>
               <button type="button" onclick="window.setTerritoryModalMunGlobal('caripe')" class="w-full text-left p-2.5 rounded-xl transition flex items-center justify-between gap-2 cursor-pointer group bg-[#140e40] hover:bg-[#23176d] text-slate-300 hover:text-white border border-[#2d1f85]">
-                <div class="flex items-center gap-2 truncate min-w-0"><span class="text-sm shrink-0">🏛️</span><span class="text-xs truncate font-bold">Caripe</span></div>
-                <span class="text-[10px] font-mono px-2 py-0.5 rounded-md shrink-0 bg-[#0e092e] text-slate-400 border border-[#2d1f85]">6</span>
+                <div class="flex items-center gap-2 truncate min-w-0"><span class="text-base shrink-0">🏛️</span><span class="text-base truncate font-bold">Caripe</span></div>
+                <span class="text-base font-mono px-2 py-0.5 rounded-md shrink-0 bg-[#0e092e] text-slate-400 border border-[#2d1f85]">6</span>
               </button>
               <button type="button" onclick="window.setTerritoryModalMunGlobal('cedeno')" class="w-full text-left p-2.5 rounded-xl transition flex items-center justify-between gap-2 cursor-pointer group bg-[#140e40] hover:bg-[#23176d] text-slate-300 hover:text-white border border-[#2d1f85]">
-                <div class="flex items-center gap-2 truncate min-w-0"><span class="text-sm shrink-0">🏛️</span><span class="text-xs truncate font-bold">Cedeño</span></div>
-                <span class="text-[10px] font-mono px-2 py-0.5 rounded-md shrink-0 bg-[#0e092e] text-slate-400 border border-[#2d1f85]">4</span>
+                <div class="flex items-center gap-2 truncate min-w-0"><span class="text-base shrink-0">🏛️</span><span class="text-base truncate font-bold">Cedeño</span></div>
+                <span class="text-base font-mono px-2 py-0.5 rounded-md shrink-0 bg-[#0e092e] text-slate-400 border border-[#2d1f85]">4</span>
               </button>
               <button type="button" onclick="window.setTerritoryModalMunGlobal('libertador')" class="w-full text-left p-2.5 rounded-xl transition flex items-center justify-between gap-2 cursor-pointer group bg-[#140e40] hover:bg-[#23176d] text-slate-300 hover:text-white border border-[#2d1f85]">
-                <div class="flex items-center gap-2 truncate min-w-0"><span class="text-sm shrink-0">🏛️</span><span class="text-xs truncate font-bold">Libertador</span></div>
-                <span class="text-[10px] font-mono px-2 py-0.5 rounded-md shrink-0 bg-[#0e092e] text-slate-400 border border-[#2d1f85]">4</span>
+                <div class="flex items-center gap-2 truncate min-w-0"><span class="text-base shrink-0">🏛️</span><span class="text-base truncate font-bold">Libertador</span></div>
+                <span class="text-base font-mono px-2 py-0.5 rounded-md shrink-0 bg-[#0e092e] text-slate-400 border border-[#2d1f85]">4</span>
               </button>
               <button type="button" onclick="window.setTerritoryModalMunGlobal('ezequiel-zamora')" class="w-full text-left p-2.5 rounded-xl transition flex items-center justify-between gap-2 cursor-pointer group bg-[#140e40] hover:bg-[#23176d] text-slate-300 hover:text-white border border-[#2d1f85]">
-                <div class="flex items-center gap-2 truncate min-w-0"><span class="text-sm shrink-0">🏛️</span><span class="text-xs truncate font-bold">Ezequiel Zamora</span></div>
-                <span class="text-[10px] font-mono px-2 py-0.5 rounded-md shrink-0 bg-[#0e092e] text-slate-400 border border-[#2d1f85]">2</span>
+                <div class="flex items-center gap-2 truncate min-w-0"><span class="text-base shrink-0">🏛️</span><span class="text-base truncate font-bold">Ezequiel Zamora</span></div>
+                <span class="text-base font-mono px-2 py-0.5 rounded-md shrink-0 bg-[#0e092e] text-slate-400 border border-[#2d1f85]">2</span>
               </button>
               <button type="button" onclick="window.setTerritoryModalMunGlobal('acosta')" class="w-full text-left p-2.5 rounded-xl transition flex items-center justify-between gap-2 cursor-pointer group bg-[#140e40] hover:bg-[#23176d] text-slate-300 hover:text-white border border-[#2d1f85]">
-                <div class="flex items-center gap-2 truncate min-w-0"><span class="text-sm shrink-0">🏛️</span><span class="text-xs truncate font-bold">Acosta</span></div>
-                <span class="text-[10px] font-mono px-2 py-0.5 rounded-md shrink-0 bg-[#0e092e] text-slate-400 border border-[#2d1f85]">2</span>
+                <div class="flex items-center gap-2 truncate min-w-0"><span class="text-base shrink-0">🏛️</span><span class="text-base truncate font-bold">Acosta</span></div>
+                <span class="text-base font-mono px-2 py-0.5 rounded-md shrink-0 bg-[#0e092e] text-slate-400 border border-[#2d1f85]">2</span>
               </button>
               <button type="button" onclick="window.setTerritoryModalMunGlobal('punceres')" class="w-full text-left p-2.5 rounded-xl transition flex items-center justify-between gap-2 cursor-pointer group bg-[#140e40] hover:bg-[#23176d] text-slate-300 hover:text-white border border-[#2d1f85]">
-                <div class="flex items-center gap-2 truncate min-w-0"><span class="text-sm shrink-0">🏛️</span><span class="text-xs truncate font-bold">Punceres</span></div>
-                <span class="text-[10px] font-mono px-2 py-0.5 rounded-md shrink-0 bg-[#0e092e] text-slate-400 border border-[#2d1f85]">2</span>
+                <div class="flex items-center gap-2 truncate min-w-0"><span class="text-base shrink-0">🏛️</span><span class="text-base truncate font-bold">Punceres</span></div>
+                <span class="text-base font-mono px-2 py-0.5 rounded-md shrink-0 bg-[#0e092e] text-slate-400 border border-[#2d1f85]">2</span>
               </button>
               <button type="button" onclick="window.setTerritoryModalMunGlobal('santa-barbara')" class="w-full text-left p-2.5 rounded-xl transition flex items-center justify-between gap-2 cursor-pointer group bg-[#140e40] hover:bg-[#23176d] text-slate-300 hover:text-white border border-[#2d1f85]">
-                <div class="flex items-center gap-2 truncate min-w-0"><span class="text-sm shrink-0">🏛️</span><span class="text-xs truncate font-bold">Santa Bárbara</span></div>
-                <span class="text-[10px] font-mono px-2 py-0.5 rounded-md shrink-0 bg-[#0e092e] text-slate-400 border border-[#2d1f85]">2</span>
+                <div class="flex items-center gap-2 truncate min-w-0"><span class="text-base shrink-0">🏛️</span><span class="text-base truncate font-bold">Santa Bárbara</span></div>
+                <span class="text-base font-mono px-2 py-0.5 rounded-md shrink-0 bg-[#0e092e] text-slate-400 border border-[#2d1f85]">2</span>
               </button>
               <button type="button" onclick="window.setTerritoryModalMunGlobal('sotillo')" class="w-full text-left p-2.5 rounded-xl transition flex items-center justify-between gap-2 cursor-pointer group bg-[#140e40] hover:bg-[#23176d] text-slate-300 hover:text-white border border-[#2d1f85]">
-                <div class="flex items-center gap-2 truncate min-w-0"><span class="text-sm shrink-0">🏛️</span><span class="text-xs truncate font-bold">Sotillo</span></div>
-                <span class="text-[10px] font-mono px-2 py-0.5 rounded-md shrink-0 bg-[#0e092e] text-slate-400 border border-[#2d1f85]">2</span>
+                <div class="flex items-center gap-2 truncate min-w-0"><span class="text-base shrink-0">🏛️</span><span class="text-base truncate font-bold">Sotillo</span></div>
+                <span class="text-base font-mono px-2 py-0.5 rounded-md shrink-0 bg-[#0e092e] text-slate-400 border border-[#2d1f85]">2</span>
               </button>
               <button type="button" onclick="window.setTerritoryModalMunGlobal('bolivar')" class="w-full text-left p-2.5 rounded-xl transition flex items-center justify-between gap-2 cursor-pointer group bg-[#140e40] hover:bg-[#23176d] text-slate-300 hover:text-white border border-[#2d1f85]">
-                <div class="flex items-center gap-2 truncate min-w-0"><span class="text-sm shrink-0">🏛️</span><span class="text-xs truncate font-bold">Bolívar</span></div>
-                <span class="text-[10px] font-mono px-2 py-0.5 rounded-md shrink-0 bg-[#0e092e] text-slate-400 border border-[#2d1f85]">1</span>
+                <div class="flex items-center gap-2 truncate min-w-0"><span class="text-base shrink-0">🏛️</span><span class="text-base truncate font-bold">Bolívar</span></div>
+                <span class="text-base font-mono px-2 py-0.5 rounded-md shrink-0 bg-[#0e092e] text-slate-400 border border-[#2d1f85]">1</span>
               </button>
               <button type="button" onclick="window.setTerritoryModalMunGlobal('aguasay')" class="w-full text-left p-2.5 rounded-xl transition flex items-center justify-between gap-2 cursor-pointer group bg-[#140e40] hover:bg-[#23176d] text-slate-300 hover:text-white border border-[#2d1f85]">
-                <div class="flex items-center gap-2 truncate min-w-0"><span class="text-sm shrink-0">🏛️</span><span class="text-xs truncate font-bold">Aguasay</span></div>
-                <span class="text-[10px] font-mono px-2 py-0.5 rounded-md shrink-0 bg-[#0e092e] text-slate-400 border border-[#2d1f85]">1</span>
+                <div class="flex items-center gap-2 truncate min-w-0"><span class="text-base shrink-0">🏛️</span><span class="text-base truncate font-bold">Aguasay</span></div>
+                <span class="text-base font-mono px-2 py-0.5 rounded-md shrink-0 bg-[#0e092e] text-slate-400 border border-[#2d1f85]">1</span>
               </button>
               <button type="button" onclick="window.setTerritoryModalMunGlobal('uracoa')" class="w-full text-left p-2.5 rounded-xl transition flex items-center justify-between gap-2 cursor-pointer group bg-[#140e40] hover:bg-[#23176d] text-slate-300 hover:text-white border border-[#2d1f85]">
-                <div class="flex items-center gap-2 truncate min-w-0"><span class="text-sm shrink-0">🏛️</span><span class="text-xs truncate font-bold">Uracoa</span></div>
-                <span class="text-[10px] font-mono px-2 py-0.5 rounded-md shrink-0 bg-[#0e092e] text-slate-400 border border-[#2d1f85]">1</span>
+                <div class="flex items-center gap-2 truncate min-w-0"><span class="text-base shrink-0">🏛️</span><span class="text-base truncate font-bold">Uracoa</span></div>
+                <span class="text-base font-mono px-2 py-0.5 rounded-md shrink-0 bg-[#0e092e] text-slate-400 border border-[#2d1f85]">1</span>
               </button>
             </div>
           </div>
@@ -1621,101 +1626,101 @@
               <div class="truncate min-w-0">
                 <div class="flex items-center gap-2">
                   <span class="text-base sm:text-lg">🏛️</span>
-                  <h4 class="text-sm sm:text-base font-black text-white truncate">Municipio Maturín</h4>
-                  <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-sky-950 text-sky-300 border border-sky-400/40 font-bold shrink-0">11 Parroquias</span>
+                  <h4 class="text-base sm:text-base font-black text-white truncate">Municipio Maturín</h4>
+                  <span class="text-base font-mono px-2 py-0.5 rounded bg-sky-950 text-sky-300 border border-sky-400/40 font-bold shrink-0">11 Parroquias</span>
                 </div>
-                <p class="text-[11px] text-slate-400 truncate mt-0.5">Capital: <strong class="text-slate-200">Maturín</strong> • Estado Monagas</p>
+                <p class="text-base text-slate-400 truncate mt-0.5">Capital: <strong class="text-slate-200">Maturín</strong> • Estado Monagas</p>
               </div>
-              <button type="button" onclick="window.earthApp?.focusMunicipio('maturin', true); window.earthApp?.closeParishSelector();" class="px-3 py-1.5 rounded-xl bg-[#0e092e] hover:bg-sky-900/60 text-sky-300 hover:text-white border border-sky-400/40 text-xs font-bold transition flex items-center gap-1.5 cursor-pointer shrink-0 shadow-sm">
+              <button type="button" onclick="window.earthApp?.focusMunicipio('maturin', true); window.earthApp?.closeParishSelector();" class="px-3 py-1.5 rounded-xl bg-[#0e092e] hover:bg-sky-900/60 text-sky-300 hover:text-white border border-sky-400/40 text-sm font-bold transition flex items-center gap-1.5 cursor-pointer shrink-0 shadow-sm">
                 <i data-lucide="crosshair" class="w-3.5 h-3.5 text-sky-400"></i>
                 <span class="hidden sm:inline">Enfocar Municipio</span>
               </button>
             </div>
 
             <div class="flex items-center justify-between px-1">
-              <div class="text-[11px] font-black text-sky-400 uppercase tracking-wider flex items-center gap-1.5">
+              <div class="text-base font-black text-sky-400 uppercase tracking-wider flex items-center gap-1.5">
                 <span>2. PARROQUIAS</span>
-                <span class="text-[10px] text-slate-400 font-normal">➔ Haz clic en una parroquia para abrirla en el satélite</span>
+                <span class="text-base text-slate-400 font-normal">➔ Haz clic en una parroquia para abrirla en el satélite</span>
               </div>
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
               <div onclick="window.selectParishGlobal('maturin', 'san-simon')" class="p-3.5 rounded-xl border transition-all duration-150 cursor-pointer flex flex-col justify-between gap-2.5 shadow-sm group hover:scale-[1.01] bg-[#140e40] hover:bg-[#20155c] border-[#2d1f85] hover:border-sky-400">
                 <div class="flex items-start justify-between gap-2">
-                  <div class="truncate min-w-0"><div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full shrink-0 bg-sky-400"></span><h5 class="text-xs sm:text-sm font-black text-white group-hover:text-sky-300 truncate">San Simón (Casco Central)</h5></div><span class="text-[10px] text-slate-400 block mt-0.5">Urbana Central</span></div>
-                  <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-[#0e092e] text-slate-400 border border-[#2d1f85] shrink-0 font-medium">4 sect.</span>
+                  <div class="truncate min-w-0"><div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full shrink-0 bg-sky-400"></span><h5 class="text-base sm:text-base font-black text-white group-hover:text-sky-300 truncate">San Simón (Casco Central)</h5></div><span class="text-base text-slate-400 block mt-0.5">Urbana Central</span></div>
+                  <span class="text-base font-mono px-2 py-0.5 rounded bg-[#0e092e] text-slate-400 border border-[#2d1f85] shrink-0 font-medium">4 sect.</span>
                 </div>
-                <div class="flex items-center justify-between pt-2 border-t border-[#2d1f85]/50 text-xs"><span class="text-[10px] font-mono text-slate-400">📍 4 sectores mapeados</span><span class="text-xs font-bold text-sky-400 group-hover:text-white flex items-center gap-1 group-hover:translate-x-1 transition-transform">Entrar al Mapa ➔</span></div>
+                <div class="flex items-center justify-between pt-2 border-t border-[#2d1f85]/50 text-base"><span class="text-base font-mono text-slate-400">📍 4 sectores mapeados</span><span class="text-base font-bold text-sky-400 group-hover:text-white flex items-center gap-1 group-hover:translate-x-1 transition-transform">Entrar al Mapa ➔</span></div>
               </div>
               <div onclick="window.selectParishGlobal('maturin', 'san-simon-sur')" class="p-3.5 rounded-xl border transition-all duration-150 cursor-pointer flex flex-col justify-between gap-2.5 shadow-sm group hover:scale-[1.01] bg-[#140e40] hover:bg-[#20155c] border-[#2d1f85] hover:border-amber-400">
                 <div class="flex items-start justify-between gap-2">
-                  <div class="truncate min-w-0"><div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full shrink-0 bg-amber-400"></span><h5 class="text-xs sm:text-sm font-black text-white group-hover:text-amber-300 truncate">San Simón Sur</h5></div><span class="text-[10px] text-slate-400 block mt-0.5">Rural y Sabana Sur</span></div>
-                  <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-[#0e092e] text-slate-400 border border-[#2d1f85] shrink-0 font-medium">5 sect.</span>
+                  <div class="truncate min-w-0"><div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full shrink-0 bg-amber-400"></span><h5 class="text-base sm:text-base font-black text-white group-hover:text-amber-300 truncate">San Simón Sur</h5></div><span class="text-base text-slate-400 block mt-0.5">Rural y Sabana Sur</span></div>
+                  <span class="text-base font-mono px-2 py-0.5 rounded bg-[#0e092e] text-slate-400 border border-[#2d1f85] shrink-0 font-medium">5 sect.</span>
                 </div>
-                <div class="flex items-center justify-between pt-2 border-t border-[#2d1f85]/50 text-xs"><span class="text-[10px] font-mono text-slate-400">📍 5 sectores mapeados</span><span class="text-xs font-bold text-amber-400 group-hover:text-white flex items-center gap-1 group-hover:translate-x-1 transition-transform">Entrar al Mapa ➔</span></div>
+                <div class="flex items-center justify-between pt-2 border-t border-[#2d1f85]/50 text-base"><span class="text-base font-mono text-slate-400">📍 5 sectores mapeados</span><span class="text-base font-bold text-amber-400 group-hover:text-white flex items-center gap-1 group-hover:translate-x-1 transition-transform">Entrar al Mapa ➔</span></div>
               </div>
               <div onclick="window.selectParishGlobal('maturin', 'alto-de-los-godos')" class="p-3.5 rounded-xl border transition-all duration-150 cursor-pointer flex flex-col justify-between gap-2.5 shadow-sm group hover:scale-[1.01] bg-[#140e40] hover:bg-[#20155c] border-[#2d1f85] hover:border-sky-400">
                 <div class="flex items-start justify-between gap-2">
-                  <div class="truncate min-w-0"><div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full shrink-0 bg-sky-400"></span><h5 class="text-xs sm:text-sm font-black text-white group-hover:text-sky-300 truncate">Alto de Los Godos</h5></div><span class="text-[10px] text-slate-400 block mt-0.5">Urbana Oeste</span></div>
-                  <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-[#0e092e] text-slate-400 border border-[#2d1f85] shrink-0 font-medium">5 sect.</span>
+                  <div class="truncate min-w-0"><div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full shrink-0 bg-sky-400"></span><h5 class="text-base sm:text-base font-black text-white group-hover:text-sky-300 truncate">Alto de Los Godos</h5></div><span class="text-base text-slate-400 block mt-0.5">Urbana Oeste</span></div>
+                  <span class="text-base font-mono px-2 py-0.5 rounded bg-[#0e092e] text-slate-400 border border-[#2d1f85] shrink-0 font-medium">5 sect.</span>
                 </div>
-                <div class="flex items-center justify-between pt-2 border-t border-[#2d1f85]/50 text-xs"><span class="text-[10px] font-mono text-slate-400">📍 5 sectores mapeados</span><span class="text-xs font-bold text-sky-400 group-hover:text-white flex items-center gap-1 group-hover:translate-x-1 transition-transform">Entrar al Mapa ➔</span></div>
+                <div class="flex items-center justify-between pt-2 border-t border-[#2d1f85]/50 text-base"><span class="text-base font-mono text-slate-400">📍 5 sectores mapeados</span><span class="text-base font-bold text-sky-400 group-hover:text-white flex items-center gap-1 group-hover:translate-x-1 transition-transform">Entrar al Mapa ➔</span></div>
               </div>
               <div onclick="window.selectParishGlobal('maturin', 'boqueron')" class="p-3.5 rounded-xl border transition-all duration-150 cursor-pointer flex flex-col justify-between gap-2.5 shadow-sm group hover:scale-[1.01] bg-[#140e40] hover:bg-[#20155c] border-[#2d1f85] hover:border-sky-400">
                 <div class="flex items-start justify-between gap-2">
-                  <div class="truncate min-w-0"><div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full shrink-0 bg-sky-400"></span><h5 class="text-xs sm:text-sm font-black text-white group-hover:text-sky-300 truncate">Boquerón</h5></div><span class="text-[10px] text-slate-400 block mt-0.5">Urbana Norte</span></div>
-                  <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-[#0e092e] text-slate-400 border border-[#2d1f85] shrink-0 font-medium">5 sect.</span>
+                  <div class="truncate min-w-0"><div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full shrink-0 bg-sky-400"></span><h5 class="text-base sm:text-base font-black text-white group-hover:text-sky-300 truncate">Boquerón</h5></div><span class="text-base text-slate-400 block mt-0.5">Urbana Norte</span></div>
+                  <span class="text-base font-mono px-2 py-0.5 rounded bg-[#0e092e] text-slate-400 border border-[#2d1f85] shrink-0 font-medium">5 sect.</span>
                 </div>
-                <div class="flex items-center justify-between pt-2 border-t border-[#2d1f85]/50 text-xs"><span class="text-[10px] font-mono text-slate-400">📍 5 sectores mapeados</span><span class="text-xs font-bold text-sky-400 group-hover:text-white flex items-center gap-1 group-hover:translate-x-1 transition-transform">Entrar al Mapa ➔</span></div>
+                <div class="flex items-center justify-between pt-2 border-t border-[#2d1f85]/50 text-base"><span class="text-base font-mono text-slate-400">📍 5 sectores mapeados</span><span class="text-base font-bold text-sky-400 group-hover:text-white flex items-center gap-1 group-hover:translate-x-1 transition-transform">Entrar al Mapa ➔</span></div>
               </div>
               <div onclick="window.selectParishGlobal('maturin', 'las-cocuizas')" class="p-3.5 rounded-xl border transition-all duration-150 cursor-pointer flex flex-col justify-between gap-2.5 shadow-sm group hover:scale-[1.01] bg-[#140e40] hover:bg-[#20155c] border-[#2d1f85] hover:border-sky-400">
                 <div class="flex items-start justify-between gap-2">
-                  <div class="truncate min-w-0"><div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full shrink-0 bg-sky-400"></span><h5 class="text-xs sm:text-sm font-black text-white group-hover:text-sky-300 truncate">Las Cocuizas</h5></div><span class="text-[10px] text-slate-400 block mt-0.5">Urbana Este</span></div>
-                  <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-[#0e092e] text-slate-400 border border-[#2d1f85] shrink-0 font-medium">5 sect.</span>
+                  <div class="truncate min-w-0"><div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full shrink-0 bg-sky-400"></span><h5 class="text-base sm:text-base font-black text-white group-hover:text-sky-300 truncate">Las Cocuizas</h5></div><span class="text-base text-slate-400 block mt-0.5">Urbana Este</span></div>
+                  <span class="text-base font-mono px-2 py-0.5 rounded bg-[#0e092e] text-slate-400 border border-[#2d1f85] shrink-0 font-medium">5 sect.</span>
                 </div>
-                <div class="flex items-center justify-between pt-2 border-t border-[#2d1f85]/50 text-xs"><span class="text-[10px] font-mono text-slate-400">📍 5 sectores mapeados</span><span class="text-xs font-bold text-sky-400 group-hover:text-white flex items-center gap-1 group-hover:translate-x-1 transition-transform">Entrar al Mapa ➔</span></div>
+                <div class="flex items-center justify-between pt-2 border-t border-[#2d1f85]/50 text-base"><span class="text-base font-mono text-slate-400">📍 5 sectores mapeados</span><span class="text-base font-bold text-sky-400 group-hover:text-white flex items-center gap-1 group-hover:translate-x-1 transition-transform">Entrar al Mapa ➔</span></div>
               </div>
               <div onclick="window.selectParishGlobal('maturin', 'santa-cruz')" class="p-3.5 rounded-xl border transition-all duration-150 cursor-pointer flex flex-col justify-between gap-2.5 shadow-sm group hover:scale-[1.01] bg-[#140e40] hover:bg-[#20155c] border-[#2d1f85] hover:border-sky-400">
                 <div class="flex items-start justify-between gap-2">
-                  <div class="truncate min-w-0"><div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full shrink-0 bg-sky-400"></span><h5 class="text-xs sm:text-sm font-black text-white group-hover:text-sky-300 truncate">Santa Cruz (La Cruz)</h5></div><span class="text-[10px] text-slate-400 block mt-0.5">Urbana Oeste</span></div>
-                  <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-[#0e092e] text-slate-400 border border-[#2d1f85] shrink-0 font-medium">4 sect.</span>
+                  <div class="truncate min-w-0"><div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full shrink-0 bg-sky-400"></span><h5 class="text-base sm:text-base font-black text-white group-hover:text-sky-300 truncate">Santa Cruz (La Cruz)</h5></div><span class="text-base text-slate-400 block mt-0.5">Urbana Oeste</span></div>
+                  <span class="text-base font-mono px-2 py-0.5 rounded bg-[#0e092e] text-slate-400 border border-[#2d1f85] shrink-0 font-medium">4 sect.</span>
                 </div>
-                <div class="flex items-center justify-between pt-2 border-t border-[#2d1f85]/50 text-xs"><span class="text-[10px] font-mono text-slate-400">📍 4 sectores mapeados</span><span class="text-xs font-bold text-sky-400 group-hover:text-white flex items-center gap-1 group-hover:translate-x-1 transition-transform">Entrar al Mapa ➔</span></div>
+                <div class="flex items-center justify-between pt-2 border-t border-[#2d1f85]/50 text-base"><span class="text-base font-mono text-slate-400">📍 4 sectores mapeados</span><span class="text-base font-bold text-sky-400 group-hover:text-white flex items-center gap-1 group-hover:translate-x-1 transition-transform">Entrar al Mapa ➔</span></div>
               </div>
               <div onclick="window.selectParishGlobal('maturin', 'san-vicente')" class="p-3.5 rounded-xl border transition-all duration-150 cursor-pointer flex flex-col justify-between gap-2.5 shadow-sm group hover:scale-[1.01] bg-[#140e40] hover:bg-[#20155c] border-[#2d1f85] hover:border-sky-400">
                 <div class="flex items-start justify-between gap-2">
-                  <div class="truncate min-w-0"><div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full shrink-0 bg-sky-400"></span><h5 class="text-xs sm:text-sm font-black text-white group-hover:text-sky-300 truncate">San Vicente</h5></div><span class="text-[10px] text-slate-400 block mt-0.5">Urbana Oeste</span></div>
-                  <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-[#0e092e] text-slate-400 border border-[#2d1f85] shrink-0 font-medium">4 sect.</span>
+                  <div class="truncate min-w-0"><div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full shrink-0 bg-sky-400"></span><h5 class="text-base sm:text-base font-black text-white group-hover:text-sky-300 truncate">San Vicente</h5></div><span class="text-base text-slate-400 block mt-0.5">Urbana Oeste</span></div>
+                  <span class="text-base font-mono px-2 py-0.5 rounded bg-[#0e092e] text-slate-400 border border-[#2d1f85] shrink-0 font-medium">4 sect.</span>
                 </div>
-                <div class="flex items-center justify-between pt-2 border-t border-[#2d1f85]/50 text-xs"><span class="text-[10px] font-mono text-slate-400">📍 4 sectores mapeados</span><span class="text-xs font-bold text-sky-400 group-hover:text-white flex items-center gap-1 group-hover:translate-x-1 transition-transform">Entrar al Mapa ➔</span></div>
+                <div class="flex items-center justify-between pt-2 border-t border-[#2d1f85]/50 text-base"><span class="text-base font-mono text-slate-400">📍 4 sectores mapeados</span><span class="text-base font-bold text-sky-400 group-hover:text-white flex items-center gap-1 group-hover:translate-x-1 transition-transform">Entrar al Mapa ➔</span></div>
               </div>
               <div onclick="window.selectParishGlobal('maturin', 'la-pica')" class="p-3.5 rounded-xl border transition-all duration-150 cursor-pointer flex flex-col justify-between gap-2.5 shadow-sm group hover:scale-[1.01] bg-[#140e40] hover:bg-[#20155c] border-[#2d1f85] hover:border-sky-400">
                 <div class="flex items-start justify-between gap-2">
-                  <div class="truncate min-w-0"><div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full shrink-0 bg-sky-400"></span><h5 class="text-xs sm:text-sm font-black text-white group-hover:text-sky-300 truncate">La Pica</h5></div><span class="text-[10px] text-slate-400 block mt-0.5">Rural - Agrícola</span></div>
-                  <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-[#0e092e] text-slate-400 border border-[#2d1f85] shrink-0 font-medium">3 sect.</span>
+                  <div class="truncate min-w-0"><div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full shrink-0 bg-sky-400"></span><h5 class="text-base sm:text-base font-black text-white group-hover:text-sky-300 truncate">La Pica</h5></div><span class="text-base text-slate-400 block mt-0.5">Rural - Agrícola</span></div>
+                  <span class="text-base font-mono px-2 py-0.5 rounded bg-[#0e092e] text-slate-400 border border-[#2d1f85] shrink-0 font-medium">3 sect.</span>
                 </div>
-                <div class="flex items-center justify-between pt-2 border-t border-[#2d1f85]/50 text-xs"><span class="text-[10px] font-mono text-slate-400">📍 3 sectores mapeados</span><span class="text-xs font-bold text-sky-400 group-hover:text-white flex items-center gap-1 group-hover:translate-x-1 transition-transform">Entrar al Mapa ➔</span></div>
+                <div class="flex items-center justify-between pt-2 border-t border-[#2d1f85]/50 text-base"><span class="text-base font-mono text-slate-400">📍 3 sectores mapeados</span><span class="text-base font-bold text-sky-400 group-hover:text-white flex items-center gap-1 group-hover:translate-x-1 transition-transform">Entrar al Mapa ➔</span></div>
               </div>
               <div onclick="window.selectParishGlobal('maturin', 'jusepin')" class="p-3.5 rounded-xl border transition-all duration-150 cursor-pointer flex flex-col justify-between gap-2.5 shadow-sm group hover:scale-[1.01] bg-[#140e40] hover:bg-[#20155c] border-[#2d1f85] hover:border-sky-400">
                 <div class="flex items-start justify-between gap-2">
-                  <div class="truncate min-w-0"><div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full shrink-0 bg-sky-400"></span><h5 class="text-xs sm:text-sm font-black text-white group-hover:text-sky-300 truncate">Jusepín</h5></div><span class="text-[10px] text-slate-400 block mt-0.5">Petrolera y Rural</span></div>
-                  <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-[#0e092e] text-slate-400 border border-[#2d1f85] shrink-0 font-medium">3 sect.</span>
+                  <div class="truncate min-w-0"><div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full shrink-0 bg-sky-400"></span><h5 class="text-base sm:text-base font-black text-white group-hover:text-sky-300 truncate">Jusepín</h5></div><span class="text-base text-slate-400 block mt-0.5">Petrolera y Rural</span></div>
+                  <span class="text-base font-mono px-2 py-0.5 rounded bg-[#0e092e] text-slate-400 border border-[#2d1f85] shrink-0 font-medium">3 sect.</span>
                 </div>
-                <div class="flex items-center justify-between pt-2 border-t border-[#2d1f85]/50 text-xs"><span class="text-[10px] font-mono text-slate-400">📍 3 sectores mapeados</span><span class="text-xs font-bold text-sky-400 group-hover:text-white flex items-center gap-1 group-hover:translate-x-1 transition-transform">Entrar al Mapa ➔</span></div>
+                <div class="flex items-center justify-between pt-2 border-t border-[#2d1f85]/50 text-base"><span class="text-base font-mono text-slate-400">📍 3 sectores mapeados</span><span class="text-base font-bold text-sky-400 group-hover:text-white flex items-center gap-1 group-hover:translate-x-1 transition-transform">Entrar al Mapa ➔</span></div>
               </div>
               <div onclick="window.selectParishGlobal('maturin', 'el-furrial')" class="p-3.5 rounded-xl border transition-all duration-150 cursor-pointer flex flex-col justify-between gap-2.5 shadow-sm group hover:scale-[1.01] bg-[#140e40] hover:bg-[#20155c] border-[#2d1f85] hover:border-sky-400">
                 <div class="flex items-start justify-between gap-2">
-                  <div class="truncate min-w-0"><div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full shrink-0 bg-sky-400"></span><h5 class="text-xs sm:text-sm font-black text-white group-hover:text-sky-300 truncate">El Furrial</h5></div><span class="text-[10px] text-slate-400 block mt-0.5">Petrolera y Agropecuaria</span></div>
-                  <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-[#0e092e] text-slate-400 border border-[#2d1f85] shrink-0 font-medium">3 sect.</span>
+                  <div class="truncate min-w-0"><div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full shrink-0 bg-sky-400"></span><h5 class="text-base sm:text-base font-black text-white group-hover:text-sky-300 truncate">El Furrial</h5></div><span class="text-base text-slate-400 block mt-0.5">Petrolera y Agropecuaria</span></div>
+                  <span class="text-base font-mono px-2 py-0.5 rounded bg-[#0e092e] text-slate-400 border border-[#2d1f85] shrink-0 font-medium">3 sect.</span>
                 </div>
-                <div class="flex items-center justify-between pt-2 border-t border-[#2d1f85]/50 text-xs"><span class="text-[10px] font-mono text-slate-400">📍 3 sectores mapeados</span><span class="text-xs font-bold text-sky-400 group-hover:text-white flex items-center gap-1 group-hover:translate-x-1 transition-transform">Entrar al Mapa ➔</span></div>
+                <div class="flex items-center justify-between pt-2 border-t border-[#2d1f85]/50 text-base"><span class="text-base font-mono text-slate-400">📍 3 sectores mapeados</span><span class="text-base font-bold text-sky-400 group-hover:text-white flex items-center gap-1 group-hover:translate-x-1 transition-transform">Entrar al Mapa ➔</span></div>
               </div>
               <div onclick="window.selectParishGlobal('maturin', 'el-corozo')" class="p-3.5 rounded-xl border transition-all duration-150 cursor-pointer flex flex-col justify-between gap-2.5 shadow-sm group hover:scale-[1.01] bg-[#140e40] hover:bg-[#20155c] border-[#2d1f85] hover:border-sky-400">
                 <div class="flex items-start justify-between gap-2">
-                  <div class="truncate min-w-0"><div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full shrink-0 bg-sky-400"></span><h5 class="text-xs sm:text-sm font-black text-white group-hover:text-sky-300 truncate">El Corozo</h5></div><span class="text-[10px] text-slate-400 block mt-0.5">Suburbana Sur</span></div>
-                  <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-[#0e092e] text-slate-400 border border-[#2d1f85] shrink-0 font-medium">3 sect.</span>
+                  <div class="truncate min-w-0"><div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full shrink-0 bg-sky-400"></span><h5 class="text-base sm:text-base font-black text-white group-hover:text-sky-300 truncate">El Corozo</h5></div><span class="text-base text-slate-400 block mt-0.5">Suburbana Sur</span></div>
+                  <span class="text-base font-mono px-2 py-0.5 rounded bg-[#0e092e] text-slate-400 border border-[#2d1f85] shrink-0 font-medium">3 sect.</span>
                 </div>
-                <div class="flex items-center justify-between pt-2 border-t border-[#2d1f85]/50 text-xs"><span class="text-[10px] font-mono text-slate-400">📍 3 sectores mapeados</span><span class="text-xs font-bold text-sky-400 group-hover:text-white flex items-center gap-1 group-hover:translate-x-1 transition-transform">Entrar al Mapa ➔</span></div>
+                <div class="flex items-center justify-between pt-2 border-t border-[#2d1f85]/50 text-base"><span class="text-base font-mono text-slate-400">📍 3 sectores mapeados</span><span class="text-base font-bold text-sky-400 group-hover:text-white flex items-center gap-1 group-hover:translate-x-1 transition-transform">Entrar al Mapa ➔</span></div>
               </div>
             </div>
           </div>
@@ -1733,25 +1738,25 @@
       <div class="flex items-center justify-between border-b border-[#2d1f85] pb-2.5">
         <div class="flex items-center gap-2">
           <i data-lucide="image" class="w-4 h-4 text-purple-400"></i>
-          <h3 class="text-xs font-black text-white uppercase tracking-wider">Superponer Plano / Imagen</h3>
+          <h3 class="text-base font-black text-white uppercase tracking-wider">Superponer Plano / Imagen</h3>
         </div>
         <button id="btn-close-overlay" class="text-slate-400 hover:text-white p-1">
           <i data-lucide="x" class="w-4 h-4"></i>
         </button>
       </div>
 
-      <p class="text-xs text-slate-300">
+      <p class="text-base text-slate-300">
         Sube un plano escaneado en imagen o foto para colocarlo sobre el mapa y calcarlo con precisión:
       </p>
 
       <form id="form-image-overlay" class="space-y-3">
         <div>
-          <label class="block text-[11px] font-bold text-slate-400 uppercase mb-1">Archivo de Imagen / Plano *</label>
-          <input type="file" id="input-overlay-file" accept="image/*" required class="w-full text-xs text-white file:mr-3 file:py-2 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-purple-600 file:text-white hover:file:bg-purple-500 cursor-pointer">
+          <label class="block text-sm font-bold text-slate-400 uppercase mb-1">Archivo de Imagen / Plano *</label>
+          <input type="file" id="input-overlay-file" accept="image/*" required class="w-full text-sm text-white file:mr-3 file:py-2 file:px-3 file:rounded-xl file:border-0 file:text-base file:font-bold file:bg-purple-600 file:text-white hover:file:bg-purple-500 cursor-pointer">
         </div>
 
         <div>
-          <div class="flex justify-between text-xs text-slate-400 mb-1">
+          <div class="flex justify-between text-sm text-slate-400 mb-1">
             <span>Transparencia / Opacidad:</span>
             <span id="overlay-opacity-val" class="font-mono text-purple-400 font-bold">65%</span>
           </div>
@@ -1759,7 +1764,7 @@
         </div>
 
         <div class="pt-2 flex items-center justify-end gap-2 border-t border-[#2d1f85]">
-          <button type="submit" class="px-5 py-2 text-xs font-black bg-purple-600 hover:bg-purple-500 text-white rounded-xl shadow-lg flex items-center gap-1.5">
+          <button type="submit" class="px-5 py-2 text-sm font-black bg-purple-600 hover:bg-purple-500 text-white rounded-xl shadow-lg flex items-center gap-1.5">
             <i data-lucide="check" class="w-4 h-4"></i>
             <span>Colocar en el Satélite</span>
           </button>
@@ -1783,11 +1788,11 @@
           </div>
           <div>
             <div class="flex items-center gap-2">
-              <span class="text-[10px] font-black uppercase tracking-wider text-amber-400 bg-amber-950/80 border border-amber-500/30 px-2 py-0.5 rounded-full">KML / KMZ Universal</span>
-              <span id="kml-badge-count" class="text-[10px] font-bold text-emerald-400 bg-emerald-950/60 border border-emerald-500/30 px-2 py-0.5 rounded-full">0 polígonos</span>
+              <span class="text-base font-black uppercase tracking-wider text-amber-400 bg-amber-950/80 border border-amber-500/30 px-2 py-0.5 rounded-full">KML / KMZ Universal</span>
+              <span id="kml-badge-count" class="text-base font-bold text-emerald-400 bg-emerald-950/60 border border-emerald-500/30 px-2 py-0.5 rounded-full">0 polígonos</span>
             </div>
             <h3 class="text-base font-black text-white mt-0.5">Importar Polígonos KML / KMZ</h3>
-            <p class="text-xs text-slate-400">Archivo: <span id="kml-modal-filename" class="text-slate-200 font-mono font-semibold">archivo.kml</span></p>
+            <p class="text-base text-slate-400">Archivo: <span id="kml-modal-filename" class="text-slate-200 font-mono font-semibold">archivo.kml</span></p>
           </div>
         </div>
         <button type="button" id="btn-close-kml-import" class="p-1.5 rounded-xl text-slate-400 hover:text-white hover:bg-[#140e40] transition">
@@ -1796,11 +1801,11 @@
       </div>
 
       <!-- Contenido Scrolleable -->
-      <div class="space-y-4 overflow-y-auto pr-1 flex-1 text-xs">
+      <div class="space-y-4 overflow-y-auto pr-1 flex-1 text-base">
 
         <!-- PASO 1: Selección de Capa (Capa 1 vs Capa 2) -->
         <div>
-          <label class="block text-[11px] font-black text-slate-300 uppercase tracking-wider mb-2">
+          <label class="block text-sm font-black text-slate-300 uppercase tracking-wider mb-2">
             Paso 1: ¿A qué nivel o capa corresponden estos polígonos? *
           </label>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -1812,10 +1817,10 @@
                 <div>
                   <div class="flex items-center gap-1.5">
                     <span class="w-2.5 h-2.5 rounded-full bg-purple-400 shrink-0"></span>
-                    <strong class="text-white text-xs font-bold">Capa 1: Eje Territorial</strong>
+                    <strong class="text-white text-base font-bold">Capa 1: Eje Territorial</strong>
                   </div>
-                  <span class="text-[10px] text-purple-300 font-semibold block mt-0.5">Sub-Parroquia (Nivel 4)</span>
-                  <p class="text-[11px] text-slate-300 mt-1 leading-relaxed">
+                  <span class="text-base text-purple-300 font-semibold block mt-0.5">Sub-Parroquia (Nivel 4)</span>
+                  <p class="text-base text-slate-300 mt-1 leading-relaxed">
                     Delimitación de Ejes Territoriales. Trazo morado con pin de centroide.
                   </p>
                 </div>
@@ -1829,10 +1834,10 @@
                 <div>
                   <div class="flex items-center gap-1.5">
                     <span class="w-2.5 h-2.5 rounded-full bg-sky-400 shrink-0"></span>
-                    <strong class="text-white text-xs font-bold">Capa 2: Sector Vecinal</strong>
+                    <strong class="text-white text-base font-bold">Capa 2: Sector Vecinal</strong>
                   </div>
-                  <span class="text-[10px] text-sky-300 font-semibold block mt-0.5">Comunidad / Base (Nivel 5)</span>
-                  <p class="text-[11px] text-slate-300 mt-1 leading-relaxed">
+                  <span class="text-base text-sky-300 font-semibold block mt-0.5">Comunidad / Base (Nivel 5)</span>
+                  <p class="text-base text-slate-300 mt-1 leading-relaxed">
                     Sectores comunitarios y punto y círculo. Trazo celeste con ficha técnica.
                   </p>
                 </div>
@@ -1845,20 +1850,20 @@
         <!-- PASO 2: Parroquia Destino y Vinculación -->
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
-            <label class="block text-[11px] font-black text-slate-300 uppercase tracking-wider mb-1">
+            <label class="block text-sm font-black text-slate-300 uppercase tracking-wider mb-1">
               Paso 2: Parroquia Destino *
             </label>
-            <select id="kml-select-parish" class="w-full bg-[#0e092e] border border-[#2d1f85] rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-amber-500 font-medium">
+            <select id="kml-select-parish" class="w-full bg-[#0e092e] border border-[#2d1f85] rounded-xl px-3 py-2 text-sm text-white focus:border-amber-500 font-medium">
               <!-- Opciones dinámicas -->
             </select>
           </div>
 
           <!-- PASO 3: Vincular a Eje (Solo visible si Capa 2 está seleccionada) -->
           <div id="kml-box-eje-link" class="hidden">
-            <label class="block text-[11px] font-black text-purple-300 uppercase tracking-wider mb-1">
+            <label class="block text-sm font-black text-purple-300 uppercase tracking-wider mb-1">
               Vincular al Eje Territorial (Opcional):
             </label>
-            <select id="kml-select-eje" class="w-full bg-[#0e092e] border border-purple-500/50 rounded-xl px-3 py-2 text-xs text-purple-200 focus:outline-none focus:border-purple-400 font-medium">
+            <select id="kml-select-eje" class="w-full bg-[#0e092e] border border-purple-500/50 rounded-xl px-3 py-2 text-sm text-purple-200 focus:border-purple-400 font-medium">
               <option value="">— Sin vincular a un Eje específico —</option>
             </select>
           </div>
@@ -1867,11 +1872,11 @@
         <!-- PASO 4: Vista Previa y Selección de Polígonos -->
         <div>
           <div class="flex items-center justify-between mb-1.5">
-            <label class="text-[11px] font-black text-slate-300 uppercase tracking-wider">
+            <label class="text-sm font-black text-slate-300 uppercase tracking-wider">
               Polígonos Detectados (<span id="kml-selected-count" class="text-emerald-400 font-bold">0</span> seleccionados):
             </label>
             <div class="flex items-center gap-2">
-              <button type="button" id="btn-kml-toggle-all" class="text-[10px] text-amber-400 hover:text-amber-300 font-bold transition cursor-pointer">
+              <button type="button" id="btn-kml-toggle-all" class="text-sm text-amber-400 hover:text-amber-300 font-bold transition cursor-pointer">
                 Marcar / Desmarcar Todos
               </button>
             </div>
@@ -1887,11 +1892,11 @@
 
       <!-- Pie del Modal -->
       <div class="pt-3 border-t border-[#2d1f85] flex items-center justify-between gap-2">
-        <button type="button" id="btn-cancel-kml-import" class="px-4 py-2 text-xs font-semibold bg-[#140e40] hover:bg-[#23176d] border border-[#2d1f85] text-slate-300 rounded-xl transition cursor-pointer">
+        <button type="button" id="btn-cancel-kml-import" class="px-4 py-2 text-sm font-semibold bg-[#140e40] hover:bg-[#23176d] border border-[#2d1f85] text-slate-300 rounded-xl transition cursor-pointer">
           Cancelar
         </button>
 
-        <button type="button" id="btn-confirm-kml-import" class="px-5 py-2.5 text-xs font-black bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white rounded-xl shadow-lg flex items-center gap-2 active:scale-95 transition cursor-pointer">
+        <button type="button" id="btn-confirm-kml-import" class="px-5 py-2.5 text-sm font-black bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white rounded-xl shadow-lg flex items-center gap-2 active:scale-95 transition cursor-pointer">
           <i data-lucide="cloud-upload" class="w-4 h-4"></i>
           <span id="btn-confirm-kml-label">Importar Polígonos a Capa 1</span>
         </button>
@@ -1910,17 +1915,17 @@
       <div class="flex items-center gap-1.5 sm:gap-2 min-w-0 flex-1">
         <span id="earth-drawing-banner-dot" class="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-sky-400 shadow-[0_0_10px_rgba(56,189,248,0.9)] shrink-0 animate-pulse"></span>
         <div class="truncate">
-          <span id="earth-drawing-banner-text" class="text-white font-black text-[11px] sm:text-xs block truncate uppercase tracking-wide">Trazando Sector</span>
-          <span id="earth-drawing-banner-parish" class="text-[10px] sm:text-[11px] text-amber-400 font-bold block truncate">📍 Monagas</span>
+          <span id="earth-drawing-banner-text" class="text-white font-black text-base sm:text-base block truncate uppercase tracking-wide">Trazando Sector</span>
+          <span id="earth-drawing-banner-parish" class="text-base sm:text-base text-amber-400 font-bold block truncate">📍 Monagas</span>
         </div>
       </div>
 
       <div class="flex items-center gap-1 shrink-0">
         <!-- Indicador Compacto en Vivo (Visible siempre para no necesitar abrir el panel) -->
-        <span id="earth-live-measure-compact" class="font-mono text-[10px] sm:text-xs font-black text-amber-300 bg-[#0e092e] px-2 py-0.5 rounded-md border border-[#2d1f85] shrink-0">0 pts</span>
+        <span id="earth-live-measure-compact" class="font-mono text-base sm:text-base font-black text-amber-300 bg-[#0e092e] px-2 py-0.5 rounded-md border border-[#2d1f85] shrink-0">0 pts</span>
 
         <!-- Botón Expandir/Minimizar Formulario de Detalles -->
-        <button type="button" id="btn-banner-toggle-collapse" onclick="window.toggleDrawingBannerExpand()" class="px-2 py-1 rounded-lg bg-[#140e40] hover:bg-[#23176d] text-sky-300 text-[10px] sm:text-xs font-bold flex items-center gap-1 border border-[#2d1f85] active:scale-95 transition cursor-pointer" title="Expandir/Minimizar formulario de datos">
+        <button type="button" id="btn-banner-toggle-collapse" onclick="window.toggleDrawingBannerExpand()" class="px-2 py-1 rounded-lg bg-[#140e40] hover:bg-[#23176d] text-sky-300 text-sm sm:text-base font-bold flex items-center gap-1 border border-[#2d1f85] active:scale-95 transition cursor-pointer" title="Expandir/Minimizar formulario de datos">
           <span>📝</span>
           <span id="earth-drawing-expand-label" class="hidden sm:inline">Datos</span>
         </button>
@@ -1940,38 +1945,38 @@
           <i data-lucide="mouse-pointer" class="w-3.5 h-3.5"></i>
         </div>
         <div class="min-w-0 flex-1">
-          <span id="earth-drawing-banner-hint" class="text-[10px] sm:text-xs text-sky-200 block font-semibold leading-tight">👉 Haz clics sobre el satélite para colocar esquinas, o pulsa [1-Clic]</span>
+          <span id="earth-drawing-banner-hint" class="text-base sm:text-base text-sky-200 block font-semibold leading-tight">👉 Haz clics sobre el satélite para colocar esquinas, o pulsa [1-Clic]</span>
         </div>
       </div>
 
       <!-- Fila 3: Indicadores Métricos Detallados -->
-      <div class="grid grid-cols-2 gap-2 text-center text-xs">
+      <div class="grid grid-cols-2 gap-2 text-center text-base">
         <div class="bg-[#0e092e] rounded-xl p-1.5 sm:p-2 border border-[#2d1f85]">
-          <span class="text-[9px] sm:text-[10px] text-slate-400 font-bold uppercase block">Puntos / Vértices</span>
-          <span id="earth-live-measure" class="font-mono text-amber-400 font-black text-xs sm:text-sm">0 puntos</span>
+          <span class="text-base sm:text-base text-slate-400 font-bold uppercase block">Puntos / Vértices</span>
+          <span id="earth-live-measure" class="font-mono text-amber-400 font-black text-base sm:text-base">0 puntos</span>
         </div>
         <div class="bg-[#0e092e] rounded-xl p-1.5 sm:p-2 border border-[#2d1f85]">
-          <span id="earth-live-measure-sub-label" class="text-[9px] sm:text-[10px] text-slate-400 font-bold uppercase block">Superficie / Área</span>
-          <span id="earth-live-measure-sub" class="font-mono text-emerald-400 font-black text-xs sm:text-sm">0.00 Ha</span>
+          <span id="earth-live-measure-sub-label" class="text-base sm:text-base text-slate-400 font-bold uppercase block">Superficie / Área</span>
+          <span id="earth-live-measure-sub" class="font-mono text-emerald-400 font-black text-base sm:text-base">0.00 Ha</span>
         </div>
       </div>
 
       <!-- Fila 4: Formulario Rápido (Nombre y Datos de Militancia) -->
       <div class="space-y-1.5">
         <div>
-          <label class="block text-[9px] sm:text-[10px] font-black text-slate-300 uppercase tracking-wider mb-0.5">Nombre / Identificador *</label>
-          <input type="text" id="earth-draw-name-input" placeholder="Nombre del polígono o ruta..." class="w-full px-2.5 py-1.5 bg-[#0e092e] border border-[#2d1f85] rounded-xl text-xs text-white font-bold focus:outline-none focus:border-sky-500 shadow-inner">
+          <label class="block text-sm sm:text-base font-black text-slate-300 uppercase tracking-wider mb-0.5">Nombre / Identificador *</label>
+          <input type="text" id="earth-draw-name-input" placeholder="Nombre del polígono o ruta..." class="w-full px-2.5 py-1.5 bg-[#0e092e] border border-[#2d1f85] rounded-xl text-sm text-white font-bold focus:border-sky-500 shadow-inner">
         </div>
 
         <!-- Campos extra exclusivos para Sector Vecinal (Militantes y Casas) -->
         <div id="earth-draw-sector-extra" class="grid grid-cols-2 gap-2">
           <div>
-            <label class="block text-[9px] font-bold text-sky-400 uppercase mb-0.5">Militantes</label>
-            <input type="number" id="earth-draw-militantes" min="0" value="0" class="w-full px-2 py-1 bg-[#0e092e] border border-[#2d1f85] rounded-lg text-xs text-white font-mono font-bold focus:outline-none focus:border-sky-500">
+            <label class="block text-sm font-bold text-sky-400 uppercase mb-0.5">Militantes</label>
+            <input type="number" id="earth-draw-militantes" min="0" value="0" class="w-full px-2 py-1 bg-[#0e092e] border border-[#2d1f85] rounded-lg text-sm text-white font-mono font-bold focus:border-sky-500">
           </div>
           <div>
-            <label class="block text-[9px] font-bold text-amber-400 uppercase mb-0.5">Casas / Familias</label>
-            <input type="number" id="earth-draw-casas" min="0" value="0" class="w-full px-2 py-1 bg-[#0e092e] border border-[#2d1f85] rounded-lg text-xs text-white font-mono font-bold focus:outline-none focus:border-sky-500">
+            <label class="block text-sm font-bold text-amber-400 uppercase mb-0.5">Casas / Familias</label>
+            <input type="number" id="earth-draw-casas" min="0" value="0" class="w-full px-2 py-1 bg-[#0e092e] border border-[#2d1f85] rounded-lg text-sm text-white font-mono font-bold focus:border-sky-500">
           </div>
         </div>
       </div>
@@ -1980,25 +1985,25 @@
     <!-- Fila 5: Botonera de Acción Directa (Siempre visible en la parte inferior) -->
     <div class="flex items-center gap-1.5 sm:gap-2 pt-1 border-t border-[#2d1f85]">
       <!-- Deshacer punto -->
-      <button type="button" id="btn-banner-undo" class="px-2.5 py-2 rounded-xl bg-[#140e40] hover:bg-[#23176d] text-amber-300 border border-[#2d1f85] font-bold text-xs flex items-center justify-center gap-1 active:scale-95 transition cursor-pointer shrink-0" title="Borrar último punto colocado (Ctrl+Z)">
+      <button type="button" id="btn-banner-undo" class="px-2.5 py-2 rounded-xl bg-[#140e40] hover:bg-[#23176d] text-amber-300 border border-[#2d1f85] font-bold text-sm flex items-center justify-center gap-1 active:scale-95 transition cursor-pointer shrink-0" title="Borrar último punto colocado (Ctrl+Z)">
         <i data-lucide="undo" class="w-3.5 h-3.5"></i>
         <span class="hidden sm:inline">Deshacer</span>
       </button>
 
       <!-- Cuadrante Automático 1-Clic -->
-      <button type="button" id="btn-banner-auto-quad" onclick="window.earthApp?.toolsManager?.generateQuickQuadrant()" class="px-2.5 py-2 rounded-xl bg-purple-950/80 hover:bg-purple-900 text-purple-300 border border-purple-500/50 font-bold text-xs flex items-center justify-center gap-1 active:scale-95 transition cursor-pointer shrink-0" title="Generar polígono de 4 esquinas centrado en esta vista">
+      <button type="button" id="btn-banner-auto-quad" onclick="window.earthApp?.toolsManager?.generateQuickQuadrant()" class="px-2.5 py-2 rounded-xl bg-purple-950/80 hover:bg-purple-900 text-purple-300 border border-purple-500/50 font-bold text-sm flex items-center justify-center gap-1 active:scale-95 transition cursor-pointer shrink-0" title="Generar polígono de 4 esquinas centrado en esta vista">
         <i data-lucide="sparkles" class="w-3.5 h-3.5 text-amber-400"></i>
         <span class="hidden sm:inline">1-Clic</span>
       </button>
 
       <!-- Guardar y Crear -->
-      <button type="button" id="btn-banner-finish" class="flex-1 px-3 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-[#050814] font-black text-xs shadow-lg flex items-center justify-center gap-1.5 active:scale-95 transition cursor-pointer" title="Guardar polígono en esta parroquia">
+      <button type="button" id="btn-banner-finish" class="flex-1 px-3 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-[#050814] font-black text-sm shadow-lg flex items-center justify-center gap-1.5 active:scale-95 transition cursor-pointer" title="Guardar polígono en esta parroquia">
         <i data-lucide="save" class="w-4 h-4"></i>
         <span id="btn-banner-finish-text">Guardar</span>
       </button>
 
       <!-- Cancelar -->
-      <button type="button" id="btn-banner-cancel" class="px-2.5 py-2 rounded-xl bg-[#140e40] hover:bg-rose-950 text-slate-400 hover:text-rose-400 border border-[#2d1f85] font-bold text-xs flex items-center justify-center gap-1 active:scale-95 transition cursor-pointer shrink-0" title="Cancelar trazado">
+      <button type="button" id="btn-banner-cancel" class="px-2.5 py-2 rounded-xl bg-[#140e40] hover:bg-rose-950 text-slate-400 hover:text-rose-400 border border-[#2d1f85] font-bold text-sm flex items-center justify-center gap-1 active:scale-95 transition cursor-pointer shrink-0" title="Cancelar trazado">
         <i data-lucide="trash-2" class="w-3.5 h-3.5 text-red-400"></i>
       </button>
     </div>
@@ -2027,8 +2032,8 @@
           <img src="assets/logo-migato.png" onerror="this.onerror=null; this.src='../assets/logo-migato.png';" alt="Logo MIGATO" class="w-8 h-8 sm:w-10 sm:h-10 object-contain drop-shadow">
           <div class="leading-none hidden sm:block">
             <span class="text-[8px] font-black text-sky-700 tracking-wider uppercase block">MIGATO</span>
-            <strong class="text-xs font-black text-slate-950 block tracking-tight">GANAMOS TODOS</strong>
-            <span class="text-[9px] font-extrabold text-amber-600 block">MONAGAS 2026</span>
+            <strong class="text-base font-black text-slate-950 block tracking-tight">GANAMOS TODOS</strong>
+            <span class="text-base font-extrabold text-amber-600 block">MONAGAS 2026</span>
           </div>
         </div>
 
@@ -2036,15 +2041,15 @@
         <div class="text-center flex-1 min-w-0 px-2">
           <div class="flex items-center justify-center gap-1.5 mb-0.5">
             <span class="w-2 h-2 rounded-full bg-amber-500 shrink-0"></span>
-            <span class="text-[9px] sm:text-[10px] font-black tracking-widest text-slate-600 uppercase truncate">
+            <span class="text-base sm:text-base font-black tracking-widest text-slate-600 uppercase truncate">
               REPÚBLICA BOLIVARIANA DE VENEZUELA • ESTADO MONAGAS
             </span>
             <span class="w-2 h-2 rounded-full bg-sky-600 shrink-0"></span>
           </div>
-          <h1 id="velo-title-entity" class="text-sm sm:text-base md:text-lg font-black text-slate-950 uppercase tracking-tight leading-tight truncate">
+          <h1 id="velo-title-entity" class="text-base sm:text-base md:text-lg font-black text-slate-950 uppercase tracking-tight leading-tight truncate">
             MUNICIPIO MATURÍN, ESTADO MONAGAS
           </h1>
-          <p id="velo-subtitle-entity" class="text-[9px] sm:text-[10px] font-black text-sky-800 tracking-wide uppercase truncate mt-0.5">
+          <p id="velo-subtitle-entity" class="text-base sm:text-base font-black text-sky-800 tracking-wide uppercase truncate mt-0.5">
             SALA SITUACIONAL Y CARTOGRAFÍA DE GOBIERNO • MIGATO 2026
           </p>
         </div>
@@ -2052,13 +2057,13 @@
         <!-- Derecha: Botón Modo Foto y Botón Cerrar Lámina -->
         <div class="flex items-center gap-2 shrink-0">
           <button type="button" onclick="document.body.classList.toggle('clean-presentation-mode')" 
-            class="px-2.5 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-amber-400 border border-slate-700 text-[10px] sm:text-xs font-black flex items-center gap-1.5 shadow-sm transition active:scale-95 cursor-pointer" 
+            class="px-2.5 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-amber-400 border border-slate-700 text-sm sm:text-base font-black flex items-center gap-1.5 shadow-sm transition active:scale-95 cursor-pointer" 
             title="Ocultar barras del sistema para tomar fotos limpias de 120 pulgadas">
             <i data-lucide="camera" class="w-3.5 h-3.5 text-amber-400"></i>
             <span class="hidden sm:inline">Modo Foto</span>
           </button>
           <button type="button" onclick="window.toggleLamina120(false)" 
-            class="w-7 h-7 rounded-xl bg-slate-100 hover:bg-rose-100 text-slate-600 hover:text-rose-600 border border-slate-300 transition flex items-center justify-center font-black text-xs cursor-pointer" 
+            class="w-7 h-7 rounded-xl bg-slate-100 hover:bg-rose-100 text-slate-600 hover:text-rose-600 border border-slate-300 transition flex items-center justify-center font-black text-sm cursor-pointer" 
             title="Cerrar modo lámina">
             ✕
           </button>
@@ -2072,29 +2077,29 @@
       <div class="flex items-center justify-between gap-2 border-b border-slate-200 pb-1">
         <div class="flex items-center gap-1.5">
           <i data-lucide="bar-chart-3" class="w-3.5 h-3.5 text-sky-700"></i>
-          <strong class="text-[11px] font-black uppercase text-slate-900 tracking-wider">Ficha CNE</strong>
+          <strong class="text-base font-black uppercase text-slate-900 tracking-wider">Ficha CNE</strong>
         </div>
-        <button type="button" onclick="document.getElementById('velo-panel-left-stats').classList.toggle('minimized')" class="text-slate-400 hover:text-slate-700 text-xs font-black px-1 cursor-pointer" title="Minimizar / Expandir Ficha">
+        <button type="button" onclick="document.getElementById('velo-panel-left-stats').classList.toggle('minimized')" class="text-slate-400 hover:text-slate-700 text-sm font-black px-1 cursor-pointer" title="Minimizar / Expandir Ficha">
           —
         </button>
       </div>
       <div class="velo-stats-body space-y-1.5 pt-1.5">
         <div>
-          <span class="text-[9px] font-black uppercase text-slate-500 block leading-none">Territorio</span>
-          <strong id="velo-stat-territorio" class="text-xs font-black text-slate-900 block leading-tight">Municipio Maturín</strong>
-          <span id="velo-stat-subdivision" class="text-[10px] font-bold text-sky-700 block">10 Parroquias</span>
+          <span class="text-base font-black uppercase text-slate-500 block leading-none">Territorio</span>
+          <strong id="velo-stat-territorio" class="text-base font-black text-slate-900 block leading-tight">Municipio Maturín</strong>
+          <span id="velo-stat-subdivision" class="text-base font-bold text-sky-700 block">10 Parroquias</span>
         </div>
         <div class="grid grid-cols-2 gap-1.5">
           <div class="bg-slate-50 border border-slate-200 rounded-lg p-1.5">
             <span class="text-[8px] font-black uppercase text-slate-500 block leading-none">Centros</span>
-            <strong id="velo-stat-centros" class="text-sm font-black text-slate-900">175</strong>
+            <strong id="velo-stat-centros" class="text-base font-black text-slate-900">175</strong>
           </div>
           <div class="bg-slate-50 border border-slate-200 rounded-lg p-1.5">
             <span class="text-[8px] font-black uppercase text-slate-500 block leading-none">Electores</span>
-            <strong id="velo-stat-electores" class="text-sm font-black text-slate-900">346,988</strong>
+            <strong id="velo-stat-electores" class="text-base font-black text-slate-900">346,988</strong>
           </div>
         </div>
-        <div class="text-[9px] font-bold text-indigo-900 bg-indigo-50 border border-indigo-200 rounded-lg px-1.5 py-0.5 flex justify-between">
+        <div class="text-base font-bold text-indigo-900 bg-indigo-50 border border-indigo-200 rounded-lg px-1.5 py-0.5 flex justify-between">
           <span>Cobertura:</span>
           <span class="font-black text-indigo-700">100% Satelital</span>
         </div>
@@ -2108,15 +2113,15 @@
       <div class="flex items-center justify-between gap-2 border-b border-slate-200 pb-1.5 shrink-0">
         <div class="flex items-center gap-1.5 min-w-0">
           <span id="velo-right-badge-color" class="w-3 h-3 rounded-full bg-sky-500 shadow-sm shrink-0"></span>
-          <strong id="velo-right-title" class="text-xs font-black uppercase text-slate-950 tracking-wider truncate">
+          <strong id="velo-right-title" class="text-base font-black uppercase text-slate-950 tracking-wider truncate">
             Maturín (11 Parroquias)
           </strong>
         </div>
         <div class="flex items-center gap-1 shrink-0">
-          <button type="button" id="btn-toggle-right-tab" onclick="window.earthApp?.toggleRightPanelTab?.()" class="text-[10px] font-extrabold px-1.5 py-0.5 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 transition cursor-pointer" title="Alternar entre Estadísticas y Simbología CNE">
+          <button type="button" id="btn-toggle-right-tab" onclick="window.earthApp?.toggleRightPanelTab?.()" class="text-sm font-extrabold px-1.5 py-0.5 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 transition cursor-pointer" title="Alternar entre Estadísticas y Simbología CNE">
             <span id="velo-right-tab-label">Simbología</span>
           </button>
-          <button type="button" onclick="document.getElementById('velo-panel-right-legend').classList.toggle('minimized')" class="text-slate-400 hover:text-slate-700 text-xs font-black px-1.5 py-0.5 rounded hover:bg-slate-100 cursor-pointer" title="Minimizar / Expandir Panel">
+          <button type="button" onclick="document.getElementById('velo-panel-right-legend').classList.toggle('minimized')" class="text-slate-400 hover:text-slate-700 text-sm font-black px-1.5 py-0.5 rounded hover:bg-slate-100 cursor-pointer" title="Minimizar / Expandir Panel">
             —
           </button>
         </div>
@@ -2129,7 +2134,7 @@
         <div id="velo-right-stats-section" class="space-y-2">
           
           <!-- Subtítulo de Entidad / Nivel -->
-          <div class="flex items-center justify-between text-[10px] text-slate-600 font-bold">
+          <div class="flex items-center justify-between text-base text-slate-600 font-bold">
             <span id="velo-right-entity-type">Resumen Territorial</span>
             <span id="velo-right-entity-code" class="font-mono text-sky-700">OFICIAL CNE</span>
           </div>
@@ -2138,28 +2143,28 @@
           <div class="grid grid-cols-2 gap-1.5 text-slate-900">
             <div class="bg-slate-50 border border-slate-200 rounded-xl p-2 shadow-xs">
               <span class="text-[8px] font-black uppercase tracking-wider text-slate-500 block leading-none mb-0.5">Habitantes</span>
-              <strong id="velo-stat-right-hab" class="text-xs sm:text-sm font-black text-slate-950 block truncate">547,000</strong>
+              <strong id="velo-stat-right-hab" class="text-base sm:text-base font-black text-slate-950 block truncate">547,000</strong>
             </div>
             <div class="bg-sky-50/60 border border-sky-200 rounded-xl p-2 shadow-xs">
               <span class="text-[8px] font-black uppercase tracking-wider text-sky-800 block leading-none mb-0.5">Electores CNE</span>
-              <strong id="velo-stat-right-vot" class="text-xs sm:text-sm font-black text-sky-950 block truncate">346,988</strong>
+              <strong id="velo-stat-right-vot" class="text-base sm:text-base font-black text-sky-950 block truncate">346,988</strong>
             </div>
             <div class="bg-amber-50/60 border border-amber-200 rounded-xl p-2 shadow-xs">
               <span class="text-[8px] font-black uppercase tracking-wider text-amber-800 block leading-none mb-0.5">Centros CNE</span>
-              <strong id="velo-stat-right-cen" class="text-xs sm:text-sm font-black text-amber-950 block truncate">175</strong>
+              <strong id="velo-stat-right-cen" class="text-base sm:text-base font-black text-amber-950 block truncate">175</strong>
             </div>
             <div class="bg-emerald-50/60 border border-emerald-200 rounded-xl p-2 shadow-xs">
               <span class="text-[8px] font-black uppercase tracking-wider text-emerald-800 block leading-none mb-0.5">Viviendas / Fam.</span>
-              <strong id="velo-stat-right-cas" class="text-xs sm:text-sm font-black text-emerald-950 block truncate">153,600</strong>
+              <strong id="velo-stat-right-cas" class="text-base sm:text-base font-black text-emerald-950 block truncate">153,600</strong>
             </div>
           </div>
 
           <!-- Línea Separadora y Título de Lista Interactiva -->
           <div class="flex items-center justify-between pt-1 border-t border-slate-200">
-            <span id="velo-right-list-title" class="text-[10px] font-black uppercase text-slate-700 tracking-wider">
+            <span id="velo-right-list-title" class="text-base font-black uppercase text-slate-700 tracking-wider">
               Parroquias (Clic para enfocar)
             </span>
-            <span class="text-[9px] font-extrabold text-sky-700 bg-sky-100 px-1.5 py-0.2 rounded-full" id="velo-right-list-count">
+            <span class="text-base font-extrabold text-sky-700 bg-sky-100 px-1.5 py-0.2 rounded-full" id="velo-right-list-count">
               11
             </span>
           </div>
@@ -2172,7 +2177,7 @@
         </div>
 
         <!-- VISTA 2: SIMBOLOGÍA CNE (Oculta por defecto, conmutable con pestaña) -->
-        <div id="velo-right-symbols-section" style="display: none;" class="space-y-1.5 pt-1 text-[10px]">
+        <div id="velo-right-symbols-section" style="display: none;" class="space-y-1.5 pt-1 text-base">
           <div class="flex items-center gap-2 py-0.5">
             <span class="w-4 h-1.5 rounded-full bg-amber-500 shrink-0"></span>
             <span class="font-bold text-slate-800">Límite Estadal</span>
@@ -2196,7 +2201,7 @@
         </div>
 
         <!-- Botón Imprimir / PDF -->
-        <button type="button" onclick="window.print()" class="w-full mt-1 py-1.5 px-3 bg-slate-950 hover:bg-slate-800 text-white rounded-xl font-black text-[10px] flex items-center justify-center gap-1.5 shadow transition cursor-pointer active:scale-95 shrink-0">
+        <button type="button" onclick="window.print()" class="w-full mt-1 py-1.5 px-3 bg-slate-950 hover:bg-slate-800 text-white rounded-xl font-black text-sm flex items-center justify-center gap-1.5 shadow transition cursor-pointer active:scale-95 shrink-0">
           <i data-lucide="printer" class="w-3.5 h-3.5 text-amber-400"></i>
           <span>Imprimir Lámina / Exportar PDF</span>
         </button>
@@ -2257,5 +2262,6 @@
       });
     })();
   </script>
+  <script src="js/a11y.js"></script>
 </body>
 </html>

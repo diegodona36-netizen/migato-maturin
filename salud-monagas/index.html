@@ -54,6 +54,7 @@
   </script>
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col antialiased select-none sm:select-auto">
+  <a href="#main-content" class="skip-link">Saltar al contenido principal</a>
 
   <!-- ============================================================== -->
   <!-- 1. TOP NAVBAR SUPERIOR INSTITUCIONAL                           -->
@@ -65,15 +66,15 @@
         <img src="../assets/logo-migato.png" alt="Logo MIGATO" class="w-10 h-10 object-contain rounded-xl bg-white p-0.5 shadow-sm border border-blue-200 group-hover:scale-105 transition-transform">
         <div>
           <div class="flex items-center gap-2">
-            <h1 class="font-black text-sm sm:text-base tracking-tight text-white flex items-center gap-1.5">
+            <h1 class="font-black text-base sm:text-base tracking-tight text-white flex items-center gap-1.5">
               <span>MIGATO</span>
-              <span class="text-sky-300 font-bold uppercase text-xs hidden sm:inline">| Módulo 5 • Salud</span>
+              <span class="text-sky-300 font-bold uppercase text-base hidden sm:inline">| Módulo 5 • Salud</span>
             </h1>
-            <span class="text-[9px] font-mono font-black uppercase tracking-wider bg-blue-900/90 text-sky-200 border border-blue-700/80 px-2 py-0.5 rounded-full">
+            <span class="text-base font-mono font-black uppercase tracking-wider bg-blue-900/90 text-sky-200 border border-blue-700/80 px-2 py-0.5 rounded-full">
               Fase 5 • Red Hospitalaria
             </span>
           </div>
-          <p class="text-[11px] text-slate-200 font-medium">Pre-Diagnóstico de Infraestructura Sanitaria Monagas • Gaceta 36.579 MPPS</p>
+          <p class="text-base text-slate-200 font-medium">Pre-Diagnóstico de Infraestructura Sanitaria Monagas • Gaceta 36.579 MPPS</p>
         </div>
       </a>
     </div>
@@ -82,7 +83,7 @@
       
       <!-- MODO NOCHE EJECUTIVO SUAVE (NO TAN OSCURO) -->
       <button id="btn-toggle-tema-oscuro" type="button" onclick="window.toggleModoOscuroSuave()" 
-              class="px-2.5 py-1.5 rounded-xl bg-blue-950/90 hover:bg-blue-900 border border-sky-400/80 text-sky-200 hover:text-white text-xs font-bold transition flex items-center gap-1.5 shadow-sm active:scale-95" 
+              class="px-2.5 py-1.5 rounded-xl bg-blue-950/90 hover:bg-blue-900 border border-sky-400/80 text-sky-200 hover:text-white text-sm font-bold transition flex items-center gap-1.5 shadow-sm active:scale-95" 
               title="Modo Noche Ejecutivo: Descanso visual sin ser excesivamente oscuro">
         <span id="icono-tema-oscuro">🌙</span>
         <span id="label-tema-oscuro" class="hidden sm:inline font-bold">Modo Noche</span>
@@ -91,38 +92,42 @@
       <div class="w-px h-5 bg-blue-800/80 hidden sm:block mx-0.5"></div>
 
       <!-- Exportar Base de Datos -->
-      <button id="btn-export-json" class="hidden xl:inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-blue-900/80 hover:bg-blue-800 border border-blue-700 text-white text-xs font-bold transition shadow-sm" title="Descargar base de datos en formato JSON">
+      <button id="btn-export-json" class="hidden xl:inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-blue-900/80 hover:bg-blue-800 border border-blue-700 text-white text-sm font-bold transition shadow-sm" title="Descargar base de datos en formato JSON">
         <i data-lucide="download" class="w-3.5 h-3.5 text-sky-300"></i>
         <span>JSON</span>
       </button>
 
-      <button id="btn-export-csv" class="hidden sm:inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-blue-900/80 hover:bg-blue-800 border border-blue-700 text-white text-xs font-bold transition shadow-sm" title="Descargar sábana de centros en CSV para Excel">
+      <button id="btn-export-csv" class="hidden sm:inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-blue-900/80 hover:bg-blue-800 border border-blue-700 text-white text-sm font-bold transition shadow-sm" title="Descargar sábana de centros en CSV para Excel">
         <i data-lucide="file-spreadsheet" class="w-3.5 h-3.5 text-emerald-300"></i>
         <span>CSV</span>
       </button>
 
       <!-- Volver al portal -->
-      <a href="../" class="px-2.5 sm:px-3 py-1.5 rounded-xl bg-blue-900/80 hover:bg-blue-800 border border-blue-700 text-sky-200 hover:text-white text-xs font-bold transition flex items-center gap-1.5 shadow-sm" title="Ir a la Sala de Mando Central">
+      <a href="../" class="px-2.5 sm:px-3 py-1.5 rounded-xl bg-blue-900/80 hover:bg-blue-800 border border-blue-700 text-sky-200 hover:text-white text-base font-bold transition flex items-center gap-1.5 shadow-sm" title="Ir a la Sala de Mando Central">
         <i data-lucide="arrow-left" class="w-4 h-4 text-amber-300"></i>
         <span class="hidden sm:inline">Sala de Mando</span>
       </a>
 
     </div>
 
-  </header>
+            <button type="button" id="btn-toggle-contrast" class="px-2.5 py-1.5 rounded-xl bg-[#1d1554] hover:bg-[#23176d] text-amber-400 border border-amber-500/40 text-sm font-bold flex items-center gap-1.5 shadow transition active:scale-95" title="Alto contraste" aria-label="Activar modo alto contraste">
+            <span aria-hidden="true">◐</span>
+            <span class="hidden sm:inline">Contraste</span>
+          </button>
+        </header>
 
   <!-- ============================================================== -->
   <!-- 2. BARRA DE CIFRAS Y KPIS DE SALUD INSTITUCIONAL               -->
   <!-- ============================================================== -->
   <section class="bg-white border-b border-slate-200 px-4 py-2.5 shadow-xs">
-    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3 text-xs">
+    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3 text-base">
       
       <!-- Contadores de Riesgo -->
       <div class="flex items-center gap-3 sm:gap-4 overflow-x-auto py-1 scrollbar-none">
         
         <div class="flex items-center gap-1.5">
           <span class="text-slate-500 font-semibold">Centros Diagnosticados:</span>
-          <strong id="kpi-total-centros" class="font-mono text-sm font-black text-slate-900">0</strong>
+          <strong id="kpi-total-centros" class="font-mono text-base font-black text-slate-900">0</strong>
         </div>
 
         <div class="w-px h-4 bg-slate-300"></div>
@@ -130,25 +135,25 @@
         <div class="flex items-center gap-1.5 bg-red-50 text-red-700 border border-red-200 px-2.5 py-1 rounded-full">
           <span class="w-2 h-2 rounded-full bg-red-500 animate-ping"></span>
           <span class="font-bold">Críticos (Rojo):</span>
-          <strong id="kpi-criticos" class="font-mono text-sm font-black text-red-800">0</strong>
+          <strong id="kpi-criticos" class="font-mono text-base font-black text-red-800">0</strong>
         </div>
 
         <div class="flex items-center gap-1.5 bg-amber-50 text-amber-800 border border-amber-200 px-2.5 py-1 rounded-full">
           <span class="w-2 h-2 rounded-full bg-amber-500"></span>
           <span class="font-bold">Alerta (Amarillo):</span>
-          <strong id="kpi-alertas" class="font-mono text-sm font-black text-amber-900">0</strong>
+          <strong id="kpi-alertas" class="font-mono text-base font-black text-amber-900">0</strong>
         </div>
 
         <div class="flex items-center gap-1.5 bg-emerald-50 text-emerald-800 border border-emerald-200 px-2.5 py-1 rounded-full">
           <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
           <span class="font-bold">Operativos (Verde):</span>
-          <strong id="kpi-estables" class="font-mono text-sm font-black text-emerald-900">0</strong>
+          <strong id="kpi-estables" class="font-mono text-base font-black text-emerald-900">0</strong>
         </div>
 
       </div>
 
       <!-- Distribución por Red MPPS -->
-      <div class="hidden lg:flex items-center gap-3 text-slate-700 font-mono text-[11px] bg-slate-100 px-3 py-1 rounded-full border border-slate-200">
+      <div class="hidden lg:flex items-center gap-3 text-slate-700 font-mono text-base bg-slate-100 px-3 py-1 rounded-full border border-slate-200">
         <span>🏥 Hospitales: <strong id="kpi-hospitales" class="text-slate-900">0</strong></span>
         <span>🩺 CDIs: <strong id="kpi-cdi" class="text-slate-900">0</strong></span>
         <span>💊 Ambulatorios: <strong id="kpi-ambulatorios" class="text-slate-900">0</strong></span>
@@ -163,17 +168,17 @@
   <nav class="bg-slate-100/90 border-b border-slate-200 px-4">
     <div class="max-w-7xl mx-auto flex gap-2 overflow-x-auto py-2 scrollbar-none">
       
-      <button class="tab-btn active px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 bg-blue-700 text-white shadow-sm border border-blue-800" data-target="tab-registro">
+      <button class="tab-btn active px-4 py-2 rounded-xl text-sm font-bold transition flex items-center gap-2 bg-blue-700 text-white shadow-sm border border-blue-800" data-target="tab-registro">
         <i data-lucide="clipboard-list" class="w-4 h-4"></i>
         <span>Ficha de Levantamiento (Formulario)</span>
       </button>
 
-      <button class="tab-btn px-4 py-2 rounded-xl text-xs font-bold text-slate-700 hover:text-blue-700 hover:bg-white bg-transparent border border-transparent hover:border-slate-300 transition flex items-center gap-2" data-target="tab-mapa">
+      <button class="tab-btn px-4 py-2 rounded-xl text-sm font-bold text-slate-700 hover:text-blue-700 hover:bg-white bg-transparent border border-transparent hover:border-slate-300 transition flex items-center gap-2" data-target="tab-mapa">
         <i data-lucide="map" class="w-4 h-4 text-blue-600"></i>
         <span>Mapa Táctico de Hospitales (13 Municipios)</span>
       </button>
 
-      <button class="tab-btn px-4 py-2 rounded-xl text-xs font-bold text-slate-700 hover:text-blue-700 hover:bg-white bg-transparent border border-transparent hover:border-slate-300 transition flex items-center gap-2" data-target="tab-directorio">
+      <button class="tab-btn px-4 py-2 rounded-xl text-sm font-bold text-slate-700 hover:text-blue-700 hover:bg-white bg-transparent border border-transparent hover:border-slate-300 transition flex items-center gap-2" data-target="tab-directorio">
         <i data-lucide="folder-kanban" class="w-4 h-4 text-amber-600"></i>
         <span>Directorio de Fichas y Centros</span>
       </button>
@@ -195,22 +200,22 @@
       <div class="bg-white border-l-4 border-l-blue-700 border border-slate-200 rounded-2xl p-4 sm:p-5 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-sm">
         <div class="space-y-1">
           <div class="flex items-center gap-2 flex-wrap">
-            <span class="px-2 py-0.5 text-[10px] font-black uppercase tracking-wider bg-blue-100 text-blue-800 border border-blue-300 rounded-full">
+            <span class="px-2 py-0.5 text-base font-black uppercase tracking-wider bg-blue-100 text-blue-800 border border-blue-300 rounded-full">
               Protocolo Oficial de Inspección
             </span>
-            <span class="inline-flex items-center gap-1 text-[11px] font-semibold text-slate-600 bg-slate-100 px-2.5 py-0.5 rounded-full border border-slate-200">
+            <span class="inline-flex items-center gap-1 text-base font-semibold text-slate-600 bg-slate-100 px-2.5 py-0.5 rounded-full border border-slate-200">
               <span>🏛️</span>
               <span>Gobernación del Estado Monagas • MPPS</span>
             </span>
           </div>
           <h2 class="text-lg sm:text-xl font-black text-slate-900 tracking-tight">Pre-Diagnóstico de Infraestructura de Salud</h2>
-          <p class="text-xs text-slate-600 leading-relaxed">
+          <p class="text-base text-slate-600 leading-relaxed">
             Levantamiento territorial de centros de salud. Evalúa la disponibilidad de soporte vital (planta eléctrica, agua continua, gases medicinales, climatización) y fallas físicas para la toma de decisiones inmediata de la Gobernación de Monagas.
           </p>
         </div>
 
         <div class="flex items-center gap-2 shrink-0">
-          <span id="badge-semaforo-en-vivo" class="px-3 py-1 text-xs font-black uppercase tracking-wider bg-emerald-50 text-emerald-800 border border-emerald-300 rounded-full flex items-center gap-1.5">
+          <span id="badge-semaforo-en-vivo" class="px-3 py-1 text-base font-black uppercase tracking-wider bg-emerald-50 text-emerald-800 border border-emerald-300 rounded-full flex items-center gap-1.5">
             <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
             <span>🟢 SOPORTE OPERATIVO ESTABLE</span>
           </span>
@@ -230,22 +235,22 @@
           <!-- 1. CABECERA & UBICACIÓN TERRITORIAL -->
           <div class="bg-white border border-slate-200 rounded-2xl p-5 space-y-4 shadow-sm">
             <div class="flex items-center justify-between border-b border-slate-200 pb-2">
-              <h3 class="text-sm font-black text-slate-900 uppercase tracking-wider flex items-center gap-2">
+              <h3 class="text-base font-black text-slate-900 uppercase tracking-wider flex items-center gap-2">
                 <i data-lucide="map-pin" class="w-4 h-4 text-blue-600"></i>
                 <span>1. Ubicación Territorial y Jurisdicción</span>
               </h3>
-              <span class="text-[11px] font-mono text-slate-500">Estado: <strong class="text-slate-900">Monagas</strong> • Área: <strong class="text-blue-700">Salud</strong></span>
+              <span class="text-base font-mono text-slate-500">Estado: <strong class="text-slate-900">Monagas</strong> • Área: <strong class="text-blue-700">Salud</strong></span>
             </div>
 
             <!-- MOTOR DE BÚSQUEDA Y AUTOCOMPLETADO INTELIGENTE DE CENTROS -->
             <div class="bg-blue-50/80 border-2 border-blue-200 rounded-2xl p-3.5 space-y-2.5 relative">
               <div class="flex flex-wrap items-center justify-between gap-2">
-                <label for="input-buscar-centro-form" class="text-xs font-bold text-blue-950 flex items-center gap-1.5">
+                <label for="input-buscar-centro-form" class="text-sm font-bold text-blue-950 flex items-center gap-1.5">
                   <span class="text-base">🏥</span>
                   <span>Buscar centro existente para rellenar la ficha automáticamente:</span>
                 </label>
                 <button type="button" onclick="window.activarModoCentroNuevo()" id="btn-modo-centro-nuevo" 
-                        class="px-2.5 py-1 rounded-lg bg-white hover:bg-blue-100 border border-blue-400 text-blue-800 hover:text-blue-950 font-bold text-xs transition flex items-center gap-1 active:scale-95 shadow-xs" title="Crear y registrar un nuevo centro que no existe en el catálogo">
+                        class="px-2.5 py-1 rounded-lg bg-white hover:bg-blue-100 border border-blue-400 text-blue-800 hover:text-blue-950 font-bold text-sm transition flex items-center gap-1 active:scale-95 shadow-xs" title="Crear y registrar un nuevo centro que no existe en el catálogo">
                   <span>➕ Es un Centro Nuevo (No catalogado)</span>
                 </button>
               </div>
@@ -256,7 +261,7 @@
                 <input type="text" id="input-buscar-centro-form" 
                        placeholder="Escriba el nombre del hospital, ambulatorio, CDI o parroquia (84 centros)..." 
                        autocomplete="off"
-                       class="w-full pl-9 pr-9 py-2.5 text-xs sm:text-sm bg-white border border-blue-300 rounded-xl text-slate-900 placeholder-slate-400 focus:border-blue-600 focus:ring-2 focus:ring-blue-100 focus:outline-none font-bold shadow-xs transition">
+                       class="w-full pl-9 pr-9 py-2.5 text-sm sm:text-base bg-white border border-blue-300 rounded-xl text-slate-900 placeholder-slate-400 focus:border-blue-600 focus:ring-2 focus:ring-blue-100 font-bold shadow-xs transition">
                 <button type="button" id="btn-clear-buscar-centro-form" onclick="window.limpiarBuscadorCentroForm()" class="hidden absolute right-2.5 top-2.5 p-1 text-slate-400 hover:text-slate-700 rounded-md transition" title="Limpiar búsqueda">
                   <i data-lucide="x" class="w-3.5 h-3.5"></i>
                 </button>
@@ -268,21 +273,21 @@
               </div>
 
               <!-- Indicador de Centro Existente Cargado -->
-              <div id="badge-centro-cargado-info" class="hidden flex flex-wrap items-center justify-between gap-2 pt-1 text-xs bg-emerald-50 border border-emerald-300 px-3 py-2 rounded-xl">
+              <div id="badge-centro-cargado-info" class="hidden flex flex-wrap items-center justify-between gap-2 pt-1 text-base bg-emerald-50 border border-emerald-300 px-3 py-2 rounded-xl">
                 <div class="flex items-center gap-2 min-w-0">
                   <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse shrink-0"></span>
-                  <span class="text-emerald-950 font-bold truncate text-xs" id="texto-centro-cargado">Centro cargado: ...</span>
+                  <span class="text-emerald-950 font-bold truncate text-base" id="texto-centro-cargado">Centro cargado: ...</span>
                 </div>
                 <div class="flex items-center gap-2 shrink-0">
-                  <span class="text-[10px] text-emerald-800 font-mono font-bold bg-emerald-100 px-2 py-0.5 rounded border border-emerald-300" id="texto-centro-cargado-id">ID: ...</span>
-                  <button type="button" onclick="window.activarModoCentroNuevo()" class="text-[11px] text-blue-700 hover:text-blue-900 font-bold hover:underline">
+                  <span class="text-base text-emerald-800 font-mono font-bold bg-emerald-100 px-2 py-0.5 rounded border border-emerald-300" id="texto-centro-cargado-id">ID: ...</span>
+                  <button type="button" onclick="window.activarModoCentroNuevo()" class="text-sm text-blue-700 hover:text-blue-900 font-bold hover:underline">
                     Cambiar a Nuevo
                   </button>
                 </div>
               </div>
 
               <!-- Banner cuando se activa Modo Centro Nuevo -->
-              <div id="badge-modo-nuevo-info" class="hidden flex items-center justify-between gap-2 pt-1 text-xs bg-amber-50 border border-amber-300 px-3 py-2 rounded-xl text-amber-900">
+              <div id="badge-modo-nuevo-info" class="hidden flex items-center justify-between gap-2 pt-1 text-base bg-amber-50 border border-amber-300 px-3 py-2 rounded-xl text-amber-900">
                 <div class="flex items-center gap-1.5 font-bold">
                   <span>📝</span>
                   <span>Modo Registro de Centro Nuevo: Seleccione Municipio, Parroquia y asigne el Nombre Oficial abajo.</span>
@@ -294,61 +299,61 @@
               
               <!-- Municipio -->
               <div class="space-y-1">
-                <label class="text-xs font-bold text-slate-700 flex items-center justify-between">
+                <label class="text-sm font-bold text-slate-700 flex items-center justify-between">
                   <span>Municipio</span>
-                  <span class="text-[10px] text-blue-700 font-mono">[▼ Cascada]</span>
+                  <span class="text-base text-blue-700 font-mono">[▼ Cascada]</span>
                 </label>
-                <select id="form-municipio" required class="w-full px-3 py-2 text-xs bg-white border border-slate-300 rounded-xl text-slate-900 font-medium focus:border-blue-600 focus:ring-2 focus:ring-blue-100 shadow-sm transition">
+                <select id="form-municipio" required class="w-full px-3 py-2 text-sm bg-white border border-slate-300 rounded-xl text-slate-900 font-medium focus:border-blue-600 focus:ring-2 focus:ring-blue-100 shadow-sm transition">
                   <option value="">Cargando municipios...</option>
                 </select>
               </div>
 
               <!-- Selector en Cascada: Centros de este Municipio -->
               <div class="space-y-1">
-                <label class="text-xs font-bold text-slate-700 flex items-center justify-between">
+                <label class="text-sm font-bold text-slate-700 flex items-center justify-between">
                   <span>Centros en este Municipio</span>
-                  <span id="label-conteo-centros-mun" class="text-[10px] text-blue-700 font-mono font-bold">[▼ Filtrar]</span>
+                  <span id="label-conteo-centros-mun" class="text-base text-blue-700 font-mono font-bold">[▼ Filtrar]</span>
                 </label>
-                <select id="form-select-centro-municipio" onchange="window.alSeleccionarCentroDeMunicipio(this.value)" class="w-full px-3 py-2 text-xs bg-white border border-slate-300 rounded-xl text-slate-900 font-medium focus:border-blue-600 focus:ring-2 focus:ring-blue-100 shadow-sm transition">
+                <select id="form-select-centro-municipio" onchange="window.alSeleccionarCentroDeMunicipio(this.value)" class="w-full px-3 py-2 text-sm bg-white border border-slate-300 rounded-xl text-slate-900 font-medium focus:border-blue-600 focus:ring-2 focus:ring-blue-100 shadow-sm transition">
                   <option value="">-- Seleccionar centro existente o registrar nuevo --</option>
                 </select>
               </div>
 
               <!-- Parroquia -->
               <div class="space-y-1">
-                <label class="text-xs font-bold text-slate-700 flex items-center justify-between">
+                <label class="text-sm font-bold text-slate-700 flex items-center justify-between">
                   <span>Parroquia</span>
-                  <span class="text-[10px] text-blue-700 font-mono">[▼ Cascada]</span>
+                  <span class="text-base text-blue-700 font-mono">[▼ Cascada]</span>
                 </label>
-                <select id="form-parroquia" required class="w-full px-3 py-2 text-xs bg-white border border-slate-300 rounded-xl text-slate-900 font-medium focus:border-blue-600 focus:ring-2 focus:ring-blue-100 shadow-sm transition">
+                <select id="form-parroquia" required class="w-full px-3 py-2 text-sm bg-white border border-slate-300 rounded-xl text-slate-900 font-medium focus:border-blue-600 focus:ring-2 focus:ring-blue-100 shadow-sm transition">
                   <option value="">Seleccione Municipio primero</option>
                 </select>
               </div>
 
               <!-- Sector -->
               <div class="space-y-1">
-                <label class="text-xs font-bold text-slate-700 flex items-center justify-between">
+                <label class="text-sm font-bold text-slate-700 flex items-center justify-between">
                   <span>Sector / Comunidad</span>
-                  <span class="text-[10px] text-blue-700 font-mono">[▼ Cascada]</span>
+                  <span class="text-base text-blue-700 font-mono">[▼ Cascada]</span>
                 </label>
-                <select id="form-sector" class="w-full px-3 py-2 text-xs bg-white border border-slate-300 rounded-xl text-slate-900 font-medium focus:border-blue-600 focus:outline-none transition">
+                <select id="form-sector" class="w-full px-3 py-2 text-sm bg-white border border-slate-300 rounded-xl text-slate-900 font-medium focus:border-blue-600 transition">
                   <option value="">Seleccione Parroquia primero</option>
                 </select>
               </div>
 
               <!-- Sector Manual (Opcional) -->
               <div id="custom-sector-container" class="hidden sm:col-span-2 space-y-1">
-                <label class="text-xs font-bold text-amber-800">Especificar Nombre del Sector:</label>
-                <input type="text" id="form-sector-custom" placeholder="Ej. Barrio Bolívar, Callejón 3" class="w-full px-3 py-2 text-xs bg-white border border-amber-400 rounded-xl text-slate-900 focus:border-blue-600 focus:outline-none transition">
+                <label class="text-sm font-bold text-amber-800">Especificar Nombre del Sector:</label>
+                <input type="text" id="form-sector-custom" placeholder="Ej. Barrio Bolívar, Callejón 3" class="w-full px-3 py-2 text-sm bg-white border border-amber-400 rounded-xl text-slate-900 focus:border-blue-600 transition">
               </div>
 
               <!-- Nombre del Centro de Salud -->
               <div class="space-y-1 sm:col-span-2">
-                <label class="text-xs font-bold text-slate-800 flex items-center justify-between">
+                <label class="text-sm font-bold text-slate-800 flex items-center justify-between">
                   <span>Nombre Oficial del Centro de Salud</span>
-                  <span class="text-[10px] text-rose-600 font-bold">* Requerido</span>
+                  <span class="text-base text-rose-600 font-bold">* Requerido</span>
                 </label>
-                <input type="text" id="form-nombre-centro" required placeholder="Ej. Hospital Universitario Dr. Manuel Núñez Tovar (HUMNT) / CDI Los Godos" class="w-full px-3.5 py-2.5 text-xs sm:text-sm bg-white border-2 border-blue-500/50 rounded-xl text-slate-900 placeholder-slate-400 focus:border-blue-600 focus:ring-2 focus:ring-blue-100 font-bold shadow-sm transition">
+                <input type="text" id="form-nombre-centro" required placeholder="Ej. Hospital Universitario Dr. Manuel Núñez Tovar (HUMNT) / CDI Los Godos" class="w-full px-3.5 py-2.5 text-sm sm:text-base bg-white border-2 border-blue-500/50 rounded-xl text-slate-900 placeholder-slate-400 focus:border-blue-600 focus:ring-2 focus:ring-blue-100 font-bold shadow-sm transition">
               </div>
 
             </div>
@@ -357,37 +362,37 @@
           <!-- 2. TIPO DE ESTABLECIMIENTO (MPPS / GACETA 36.579) -->
           <div class="bg-white border border-slate-200 rounded-2xl p-5 space-y-4 shadow-sm">
             <div class="border-b border-slate-200 pb-2">
-              <h3 class="text-sm font-black text-slate-900 uppercase tracking-wider flex items-center gap-2">
+              <h3 class="text-base font-black text-slate-900 uppercase tracking-wider flex items-center gap-2">
                 <i data-lucide="building-2" class="w-4 h-4 text-blue-600"></i>
                 <span>2. Tipo de Establecimiento (Normativa MPPS)</span>
               </h3>
-              <p class="text-[11px] text-slate-500 mt-0.5">Clasificación asistencial según Gaceta Oficial N° 36.579</p>
+              <p class="text-base text-slate-500 mt-0.5">Clasificación asistencial según Gaceta Oficial N° 36.579</p>
             </div>
 
             <!-- Selector de Red -->
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
               
-              <label class="flex items-center gap-2.5 p-3 rounded-xl bg-slate-50 border-2 border-slate-200 hover:border-blue-500 hover:bg-blue-50/40 cursor-pointer text-xs transition shadow-xs">
+              <label class="flex items-center gap-2.5 p-3 rounded-xl bg-slate-50 border-2 border-slate-200 hover:border-blue-500 hover:bg-blue-50/40 cursor-pointer text-sm transition shadow-xs">
                 <input type="radio" name="tipoRed" value="comunal" class="accent-blue-600 w-4 h-4">
                 <div>
                   <strong class="text-slate-900 block font-bold">Red Comunal</strong>
-                  <span class="text-[10px] text-slate-500 block">Barrio Adentro (CPT, CDI, SRI)</span>
+                  <span class="text-base text-slate-500 block">Barrio Adentro (CPT, CDI, SRI)</span>
                 </div>
               </label>
 
-              <label class="flex items-center gap-2.5 p-3 rounded-xl bg-slate-50 border-2 border-slate-200 hover:border-blue-500 hover:bg-blue-50/40 cursor-pointer text-xs transition shadow-xs">
+              <label class="flex items-center gap-2.5 p-3 rounded-xl bg-slate-50 border-2 border-slate-200 hover:border-blue-500 hover:bg-blue-50/40 cursor-pointer text-sm transition shadow-xs">
                 <input type="radio" name="tipoRed" value="ambulatoria" class="accent-blue-600 w-4 h-4">
                 <div>
                   <strong class="text-slate-900 block font-bold">Red Ambulatoria</strong>
-                  <span class="text-[10px] text-slate-500 block">Rurales I-II, Urbanos I-III</span>
+                  <span class="text-base text-slate-500 block">Rurales I-II, Urbanos I-III</span>
                 </div>
               </label>
 
-              <label class="flex items-center gap-2.5 p-3 rounded-xl bg-slate-50 border-2 border-slate-200 hover:border-blue-500 hover:bg-blue-50/40 cursor-pointer text-xs transition shadow-xs">
+              <label class="flex items-center gap-2.5 p-3 rounded-xl bg-slate-50 border-2 border-slate-200 hover:border-blue-500 hover:bg-blue-50/40 cursor-pointer text-sm transition shadow-xs">
                 <input type="radio" name="tipoRed" value="hospitalaria" checked class="accent-blue-600 w-4 h-4">
                 <div>
                   <strong class="text-slate-900 block font-bold">Red Hospitalaria</strong>
-                  <span class="text-[10px] text-slate-500 block">Hospitales Tipo I, II, III, IV</span>
+                  <span class="text-base text-slate-500 block">Hospitales Tipo I, II, III, IV</span>
                 </div>
               </label>
 
@@ -395,7 +400,7 @@
 
             <!-- Subtipos MPPS específicos generados dinámicamente -->
             <div class="space-y-1.5 pt-2">
-              <span class="text-xs font-bold text-slate-700 block">Clasificación Específica:</span>
+              <span class="text-base font-bold text-slate-700 block">Clasificación Específica:</span>
               <div id="container-subtipos-mpps">
                 <!-- Se llena dinámicamente -->
               </div>
@@ -407,22 +412,22 @@
           <div class="bg-white border border-slate-200 rounded-2xl p-5 space-y-4 shadow-sm">
             <div class="flex items-center justify-between border-b border-slate-200 pb-2">
               <div>
-                <h3 class="text-sm font-black text-slate-900 uppercase tracking-wider flex items-center gap-2">
+                <h3 class="text-base font-black text-slate-900 uppercase tracking-wider flex items-center gap-2">
                   <i data-lucide="shield-alert" class="w-4 h-4 text-rose-600"></i>
                   <span>3. Soporte Crítico y Vital</span>
                 </h3>
-                <p class="text-[11px] text-slate-500">Condición indispensable para quirófanos, emergencias y cadena de frío</p>
+                <p class="text-base text-slate-500">Condición indispensable para quirófanos, emergencias y cadena de frío</p>
               </div>
-              <span class="text-[10px] font-mono uppercase bg-rose-50 text-rose-700 border border-rose-300 px-2 py-0.5 rounded-full font-bold">
+              <span class="text-base font-mono uppercase bg-rose-50 text-rose-700 border border-rose-300 px-2 py-0.5 rounded-full font-bold">
                 Alta Prioridad
               </span>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-base">
               
               <!-- Planta Eléctrica -->
               <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 space-y-2 shadow-xs">
-                <div class="flex items-center gap-1.5 font-bold text-slate-800 text-xs border-b border-slate-200 pb-1.5">
+                <div class="flex items-center gap-1.5 font-bold text-slate-800 text-base border-b border-slate-200 pb-1.5">
                   <span>⚡ Planta Eléctrica</span>
                 </div>
                 <div class="space-y-1.5">
@@ -443,7 +448,7 @@
 
               <!-- Suministro de Agua -->
               <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 space-y-2 shadow-xs">
-                <div class="flex items-center gap-1.5 font-bold text-slate-800 text-xs border-b border-slate-200 pb-1.5">
+                <div class="flex items-center gap-1.5 font-bold text-slate-800 text-base border-b border-slate-200 pb-1.5">
                   <span>💧 Suministro Agua</span>
                 </div>
                 <div class="space-y-1.5">
@@ -464,7 +469,7 @@
 
               <!-- Gases Medicinales -->
               <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 space-y-2 shadow-xs">
-                <div class="flex items-center gap-1.5 font-bold text-slate-800 text-xs border-b border-slate-200 pb-1.5">
+                <div class="flex items-center gap-1.5 font-bold text-slate-800 text-base border-b border-slate-200 pb-1.5">
                   <span>💨 Gases Medicinales</span>
                 </div>
                 <div class="space-y-1.5">
@@ -485,7 +490,7 @@
 
               <!-- Climatización -->
               <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 space-y-2 shadow-xs">
-                <div class="flex items-center gap-1.5 font-bold text-slate-800 text-xs border-b border-slate-200 pb-1.5">
+                <div class="flex items-center gap-1.5 font-bold text-slate-800 text-base border-b border-slate-200 pb-1.5">
                   <span>❄️ Climatización (A/A)</span>
                 </div>
                 <div class="space-y-1.5">
@@ -511,11 +516,11 @@
           <div class="bg-white border border-slate-200 rounded-2xl p-5 space-y-4 shadow-sm">
             <div class="flex items-center justify-between border-b border-slate-200 pb-2">
               <div>
-                <h3 class="text-sm font-black text-slate-900 uppercase tracking-wider flex items-center gap-2">
+                <h3 class="text-base font-black text-slate-900 uppercase tracking-wider flex items-center gap-2">
                   <i data-lucide="check-square" class="w-4 h-4 text-blue-600"></i>
                   <span>4. Áreas y Servicios Evaluados</span>
                 </h3>
-                <p class="text-[11px] text-slate-500">Marque los servicios que se encuentran instalados en el centro</p>
+                <p class="text-base text-slate-500">Marque los servicios que se encuentran instalados en el centro</p>
               </div>
             </div>
 
@@ -528,11 +533,11 @@
           <div class="bg-white border border-slate-200 rounded-2xl p-5 space-y-4 shadow-sm">
             <div class="flex items-center justify-between border-b border-slate-200 pb-2">
               <div>
-                <h3 class="text-sm font-black text-slate-900 uppercase tracking-wider flex items-center gap-2">
+                <h3 class="text-base font-black text-slate-900 uppercase tracking-wider flex items-center gap-2">
                   <i data-lucide="alert-triangle" class="w-4 h-4 text-amber-500"></i>
                   <span>5. Fallas de Infraestructura Física Detectadas</span>
                 </h3>
-                <p class="text-[11px] text-slate-500">Checklist exhaustivo de deficiencias reportadas por el equipo médico</p>
+                <p class="text-base text-slate-500">Checklist exhaustivo de deficiencias reportadas por el equipo médico</p>
               </div>
             </div>
 
@@ -544,47 +549,47 @@
           <!-- 6. RED DE REMISIÓN, OBSERVACIONES Y FIRMA -->
           <div class="bg-white border border-slate-200 rounded-2xl p-5 space-y-4 shadow-sm">
             <div class="border-b border-slate-200 pb-2">
-              <h3 class="text-sm font-black text-slate-900 uppercase tracking-wider flex items-center gap-2">
+              <h3 class="text-base font-black text-slate-900 uppercase tracking-wider flex items-center gap-2">
                 <i data-lucide="send" class="w-4 h-4 text-indigo-600"></i>
                 <span>6. Red de Remisión, Observaciones y Responsable</span>
               </h3>
             </div>
 
-            <div class="space-y-4 text-xs">
+            <div class="space-y-4 text-base">
               
               <!-- Red de Remisión -->
               <div class="space-y-1">
                 <label class="font-bold text-slate-700 block">Centro Hospitalario / Receptor de Referencia:</label>
-                <input type="text" id="form-red-remision" value="Hospital Universitario Dr. Manuel Núñez Tovar (HUMNT)" placeholder="Ej. HUMNT Maturín / CDI más cercano" class="w-full px-3 py-2 text-xs bg-white border border-slate-300 rounded-xl text-slate-900 focus:border-blue-600 focus:ring-2 focus:ring-blue-100 shadow-sm transition font-medium">
+                <input type="text" id="form-red-remision" value="Hospital Universitario Dr. Manuel Núñez Tovar (HUMNT)" placeholder="Ej. HUMNT Maturín / CDI más cercano" class="w-full px-3 py-2 text-sm bg-white border border-slate-300 rounded-xl text-slate-900 focus:border-blue-600 focus:ring-2 focus:ring-blue-100 shadow-sm transition font-medium">
               </div>
 
               <!-- Observaciones -->
               <div class="space-y-1">
                 <label class="font-bold text-slate-700 block">Observaciones y Necesidades Urgentes:</label>
-                <textarea id="form-observaciones" rows="3" placeholder="Detalles de averías de equipos, filtraciones graves, urgencia de dotación..." class="w-full px-3 py-2 text-xs bg-white border border-slate-300 rounded-xl text-slate-900 focus:border-blue-600 focus:ring-2 focus:ring-blue-100 shadow-sm transition font-medium"></textarea>
+                <textarea id="form-observaciones" rows="3" placeholder="Detalles de averías de equipos, filtraciones graves, urgencia de dotación..." class="w-full px-3 py-2 text-sm bg-white border border-slate-300 rounded-xl text-slate-900 focus:border-blue-600 focus:ring-2 focus:ring-blue-100 shadow-sm transition font-medium"></textarea>
               </div>
 
               <!-- Evaluador -->
               <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 pt-2 border-t border-slate-200">
                 <div class="space-y-1">
                   <label class="font-bold text-slate-700 block">Nombre del Evaluador:</label>
-                  <input type="text" id="form-eval-nombre" placeholder="Dr. Carlos Mendoza" class="w-full px-3 py-2 text-xs bg-white border border-slate-300 rounded-xl text-slate-900 focus:border-blue-600 focus:ring-2 focus:ring-blue-100 shadow-sm transition">
+                  <input type="text" id="form-eval-nombre" placeholder="Dr. Carlos Mendoza" class="w-full px-3 py-2 text-sm bg-white border border-slate-300 rounded-xl text-slate-900 focus:border-blue-600 focus:ring-2 focus:ring-blue-100 shadow-sm transition">
                 </div>
                 <div class="space-y-1">
                   <label class="font-bold text-slate-700 block">Cédula de Identidad:</label>
-                  <input type="text" id="form-eval-ci" placeholder="V-14.892.410" class="w-full px-3 py-2 text-xs bg-white border border-slate-300 rounded-xl text-slate-900 focus:border-blue-600 focus:ring-2 focus:ring-blue-100 shadow-sm transition">
+                  <input type="text" id="form-eval-ci" placeholder="V-14.892.410" class="w-full px-3 py-2 text-sm bg-white border border-slate-300 rounded-xl text-slate-900 focus:border-blue-600 focus:ring-2 focus:ring-blue-100 shadow-sm transition">
                 </div>
                 <div class="space-y-1">
                   <label class="font-bold text-slate-700 block">Cargo / Enlace:</label>
-                  <input type="text" id="form-eval-cargo" placeholder="Médico Jefe / Enlace Sala de Mando" class="w-full px-3 py-2 text-xs bg-white border border-slate-300 rounded-xl text-slate-900 focus:border-blue-600 focus:ring-2 focus:ring-blue-100 shadow-sm transition">
+                  <input type="text" id="form-eval-cargo" placeholder="Médico Jefe / Enlace Sala de Mando" class="w-full px-3 py-2 text-sm bg-white border border-slate-300 rounded-xl text-slate-900 focus:border-blue-600 focus:ring-2 focus:ring-blue-100 shadow-sm transition">
                 </div>
                 <div class="space-y-1">
                   <label class="font-bold text-slate-700 block">Teléfono de Contacto:</label>
-                  <input type="text" id="form-eval-telefono" placeholder="0414-7654321" class="w-full px-3 py-2 text-xs bg-white border border-slate-300 rounded-xl text-slate-900 focus:border-blue-600 focus:ring-2 focus:ring-blue-100 shadow-sm transition">
+                  <input type="text" id="form-eval-telefono" placeholder="0414-7654321" class="w-full px-3 py-2 text-sm bg-white border border-slate-300 rounded-xl text-slate-900 focus:border-blue-600 focus:ring-2 focus:ring-blue-100 shadow-sm transition">
                 </div>
                 <div class="space-y-1">
                   <label class="font-bold text-slate-700 block">Fecha del Levantamiento:</label>
-                  <input type="date" id="form-eval-fecha" class="w-full px-3 py-2 text-xs bg-white border border-slate-300 rounded-xl text-slate-900 focus:border-blue-600 focus:ring-2 focus:ring-blue-100 shadow-sm transition font-medium">
+                  <input type="date" id="form-eval-fecha" class="w-full px-3 py-2 text-sm bg-white border border-slate-300 rounded-xl text-slate-900 focus:border-blue-600 focus:ring-2 focus:ring-blue-100 shadow-sm transition font-medium">
                 </div>
               </div>
 
@@ -594,18 +599,18 @@
 
           <!-- BOTONES DE ACCIÓN DEL FORMULARIO -->
           <div class="flex flex-wrap items-center justify-between gap-3 pt-2">
-            <button type="button" id="btn-limpiar-form" class="px-4 py-2.5 rounded-xl bg-white hover:bg-slate-100 border border-slate-300 text-slate-700 text-xs font-bold transition flex items-center gap-1.5 shadow-sm">
+            <button type="button" id="btn-limpiar-form" class="px-4 py-2.5 rounded-xl bg-white hover:bg-slate-100 border border-slate-300 text-slate-700 text-sm font-bold transition flex items-center gap-1.5 shadow-sm">
               <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
               <span>Limpiar Formulario</span>
             </button>
 
             <div class="flex items-center gap-2">
-              <button type="button" id="btn-previsualizar-ficha" class="px-4 py-2.5 rounded-xl bg-blue-50 hover:bg-blue-100 border border-blue-300 text-blue-900 text-xs font-bold transition flex items-center gap-1.5 shadow-sm">
+              <button type="button" id="btn-previsualizar-ficha" class="px-4 py-2.5 rounded-xl bg-blue-50 hover:bg-blue-100 border border-blue-300 text-blue-900 text-sm font-bold transition flex items-center gap-1.5 shadow-sm">
                 <i data-lucide="eye" class="w-4 h-4"></i>
                 <span>Previsualizar Ficha 1:1</span>
               </button>
 
-              <button type="submit" class="px-5 py-2.5 rounded-xl bg-blue-700 hover:bg-blue-800 text-white font-black text-xs uppercase tracking-wider transition flex items-center gap-1.5 shadow-md active:scale-95">
+              <button type="submit" class="px-5 py-2.5 rounded-xl bg-blue-700 hover:bg-blue-800 text-white font-black text-sm uppercase tracking-wider transition flex items-center gap-1.5 shadow-md active:scale-95">
                 <i data-lucide="save" class="w-4 h-4"></i>
                 <span>Guardar Pre-Diagnóstico</span>
               </button>
@@ -622,11 +627,11 @@
             <!-- WIDGET MAPA SATELITAL DE UBICACIÓN -->
             <div class="bg-white border border-slate-200 rounded-2xl p-4 space-y-3 shadow-sm">
               <div class="flex items-center justify-between border-b border-slate-200 pb-2">
-                <span class="text-xs font-bold text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
+                <span class="text-base font-bold text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
                   <i data-lucide="crosshair" class="w-4 h-4 text-blue-600"></i>
                   <span>Georreferenciación Satelital</span>
                 </span>
-                <button type="button" id="btn-gps-ubicacion" class="p-1 px-2.5 rounded-lg bg-blue-50 hover:bg-blue-100 border border-blue-200 text-blue-700 text-[10px] font-bold transition flex items-center gap-1 shadow-xs" title="Usar mi GPS actual">
+                <button type="button" id="btn-gps-ubicacion" class="p-1 px-2.5 rounded-lg bg-blue-50 hover:bg-blue-100 border border-blue-200 text-blue-700 text-sm font-bold transition flex items-center gap-1 shadow-xs" title="Usar mi GPS actual">
                   <i data-lucide="navigation" class="w-3.5 h-3.5"></i>
                   <span>Mi GPS</span>
                 </button>
@@ -636,45 +641,45 @@
               <div class="space-y-1.5 bg-slate-50 p-2.5 rounded-xl border border-slate-200">
                 <div class="flex gap-1.5">
                   <input type="text" id="input-google-maps" placeholder="Pegar enlace Google Maps o lat, lng..." 
-                         class="flex-1 bg-white border border-slate-300 rounded-lg px-2.5 py-1.5 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-600 font-mono">
-                  <button type="button" id="btn-aplicar-gmaps" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-lg shadow-xs transition flex items-center gap-1 active:scale-95" title="Fijar coordenadas">
+                         class="flex-1 bg-white border border-slate-300 rounded-lg px-2.5 py-1.5 text-sm text-slate-900 placeholder-slate-400 focus:border-blue-600 font-mono">
+                  <button type="button" id="btn-aplicar-gmaps" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm rounded-lg shadow-xs transition flex items-center gap-1 active:scale-95" title="Fijar coordenadas">
                     <i data-lucide="check" class="w-3.5 h-3.5"></i>
                     <span>Fijar</span>
                   </button>
                 </div>
                 <div class="flex items-center justify-between pt-0.5">
-                  <button type="button" id="btn-buscar-gmaps" class="text-[10px] text-blue-600 hover:text-blue-800 font-semibold flex items-center gap-1 transition" title="Abrir búsqueda en Google Maps en nueva pestaña">
+                  <button type="button" id="btn-buscar-gmaps" class="text-sm text-blue-600 hover:text-blue-800 font-semibold flex items-center gap-1 transition" title="Abrir búsqueda en Google Maps en nueva pestaña">
                     <i data-lucide="external-link" class="w-3 h-3"></i>
                     <span>Buscar este centro en Google Maps ↗</span>
                   </button>
-                  <span class="text-[9px] text-slate-500">Pega URL o 9.7175, -63.2072</span>
+                  <span class="text-base text-slate-500">Pega URL o 9.7175, -63.2072</span>
                 </div>
               </div>
 
               <!-- Contenedor del Mapa Leaflet -->
               <div id="mapa-formulario" class="w-full h-64 rounded-xl overflow-hidden border border-slate-300 relative shadow-inner isolate z-0"></div>
 
-              <div class="flex items-center justify-between text-[11px] font-mono text-slate-600 pt-1">
+              <div class="flex items-center justify-between text-base font-mono text-slate-600 pt-1">
                 <span>Coordenadas:</span>
                 <span id="display-coordenadas" class="font-bold text-blue-900">9.74830, -63.17850</span>
               </div>
               <input type="hidden" id="form-precision" value="sectorial">
               <div id="form-precision-status" class="py-1">
-                <span class="text-[10px] text-amber-800 font-bold flex items-center gap-1">
+                <span class="text-base text-amber-800 font-bold flex items-center gap-1">
                   <span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span> Coordenada Referencial de Sector
                 </span>
               </div>
-              <p class="text-[10px] text-slate-500 leading-tight">
+              <p class="text-base text-slate-500 leading-tight">
                 💡 Haz clic o arrastra el marcador rojo para fijar la entrada de emergencia o coordenadas exactas del centro de salud.
               </p>
             </div>
 
             <!-- INSTRUCCIONES RÁPIDAS DE IMPRESIÓN -->
-            <div class="bg-blue-50 border border-blue-200 rounded-2xl p-4 space-y-2 text-xs shadow-sm">
-              <span class="text-[10px] font-mono uppercase font-black text-blue-950 block tracking-wider">
+            <div class="bg-blue-50 border border-blue-200 rounded-2xl p-4 space-y-2 text-base shadow-sm">
+              <span class="text-base font-mono uppercase font-black text-blue-950 block tracking-wider">
                 📄 Salida en Papel y PDF 1:1
               </span>
-              <p class="text-slate-700 text-[11px] leading-relaxed">
+              <p class="text-slate-700text-sm leading-relaxed">
                 Al guardar o pulsar <strong>"Previsualizar Ficha 1:1"</strong>, el sistema generará una hoja técnica idéntica a las fichas impresas de Vialidad y Electricidad de la Gobernación, lista para firmar e imprimir en hoja Carta/A4.
               </p>
             </div>
@@ -697,13 +702,13 @@
           <h2 class="text-base font-black text-slate-900 flex items-center gap-2">
             <i data-lucide="map" class="w-5 h-5 text-blue-600"></i>
             <span>Red Hospitalaria y Sanitaria del Estado Monagas</span>
-            <span class="text-[10px] font-mono font-bold bg-blue-50 text-blue-700 border border-blue-300 px-2 py-0.5 rounded-full hidden sm:inline">Google Maps • Exclusivo Monagas</span>
+            <span class="text-base font-mono font-bold bg-blue-50 text-blue-700 border border-blue-300 px-2 py-0.5 rounded-full hidden sm:inline">Google Maps • Exclusivo Monagas</span>
           </h2>
-          <p class="text-xs text-slate-600">Monitoreo de 13 Municipios • Cartografía Google Maps • Bloqueo territorial estricto a Monagas</p>
+          <p class="text-base text-slate-600">Monitoreo de 13 Municipios • Cartografía Google Maps • Bloqueo territorial estricto a Monagas</p>
         </div>
 
         <!-- Leyenda -->
-        <div class="flex items-center gap-3 text-xs font-bold text-slate-700">
+        <div class="flex items-center gap-3 text-base font-bold text-slate-700">
           <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-red-500 shadow-xs"></span> Crítico</span>
           <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-amber-500 shadow-xs"></span> Alerta</span>
           <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-emerald-500 shadow-xs"></span> Operativo</span>
@@ -721,24 +726,24 @@
             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
               <i data-lucide="search" class="w-4 h-4"></i>
             </div>
-            <input id="mapa-search-input" type="text" placeholder="🔍 Buscar por nombre, municipio o sector (ej. HUMNT, Caripito, Los Godos)..." class="w-full bg-slate-50 border border-slate-300 rounded-xl pl-9 pr-3 py-2 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:bg-white focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition">
+            <input id="mapa-search-input" type="text" placeholder="🔍 Buscar por nombre, municipio o sector (ej. HUMNT, Caripito, Los Godos)..." class="w-full bg-slate-50 border border-slate-300 rounded-xl pl-9 pr-3 py-2 text-sm text-slate-900 placeholder-slate-400 focus:bg-white focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition">
           </div>
 
           <!-- Selector Desplegable de Centros -->
           <div class="md:col-span-4">
-            <select id="mapa-select-centro" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs text-slate-900 focus:outline-none focus:bg-white focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition cursor-pointer font-medium">
+            <select id="mapa-select-centro" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-sm text-slate-900 focus:bg-white focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition cursor-pointer font-medium">
               <option value="">-- Seleccionar centro para enfocar (84) --</option>
             </select>
           </div>
 
           <!-- Botones Anterior / Siguiente -->
           <div class="md:col-span-2 flex items-center justify-between gap-1.5">
-            <button id="btn-mapa-prev" class="flex-1 py-2 px-2 bg-white hover:bg-slate-100 border border-slate-300 text-slate-700 hover:text-slate-900 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1 active:scale-95 shadow-xs" title="Centro Anterior">
+            <button id="btn-mapa-prev" class="flex-1 py-2 px-2 bg-white hover:bg-slate-100 border border-slate-300 text-slate-700 hover:text-slate-900 rounded-xl text-sm font-bold transition flex items-center justify-center gap-1 active:scale-95 shadow-xs" title="Centro Anterior">
               <i data-lucide="chevron-left" class="w-3.5 h-3.5"></i>
               <span>Ant</span>
             </button>
-            <span id="mapa-nav-counter" class="text-[11px] font-mono text-slate-500 shrink-0 px-1">1/84</span>
-            <button id="btn-mapa-next" class="flex-1 py-2 px-2 bg-white hover:bg-slate-100 border border-slate-300 text-slate-700 hover:text-slate-900 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1 active:scale-95 shadow-xs" title="Centro Siguiente">
+            <span id="mapa-nav-counter" class="text-base font-mono text-slate-500 shrink-0 px-1">1/84</span>
+            <button id="btn-mapa-next" class="flex-1 py-2 px-2 bg-white hover:bg-slate-100 border border-slate-300 text-slate-700 hover:text-slate-900 rounded-xl text-sm font-bold transition flex items-center justify-center gap-1 active:scale-95 shadow-xs" title="Centro Siguiente">
               <span>Sig</span>
               <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
             </button>
@@ -746,19 +751,19 @@
         </div>
 
         <!-- Fila 2: Chips de Filtrado Rápido y Selector de Capa Satelital -->
-        <div class="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-slate-200 text-xs">
+        <div class="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-slate-200 text-base">
           
           <!-- Chips de Filtrado -->
           <div class="flex items-center gap-1.5 flex-wrap">
-            <span class="text-[11px] text-slate-500 mr-1 font-semibold">Mostrar:</span>
-            <button id="chip-filtro-todos" onclick="window.filtrarCentrosMapa('todos')" class="chip-filter active px-2.5 py-1 rounded-lg bg-blue-700 text-white font-bold text-[11px] transition shadow-xs">
+            <span class="text-base text-slate-500 mr-1 font-semibold">Mostrar:</span>
+            <button id="chip-filtro-todos" onclick="window.filtrarCentrosMapa('todos')" class="chip-filter active px-2.5 py-1 rounded-lg bg-blue-700 text-white font-bold text-sm transition shadow-xs">
               Todos (84)
             </button>
-            <button id="chip-filtro-calibrar" onclick="window.filtrarCentrosMapa('calibrar')" class="chip-filter px-2.5 py-1 rounded-lg bg-amber-50 border border-amber-300 text-amber-900 hover:bg-amber-100 font-bold text-[11px] transition flex items-center gap-1">
+            <button id="chip-filtro-calibrar" onclick="window.filtrarCentrosMapa('calibrar')" class="chip-filter px-2.5 py-1 rounded-lg bg-amber-50 border border-amber-300 text-amber-900 hover:bg-amber-100 font-bold text-sm transition flex items-center gap-1">
               <span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
               <span>⚠️ Por Calibrar (42)</span>
             </button>
-            <button id="chip-filtro-exactos" onclick="window.filtrarCentrosMapa('exactos')" class="chip-filter px-2.5 py-1 rounded-lg bg-emerald-50 border border-emerald-300 text-emerald-900 hover:bg-emerald-100 font-bold text-[11px] transition flex items-center gap-1">
+            <button id="chip-filtro-exactos" onclick="window.filtrarCentrosMapa('exactos')" class="chip-filter px-2.5 py-1 rounded-lg bg-emerald-50 border border-emerald-300 text-emerald-900 hover:bg-emerald-100 font-bold text-sm transition flex items-center gap-1">
               <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
               <span>🟢 Exactos (42)</span>
             </button>
@@ -766,22 +771,22 @@
 
           <!-- Conmutador de Capas Google Maps (Delimitado a Monagas) -->
           <div class="flex items-center gap-1 bg-slate-100 p-1 rounded-xl border border-slate-200">
-            <button id="btn-toggle-calles" onclick="window.conmutarCapaMapa('calles')" class="px-2.5 py-1 rounded-lg bg-blue-700 text-white font-bold text-[11px] transition flex items-center gap-1 shadow-xs" title="Formato Plano: Calles limpias sin relieve">
+            <button id="btn-toggle-calles" onclick="window.conmutarCapaMapa('calles')" class="px-2.5 py-1 rounded-lg bg-blue-700 text-white font-bold text-sm transition flex items-center gap-1 shadow-xs" title="Formato Plano: Calles limpias sin relieve">
               <span>📐 Tipo Plano</span>
             </button>
-            <button id="btn-toggle-terreno" onclick="window.conmutarCapaMapa('terreno')" class="px-2.5 py-1 rounded-lg text-slate-700 hover:text-blue-900 font-medium text-[11px] transition flex items-center gap-1" title="Con Relieve: Mapa topográfico y elevación">
+            <button id="btn-toggle-terreno" onclick="window.conmutarCapaMapa('terreno')" class="px-2.5 py-1 rounded-lg text-slate-700 hover:text-blue-900 font-medium text-sm transition flex items-center gap-1" title="Con Relieve: Mapa topográfico y elevación">
               <span>⛰️ Con Relieve</span>
             </button>
-            <button id="btn-toggle-satelite" onclick="window.conmutarCapaMapa('satelite')" class="px-2.5 py-1 rounded-lg text-slate-700 hover:text-blue-900 font-medium text-[11px] transition flex items-center gap-1" title="Google Maps: Satélite con Etiquetas">
+            <button id="btn-toggle-satelite" onclick="window.conmutarCapaMapa('satelite')" class="px-2.5 py-1 rounded-lg text-slate-700 hover:text-blue-900 font-medium text-sm transition flex items-center gap-1" title="Google Maps: Satélite con Etiquetas">
               <span>🛰️ Satélite</span>
             </button>
-            <button id="btn-toggle-mascara" onclick="window.toggleMascaraMonagas()" class="px-2.5 py-1 rounded-lg bg-blue-50 text-blue-700 border border-blue-300 font-bold text-[11px] transition flex items-center gap-1" title="Activar/Desactivar Velo Oscuro fuera de Monagas">
+            <button id="btn-toggle-mascara" onclick="window.toggleMascaraMonagas()" class="px-2.5 py-1 rounded-lg bg-blue-50 text-blue-700 border border-blue-300 font-bold text-sm transition flex items-center gap-1" title="Activar/Desactivar Velo Oscuro fuera de Monagas">
               <span>🛡️ Velo Monagas</span>
             </button>
-            <button onclick="window.recentrarMapaMonagas()" class="px-2.5 py-1 rounded-lg bg-white hover:bg-slate-50 text-blue-900 border border-slate-300 font-bold text-[11px] transition flex items-center gap-1 ml-1 shadow-xs" title="Centrar vista completa del Estado Monagas">
+            <button onclick="window.recentrarMapaMonagas()" class="px-2.5 py-1 rounded-lg bg-white hover:bg-slate-50 text-blue-900 border border-slate-300 font-bold text-sm transition flex items-center gap-1 ml-1 shadow-xs" title="Centrar vista completa del Estado Monagas">
               <span>🔄 Monagas</span>
             </button>
-            <button onclick="window.restaurarCentrosOriginales()" class="px-2.5 py-1 rounded-lg bg-white hover:bg-red-50 text-slate-600 hover:text-red-700 border border-slate-300 font-medium text-[11px] transition flex items-center gap-1 shadow-xs" title="Restablecer los 84 centros iniciales si eliminaste alguno por error">
+            <button onclick="window.restaurarCentrosOriginales()" class="px-2.5 py-1 rounded-lg bg-white hover:bg-red-50 text-slate-600 hover:text-red-700 border border-slate-300 font-medium text-sm transition flex items-center gap-1 shadow-xs" title="Restablecer los 84 centros iniciales si eliminaste alguno por error">
               <span>↺ Restaurar</span>
             </button>
           </div>
@@ -803,13 +808,13 @@
             </div>
             <input type="text" id="input-search-gmaps-overlay" 
                    placeholder="Buscar hospital, ambulatorio o sector (ej. Manuel Núñez, Los Godos)..."
-                   class="w-full bg-transparent py-2.5 pr-2 text-xs text-slate-900 placeholder-slate-400 focus:outline-none font-medium">
+                   class="w-full bg-transparent py-2.5 pr-2 text-sm text-slate-900 placeholder-slate-400 font-medium">
             <button type="button" id="btn-clear-search-gmaps" onclick="window.limpiarBusquedaFlotante()" 
                     class="hidden px-2 text-slate-400 hover:text-slate-700 transition" title="Limpiar búsqueda">
               <i data-lucide="x" class="w-3.5 h-3.5"></i>
             </button>
             <button type="button" onclick="window.buscarExternoGmapsQuery()" 
-                    class="px-3 py-2.5 bg-blue-700 hover:bg-blue-800 text-white font-black text-[11px] transition flex items-center gap-1 shrink-0 active:scale-95" 
+                    class="px-3 py-2.5 bg-blue-700 hover:bg-blue-800 text-white font-black text-sm transition flex items-center gap-1 shrink-0 active:scale-95" 
                     title="Buscar directamente en Google Maps oficial">
               <span>Google ↗</span>
             </button>
@@ -825,8 +830,8 @@
             <div class="flex items-center gap-2 min-w-0">
               <span class="text-base shrink-0">🎯</span>
               <div class="min-w-0">
-                <h4 class="text-xs font-black text-slate-900 truncate" id="card-pin-title">Punto Marcado en Google Maps</h4>
-                <div class="text-[10px] text-blue-800 font-mono font-bold truncate" id="card-pin-coords">9.741430, -63.200590</div>
+                <h4 class="text-base font-black text-slate-900 truncate" id="card-pin-title">Punto Marcado en Google Maps</h4>
+                <div class="text-base text-blue-800 font-mono font-bold truncate" id="card-pin-coords">9.741430, -63.200590</div>
               </div>
             </div>
             <button type="button" onclick="window.cerrarTarjetaPinFlotante()" class="p-1 text-slate-400 hover:text-slate-700 rounded-lg hover:bg-slate-100 transition shrink-0" title="Cerrar">
@@ -836,14 +841,14 @@
 
           <!-- Asignar punto a centro existente -->
           <div class="space-y-1 bg-slate-50 p-2 sm:p-2.5 rounded-xl border border-slate-200">
-            <span class="text-[10px] text-slate-600 font-bold block">🎯 Reubicar centro existente en estas coordenadas:</span>
+            <span class="text-base text-slate-600 font-bold block">🎯 Reubicar centro existente en estas coordenadas:</span>
             <div class="flex items-center gap-1.5 w-full min-w-0">
               <div class="flex-1 min-w-0 w-0">
-                <select id="select-card-asignar-centro" class="w-full min-w-0 bg-white border border-slate-300 rounded-lg px-2.5 py-1.5 text-xs text-slate-900 focus:border-blue-600 focus:outline-none font-medium truncate shadow-xs">
+                <select id="select-card-asignar-centro" class="w-full min-w-0 bg-white border border-slate-300 rounded-lg px-2.5 py-1.5 text-sm text-slate-900 focus:border-blue-600 font-medium truncate shadow-xs">
                   <option value="">-- Mover este punto a... --</option>
                 </select>
               </div>
-              <button type="button" onclick="window.guardarPuntoDesdeTarjetaFlotante()" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-lg shadow-xs transition flex items-center gap-1 shrink-0 active:scale-95" title="Mover la ubicación de este centro aquí">
+              <button type="button" onclick="window.guardarPuntoDesdeTarjetaFlotante()" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm rounded-lg shadow-xs transition flex items-center gap-1 shrink-0 active:scale-95" title="Mover la ubicación de este centro aquí">
                 <span>Guardar ✓</span>
               </button>
               <button type="button" onclick="window.copiarCoordsDesdeTarjetaFlotante()" class="p-1.5 bg-white hover:bg-slate-100 border border-slate-300 text-blue-700 rounded-lg transition shrink-0 shadow-xs" title="Copiar Coordenadas">
@@ -853,26 +858,26 @@
           </div>
 
           <div class="flex items-center gap-2 pt-1 border-t border-slate-200">
-            <button type="button" onclick="window.abrirModalCrearCentroRapido()" class="flex-1 py-2 px-3 bg-blue-700 hover:bg-blue-800 text-white font-bold text-xs rounded-xl shadow-xs transition flex items-center justify-center gap-1.5 active:scale-95" title="Crear un nuevo centro con tu propio puntero">
+            <button type="button" onclick="window.abrirModalCrearCentroRapido()" class="flex-1 py-2 px-3 bg-blue-700 hover:bg-blue-800 text-white font-bold text-sm rounded-xl shadow-xs transition flex items-center justify-center gap-1.5 active:scale-95" title="Crear un nuevo centro con tu propio puntero">
               <span>➕ Crear Nuevo Centro Aquí</span>
             </button>
-            <button type="button" onclick="window.eliminarCentroSeleccionadoDesdeTarjeta()" class="py-2 px-3 bg-red-50 hover:bg-red-100 text-red-700 font-bold text-xs rounded-xl border border-red-200 transition flex items-center gap-1 shrink-0 active:scale-95" title="Eliminar el centro seleccionado en el desplegable si no existe">
+            <button type="button" onclick="window.eliminarCentroSeleccionadoDesdeTarjeta()" class="py-2 px-3 bg-red-50 hover:bg-red-100 text-red-700 font-bold text-sm rounded-xl border border-red-200 transition flex items-center gap-1 shrink-0 active:scale-95" title="Eliminar el centro seleccionado en el desplegable si no existe">
               <span>🗑️ Eliminar</span>
             </button>
           </div>
         </div>
 
         <!-- PANEL / INSPECTOR FLOTANTE DE CALIBRACIÓN RÁPIDA -->
-        <div id="mapa-quick-calibrator" class="hidden absolute top-4 right-4 z-[400] max-w-[400px] w-[calc(100%-2rem)] bg-white/95 backdrop-blur-md border-2 border-blue-600 rounded-2xl p-4 shadow-2xl text-xs space-y-3 max-h-[92%] overflow-y-auto text-slate-800">
+        <div id="mapa-quick-calibrator" class="hidden absolute top-4 right-4 z-[400] max-w-[400px] w-[calc(100%-2rem)] bg-white/95 backdrop-blur-md border-2 border-blue-600 rounded-2xl p-4 shadow-2xl text-base space-y-3 max-h-[92%] overflow-y-auto text-slate-800">
           
           <!-- Cabecera -->
           <div class="flex items-start justify-between gap-2 border-b border-slate-200 pb-2">
             <div class="min-w-0 flex-1">
               <div class="flex items-center gap-1.5">
                 <span class="text-base shrink-0">🏥</span>
-                <h3 id="calibrator-nombre" class="font-bold text-slate-900 text-sm leading-tight truncate">Nombre del Centro</h3>
+                <h3 id="calibrator-nombre" class="font-bold text-slate-900 text-base leading-tight truncate">Nombre del Centro</h3>
               </div>
-              <div id="calibrator-ubicacion" class="text-[11px] text-blue-700 mt-0.5 font-medium truncate">Municipio • Parroquia • Sector</div>
+              <div id="calibrator-ubicacion" class="text-base text-blue-700 mt-0.5 font-medium truncate">Municipio • Parroquia • Sector</div>
             </div>
             <button onclick="window.cerrarCalibradorRapido()" class="p-1 rounded-lg bg-slate-100 hover:bg-red-50 text-slate-500 hover:text-red-700 border border-slate-200 transition shrink-0" title="Cerrar Inspector">
               <i data-lucide="x" class="w-4 h-4"></i>
@@ -882,13 +887,13 @@
           <!-- Estado de precisión y coordenadas actuales -->
           <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-200 space-y-1.5">
             <div class="flex items-center justify-between">
-              <span id="calibrator-badge-precision" class="px-2 py-0.5 rounded-full text-[10px] font-bold">Estado</span>
-              <button onclick="window.copiarCoordenadasCalibrador()" class="text-[10px] text-slate-500 hover:text-blue-700 font-mono flex items-center gap-1 transition">
+              <span id="calibrator-badge-precision" class="px-2 py-0.5 rounded-full text-base font-bold">Estado</span>
+              <button onclick="window.copiarCoordenadasCalibrador()" class="text-sm text-slate-500 hover:text-blue-700 font-mono flex items-center gap-1 transition">
                 <i data-lucide="copy" class="w-3 h-3"></i>
                 <span>Copiar Coordenadas</span>
               </button>
             </div>
-            <div class="flex items-center justify-between font-mono text-[11px]">
+            <div class="flex items-center justify-between font-mono text-base">
               <span class="text-slate-500">Coordenadas:</span>
               <span id="calibrator-coords-display" class="font-bold text-blue-900">0.00000, 0.00000</span>
             </div>
@@ -897,25 +902,25 @@
           <!-- Herramientas de Calibración Rápida -->
           <div class="space-y-2">
             <!-- Botón Arrastre / Clic -->
-            <button id="btn-toggle-arrastre" onclick="window.toggleModoArrastrePin()" class="w-full py-2 px-3 bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300 font-bold rounded-xl text-xs transition flex items-center justify-center gap-1.5 shadow-xs">
+            <button id="btn-toggle-arrastre" onclick="window.toggleModoArrastrePin()" class="w-full py-2 px-3 bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300 font-bold rounded-xl text-sm transition flex items-center justify-center gap-1.5 shadow-xs">
               <i data-lucide="move" class="w-3.5 h-3.5 text-amber-600"></i>
               <span id="label-modo-arrastre">🎯 Activar Arrastre / Clic en el Mapa</span>
             </button>
             
-            <p id="msg-modo-arrastre" class="hidden text-[11px] text-amber-900 bg-amber-50 p-2.5 rounded-xl border border-amber-300 leading-tight text-center shadow-xs">
+            <p id="msg-modo-arrastre" class="hiddentext-sm text-amber-900 bg-amber-50 p-2.5 rounded-xl border border-amber-300 leading-tight text-center shadow-xs">
               👆 <strong>Modo Arrastre ACTIVO:</strong> Haz clic en el techo del hospital o arrastra el marcador rojo al punto exacto.
             </p>
 
             <!-- Abrir en Google Maps -->
-            <button onclick="window.abrirGmapsCalibradorActual()" class="w-full py-1.5 px-3 bg-white hover:bg-slate-50 text-blue-700 border border-slate-300 font-bold rounded-xl text-xs transition flex items-center justify-center gap-1.5 shadow-xs">
+            <button onclick="window.abrirGmapsCalibradorActual()" class="w-full py-1.5 px-3 bg-white hover:bg-slate-50 text-blue-700 border border-slate-300 font-bold rounded-xl text-sm transition flex items-center justify-center gap-1.5 shadow-xs">
               <i data-lucide="compass" class="w-3.5 h-3.5 text-blue-600"></i>
               <span>Abrir en Google Maps (Nueva Pestaña) ↗</span>
             </button>
 
             <!-- Pegar URL o Coords de Google Maps -->
             <div class="flex items-center gap-1.5">
-              <input id="calibrator-gmaps-input" type="text" placeholder="Pegar enlace o coords (ej: 9.7483, -63.1785)..." class="flex-1 bg-slate-50 border border-slate-300 rounded-xl px-2.5 py-1.5 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-blue-600 font-mono">
-              <button onclick="window.aplicarGmapsEnCalibrador()" class="px-3 py-1.5 bg-blue-700 hover:bg-blue-800 text-white font-bold rounded-xl text-xs transition shrink-0 shadow-xs">
+              <input id="calibrator-gmaps-input" type="text" placeholder="Pegar enlace o coords (ej: 9.7483, -63.1785)..." class="flex-1 bg-slate-50 border border-slate-300 rounded-xl px-2.5 py-1.5 text-sm text-slate-900 placeholder-slate-400 focus:ring-1 focus:ring-blue-600 font-mono">
+              <button onclick="window.aplicarGmapsEnCalibrador()" class="px-3 py-1.5 bg-blue-700 hover:bg-blue-800 text-white font-bold rounded-xl text-sm transition shrink-0 shadow-xs">
                 Aplicar
               </button>
             </div>
@@ -923,15 +928,15 @@
 
           <!-- Botones de Acción -->
           <div class="pt-1 flex flex-col gap-1.5">
-            <button id="btn-guardar-calibracion" onclick="window.guardarCalibracionActual()" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-xs transition flex items-center justify-center gap-2 shadow-xs active:scale-95">
+            <button id="btn-guardar-calibracion" onclick="window.guardarCalibracionActual()" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-sm transition flex items-center justify-center gap-2 shadow-xs active:scale-95">
               <i data-lucide="check-circle" class="w-4 h-4"></i>
               <span>💾 Guardar Ubicación Exacta</span>
             </button>
-            <button onclick="window.eliminarCentroCalibradorActual()" class="w-full py-2 bg-red-50 hover:bg-red-100 text-red-700 hover:text-red-800 rounded-xl border border-red-200 font-bold text-xs transition flex items-center justify-center gap-1.5 shadow-xs active:scale-95" title="Eliminar este centro si no existe">
+            <button onclick="window.eliminarCentroCalibradorActual()" class="w-full py-2 bg-red-50 hover:bg-red-100 text-red-700 hover:text-red-800 rounded-xl border border-red-200 font-bold text-sm transition flex items-center justify-center gap-1.5 shadow-xs active:scale-95" title="Eliminar este centro si no existe">
               <i data-lucide="trash-2" class="w-3.5 h-3.5 text-red-600"></i>
               <span>🗑️ Eliminar este Centro (No Existe)</span>
             </button>
-            <button onclick="window.verFichaCalibradorActual()" class="w-full py-1.5 bg-white hover:bg-slate-50 text-slate-700 hover:text-slate-900 rounded-xl border border-slate-300 text-xs font-semibold transition flex items-center justify-center gap-1 shadow-xs">
+            <button onclick="window.verFichaCalibradorActual()" class="w-full py-1.5 bg-white hover:bg-slate-50 text-slate-700 hover:text-slate-900 rounded-xl border border-slate-300 text-sm font-semibold transition flex items-center justify-center gap-1 shadow-xs">
               <i data-lucide="printer" class="w-3.5 h-3.5"></i>
               <span>Ver Ficha Oficial 1:1</span>
             </button>
@@ -949,13 +954,13 @@
               <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
               <span class="relative inline-flex rounded-full h-3 w-3 bg-blue-600"></span>
             </span>
-            <h3 class="text-xs sm:text-sm font-black text-blue-950 flex items-center gap-1.5 uppercase tracking-wide">
+            <h3 class="text-base sm:text-base font-black text-blue-950 flex items-center gap-1.5 uppercase tracking-wide">
               <i data-lucide="crosshair" class="w-4 h-4 text-blue-600"></i>
               <span>Inspector Interactivo Google Maps (Casillas de Coordenadas)</span>
             </h3>
           </div>
           <div class="flex items-center gap-2">
-            <span id="gmaps-estado-click" class="text-[11px] text-blue-700 font-mono font-bold">
+            <span id="gmaps-estado-click" class="text-base text-blue-700 font-mono font-bold">
               👉 Toca o haz clic en cualquier ambulatorio, calle o techo del mapa
             </span>
           </div>
@@ -966,30 +971,30 @@
           
           <!-- Casilla Latitud -->
           <div class="sm:col-span-3 space-y-1">
-            <label class="text-[10px] uppercase font-black text-slate-700 tracking-wider flex items-center justify-between">
+            <label class="text-sm uppercase font-black text-slate-700 tracking-wider flex items-center justify-between">
               <span>Latitud (Norte)</span>
-              <span class="text-blue-700 font-mono text-[9px] font-bold">Grados Decimales</span>
+              <span class="text-blue-700 font-mono text-base font-bold">Grados Decimales</span>
             </label>
             <input type="text" id="gmaps-input-lat" value="9.748300" onchange="window.actualizarPuntoDesdeInputs()"
-                   class="w-full bg-slate-50 border-2 border-blue-500/60 rounded-xl px-3 py-2 text-xs sm:text-sm font-mono font-black text-blue-950 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 select-all shadow-inner" 
+                   class="w-full bg-slate-50 border-2 border-blue-500/60 rounded-xl px-3 py-2 text-sm sm:text-base font-mono font-black text-blue-950 focus:bg-white focus:ring-2 focus:ring-blue-500 select-all shadow-inner" 
                    placeholder="9.xxxxx">
           </div>
 
           <!-- Casilla Longitud -->
           <div class="sm:col-span-3 space-y-1">
-            <label class="text-[10px] uppercase font-black text-slate-700 tracking-wider flex items-center justify-between">
+            <label class="text-sm uppercase font-black text-slate-700 tracking-wider flex items-center justify-between">
               <span>Longitud (Oeste)</span>
-              <span class="text-blue-700 font-mono text-[9px] font-bold">Grados Decimales</span>
+              <span class="text-blue-700 font-mono text-base font-bold">Grados Decimales</span>
             </label>
             <input type="text" id="gmaps-input-lng" value="-63.178500" onchange="window.actualizarPuntoDesdeInputs()"
-                   class="w-full bg-slate-50 border-2 border-blue-500/60 rounded-xl px-3 py-2 text-xs sm:text-sm font-mono font-black text-blue-950 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 select-all shadow-inner" 
+                   class="w-full bg-slate-50 border-2 border-blue-500/60 rounded-xl px-3 py-2 text-sm sm:text-base font-mono font-black text-blue-950 focus:bg-white focus:ring-2 focus:ring-blue-500 select-all shadow-inner" 
                    placeholder="-63.xxxxx">
           </div>
 
           <!-- Botón Copiar Rápido -->
           <div class="sm:col-span-2 flex items-end">
             <button type="button" id="btn-gmaps-copiar" onclick="window.copiarCoordenadasInspector()" 
-                    class="w-full py-2 px-3 bg-white hover:bg-slate-100 border border-slate-300 hover:border-blue-500 text-slate-700 hover:text-blue-950 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-xs active:scale-95" title="Copiar coordenadas al portapapeles">
+                    class="w-full py-2 px-3 bg-white hover:bg-slate-100 border border-slate-300 hover:border-blue-500 text-slate-700 hover:text-blue-950 rounded-xl text-sm font-bold transition flex items-center justify-center gap-1.5 shadow-xs active:scale-95" title="Copiar coordenadas al portapapeles">
               <i data-lucide="copy" class="w-3.5 h-3.5 text-blue-600"></i>
               <span id="btn-copiar-texto">Copiar Coords</span>
             </button>
@@ -998,7 +1003,7 @@
           <!-- Botón Abrir en Google Maps Externo -->
           <div class="sm:col-span-2 flex items-end">
             <button type="button" onclick="window.abrirPuntoEnGoogleMapsOficial()" 
-                    class="w-full py-2 px-3 bg-white hover:bg-slate-100 border border-slate-300 text-slate-700 hover:text-blue-950 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-xs active:scale-95" title="Abrir satélite en Google Maps">
+                    class="w-full py-2 px-3 bg-white hover:bg-slate-100 border border-slate-300 text-slate-700 hover:text-blue-950 rounded-xl text-sm font-bold transition flex items-center justify-center gap-1.5 shadow-xs active:scale-95" title="Abrir satélite en Google Maps">
               <i data-lucide="external-link" class="w-3.5 h-3.5 text-emerald-600"></i>
               <span>Google Maps ↗</span>
             </button>
@@ -1007,7 +1012,7 @@
           <!-- Botón Crear Nuevo Centro Aquí -->
           <div class="sm:col-span-2 flex items-end">
             <button type="button" onclick="window.crearCentroDesdePunto()" 
-                    class="w-full py-2 px-3 bg-blue-700 hover:bg-blue-800 text-white rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-xs active:scale-95" title="Abrir Formulario de Pre-Diagnóstico con estas coordenadas">
+                    class="w-full py-2 px-3 bg-blue-700 hover:bg-blue-800 text-white rounded-xl text-sm font-bold transition flex items-center justify-center gap-1.5 shadow-xs active:scale-95" title="Abrir Formulario de Pre-Diagnóstico con estas coordenadas">
               <i data-lucide="plus-circle" class="w-3.5 h-3.5"></i>
               <span>Nuevo Centro</span>
             </button>
@@ -1016,16 +1021,16 @@
         </div>
 
         <!-- FILA DE ASIGNACIÓN RÁPIDA: ASIGNAR ESTE PUNTO A CUALQUIERA DE LOS 84 CENTROS -->
-        <div class="flex flex-wrap items-center justify-between gap-2.5 pt-2.5 border-t border-slate-200 bg-slate-50 p-3 rounded-xl text-xs">
+        <div class="flex flex-wrap items-center justify-between gap-2.5 pt-2.5 border-t border-slate-200 bg-slate-50 p-3 rounded-xl text-base">
           <div class="flex items-center gap-2 flex-1 min-w-[280px]">
-            <span class="text-[11px] text-slate-700 font-semibold shrink-0">🎯 Asignar coordenada a:</span>
-            <select id="select-asignar-centro" class="flex-1 min-w-0 w-0 bg-white border border-slate-300 rounded-lg px-2.5 py-1.5 text-xs text-slate-900 focus:border-blue-600 focus:outline-none font-medium truncate">
+            <span class="text-base text-slate-700 font-semibold shrink-0">🎯 Asignar coordenada a:</span>
+            <select id="select-asignar-centro" class="flex-1 min-w-0 w-0 bg-white border border-slate-300 rounded-lg px-2.5 py-1.5 text-sm text-slate-900 focus:border-blue-600 font-medium truncate">
               <option value="">-- Seleccionar centro de salud a calibrar (84) --</option>
             </select>
           </div>
           <div class="flex items-center gap-2">
             <button type="button" onclick="window.aplicarCoordenadaACentroSeleccionado()" 
-                    class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-xs transition flex items-center gap-1.5 active:scale-95">
+                    class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm rounded-xl shadow-xs transition flex items-center gap-1.5 active:scale-95">
               <i data-lucide="check-check" class="w-4 h-4"></i>
               <span>Guardar en este Centro</span>
             </button>
@@ -1048,20 +1053,20 @@
         <div class="md:col-span-2">
           <div class="relative">
             <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3.5 top-3 pointer-events-none"></i>
-            <input type="text" id="input-busqueda-centros" placeholder="Buscar por nombre, parroquia, sector o tipo..." class="w-full pl-10 pr-4 py-2 text-xs bg-slate-50 border border-slate-300 rounded-xl text-slate-900 placeholder-slate-400 focus:border-blue-600 focus:bg-white focus:outline-none transition font-medium">
+            <input type="text" id="input-busqueda-centros" placeholder="Buscar por nombre, parroquia, sector o tipo..." class="w-full pl-10 pr-4 py-2 text-sm bg-slate-50 border border-slate-300 rounded-xl text-slate-900 placeholder-slate-400 focus:border-blue-600 focus:bg-white transition font-medium">
           </div>
         </div>
 
         <!-- Filtro Municipio -->
         <div>
-          <select id="filtro-municipio" class="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-300 rounded-xl text-slate-900 focus:border-blue-600 focus:bg-white focus:outline-none transition font-medium">
+          <select id="filtro-municipio" class="w-full px-3 py-2 text-sm bg-slate-50 border border-slate-300 rounded-xl text-slate-900 focus:border-blue-600 focus:bg-white transition font-medium">
             <option value="todos">Todos los Municipios (13)</option>
           </select>
         </div>
 
         <!-- Filtro Tipo de Red MPPS -->
         <div>
-          <select id="filtro-tipo-red" class="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-300 rounded-xl text-slate-900 focus:border-blue-600 focus:bg-white focus:outline-none transition font-medium">
+          <select id="filtro-tipo-red" class="w-full px-3 py-2 text-sm bg-slate-50 border border-slate-300 rounded-xl text-slate-900 focus:border-blue-600 focus:bg-white transition font-medium">
             <option value="todos">Todas las Redes (MPPS)</option>
             <option value="hospitalaria">Red Hospitalaria (Tipo I - IV)</option>
             <option value="comunal">Red Comunal (CPT, CDI, SRI)</option>
@@ -1071,7 +1076,7 @@
 
         <!-- Filtro Riesgo -->
         <div>
-          <select id="filtro-riesgo" class="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-300 rounded-xl text-slate-900 focus:border-blue-600 focus:bg-white focus:outline-none transition font-medium">
+          <select id="filtro-riesgo" class="w-full px-3 py-2 text-sm bg-slate-50 border border-slate-300 rounded-xl text-slate-900 focus:border-blue-600 focus:bg-white transition font-medium">
             <option value="todos">Todos los Estados</option>
             <option value="rojo">🔴 Crítico (Rojo)</option>
             <option value="amarillo">🟡 Alerta (Amarillo)</option>
@@ -1086,7 +1091,7 @@
         <div class="overflow-x-auto">
           <table class="w-full text-left border-collapse">
             <thead>
-              <tr class="bg-slate-100 border-b border-slate-200 text-[11px] font-bold uppercase text-slate-700">
+              <tr class="bg-slate-100 border-b border-slate-200 text-base font-bold uppercase text-slate-700">
                 <th class="py-3 px-3">#</th>
                 <th class="py-3 px-3">Centro de Salud</th>
                 <th class="py-3 px-3">Jurisdicción</th>
@@ -1103,7 +1108,7 @@
 
         <div id="tabla-centros-empty" class="hidden p-8 text-center text-slate-500 space-y-2">
           <i data-lucide="inbox" class="w-8 h-8 mx-auto text-slate-400"></i>
-          <p class="text-xs font-medium">No se encontraron centros de salud con los filtros seleccionados.</p>
+          <p class="text-base font-medium">No se encontraron centros de salud con los filtros seleccionados.</p>
         </div>
       </div>
 
@@ -1121,31 +1126,31 @@
       <div class="flex items-center gap-2">
         <img src="assets/logo-migato.png" alt="MIGATO" class="w-8 h-8 object-contain rounded-lg bg-white p-0.5 border border-slate-200 shadow-xs">
         <div>
-          <strong class="text-xs font-black text-slate-900 block leading-tight">Previsualización de Ficha Oficial 1:1</strong>
-          <span class="text-[10px] text-blue-700 font-semibold">Movimiento Independiente Ganamos Todos • Monagas</span>
+          <strong class="text-base font-black text-slate-900 block leading-tight">Previsualización de Ficha Oficial 1:1</strong>
+          <span class="text-base text-blue-700 font-semibold">Movimiento Independiente Ganamos Todos • Monagas</span>
         </div>
       </div>
 
       <!-- SELECTOR DE FORMATO DE MAPA PARA LA FICHA -->
       <div class="flex items-center gap-1 bg-slate-100 p-1 rounded-xl border border-slate-200">
-        <span class="text-[10px] text-slate-600 font-bold px-1.5 hidden sm:inline">Mapa:</span>
-        <button id="btn-ficha-mapa-plano" type="button" onclick="window.cambiarEstiloMapaFicha('plano')" class="px-2.5 py-1 rounded-lg bg-blue-700 text-white font-bold text-xs transition shadow-xs flex items-center gap-1 active:scale-95" title="Formato Plano: Limpio, sin relieve ni fotos, ideal para imprimir en papel">
+        <span class="text-base text-slate-600 font-bold px-1.5 hidden sm:inline">Mapa:</span>
+        <button id="btn-ficha-mapa-plano" type="button" onclick="window.cambiarEstiloMapaFicha('plano')" class="px-2.5 py-1 rounded-lg bg-blue-700 text-white font-bold text-sm transition shadow-xs flex items-center gap-1 active:scale-95" title="Formato Plano: Limpio, sin relieve ni fotos, ideal para imprimir en papel">
           <span>📐 Tipo Plano</span>
         </button>
-        <button id="btn-ficha-mapa-relieve" type="button" onclick="window.cambiarEstiloMapaFicha('relieve')" class="px-2.5 py-1 rounded-lg text-slate-700 hover:text-blue-700 font-semibold text-xs transition flex items-center gap-1 active:scale-95" title="Con Relieve: Mapa topográfico y elevación">
+        <button id="btn-ficha-mapa-relieve" type="button" onclick="window.cambiarEstiloMapaFicha('relieve')" class="px-2.5 py-1 rounded-lg text-slate-700 hover:text-blue-700 font-semibold text-sm transition flex items-center gap-1 active:scale-95" title="Con Relieve: Mapa topográfico y elevación">
           <span>⛰️ Con Relieve</span>
         </button>
-        <button id="btn-ficha-mapa-satelite" type="button" onclick="window.cambiarEstiloMapaFicha('satelite')" class="px-2.5 py-1 rounded-lg text-slate-700 hover:text-blue-700 font-semibold text-xs transition flex items-center gap-1 active:scale-95" title="Satélite: Fotografía aérea de alta resolución">
+        <button id="btn-ficha-mapa-satelite" type="button" onclick="window.cambiarEstiloMapaFicha('satelite')" class="px-2.5 py-1 rounded-lg text-slate-700 hover:text-blue-700 font-semibold text-sm transition flex items-center gap-1 active:scale-95" title="Satélite: Fotografía aérea de alta resolución">
           <span>🛰️ Satélite</span>
         </button>
       </div>
 
       <div class="flex items-center gap-2">
-        <button onclick="window.imprimirFichaActual()" class="px-3.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs transition flex items-center gap-1.5 shadow-xs active:scale-95" title="Imprime o guarda en PDF directamente">
+        <button onclick="window.imprimirFichaActual()" class="px-3.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm transition flex items-center gap-1.5 shadow-xs active:scale-95" title="Imprime o guarda en PDF directamente">
           <i data-lucide="printer" class="w-4 h-4"></i>
           <span>Imprimir Ficha (PDF / Papel)</span>
         </button>
-        <button onclick="window.abrirFichaEnVentanaLimpia(true)" class="px-3 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs transition flex items-center gap-1.5 shadow-xs active:scale-95" title="Abre una ventana 100% aislada para descargar o imprimir el PDF sin interferencias">
+        <button onclick="window.abrirFichaEnVentanaLimpia(true)" class="px-3 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm transition flex items-center gap-1.5 shadow-xs active:scale-95" title="Abre una ventana 100% aislada para descargar o imprimir el PDF sin interferencias">
           <i data-lucide="file-down" class="w-4 h-4"></i>
           <span class="hidden sm:inline">PDF / Ventana Limpia</span>
         </button>
@@ -1171,8 +1176,8 @@
         <div class="flex items-center gap-2">
           <span class="text-xl">📍</span>
           <div>
-            <h3 class="font-black text-slate-900 text-sm">Nuevo Centro de Salud</h3>
-            <p class="text-[10px] text-blue-700 font-mono font-bold" id="modal-rapido-coords-sub">Coords: 0.00000, 0.00000</p>
+            <h3 class="font-black text-slate-900 text-base">Nuevo Centro de Salud</h3>
+            <p class="text-base text-blue-700 font-mono font-bold" id="modal-rapido-coords-sub">Coords: 0.00000, 0.00000</p>
           </div>
         </div>
         <button type="button" onclick="window.cerrarModalCrearCentroRapido()" class="p-1 text-slate-400 hover:text-slate-700 rounded-lg hover:bg-slate-100 transition">
@@ -1180,22 +1185,22 @@
         </button>
       </div>
 
-      <form id="form-nuevo-centro-rapido" onsubmit="event.preventDefault(); window.guardarNuevoCentroRapido();" class="space-y-3 text-xs">
+      <form id="form-nuevo-centro-rapido" onsubmit="event.preventDefault(); window.guardarNuevoCentroRapido();" class="space-y-3 text-base">
         <div>
           <label class="block text-slate-700 font-bold mb-1">Nombre del Centro / Ambulatorio / Hospital: *</label>
-          <input type="text" id="modal-rapido-nombre" required placeholder="Ej: Ambulatorio Dr. Carlos Gómez" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-600 focus:bg-white font-medium">
+          <input type="text" id="modal-rapido-nombre" required placeholder="Ej: Ambulatorio Dr. Carlos Gómez" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-900 placeholder-slate-400 focus:border-blue-600 focus:bg-white font-medium">
         </div>
 
         <div class="grid grid-cols-2 gap-2">
           <div>
             <label class="block text-slate-700 font-bold mb-1">Municipio: *</label>
-            <select id="modal-rapido-municipio" required class="w-full bg-slate-50 border border-slate-300 rounded-xl px-2.5 py-2 text-slate-900 focus:outline-none focus:border-blue-600 focus:bg-white font-medium">
+            <select id="modal-rapido-municipio" required class="w-full bg-slate-50 border border-slate-300 rounded-xl px-2.5 py-2 text-slate-900 focus:border-blue-600 focus:bg-white font-medium">
               <option value="">Seleccione...</option>
             </select>
           </div>
           <div>
             <label class="block text-slate-700 font-bold mb-1">Tipo de Red: *</label>
-            <select id="modal-rapido-tipo-red" required class="w-full bg-slate-50 border border-slate-300 rounded-xl px-2.5 py-2 text-slate-900 focus:outline-none focus:border-blue-600 focus:bg-white font-medium">
+            <select id="modal-rapido-tipo-red" required class="w-full bg-slate-50 border border-slate-300 rounded-xl px-2.5 py-2 text-slate-900 focus:border-blue-600 focus:bg-white font-medium">
               <option value="comunal">Red Comunal (Ambulatorio / CPT3)</option>
               <option value="hospitalaria">Red Hospitalaria (Hospital Tipo I - IV)</option>
               <option value="especializada">Red Especializada / CDI / SRI</option>
@@ -1207,11 +1212,11 @@
         <div class="grid grid-cols-2 gap-2">
           <div>
             <label class="block text-slate-700 font-bold mb-1">Parroquia / Sector:</label>
-            <input type="text" id="modal-rapido-sector" placeholder="Ej: Sector Las Garzas" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-600 focus:bg-white font-medium">
+            <input type="text" id="modal-rapido-sector" placeholder="Ej: Sector Las Garzas" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-900 placeholder-slate-400 focus:border-blue-600 focus:bg-white font-medium">
           </div>
           <div>
             <label class="block text-slate-700 font-bold mb-1">Clasificación:</label>
-            <select id="modal-rapido-clasificacion" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-2.5 py-2 text-slate-900 focus:outline-none focus:border-blue-600 focus:bg-white font-medium">
+            <select id="modal-rapido-clasificacion" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-2.5 py-2 text-slate-900 focus:border-blue-600 focus:bg-white font-medium">
               <option value="Ambulatorio Rural Tipo II">Ambulatorio Rural Tipo II</option>
               <option value="Ambulatorio Urbano Tipo I">Ambulatorio Urbano Tipo I</option>
               <option value="Ambulatorio Urbano Tipo II">Ambulatorio Urbano Tipo II</option>
@@ -1227,14 +1232,14 @@
         </div>
 
         <div class="pt-2 flex flex-wrap items-center justify-between gap-2 border-t border-slate-200">
-          <button type="button" onclick="window.crearCentroDesdePunto()" class="text-[11px] text-blue-700 hover:text-blue-950 font-bold hover:underline flex items-center gap-1">
+          <button type="button" onclick="window.crearCentroDesdePunto()" class="text-sm text-blue-700 hover:text-blue-950 font-bold hover:underline flex items-center gap-1">
             <span>📋 Ir a Ficha Completa de Pre-Diagnóstico ↗</span>
           </button>
           <div class="flex items-center gap-2">
-            <button type="button" onclick="window.cerrarModalCrearCentroRapido()" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-bold transition text-xs">
+            <button type="button" onclick="window.cerrarModalCrearCentroRapido()" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-bold transition text-sm">
               Cancelar
             </button>
-            <button type="submit" class="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-black rounded-xl shadow-xs transition flex items-center gap-1.5 active:scale-95 text-xs">
+            <button type="submit" class="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-black rounded-xl shadow-xs transition flex items-center gap-1.5 active:scale-95 text-sm">
               <span>✓ Guardar en el Mapa</span>
             </button>
           </div>
@@ -1249,5 +1254,6 @@
   <script src="js/saludData.js?v=172"></script>
   <script src="js/saludApp.js?v=172"></script>
 
+  <script src="js/a11y.js"></script>
 </body>
 </html>

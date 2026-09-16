@@ -89,6 +89,7 @@
   </style>
 </head>
 <body class="bg-[#0e092e] text-slate-100 min-h-screen flex flex-col antialiased selection:bg-[#23176d] selection:text-white max-w-full overflow-x-hidden">
+  <a href="#main-content" class="skip-link">Saltar al contenido principal</a>
 
   <!-- ============================================================== -->
   <!-- 1. CABECERA INSTITUCIONAL SOBRIA                                -->
@@ -97,28 +98,28 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-3">
       
       <div class="flex items-center gap-3 min-w-0">
-        <a href="../" class="p-2 rounded-xl bg-[#18114a] hover:bg-[#23176d] text-slate-300 hover:text-white border border-[#2d1f85] transition flex items-center gap-1 text-xs font-bold shrink-0" title="Volver al Portal Central">
+        <a href="../" class="p-2 rounded-xl bg-[#18114a] hover:bg-[#23176d] text-slate-300 hover:text-white border border-[#2d1f85] transition flex items-center gap-1 text-base font-bold shrink-0" title="Volver al Portal Central">
           <i data-lucide="home" class="w-4 h-4"></i>
         </a>
-        <a href="../earth-monagas/?v=230&u=admin" class="p-2 sm:px-3 rounded-xl bg-[#18114a] hover:bg-[#23176d] text-sky-400 border border-[#2d1f85] transition flex items-center gap-1.5 text-xs font-bold shrink-0" title="Ir al Módulo 4 • Mapa Satelital">
+        <a href="../earth-monagas/?v=230&u=admin" class="p-2 sm:px-3 rounded-xl bg-[#18114a] hover:bg-[#23176d] text-sky-400 border border-[#2d1f85] transition flex items-center gap-1.5 text-base font-bold shrink-0" title="Ir al Módulo 4 • Mapa Satelital">
           <i data-lucide="globe" class="w-4 h-4 text-sky-400"></i>
           <span class="hidden sm:inline">Módulo 4: Mapa</span>
         </a>
-        <a href="../caracterizacion-voto/?v=102" class="p-2 sm:px-3 rounded-xl bg-[#18114a] hover:bg-[#23176d] text-amber-400 border border-[#2d1f85] transition flex items-center gap-1.5 text-xs font-bold shrink-0" title="Ir al Módulo 3 • Auditoría y Padrón CNE">
+        <a href="../caracterizacion-voto/?v=102" class="p-2 sm:px-3 rounded-xl bg-[#18114a] hover:bg-[#23176d] text-amber-400 border border-[#2d1f85] transition flex items-center gap-1.5 text-base font-bold shrink-0" title="Ir al Módulo 3 • Auditoría y Padrón CNE">
           <i data-lucide="clipboard-list" class="w-4 h-4 text-amber-400"></i>
           <span class="hidden sm:inline">Módulo 3: Padrón</span>
         </a>
 
         <div class="truncate">
           <div class="flex items-center gap-2">
-            <h1 class="text-sm sm:text-base font-black text-white uppercase tracking-tight truncate">
+            <h1 class="text-base sm:text-base font-black text-white uppercase tracking-tight truncate">
               MÓDULO 2 • TABLERO DE CENSO Y POBLACIÓN
             </h1>
-            <span class="px-2 py-0.5 rounded-md bg-[#23176d] text-sky-300 border border-[#2d1f85] text-[10px] font-mono font-bold hidden md:inline-block">
+            <span class="px-2 py-0.5 rounded-md bg-[#23176d] text-sky-300 border border-[#2d1f85] text-base font-mono font-bold hidden md:inline-block">
               Monagas 2026
             </span>
           </div>
-          <p id="dashboard-territory-subtitle" class="text-[11px] text-slate-400 truncate">
+          <p id="dashboard-territory-subtitle" class="text-base text-slate-400 truncate">
             Consulta amigable de viviendas, familias, habitantes y padrón territorial
           </p>
         </div>
@@ -126,13 +127,13 @@
 
       <div class="flex items-center gap-2 shrink-0">
         <!-- Indicador de Red / Sincronización -->
-        <div class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-[#18114a] border border-[#2d1f85] text-[11px] font-mono">
+        <div class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-[#18114a] border border-[#2d1f85] text-base font-mono">
           <span id="cloud-status-dot" class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
           <span id="cloud-status-text" class="text-slate-300 font-bold hidden sm:inline">En Línea</span>
         </div>
 
         <!-- Botón Exportar CSV / Excel -->
-        <button id="btn-export-csv" type="button" class="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-black text-xs transition flex items-center gap-1.5 shadow-md shadow-emerald-600/20 active:scale-95 cursor-pointer" title="Descargar Censo Completo en Planilla Excel / CSV">
+        <button id="btn-export-csv" type="button" class="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-black text-sm transition flex items-center gap-1.5 shadow-md shadow-emerald-600/20 active:scale-95 cursor-pointer" title="Descargar Censo Completo en Planilla Excel / CSV">
           <i data-lucide="download" class="w-3.5 h-3.5"></i>
           <span class="font-bold">Descargar Excel</span>
         </button>
@@ -143,7 +144,11 @@
       </div>
 
     </div>
-  </header>
+            <button type="button" id="btn-toggle-contrast" class="px-2.5 py-1.5 rounded-xl bg-[#1d1554] hover:bg-[#23176d] text-amber-400 border border-amber-500/40 text-sm font-bold flex items-center gap-1.5 shadow transition active:scale-95" title="Alto contraste" aria-label="Activar modo alto contraste">
+            <span aria-hidden="true">◐</span>
+            <span class="hidden sm:inline">Contraste</span>
+          </button>
+        </header>
 
   <!-- ============================================================== -->
   <!-- 2. CONTENEDOR PRINCIPAL                                         -->
@@ -159,11 +164,11 @@
           
           <!-- Paso 1: Municipio -->
           <div class="flex items-center gap-2 bg-[#0e092e] px-3 py-2 rounded-2xl border border-[#2d1f85]">
-            <label for="filter-municipio" class="text-xs font-black text-slate-300 uppercase tracking-wider flex items-center gap-1 shrink-0">
+            <label for="filter-municipio" class="text-sm font-black text-slate-300 uppercase tracking-wider flex items-center gap-1 shrink-0">
               <i data-lucide="map-pin" class="w-3.5 h-3.5 text-sky-400"></i>
               <span>1. Municipio:</span>
             </label>
-            <select id="filter-municipio" class="w-full bg-transparent text-xs font-bold text-white focus:outline-none cursor-pointer">
+            <select id="filter-municipio" class="w-full bg-transparent text-sm font-bold text-white cursor-pointer">
               <option value="maturin" selected class="bg-[#140e40]">Maturín (Capital)</option>
               <option value="todos" class="bg-[#140e40]">-- Todo el Estado Monagas (13 Mun) --</option>
               <option value="bolivar" class="bg-[#140e40]">Bolívar (Caripito)</option>
@@ -183,11 +188,11 @@
 
           <!-- Paso 2: Parroquia -->
           <div class="flex items-center gap-2 bg-[#0e092e] px-3 py-2 rounded-2xl border border-[#2d1f85]">
-            <label for="filter-parroquia" class="text-xs font-black text-slate-300 uppercase tracking-wider flex items-center gap-1 shrink-0">
+            <label for="filter-parroquia" class="text-sm font-black text-slate-300 uppercase tracking-wider flex items-center gap-1 shrink-0">
               <i data-lucide="layers" class="w-3.5 h-3.5 text-amber-400"></i>
               <span>2. Parroquia:</span>
             </label>
-            <select id="filter-parroquia" class="w-full bg-transparent text-xs font-bold text-white focus:outline-none cursor-pointer">
+            <select id="filter-parroquia" class="w-full bg-transparent text-sm font-bold text-white cursor-pointer">
               <option value="todas" selected class="bg-[#140e40]">Todas las Parroquias</option>
             </select>
           </div>
@@ -200,9 +205,9 @@
             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
               <i data-lucide="search" class="w-4 h-4"></i>
             </div>
-            <input type="text" id="filter-search" placeholder="Buscar sector o comunidad (ej: La Puente)..." class="w-full pl-9 pr-3.5 py-2.5 bg-[#0e092e] border border-[#2d1f85] rounded-2xl text-xs text-white placeholder-slate-400 focus:outline-none focus:border-sky-500 font-medium">
+            <input type="text" id="filter-search" placeholder="Buscar sector o comunidad (ej: La Puente)..." class="w-full pl-9 pr-3.5 py-2.5 bg-[#0e092e] border border-[#2d1f85] rounded-2xl text-sm text-white placeholder-slate-400 focus:border-sky-500 font-medium">
           </div>
-          <button id="btn-reset-filters" type="button" class="p-2.5 rounded-2xl bg-[#0e092e] hover:bg-[#18114a] border border-[#2d1f85] text-slate-400 hover:text-white text-xs font-bold transition" title="Limpiar filtros y ver todo">
+          <button id="btn-reset-filters" type="button" class="p-2.5 rounded-2xl bg-[#0e092e] hover:bg-[#18114a] border border-[#2d1f85] text-slate-400 hover:text-white text-sm font-bold transition" title="Limpiar filtros y ver todo">
             <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
           </button>
         </div>
@@ -219,56 +224,56 @@
       <!-- 1. Total Viviendas / Casas -->
       <div class="bg-[#18114a]/95 border border-[#2d1f85] p-4 sm:p-5 rounded-3xl shadow-xl flex flex-col justify-between hover:border-amber-400/50 transition">
         <div class="flex items-center justify-between mb-1.5">
-          <span class="text-xs font-black uppercase text-amber-400 flex items-center gap-1.5">
-            <span class="text-sm">🏠</span> Viviendas
+          <span class="text-base font-black uppercase text-amber-400 flex items-center gap-1.5">
+            <span class="text-base">🏠</span> Viviendas
           </span>
-          <span class="text-[10px] font-mono text-slate-400 bg-[#0e092e] px-2 py-0.5 rounded-md border border-[#2d1f85]">Casas</span>
+          <span class="text-base font-mono text-slate-400 bg-[#0e092e] px-2 py-0.5 rounded-md border border-[#2d1f85]">Casas</span>
         </div>
         <div>
           <span id="kpi-total-casas" class="text-3xl sm:text-4xl font-black text-amber-400 font-mono tracking-tight">0</span>
-          <span class="text-xs font-bold text-slate-300 block mt-1">Viviendas registradas</span>
+          <span class="text-base font-bold text-slate-300 block mt-1">Viviendas registradas</span>
         </div>
       </div>
 
       <!-- 2. Total Familias -->
       <div class="bg-[#18114a]/95 border border-[#2d1f85] p-4 sm:p-5 rounded-3xl shadow-xl flex flex-col justify-between hover:border-sky-400/50 transition">
         <div class="flex items-center justify-between mb-1.5">
-          <span class="text-xs font-black uppercase text-sky-400 flex items-center gap-1.5">
-            <span class="text-sm">👨‍👩‍👧</span> Familias
+          <span class="text-base font-black uppercase text-sky-400 flex items-center gap-1.5">
+            <span class="text-base">👨‍👩‍👧</span> Familias
           </span>
-          <span class="text-[10px] font-mono text-slate-400 bg-[#0e092e] px-2 py-0.5 rounded-md border border-[#2d1f85]">Hogares</span>
+          <span class="text-base font-mono text-slate-400 bg-[#0e092e] px-2 py-0.5 rounded-md border border-[#2d1f85]">Hogares</span>
         </div>
         <div>
           <span id="kpi-total-familias" class="text-3xl sm:text-4xl font-black text-sky-300 font-mono tracking-tight">0</span>
-          <span class="text-xs font-bold text-slate-300 block mt-1">Núcleos familiares</span>
+          <span class="text-base font-bold text-slate-300 block mt-1">Núcleos familiares</span>
         </div>
       </div>
 
       <!-- 3. Total Habitantes -->
       <div class="bg-[#18114a]/95 border border-[#2d1f85] p-4 sm:p-5 rounded-3xl shadow-xl flex flex-col justify-between hover:border-emerald-400/50 transition">
         <div class="flex items-center justify-between mb-1.5">
-          <span class="text-xs font-black uppercase text-emerald-400 flex items-center gap-1.5">
-            <span class="text-sm">👥</span> Habitantes
+          <span class="text-base font-black uppercase text-emerald-400 flex items-center gap-1.5">
+            <span class="text-base">👥</span> Habitantes
           </span>
-          <span class="text-[10px] font-mono text-slate-400 bg-[#0e092e] px-2 py-0.5 rounded-md border border-[#2d1f85]">Población</span>
+          <span class="text-base font-mono text-slate-400 bg-[#0e092e] px-2 py-0.5 rounded-md border border-[#2d1f85]">Población</span>
         </div>
         <div>
           <span id="kpi-total-habitantes" class="text-3xl sm:text-4xl font-black text-emerald-400 font-mono tracking-tight">0</span>
-          <span class="text-xs font-bold text-slate-300 block mt-1">Población estimada</span>
+          <span class="text-base font-bold text-slate-300 block mt-1">Población estimada</span>
         </div>
       </div>
 
       <!-- 4. Total Votantes y Desglose Directo -->
       <div class="bg-[#18114a]/95 border border-[#2d1f85] p-4 sm:p-5 rounded-3xl shadow-xl flex flex-col justify-between hover:border-purple-400/50 transition">
         <div class="flex items-center justify-between mb-1.5">
-          <span class="text-xs font-black uppercase text-purple-300 flex items-center gap-1.5">
-            <span class="text-sm">🗳️</span> Padrón Votantes
+          <span class="text-base font-black uppercase text-purple-300 flex items-center gap-1.5">
+            <span class="text-base">🗳️</span> Padrón Votantes
           </span>
-          <span class="text-[10px] font-mono text-purple-300 bg-purple-950 px-2 py-0.5 rounded-md border border-purple-800/60 font-bold">CNE</span>
+          <span class="text-base font-mono text-purple-300 bg-purple-950 px-2 py-0.5 rounded-md border border-purple-800/60 font-bold">CNE</span>
         </div>
         <div>
           <span id="kpi-total-votantes" class="text-3xl sm:text-4xl font-black text-purple-300 font-mono tracking-tight">0</span>
-          <div class="flex items-center gap-2 mt-1.5 text-[11px] font-mono font-bold flex-wrap">
+          <div class="flex items-center gap-2 mt-1.5 text-base font-mono font-bold flex-wrap">
             <span class="text-emerald-400 flex items-center gap-1 bg-emerald-950/60 px-1.5 py-0.5 rounded border border-emerald-800/40">
               <span>🟢 Duro:</span> <span id="kpi-voto-duro">0</span> (<span id="kpi-voto-duro-pct">0%</span>)
             </span>
@@ -297,15 +302,15 @@
     <section class="bg-[#18114a]/95 border border-[#2d1f85] rounded-3xl p-4 sm:p-5 shadow-xl space-y-3">
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#2d1f85] pb-3">
         <div>
-          <h2 class="text-sm sm:text-base font-black text-white uppercase tracking-wider flex items-center gap-2">
+          <h2 class="text-base sm:text-base font-black text-white uppercase tracking-wider flex items-center gap-2">
             <i data-lucide="bar-chart-2" class="w-5 h-5 text-sky-400"></i>
             <span>Comparativa: Habitantes vs Votantes Registrados</span>
           </h2>
-          <p class="text-xs text-slate-300 mt-0.5">
+          <p class="text-base text-slate-300 mt-0.5">
             Visualización directa para contrastar población total y electores por cada territorio
           </p>
         </div>
-        <div class="flex items-center gap-3 text-xs font-mono font-bold shrink-0">
+        <div class="flex items-center gap-3 text-base font-mono font-bold shrink-0">
           <span class="flex items-center gap-1.5 text-emerald-400">
             <span class="w-3 h-3 rounded-sm bg-emerald-400"></span>
             <span>Habitantes</span>
@@ -328,18 +333,18 @@
     <section class="bg-[#18114a]/95 border border-[#2d1f85] rounded-3xl p-4 sm:p-5 shadow-xl space-y-4">
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#2d1f85] pb-3">
         <div>
-          <h2 class="text-sm sm:text-base font-black text-white uppercase tracking-wider flex items-center gap-2">
+          <h2 class="text-base sm:text-base font-black text-white uppercase tracking-wider flex items-center gap-2">
             <i data-lucide="table" class="w-5 h-5 text-amber-400"></i>
             <span>Directorio Territorial de Sectores y Censo Comunal</span>
           </h2>
-          <p class="text-xs text-slate-300 mt-0.5">
+          <p class="text-base text-slate-300 mt-0.5">
             Formato de planilla fácil de leer para cualquier funcionario público o directivo
           </p>
         </div>
 
         <!-- Conmutador de Vistas: Tabla Plana (Excel) vs Cascada -->
         <div class="flex items-center gap-2 shrink-0">
-          <div class="bg-[#0e092e] p-1 rounded-2xl border border-[#2d1f85] flex items-center gap-1 text-xs font-bold">
+          <div class="bg-[#0e092e] p-1 rounded-2xl border border-[#2d1f85] flex items-center gap-1 text-base font-bold">
             <button id="btn-view-flat" type="button" class="px-3 py-1.5 rounded-xl bg-sky-500 text-white font-black shadow-md transition flex items-center gap-1.5 cursor-pointer">
               <i data-lucide="sheet" class="w-3.5 h-3.5"></i>
               <span>Vista Tabla</span>
@@ -356,7 +361,7 @@
       <div id="view-flat-container" class="space-y-3">
         
         <!-- Barra de Estado de la Tabla y Paginador Superior -->
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs font-mono text-slate-300">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-base font-mono text-slate-300">
           <div class="flex items-center gap-2">
             <span id="flat-table-count" class="font-black text-sky-300 bg-[#0e092e] px-2.5 py-1 rounded-xl border border-[#2d1f85]">
               Cargando sectores...
@@ -376,9 +381,9 @@
 
         <!-- Contenedor Scrollable de la Tabla -->
         <div class="overflow-x-auto border border-[#2d1f85] rounded-2xl">
-          <table class="w-full text-left border-collapse text-xs font-mono">
+          <table class="w-full text-left border-collapse text-base font-mono">
             <thead>
-              <tr class="bg-[#100b33] text-[11px] uppercase font-black text-slate-300 border-b border-[#2d1f85]">
+              <tr class="bg-[#100b33] text-base uppercase font-black text-slate-300 border-b border-[#2d1f85]">
                 <th class="py-3 px-3">#</th>
                 <th class="py-3 px-3">Parroquia</th>
                 <th class="py-3 px-3">Sector / Comunidad</th>
@@ -400,11 +405,11 @@
 
       <!-- VISTA 2: ÁRBOL EN CASCADA (OPCIONAL) -->
       <div id="view-cascade-container" class="hidden space-y-3">
-        <div class="flex items-center justify-between text-xs font-mono text-slate-400 pb-1">
+        <div class="flex items-center justify-between text-base font-mono text-slate-400 pb-1">
           <span id="cascade-summary-badge" class="px-2.5 py-1 bg-[#0e092e] border border-[#2d1f85] rounded-xl font-bold text-sky-400">
             0 Parroquias en Vista
           </span>
-          <span class="text-[11px] text-slate-400">Haz clic en cada parroquia para desplegar sus ejes</span>
+          <span class="text-base text-slate-400">Haz clic en cada parroquia para desplegar sus ejes</span>
         </div>
         <div id="cascade-container" class="space-y-3">
           <!-- Inyectado por JS -->
@@ -418,12 +423,12 @@
     <!-- (TORTAS, PARETO Y RATIOS NO SATURAN LA VISTA PRINCIPAL)         -->
     <!-- ============================================================== -->
     <details id="advanced-technical-drawer" class="bg-[#140e40]/80 border border-[#2d1f85] rounded-3xl p-4 sm:p-5 shadow-xl group transition">
-      <summary class="cursor-pointer font-black text-slate-300 hover:text-white flex items-center justify-between text-xs sm:text-sm uppercase tracking-wider select-none list-none">
+      <summary class="cursor-pointer font-black text-slate-300 hover:text-white flex items-center justify-between text-base sm:text-base uppercase tracking-wider select-none list-none">
         <div class="flex items-center gap-2">
-          <span class="p-1.5 rounded-xl bg-[#23176d] text-amber-400 text-sm">⚙️</span>
+          <span class="p-1.5 rounded-xl bg-[#23176d] text-amber-400 text-base">⚙️</span>
           <span>Modo Analítico Avanzado (Pareto, Ratios Habitacionales y Diagnóstico)</span>
         </div>
-        <div class="flex items-center gap-2 text-xs font-mono text-sky-400 font-bold">
+        <div class="flex items-center gap-2 text-base font-mono text-sky-400 font-bold">
           <span class="group-open:hidden">[ + Abrir Herramientas Avanzadas ]</span>
           <span class="hidden group-open:inline">[ - Ocultar Herramientas ]</span>
         </div>
@@ -438,42 +443,42 @@
           <div class="bg-[#0e092e] border border-[#2d1f85] rounded-2xl p-4 shadow-lg flex flex-col justify-between">
             <div>
               <div class="flex items-center justify-between border-b border-[#2d1f85] pb-2 mb-2">
-                <h3 class="text-xs font-black text-white uppercase tracking-wider">Distribución Territorial</h3>
-                <span id="chart-electoral-subtitle" class="text-[10px] font-mono font-bold text-amber-300 bg-amber-950/60 px-2 py-0.5 rounded-md border border-amber-500/30">13 Mun</span>
+                <h3 class="text-base font-black text-white uppercase tracking-wider">Distribución Territorial</h3>
+                <span id="chart-electoral-subtitle" class="text-base font-mono font-bold text-amber-300 bg-amber-950/60 px-2 py-0.5 rounded-md border border-amber-500/30">13 Mun</span>
               </div>
               <div class="relative flex items-center justify-center min-h-[200px] max-h-[220px]">
                 <canvas id="chart-electoral-share"></canvas>
               </div>
             </div>
-            <div id="chart-electoral-summary" class="mt-3 pt-2 border-t border-[#2d1f85]/80 text-[11px] flex items-center justify-between text-slate-300 font-mono"></div>
+            <div id="chart-electoral-summary" class="mt-3 pt-2 border-t border-[#2d1f85]/80 text-base flex items-center justify-between text-slate-300 font-mono"></div>
           </div>
 
           <!-- Torta 2: Clasificación Política del Voto -->
           <div class="bg-[#0e092e] border border-[#2d1f85] rounded-2xl p-4 shadow-lg flex flex-col justify-between">
             <div>
               <div class="flex items-center justify-between border-b border-[#2d1f85] pb-2 mb-2">
-                <h3 class="text-xs font-black text-white uppercase tracking-wider">Composición del Voto</h3>
-                <span class="text-[10px] font-mono font-bold text-emerald-300 bg-emerald-950/60 px-2 py-0.5 rounded-md border border-emerald-500/30">Estándar</span>
+                <h3 class="text-base font-black text-white uppercase tracking-wider">Composición del Voto</h3>
+                <span class="text-base font-mono font-bold text-emerald-300 bg-emerald-950/60 px-2 py-0.5 rounded-md border border-emerald-500/30">Estándar</span>
               </div>
               <div class="relative flex items-center justify-center min-h-[200px] max-h-[220px]">
                 <canvas id="chart-political-vote"></canvas>
               </div>
             </div>
-            <div id="chart-political-summary" class="mt-3 pt-2 border-t border-[#2d1f85]/80 grid grid-cols-3 gap-1 text-center text-[11px] font-mono"></div>
+            <div id="chart-political-summary" class="mt-3 pt-2 border-t border-[#2d1f85]/80 grid grid-cols-3 gap-1 text-center text-base font-mono"></div>
           </div>
 
           <!-- Torta 3: Semáforo de Cobertura y Riesgo -->
           <div class="bg-[#0e092e] border border-[#2d1f85] rounded-2xl p-4 shadow-lg flex flex-col justify-between">
             <div>
               <div class="flex items-center justify-between border-b border-[#2d1f85] pb-2 mb-2">
-                <h3 class="text-xs font-black text-white uppercase tracking-wider">Semáforo de Riesgo</h3>
-                <span class="text-[10px] font-mono font-bold text-sky-300 bg-sky-950/60 px-2 py-0.5 rounded-md border border-sky-500/30">Salud</span>
+                <h3 class="text-base font-black text-white uppercase tracking-wider">Semáforo de Riesgo</h3>
+                <span class="text-base font-mono font-bold text-sky-300 bg-sky-950/60 px-2 py-0.5 rounded-md border border-sky-500/30">Salud</span>
               </div>
               <div class="relative flex items-center justify-center min-h-[200px] max-h-[220px]">
                 <canvas id="chart-coverage-traffic"></canvas>
               </div>
             </div>
-            <div id="chart-coverage-summary" class="mt-3 pt-2 border-t border-[#2d1f85]/80 grid grid-cols-3 gap-1 text-center text-[11px] font-mono"></div>
+            <div id="chart-coverage-summary" class="mt-3 pt-2 border-t border-[#2d1f85]/80 grid grid-cols-3 gap-1 text-center text-base font-mono"></div>
           </div>
 
         </div>
@@ -484,16 +489,16 @@
           <!-- Decisión 1: Pareto de Concentración -->
           <div class="bg-[#0e092e] border border-amber-500/30 rounded-2xl p-3.5 space-y-1 shadow-md">
             <div class="flex items-center justify-between">
-              <span class="text-[10px] font-black uppercase text-amber-400 flex items-center gap-1">
+              <span class="text-base font-black uppercase text-amber-400 flex items-center gap-1">
                 <span>🎯</span> Regla de Pareto
               </span>
-              <span class="text-[9px] font-mono bg-amber-950 text-amber-300 px-1.5 py-0.5 rounded border border-amber-700/50">Top 3</span>
+              <span class="text-base font-mono bg-amber-950 text-amber-300 px-1.5 py-0.5 rounded border border-amber-700/50">Top 3</span>
             </div>
             <div class="flex items-baseline gap-1.5">
               <strong id="decision-pareto-pct" class="text-2xl font-black text-amber-300 font-mono">0%</strong>
-              <span class="text-[11px] text-slate-400">del padrón</span>
+              <span class="text-base text-slate-400">del padrón</span>
             </div>
-            <p id="decision-pareto-desc" class="text-[11px] text-slate-300 leading-snug">
+            <p id="decision-pareto-desc" class="text-base text-slate-300 leading-snug">
               Concentrado en los 3 territorios líderes.
             </p>
           </div>
@@ -501,16 +506,16 @@
           <!-- Decisión 2: Sectores en Riesgo Operativo -->
           <div class="bg-[#0e092e] border border-rose-500/30 rounded-2xl p-3.5 space-y-1 shadow-md">
             <div class="flex items-center justify-between">
-              <span class="text-[10px] font-black uppercase text-rose-400 flex items-center gap-1">
+              <span class="text-base font-black uppercase text-rose-400 flex items-center gap-1">
                 <span>🚨</span> Alerta Operativa
               </span>
-              <span class="text-[9px] font-mono bg-rose-950 text-rose-300 px-1.5 py-0.5 rounded border border-rose-700/50">&lt; 50%</span>
+              <span class="text-base font-mono bg-rose-950 text-rose-300 px-1.5 py-0.5 rounded border border-rose-700/50">&lt; 50%</span>
             </div>
             <div class="flex items-baseline gap-1.5">
               <strong id="decision-risk-count" class="text-2xl font-black text-rose-400 font-mono">0</strong>
-              <span class="text-[11px] text-slate-400">sectores críticos</span>
+              <span class="text-base text-slate-400">sectores críticos</span>
             </div>
-            <p id="decision-risk-desc" class="text-[11px] text-slate-300 leading-snug">
+            <p id="decision-risk-desc" class="text-base text-slate-300 leading-snug">
               Requieren despliegue inmediato de equipos territoriales.
             </p>
           </div>
@@ -518,16 +523,16 @@
           <!-- Decisión 3: Presión Social / Familias por Casa -->
           <div class="bg-[#0e092e] border border-sky-500/30 rounded-2xl p-3.5 space-y-1 shadow-md">
             <div class="flex items-center justify-between">
-              <span class="text-[10px] font-black uppercase text-sky-400 flex items-center gap-1">
+              <span class="text-base font-black uppercase text-sky-400 flex items-center gap-1">
                 <span>🏠</span> Presión Habitacional
               </span>
-              <span class="text-[9px] font-mono bg-sky-950 text-sky-300 px-1.5 py-0.5 rounded border border-sky-700/50">Fam/Casa</span>
+              <span class="text-base font-mono bg-sky-950 text-sky-300 px-1.5 py-0.5 rounded border border-sky-700/50">Fam/Casa</span>
             </div>
             <div class="flex items-baseline gap-1.5">
               <strong id="decision-cohabit-ratio" class="text-2xl font-black text-sky-300 font-mono">1.00</strong>
-              <span class="text-[11px] text-slate-400">familias/casa</span>
+              <span class="text-base text-slate-400">familias/casa</span>
             </div>
-            <p id="decision-cohabit-desc" class="text-[11px] text-slate-300 leading-snug">
+            <p id="decision-cohabit-desc" class="text-base text-slate-300 leading-snug">
               Carga habitacional equilibrada (1 familia por casa).
             </p>
           </div>
@@ -535,16 +540,16 @@
           <!-- Decisión 4: Ratio Logístico por Centro CNE -->
           <div class="bg-[#0e092e] border border-purple-500/30 rounded-2xl p-3.5 space-y-1 shadow-md">
             <div class="flex items-center justify-between">
-              <span class="text-[10px] font-black uppercase text-purple-400 flex items-center gap-1">
+              <span class="text-base font-black uppercase text-purple-400 flex items-center gap-1">
                 <span>🏫</span> Carga por Escuela
               </span>
-              <span class="text-[9px] font-mono bg-purple-950 text-purple-300 px-1.5 py-0.5 rounded border border-purple-700/50">Electores</span>
+              <span class="text-base font-mono bg-purple-950 text-purple-300 px-1.5 py-0.5 rounded border border-purple-700/50">Electores</span>
             </div>
             <div class="flex items-baseline gap-1.5">
               <strong id="decision-school-load" class="text-2xl font-black text-purple-300 font-mono">0</strong>
-              <span class="text-[11px] text-slate-400">electores/centro</span>
+              <span class="text-base text-slate-400">electores/centro</span>
             </div>
-            <p id="decision-school-desc" class="text-[11px] text-slate-300 leading-snug">
+            <p id="decision-school-desc" class="text-base text-slate-300 leading-snug">
               Planificación de logística, testigos y refrigerio.
             </p>
           </div>
@@ -559,12 +564,13 @@
   <!-- ============================================================== -->
   <!-- 3. PIE DE PÁGINA                                                -->
   <!-- ============================================================== -->
-  <footer class="bg-[#100b33] border-t border-[#2d1f85] py-4 text-center text-xs text-slate-400 font-mono shrink-0">
+  <footer class="bg-[#100b33] border-t border-[#2d1f85] py-4 text-centertext-sm text-slate-400 font-mono shrink-0">
     <p>Plataforma Territorial Monagas • Censo Numérico Territorial</p>
   </footer>
 
   <!-- App Script (v=104 cache buster) -->
   <script type="module" src="./js/dashboardApp.js?v=104"></script>
 
+  <script src="js/a11y.js"></script>
 </body>
 </html>

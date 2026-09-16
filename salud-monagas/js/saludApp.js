@@ -276,14 +276,14 @@ function actualizarBadgePrecisionFormulario(tipo) {
   if (!container) return;
   if (tipo === 'exacta' || tipo === 'calibrada_usuario') {
     container.innerHTML = `
-      <div class="flex items-center gap-1.5 text-emerald-800 font-bold text-[10px]">
+      <div class="flex items-center gap-1.5 text-emerald-800 font-bold text-sm">
         <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
         <span>📍 Coordenada Exacta Verificada (${tipo === 'calibrada_usuario' ? 'Calibrada por Usuario' : 'Cartografía Satelital'})</span>
       </div>
     `;
   } else {
     container.innerHTML = `
-      <div class="flex items-center gap-1.5 text-amber-800 font-bold text-[10px]">
+      <div class="flex items-center gap-1.5 text-amber-800 font-bold text-sm">
         <span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
         <span>📍 Ubicación Referencial de Sector (Mueve el pin o presiona "Mi GPS" para fijar al techo)</span>
       </div>
@@ -450,10 +450,10 @@ function toggleMascaraMonagas() {
   }
   if (btn) {
     if (state.mascaraActiva) {
-      btn.className = 'px-2.5 py-1 rounded-lg bg-sky-950 text-sky-300 border border-sky-600/50 font-bold text-[11px] transition flex items-center gap-1 shadow';
+      btn.className = 'px-2.5 py-1 rounded-lg bg-sky-950 text-sky-300 border border-sky-600/50 font-bold text-sm transition flex items-center gap-1 shadow';
       btn.innerHTML = '<span>🛡️ Velo Monagas</span>';
     } else {
-      btn.className = 'px-2.5 py-1 rounded-lg bg-[#120c36] text-slate-400 border border-slate-700 font-bold text-[11px] transition flex items-center gap-1';
+      btn.className = 'px-2.5 py-1 rounded-lg bg-[#120c36] text-slate-400 border border-slate-700 font-bold text-sm transition flex items-center gap-1';
       btn.innerHTML = '<span>👁️ Sin Velo</span>';
     }
   }
@@ -678,9 +678,9 @@ function initBusquedaFlotanteGoogleMaps() {
 
     if (matches.length === 0) {
       resultsBox.innerHTML = `
-        <div class="p-3 text-xs text-slate-400 text-center">
+        <div class="p-3 text-sm text-slate-400 text-center">
           No se encontró "${e.target.value}" en la base local.<br>
-          <button type="button" onclick="window.buscarExternoGmapsQuery()" class="mt-2 px-3 py-1.5 bg-sky-600 hover:bg-sky-500 text-white rounded-xl font-bold text-[11px] transition">
+          <button type="button" onclick="window.buscarExternoGmapsQuery()" class="mt-2 px-3 py-1.5 bg-sky-600 hover:bg-sky-500 text-white rounded-xl font-bold text-sm transition">
             🔍 Buscar en Google Maps Oficial ↗
           </button>
         </div>
@@ -694,17 +694,17 @@ function initBusquedaFlotanteGoogleMaps() {
       const icono = (c.precision === 'exacta' || c.precision === 'calibrada_usuario') ? '🟢' : '⚠️';
       html += `
         <div onclick="window.seleccionarCentroDesdeBusquedaFlotante('${c.id}')" 
-             class="p-2.5 hover:bg-blue-50 cursor-pointer flex items-center justify-between gap-2 text-xs text-slate-800 transition border-b border-slate-100 last:border-0">
+             class="p-2.5 hover:bg-blue-50 cursor-pointer flex items-center justify-between gap-2 text-sm text-slate-800 transition border-b border-slate-100 last:border-0">
            <div class="min-w-0">
              <div class="font-bold text-slate-900 truncate flex items-center gap-1.5">
                <span>${icono}</span>
                <span class="truncate">${c.nombre}</span>
              </div>
-             <div class="text-[10px] text-blue-700 font-medium truncate">
+             <div class="text-sm text-blue-700 font-medium truncate">
                ${c.municipio} • ${c.parroquia} ${c.sector ? '• ' + c.sector : ''}
              </div>
            </div>
-           <span class="text-[10px] text-slate-500 font-mono shrink-0">${c.lat.toFixed(4)}, ${c.lng.toFixed(4)}</span>
+           <span class="text-sm text-slate-500 font-mono shrink-0">${c.lat.toFixed(4)}, ${c.lng.toFixed(4)}</span>
          </div>
        `;
      });
@@ -843,37 +843,37 @@ function actualizarMapaGeneral() {
     const marker = L.marker([c.lat, c.lng], { icon: customIcon });
 
     const popupHtml = `
-      <div class="p-3.5 min-w-[260px] text-xs font-sans text-slate-800 bg-white">
+      <div class="p-3.5 min-w-[260px] text-sm font-sans text-slate-800 bg-white">
         <div class="flex items-center justify-between gap-2 border-b border-slate-200 pb-1.5 mb-2">
-          <span class="font-mono text-[9px] uppercase px-2 py-0.5 rounded font-bold ${
+          <span class="font-mono text-sm uppercase px-2 py-0.5 rounded font-bold ${
             color === 'rojo' ? 'bg-red-50 text-red-700 border border-red-200' :
             color === 'amarillo' ? 'bg-amber-50 text-amber-800 border border-amber-200' :
             'bg-emerald-50 text-emerald-800 border border-emerald-200'
           }">
             ${color === 'rojo' ? '⚠️ RIESGO CRÍTICO' : color === 'amarillo' ? '🟡 ALERTA' : '🟢 OPERATIVO'}
           </span>
-          <span class="text-[10px] text-slate-500 font-mono font-bold">${(c.municipio || '').replace('Municipio ', '')}</span>
+          <span class="text-sm text-slate-500 font-mono font-bold">${(c.municipio || '').replace('Municipio ', '')}</span>
         </div>
         <h4 class="font-bold text-sm text-slate-900 mb-1 leading-snug">${c.nombre}</h4>
-        <p class="text-blue-700 font-semibold text-[11px] mb-2">${c.clasificacionEspecificaLabel || c.clasificacionEspecifica} • ${c.parroquia}</p>
+        <p class="text-blue-700 font-semibold text-sm mb-2">${c.clasificacionEspecificaLabel || c.clasificacionEspecifica} • ${c.parroquia}</p>
         
         <div class="mb-2">
           ${(c.precision === 'exacta' || c.precision === 'calibrada_usuario')
-            ? `<div class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-emerald-50 border border-emerald-200 text-[10px] text-emerald-800 font-bold">
+            ? `<div class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-emerald-50 border border-emerald-200 text-sm text-emerald-800 font-bold">
                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
                  <span>📍 Coordenada Exacta (${c.precision === 'calibrada_usuario' ? 'Ajustada en Campo' : 'Cartografía OSM / Satélite'})</span>
                </div>`
-            : `<div class="p-1.5 rounded bg-amber-50 border border-amber-200 text-[10px] text-amber-900">
+            : `<div class="p-1.5 rounded bg-amber-50 border border-amber-200 text-sm text-amber-900">
                  <div class="flex items-center gap-1 font-bold">
                    <span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
                    <span>📍 Ubicación Sectorial (Aproximada)</span>
                  </div>
-                 <p class="text-[9px] text-amber-800 mt-0.5 leading-tight">Sin cartografía pública de edificio. Pulsa "Mover" o usa GPS para fijar el techo exacto.</p>
+                 <p class="text-sm text-amber-800 mt-0.5 leading-tight">Sin cartografía pública de edificio. Pulsa "Mover" o usa GPS para fijar el techo exacto.</p>
                </div>`
           }
         </div>
 
-        <div class="grid grid-cols-2 gap-1.5 text-[10px] bg-slate-50 p-2 rounded-lg border border-slate-200 mb-3 text-slate-700">
+        <div class="grid grid-cols-2 gap-1.5 text-sm bg-slate-50 p-2 rounded-lg border border-slate-200 mb-3 text-slate-700">
           <div>⚡ Planta: <strong class="text-slate-900">${c.soporteVital?.plantaElectrica || 'N/A'}</strong></div>
           <div>💧 Agua: <strong class="text-slate-900">${c.soporteVital?.suministroAgua || 'N/A'}</strong></div>
           <div>💨 Gases: <strong class="text-slate-900">${c.soporteVital?.gasesMedicinales || 'N/A'}</strong></div>
@@ -881,16 +881,16 @@ function actualizarMapaGeneral() {
         </div>
 
         <div class="flex gap-1.5 flex-wrap">
-          <button onclick="window.editarCentro('${c.id}')" class="flex-1 py-1.5 bg-blue-700 hover:bg-blue-800 text-white font-bold rounded-lg text-[11px] transition text-center shadow-sm flex items-center justify-center gap-1">
+          <button onclick="window.editarCentro('${c.id}')" class="flex-1 py-1.5 bg-blue-700 hover:bg-blue-800 text-white font-bold rounded-lg text-sm transition text-center shadow-sm flex items-center justify-center gap-1">
             <span>📝 Diagnóstico</span>
           </button>
-          <button onclick="window.enfocarEnMapa('${c.id}')" class="px-2.5 py-1.5 bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300 rounded-lg font-bold text-[11px] transition flex items-center justify-center gap-1 shadow-sm" title="Calibrar y Mover Pin al Techo Exacto">
+          <button onclick="window.enfocarEnMapa('${c.id}')" class="px-2.5 py-1.5 bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300 rounded-lg font-bold text-sm transition flex items-center justify-center gap-1 shadow-sm" title="Calibrar y Mover Pin al Techo Exacto">
             🎯 Mover
           </button>
-          <button onclick="window.eliminarCentro('${c.id}')" class="px-2 py-1.5 bg-red-50 hover:bg-red-100 text-red-700 border border-red-200 rounded-lg font-bold text-[11px] transition flex items-center justify-center gap-1 shadow-sm" title="Eliminar este centro si no existe">
+          <button onclick="window.eliminarCentro('${c.id}')" class="px-2 py-1.5 bg-red-50 hover:bg-red-100 text-red-700 border border-red-200 rounded-lg font-bold text-sm transition flex items-center justify-center gap-1 shadow-sm" title="Eliminar este centro si no existe">
             🗑️ Eliminar
           </button>
-          <button onclick="window.verFichaCentro('${c.id}')" class="px-2 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-slate-900 rounded-lg border border-slate-300 text-[10px] font-bold transition" title="Ver Ficha Imprimible">
+          <button onclick="window.verFichaCentro('${c.id}')" class="px-2 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-slate-900 rounded-lg border border-slate-300 text-sm font-bold transition" title="Ver Ficha Imprimible">
             Ficha 1:1
           </button>
         </div>
@@ -1109,8 +1109,8 @@ function renderResultadosBuscadorFormulario(resultados, query) {
   if (resultados.length === 0) {
     dropdown.innerHTML = `
       <div class="p-3.5 text-center space-y-2 bg-white">
-        <p class="text-xs text-slate-500">No se encontró ningún centro de salud catalogado que coincida con "<strong>${query}</strong>".</p>
-        <button type="button" onclick="window.activarModoCentroNuevoConNombre('${query.replace(/'/g, "\\'")}')" class="px-3 py-1.5 bg-blue-700 hover:bg-blue-800 text-white rounded-lg text-xs font-bold transition inline-flex items-center gap-1.5 shadow-xs">
+        <p class="text-sm text-slate-500">No se encontró ningún centro de salud catalogado que coincida con "<strong>${query}</strong>".</p>
+        <button type="button" onclick="window.activarModoCentroNuevoConNombre('${query.replace(/'/g, "\\'")}')" class="px-3 py-1.5 bg-blue-700 hover:bg-blue-800 text-white rounded-lg text-sm font-bold transition inline-flex items-center gap-1.5 shadow-xs">
           <span>➕ Crear como Nuevo Centro Oficial: "${query}"</span>
         </button>
       </div>
@@ -1120,7 +1120,7 @@ function renderResultadosBuscadorFormulario(resultados, query) {
   }
 
   let html = `
-    <div class="p-2 bg-blue-50 border-b border-blue-100 flex items-center justify-between text-[11px] font-bold text-blue-950">
+    <div class="p-2 bg-blue-50 border-b border-blue-100 flex items-center justify-between text-sm font-bold text-blue-950">
       <span>Coincidencias encontradas (${resultados.length}):</span>
       <span class="text-blue-700">Haz clic para auto-rellenar</span>
     </div>
@@ -1136,10 +1136,10 @@ function renderResultadosBuscadorFormulario(resultados, query) {
       <button type="button" onclick="window.seleccionarCentroDesdeBuscadorForm('${c.id}')" class="w-full p-2.5 text-left hover:bg-blue-50/80 transition flex items-center justify-between gap-2 group">
         <div class="min-w-0 flex-1">
           <div class="flex items-center gap-1.5 flex-wrap">
-            <span class="font-black text-slate-900 text-xs group-hover:text-blue-700">${c.nombre}</span>
-            <span class="text-[9px] font-bold uppercase px-1.5 py-0.5 rounded border ${badgeColor}">${c.tipoRed || 'Salud'}</span>
+            <span class="font-black text-slate-900 text-sm group-hover:text-blue-700">${c.nombre}</span>
+            <span class="text-sm font-bold uppercase px-1.5 py-0.5 rounded border ${badgeColor}">${c.tipoRed || 'Salud'}</span>
           </div>
-          <div class="text-[11px] text-slate-500 truncate flex items-center gap-1.5 mt-0.5">
+          <div class="text-sm text-slate-500 truncate flex items-center gap-1.5 mt-0.5">
             <span>📍 ${c.municipio || 'Monagas'}</span>
             <span>•</span>
             <span>${c.parroquia || ''}</span>
@@ -1147,7 +1147,7 @@ function renderResultadosBuscadorFormulario(resultados, query) {
           </div>
         </div>
         <div class="text-right shrink-0">
-          <span class="inline-flex items-center gap-1 px-2 py-1 rounded bg-blue-100 text-blue-800 font-bold text-[10px] group-hover:bg-blue-700 group-hover:text-white transition">
+          <span class="inline-flex items-center gap-1 px-2 py-1 rounded bg-blue-100 text-blue-800 font-bold text-sm group-hover:bg-blue-700 group-hover:text-white transition">
             <span>Cargar Datos ➔</span>
           </span>
         </div>
@@ -1158,8 +1158,8 @@ function renderResultadosBuscadorFormulario(resultados, query) {
   html += `
     </div>
     <div class="p-2 bg-slate-50 border-t border-slate-200 flex items-center justify-between">
-      <span class="text-[10px] text-slate-500">¿No es ninguno de estos?</span>
-      <button type="button" onclick="window.activarModoCentroNuevoConNombre('${query.replace(/'/g, "\\'")}')" class="text-xs text-blue-700 hover:text-blue-900 font-bold hover:underline">
+      <span class="text-sm text-slate-500">¿No es ninguno de estos?</span>
+      <button type="button" onclick="window.activarModoCentroNuevoConNombre('${query.replace(/'/g, "\\'")}')" class="text-sm text-blue-700 hover:text-blue-900 font-bold hover:underline">
         ➕ Crear nuevo con este nombre
       </button>
     </div>
@@ -1248,7 +1248,7 @@ function mostrarToastAccion(mensaje) {
 
   const toast = document.createElement('div');
   toast.id = 'salud-toast-global';
-  toast.className = 'fixed top-5 right-5 z-[99999] bg-slate-900/95 text-white px-4 py-3 rounded-2xl shadow-2xl border border-blue-400 text-xs font-bold flex items-center gap-2 backdrop-blur-md transition-all duration-300 transform translate-y-0 opacity-100 max-w-sm';
+  toast.className = 'fixed top-5 right-5 z-[99999] bg-slate-900/95 text-white px-4 py-3 rounded-2xl shadow-2xl border border-blue-400 text-sm font-bold flex items-center gap-2 backdrop-blur-md transition-all duration-300 transform translate-y-0 opacity-100 max-w-sm';
   toast.innerHTML = `
     <span class="text-base">ℹ️</span>
     <div class="flex-1">${mensaje}</div>
@@ -1287,11 +1287,11 @@ function renderTiposEstablecimiento() {
     let html = '<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">';
     red.subtipos.forEach(st => {
       html += `
-        <label class="flex items-center gap-2.5 p-2.5 rounded-xl bg-white border border-slate-200 hover:border-blue-500 hover:bg-blue-50/50 cursor-pointer text-xs transition shadow-xs">
+        <label class="flex items-center gap-2.5 p-2.5 rounded-xl bg-white border border-slate-200 hover:border-blue-500 hover:bg-blue-50/50 cursor-pointer text-sm transition shadow-xs">
           <input type="radio" name="clasificacionEspecifica" value="${st.codigo}" data-label="${st.nombre}" class="accent-blue-600 w-4 h-4">
           <div>
-            <span class="font-black text-blue-900 block text-xs">${st.codigo}</span>
-            <span class="text-[11px] text-slate-600 block">${st.nombre}</span>
+            <span class="font-black text-blue-900 block text-sm">${st.codigo}</span>
+            <span class="text-sm text-slate-600 block">${st.nombre}</span>
           </div>
         </label>
       `;
@@ -1322,12 +1322,12 @@ function renderAreasServiciosChecks() {
   catAreas.forEach(a => {
     html += `
       <div class="p-3 rounded-xl bg-white border border-slate-200 shadow-xs flex flex-col justify-between space-y-2 hover:border-blue-300 hover:shadow-sm transition">
-        <label class="flex items-center gap-2 text-xs font-bold text-slate-800 cursor-pointer">
+        <label class="flex items-center gap-2 text-sm font-bold text-slate-800 cursor-pointer">
           <input type="checkbox" name="areaServicio" value="${a.id}" class="accent-blue-600 w-4 h-4 rounded border-slate-300">
           <span>${a.label}</span>
         </label>
         ${a.id === 'quirofanos' ? `
-          <div class="flex items-center gap-2 pt-1.5 border-t border-slate-200 text-[11px]">
+          <div class="flex items-center gap-2 pt-1.5 border-t border-slate-200 text-sm">
             <span class="text-slate-500 font-semibold">Total:</span>
             <input type="number" id="num-quirofanos-total" min="0" max="50" value="0" class="w-12 px-1.5 py-0.5 bg-slate-50 border border-slate-300 rounded text-center text-slate-900 font-bold focus:border-blue-600">
             <span class="text-emerald-700 font-bold ml-1">Op:</span>
@@ -1335,7 +1335,7 @@ function renderAreasServiciosChecks() {
           </div>
         ` : ''}
         ${a.id === 'hospitalizacion' ? `
-          <div class="flex items-center gap-2 pt-1.5 border-t border-slate-200 text-[11px]">
+          <div class="flex items-center gap-2 pt-1.5 border-t border-slate-200 text-sm">
             <span class="text-slate-500 font-semibold">Camas Totales:</span>
             <input type="number" id="num-camas-hosp" min="0" max="1000" value="0" class="w-16 px-1.5 py-0.5 bg-slate-50 border border-slate-300 rounded text-center text-slate-900 font-bold focus:border-blue-600">
           </div>
@@ -1367,13 +1367,13 @@ function renderFallasChecks() {
   grupos.forEach(g => {
     html += `
       <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200 shadow-xs space-y-2">
-        <h4 class="text-xs font-black text-slate-800 uppercase tracking-wider mb-2 pb-1.5 border-b border-slate-200 flex items-center justify-between">
+        <h4 class="text-sm font-black text-slate-800 uppercase tracking-wider mb-2 pb-1.5 border-b border-slate-200 flex items-center justify-between">
           <span>${g.titulo}</span>
-          <span class="text-[10px] text-amber-700 font-mono font-bold">[Inspección]</span>
+          <span class="text-sm text-amber-700 font-mono font-bold">[Inspección]</span>
         </h4>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
           ${g.items.map(item => `
-            <label class="flex items-start gap-2.5 text-xs text-slate-700 hover:text-slate-900 cursor-pointer p-1.5 rounded-lg hover:bg-white transition">
+            <label class="flex items-start gap-2.5 text-sm text-slate-700 hover:text-slate-900 cursor-pointer p-1.5 rounded-lg hover:bg-white transition">
               <input type="checkbox" name="falla_${g.key}" value="${item.id}" class="accent-amber-600 w-3.5 h-3.5 mt-0.5 rounded border-slate-300">
               <span class="leading-tight font-medium">${item.label}</span>
             </label>
@@ -1398,13 +1398,13 @@ function evaluarSemaforoEnVivo() {
   const nivel = calcularNivelRiesgo(datosTemp);
 
   if (nivel === 'rojo') {
-    badge.className = 'px-3 py-1 text-xs font-black uppercase tracking-wider bg-red-50 text-red-700 border border-red-300 rounded-full flex items-center gap-1.5 animate-pulse';
+    badge.className = 'px-3 py-1 text-sm font-black uppercase tracking-wider bg-red-50 text-red-700 border border-red-300 rounded-full flex items-center gap-1.5 animate-pulse';
     badge.innerHTML = '<span class="w-2 h-2 rounded-full bg-red-500"></span> ⚠️ RIESGO CRÍTICO DETECTADO';
   } else if (nivel === 'amarillo') {
-    badge.className = 'px-3 py-1 text-xs font-black uppercase tracking-wider bg-amber-50 text-amber-800 border border-amber-300 rounded-full flex items-center gap-1.5';
+    badge.className = 'px-3 py-1 text-sm font-black uppercase tracking-wider bg-amber-50 text-amber-800 border border-amber-300 rounded-full flex items-center gap-1.5';
     badge.innerHTML = '<span class="w-2 h-2 rounded-full bg-amber-500"></span> 🟡 ALERTA / COMPROMISO PARCIAL';
   } else {
-    badge.className = 'px-3 py-1 text-xs font-black uppercase tracking-wider bg-emerald-50 text-emerald-800 border border-emerald-300 rounded-full flex items-center gap-1.5';
+    badge.className = 'px-3 py-1 text-sm font-black uppercase tracking-wider bg-emerald-50 text-emerald-800 border border-emerald-300 rounded-full flex items-center gap-1.5';
     badge.innerHTML = '<span class="w-2 h-2 rounded-full bg-emerald-500"></span> 🟢 SOPORTE OPERATIVO ESTABLE';
   }
 }
@@ -1717,8 +1717,8 @@ function conmutarCapaMapa(tipo) {
     state.mapaGeneral.removeLayer(state.googleTerrainLayer);
   }
 
-  const activeClass = 'px-2.5 py-1 rounded-lg bg-blue-700 text-white font-bold text-[11px] transition flex items-center gap-1 shadow-sm';
-  const inactiveClass = 'px-2.5 py-1 rounded-lg text-slate-700 hover:text-blue-900 font-medium text-[11px] transition flex items-center gap-1';
+  const activeClass = 'px-2.5 py-1 rounded-lg bg-blue-700 text-white font-bold text-sm transition flex items-center gap-1 shadow-sm';
+  const inactiveClass = 'px-2.5 py-1 rounded-lg text-slate-700 hover:text-blue-900 font-medium text-sm transition flex items-center gap-1';
 
   if (btnCalles) btnCalles.className = inactiveClass;
   if (btnSat) btnSat.className = inactiveClass;
@@ -1791,7 +1791,7 @@ function actualizarUICalibrador(centro) {
   const badgePrec = document.getElementById('calibrator-badge-precision');
   if (badgePrec) {
     const esExacto = (centro.precision === 'exacta' || centro.precision === 'calibrada_usuario');
-    badgePrec.className = `px-2 py-0.5 rounded-full text-[10px] font-bold ${
+    badgePrec.className = `px-2 py-0.5 rounded-full text-sm font-bold ${
       esExacto ? 'bg-emerald-950 text-emerald-300 border border-emerald-700/60' : 'bg-amber-950 text-amber-300 border border-amber-700/60 animate-pulse'
     }`;
     badgePrec.innerHTML = esExacto 
@@ -1967,7 +1967,7 @@ function copiarCoordenadasCalibrador() {
 
 function mostrarNotificacion(mensaje, tipo = 'exito') {
   const toast = document.createElement('div');
-  toast.className = `fixed bottom-5 right-5 z-[999999] px-4 py-3 rounded-2xl shadow-2xl border flex items-center gap-2 text-xs font-bold transition-all transform duration-300 translate-y-8 opacity-0 ${
+  toast.className = `fixed bottom-5 right-5 z-[999999] px-4 py-3 rounded-2xl shadow-2xl border flex items-center gap-2 text-sm font-bold transition-all transform duration-300 translate-y-8 opacity-0 ${
     tipo === 'exito' ? 'bg-[#0f241a] border-emerald-500 text-emerald-200' : 'bg-[#290e14] border-red-500 text-red-200'
   }`;
   toast.innerHTML = `<span>${tipo === 'exito' ? '✅' : '⚠️'}</span> <span>${mensaje}</span>`;
@@ -2299,23 +2299,23 @@ function renderFichaImprimible(centro) {
         <tr>
           <td width="20%">
             <span class="ficha-label">Estado:</span><br>
-            <strong class="ficha-value text-xs">MONAGAS</strong>
+            <strong class="ficha-value text-sm">MONAGAS</strong>
           </td>
           <td width="20%">
             <span class="ficha-label">Municipio:</span><br>
-            <span class="ficha-value text-xs">${(centro.municipio || '').replace('Municipio ', '')}</span>
+            <span class="ficha-value text-sm">${(centro.municipio || '').replace('Municipio ', '')}</span>
           </td>
           <td width="20%">
             <span class="ficha-label">Parroquia:</span><br>
-            <span class="ficha-value text-xs">${centro.parroquia || ''}</span>
+            <span class="ficha-value text-sm">${centro.parroquia || ''}</span>
           </td>
           <td width="20%">
             <span class="ficha-label">Sector:</span><br>
-            <span class="ficha-value text-xs">${centro.sector || 'Casco Central'}</span>
+            <span class="ficha-value text-sm">${centro.sector || 'Casco Central'}</span>
           </td>
           <td width="20%">
             <span class="ficha-label">Área / Módulo:</span><br>
-            <strong class="ficha-value text-xs">SALUD (MOD. 5)</strong>
+            <strong class="ficha-value text-sm">SALUD (MOD. 5)</strong>
           </td>
         </tr>
         <tr>
@@ -2520,7 +2520,7 @@ function renderFichaImprimible(centro) {
           </td>
           <td width="76%">
             <span class="ficha-label">Centro Hospitalario / Receptor de Referencia:</span><br>
-            <span class="ficha-value text-xs">${centro.redRemision || 'Hospital Universitario Dr. Manuel Núñez Tovar (HUMNT)'}</span>
+            <span class="ficha-value text-sm">${centro.redRemision || 'Hospital Universitario Dr. Manuel Núñez Tovar (HUMNT)'}</span>
           </td>
         </tr>
       </table>
@@ -2653,8 +2653,8 @@ function actualizarBotonesEstiloFicha(estiloActivo) {
   const btnRelieve = document.getElementById('btn-ficha-mapa-relieve');
   const btnSat = document.getElementById('btn-ficha-mapa-satelite');
 
-  const btnActive = 'px-2.5 py-1 rounded-lg bg-sky-500 text-slate-950 font-black text-xs transition shadow flex items-center gap-1 active:scale-95';
-  const btnInactive = 'px-2.5 py-1 rounded-lg text-slate-300 hover:text-white font-bold text-xs transition flex items-center gap-1 active:scale-95';
+  const btnActive = 'px-2.5 py-1 rounded-lg bg-sky-500 text-slate-950 font-black text-sm transition shadow flex items-center gap-1 active:scale-95';
+  const btnInactive = 'px-2.5 py-1 rounded-lg text-slate-300 hover:text-white font-bold text-sm transition flex items-center gap-1 active:scale-95';
 
   if (btnPlano) btnPlano.className = (estiloActivo === 'plano') ? btnActive : btnInactive;
   if (btnRelieve) btnRelieve.className = (estiloActivo === 'relieve') ? btnActive : btnInactive;
@@ -2713,7 +2713,7 @@ function renderDirectorioTabla() {
   filtrados.forEach((c, idx) => {
     const color = c.nivelRiesgo || 'verde';
     const badgeRisk = `
-      <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider ${
+      <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-sm font-black uppercase tracking-wider ${
         color === 'rojo' ? 'bg-red-50 text-red-700 border border-red-200 animate-pulse' :
         color === 'amarillo' ? 'bg-amber-50 text-amber-800 border border-amber-200' :
         'bg-emerald-50 text-emerald-800 border border-emerald-200'
@@ -2724,24 +2724,24 @@ function renderDirectorioTabla() {
     `;
 
     html += `
-      <tr class="border-b border-slate-200 hover:bg-blue-50/50 transition text-xs">
+      <tr class="border-b border-slate-200 hover:bg-blue-50/50 transition text-sm">
         <td class="py-3 px-3 font-mono text-slate-500">#${idx + 1}</td>
         <td class="py-3 px-3">
           <strong class="text-slate-900 block font-bold text-sm leading-snug">${c.nombre}</strong>
-          <span class="text-[11px] text-blue-700 font-bold font-mono">${c.clasificacionEspecificaLabel || c.clasificacionEspecifica}</span>
+          <span class="text-sm text-blue-700 font-bold font-mono">${c.clasificacionEspecificaLabel || c.clasificacionEspecifica}</span>
         </td>
         <td class="py-3 px-3 text-slate-700">
           <div class="font-semibold text-slate-900">${(c.municipio || '').replace('Municipio ', '')}</div>
-          <div class="text-[11px] text-slate-500">${c.parroquia} • ${c.sector || 'N/A'}</div>
+          <div class="text-sm text-slate-500">${c.parroquia} • ${c.sector || 'N/A'}</div>
           <div class="mt-1">
             ${(c.precision === 'exacta' || c.precision === 'calibrada_usuario')
-              ? `<span class="inline-flex items-center gap-1 text-[9px] text-emerald-800 font-bold bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Exacta (${c.lat.toFixed(4)}, ${c.lng.toFixed(4)})</span>`
-              : `<span class="inline-flex items-center gap-1 text-[9px] text-amber-800 font-bold bg-amber-50 px-1.5 py-0.5 rounded border border-amber-200"><span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span> Sectorial</span>`
+              ? `<span class="inline-flex items-center gap-1 text-sm text-emerald-800 font-bold bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Exacta (${c.lat.toFixed(4)}, ${c.lng.toFixed(4)})</span>`
+              : `<span class="inline-flex items-center gap-1 text-sm text-amber-800 font-bold bg-amber-50 px-1.5 py-0.5 rounded border border-amber-200"><span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span> Sectorial</span>`
             }
           </div>
         </td>
         <td class="py-3 px-3">
-          <div class="grid grid-cols-2 gap-1 text-[10px] font-mono">
+          <div class="grid grid-cols-2 gap-1 text-sm font-mono">
             <span title="Planta Eléctrica" class="px-1.5 py-0.5 rounded ${c.soporteVital?.plantaElectrica === 'Operativa' ? 'bg-emerald-50 text-emerald-800 border border-emerald-200 font-bold' : 'bg-red-50 text-red-800 border border-red-200 font-bold'}">
               ⚡ ${c.soporteVital?.plantaElectrica || 'N/A'}
             </span>
@@ -2755,14 +2755,14 @@ function renderDirectorioTabla() {
         </td>
         <td class="py-3 px-3 text-right">
           <div class="flex items-center justify-end gap-1.5">
-            <button onclick="window.enfocarEnMapa('${c.id}')" class="px-2 py-1.5 bg-emerald-50 hover:bg-emerald-600 text-emerald-800 hover:text-white font-bold rounded-lg text-[11px] border border-emerald-300 transition flex items-center gap-1 shadow-xs" title="Enfocar y Calibrar en el Mapa">
+            <button onclick="window.enfocarEnMapa('${c.id}')" class="px-2 py-1.5 bg-emerald-50 hover:bg-emerald-600 text-emerald-800 hover:text-white font-bold rounded-lg text-sm border border-emerald-300 transition flex items-center gap-1 shadow-xs" title="Enfocar y Calibrar en el Mapa">
               <i data-lucide="crosshair" class="w-3.5 h-3.5"></i>
               <span>Calibrar</span>
             </button>
             <button onclick="window.buscarCentroEnGoogleMaps('${c.id}')" class="p-1.5 bg-white hover:bg-amber-50 text-amber-600 hover:text-amber-700 rounded-lg border border-amber-200 transition shadow-xs" title="Buscar en Google Maps ↗">
               <i data-lucide="compass" class="w-3.5 h-3.5"></i>
             </button>
-            <button onclick="window.verFichaCentro('${c.id}')" class="px-2.5 py-1.5 bg-blue-50 hover:bg-blue-600 text-blue-800 hover:text-white font-bold rounded-lg text-[11px] border border-blue-300 transition flex items-center gap-1 shadow-xs" title="Ver Ficha Imprimible 1:1">
+            <button onclick="window.verFichaCentro('${c.id}')" class="px-2.5 py-1.5 bg-blue-50 hover:bg-blue-600 text-blue-800 hover:text-white font-bold rounded-lg text-sm border border-blue-300 transition flex items-center gap-1 shadow-xs" title="Ver Ficha Imprimible 1:1">
               <i data-lucide="printer" class="w-3.5 h-3.5"></i>
               <span>Ficha 1:1</span>
             </button>
@@ -3310,7 +3310,7 @@ function aplicarModoOscuroSuave(activar) {
     if (icono) icono.textContent = '☀️';
     if (label) label.textContent = 'Modo Claro';
     if (btn) {
-      btn.className = 'px-2.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 border border-amber-400/80 text-amber-300 hover:text-white text-xs font-bold transition flex items-center gap-1.5 shadow-sm active:scale-95';
+      btn.className = 'px-2.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 border border-amber-400/80 text-amber-300 hover:text-white text-sm font-bold transition flex items-center gap-1.5 shadow-sm active:scale-95';
       btn.title = 'Cambiar a Modo Claro Gubernamental (Blanco y Azul)';
     }
     localStorage.setItem('salud_modo_oscuro', 'true');
@@ -3320,7 +3320,7 @@ function aplicarModoOscuroSuave(activar) {
     if (icono) icono.textContent = '🌙';
     if (label) label.textContent = 'Modo Noche';
     if (btn) {
-      btn.className = 'px-2.5 py-1.5 rounded-xl bg-blue-950/90 hover:bg-blue-900 border border-sky-400/80 text-sky-200 hover:text-white text-xs font-bold transition flex items-center gap-1.5 shadow-sm active:scale-95';
+      btn.className = 'px-2.5 py-1.5 rounded-xl bg-blue-950/90 hover:bg-blue-900 border border-sky-400/80 text-sky-200 hover:text-white text-sm font-bold transition flex items-center gap-1.5 shadow-sm active:scale-95';
       btn.title = 'Modo Noche Ejecutivo: Descanso visual';
     }
     localStorage.setItem('salud_modo_oscuro', 'false');

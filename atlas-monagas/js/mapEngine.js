@@ -240,11 +240,11 @@ export class AtlasMapEngine {
       });
 
       const tooltipContent = `
-        <div class="p-1 text-xs">
+        <div class="p-1 text-sm">
           <strong class="text-white block font-bold">${lineData.nombre}</strong>
-          <span class="text-[10px] font-mono text-slate-300">${lineData.longitudM} metros</span>
-          <span class="block text-[10px] font-bold mt-0.5" style="color: ${color}">● ${lineData.color.toUpperCase()}</span>
-          ${lineData.detalle ? `<p class="text-[10px] text-slate-400 mt-0.5 italic">${lineData.detalle}</p>` : ''}
+          <span class="text-sm font-mono text-slate-300">${lineData.longitudM} metros</span>
+          <span class="block text-sm font-bold mt-0.5" style="color: ${color}">● ${lineData.color.toUpperCase()}</span>
+          ${lineData.detalle ? `<p class="text-sm text-slate-300 mt-0.5 italic">${lineData.detalle}</p>` : ''}
         </div>
       `;
 

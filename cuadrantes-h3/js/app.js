@@ -118,7 +118,7 @@ class CuadrantesH3App {
     if (badge) badge.textContent = `${this.currentParish.municipio} • ${this.currentParish.tipo}`;
     if (sectoresEl) {
       sectoresEl.innerHTML = this.currentParish.sectores
-        .map(s => `<span class="px-2 py-0.5 rounded-full bg-[#18114a] border border-[#2d1f85] text-slate-300 text-[10px] font-medium">${s}</span>`)
+        .map(s => `<span class="px-2 py-0.5 rounded-full bg-[#18114a] border border-[#2d1f85] text-slate-300 text-sm font-medium">${s}</span>`)
         .join("");
     }
 
@@ -190,10 +190,10 @@ class CuadrantesH3App {
       const estadoLabel = hex.estado === "cubierto" ? "🟢 CUBIERTO" : (hex.estado === "en_despliegue" ? "🟡 EN DESPLIEGUE" : "⚪ SIN ASIGNAR");
 
       hexPoly.bindTooltip(
-        `<div class="text-xs font-mono font-bold leading-tight">
+        `<div class="text-sm font-mono font-bold leading-tight">
           <div class="text-white">${hex.id}</div>
-          <div class="text-[10px] text-slate-300 font-normal">${hex.areaHa} Ha • ${hex.metaCasas} casas</div>
-          <div class="text-[10px] font-bold mt-0.5">${estadoLabel}</div>
+          <div class="text-sm text-slate-300 font-normal">${hex.areaHa} Ha • ${hex.metaCasas} casas</div>
+          <div class="text-sm font-bold mt-0.5">${estadoLabel}</div>
         </div>`,
         { direction: "center", permanent: false, sticky: true }
       );

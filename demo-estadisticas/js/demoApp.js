@@ -135,9 +135,9 @@ export class DemoStatsApp {
     document.querySelectorAll(".demo-tab-btn").forEach(btn => {
       const isCurrent = btn.dataset.tab === this.activeTab;
       if (isCurrent) {
-        btn.className = "demo-tab-btn px-4 py-2.5 rounded-xl bg-amber-500 text-[#0e092e] font-black text-xs shadow-lg shadow-amber-500/20 flex items-center gap-2 transition cursor-pointer";
+        btn.className = "demo-tab-btn px-4 py-2.5 rounded-xl bg-amber-500 text-[#0e092e] font-black text-sm shadow-lg shadow-amber-500/20 flex items-center gap-2 transition cursor-pointer";
       } else {
-        btn.className = "demo-tab-btn px-4 py-2.5 rounded-xl bg-[#140e40] hover:bg-[#18114a] text-slate-300 hover:text-white font-bold text-xs border border-[#2d1f85] flex items-center gap-2 transition cursor-pointer";
+        btn.className = "demo-tab-btn px-4 py-2.5 rounded-xl bg-[#140e40] hover:bg-[#18114a] text-slate-300 hover:text-white font-bold text-sm border border-[#2d1f85] flex items-center gap-2 transition cursor-pointer";
       }
     });
 
@@ -181,7 +181,7 @@ export class DemoStatsApp {
     }
 
     const allPill = `
-      <button type="button" data-parish="todas" class="px-3 py-1.5 rounded-xl text-xs font-bold shrink-0 transition cursor-pointer ${this.selectedParishId === 'todas' ? 'bg-amber-500 text-[#0e092e] font-black shadow-md' : 'bg-[#140e40] hover:bg-[#18114a] text-slate-200 border border-[#2d1f85]'}">
+      <button type="button" data-parish="todas" class="px-3 py-1.5 rounded-xl text-sm font-bold shrink-0 transition cursor-pointer ${this.selectedParishId === 'todas' ? 'bg-amber-500 text-[#0e092e] font-black shadow-md' : 'bg-[#140e40] hover:bg-[#18114a] text-slate-200 border border-[#2d1f85]'}">
         🌐 Todas las Parroquias (${parishes.length})
       </button>
     `;
@@ -189,7 +189,7 @@ export class DemoStatsApp {
     const parishesPills = parishes.map(p => {
       const isSelected = p.id === this.selectedParishId;
       return `
-        <button type="button" data-parish="${p.id}" class="px-3 py-1.5 rounded-xl text-xs font-semibold shrink-0 transition cursor-pointer ${isSelected ? 'bg-amber-500 text-[#0e092e] font-black shadow-md' : 'bg-[#140e40] hover:bg-[#18114a] text-slate-200 border border-[#2d1f85]'}">
+        <button type="button" data-parish="${p.id}" class="px-3 py-1.5 rounded-xl text-sm font-semibold shrink-0 transition cursor-pointer ${isSelected ? 'bg-amber-500 text-[#0e092e] font-black shadow-md' : 'bg-[#140e40] hover:bg-[#18114a] text-slate-200 border border-[#2d1f85]'}">
           📍 ${p.nombre}
         </button>
       `;
@@ -370,12 +370,12 @@ export class DemoStatsApp {
           ${circles}
         </svg>
         <div class="absolute inset-0 flex flex-col items-center justify-center text-center pointer-events-none">
-          <span class="text-[10px] text-slate-400 font-mono">LÍDER</span>
-          <span class="text-xs font-black text-amber-400 truncate max-w-[90px]">${topLabel}</span>
+          <span class="text-sm text-slate-400 font-mono">LÍDER</span>
+          <span class="text-sm font-black text-amber-400 truncate max-w-[90px]">${topLabel}</span>
           <span class="text-sm font-black text-white">${topPct}</span>
         </div>
       </div>
-      <div class="flex flex-wrap items-center justify-center gap-2 mt-2 text-[10px] text-slate-300 font-mono">
+      <div class="flex flex-wrap items-center justify-center gap-2 mt-2 text-sm text-slate-300 font-mono">
         ${labels.slice(0, 5).map((l, i) => `
           <span class="flex items-center gap-1">
             <span class="w-2 h-2 rounded-full" style="background-color:${colors[i % colors.length]}"></span>
@@ -572,19 +572,19 @@ export class DemoStatsApp {
     if (summaryEl) {
       summaryEl.innerHTML = `
         <div class="p-1.5 rounded-xl bg-emerald-950/40 border border-emerald-500/30 text-emerald-300">
-          <span class="block text-[9px] text-slate-400">🟢 Duro</span>
-          <strong class="text-xs font-black">${this.nf.format(duro)}</strong>
-          <span class="text-[9px] text-slate-400 block">${((duro / total) * 100).toFixed(0)}%</span>
+          <span class="block text-sm text-slate-400">🟢 Duro</span>
+          <strong class="text-sm font-black">${this.nf.format(duro)}</strong>
+          <span class="text-sm text-slate-400 block">${((duro / total) * 100).toFixed(0)}%</span>
         </div>
         <div class="p-1.5 rounded-xl bg-amber-950/40 border border-amber-500/30 text-amber-300">
-          <span class="block text-[9px] text-slate-400">🟡 Blando</span>
-          <strong class="text-xs font-black">${this.nf.format(blando)}</strong>
-          <span class="text-[9px] text-slate-400 block">${((blando / total) * 100).toFixed(0)}%</span>
+          <span class="block text-sm text-slate-400">🟡 Blando</span>
+          <strong class="text-sm font-black">${this.nf.format(blando)}</strong>
+          <span class="text-sm text-slate-400 block">${((blando / total) * 100).toFixed(0)}%</span>
         </div>
         <div class="p-1.5 rounded-xl bg-sky-950/40 border border-sky-500/30 text-sky-300">
-          <span class="block text-[9px] text-slate-400">🔵 Nuevo</span>
-          <strong class="text-xs font-black">${this.nf.format(nuevo)}</strong>
-          <span class="text-[9px] text-slate-400 block">${((nuevo / total) * 100).toFixed(0)}%</span>
+          <span class="block text-sm text-slate-400">🔵 Nuevo</span>
+          <strong class="text-sm font-black">${this.nf.format(nuevo)}</strong>
+          <span class="text-sm text-slate-400 block">${((nuevo / total) * 100).toFixed(0)}%</span>
         </div>
       `;
     }
@@ -668,16 +668,16 @@ export class DemoStatsApp {
 
       summaryEl.innerHTML = `
         <div class="p-2 rounded-xl bg-emerald-950/40 border border-emerald-500/30 text-emerald-300">
-          <span class="block text-[10px] text-slate-400">🟢 Óptimo</span>
-          <strong class="text-sm font-black">${high.length}</strong> <span class="text-[10px] text-slate-400">(${highPct}%)</span>
+          <span class="block text-sm text-slate-400">🟢 Óptimo</span>
+          <strong class="text-sm font-black">${high.length}</strong> <span class="text-sm text-slate-400">(${highPct}%)</span>
         </div>
         <div class="p-2 rounded-xl bg-amber-950/40 border border-amber-500/30 text-amber-300">
-          <span class="block text-[10px] text-slate-400">🟡 En Progreso</span>
-          <strong class="text-sm font-black">${mid.length}</strong> <span class="text-[10px] text-slate-400">(${midPct}%)</span>
+          <span class="block text-sm text-slate-400">🟡 En Progreso</span>
+          <strong class="text-sm font-black">${mid.length}</strong> <span class="text-sm text-slate-400">(${midPct}%)</span>
         </div>
         <div class="p-2 rounded-xl bg-rose-950/40 border border-rose-500/30 text-rose-300">
-          <span class="block text-[10px] text-slate-400">🔴 Crítico</span>
-          <strong class="text-sm font-black">${low.length}</strong> <span class="text-[10px] text-slate-400">(${lowPct}%)</span>
+          <span class="block text-sm text-slate-400">🔴 Crítico</span>
+          <strong class="text-sm font-black">${low.length}</strong> <span class="text-sm text-slate-400">(${lowPct}%)</span>
         </div>
       `;
     }
@@ -714,21 +714,21 @@ export class DemoStatsApp {
       return `
         <tr class="border-b border-slate-800/80 hover:bg-slate-800/50 transition cursor-pointer ${isSelected ? 'bg-amber-500/10 border-amber-500/40' : ''}" onclick="window.demoApp.filterByMunRow('${m.munId}')">
           <td class="px-3 py-2.5 font-bold text-slate-100 flex items-center gap-2">
-            <span class="text-[10px] font-mono text-slate-500">${idx + 1}.</span>
+            <span class="text-sm font-mono text-slate-500">${idx + 1}.</span>
             <span class="text-amber-400 font-black">${m.nombre}</span>
-            ${m.munId === 'maturin' ? '<span class="px-1.5 py-0.2 bg-amber-500/20 text-amber-300 text-[9px] font-bold rounded">Capital</span>' : ''}
+            ${m.munId === 'maturin' ? '<span class="px-1.5 py-0.2 bg-amber-500/20 text-amber-300 text-sm font-bold rounded">Capital</span>' : ''}
           </td>
-          <td class="px-3 py-2.5 text-center font-mono text-xs text-slate-300">${m.parroquiasCount}</td>
-          <td class="px-3 py-2.5 text-center font-mono text-xs text-purple-300 font-bold">${m.subCount}</td>
-          <td class="px-3 py-2.5 text-center font-mono text-xs text-sky-400 font-bold">${m.secCount}</td>
-          <td class="px-3 py-2.5 text-right font-mono text-xs text-amber-300">${this.nf.format(m.casas)}</td>
-          <td class="px-3 py-2.5 text-right font-mono text-xs text-emerald-400 font-bold">${this.nf.format(m.habitantes)}</td>
-          <td class="px-3 py-2.5 text-right font-mono text-xs text-purple-300 font-black bg-purple-500/10">${this.nf.format(m.votantes)}</td>
-          <td class="px-3 py-2.5 text-right font-mono text-xs text-emerald-400 font-bold">${this.nf.format(m.votoDuro || 0)}</td>
-          <td class="px-3 py-2.5 text-right font-mono text-xs text-amber-400 font-bold">${this.nf.format(m.votoBlando || 0)}</td>
-          <td class="px-3 py-2.5 text-right font-mono text-xs text-sky-400 font-bold">${this.nf.format(m.votoNuevo || 0)}</td>
-          <td class="px-3 py-2.5 text-center font-mono text-xs text-purple-300 font-black">${this.nf.format(m.electoresNominales || 0)}</td>
-          <td class="px-3 py-2.5 text-right font-mono text-xs text-sky-300 font-bold">${m.padronPct}%</td>
+          <td class="px-3 py-2.5 text-center font-mono text-sm text-slate-300">${m.parroquiasCount}</td>
+          <td class="px-3 py-2.5 text-center font-mono text-sm text-purple-300 font-bold">${m.subCount}</td>
+          <td class="px-3 py-2.5 text-center font-mono text-sm text-sky-400 font-bold">${m.secCount}</td>
+          <td class="px-3 py-2.5 text-right font-mono text-sm text-amber-300">${this.nf.format(m.casas)}</td>
+          <td class="px-3 py-2.5 text-right font-mono text-sm text-emerald-400 font-bold">${this.nf.format(m.habitantes)}</td>
+          <td class="px-3 py-2.5 text-right font-mono text-sm text-purple-300 font-black bg-purple-500/10">${this.nf.format(m.votantes)}</td>
+          <td class="px-3 py-2.5 text-right font-mono text-sm text-emerald-400 font-bold">${this.nf.format(m.votoDuro || 0)}</td>
+          <td class="px-3 py-2.5 text-right font-mono text-sm text-amber-400 font-bold">${this.nf.format(m.votoBlando || 0)}</td>
+          <td class="px-3 py-2.5 text-right font-mono text-sm text-sky-400 font-bold">${this.nf.format(m.votoNuevo || 0)}</td>
+          <td class="px-3 py-2.5 text-center font-mono text-sm text-purple-300 font-black">${this.nf.format(m.electoresNominales || 0)}</td>
+          <td class="px-3 py-2.5 text-right font-mono text-sm text-sky-300 font-bold">${m.padronPct}%</td>
         </tr>
       `;
     }).join("");
@@ -737,7 +737,7 @@ export class DemoStatsApp {
     const tfoot = document.getElementById("demo-matrix-tfoot");
     if (tfoot) {
       tfoot.innerHTML = `
-        <tr class="bg-[#100b33] font-mono text-xs font-black text-amber-400 border-t-2 border-amber-500/50">
+        <tr class="bg-[#100b33] font-mono text-sm font-black text-amber-400 border-t-2 border-amber-500/50">
           <td class="px-3 py-3">TOTAL ESTADO MONAGAS (13)</td>
           <td class="px-3 py-3 text-center">44</td>
           <td class="px-3 py-3 text-center text-purple-300">120+</td>
@@ -798,13 +798,13 @@ export class DemoStatsApp {
         <div class="p-3 bg-[#18114a] border border-[#2d1f85] hover:border-amber-500/50 rounded-2xl transition space-y-2">
           <div class="flex items-start justify-between gap-2">
             <div class="min-w-0">
-              <span class="text-[10px] font-mono text-slate-400 block">#${i + 1} • ${s.id}</span>
-              <h4 class="text-xs font-black text-white truncate" title="${s.nombre}">${s.nombre}</h4>
-              <span class="text-[10px] text-amber-400 font-semibold truncate block">${s.munNombre} ➔ ${s.parishNombre}</span>
+              <span class="text-sm font-mono text-slate-400 block">#${i + 1} • ${s.id}</span>
+              <h4 class="text-sm font-black text-white truncate" title="${s.nombre}">${s.nombre}</h4>
+              <span class="text-sm text-amber-400 font-semibold truncate block">${s.munNombre} ➔ ${s.parishNombre}</span>
             </div>
             <div class="text-right shrink-0">
               <span class="text-sm font-black font-mono text-amber-400">${this.nf.format(s.votantes)}</span>
-              <span class="text-[9px] text-slate-300 block">votantes</span>
+              <span class="text-sm text-slate-300 block">votantes</span>
             </div>
           </div>
           
@@ -812,7 +812,7 @@ export class DemoStatsApp {
             <div class="bg-gradient-to-r from-amber-500 to-orange-400 h-full rounded-full" style="width: ${pctBar}%"></div>
           </div>
 
-          <div class="flex items-center justify-between text-[10px] font-mono text-slate-300 pt-0.5 border-t border-[#2d1f85]/50">
+          <div class="flex items-center justify-between text-sm font-mono text-slate-300 pt-0.5 border-t border-[#2d1f85]/50">
             <span>🏠 ${s.casas} casas</span>
             <span>👥 ${s.habitantes} hab</span>
             <span class="text-emerald-400 font-bold">✓ ${s.cobertura}%</span>
@@ -873,7 +873,7 @@ export class DemoStatsApp {
     if (paginated.length === 0) {
       tbody.innerHTML = `
         <tr>
-          <td colspan="13" class="text-center py-8 text-slate-400 text-xs">
+          <td colspan="13" class="text-center py-8 text-slate-400 text-sm">
             No se encontraron sectores con el criterio de búsqueda.
           </td>
         </tr>
@@ -883,19 +883,19 @@ export class DemoStatsApp {
 
     tbody.innerHTML = paginated.map(s => `
       <tr class="border-b border-slate-800 hover:bg-slate-800/40 transition">
-        <td class="px-3 py-2 font-mono text-[11px] text-amber-400 font-bold whitespace-nowrap">${s.id}</td>
-        <td class="px-3 py-2 font-bold text-white text-xs whitespace-nowrap">${s.nombre}</td>
-        <td class="px-3 py-2 text-[11px] text-purple-300 truncate max-w-[180px]">${s.subParroquiaNombre}</td>
-        <td class="px-3 py-2 text-[11px] text-slate-300 whitespace-nowrap">${s.parishNombre}</td>
-        <td class="px-3 py-2 text-[11px] text-slate-400 whitespace-nowrap">${s.munNombre}</td>
-        <td class="px-3 py-2 text-right font-mono text-xs text-amber-300">${this.nf.format(s.casas)}</td>
-        <td class="px-3 py-2 text-right font-mono text-xs text-emerald-400 font-bold">${this.nf.format(s.habitantes)}</td>
-        <td class="px-3 py-2 text-right font-mono text-xs text-purple-300 font-black bg-purple-500/10">${this.nf.format(s.votantes)}</td>
-        <td class="px-3 py-2 text-right font-mono text-xs text-emerald-400 font-bold">${this.nf.format(s.votoDuro || 0)}</td>
-        <td class="px-3 py-2 text-right font-mono text-xs text-amber-400 font-bold">${this.nf.format(s.votoBlando || 0)}</td>
-        <td class="px-3 py-2 text-right font-mono text-xs text-sky-400 font-bold">${this.nf.format(s.votoNuevo || 0)}</td>
-        <td class="px-3 py-2 text-center font-mono text-xs text-purple-300 font-black">${this.nf.format(s.electoresNominales || 0)}</td>
-        <td class="px-3 py-2 text-[11px] text-slate-300 truncate max-w-[200px]" title="${s.centroVotacion}">${s.centroVotacion}</td>
+        <td class="px-3 py-2 font-mono text-sm text-amber-400 font-bold whitespace-nowrap">${s.id}</td>
+        <td class="px-3 py-2 font-bold text-white text-sm whitespace-nowrap">${s.nombre}</td>
+        <td class="px-3 py-2 text-sm text-purple-300 truncate max-w-[180px]">${s.subParroquiaNombre}</td>
+        <td class="px-3 py-2 text-sm text-slate-300 whitespace-nowrap">${s.parishNombre}</td>
+        <td class="px-3 py-2 text-sm text-slate-400 whitespace-nowrap">${s.munNombre}</td>
+        <td class="px-3 py-2 text-right font-mono text-sm text-amber-300">${this.nf.format(s.casas)}</td>
+        <td class="px-3 py-2 text-right font-mono text-sm text-emerald-400 font-bold">${this.nf.format(s.habitantes)}</td>
+        <td class="px-3 py-2 text-right font-mono text-sm text-purple-300 font-black bg-purple-500/10">${this.nf.format(s.votantes)}</td>
+        <td class="px-3 py-2 text-right font-mono text-sm text-emerald-400 font-bold">${this.nf.format(s.votoDuro || 0)}</td>
+        <td class="px-3 py-2 text-right font-mono text-sm text-amber-400 font-bold">${this.nf.format(s.votoBlando || 0)}</td>
+        <td class="px-3 py-2 text-right font-mono text-sm text-sky-400 font-bold">${this.nf.format(s.votoNuevo || 0)}</td>
+        <td class="px-3 py-2 text-center font-mono text-sm text-purple-300 font-black">${this.nf.format(s.electoresNominales || 0)}</td>
+        <td class="px-3 py-2 text-sm text-slate-300 truncate max-w-[200px]" title="${s.centroVotacion}">${s.centroVotacion}</td>
       </tr>
     `).join("");
 
@@ -955,21 +955,21 @@ export class DemoStatsApp {
           const sectorsListHtml = sp.sectores.map(rawS => {
             const s = sectorMap.get(rawS.id) || rawS;
             return `
-            <div class="p-2.5 bg-[#18114a] border border-[#2d1f85] rounded-xl hover:border-amber-500/40 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs transition">
+            <div class="p-2.5 bg-[#18114a] border border-[#2d1f85] rounded-xl hover:border-amber-500/40 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-sm transition">
               <div class="flex items-center gap-2 min-w-0">
                 <span class="w-2 h-2 rounded-full bg-amber-400 shrink-0"></span>
-                <span class="font-mono text-amber-400 font-bold text-[11px]">${s.id}</span>
+                <span class="font-mono text-amber-400 font-bold text-sm">${s.id}</span>
                 <span class="font-bold text-white truncate">${s.nombre}</span>
               </div>
-              <div class="flex flex-wrap items-center gap-2 font-mono text-[11px] text-slate-300 shrink-0">
+              <div class="flex flex-wrap items-center gap-2 font-mono text-sm text-slate-300 shrink-0">
                 <span>🏠 ${s.casas}</span>
                 <span>👥 ${s.habitantes}</span>
                 <span class="px-2 py-0.5 rounded bg-purple-500/15 border border-purple-500/40 text-purple-300 font-bold font-mono">🗳️ ${s.votantes}</span>
-                <span class="px-1.5 py-0.5 rounded bg-emerald-950/60 border border-emerald-500/40 text-emerald-300 text-[10px]" title="Voto Duro">🟢 ${s.votoDuro || 0}</span>
-                <span class="px-1.5 py-0.5 rounded bg-amber-950/60 border border-amber-500/40 text-amber-300 text-[10px]" title="Voto Blando">🟡 ${s.votoBlando || 0}</span>
-                <span class="px-1.5 py-0.5 rounded bg-sky-950/60 border border-sky-500/40 text-sky-300 text-[10px]" title="Voto Nuevo">🔵 ${s.votoNuevo || 0}</span>
-                ${(s.electoresNominales || 0) > 0 ? `<span class="px-1.5 py-0.5 rounded bg-purple-950/80 border border-purple-500/50 text-purple-200 text-[10px] font-bold" title="Electores Nominales">📋 ${s.electoresNominales} nom</span>` : ''}
-                <span class="text-[10px] text-slate-400 hidden lg:inline truncate max-w-[160px]" title="${s.centroVotacion}">🏫 ${s.centroVotacion}</span>
+                <span class="px-1.5 py-0.5 rounded bg-emerald-950/60 border border-emerald-500/40 text-emerald-300 text-sm" title="Voto Duro">🟢 ${s.votoDuro || 0}</span>
+                <span class="px-1.5 py-0.5 rounded bg-amber-950/60 border border-amber-500/40 text-amber-300 text-sm" title="Voto Blando">🟡 ${s.votoBlando || 0}</span>
+                <span class="px-1.5 py-0.5 rounded bg-sky-950/60 border border-sky-500/40 text-sky-300 text-sm" title="Voto Nuevo">🔵 ${s.votoNuevo || 0}</span>
+                ${(s.electoresNominales || 0) > 0 ? `<span class="px-1.5 py-0.5 rounded bg-purple-950/80 border border-purple-500/50 text-purple-200 text-sm font-bold" title="Electores Nominales">📋 ${s.electoresNominales} nom</span>` : ''}
+                <span class="text-sm text-slate-400 hidden lg:inline truncate max-w-[160px]" title="${s.centroVotacion}">🏫 ${s.centroVotacion}</span>
               </div>
             </div>
           `;
@@ -980,11 +980,11 @@ export class DemoStatsApp {
               <div class="flex items-center justify-between cursor-pointer" onclick="window.demoApp.toggleSubparroquia('${sp.id}')">
                 <div class="flex items-center gap-2 min-w-0">
                   <span class="text-purple-400 text-sm">${isSubExpanded ? '▾' : '▸'}</span>
-                  <span class="w-6 h-6 rounded-lg bg-purple-900/80 border border-purple-500/50 flex items-center justify-center text-purple-300 text-[10px] font-bold shrink-0">L4</span>
-                  <h5 class="text-xs font-black text-purple-200 truncate">${sp.nombre}</h5>
-                  <span class="text-[10px] font-mono text-slate-400">(${sp.sectores.length} sectores)</span>
+                  <span class="w-6 h-6 rounded-lg bg-purple-900/80 border border-purple-500/50 flex items-center justify-center text-purple-300 text-sm font-bold shrink-0">L4</span>
+                  <h5 class="text-sm font-black text-purple-200 truncate">${sp.nombre}</h5>
+                  <span class="text-sm font-mono text-slate-400">(${sp.sectores.length} sectores)</span>
                 </div>
-                <div class="flex items-center gap-2 font-mono text-[11px] text-purple-300 font-bold shrink-0">
+                <div class="flex items-center gap-2 font-mono text-sm text-purple-300 font-bold shrink-0">
                   <span>${this.nf.format(totalSubCasas)} casas</span>
                   <span>•</span>
                   <span>${this.nf.format(totalSubVot)} votantes</span>
@@ -1008,11 +1008,11 @@ export class DemoStatsApp {
             <div class="flex items-center justify-between cursor-pointer border-b border-[#2d1f85] pb-2.5" onclick="window.demoApp.toggleParish('${p.id}')">
               <div class="flex items-center gap-2 min-w-0">
                 <span class="text-amber-400 text-sm">${isParishExpanded ? '▾' : '▸'}</span>
-                <span class="w-6 h-6 rounded-lg bg-amber-500/20 border border-amber-500/50 flex items-center justify-center text-amber-300 text-[10px] font-bold shrink-0">L3</span>
-                <h4 class="text-xs sm:text-sm font-black text-white truncate">Parroquia ${p.nombre}</h4>
-                <span class="text-[10px] text-slate-400 font-mono">(${p.subparroquias.length} Ejes)</span>
+                <span class="w-6 h-6 rounded-lg bg-amber-500/20 border border-amber-500/50 flex items-center justify-center text-amber-300 text-sm font-bold shrink-0">L3</span>
+                <h4 class="text-sm sm:text-sm font-black text-white truncate">Parroquia ${p.nombre}</h4>
+                <span class="text-sm text-slate-400 font-mono">(${p.subparroquias.length} Ejes)</span>
               </div>
-              <div class="flex items-center gap-2 font-mono text-xs text-amber-400 font-black shrink-0">
+              <div class="flex items-center gap-2 font-mono text-sm text-amber-400 font-black shrink-0">
                 <span>${this.nf.format(totalParishCasas)} casas</span>
                 <span>•</span>
                 <span class="text-white">${this.nf.format(totalParishVot)} votantes</span>
@@ -1032,13 +1032,13 @@ export class DemoStatsApp {
         <div class="bg-[#140e40]/95 border-2 border-amber-500/40 rounded-3xl p-4 sm:p-5 shadow-2xl space-y-4">
           <div class="flex items-center justify-between border-b border-[#2d1f85] pb-3">
             <div class="flex items-center gap-2.5">
-              <span class="w-7 h-7 rounded-xl bg-amber-500 text-[#0e092e] font-black flex items-center justify-center text-xs shadow-md">L2</span>
+              <span class="w-7 h-7 rounded-xl bg-amber-500 text-[#0e092e] font-black flex items-center justify-center text-sm shadow-md">L2</span>
               <div>
                 <h3 class="text-sm sm:text-base font-black text-white uppercase tracking-tight">${m.nombre}</h3>
-                <span class="text-[10px] text-slate-400 font-mono">Capital: ${m.capital} • ${m.parroquias.length} Parroquias</span>
+                <span class="text-sm text-slate-400 font-mono">Capital: ${m.capital} • ${m.parroquias.length} Parroquias</span>
               </div>
             </div>
-            <span class="px-2.5 py-1 rounded-xl bg-amber-500/20 border border-amber-500/50 text-amber-300 text-xs font-mono font-black">
+            <span class="px-2.5 py-1 rounded-xl bg-amber-500/20 border border-amber-500/50 text-amber-300 text-sm font-mono font-black">
               100% Censado
             </span>
           </div>
@@ -1183,31 +1183,31 @@ export class DemoStatsApp {
     }
 
     content.innerHTML = `
-      <div class="space-y-4 text-xs">
+      <div class="space-y-4 text-sm">
         <div class="border-b border-[#2d1f85] pb-3">
           <div class="flex items-center justify-between">
-            <span class="text-[10px] font-mono font-bold text-amber-400 uppercase tracking-widest">SALA SITUACIONAL • INFORME EJECUTIVO</span>
-            <span class="text-[10px] font-mono text-slate-400">${new Date().toLocaleString("es-VE")}</span>
+            <span class="text-sm font-mono font-bold text-amber-400 uppercase tracking-widest">SALA SITUACIONAL • INFORME EJECUTIVO</span>
+            <span class="text-sm font-mono text-slate-400">${new Date().toLocaleString("es-VE")}</span>
           </div>
           <h3 class="text-base font-black text-white mt-1">${munName}</h3>
-          <p class="text-slate-300 text-[11px]">Consolidado para presentación ante equipos de ingeniería y dirección operativa.</p>
+          <p class="text-slate-300 text-sm">Consolidado para presentación ante equipos de ingeniería y dirección operativa.</p>
         </div>
 
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 font-mono">
           <div class="bg-[#0e092e] p-3 rounded-xl border border-[#2d1f85]">
-            <span class="text-[10px] text-slate-300 block">Viviendas Censadas</span>
+            <span class="text-sm text-slate-300 block">Viviendas Censadas</span>
             <span class="text-lg font-black text-amber-400">${this.nf.format(agg.casas)}</span>
           </div>
           <div class="bg-[#0e092e] p-3 rounded-xl border border-[#2d1f85]">
-            <span class="text-[10px] text-slate-300 block">Familias Registradas</span>
+            <span class="text-sm text-slate-300 block">Familias Registradas</span>
             <span class="text-lg font-black text-sky-400">${this.nf.format(agg.familias)}</span>
           </div>
           <div class="bg-[#0e092e] p-3 rounded-xl border border-[#2d1f85]">
-            <span class="text-[10px] text-slate-300 block">Habitantes Totales</span>
+            <span class="text-sm text-slate-300 block">Habitantes Totales</span>
             <span class="text-lg font-black text-emerald-400">${this.nf.format(agg.habitantes)}</span>
           </div>
           <div class="bg-[#0e092e] p-3 rounded-xl border border-[#2d1f85]">
-            <span class="text-[10px] text-slate-300 block">Padrón Electoral</span>
+            <span class="text-sm text-slate-300 block">Padrón Electoral</span>
             <span class="text-lg font-black text-white">${this.nf.format(agg.votantes)}</span>
           </div>
         </div>
@@ -1215,24 +1215,24 @@ export class DemoStatsApp {
         <!-- Caracterización Política del Voto (Estándar Oficial MIGATO) -->
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 font-mono text-center">
           <div class="bg-emerald-950/40 p-2.5 rounded-xl border border-emerald-500/30 text-emerald-300">
-            <span class="text-[9px] text-slate-400 block">🟢 Voto Duro</span>
+            <span class="text-sm text-slate-400 block">🟢 Voto Duro</span>
             <span class="text-base font-black">${this.nf.format(agg.votoDuro || 0)}</span>
           </div>
           <div class="bg-amber-950/40 p-2.5 rounded-xl border border-amber-500/30 text-amber-300">
-            <span class="text-[9px] text-slate-400 block">🟡 Voto Blando</span>
+            <span class="text-sm text-slate-400 block">🟡 Voto Blando</span>
             <span class="text-base font-black">${this.nf.format(agg.votoBlando || 0)}</span>
           </div>
           <div class="bg-sky-950/40 p-2.5 rounded-xl border border-sky-500/30 text-sky-300">
-            <span class="text-[9px] text-slate-400 block">🔵 Voto Nuevo</span>
+            <span class="text-sm text-slate-400 block">🔵 Voto Nuevo</span>
             <span class="text-base font-black">${this.nf.format(agg.votoNuevo || 0)}</span>
           </div>
           <div class="bg-purple-950/40 p-2.5 rounded-xl border border-purple-500/30 text-purple-300">
-            <span class="text-[9px] text-slate-400 block">📋 Nominales</span>
+            <span class="text-sm text-slate-400 block">📋 Nominales</span>
             <span class="text-base font-black">${this.nf.format(agg.electoresNominales || 0)}</span>
           </div>
         </div>
 
-        <div class="bg-[#0e092e] p-3 rounded-xl border border-[#2d1f85] space-y-1.5 font-mono text-[11px]">
+        <div class="bg-[#0e092e] p-3 rounded-xl border border-[#2d1f85] space-y-1.5 font-mono text-sm">
           <div class="flex justify-between text-slate-300">
             <span>Sectores / Polígonos Digitalizados:</span>
             <strong class="text-amber-400">${agg.totalSectores} polígonos</strong>
@@ -1255,7 +1255,7 @@ export class DemoStatsApp {
           </div>
         </div>
 
-        <p class="text-[10px] text-slate-500 italic text-center">
+        <p class="text-sm text-slate-500 italic text-center">
           Documento generado determinísticamente para fines de auditoría técnica e ingeniería de software.
         </p>
       </div>

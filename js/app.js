@@ -118,7 +118,7 @@ class App {
         // Modo Offline
         if (statusBar) statusBar.classList.remove('hidden');
         if (badge) {
-          badge.className = 'hidden sm:inline-flex px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider bg-amber-500/20 text-amber-300 border border-amber-500/30 rounded-full items-center gap-1';
+          badge.className = 'hidden sm:inline-flex px-2 py-0.5 text-sm font-bold uppercase tracking-wider bg-amber-500/20 text-amber-300 border border-amber-500/30 rounded-full items-center gap-1';
           badge.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span><span>Sin Cobertura (Offline)</span>`;
         }
         this.showToast('📴 Estás en modo sin conexión. Las encuestas se guardarán en tu teléfono.');
@@ -126,7 +126,7 @@ class App {
         // En Línea
         if (statusBar) statusBar.classList.add('hidden');
         if (badge) {
-          badge.className = 'hidden sm:inline-flex px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 rounded-full items-center gap-1';
+          badge.className = 'hidden sm:inline-flex px-2 py-0.5 text-sm font-bold uppercase tracking-wider bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 rounded-full items-center gap-1';
           badge.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span><span>En Línea</span>`;
         }
 
@@ -483,7 +483,7 @@ class App {
 
             if (labelGpsStatus) {
               labelGpsStatus.textContent = `📍 GPS Exacto: ${lat.toFixed(4)}, ${lng.toFixed(4)} (Precisión: ±${accuracy}m)`;
-              labelGpsStatus.className = 'text-[10px] text-emerald-600 font-bold';
+              labelGpsStatus.className = 'text-sm text-emerald-600 font-bold';
             }
 
             if (btnGpsText) btnGpsText.textContent = '✓ GPS Capturado';
@@ -495,7 +495,7 @@ class App {
             console.warn('Error al obtener GPS:', err);
             if (labelGpsStatus) {
               labelGpsStatus.textContent = 'No se pudo acceder al GPS. Se usarán coordenadas del sector.';
-              labelGpsStatus.className = 'text-[10px] text-amber-600';
+              labelGpsStatus.className = 'text-sm text-amber-600';
             }
             if (btnGpsText) btnGpsText.textContent = 'Reintentar GPS';
             btnGetGps.disabled = false;
@@ -516,7 +516,7 @@ class App {
           if (formLng) formLng.value = extracted.lng;
           if (labelGpsStatus) {
             labelGpsStatus.textContent = `📍 Coordenadas detectadas: ${extracted.lat.toFixed(5)}, ${extracted.lng.toFixed(5)}`;
-            labelGpsStatus.className = 'text-[10px] text-emerald-600 font-bold';
+            labelGpsStatus.className = 'text-sm text-emerald-600 font-bold';
           }
         }
       });
@@ -575,7 +575,7 @@ class App {
         if (formLng) formLng.value = '';
         if (labelGpsStatus) {
           labelGpsStatus.textContent = 'Usar coordenadas automáticas del sector';
-          labelGpsStatus.className = 'text-[10px] text-slate-500';
+          labelGpsStatus.className = 'text-sm text-slate-500';
         }
         if (btnGpsText) btnGpsText.textContent = 'Obtener mi GPS';
         if (btnGetGps) btnGetGps.classList.remove('bg-emerald-50', 'border-emerald-300', 'text-emerald-700');
@@ -852,26 +852,26 @@ class App {
       .slice(0, 4);
 
     if (entries.length === 0) {
-      container.innerHTML = `<p class="text-xs text-slate-400">Sin datos de encuestas aún.</p>`;
+      container.innerHTML = `<p class="text-sm text-slate-400">Sin datos de encuestas aún.</p>`;
       return;
     }
 
     container.innerHTML = entries.map((p, idx) => `
       <div class="p-2.5 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-between">
         <div class="flex items-center gap-2.5">
-          <span class="w-6 h-6 rounded-lg bg-slate-200 text-slate-700 font-bold text-xs flex items-center justify-center">
+          <span class="w-6 h-6 rounded-lg bg-slate-200 text-slate-700 font-bold text-sm flex items-center justify-center">
             ${idx + 1}
           </span>
           <div>
-            <h4 class="font-bold text-xs text-slate-900 leading-tight">${p.name}</h4>
-            <div class="flex items-center gap-2 text-[10px] text-slate-500">
+            <h4 class="font-bold text-sm text-slate-900 leading-tight">${p.name}</h4>
+            <div class="flex items-center gap-2 text-sm text-slate-500">
               <span class="text-sky-600 font-medium">🚰 ${p.aguaRojo} agua crítica</span>
               <span>•</span>
               <span class="text-amber-600 font-medium">🛣️ ${p.vialidadRojo} vialidad mala</span>
             </div>
           </div>
         </div>
-        <span class="px-2 py-0.5 rounded text-[11px] font-extrabold bg-red-100 text-red-700">
+        <span class="px-2 py-0.5 rounded text-sm font-extrabold bg-red-100 text-red-700">
           ${p.totalCriticos} críticos
         </span>
       </div>
@@ -890,15 +890,15 @@ class App {
         <div class="p-3 rounded-xl border ${hasReds ? 'border-red-100 bg-red-50/30' : 'border-slate-100 bg-slate-50'} flex flex-col justify-between">
           <div>
             <div class="flex items-center justify-between mb-1">
-              <h4 class="font-bold text-xs text-slate-900">${pName}</h4>
-              <span class="text-[10px] font-bold px-1.5 py-0.2 rounded ${pData.total > 0 ? 'bg-sky-100 text-sky-700' : 'bg-slate-200 text-slate-500'}">
+              <h4 class="font-bold text-sm text-slate-900">${pName}</h4>
+              <span class="text-sm font-bold px-1.5 py-0.2 rounded ${pData.total > 0 ? 'bg-sky-100 text-sky-700' : 'bg-slate-200 text-slate-500'}">
                 ${pData.total} enc.
               </span>
             </div>
-            <p class="text-[10px] text-slate-500 mb-2">${pData.sectores ? pData.sectores.size : 0} sectores visitados</p>
+            <p class="text-sm text-slate-500 mb-2">${pData.sectores ? pData.sectores.size : 0} sectores visitados</p>
           </div>
           
-          <div class="pt-2 border-t border-slate-200/60 flex items-center justify-between text-[11px]">
+          <div class="pt-2 border-t border-slate-200/60 flex items-center justify-between text-sm">
             <span class="${pData.aguaRojo > 0 ? 'text-red-600 font-bold' : 'text-slate-500'}">🚰 ${pData.aguaRojo}</span>
             <span class="${pData.vialidadRojo > 0 ? 'text-amber-600 font-bold' : 'text-slate-500'}">🛣️ ${pData.vialidadRojo}</span>
           </div>
@@ -921,7 +921,7 @@ class App {
     });
 
     if (surveys.length === 0) {
-      tbody.innerHTML = `<tr><td colspan="5" class="px-4 py-8 text-center text-xs text-slate-400">No hay encuestas de agua con los filtros seleccionados.</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="5" class="px-4 py-8 text-center text-sm text-slate-400">No hay encuestas de agua con los filtros seleccionados.</td></tr>`;
       return;
     }
 
@@ -930,7 +930,7 @@ class App {
         <td class="px-4 py-3 font-bold text-slate-900">${s.sector}</td>
         <td class="px-4 py-3 text-slate-500">${s.parroquia}</td>
         <td class="px-4 py-3 text-center">
-          <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-bold ${this.getBadgeClass(s.aguaEstado)}">
+          <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-sm font-bold ${this.getBadgeClass(s.aguaEstado)}">
             <span class="w-2 h-2 rounded-full ${this.getBgColorClass(s.aguaEstado)}"></span>
             ${this.capitalize(s.aguaEstado)}
           </span>
@@ -955,7 +955,7 @@ class App {
     });
 
     if (surveys.length === 0) {
-      tbody.innerHTML = `<tr><td colspan="5" class="px-4 py-8 text-center text-xs text-slate-400">No hay encuestas de vialidad con los filtros seleccionados.</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="5" class="px-4 py-8 text-center text-sm text-slate-400">No hay encuestas de vialidad con los filtros seleccionados.</td></tr>`;
       return;
     }
 
@@ -964,7 +964,7 @@ class App {
         <td class="px-4 py-3 font-bold text-slate-900">${s.sector}</td>
         <td class="px-4 py-3 text-slate-500">${s.parroquia}</td>
         <td class="px-4 py-3 text-center">
-          <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-bold ${this.getBadgeClass(s.vialidadEstado)}">
+          <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-sm font-bold ${this.getBadgeClass(s.vialidadEstado)}">
             <span class="w-2 h-2 rounded-full ${this.getBgColorClass(s.vialidadEstado)}"></span>
             ${this.capitalize(s.vialidadEstado)}
           </span>
@@ -1003,7 +1003,7 @@ class App {
     }
 
     if (surveys.length === 0) {
-      tbody.innerHTML = `<tr><td colspan="7" class="px-4 py-8 text-center text-xs text-slate-400">No se encontraron encuestas con los criterios de búsqueda.</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="7" class="px-4 py-8 text-center text-sm text-slate-400">No se encontraron encuestas con los criterios de búsqueda.</td></tr>`;
       return;
     }
 
@@ -1011,30 +1011,30 @@ class App {
       <tr class="hover:bg-slate-50 transition">
         <td class="px-4 py-3">
           <span class="font-mono font-bold text-slate-900">${s.id}</span>
-          <span class="block text-[10px] text-slate-400">${s.fecha}</span>
+          <span class="block text-sm text-slate-400">${s.fecha}</span>
         </td>
         <td class="px-4 py-3">
           <span class="font-bold text-slate-800">${s.encuestador}</span>
-          <span class="block text-[10px] font-mono text-slate-500">${s.cedula || 'Sin Cédula'}</span>
+          <span class="block text-sm font-mono text-slate-500">${s.cedula || 'Sin Cédula'}</span>
         </td>
         <td class="px-4 py-3">
           <span class="font-bold text-slate-900">${s.sector}</span>
-          <span class="block text-[10px] text-slate-500">${s.parroquia}</span>
+          <span class="block text-sm text-slate-500">${s.parroquia}</span>
         </td>
         <td class="px-4 py-3 text-center">
-          <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold ${this.getBadgeClass(s.aguaEstado)}">
+          <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-sm font-bold ${this.getBadgeClass(s.aguaEstado)}">
             <span class="w-1.5 h-1.5 rounded-full ${this.getBgColorClass(s.aguaEstado)}"></span>
             ${this.capitalize(s.aguaEstado)}
           </span>
         </td>
         <td class="px-4 py-3 text-center">
-          <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold ${this.getBadgeClass(s.vialidadEstado)}">
+          <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-sm font-bold ${this.getBadgeClass(s.vialidadEstado)}">
             <span class="w-1.5 h-1.5 rounded-full ${this.getBgColorClass(s.vialidadEstado)}"></span>
             ${this.capitalize(s.vialidadEstado)}
           </span>
         </td>
         <td class="px-4 py-3 text-center">
-          <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${s.syncStatus === 'pending' ? 'bg-amber-100 text-amber-800' : 'bg-emerald-100 text-emerald-800'}">
+          <span class="px-2 py-0.5 rounded-full text-sm font-bold ${s.syncStatus === 'pending' ? 'bg-amber-100 text-amber-800' : 'bg-emerald-100 text-emerald-800'}">
             ${s.syncStatus === 'pending' ? '⏳ Pendiente' : '✓ Sincronizado'}
           </span>
         </td>

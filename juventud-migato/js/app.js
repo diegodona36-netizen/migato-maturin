@@ -112,7 +112,7 @@ class JuventudDashboardApp {
       if (r.fotos && r.fotos.length > 0) {
         fotosHtml = `
           <div class="pt-3 border-t border-slate-100">
-            <span class="text-[11px] font-bold text-slate-600 uppercase tracking-wider block mb-2 flex items-center gap-1.5">
+            <span class="text-sm font-bold text-slate-600 uppercase tracking-wider block mb-2 flex items-center gap-1.5">
               <i data-lucide="image" class="w-3.5 h-3.5 text-amber-500"></i> Evidencias Fotográficas (${r.fotos.length})
             </span>
             <div class="grid grid-cols-2 gap-2">
@@ -120,7 +120,7 @@ class JuventudDashboardApp {
                 <div class="group relative rounded-xl overflow-hidden aspect-video bg-slate-100 cursor-pointer border border-slate-200" onclick="window.juventudApp.openPhotoModal('${f.url}', '${f.titulo}', '${r.municipio}')">
                   <img src="${f.url}" alt="${f.titulo}" class="w-full h-full object-cover group-hover:scale-105 transition duration-200">
                   <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent flex items-end p-2 opacity-90 group-hover:opacity-100 transition">
-                    <span class="text-[10px] font-bold text-white leading-tight truncate">${f.titulo}</span>
+                    <span class="text-sm font-bold text-white leading-tight truncate">${f.titulo}</span>
                   </div>
                 </div>
               `).join("")}
@@ -129,7 +129,7 @@ class JuventudDashboardApp {
         `;
       } else {
         fotosHtml = `
-          <div class="pt-3 border-t border-slate-100 text-center py-2 text-[11px] text-slate-400 italic">
+          <div class="pt-3 border-t border-slate-100 text-center py-2 text-sm text-slate-400 italic">
             Sin fotos adjuntas en este reporte
           </div>
         `;
@@ -142,55 +142,55 @@ class JuventudDashboardApp {
             <div>
               <div class="flex items-center gap-2">
                 <h3 class="text-lg font-black text-slate-900">${r.municipio}</h3>
-                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800">
+                <span class="px-2 py-0.5 rounded-full text-sm font-bold bg-amber-100 text-amber-800">
                   ${r.parroquia}
                 </span>
               </div>
-              <p class="text-xs text-slate-500 font-medium mt-0.5 flex items-center gap-1.5">
+              <p class="text-sm text-slate-500 font-medium mt-0.5 flex items-center gap-1.5">
                 <i data-lucide="user" class="w-3.5 h-3.5 text-slate-400"></i>
                 <span>${r.responsable} (${r.cargo || "Secretario Juvenil"})</span>
               </p>
             </div>
 
             <div class="text-right shrink-0">
-              <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 flex items-center gap-1">
+              <span class="px-2 py-0.5 rounded-full text-sm font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 flex items-center gap-1">
                 <i data-lucide="check-circle" class="w-3 h-3"></i> Entregado
               </span>
-              <span class="text-[10px] text-slate-400 font-mono block mt-1">${r.fechaEntrega}</span>
+              <span class="text-sm text-slate-400 font-mono block mt-1">${r.fechaEntrega}</span>
             </div>
           </div>
 
           <div class="grid grid-cols-3 gap-2 text-center">
             
             <div class="p-2.5 rounded-xl bg-amber-50/70 border border-amber-200/80">
-              <span class="text-[10px] font-bold text-amber-800 uppercase block">🟡 Captación</span>
+              <span class="text-sm font-bold text-amber-800 uppercase block">🟡 Captación</span>
               <span class="text-xl font-black text-amber-600 block mt-0.5">${r.captacion?.totalJovenes || 0}</span>
-              <span class="text-[9px] text-slate-500">jóvenes</span>
+              <span class="text-sm text-slate-500">jóvenes</span>
             </div>
 
             <div class="p-2.5 rounded-xl bg-sky-50/70 border border-sky-200/80">
-              <span class="text-[10px] font-bold text-sky-800 uppercase block">🗣️ Asambleas</span>
+              <span class="text-sm font-bold text-sky-800 uppercase block">🗣️ Asambleas</span>
               <span class="text-xl font-black text-sky-600 block mt-0.5">${r.conversatorios?.totalRealizados || 0}</span>
-              <span class="text-[9px] text-slate-500">${r.conversatorios?.totalAsistentes || 0} part.</span>
+              <span class="text-sm text-slate-500">${r.conversatorios?.totalAsistentes || 0} part.</span>
             </div>
 
             <div class="p-2.5 rounded-xl bg-emerald-50/70 border border-emerald-200/80">
-              <span class="text-[10px] font-bold text-emerald-800 uppercase block">🚶‍♂️ Caminatas</span>
+              <span class="text-sm font-bold text-emerald-800 uppercase block">🚶‍♂️ Caminatas</span>
               <span class="text-xl font-black text-emerald-600 block mt-0.5">${r.caminatas?.totalRealizadas || 0}</span>
-              <span class="text-[9px] text-slate-500">${r.caminatas?.casasVisitadas || 0} casas</span>
+              <span class="text-sm text-slate-500">${r.caminatas?.casasVisitadas || 0} casas</span>
             </div>
 
           </div>
 
-          <div class="space-y-2 text-xs">
+          <div class="space-y-2 text-sm">
             <div class="p-3 rounded-xl bg-slate-50 border border-slate-100">
-              <span class="font-bold text-slate-800 block text-[11px] mb-0.5">🌟 Logro Destacado de la Semana:</span>
-              <p class="text-slate-600 leading-relaxed text-[11px]">${r.cualitativo?.logroPrincipal || "Sin registrar."}</p>
+              <span class="font-bold text-slate-800 block text-sm mb-0.5">🌟 Logro Destacado de la Semana:</span>
+              <p class="text-slate-600 leading-relaxed text-sm">${r.cualitativo?.logroPrincipal || "Sin registrar."}</p>
             </div>
 
             <div class="p-3 rounded-xl bg-rose-50/60 border border-rose-100 text-rose-950">
-              <span class="font-bold block text-[11px] mb-0.5 text-rose-900">⚠️ Nudo Crítico / Requerimiento:</span>
-              <p class="text-slate-700 leading-relaxed text-[11px]">${r.cualitativo?.nudoCritico || "Ninguno reportado."}</p>
+              <span class="font-bold block text-sm mb-0.5 text-rose-900">⚠️ Nudo Crítico / Requerimiento:</span>
+              <p class="text-slate-700 leading-relaxed text-sm">${r.cualitativo?.nudoCritico || "Ninguno reportado."}</p>
             </div>
           </div>
 
@@ -198,9 +198,9 @@ class JuventudDashboardApp {
 
         </div>
 
-        <div class="bg-slate-50 px-5 py-2.5 border-t border-slate-100 flex items-center justify-between text-xs">
-          <span class="text-[11px] text-slate-500 font-mono">📱 ${r.telefono}</span>
-          <span class="text-[11px] font-bold text-sky-600">🎯 Meta: ${r.cualitativo?.metaSiguienteSemana || "Despliegue continuo"}</span>
+        <div class="bg-slate-50 px-5 py-2.5 border-t border-slate-100 flex items-center justify-between text-sm">
+          <span class="text-sm text-slate-500 font-mono">📱 ${r.telefono}</span>
+          <span class="text-sm font-bold text-sky-600">🎯 Meta: ${r.cualitativo?.metaSiguienteSemana || "Despliegue continuo"}</span>
         </div>
       `;
 
@@ -226,7 +226,7 @@ class JuventudDashboardApp {
 
     rankingData.forEach((r, idx) => {
       const tr = document.createElement("tr");
-      tr.className = "border-b border-slate-100 hover:bg-slate-50 text-xs transition";
+      tr.className = "border-b border-slate-100 hover:bg-slate-50 text-sm transition";
       
       const posColor = idx === 0 ? "text-amber-500 font-black" : (idx === 1 ? "text-slate-400 font-bold" : (idx === 2 ? "text-amber-700 font-bold" : "text-slate-400"));
 
@@ -234,7 +234,7 @@ class JuventudDashboardApp {
         <td class="px-4 py-3 font-mono font-bold ${posColor}">#${idx + 1}</td>
         <td class="px-4 py-3 font-bold text-slate-900 flex items-center gap-2">
           <span>${r.municipio}</span>
-          <span class="text-[10px] text-slate-400 font-normal">(${r.parroquia})</span>
+          <span class="text-sm text-slate-400 font-normal">(${r.parroquia})</span>
         </td>
         <td class="px-4 py-3 text-slate-700">${r.responsable}</td>
         <td class="px-4 py-3 font-mono font-bold text-amber-600">${r.captacion?.totalJovenes || 0}</td>
@@ -273,9 +273,9 @@ class JuventudDashboardApp {
       card.innerHTML = `
         <img src="${f.url}" alt="${f.titulo}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
         <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex flex-col justify-end p-3 text-white">
-          <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-500 text-[#0e092e] w-fit mb-1">${f.eje || "Evidencia"}</span>
-          <h4 class="font-bold text-xs leading-tight">${f.titulo}</h4>
-          <p class="text-[10px] text-slate-300 mt-0.5">${f.municipio} • ${f.parroquia}</p>
+          <span class="text-sm font-bold px-2 py-0.5 rounded-full bg-amber-500 text-[#0e092e] w-fit mb-1">${f.eje || "Evidencia"}</span>
+          <h4 class="font-bold text-sm leading-tight">${f.titulo}</h4>
+          <p class="text-sm text-slate-300 mt-0.5">${f.municipio} • ${f.parroquia}</p>
         </div>
       `;
       container.appendChild(card);
@@ -294,36 +294,36 @@ class JuventudDashboardApp {
         
         <div class="flex items-center justify-between border-b-2 border-[#140e40] pb-4">
           <div>
-            <span class="text-xs font-black tracking-widest uppercase text-amber-600">SECRETARÍA REGIONAL JUVENIL MIGATO</span>
+            <span class="text-sm font-black tracking-widest uppercase text-amber-600">SECRETARÍA REGIONAL JUVENIL MIGATO</span>
             <h2 class="text-2xl font-black text-slate-900">Informe Ejecutivo de Despliegue Semanal</h2>
-            <p class="text-xs text-slate-500 font-medium">Reunión Ordinaria de los Lunes • Monagas • ${hoy}</p>
+            <p class="text-sm text-slate-500 font-medium">Reunión Ordinaria de los Lunes • Monagas • ${hoy}</p>
           </div>
           <div class="text-right">
-            <span class="px-3 py-1 bg-[#140e40] text-white font-mono font-bold text-xs rounded-lg">DESPLIEGUE MONAGAS</span>
+            <span class="px-3 py-1 bg-[#140e40] text-white font-mono font-bold text-sm rounded-lg">DESPLIEGUE MONAGAS</span>
           </div>
         </div>
 
         <div class="grid grid-cols-3 gap-4 text-center">
           <div class="p-4 rounded-xl border border-amber-300 bg-amber-50">
-            <span class="text-xs font-bold text-amber-800 uppercase block">🟡 Total Jóvenes Captados</span>
+            <span class="text-sm font-bold text-amber-800 uppercase block">🟡 Total Jóvenes Captados</span>
             <span class="text-3xl font-black text-amber-600 block mt-1">${totales.captacion}</span>
           </div>
           <div class="p-4 rounded-xl border border-sky-300 bg-sky-50">
-            <span class="text-xs font-bold text-sky-800 uppercase block">🗣️ Conversatorios Realizados</span>
+            <span class="text-sm font-bold text-sky-800 uppercase block">🗣️ Conversatorios Realizados</span>
             <span class="text-3xl font-black text-sky-600 block mt-1">${totales.conversatorios}</span>
-            <span class="text-[11px] text-slate-500">${totales.asistentes} participantes</span>
+            <span class="text-sm text-slate-500">${totales.asistentes} participantes</span>
           </div>
           <div class="p-4 rounded-xl border border-emerald-300 bg-emerald-50">
-            <span class="text-xs font-bold text-emerald-800 uppercase block">🚶‍♂️ Caminatas / Casas Tocadas</span>
+            <span class="text-sm font-bold text-emerald-800 uppercase block">🚶‍♂️ Caminatas / Casas Tocadas</span>
             <span class="text-3xl font-black text-emerald-600 block mt-1">${totales.caminatas}</span>
-            <span class="text-[11px] text-slate-500">${totales.casas} casas visitadas</span>
+            <span class="text-sm text-slate-500">${totales.casas} casas visitadas</span>
           </div>
         </div>
 
         <div class="space-y-2">
           <h3 class="text-sm font-black uppercase text-slate-900 tracking-wider">Desglose por Municipio</h3>
-          <table class="w-full text-xs text-left border border-slate-200 rounded-lg overflow-hidden">
-            <thead class="bg-slate-100 text-slate-700 font-bold uppercase text-[10px]">
+          <table class="w-full text-sm text-left border border-slate-200 rounded-lg overflow-hidden">
+            <thead class="bg-slate-100 text-slate-700 font-bold uppercase text-sm">
               <tr>
                 <th class="p-2.5">Municipio / Parroquia</th>
                 <th class="p-2.5">Responsable</th>
@@ -341,7 +341,7 @@ class JuventudDashboardApp {
                   <td class="p-2.5 font-mono font-bold text-center text-amber-600">${r.captacion?.totalJovenes || 0}</td>
                   <td class="p-2.5 font-mono font-bold text-center text-sky-600">${r.conversatorios?.totalRealizados || 0}</td>
                   <td class="p-2.5 font-mono font-bold text-center text-emerald-600">${r.caminatas?.totalRealizadas || 0}</td>
-                  <td class="p-2.5 text-slate-600 text-[11px]">${r.cualitativo?.logroPrincipal || "-"}</td>
+                  <td class="p-2.5 text-slate-600 text-sm">${r.cualitativo?.logroPrincipal || "-"}</td>
                 </tr>
               `).join("")}
             </tbody>
@@ -350,10 +350,10 @@ class JuventudDashboardApp {
 
         <div class="pt-8 flex items-center justify-between border-t border-slate-200">
           <div class="text-center w-64 border-t border-slate-400 pt-2">
-            <p class="font-bold text-xs text-slate-900">Albany Ydrogo</p>
-            <p class="text-[10px] text-slate-500">Secretaria Regional Juvenil MIGATO</p>
+            <p class="font-bold text-sm text-slate-900">Albany Ydrogo</p>
+            <p class="text-sm text-slate-500">Secretaria Regional Juvenil MIGATO</p>
           </div>
-          <div class="text-right text-[10px] text-slate-400 font-mono">
+          <div class="text-right text-sm text-slate-400 font-mono">
             Sistema Oficial de Gestión Territorial • MIGATO Monagas
           </div>
         </div>

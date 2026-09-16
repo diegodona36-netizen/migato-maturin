@@ -1450,49 +1450,49 @@ export class EarthMapEngine {
             const polNuevo = totNuevo || Math.max(0, totVot - polDuro - polBlando);
 
             spLayer.bindTooltip(`
-              <div class="p-2 font-mono text-xs max-w-[260px] bg-[#140e40]/95 rounded-xl border border-purple-500/50 shadow-2xl">
+              <div class="p-2 font-mono text-sm max-w-[260px] bg-[#140e40]/95 rounded-xl border border-purple-500/50 shadow-2xl">
                 <div class="flex items-center justify-between gap-2 border-b border-purple-800/60 pb-1.5 mb-1.5">
-                  <span class="text-[9px] uppercase tracking-wider text-purple-400 font-black flex items-center gap-1">
+                  <span class="text-sm uppercase tracking-wider text-purple-400 font-black flex items-center gap-1">
                     <span class="w-2 h-2 rounded-full bg-purple-400"></span>
                     <span>Nivel 4 • Eje Territorial</span>
                   </span>
-                  <span class="text-[9px] font-bold text-purple-200 bg-purple-900/80 px-1.5 py-0.5 rounded border border-purple-700">
+                  <span class="text-sm font-bold text-purple-200 bg-purple-900/80 px-1.5 py-0.5 rounded border border-purple-700">
                     ${childSecs.length} Sectores
                   </span>
                 </div>
                 <strong class="text-white block font-black text-sm mb-0.5">${sp.nombre}</strong>
-                <span class="text-[10px] text-purple-200 block mb-2">📍 Parroquia ${pData.nombre || parishId}</span>
+                <span class="text-sm text-purple-200 block mb-2">📍 Parroquia ${pData.nombre || parishId}</span>
                 
-                <div class="grid grid-cols-2 gap-1.5 text-center text-[10px] font-mono bg-[#18114a]/90 p-1.5 rounded-lg border border-purple-900/50 mb-1.5">
+                <div class="grid grid-cols-2 gap-1.5 text-center text-sm font-mono bg-[#18114a]/90 p-1.5 rounded-lg border border-purple-900/50 mb-1.5">
                   <div class="bg-[#0e092e]/90 p-1 rounded border border-amber-500/30">
-                    <span class="text-[9px] text-amber-400 font-bold block uppercase">Casas</span>
-                    <strong class="text-amber-200 text-xs">${totCasas.toLocaleString()}</strong>
+                    <span class="text-sm text-amber-400 font-bold block uppercase">Casas</span>
+                    <strong class="text-amber-200 text-sm">${totCasas.toLocaleString()}</strong>
                   </div>
                   <div class="bg-[#0e092e]/90 p-1 rounded border border-sky-500/30">
-                    <span class="text-[9px] text-sky-400 font-bold block uppercase">Familias</span>
-                    <strong class="text-sky-200 text-xs">${totFam.toLocaleString()}</strong>
+                    <span class="text-sm text-sky-400 font-bold block uppercase">Familias</span>
+                    <strong class="text-sky-200 text-sm">${totFam.toLocaleString()}</strong>
                   </div>
                   <div class="bg-[#0e092e]/90 p-1 rounded border border-emerald-500/30">
-                    <span class="text-[9px] text-emerald-400 font-bold block uppercase">Habitantes</span>
-                    <strong class="text-emerald-200 text-xs">${totHab.toLocaleString()}</strong>
+                    <span class="text-sm text-emerald-400 font-bold block uppercase">Habitantes</span>
+                    <strong class="text-emerald-200 text-sm">${totHab.toLocaleString()}</strong>
                   </div>
                   <div class="bg-[#0e092e]/90 p-1 rounded border border-purple-500/30">
-                    <span class="text-[9px] text-purple-400 font-bold block uppercase">Votantes</span>
-                    <strong class="text-purple-200 text-xs">${totVot.toLocaleString()}</strong>
+                    <span class="text-sm text-purple-400 font-bold block uppercase">Votantes</span>
+                    <strong class="text-purple-200 text-sm">${totVot.toLocaleString()}</strong>
                   </div>
                 </div>
 
-                <div class="grid grid-cols-3 gap-1 text-center font-mono text-[9px] mb-1.5 p-1 rounded-lg bg-[#0e092e]/90 border border-[#2d1f85]">
+                <div class="grid grid-cols-3 gap-1 text-center font-mono text-sm mb-1.5 p-1 rounded-lg bg-[#0e092e]/90 border border-[#2d1f85]">
                   <span class="text-emerald-300 font-bold" title="Voto Duro">🟢 ${polDuro.toLocaleString()}</span>
                   <span class="text-amber-300 font-bold" title="Voto Blando">🟡 ${polBlando.toLocaleString()}</span>
                   <span class="text-sky-300 font-bold" title="Voto Nuevo">🔵 ${polNuevo.toLocaleString()}</span>
                 </div>
 
-                <div class="flex items-center justify-between text-[9px] text-slate-400 pt-0.5 border-t border-purple-900/40">
+                <div class="flex items-center justify-between text-sm text-slate-400 pt-0.5 border-t border-purple-900/40">
                   <span>Área: ${sp.areaHa || 0} Ha</span>
                   <span>Perímetro: ${sp.perimetroM || 0} m</span>
                 </div>
-                <span class="text-[9px] text-purple-300 font-bold block mt-1 text-center">👉 Clic para enfocar y ver ficha</span>
+                <span class="text-sm text-purple-300 font-bold block mt-1 text-center">👉 Clic para enfocar y ver ficha</span>
               </div>
             `, { sticky: true, className: "earth-tooltip" });
           }
@@ -1566,53 +1566,53 @@ export class EarthMapEngine {
 
           if (!isDrawing && !this.isTouchDevice) {
             pLayer.bindTooltip(`
-              <div class="p-2 font-mono text-xs max-w-[260px] bg-[#140e40]/95 rounded-xl border border-sky-500/50 shadow-2xl">
+              <div class="p-2 font-mono text-sm max-w-[260px] bg-[#140e40]/95 rounded-xl border border-sky-500/50 shadow-2xl">
                 <div class="flex items-center justify-between gap-2 border-b border-sky-800/60 pb-1.5 mb-1.5">
-                  <span class="text-[9px] uppercase tracking-wider text-sky-400 font-black flex items-center gap-1 truncate">
+                  <span class="text-sm uppercase tracking-wider text-sky-400 font-black flex items-center gap-1 truncate">
                     <span class="w-2 h-2 rounded-full bg-sky-400"></span>
                     <span class="truncate">Sector Vecinal${spTag}</span>
                   </span>
-                  <span class="text-[9px] font-bold text-emerald-300 bg-emerald-950/80 px-1.5 py-0.5 rounded border border-emerald-700 shrink-0">
+                  <span class="text-sm font-bold text-emerald-300 bg-emerald-950/80 px-1.5 py-0.5 rounded border border-emerald-700 shrink-0">
                     Base
                   </span>
                 </div>
                 <strong class="text-white block font-black text-sm mb-0.5 truncate">${poly.nombre}</strong>
-                <span class="text-[10px] text-slate-300 block mb-2 truncate">📍 Parroquia ${pData.nombre || parishId}</span>
+                <span class="text-sm text-slate-300 block mb-2 truncate">📍 Parroquia ${pData.nombre || parishId}</span>
                 
-                <div class="grid grid-cols-2 gap-1.5 text-center text-[10px] font-mono bg-[#18114a]/90 p-1.5 rounded-lg border border-sky-900/50 mb-1.5">
+                <div class="grid grid-cols-2 gap-1.5 text-center text-sm font-mono bg-[#18114a]/90 p-1.5 rounded-lg border border-sky-900/50 mb-1.5">
                   <div class="bg-[#0e092e]/90 p-1 rounded border border-amber-500/30">
-                    <span class="text-[9px] text-amber-400 font-bold block uppercase">Casas</span>
-                    <strong class="text-amber-200 text-xs">${casasCount.toLocaleString()}</strong>
+                    <span class="text-sm text-amber-400 font-bold block uppercase">Casas</span>
+                    <strong class="text-amber-200 text-sm">${casasCount.toLocaleString()}</strong>
                   </div>
                   <div class="bg-[#0e092e]/90 p-1 rounded border border-sky-500/30">
-                    <span class="text-[9px] text-sky-400 font-bold block uppercase">Familias</span>
-                    <strong class="text-sky-200 text-xs">${famCount.toLocaleString()}</strong>
+                    <span class="text-sm text-sky-400 font-bold block uppercase">Familias</span>
+                    <strong class="text-sky-200 text-sm">${famCount.toLocaleString()}</strong>
                   </div>
                   <div class="bg-[#0e092e]/90 p-1 rounded border border-emerald-500/30">
-                    <span class="text-[9px] text-emerald-400 font-bold block uppercase">Habitantes</span>
-                    <strong class="text-emerald-200 text-xs">${habCount.toLocaleString()}</strong>
+                    <span class="text-sm text-emerald-400 font-bold block uppercase">Habitantes</span>
+                    <strong class="text-emerald-200 text-sm">${habCount.toLocaleString()}</strong>
                   </div>
                   <div class="bg-[#0e092e]/90 p-1 rounded border border-purple-500/30">
-                    <span class="text-[9px] text-purple-400 font-bold block uppercase">Votantes</span>
-                    <strong class="text-purple-200 text-xs">${milCount.toLocaleString()}</strong>
+                    <span class="text-sm text-purple-400 font-bold block uppercase">Votantes</span>
+                    <strong class="text-purple-200 text-sm">${milCount.toLocaleString()}</strong>
                   </div>
                 </div>
 
-                <div class="grid grid-cols-3 gap-1 text-center font-mono text-[9px] mb-1.5 p-1 rounded-lg bg-[#0e092e]/90 border border-[#2d1f85]">
+                <div class="grid grid-cols-3 gap-1 text-center font-mono text-sm mb-1.5 p-1 rounded-lg bg-[#0e092e]/90 border border-[#2d1f85]">
                   <span class="text-emerald-300 font-bold" title="Voto Duro">🟢 ${duroCount.toLocaleString()}</span>
                   <span class="text-amber-300 font-bold" title="Voto Blando">🟡 ${blandoCount.toLocaleString()}</span>
                   <span class="text-sky-300 font-bold" title="Voto Nuevo">🔵 ${nuevoCount.toLocaleString()}</span>
                 </div>
 
-                <div class="text-[10px] text-purple-200 font-medium truncate mb-1 bg-purple-950/60 px-1.5 py-1 rounded border border-purple-800/60">
+                <div class="text-sm text-purple-200 font-medium truncate mb-1 bg-purple-950/60 px-1.5 py-1 rounded border border-purple-800/60">
                   ${centroVot}
                 </div>
 
-                <div class="flex items-center justify-between text-[9px] text-slate-400 pt-0.5 border-t border-sky-900/40">
+                <div class="flex items-center justify-between text-sm text-slate-400 pt-0.5 border-t border-sky-900/40">
                   <span>Área: ${poly.areaHa || 0} Ha</span>
                   <span>Perímetro: ${poly.perimetroM || 0} m</span>
                 </div>
-                <span class="text-[9px] text-sky-300 font-bold block mt-1 text-center">👉 Clic para abrir Ficha / Modificar</span>
+                <span class="text-sm text-sky-300 font-bold block mt-1 text-center">👉 Clic para abrir Ficha / Modificar</span>
               </div>
             `, { sticky: true, className: "earth-tooltip" });
           }
@@ -1660,9 +1660,9 @@ export class EarthMapEngine {
         });
 
         line.bindTooltip(`
-          <div class="p-1 font-mono text-xs">
+          <div class="p-1 font-mono text-sm">
             <strong class="text-white block font-bold">${r.nombre}</strong>
-            <span class="text-[10px] text-emerald-300">Longitud: ${r.longitudM || 0} m</span>
+            <span class="text-sm text-emerald-300">Longitud: ${r.longitudM || 0} m</span>
           </div>
         `, { sticky: true, className: "earth-tooltip" });
 

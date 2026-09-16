@@ -610,7 +610,7 @@ export class PropertiesDialog {
               <tr>
                 <td colspan="5" class="py-6 px-3 text-center text-slate-400">
                   <p class="font-bold text-slate-300">Sin electores registrados en ${item.nombre || 'este sector'}</p>
-                  <p class="text-[10px] text-slate-500 mt-1">Usa el botón "Cargar Elector" para registrar personas con los 10 campos oficiales.</p>
+                  <p class="text-sm text-slate-500 mt-1">Usa el botón "Cargar Elector" para registrar personas con los 10 campos oficiales.</p>
                 </td>
               </tr>
             `;
@@ -622,7 +622,7 @@ export class PropertiesDialog {
                 <td class="p-2 text-center font-mono">${e.edad || '--'}</td>
                 <td class="p-2 truncate max-w-[100px]" title="${e.profesion || ''}">${e.profesion || '--'}</td>
                 <td class="p-2 text-center">
-                  <span class="px-2 py-0.5 rounded-full text-[10px] font-black uppercase ${
+                  <span class="px-2 py-0.5 rounded-full text-sm font-black uppercase ${
                     e.clasificacionVoto === 'duro' ? 'bg-emerald-950 text-emerald-300 border border-emerald-500/40' :
                     (e.clasificacionVoto === 'blando' ? 'bg-amber-950 text-amber-300 border border-amber-500/40' :
                     'bg-sky-950 text-sky-300 border border-sky-500/40')

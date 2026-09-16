@@ -105,8 +105,8 @@ class TrazadorVialApp {
       container.innerHTML = `
         <div class="p-6 text-center border border-dashed border-[#2d1f85]/70 rounded-2xl text-slate-500 space-y-2">
           <i data-lucide="edit-3" class="w-8 h-8 mx-auto text-slate-500"></i>
-          <p class="text-xs font-bold text-slate-400">Aún no has trazado tramos en La Puente.</p>
-          <p class="text-[10px]">Toca "+ Trazar Nuevo Tramo" para empezar cuadra por cuadra.</p>
+          <p class="text-sm font-bold text-slate-400">Aún no has trazado tramos en La Puente.</p>
+          <p class="text-sm">Toca "+ Trazar Nuevo Tramo" para empezar cuadra por cuadra.</p>
         </div>
       `;
       if (window.lucide) { try { window.lucide.createIcons(); } catch(e){} }
@@ -125,12 +125,12 @@ class TrazadorVialApp {
         <div class="flex items-center gap-2.5 overflow-hidden">
           <span class="w-3.5 h-3.5 rounded-full shrink-0 shadow ${colorBadge[t.color] || 'bg-slate-500'}"></span>
           <div class="overflow-hidden">
-            <h4 class="text-xs font-bold text-slate-200 truncate group-hover:text-white">${t.nombre}</h4>
-            <p class="text-[10px] text-slate-400 font-mono">${t.longitudM} m • <span class="capitalize text-slate-300 font-bold">${t.color}</span></p>
+            <h4 class="text-sm font-bold text-slate-200 truncate group-hover:text-white">${t.nombre}</h4>
+            <p class="text-sm text-slate-400 font-mono">${t.longitudM} m • <span class="capitalize text-slate-300 font-bold">${t.color}</span></p>
           </div>
         </div>
         <div class="flex items-center gap-1 shrink-0">
-          ${t.foto ? `<span class="text-xs" title="Tiene foto">📷</span>` : ''}
+          ${t.foto ? `<span class="text-sm" title="Tiene foto">📷</span>` : ''}
           <button type="button" onclick="event.stopPropagation(); window.trazadorApp.deleteTramo('${t.id}')" class="p-1 text-slate-500 hover:text-red-400 rounded opacity-70 group-hover:opacity-100 transition" title="Borrar tramo">
             <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
           </button>

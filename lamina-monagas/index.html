@@ -43,6 +43,7 @@
   <meta http-equiv="Pragma" content="no-cache" />
 </head>
 <body class="bg-white text-slate-900 h-screen w-screen overflow-hidden select-none">
+  <a href="#main-content" class="skip-link">Saltar al contenido principal</a>
 
   <!-- 1. LIENZO CARTOGRÁFICO SATELITAL PANTALLA COMPLETA -->
   <div id="map-lamina"></div>
@@ -54,14 +55,14 @@
     <div class="lamina-header-card flex items-center gap-3">
       <img src="../assets/logo-migato.png" alt="MIGATO" class="w-9 h-9 object-contain shrink-0" onerror="this.style.display='none'">
       <div>
-        <span class="text-[9px] font-black uppercase tracking-wider text-slate-500 block leading-none mb-0.5">
+        <span class="text-base font-black uppercase tracking-wider text-slate-500 block leading-none mb-0.5">
           República Bolivariana de Venezuela
         </span>
-        <h1 class="text-xs font-black text-slate-950 uppercase tracking-tight flex items-center gap-1.5">
+        <h1 class="text-base font-black text-slate-950 uppercase tracking-tight flex items-center gap-1.5">
           <span>Gobernación del Estado Monagas</span>
           <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0"></span>
         </h1>
-        <span class="text-[9px] font-bold text-sky-700 block leading-tight">
+        <span class="text-base font-bold text-sky-700 block leading-tight">
           Sala Situacional • Cartografía Estratégica 2026
         </span>
       </div>
@@ -69,21 +70,21 @@
 
     <!-- Bloque Central: Título Dinámico de la Entidad y Migas de Pan -->
     <div class="lamina-header-card flex flex-col items-center justify-center text-center px-6">
-      <h2 id="lamina-entity-title" class="font-display text-sm sm:text-base font-black text-slate-950 uppercase tracking-tight">
+      <h2 id="lamina-entity-title" class="font-display text-base sm:text-base font-black text-slate-950 uppercase tracking-tight">
         MUNICIPIO MATURÍN
       </h2>
-      <span id="lamina-entity-subtitle" class="text-[10px] font-extrabold text-slate-500 uppercase tracking-wider mb-1">
+      <span id="lamina-entity-subtitle" class="text-base font-extrabold text-slate-500 uppercase tracking-wider mb-1">
         ESTADO MONAGAS • 11 PARROQUIAS OFICIALES
       </span>
       <!-- Migas de Pan Interactivas -->
-      <div id="lamina-breadcrumbs" class="flex items-center gap-1.5 text-xs">
+      <div id="lamina-breadcrumbs" class="flex items-center gap-1.5 text-base">
         <!-- Inyectado dinámicamente -->
       </div>
     </div>
 
     <!-- Bloque de Controles Rápidos Derecho -->
     <div class="lamina-header-card flex items-center gap-2 no-print">
-      <button type="button" onclick="window.print()" class="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-black text-xs flex items-center gap-1.5 shadow-sm transition active:scale-95 cursor-pointer" title="Exportar Lámina a PDF o Imprimir">
+      <button type="button" onclick="window.print()" class="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-black text-sm flex items-center gap-1.5 shadow-sm transition active:scale-95 cursor-pointer" title="Exportar Lámina a PDF o Imprimir">
         <i data-lucide="printer" class="w-3.5 h-3.5 text-amber-400"></i>
         <span>Imprimir / PDF</span>
       </button>
@@ -92,7 +93,7 @@
         <i data-lucide="maximize" class="w-4 h-4"></i>
       </button>
 
-      <a href="../earth-monagas/" class="px-2.5 py-1.5 rounded-xl bg-sky-50 hover:bg-sky-100 text-sky-800 border border-sky-200 font-bold text-xs flex items-center gap-1 transition" title="Abrir en Editor GIS Satelital">
+      <a href="../earth-monagas/" class="px-2.5 py-1.5 rounded-xl bg-sky-50 hover:bg-sky-100 text-sky-800 border border-sky-200 font-bold text-base flex items-center gap-1 transition" title="Abrir en Editor GIS Satelital">
         <i data-lucide="globe" class="w-3.5 h-3.5"></i>
         <span class="hidden sm:inline">Modo GIS</span>
       </a>
@@ -102,7 +103,11 @@
       </a>
     </div>
 
-  </header>
+            <button type="button" id="btn-toggle-contrast" class="px-2.5 py-1.5 rounded-xl bg-[#1d1554] hover:bg-[#23176d] text-amber-400 border border-amber-500/40 text-sm font-bold flex items-center gap-1.5 shadow transition active:scale-95" title="Alto contraste" aria-label="Activar modo alto contraste">
+            <span aria-hidden="true">◐</span>
+            <span class="hidden sm:inline">Contraste</span>
+          </button>
+        </header>
 
   <!-- 3. PANEL LATERAL DERECHO DE ESTADÍSTICAS Y LEYENDA CROMÁTICA -->
   <aside id="lamina-side-panel">
@@ -111,15 +116,15 @@
     <div class="flex items-center justify-between pb-2 border-b border-slate-200 shrink-0">
       <div class="flex items-center gap-2 min-w-0">
         <span id="side-badge-color" class="w-3.5 h-3.5 rounded-full bg-sky-600 shadow-sm shrink-0"></span>
-        <h3 id="side-entity-title" class="font-black text-xs text-slate-950 uppercase tracking-tight truncate max-w-[180px]">
+        <h3 id="side-entity-title" class="font-black text-base text-slate-950 uppercase tracking-tight truncate max-w-[180px]">
           MUNICIPIO MATURÍN
         </h3>
       </div>
       <div class="flex items-center gap-1 shrink-0 no-print">
-        <button id="btn-toggle-side-tab" type="button" class="text-[10px] font-extrabold px-2 py-0.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 transition cursor-pointer" title="Alternar entre Estadísticas y Simbología">
+        <button id="btn-toggle-side-tab" type="button" class="text-sm font-extrabold px-2 py-0.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 transition cursor-pointer" title="Alternar entre Estadísticas y Simbología">
           <span id="side-tab-label">Simbología</span>
         </button>
-        <button id="btn-toggle-minimize-panel" type="button" class="text-slate-400 hover:text-slate-700 text-xs font-black px-1.5 py-0.5 rounded hover:bg-slate-100 cursor-pointer" title="Minimizar panel">
+        <button id="btn-toggle-minimize-panel" type="button" class="text-slate-400 hover:text-slate-700 text-sm font-black px-1.5 py-0.5 rounded hover:bg-slate-100 cursor-pointer" title="Minimizar panel">
           —
         </button>
       </div>
@@ -132,7 +137,7 @@
       <div id="side-stats-section" class="flex flex-col flex-1 min-h-0 gap-2">
         
         <!-- Nivel y Código Oficial -->
-        <div class="flex items-center justify-between text-[10px] font-bold text-slate-600">
+        <div class="flex items-center justify-between text-base font-bold text-slate-600">
           <span id="side-entity-type">Resumen Municipal Oficial</span>
           <span id="side-entity-code" class="font-mono text-sky-700 font-extrabold">11 PARROQUIAS</span>
         </div>
@@ -159,10 +164,10 @@
 
         <!-- Título de Lista Interactiva -->
         <div class="flex items-center justify-between pt-1 border-t border-slate-200 shrink-0">
-          <span id="side-list-title" class="text-[10px] font-black uppercase text-slate-700 tracking-wider">
+          <span id="side-list-title" class="text-base font-black uppercase text-slate-700 tracking-wider">
             Parroquias (Clic para enfocar)
           </span>
-          <span id="side-list-count" class="text-[9px] font-extrabold text-sky-700 bg-sky-100 px-1.5 py-0.2 rounded-full">
+          <span id="side-list-count" class="text-base font-extrabold text-sky-700 bg-sky-100 px-1.5 py-0.2 rounded-full">
             11
           </span>
         </div>
@@ -175,9 +180,9 @@
       </div>
 
       <!-- VISTA 2: SIMBOLOGÍA TÉCNICA CNE (Oculta por defecto) -->
-      <div id="side-symbols-section" style="display: none;" class="space-y-2 pt-1 text-xs text-slate-800">
+      <div id="side-symbols-section" style="display: none;" class="space-y-2 pt-1 text-base text-slate-800">
         <div class="p-2 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
-          <span class="text-[9px] font-black uppercase text-slate-500 tracking-wider block">
+          <span class="text-base font-black uppercase text-slate-500 tracking-wider block">
             Convenios Cartográficos Oficiales
           </span>
           <div class="flex items-center gap-2.5">
@@ -204,7 +209,7 @@
       </div>
 
       <!-- Botón Exportar PDF en el panel -->
-      <button type="button" onclick="window.print()" class="w-full mt-auto py-2 px-3 bg-slate-950 hover:bg-slate-800 text-white rounded-xl font-black text-xs flex items-center justify-center gap-2 shadow transition active:scale-95 cursor-pointer no-print shrink-0">
+      <button type="button" onclick="window.print()" class="w-full mt-auto py-2 px-3 bg-slate-950 hover:bg-slate-800 text-white rounded-xl font-black text-sm flex items-center justify-center gap-2 shadow transition active:scale-95 cursor-pointer no-print shrink-0">
         <i data-lucide="printer" class="w-4 h-4 text-amber-400"></i>
         <span>Exportar Lámina Oficial / PDF</span>
       </button>
@@ -233,5 +238,6 @@
       window.lucide.createIcons();
     }
   </script>
+  <script src="js/a11y.js"></script>
 </body>
 </html>

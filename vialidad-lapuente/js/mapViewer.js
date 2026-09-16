@@ -264,12 +264,12 @@ export class RoadMapViewer {
       });
 
       const tooltipContent = `
-        <div class="p-1 text-xs">
+        <div class="p-1 text-sm">
           <strong class="text-white block font-bold">${t.nombre}</strong>
-          <span class="text-[10px] font-mono text-slate-300">${t.longitudM} metros</span>
-          <span class="block text-[10px] font-bold mt-0.5" style="color: ${color}">● Estado: ${t.color.toUpperCase()}</span>
-          ${t.detalle ? `<p class="text-[10px] text-slate-400 mt-0.5 italic">${t.detalle}</p>` : ''}
-          ${t.foto ? `<p class="text-[10px] text-amber-300 font-bold mt-0.5">📷 Con foto adjunta</p>` : ''}
+          <span class="text-sm font-mono text-slate-300">${t.longitudM} metros</span>
+          <span class="block text-sm font-bold mt-0.5" style="color: ${color}">● Estado: ${t.color.toUpperCase()}</span>
+          ${t.detalle ? `<p class="text-sm text-slate-400 mt-0.5 italic">${t.detalle}</p>` : ''}
+          ${t.foto ? `<p class="text-sm text-amber-300 font-bold mt-0.5">📷 Con foto adjunta</p>` : ''}
         </div>
       `;
 

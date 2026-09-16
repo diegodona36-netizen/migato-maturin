@@ -127,6 +127,7 @@
   </style>
 </head>
 <body>
+  <a href="#main-content" class="skip-link">Saltar al contenido principal</a>
 
   <header>
     <div class="title-box">
@@ -136,7 +137,11 @@
     <div style="display: flex; gap: 10px;">
       <a class="btn-action" href="presentacion/">Ver Presentación Ejecutiva</a>
     </div>
-  </header>
+            <button type="button" id="btn-toggle-contrast" class="px-2.5 py-1.5 rounded-xl bg-[#1d1554] hover:bg-[#23176d] text-amber-400 border border-amber-500/40 text-sm font-bold flex items-center gap-1.5 shadow transition active:scale-95" title="Alto contraste" aria-label="Activar modo alto contraste">
+            <span aria-hidden="true">◐</span>
+            <span class="hidden sm:inline">Contraste</span>
+          </button>
+        </header>
 
   <div id="tree-container"></div>
 
@@ -270,5 +275,6 @@
     function zoomOut() { svg.transition().duration(250).call(zoom.scaleBy, 0.8); }
     function resetZoom() { svg.transition().duration(300).call(zoom.transform, d3.zoomIdentity.translate(80, 40).scale(0.95)); }
   </script>
+  <script src="js/a11y.js"></script>
 </body>
 </html>

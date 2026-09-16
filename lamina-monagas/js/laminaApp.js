@@ -790,13 +790,13 @@ export class LaminaApp {
       if (data.backBtn) {
         html += `
           <div onclick="${data.backBtn.onClick}" 
-               class="flex items-center justify-between p-2 rounded-xl bg-sky-50 hover:bg-sky-100 text-sky-900 border border-sky-200 cursor-pointer mb-2 transition text-xs font-black"
+               class="flex items-center justify-between p-2 rounded-xl bg-sky-50 hover:bg-sky-100 text-sky-900 border border-sky-200 cursor-pointer mb-2 transition text-sm font-black"
                title="${data.backBtn.label}">
             <span class="flex items-center gap-1.5">
               <span>⬅</span>
               <span>${data.backBtn.label}</span>
             </span>
-            <span class="bg-sky-200/80 text-sky-950 px-1.5 py-0.5 rounded font-mono text-[10px]">${data.backBtn.count}</span>
+            <span class="bg-sky-200/80 text-sky-950 px-1.5 py-0.5 rounded font-mono text-sm">${data.backBtn.count}</span>
           </div>
         `;
       }
@@ -808,16 +808,16 @@ export class LaminaApp {
                title="${item.nombre} • Clic para enfocar">
             <div class="flex items-center gap-2 truncate">
               <span class="w-2.5 h-2.5 rounded-full shrink-0 shadow-xs" style="background-color: ${item.color || '#0284c7'};"></span>
-              <span class="font-bold text-xs text-slate-900 truncate">${item.nombre}</span>
+              <span class="font-bold text-sm text-slate-900 truncate">${item.nombre}</span>
             </div>
-            <span class="text-[10px] font-extrabold text-slate-700 shrink-0 ml-1">
+            <span class="text-sm font-extrabold text-slate-700 shrink-0 ml-1">
               ${item.badge}
             </span>
           </div>
         `).join("");
       } else {
         html += `
-          <div class="p-3 text-center text-xs text-slate-700 italic">
+          <div class="p-3 text-center text-sm text-slate-700 italic">
             Sin entidades secundarias registradas
           </div>
         `;

@@ -35,6 +35,7 @@
   <link rel="stylesheet" href="css/styles.css?v=6">
 </head>
 <body class="bg-[#0e092e] text-slate-100 h-screen flex flex-col antialiased select-none" style="background: radial-gradient(circle at 50% 25%, #201763 0%, #140e40 45%, #0c0828 100%);">
+  <a href="#main-content" class="skip-link">Saltar al contenido principal</a>
 
   <!-- ============================================================== -->
   <!-- TOP NAVBAR -->
@@ -46,50 +47,50 @@
         <i data-lucide="pencil-ruler" class="w-5 h-5"></i>
       </div>
       <div>
-        <h1 class="text-sm font-black text-white leading-tight flex items-center gap-2">
+        <h1 class="text-base font-black text-white leading-tight flex items-center gap-2">
           <span>Trazador Vial de Calles • La Puente</span>
-          <span class="text-[10px] font-bold bg-amber-500/20 text-amber-400 border border-amber-500/30 px-2 py-0.5 rounded-full uppercase">
+          <span class="text-base font-bold bg-amber-500/20 text-amber-400 border border-amber-500/30 px-2 py-0.5 rounded-full uppercase">
             Tramo a Tramo
           </span>
         </h1>
-        <p class="text-[11px] text-slate-400 font-medium">Traza tramos independientes y asigna colores distintos por cuadra</p>
+        <p class="text-base text-slate-400 font-medium">Traza tramos independientes y asigna colores distintos por cuadra</p>
       </div>
     </div>
 
     <div class="flex items-center gap-2">
       
       <!-- Botón Modo Trazar Calle -->
-      <button id="btn-activar-trazo" class="px-3.5 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-[#0e092e] text-xs font-black shadow transition flex items-center gap-1.5">
+      <button id="btn-activar-trazo" class="px-3.5 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-[#0e092e] text-sm font-black shadow transition flex items-center gap-1.5">
         <i data-lucide="plus" class="w-4 h-4"></i>
         <span>+ Trazar Nuevo Tramo</span>
       </button>
 
       <!-- Botón Deshacer Último Punto (Modo Trazando) -->
-      <button id="btn-deshacer-punto" class="hidden px-2.5 py-1.5 rounded-xl bg-[#0e092e] hover:bg-[#23176d] border border-[#2d1f85] text-amber-300 text-xs font-bold transition items-center gap-1">
+      <button id="btn-deshacer-punto" class="hidden px-2.5 py-1.5 rounded-xl bg-[#0e092e] hover:bg-[#23176d] border border-[#2d1f85] text-amber-300 text-sm font-bold transition items-center gap-1">
         <i data-lucide="undo" class="w-3.5 h-3.5"></i>
         <span class="hidden sm:inline">Deshacer Punto</span>
       </button>
 
       <!-- Botón Finalizar Trazo (Oculto al inicio) -->
-      <button id="btn-finalizar-trazo" class="hidden px-3.5 py-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-[#0e092e] text-xs font-black shadow transition items-center gap-1.5 animate-pulse">
+      <button id="btn-finalizar-trazo" class="hidden px-3.5 py-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-[#0e092e] text-sm font-black shadow transition items-center gap-1.5 animate-pulse">
         <i data-lucide="check" class="w-4 h-4"></i>
         <span>Listo: Asignar Color</span>
       </button>
 
       <!-- Botón Cancelar Trazo (Oculto al inicio) -->
-      <button id="btn-cancelar-trazo" class="hidden px-2.5 py-1.5 rounded-xl bg-[#0e092e] hover:bg-[#23176d] border border-[#2d1f85] text-slate-300 text-xs font-bold transition items-center gap-1">
+      <button id="btn-cancelar-trazo" class="hidden px-2.5 py-1.5 rounded-xl bg-[#0e092e] hover:bg-[#23176d] border border-[#2d1f85] text-slate-300 text-sm font-bold transition items-center gap-1">
         <i data-lucide="x" class="w-3.5 h-3.5"></i>
         <span>Cancelar</span>
       </button>
 
       <!-- Botón GPS en Vivo -->
-      <button id="btn-gps-locate" class="px-2.5 py-1.5 rounded-xl bg-[#0e092e] hover:bg-[#23176d] border border-[#2d1f85] text-sky-400 text-xs font-bold transition flex items-center gap-1" title="Centrar mi ubicación en La Puente">
+      <button id="btn-gps-locate" class="px-2.5 py-1.5 rounded-xl bg-[#0e092e] hover:bg-[#23176d] border border-[#2d1f85] text-sky-400 text-sm font-bold transition flex items-center gap-1" title="Centrar mi ubicación en La Puente">
         <i data-lucide="crosshair" class="w-3.5 h-3.5"></i>
         <span class="hidden md:inline">Mi GPS</span>
       </button>
 
       <!-- Exportar KML para Google Earth -->
-      <button id="btn-export-kml-road" class="px-3 py-1.5 rounded-xl bg-[#0e092e] hover:bg-[#23176d] border border-[#2d1f85] text-slate-200 text-xs font-bold transition flex items-center gap-1.5" title="Descargar archivo KML">
+      <button id="btn-export-kml-road" class="px-3 py-1.5 rounded-xl bg-[#0e092e] hover:bg-[#23176d] border border-[#2d1f85] text-slate-200 text-sm font-bold transition flex items-center gap-1.5" title="Descargar archivo KML">
         <i data-lucide="download" class="w-3.5 h-3.5 text-emerald-400"></i>
         <span class="hidden sm:inline">KML</span>
       </button>
@@ -101,7 +102,11 @@
 
     </div>
 
-  </header>
+            <button type="button" id="btn-toggle-contrast" class="px-2.5 py-1.5 rounded-xl bg-[#1d1554] hover:bg-[#23176d] text-amber-400 border border-amber-500/40 text-sm font-bold flex items-center gap-1.5 shadow transition active:scale-95" title="Alto contraste" aria-label="Activar modo alto contraste">
+            <span aria-hidden="true">◐</span>
+            <span class="hidden sm:inline">Contraste</span>
+          </button>
+        </header>
 
   <!-- ============================================================== -->
   <!-- MAIN WORKSPACE -->
@@ -116,13 +121,13 @@
         <!-- Banner de Instrucciones Rápidas -->
         <div class="bg-[#18114a] p-4 rounded-2xl border border-[#2d1f85] space-y-2.5 shadow-sm">
           <div class="flex items-center justify-between">
-            <span class="text-[10px] font-bold text-amber-400 uppercase tracking-wider bg-amber-500/10 border border-amber-500/20 px-2 py-0.5 rounded-full">
+            <span class="text-base font-bold text-amber-400 uppercase tracking-wider bg-amber-500/10 border border-amber-500/20 px-2 py-0.5 rounded-full">
               Instrucciones
             </span>
-            <span id="kpi-contador-calles" class="text-xs font-mono text-slate-400 font-bold">0 tramos</span>
+            <span id="kpi-contador-calles" class="text-base font-mono text-slate-400 font-bold">0 tramos</span>
           </div>
 
-          <p class="text-xs text-slate-300 leading-relaxed">
+          <p class="text-base text-slate-300 leading-relaxed">
             • Traza <strong>cada tramo independiente</strong> (ej: de esquina a esquina o 100-200m).<br>
             • Asígnale su color correspondiente.<br>
             • Usa <strong>"Continuar siguiente tramo"</strong> para seguir avanzando sin dejar huecos.
@@ -136,7 +141,7 @@
               <div id="bar-amarillo" style="width: 0%" class="bg-amber-500 h-full transition-all"></div>
               <div id="bar-verde" style="width: 0%" class="bg-emerald-500 h-full transition-all"></div>
             </div>
-            <div class="flex justify-between text-[10px] text-slate-400 font-mono mt-1">
+            <div class="flex justify-between text-sm text-slate-400 font-mono mt-1">
               <span id="txt-longitud-total">0 m trazados</span>
               <span id="txt-danada-pct">0% en mal estado</span>
             </div>
@@ -144,7 +149,7 @@
         </div>
 
         <!-- Leyenda de Colores -->
-        <div class="bg-[#18114a] p-3 rounded-xl border border-[#2d1f85] text-[11px] grid grid-cols-2 gap-2">
+        <div class="bg-[#18114a] p-3 rounded-xl border border-[#2d1f85] text-base grid grid-cols-2 gap-2">
           <div class="flex items-center gap-1.5">
             <span class="w-3 h-3 rounded-full bg-emerald-500 shrink-0 shadow-sm"></span>
             <span>🟢 Bueno / Óptimo</span>
@@ -166,8 +171,8 @@
         <!-- Lista de Tramos Trazados por el Usuario -->
         <div class="space-y-2">
           <div class="flex items-center justify-between">
-            <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Tramos en La Puente:</span>
-            <button id="btn-borrar-todas" class="text-[10px] text-red-400 hover:text-red-300 font-bold transition">
+            <span class="text-base font-bold text-slate-400 uppercase tracking-wider">Tramos en La Puente:</span>
+            <button id="btn-borrar-todas" class="text-sm text-red-400 hover:text-red-300 font-bold transition">
               Borrar Todo
             </button>
           </div>
@@ -179,7 +184,7 @@
 
       </div>
 
-      <div class="p-3 border-t border-[#2d1f85] bg-[#100b33] text-[11px] text-slate-400 text-center font-mono">
+      <div class="p-3 border-t border-[#2d1f85] bg-[#100b33] text-sm text-slate-400 text-center font-mono">
         MIGATO • Diagnóstico Vial La Puente
       </div>
 
@@ -190,12 +195,12 @@
       <div id="map-vialidad"></div>
 
       <!-- Banner Flotante Informativo en Modo Trazo -->
-      <div id="banner-trazando" style="z-index: 2500;" class="hidden absolute top-4 left-1/2 -translate-x-1/2 bg-amber-500 text-[#0e092e] px-4 py-2 rounded-2xl shadow-2xl border-2 border-white font-bold text-xs items-center gap-3">
+      <div id="banner-trazando" style="z-index: 2500;" class="hidden absolute top-4 left-1/2 -translate-x-1/2 bg-amber-500 text-[#0e092e] px-4 py-2 rounded-2xl shadow-2xl border-2 border-white font-bold text-base items-center gap-3">
         <div class="flex items-center gap-1.5">
           <i data-lucide="pen-tool" class="w-4 h-4"></i>
           <span>Haz clics para este tramo:</span>
         </div>
-        <span id="live-drawing-length" class="font-mono bg-[#0e092e] text-amber-400 px-2 py-0.5 rounded-lg text-xs font-black">0 m</span>
+        <span id="live-drawing-length" class="font-mono bg-[#0e092e] text-amber-400 px-2 py-0.5 rounded-lg text-base font-black">0 m</span>
       </div>
     </main>
 
@@ -209,7 +214,7 @@
       
       <div class="flex items-start justify-between border-b border-[#2d1f85] pb-3">
         <div>
-          <span class="text-[10px] font-bold text-amber-400 uppercase tracking-wider">Asignar Condición al Tramo</span>
+          <span class="text-base font-bold text-amber-400 uppercase tracking-wider">Asignar Condición al Tramo</span>
           <h3 id="modal-tramo-longitud" class="text-lg font-black text-white font-mono mt-0.5">0 metros</h3>
         </div>
         <button id="btn-close-modal" class="text-slate-400 hover:text-white p-1">
@@ -221,44 +226,44 @@
         
         <!-- Nombre del Tramo -->
         <div>
-          <label class="block text-xs font-bold text-slate-300 uppercase mb-1">Nombre o Número de Tramo *</label>
-          <input type="text" id="input-tramo-nombre" required placeholder="Ej: Tramo 1: Esquina Los Guaros" class="w-full px-3 py-2 text-xs bg-[#0e092e] border border-[#2d1f85] rounded-xl text-white focus:outline-none focus:border-amber-500 font-bold">
+          <label class="block text-sm font-bold text-slate-300 uppercase mb-1">Nombre o Número de Tramo *</label>
+          <input type="text" id="input-tramo-nombre" required placeholder="Ej: Tramo 1: Esquina Los Guaros" class="w-full px-3 py-2 text-sm bg-[#0e092e] border border-[#2d1f85] rounded-xl text-white focus:border-amber-500 font-bold">
         </div>
 
         <!-- 4 BOTONES GRANDES DE COLOR -->
         <div>
-          <label class="block text-xs font-bold text-slate-300 uppercase mb-2">Selecciona el Estado / Color para este Tramo *</label>
+          <label class="block text-sm font-bold text-slate-300 uppercase mb-2">Selecciona el Estado / Color para este Tramo *</label>
           <div class="grid grid-cols-2 gap-2">
             
             <button type="button" data-color="verde" class="btn-color-pick p-3 rounded-2xl bg-emerald-950/80 border-2 border-emerald-600 hover:bg-emerald-900 text-left transition flex items-center gap-2.5">
               <span class="w-5 h-5 rounded-full bg-emerald-500 shadow shrink-0"></span>
               <div>
-                <strong class="text-xs font-black text-emerald-300 block">🟢 Bueno</strong>
-                <span class="text-[9px] text-slate-400">Sin huecos graves</span>
+                <strong class="text-base font-black text-emerald-300 block">🟢 Bueno</strong>
+                <span class="text-base text-slate-400">Sin huecos graves</span>
               </div>
             </button>
 
             <button type="button" data-color="amarillo" class="btn-color-pick p-3 rounded-2xl bg-amber-950/80 border-2 border-amber-600 hover:bg-amber-900 text-left transition flex items-center gap-2.5">
               <span class="w-5 h-5 rounded-full bg-amber-500 shadow shrink-0"></span>
               <div>
-                <strong class="text-xs font-black text-amber-300 block">🟡 Regular</strong>
-                <span class="text-[9px] text-slate-400">Desgaste / Baches</span>
+                <strong class="text-base font-black text-amber-300 block">🟡 Regular</strong>
+                <span class="text-base text-slate-400">Desgaste / Baches</span>
               </div>
             </button>
 
             <button type="button" data-color="naranja" class="btn-color-pick p-3 rounded-2xl bg-orange-950/80 border-2 border-orange-600 hover:bg-orange-900 text-left transition flex items-center gap-2.5">
               <span class="w-5 h-5 rounded-full bg-orange-500 shadow shrink-0"></span>
               <div>
-                <strong class="text-xs font-black text-orange-300 block">🟠 Malo</strong>
-                <span class="text-[9px] text-slate-400">Huecos profundos</span>
+                <strong class="text-base font-black text-orange-300 block">🟠 Malo</strong>
+                <span class="text-base text-slate-400">Huecos profundos</span>
               </div>
             </button>
 
             <button type="button" data-color="rojo" class="btn-color-pick p-3 rounded-2xl bg-red-950/80 border-2 border-red-600 hover:bg-red-900 text-left transition flex items-center gap-2.5">
               <span class="w-5 h-5 rounded-full bg-red-500 shadow shrink-0"></span>
               <div>
-                <strong class="text-xs font-black text-red-300 block">🔴 Crítico</strong>
-                <span class="text-[9px] text-slate-400">Intransitable</span>
+                <strong class="text-base font-black text-red-300 block">🔴 Crítico</strong>
+                <span class="text-base text-slate-400">Intransitable</span>
               </div>
             </button>
 
@@ -268,11 +273,11 @@
         <!-- FOTO DEL BACHE (OPCIONAL) -->
         <div class="bg-[#0e092e] p-3 rounded-2xl border border-[#2d1f85] space-y-2">
           <div class="flex items-center justify-between">
-            <label class="block text-[11px] font-bold text-slate-300 uppercase">Foto de Evidencia (Opcional):</label>
-            <span class="text-[10px] text-slate-500">Cámara / WhatsApp</span>
+            <label class="block text-sm font-bold text-slate-300 uppercase">Foto de Evidencia (Opcional):</label>
+            <span class="text-base text-slate-500">Cámara / WhatsApp</span>
           </div>
 
-          <button type="button" onclick="document.getElementById('input-camera-file').click()" class="w-full py-2 px-3 rounded-xl bg-[#18114a] hover:bg-[#23176d] border border-[#2d1f85] text-xs font-bold text-amber-400 transition flex items-center justify-center gap-2">
+          <button type="button" onclick="document.getElementById('input-camera-file').click()" class="w-full py-2 px-3 rounded-xl bg-[#18114a] hover:bg-[#23176d] border border-[#2d1f85] text-sm font-bold text-amber-400 transition flex items-center justify-center gap-2">
             <i data-lucide="camera" class="w-4 h-4"></i>
             <span>Tomar Foto / Subir Imagen</span>
           </button>
@@ -288,24 +293,24 @@
 
         <!-- Observación rápida -->
         <div>
-          <label class="block text-xs font-bold text-slate-300 uppercase mb-1">Detalle o Falla (Opcional)</label>
-          <input type="text" id="input-tramo-detalle" placeholder="Ej: Bote de agua cloacal, bache en canal derecho..." class="w-full px-3 py-2 text-xs bg-[#0e092e] border border-[#2d1f85] rounded-xl text-white focus:outline-none focus:border-amber-500">
+          <label class="block text-sm font-bold text-slate-300 uppercase mb-1">Detalle o Falla (Opcional)</label>
+          <input type="text" id="input-tramo-detalle" placeholder="Ej: Bote de agua cloacal, bache en canal derecho..." class="w-full px-3 py-2 text-sm bg-[#0e092e] border border-[#2d1f85] rounded-xl text-white focus:border-amber-500">
         </div>
 
         <!-- Botones de Acción y Continuación -->
         <div class="pt-2 space-y-2 border-t border-[#2d1f85]">
           
           <div class="flex items-center justify-between gap-2">
-            <button type="button" id="btn-cancelar-modal" class="px-3 py-2 text-xs font-semibold text-slate-400 hover:text-white">
+            <button type="button" id="btn-cancelar-modal" class="px-3 py-2 text-sm font-semibold text-slate-400 hover:text-white">
               Cancelar
             </button>
             
             <div class="flex items-center gap-2">
-              <button type="submit" id="btn-guardar-solo" class="px-4 py-2 text-xs font-bold bg-[#0e092e] hover:bg-[#23176d] text-white rounded-xl border border-[#2d1f85] shadow">
+              <button type="submit" id="btn-guardar-solo" class="px-4 py-2 text-sm font-bold bg-[#0e092e] hover:bg-[#23176d] text-white rounded-xl border border-[#2d1f85] shadow">
                 Guardar Tramo
               </button>
               
-              <button type="button" id="btn-guardar-y-continuar" class="px-4 py-2 text-xs font-black bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 text-[#0e092e] rounded-xl shadow-lg flex items-center gap-1.5">
+              <button type="button" id="btn-guardar-y-continuar" class="px-4 py-2 text-sm font-black bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 text-[#0e092e] rounded-xl shadow-lg flex items-center gap-1.5">
                 <span>Guardar y Trazar Siguiente ➔</span>
               </button>
             </div>
@@ -313,7 +318,7 @@
 
           <!-- Botón Dividir Tramo (Solo en modo edición de tramo largo) -->
           <div id="box-dividir-tramo" class="hidden pt-1 border-t border-[#2d1f85]/80">
-            <button type="button" id="btn-dividir-tramo-en-dos" class="w-full py-2 px-3 rounded-xl bg-purple-950/80 hover:bg-purple-900 border border-purple-600 text-purple-200 text-xs font-bold transition flex items-center justify-center gap-2">
+            <button type="button" id="btn-dividir-tramo-en-dos" class="w-full py-2 px-3 rounded-xl bg-purple-950/80 hover:bg-purple-900 border border-purple-600 text-purple-200 text-sm font-bold transition flex items-center justify-center gap-2">
               <i data-lucide="scissors" class="w-4 h-4"></i>
               <span>✂️ Dividir este tramo en dos para asignarle otro color</span>
             </button>
@@ -328,5 +333,6 @@
 
   <!-- SCRIPT -->
   <script type="module" src="js/app.js?v=6"></script>
+  <script src="js/a11y.js"></script>
 </body>
 </html>

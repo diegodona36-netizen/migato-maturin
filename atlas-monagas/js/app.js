@@ -73,16 +73,16 @@ class AtlasMonagasApp {
             <span class="w-10 h-10 rounded-xl flex items-center justify-center font-bold text-white shadow" style="background-color: ${mun.color}">
               <i data-lucide="${mun.icon || 'map-pin'}" class="w-5 h-5"></i>
             </span>
-            <span class="text-[11px] font-mono font-bold px-2.5 py-1 rounded-full bg-[#0e092e] text-amber-400 border border-[#2d1f85]">
+            <span class="text-sm font-mono font-bold px-2.5 py-1 rounded-full bg-[#0e092e] text-amber-400 border border-[#2d1f85]">
               ${mun.parroquias.length} Parroquias
             </span>
           </div>
           <h3 class="text-lg font-black text-white group-hover:text-amber-300 transition">${mun.nombre}</h3>
-          <p class="text-xs text-slate-400 mt-0.5">Capital: <span class="text-slate-200 font-semibold">${mun.capital}</span></p>
+          <p class="text-sm text-slate-400 mt-0.5">Capital: <span class="text-slate-200 font-semibold">${mun.capital}</span></p>
         </div>
 
-        <div class="mt-4 pt-3 border-t border-[#2d1f85] flex items-center justify-between text-xs text-slate-400">
-          <span class="text-[11px] font-medium">Trazar calles y cargar planos</span>
+        <div class="mt-4 pt-3 border-t border-[#2d1f85] flex items-center justify-between text-sm text-slate-400">
+          <span class="text-sm font-medium">Trazar calles y cargar planos</span>
           <i data-lucide="arrow-right" class="w-4 h-4 text-amber-400 group-hover:translate-x-1 transition"></i>
         </div>
       `;
@@ -111,10 +111,10 @@ class AtlasMonagasApp {
         <div onclick="window.atlasApp.launchParishMap('${mun.id}', '${p.id}')" class="p-3.5 rounded-2xl border border-[#2d1f85] bg-[#18114a] hover:bg-[#23176d] hover:border-amber-500/50 active:scale-[0.98] cursor-pointer transition-all flex items-center justify-between gap-3 group shadow-sm">
           <div class="min-w-0 flex-1">
             <h4 class="text-sm font-black text-white group-hover:text-amber-300 transition truncate">${p.nombre}</h4>
-            <p class="text-[11px] text-slate-400 font-mono">${p.tipo} • <span class="text-amber-400/80">${p.codigo}</span></p>
-            <p class="text-[10px] text-slate-500 mt-0.5 truncate">${p.sectores.join(", ")}</p>
+            <p class="text-sm text-slate-300 font-mono">${p.tipo} • <span class="text-amber-400/80">${p.codigo}</span></p>
+            <p class="text-sm text-slate-400 mt-0.5 truncate">${p.sectores.join(", ")}</p>
           </div>
-          <div class="shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-500/15 text-amber-400 border border-amber-500/30 text-xs font-black group-hover:bg-amber-500 group-hover:text-[#0e092e] transition whitespace-nowrap shadow">
+          <div class="shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-500/15 text-amber-400 border border-amber-500/30 text-sm font-black group-hover:bg-amber-500 group-hover:text-[#0e092e] transition whitespace-nowrap shadow">
             <span>Trazar</span>
             <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
           </div>
@@ -231,8 +231,8 @@ class AtlasMonagasApp {
       container.innerHTML = `
         <div class="p-6 text-center border border-dashed border-[#2d1f85]/70 rounded-2xl text-slate-500 space-y-2">
           <i data-lucide="pencil" class="w-7 h-7 mx-auto text-slate-500"></i>
-          <p class="text-xs font-bold text-slate-400">Sin calles trazadas en esta parroquia.</p>
-          <p class="text-[10px]">Toca "+ Trazar Nueva Calle" o "Cargar Plano" para importar KML/KMZ.</p>
+          <p class="text-sm font-bold text-slate-400">Sin calles trazadas en esta parroquia.</p>
+          <p class="text-sm">Toca "+ Trazar Nueva Calle" o "Cargar Plano" para importar KML/KMZ.</p>
         </div>
       `;
       if (window.lucide) { try { window.lucide.createIcons(); } catch(e){} }
@@ -251,8 +251,8 @@ class AtlasMonagasApp {
         <div class="flex items-center gap-2.5 overflow-hidden">
           <span class="w-3.5 h-3.5 rounded-full shrink-0 shadow ${colorBadge[l.color] || 'bg-slate-500'}"></span>
           <div class="overflow-hidden">
-            <h4 class="text-xs font-bold text-slate-200 truncate group-hover:text-white">${l.nombre}</h4>
-            <p class="text-[10px] text-slate-400 font-mono">${l.longitudM} m • <span class="capitalize text-slate-300 font-bold">${l.color}</span></p>
+            <h4 class="text-sm font-bold text-slate-200 truncate group-hover:text-white">${l.nombre}</h4>
+            <p class="text-sm text-slate-300 font-mono">${l.longitudM} m • <span class="capitalize text-slate-300 font-bold">${l.color}</span></p>
           </div>
         </div>
         <button type="button" onclick="event.stopPropagation(); window.atlasApp.deleteLine('${l.id}')" class="p-1 text-slate-400 hover:text-red-400 rounded opacity-70 group-hover:opacity-100 transition" title="Borrar línea">

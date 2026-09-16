@@ -152,10 +152,10 @@ export class MapEditor {
 
       // Tooltip informativo al pasar el cursor
       hexPolygon.bindTooltip(
-        `<div class="text-xs font-mono font-bold">
+        `<div class="text-sm font-mono font-bold">
           <span>${hex.id}</span>
-          <span class="block text-[10px] text-slate-400 font-normal">${hex.areaHa} Ha</span>
-          <span class="block text-[10px] font-bold ${isSelected ? 'text-emerald-400' : 'text-amber-300'}">
+          <span class="block text-sm text-slate-400 font-normal">${hex.areaHa} Ha</span>
+          <span class="block text-sm font-bold ${isSelected ? 'text-emerald-400' : 'text-amber-300'}">
             ${isSelected ? '● ASIGNADO' : '○ DISPONIBLE'}
           </span>
         </div>`,
@@ -192,9 +192,9 @@ export class MapEditor {
       });
 
       poly.bindPopup(`
-        <div class="p-2 text-xs">
+        <div class="p-2 text-sm">
           <strong class="text-slate-900 block font-bold">${f.nombre}</strong>
-          <span class="text-slate-500 text-[10px]">Origen: ${fileName}</span>
+          <span class="text-slate-500 text-sm">Origen: ${fileName}</span>
         </div>
       `);
 

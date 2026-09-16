@@ -472,7 +472,7 @@ class VotoApp {
             <div class="max-w-md mx-auto space-y-2">
               <i data-lucide="users" class="w-8 h-8 text-amber-400 mx-auto"></i>
               <p class="text-sm font-bold text-white">No hay electores registrados aún</p>
-              <p class="text-xs text-blue-300/70">Utilice el formulario superior para registrar al primer elector de campo con su clasificación oficial (Duro, Blando o Nuevo).</p>
+              <p class="text-sm text-blue-300/70">Utilice el formulario superior para registrar al primer elector de campo con su clasificación oficial (Duro, Blando o Nuevo).</p>
             </div>
           </td>
         </tr>
@@ -488,7 +488,7 @@ class VotoApp {
             <div class="max-w-sm mx-auto space-y-2">
               <i data-lucide="search-x" class="w-8 h-8 text-blue-400 mx-auto"></i>
               <p class="text-sm font-bold text-white">No se encontraron electores</p>
-              <p class="text-xs text-blue-300/70">Prueba ajustando los filtros de búsqueda o cambia el tipo de voto.</p>
+              <p class="text-sm text-blue-300/70">Prueba ajustando los filtros de búsqueda o cambia el tipo de voto.</p>
             </div>
           </td>
         </tr>
@@ -514,7 +514,7 @@ class VotoApp {
       }
 
       return `
-        <tr class="border-b border-[#2d1f85]/60 hover:bg-[#1d1554]/50 transition group text-xs">
+        <tr class="border-b border-[#2d1f85]/60 hover:bg-[#1d1554]/50 transition group text-sm">
           <!-- 1. N° Correlativo -->
           <td class="py-3 px-3 font-mono font-black text-amber-400 text-center bg-[#140e40]/70">
             ${index + 1}
@@ -544,7 +544,7 @@ class VotoApp {
 
           <!-- 5. Sub-Parroquia -->
           <td class="py-3 px-3 text-blue-200">
-            <span class="px-2 py-0.5 rounded-md bg-[#140e40] border border-[#2d1f85] text-[11px] font-semibold block truncate max-w-[180px]" title="${e.subParroquia}">
+            <span class="px-2 py-0.5 rounded-md bg-[#140e40] border border-[#2d1f85] text-sm font-semibold block truncate max-w-[180px]" title="${e.subParroquia}">
               ${e.subParroquia.replace("Sub-Parroquia ", "SP ")}
             </span>
           </td>
@@ -575,7 +575,7 @@ class VotoApp {
           <td class="py-2.5 px-3">
             <div class="flex items-center gap-1.5 justify-center">
               <!-- Duro -->
-              <span class="w-7 h-7 rounded-lg font-black font-mono flex items-center justify-center text-[11px] transition ${
+              <span class="w-7 h-7 rounded-lg font-black font-mono flex items-center justify-center text-sm transition ${
                 esDuro 
                   ? "bg-emerald-500 text-[#0e092e] shadow-md shadow-emerald-500/30 font-extrabold" 
                   : "bg-[#140e40] text-blue-400/40 border border-[#2d1f85]"
@@ -584,7 +584,7 @@ class VotoApp {
               </span>
 
               <!-- Blando -->
-              <span class="w-7 h-7 rounded-lg font-black font-mono flex items-center justify-center text-[11px] transition ${
+              <span class="w-7 h-7 rounded-lg font-black font-mono flex items-center justify-center text-sm transition ${
                 esBlando 
                   ? "bg-amber-500 text-[#0e092e] shadow-md shadow-amber-500/30 font-extrabold" 
                   : "bg-[#140e40] text-blue-400/40 border border-[#2d1f85]"
@@ -593,7 +593,7 @@ class VotoApp {
               </span>
 
               <!-- Nuevo -->
-              <span class="w-7 h-7 rounded-lg font-black font-mono flex items-center justify-center text-[11px] transition ${
+              <span class="w-7 h-7 rounded-lg font-black font-mono flex items-center justify-center text-sm transition ${
                 esNuevo 
                   ? "bg-sky-400 text-[#0e092e] shadow-md shadow-sky-400/30 font-extrabold" 
                   : "bg-[#140e40] text-blue-400/40 border border-[#2d1f85]"
@@ -640,7 +640,7 @@ class VotoApp {
       const e = lista[i];
       if (e) {
         rowsHtml += `
-          <tr class="border-b border-black text-[11px]">
+          <tr class="border-b border-black text-sm">
             <td class="border-r border-black p-1 text-center font-bold font-mono">${i + 1}</td>
             <td class="border-r border-black p-1 font-bold truncate">${e.nombreApellido}</td>
             <td class="border-r border-black p-1 font-mono text-center">${e.cedula}</td>
@@ -658,7 +658,7 @@ class VotoApp {
       } else {
         // Fila vacía para rellenar a mano
         rowsHtml += `
-          <tr class="border-b border-black text-[11px] h-8">
+          <tr class="border-b border-black text-sm h-8">
             <td class="border-r border-black p-1 text-center font-mono text-slate-400">${i + 1}</td>
             <td class="border-r border-black p-1"></td>
             <td class="border-r border-black p-1"></td>
@@ -971,13 +971,13 @@ class VotoApp {
 
           return `
             <tr class="hover:bg-white/5 transition">
-              <td class="p-2 text-center font-mono text-[10px] text-slate-400">${i + 1}</td>
+              <td class="p-2 text-center font-mono text-sm text-slate-400">${i + 1}</td>
               <td class="p-2 font-mono font-bold text-white whitespace-nowrap">${r.cedula}</td>
               <td class="p-2 font-semibold text-slate-200 truncate max-w-[140px]">${r.nombre}</td>
-              <td class="p-2 text-[10px] text-slate-300 truncate max-w-[120px]">${r.sector}</td>
-              <td class="p-2 text-center text-[10px] whitespace-nowrap">${votoBadge}</td>
-              <td class="p-2 text-center text-[10px]">
-                <span class="px-1.5 py-0.5 rounded text-[9px] font-bold ${badgeClass}">${badgeText}</span>
+              <td class="p-2 text-sm text-slate-300 truncate max-w-[120px]">${r.sector}</td>
+              <td class="p-2 text-center text-sm whitespace-nowrap">${votoBadge}</td>
+              <td class="p-2 text-center text-sm">
+                <span class="px-1.5 py-0.5 rounded text-sm font-bold ${badgeClass}">${badgeText}</span>
               </td>
             </tr>
           `;
