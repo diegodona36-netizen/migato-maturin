@@ -255,7 +255,7 @@ export class TerritorialDashboardApp {
       }
     }
 
-    let html = `<option value="todas" ${this.selectedParishId === 'todas' ? 'selected' : ''}>-- Todas las Parroquias (${parishes.length}) --</option>`;
+    let html = `<option value="todas" ${this.selectedParishId === 'todas' ? 'selected' : ''}>Todas (${parishes.length})</option>`;
     parishes.forEach(p => {
       const isSel = this.selectedParishId === p.id ? 'selected' : '';
       const label = this.selectedMunId === "todos" ? `${p.nombre} (${p.munNombre})` : p.nombre;
@@ -899,7 +899,7 @@ export class TerritorialDashboardApp {
     if (elParetoPct) elParetoPct.textContent = `${paretoPct}%`;
     if (elParetoDesc) {
       const names = top3.map(it => it.nombre).join(", ");
-      elParetoDesc.innerHTML = `Concentrado en <strong class="text-amber-300 font-bold">${names || "territorios líderes"}</strong>. Focalizar la movilización aquí asegura la meta.`;
+      elParetoDesc.innerHTML = `Concentrado en <strong class="text-amber-300 font-bold">${names || "territorios líderes"}</strong>. Focalizar aquí.`;
     }
 
     const critSectors = allSectors.filter(s => (s.cobertura || 0) < 50);
@@ -909,7 +909,7 @@ export class TerritorialDashboardApp {
     const elRiskDesc = document.getElementById("decision-risk-desc");
     if (elRiskCount) elRiskCount.textContent = critCount;
     if (elRiskDesc) {
-      elRiskDesc.innerHTML = `<strong class="text-rose-300 font-bold">${critPct}%</strong> del territorio (${critCount} sectores) con censo &lt;50%. Desplegar brigadas.`;
+      elRiskDesc.innerHTML = `<strong class="text-rose-300 font-bold">${critPct}%</strong> del territorio con censo &lt;50%.`;
     }
 
     const famCasa = totCasas > 0 ? (totFam / totCasas).toFixed(2) : "1.00";
@@ -918,7 +918,7 @@ export class TerritorialDashboardApp {
     const elCohabitDesc = document.getElementById("decision-cohabit-desc");
     if (elCohabit) elCohabit.textContent = famCasa;
     if (elCohabitDesc) {
-      elCohabitDesc.innerHTML = `Carga de <strong class="text-sky-300 font-bold">${famCasa}</strong> familias/vivienda (${deficitPct}% de cohabitación familiar múltiple).`;
+      elCohabitDesc.innerHTML = `Carga de <strong class="text-sky-300 font-bold">${famCasa}</strong> familias/vivienda.`;
     }
 
     const schoolLoad = uniqueCentros > 0 ? Math.round(totVot / uniqueCentros) : 0;
@@ -926,7 +926,7 @@ export class TerritorialDashboardApp {
     const elSchoolDesc = document.getElementById("decision-school-desc");
     if (elSchoolLoad) elSchoolLoad.textContent = this.nf.format(schoolLoad);
     if (elSchoolDesc) {
-      elSchoolDesc.innerHTML = `Promedio de <strong class="text-purple-300 font-bold">${this.nf.format(schoolLoad)}</strong> electores por escuela para dimensionar testigos y transporte.`;
+      elSchoolDesc.innerHTML = `Promedio de <strong class="text-purple-300 font-bold">${this.nf.format(schoolLoad)}</strong> electores por escuela.`;
     }
   }
 

@@ -443,22 +443,22 @@
             <input 
               type="text" 
               id="filtro-busqueda" 
-              placeholder="Buscar por nombre, cédula, teléfono, sector o profesión..."
+              placeholder="Buscar por nombre, cédula o sector..."
               class="w-full pl-10 pr-4 py-2 bg-[#0e092e] border border-[#2d1f85] rounded-xl text-sm text-white placeholder-blue-300/50 focus:border-amber-400 "
             >
           </div>
 
           <!-- Botones de Acción -->
           <div class="flex items-center gap-2 shrink-0">
-            <button type="button" id="btn-importar-csv" class="px-3 py-2 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-bold text-sm transition flex items-center gap-1.5 shadow active:scale-95 cursor-pointer" title="Carga Masiva desde Excel, CSV o Portapapeles">
+            <button type="button" id="btn-importar-csv" class="px-3 py-2 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-bold text-sm transition flex items-center gap-1.5 shadow active:scale-95 cursor-pointer" aria-label="Importar Excel">
               <i data-lucide="file-up" class="w-4 h-4"></i>
               <span>Importar Excel</span>
             </button>
-            <button type="button" id="btn-exportar-csv" class="px-3 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm transition flex items-center gap-1.5 shadow active:scale-95 cursor-pointer" title="Exportar a formato Excel / CSV">
+            <button type="button" id="btn-exportar-csv" class="px-3 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm transition flex items-center gap-1.5 shadow active:scale-95 cursor-pointer" aria-label="Exportar Excel">
               <i data-lucide="file-spreadsheet" class="w-4 h-4"></i>
-              <span>Exportar Excel</span>
+              <span>Exportar</span>
             </button>
-            <button type="button" id="btn-limpiar-todos" class="px-2.5 py-2 rounded-xl bg-rose-950/60 hover:bg-rose-900 text-rose-300 border border-rose-800 font-bold text-sm transition flex items-center gap-1 active:scale-95 cursor-pointer" title="Vaciar toda la lista">
+            <button type="button" id="btn-limpiar-todos" class="px-2.5 py-2 rounded-xl bg-rose-950/60 hover:bg-rose-900 text-rose-300 border border-rose-800 font-bold text-sm transition flex items-center gap-1 active:scale-95 cursor-pointer" aria-label="Vaciar lista">
               <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
             </button>
           </div>
@@ -469,7 +469,6 @@
         <div class="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-[#2d1f85] text-base">
           
           <div id="filtro-voto-group" class="flex items-center gap-1.5 flex-wrap">
-            <span class="text-base font-bold text-blue-200 uppercase mr-1">Filtrar Voto:</span>
             <button type="button" data-filter-voto="todos" class="px-2.5 py-1 rounded-lg bg-sky-600 text-white font-black flex items-center gap-1">
               <span>Todos</span>
               <span id="badge-count-todos" class="text-base bg-[#0e092e]/60 px-1 rounded">0</span>
@@ -479,11 +478,11 @@
               <span id="badge-count-duros" class="text-base bg-[#0e092e]/60 px-1 rounded">0</span>
             </button>
             <button type="button" data-filter-voto="blando" class="px-2.5 py-1 rounded-lg bg-[#140e40] border border-[#2d1f85] text-amber-400 font-bold flex items-center gap-1 hover:bg-amber-950">
-              <span>🟡 Blandos (Persuasión)</span>
+              <span>🟢 Duros</span>
               <span id="badge-count-blandos" class="text-base bg-[#0e092e]/60 px-1 rounded">0</span>
             </button>
             <button type="button" data-filter-voto="nuevo" class="px-2.5 py-1 rounded-lg bg-[#140e40] border border-[#2d1f85] text-sky-400 font-bold flex items-center gap-1 hover:bg-sky-950">
-              <span>🔵 Nuevos (Juventud)</span>
+              <span>🔵 Nuevos</span>
               <span id="badge-count-nuevos" class="text-base bg-[#0e092e]/60 px-1 rounded">0</span>
             </button>
           </div>
@@ -655,7 +654,7 @@
             <p class="text-base text-blue-200/80">Importar directamente desde Excel, Google Sheets o CSV a la Central</p>
           </div>
         </div>
-        <button type="button" id="btn-cerrar-modal-importar" class="p-1.5 rounded-xl hover:bg-white/10 text-slate-400 hover:text-white transition cursor-pointer">
+        <button type="button" id="btn-cerrar-modal-importar" class="p-1.5 rounded-xl hover:bg-white/10 text-slate-400 hover:text-white transition cursor-pointer" aria-label="Cerrar">
           <i data-lucide="x" class="w-5 h-5"></i>
         </button>
       </div>
@@ -671,7 +670,7 @@
           </div>
           <button type="button" id="btn-modal-descargar-plantilla" class="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm transition flex items-center gap-1.5 shadow cursor-pointer shrink-0">
             <i data-lucide="download" class="w-3.5 h-3.5"></i>
-            <span>Descargar Plantilla CSV</span>
+            <span>Plantilla CSV</span>
           </button>
         </div>
 
@@ -682,8 +681,8 @@
             <input type="file" id="input-modal-archivo" accept=".csv,.tsv,.txt" class="absolute inset-0 opacity-0 cursor-pointer w-full h-full">
             <div class="flex flex-col items-center gap-1.5 pointer-events-none">
               <i data-lucide="upload-cloud" class="w-6 h-6 text-sky-400"></i>
-              <span class="text-base text-slate-200 font-bold" id="label-modal-archivo">Haz clic o arrastra tu archivo aquí</span>
-              <span class="text-base text-slate-400 font-mono">Formatos: .csv, .txt (delimitado por comas o tabulador)</span>
+              <span class="text-base text-slate-200 font-bold" id="label-modal-archivo">Arrastra tu archivo aquí</span>
+              <span class="text-base text-slate-400 font-mono">Formatos: .csv, .txt</span>
             </div>
           </div>
         </div>
@@ -691,15 +690,15 @@
         <!-- Pegado Directo (Ctrl+V) -->
         <div>
           <div class="flex items-center justify-between mb-1">
-            <label class="text-sm font-bold uppercase text-blue-200">2. O pega directamente celdas de Excel (Ctrl+V)</label>
+            <label class="text-sm font-bold uppercase text-blue-200">2. Pegar desde Excel:</label>
             <button type="button" id="btn-modal-limpiar-texto" class="text-sm text-slate-400 hover:text-amber-300 underline font-mono">Limpiar</button>
           </div>
-          <textarea id="textarea-modal-pegado" rows="4" placeholder="Copia de tu Excel las columnas (Nombre, Cédula, Teléfono...) y pégalas aquí con Ctrl+V..." class="w-full px-3 py-2 bg-[#0e092e] border border-[#2d1f85] rounded-xl text-sm font-mono text-slate-200 placeholder-slate-500 focus:border-sky-400 custom-scrollbar"></textarea>
+          <textarea id="textarea-modal-pegado" rows="4" placeholder="Pega celdas de Excel (Nombre, Cédula, Teléfono...)" class="w-full px-3 py-2 bg-[#0e092e] border border-[#2d1f85] rounded-xl text-sm font-mono text-slate-200 placeholder-slate-500 focus:border-sky-400 custom-scrollbar"></textarea>
         </div>
 
         <button type="button" id="btn-modal-analizar" class="w-full py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-sm uppercase tracking-wider rounded-xl shadow transition flex items-center justify-center gap-2 cursor-pointer">
           <i data-lucide="scan-line" class="w-4 h-4 text-sky-300"></i>
-          <span>Analizar y Validar Datos</span>
+          <span>Analizar</span>
         </button>
 
         <!-- Previsualización y KPIs -->

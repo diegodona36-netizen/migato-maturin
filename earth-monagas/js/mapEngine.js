@@ -1993,7 +1993,7 @@ export class EarthMapEngine {
       banner.classList.add("flex");
       banner.style.display = "flex";
       banner.style.zIndex = "9999";
-      if (bannerText) bannerText.textContent = `Ajustando ${poly.nombre}: Arrastra los puntos amarillos sobre el satélite`;
+      if (bannerText) bannerText.textContent = `Ajustando ${poly.nombre}: Arrastra los puntos sobre el satélite`;
       if (liveMeasure) liveMeasure.textContent = `${poly.vertices.length} vértices`;
     }
 

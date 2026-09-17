@@ -42,7 +42,7 @@ class VotoApp {
     const selectFiltro = document.getElementById("filtro-subparroquia");
 
     if (selectForm) {
-      selectForm.innerHTML = `<option value="">-- Selecciona Sub-Parroquia / Eje --</option>`;
+      selectForm.innerHTML = `<option value="">-- Sub-Parroquia / Eje --</option>`;
       SUBPARROQUIAS_GODOS.forEach(sp => {
         const opt = document.createElement("option");
         opt.value = sp.nombre;
@@ -70,7 +70,7 @@ class VotoApp {
     if (!selectSector) return;
 
     const sp = SUBPARROQUIAS_GODOS.find(s => s.nombre === subParroquiaNombre);
-    selectSector.innerHTML = `<option value="">-- Selecciona Sector / Comunidad --</option>`;
+    selectSector.innerHTML = `<option value="">-- Sector / Comunidad --</option>`;
 
     if (sp && sp.sectores) {
       sp.sectores.forEach(sec => {
@@ -83,7 +83,7 @@ class VotoApp {
     // Opción para sector personalizado
     const optOtro = document.createElement("option");
     optOtro.value = "__otro__";
-    optOtro.textContent = "➕ Otro sector (Escribir a mano)...";
+    optOtro.textContent = "➕ Otro sector...";
     selectSector.appendChild(optOtro);
 
     // Sugerir centro electoral principal si existe
@@ -123,7 +123,7 @@ class VotoApp {
     }
 
     if (selectForm) {
-      selectForm.innerHTML = `<option value="">-- Selecciona Centro Electoral CNE --</option>`;
+      selectForm.innerHTML = `<option value="">-- Centro Electoral CNE --</option>`;
       lista.forEach(c => {
         const opt = document.createElement("option");
         opt.value = c.nombre;
@@ -509,7 +509,7 @@ class VotoApp {
         const soloDigitos = e.telefono.replace(/\D/g, "");
         if (soloDigitos.length >= 10) {
           const codPais = soloDigitos.startsWith("58") ? soloDigitos : `58${soloDigitos.replace(/^0/, "")}`;
-          enlaceWhatsapp = `https://wa.me/${codPais}?text=Hola%20${encodeURIComponent(e.nombreApellido)},%20te%20saludamos%20del%20Comando%20MIGATO%20Alto%20de%20Los%20Godos`;
+          enlaceWhatsapp = `https://wa.me/${codPais}?text=Hola%20${encodeURIComponent(e.nombreApellido)},%20saludos%20MIGATO%20Alto%20de%20Los%20Godos`;
         }
       }
 

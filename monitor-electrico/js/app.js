@@ -95,9 +95,9 @@ class AppController {
     const countSinAnomaliaEl = document.getElementById("stat-sin-anomalia");
     const activeStateNameEl = document.getElementById("header-active-state-name");
 
-    if (countEventosEl) countEventosEl.innerHTML = `<span class="w-2 h-2 rounded-full bg-rose-500 mr-1.5 inline-block"></span> ${resumen.conEvento} con evento detectado`;
-    if (countRacionamientoEl) countRacionamientoEl.innerHTML = `<span class="w-2 h-2 rounded-full bg-amber-500 mr-1.5 inline-block"></span> ${resumen.conRacionamiento} con posible racionamiento`;
-    if (countSinAnomaliaEl) countSinAnomaliaEl.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-500 mr-1.5 inline-block"></span> ${resumen.sinAnomalias} sin anomalías`;
+    if (countEventosEl) countEventosEl.innerHTML = `<span class="w-2 h-2 rounded-full bg-rose-500 mr-1.5 inline-block"></span> ${resumen.conEvento} con evento`;
+    if (countRacionamientoEl) countRacionamientoEl.innerHTML = `<span class="w-2 h-2 rounded-full bg-amber-500 mr-1.5 inline-block"></span> ${resumen.conRacionamiento} con racionamiento`;
+    if (countSinAnomaliaEl) countSinAnomaliaEl.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-500 mr-1.5 inline-block"></span> ${resumen.sinAnomalias} sin anomalía`;
     if (activeStateNameEl && this.selectedState) activeStateNameEl.textContent = this.selectedState.nombre;
   }
 
@@ -161,7 +161,7 @@ class AppController {
       if (historyBody) {
         historyBody.innerHTML = "";
         if (monagasEvents.length === 0) {
-          historyBody.innerHTML = `<tr><td colspan="6" class="p-6 text-center text-sm text-slate-400">No se detectaron caídas de sondeo en Monagas en este rango.</td></tr>`;
+          historyBody.innerHTML = `<tr><td colspan="6" class="p-6 text-center text-sm text-slate-400">Sin caídas de sondeo en Monagas en este rango.</td></tr>`;
         } else {
           monagasEvents.forEach(ev => {
             const tr = document.createElement("tr");
@@ -436,7 +436,7 @@ class AppController {
 
     tableBody.innerHTML = "";
     if (events.length === 0) {
-      tableBody.innerHTML = `<tr><td colspan="6" class="p-6 text-center text-sm text-slate-400">No hay eventos registrados en este período con el filtro seleccionado.</td></tr>`;
+      tableBody.innerHTML = `<tr><td colspan="6" class="p-6 text-center text-sm text-slate-400">Sin eventos en este período.</td></tr>`;
       return;
     }
 

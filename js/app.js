@@ -183,7 +183,7 @@ class App {
 
     if (profile.nombre && profile.cedula) {
       if (headerLabel) headerLabel.textContent = `${profile.nombre.split(' ')[0]} (${profile.cedula})`;
-      if (surveyModalSub) surveyModalSub.textContent = `Encuestador: ${profile.nombre} (${profile.cedula})`;
+      if (surveyModalSub) surveyModalSub.textContent = `Encuestador: ${profile.nombre.split(' ')[0]}`;
     } else {
       if (headerLabel) headerLabel.textContent = 'Mi Cédula';
     }
@@ -226,7 +226,7 @@ class App {
         modal.classList.remove('flex');
 
         if (headerLabel) headerLabel.textContent = `${nombre.split(' ')[0]} (${cedula})`;
-        if (surveyModalSub) surveyModalSub.textContent = `Encuestador: ${nombre} (${cedula})`;
+        if (surveyModalSub) surveyModalSub.textContent = `Encuestador: ${nombre.split(' ')[0]}`;
 
         this.showToast(`✅ Perfil de ${nombre} guardado en este teléfono.`);
       });
@@ -415,10 +415,10 @@ class App {
 
         if (type === 'agua') {
           document.getElementById('form-agua-estado').value = val;
-          document.getElementById('label-selected-agua').textContent = `${val === 'rojo' ? '🔴' : val === 'amarillo' ? '🟡' : '🟢'} Seleccionado: ${val.toUpperCase()}`;
+          document.getElementById('label-selected-agua').textContent = `${val === 'rojo' ? '🔴' : val === 'amarillo' ? '🟡' : '🟢'} ${val.toUpperCase()}`;
         } else {
           document.getElementById('form-vialidad-estado').value = val;
-          document.getElementById('label-selected-vialidad').textContent = `${val === 'rojo' ? '🔴' : val === 'amarillo' ? '🟡' : '🟢'} Seleccionado: ${val.toUpperCase()}`;
+          document.getElementById('label-selected-vialidad').textContent = `${val === 'rojo' ? '🔴' : val === 'amarillo' ? '🟡' : '🟢'} ${val.toUpperCase()}`;
         }
       });
     });
@@ -482,19 +482,19 @@ class App {
             if (formLng) formLng.value = lng;
 
             if (labelGpsStatus) {
-              labelGpsStatus.textContent = `📍 GPS Exacto: ${lat.toFixed(4)}, ${lng.toFixed(4)} (Precisión: ±${accuracy}m)`;
+              labelGpsStatus.textContent = `📍 GPS: ${lat.toFixed(4)}, ${lng.toFixed(4)}`;
               labelGpsStatus.className = 'text-sm text-emerald-600 font-bold';
             }
 
             if (btnGpsText) btnGpsText.textContent = '✓ GPS Capturado';
             btnGetGps.classList.add('bg-emerald-50', 'border-emerald-300', 'text-emerald-700');
             btnGetGps.disabled = false;
-            this.showToast(`🎯 Ubicación GPS fijada con precisión de ${accuracy} metros.`);
+            this.showToast(`🎯 GPS fijado: ±${accuracy}m`);
           },
           (err) => {
             console.warn('Error al obtener GPS:', err);
             if (labelGpsStatus) {
-              labelGpsStatus.textContent = 'No se pudo acceder al GPS. Se usarán coordenadas del sector.';
+              labelGpsStatus.textContent = 'Sin GPS. Se usan coordenadas del sector.';
               labelGpsStatus.className = 'text-sm text-amber-600';
             }
             if (btnGpsText) btnGpsText.textContent = 'Reintentar GPS';
@@ -515,7 +515,7 @@ class App {
           if (formLat) formLat.value = extracted.lat;
           if (formLng) formLng.value = extracted.lng;
           if (labelGpsStatus) {
-            labelGpsStatus.textContent = `📍 Coordenadas detectadas: ${extracted.lat.toFixed(5)}, ${extracted.lng.toFixed(5)}`;
+            labelGpsStatus.textContent = `📍 ${extracted.lat.toFixed(5)}, ${extracted.lng.toFixed(5)}`;
             labelGpsStatus.className = 'text-sm text-emerald-600 font-bold';
           }
         }
@@ -817,10 +817,10 @@ class App {
 
     // Badges en headers de módulos
     const badgeAgua = document.getElementById('badge-sectores-sin-agua');
-    if (badgeAgua) badgeAgua.textContent = `${stats.agua.rojo} reportes en Alerta Roja`;
+    if (badgeAgua) badgeAgua.textContent = `${stats.agua.rojo} en Alerta Roja`;
 
     const badgeVialidad = document.getElementById('badge-sectores-vialidad-mala');
-    if (badgeVialidad) badgeVialidad.textContent = `${stats.vialidad.rojo} vías en estado crítico`;
+    if (badgeVialidad) badgeVialidad.textContent = `${stats.vialidad.rojo} vías críticas`;
 
     // 2. Render de Módulos
     this.renderTopParroquias(stats);
@@ -921,7 +921,7 @@ class App {
     });
 
     if (surveys.length === 0) {
-      tbody.innerHTML = `<tr><td colspan="5" class="px-4 py-8 text-center text-sm text-slate-400">No hay encuestas de agua con los filtros seleccionados.</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="5" class="px-4 py-8 text-center text-sm text-slate-400">Sin encuestas de agua.</td></tr>`;
       return;
     }
 
@@ -955,7 +955,7 @@ class App {
     });
 
     if (surveys.length === 0) {
-      tbody.innerHTML = `<tr><td colspan="5" class="px-4 py-8 text-center text-sm text-slate-400">No hay encuestas de vialidad con los filtros seleccionados.</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="5" class="px-4 py-8 text-center text-sm text-slate-400">Sin encuestas de vialidad.</td></tr>`;
       return;
     }
 
@@ -999,11 +999,11 @@ class App {
 
     const infoEl = document.getElementById('table-pagination-info');
     if (infoEl) {
-      infoEl.textContent = `Mostrando ${surveys.length} de ${this.store.getAll().length} encuestas`;
+      infoEl.textContent = `${surveys.length} de ${this.store.getAll().length} encuestas`;
     }
 
     if (surveys.length === 0) {
-      tbody.innerHTML = `<tr><td colspan="7" class="px-4 py-8 text-center text-sm text-slate-400">No se encontraron encuestas con los criterios de búsqueda.</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="7" class="px-4 py-8 text-center text-sm text-slate-400">Sin encuestas con estos criterios.</td></tr>`;
       return;
     }
 

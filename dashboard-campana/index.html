@@ -133,7 +133,7 @@
         </div>
 
         <!-- Botón Exportar CSV / Excel -->
-        <button id="btn-export-csv" type="button" class="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-black text-sm transition flex items-center gap-1.5 shadow-md shadow-emerald-600/20 active:scale-95 cursor-pointer" title="Descargar Censo Completo en Planilla Excel / CSV">
+        <button id="btn-export-csv" type="button" class="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-black text-sm transition flex items-center gap-1.5 shadow-md shadow-emerald-600/20 active:scale-95 cursor-pointer" aria-label="Descargar Excel">
           <i data-lucide="download" class="w-3.5 h-3.5"></i>
           <span class="font-bold">Descargar Excel</span>
         </button>
@@ -166,7 +166,7 @@
           <div class="flex items-center gap-2 bg-[#0e092e] px-3 py-2 rounded-2xl border border-[#2d1f85]">
             <label for="filter-municipio" class="text-sm font-black text-slate-300 uppercase tracking-wider flex items-center gap-1 shrink-0">
               <i data-lucide="map-pin" class="w-3.5 h-3.5 text-sky-400"></i>
-              <span>1. Municipio:</span>
+              <span>Municipio:</span>
             </label>
             <select id="filter-municipio" class="w-full bg-transparent text-sm font-bold text-white cursor-pointer">
               <option value="maturin" selected class="bg-[#140e40]">Maturín (Capital)</option>
@@ -190,7 +190,7 @@
           <div class="flex items-center gap-2 bg-[#0e092e] px-3 py-2 rounded-2xl border border-[#2d1f85]">
             <label for="filter-parroquia" class="text-sm font-black text-slate-300 uppercase tracking-wider flex items-center gap-1 shrink-0">
               <i data-lucide="layers" class="w-3.5 h-3.5 text-amber-400"></i>
-              <span>2. Parroquia:</span>
+              <span>Parroquia:</span>
             </label>
             <select id="filter-parroquia" class="w-full bg-transparent text-sm font-bold text-white cursor-pointer">
               <option value="todas" selected class="bg-[#140e40]">Todas las Parroquias</option>
@@ -205,9 +205,9 @@
             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
               <i data-lucide="search" class="w-4 h-4"></i>
             </div>
-            <input type="text" id="filter-search" placeholder="Buscar sector o comunidad (ej: La Puente)..." class="w-full pl-9 pr-3.5 py-2.5 bg-[#0e092e] border border-[#2d1f85] rounded-2xl text-sm text-white placeholder-slate-400 focus:border-sky-500 font-medium">
+            <input type="text" id="filter-search" placeholder="Buscar sector o comunidad..." class="w-full pl-9 pr-3.5 py-2.5 bg-[#0e092e] border border-[#2d1f85] rounded-2xl text-sm text-white placeholder-slate-400 focus:border-sky-500 font-medium">
           </div>
-          <button id="btn-reset-filters" type="button" class="p-2.5 rounded-2xl bg-[#0e092e] hover:bg-[#18114a] border border-[#2d1f85] text-slate-400 hover:text-white text-sm font-bold transition" title="Limpiar filtros y ver todo">
+          <button id="btn-reset-filters" type="button" class="p-2.5 rounded-2xl bg-[#0e092e] hover:bg-[#18114a] border border-[#2d1f85] text-slate-400 hover:text-white text-sm font-bold transition" aria-label="Limpiar filtros">
             <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
           </button>
         </div>

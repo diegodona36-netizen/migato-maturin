@@ -251,14 +251,14 @@ export class DemoStatsApp {
     const subtitle = document.getElementById("demo-territory-subtitle");
     if (subtitle) {
       if (this.selectedMunId === "todos") {
-        subtitle.textContent = `Estado Monagas Completo • 13 Municipios • ${agg.uniqueParroquias} Parroquias • ${agg.totalSectores} Sectores Digitalizados`;
+        subtitle.textContent = `Estado Monagas • ${agg.uniqueParroquias} Parroquias • ${agg.totalSectores} Sectores`;
       } else {
         const m = MONAGAS_DEMO_DATA.municipios.find(x => x.id === this.selectedMunId);
         const p = m ? m.parroquias.find(x => x.id === this.selectedParishId) : null;
         if (p) {
-          subtitle.textContent = `Municipio ${m.nombre} • Parroquia ${p.nombre} • ${agg.totalSectores} Sectores Censados`;
+          subtitle.textContent = `Municipio ${m.nombre} • ${agg.totalSectores} Sectores`;
         } else {
-          subtitle.textContent = `Municipio ${m ? m.nombre : ''} • ${agg.uniqueParroquias} Parroquias • ${agg.totalSectores} Sectores Censados`;
+          subtitle.textContent = `Municipio ${m ? m.nombre : ''} • ${agg.totalSectores} Sectores`;
         }
       }
     }
@@ -305,7 +305,7 @@ export class DemoStatsApp {
     if (elParetoPct) elParetoPct.textContent = `${paretoPct}%`;
     if (elParetoDesc) {
       const names = top3.map(it => it.nombre).join(", ");
-      elParetoDesc.innerHTML = `Concentrado en <strong class="text-amber-300 font-bold">${names || "territorios líderes"}</strong>. Focalizar la movilización aquí asegura la meta.`;
+      elParetoDesc.innerHTML = `Concentrado en <strong class="text-amber-300 font-bold">${names || "territorios líderes"}</strong>. Focalizar aquí.`;
     }
 
     // 2. Alerta Operativa / Sectores Críticos (<50%)
@@ -316,7 +316,7 @@ export class DemoStatsApp {
     const elRiskDesc = document.getElementById("decision-risk-desc");
     if (elRiskCount) elRiskCount.textContent = critCount;
     if (elRiskDesc) {
-      elRiskDesc.innerHTML = `<strong class="text-rose-300 font-bold">${critPct}%</strong> del territorio (${critCount} sectores) con censo &lt;50%. Desplegar brigadas.`;
+      elRiskDesc.innerHTML = `<strong class="text-rose-300 font-bold">${critPct}%</strong> del territorio con censo &lt;50%.`;
     }
 
     // 3. Presión Social / Familias por Casa
@@ -326,7 +326,7 @@ export class DemoStatsApp {
     const elCohabitDesc = document.getElementById("decision-cohabit-desc");
     if (elCohabit) elCohabit.textContent = agg.avgFamCasa;
     if (elCohabitDesc) {
-      elCohabitDesc.innerHTML = `Déficit de <strong class="text-sky-300 font-bold">${deficitPct}%</strong> en viviendas (cohabitación familiar múltiple detectada).`;
+      elCohabitDesc.innerHTML = `Déficit de <strong class="text-sky-300 font-bold">${deficitPct}%</strong> en viviendas.`;
     }
 
     // 4. Ratio Logístico por Centro CNE
@@ -335,7 +335,7 @@ export class DemoStatsApp {
     const elSchoolDesc = document.getElementById("decision-school-desc");
     if (elSchoolLoad) elSchoolLoad.textContent = this.nf.format(schoolLoad);
     if (elSchoolDesc) {
-      elSchoolDesc.innerHTML = `Promedio de <strong class="text-purple-300 font-bold">${this.nf.format(schoolLoad)}</strong> electores por escuela para dimensionar testigos y transporte.`;
+      elSchoolDesc.innerHTML = `Promedio de <strong class="text-purple-300 font-bold">${this.nf.format(schoolLoad)}</strong> electores por escuela.`;
     }
   }
 
@@ -867,7 +867,7 @@ export class DemoStatsApp {
     const startIndex = (this.sectorsPage - 1) * this.sectorsPageSize;
     const paginated = sectors.slice(startIndex, startIndex + this.sectorsPageSize);
 
-    if (countLabel) countLabel.textContent = `${totalCount} sectores encontrados`;
+    if (countLabel) countLabel.textContent = `${totalCount} sectores`;
     if (pageLabel) pageLabel.textContent = `Pág. ${this.sectorsPage} de ${totalPages}`;
 
     if (paginated.length === 0) {

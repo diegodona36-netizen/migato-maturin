@@ -674,13 +674,13 @@
               </p>
             </div>
 
-            <!-- INSTRUCCIONES RÁPIDAS DE IMPRESIÓN -->
+            <!-- IMPRESIÓN -->
             <div class="bg-blue-50 border border-blue-200 rounded-2xl p-4 space-y-2 text-base shadow-sm">
               <span class="text-base font-mono uppercase font-black text-blue-950 block tracking-wider">
                 📄 Salida en Papel y PDF 1:1
               </span>
-              <p class="text-slate-700text-sm leading-relaxed">
-                Al guardar o pulsar <strong>"Previsualizar Ficha 1:1"</strong>, el sistema generará una hoja técnica idéntica a las fichas impresas de Vialidad y Electricidad de la Gobernación, lista para firmar e imprimir en hoja Carta/A4.
+              <p class="text-slate-700 text-base leading-relaxed">
+                Al pulsar <strong>"Previsualizar Ficha 1:1"</strong>, genera una hoja lista para imprimir en Carta/A4.
               </p>
             </div>
 
@@ -701,10 +701,10 @@
         <div>
           <h2 class="text-base font-black text-slate-900 flex items-center gap-2">
             <i data-lucide="map" class="w-5 h-5 text-blue-600"></i>
-            <span>Red Hospitalaria y Sanitaria del Estado Monagas</span>
-            <span class="text-base font-mono font-bold bg-blue-50 text-blue-700 border border-blue-300 px-2 py-0.5 rounded-full hidden sm:inline">Google Maps • Exclusivo Monagas</span>
+            <span>Red Hospitalaria de Monagas</span>
+            <span class="text-base font-mono font-bold bg-blue-50 text-blue-700 border border-blue-300 px-2 py-0.5 rounded-full hidden sm:inline">Google Maps</span>
           </h2>
-          <p class="text-base text-slate-600">Monitoreo de 13 Municipios • Cartografía Google Maps • Bloqueo territorial estricto a Monagas</p>
+          <p class="text-base text-slate-600">13 Municipios • Cartografía Google Maps</p>
         </div>
 
         <!-- Leyenda -->
@@ -907,7 +907,7 @@
               <span id="label-modo-arrastre">🎯 Activar Arrastre / Clic en el Mapa</span>
             </button>
             
-            <p id="msg-modo-arrastre" class="hiddentext-sm text-amber-900 bg-amber-50 p-2.5 rounded-xl border border-amber-300 leading-tight text-center shadow-xs">
+            <p id="msg-modo-arrastre" class="hidden text-base text-amber-900 bg-amber-50 p-2.5 rounded-xl border border-amber-300 leading-tight text-center shadow-xs">
               👆 <strong>Modo Arrastre ACTIVO:</strong> Haz clic en el techo del hospital o arrastra el marcador rojo al punto exacto.
             </p>
 
@@ -1180,7 +1180,7 @@
             <p class="text-base text-blue-700 font-mono font-bold" id="modal-rapido-coords-sub">Coords: 0.00000, 0.00000</p>
           </div>
         </div>
-        <button type="button" onclick="window.cerrarModalCrearCentroRapido()" class="p-1 text-slate-400 hover:text-slate-700 rounded-lg hover:bg-slate-100 transition">
+        <button type="button" onclick="window.cerrarModalCrearCentroRapido()" class="p-1 text-slate-400 hover:text-slate-700 rounded-lg hover:bg-slate-100 transition" aria-label="Cerrar">
           <i data-lucide="x" class="w-4 h-4"></i>
         </button>
       </div>

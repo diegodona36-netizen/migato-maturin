@@ -595,8 +595,8 @@ class EarthMonagasApp {
       const parishName = parish ? parish.nombre : "";
       const toolName = this.toolsManager.activeTool;
       const parishSuffix = parishName ? ` (${parishName})` : "";
-      if (toolName === "subparroquia") bannerText.textContent = `Trazando Sub-Parroquia / Eje Territorial${parishSuffix}`;
-      else if (toolName === "poligono") bannerText.textContent = `Trazando Sector Vecinal / Militancia${parishSuffix}`;
+      if (toolName === "subparroquia") bannerText.textContent = `Trazando Eje Territorial${parishSuffix}`;
+      else if (toolName === "poligono") bannerText.textContent = `Trazando Sector Vecinal${parishSuffix}`;
       else if (toolName === "ruta") bannerText.textContent = `Trazando Ruta${parishSuffix}`;
       else if (toolName === "marca") bannerText.textContent = `Colocar Marca${parishSuffix}`;
     }
@@ -1385,14 +1385,14 @@ class EarthMonagasApp {
         if (statElectores) statElectores.textContent = (parish.electores || 35000).toLocaleString();
       } else if ((focusLevel === "municipio" || this.selectedMunId) && munObj) {
         if (titleEl) titleEl.textContent = `MUNICIPIO ${cleanMunName.toUpperCase()}, ESTADO MONAGAS`;
-        if (subTitleEl) subTitleEl.textContent = `SALA DE MANDO TERRITORIAL OFICIAL • MIGATO 2026`;
+        if (subTitleEl) subTitleEl.textContent = `SALA DE MANDO • MIGATO 2026`;
         if (statTerritorio) statTerritorio.textContent = `Municipio ${cleanMunName}`;
         if (statSubdiv) statSubdiv.textContent = `${(munObj.parroquias || []).length} Parroquias Oficiales`;
         if (statCentros) statCentros.textContent = String(munObj.totalCentros || (munObj.id === 'maturin' ? 175 : 24));
         if (statElectores) statElectores.textContent = (munObj.totalElectores || (munObj.id === 'maturin' ? 346988 : 45000)).toLocaleString();
       } else {
         if (titleEl) titleEl.textContent = `ESTADO MONAGAS • SALA SITUACIONAL`;
-        if (subTitleEl) subTitleEl.textContent = `13 MUNICIPIOS • CARTOGRAFÍA OFICIAL DE GOBIERNO • MIGATO 2026`;
+        if (subTitleEl) subTitleEl.textContent = `13 MUNICIPIOS • CARTOGRAFÍA OFICIAL • MIGATO 2026`;
         if (statTerritorio) statTerritorio.textContent = `Estado Monagas (Capital Maturín)`;
         if (statSubdiv) statSubdiv.textContent = `13 Municipios • 45 Parroquias`;
         if (statCentros) statCentros.textContent = `536`;
@@ -4309,7 +4309,7 @@ class EarthMonagasApp {
     const parish = this.store.getParish(mId, pId);
     const subps = parish?.subparroquias || [];
 
-    selectEje.innerHTML = `<option value="">— Sin vincular a un Eje específico —</option>` +
+    selectEje.innerHTML = `<option value="">— Sin Eje específico —</option>` +
       subps.map(sp => `<option value="${sp.id}">🟣 ${sp.nombre}</option>`).join("");
   }
 
@@ -4319,7 +4319,7 @@ class EarthMonagasApp {
 
     const polys = this.pendingKmlImport.polygons || [];
     if (polys.length === 0) {
-      container.innerHTML = `<div class="p-4 text-center text-slate-500 italic">No se detectaron polígonos cerrados en este archivo.</div>`;
+      container.innerHTML = `<div class="p-4 text-center text-slate-500 italic">Sin polígonos cerrados en este archivo.</div>`;
       return;
     }
 
@@ -4370,9 +4370,9 @@ class EarthMonagasApp {
 
     if (labelConfirm) {
       if (this.pendingKmlImport.selectedLayer === "capa1") {
-        labelConfirm.textContent = `Importar ${selectedCount} Polígonos a Capa 1 (Ejes Territoriales) en ${parishName}`;
+        labelConfirm.textContent = `Importar ${selectedCount} polígonos a Capa 1 en ${parishName}`;
       } else {
-        labelConfirm.textContent = `Importar ${selectedCount} Polígonos a Capa 2 (Sectores Vecinales) en ${parishName}`;
+        labelConfirm.textContent = `Importar ${selectedCount} polígonos a Capa 2 en ${parishName}`;
       }
     }
 
@@ -4569,7 +4569,7 @@ class EarthMonagasApp {
     const btnConfirm = document.getElementById("btn-confirm-kml-import");
     if (btnConfirm) {
       btnConfirm.disabled = true;
-      btnConfirm.innerHTML = `<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> Guardando en la nube...`;
+      btnConfirm.innerHTML = `<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> Guardando...`;
     }
 
     try {
@@ -4656,7 +4656,7 @@ class EarthMonagasApp {
     } finally {
       if (btnConfirm) {
         btnConfirm.disabled = false;
-        btnConfirm.innerHTML = `<i data-lucide="cloud-upload" class="w-4 h-4"></i> <span id="btn-confirm-kml-label">Importar Polígonos a la Nube</span>`;
+        btnConfirm.innerHTML = `<i data-lucide="cloud-upload" class="w-4 h-4"></i> <span id="btn-confirm-kml-label">Importar a la Nube</span>`;
         if (window.lucide && typeof window.lucide.createIcons === 'function') window.lucide.createIcons();
       }
     }

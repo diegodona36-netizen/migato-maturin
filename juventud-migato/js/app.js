@@ -73,8 +73,8 @@ class JuventudDashboardApp {
     const kpiSemaforo = document.getElementById("kpi-semaforo-entrega");
 
     if (kpiCaptacion) kpiCaptacion.textContent = `${totales.captacion.toLocaleString()} jóvenes`;
-    if (kpiConversatorios) kpiConversatorios.textContent = `${totales.conversatorios} (${totales.asistentes.toLocaleString()} participantes)`;
-    if (kpiCaminatas) kpiCaminatas.textContent = `${totales.caminatas} (${totales.casas.toLocaleString()} casas)`;
+    if (kpiConversatorios) kpiConversatorios.textContent = `${totales.conversatorios} conversatorios`;
+    if (kpiCaminatas) kpiCaminatas.textContent = `${totales.caminatas} caminatas`;
     if (kpiSemaforo) {
       kpiSemaforo.textContent = `${totales.municipiosEntregados} / ${totales.totalMunicipios} Municipios`;
     }

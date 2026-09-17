@@ -147,17 +147,13 @@
         </div>
 
         <div id="login-error" class="hidden p-2.5 bg-rose-950/80 border border-rose-800 rounded-xl text-rose-300 text-base text-center font-bold">
-          Credenciales incorrectas. Verifique su usuario y clave.
+          Usuario o contraseña incorrectos.
         </div>
 
-        <button type="submit" class="w-full py-3 bg-blue-600 hover:bg-blue-500 text-white font-black text-sm uppercase tracking-wider rounded-xl shadow-lg shadow-blue-600/30 transition active:scale-95 cursor-pointer">
-          Ingresar al Buzón
-        </button>
+      <button type="submit" class="w-full py-3 bg-blue-600 hover:bg-blue-500 text-white font-black text-sm uppercase tracking-wider rounded-xl shadow-lg shadow-blue-600/30 transition active:scale-95 cursor-pointer">
+        Ingresar al Buzón
+      </button>
       </form>
-
-      <div class="text-center text-sm text-blue-300/60 font-mono">
-        Canal exclusivo para responsables autorizados
-      </div>
     </div>
   </div>
 
@@ -193,7 +189,7 @@
           <span id="cloud-dot" class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
           <span id="cloud-text">En Línea</span>
         </span>
-        <button type="button" id="btn-logout" class="p-1.5 rounded-lg bg-[#18114a] hover:bg-rose-950 text-blue-200 hover:text-rose-300 border border-[#2d1f85] transition cursor-pointer" title="Cerrar sesión">
+        <button type="button" id="btn-logout" class="p-1.5 rounded-lg bg-[#18114a] hover:bg-rose-950 text-blue-200 hover:text-rose-300 border border-[#2d1f85] transition cursor-pointer" aria-label="Cerrar sesión">
           <i data-lucide="log-out" class="w-4 h-4"></i>
         </button>
       </div>
@@ -461,7 +457,7 @@
           </div>
 
           <p class="text-base text-blue-200/90 leading-relaxed">
-            Sube un archivo <strong>Excel / CSV</strong> o <strong>pega directamente</strong> las celdas copiadas de tu hoja de cálculo. El sistema valida cédulas y detecta duplicados en tiempo real.
+            Sube un archivo <strong>Excel / CSV</strong> o <strong>pega celdas</strong> directamente. El sistema valida cédulas y detecta duplicados en tiempo real.
           </p>
 
           <!-- Selectores Territoriales Predeterminados (Fallback) -->
@@ -499,23 +495,23 @@
               <input type="file" id="input-archivo-masivo" accept=".csv,.txt,.tsv" class="absolute inset-0 opacity-0 cursor-pointer w-full h-full">
               <div class="flex flex-col items-center gap-1 pointer-events-none">
                 <i data-lucide="file-up" class="w-6 h-6 text-emerald-400"></i>
-                <span class="text-base text-slate-200 font-bold" id="label-archivo-masivo">Haz clic o arrastra tu archivo Excel / CSV aquí</span>
-                <span class="text-base text-slate-400 font-mono">Formatos soportados: .CSV, .TXT (delimitado por coma, punto y coma o tabulador)</span>
+                <span class="text-base text-slate-200 font-bold" id="label-archivo-masivo">Arrastra tu archivo aquí</span>
+                <span class="text-base text-slate-400 font-mono">Formatos: .CSV, .TXT</span>
               </div>
             </div>
 
             <!-- Pegado Directo -->
             <div class="pt-2">
               <label class="block text-sm font-bold uppercase text-blue-200 mb-1 flex items-center justify-between">
-                <span>2. O pega directamente de Excel / Google Sheets:</span>
-                <button type="button" id="btn-limpiar-masivo" class="text-sm text-slate-400 hover:text-amber-300 underline font-mono">Limpiar texto</button>
+                <span>2. Pegar desde Excel:</span>
+                <button type="button" id="btn-limpiar-masivo" class="text-sm text-slate-400 hover:text-amber-300 underline font-mono">Limpiar</button>
               </label>
-              <textarea id="textarea-pegado-masivo" rows="4" placeholder="Pega aquí con Ctrl+V las filas copiadas de tu Excel...&#10;Ejemplo:&#10;V-14521890	Carlos Rondón	0414-7891234	35	Docente	Villa de los Ángeles	Duro&#10;V-18942310	María Salazar	0424-9123456	42	Comerciante	Villa de los Ángeles	Blando" class="w-full px-3 py-2 bg-[#0e092e] border border-[#2d1f85] rounded-xl text-sm font-mono text-slate-200 placeholder-slate-500 focus:border-emerald-400 custom-scrollbar"></textarea>
+              <textarea id="textarea-pegado-masivo" rows="4" placeholder="Pega filas de Excel con Ctrl+V&#10;Ej:&#10;V-14521890	Carlos Rondón	0414-7891234	35	Docente	Villa de los Ángeles	Duro" class="w-full px-3 py-2 bg-[#0e092e] border border-[#2d1f85] rounded-xl text-sm font-mono text-slate-200 placeholder-slate-500 focus:border-emerald-400 custom-scrollbar"></textarea>
             </div>
 
             <button type="button" id="btn-procesar-masivo" class="w-full py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-sm uppercase tracking-wider rounded-xl shadow-md transition flex items-center justify-center gap-2 cursor-pointer">
               <i data-lucide="scan-line" class="w-4 h-4 text-emerald-300"></i>
-              <span>Analizar y Previsualizar Datos</span>
+              <span>Analizar datos</span>
             </button>
           </div>
 
@@ -524,15 +520,15 @@
             <!-- Resumen de Métricas -->
             <div class="grid grid-cols-3 gap-2 text-center text-base">
               <div class="bg-[#0e092e] p-2.5 rounded-xl border border-emerald-500/40">
-                <span class="text-base uppercase font-bold text-emerald-400 block">Listos para Cargar</span>
+                <span class="text-base uppercase font-bold text-emerald-400 block">Válidos</span>
                 <span id="kpi-masivo-validos" class="text-base font-black text-white font-mono">0</span>
               </div>
               <div class="bg-[#0e092e] p-2.5 rounded-xl border border-amber-500/40">
-                <span class="text-base uppercase font-bold text-amber-400 block">Duplicados Omitidos</span>
+                <span class="text-base uppercase font-bold text-amber-400 block">Duplicados</span>
                 <span id="kpi-masivo-duplicados" class="text-base font-black text-amber-300 font-mono">0</span>
               </div>
               <div class="bg-[#0e092e] p-2.5 rounded-xl border border-rose-500/40">
-                <span class="text-base uppercase font-bold text-rose-400 block">Filas Inválidas</span>
+                <span class="text-base uppercase font-bold text-rose-400 block">Inválidos</span>
                 <span id="kpi-masivo-errores" class="text-base font-black text-rose-300 font-mono">0</span>
               </div>
             </div>
@@ -540,7 +536,7 @@
             <!-- Mini Tabla de Previsualización -->
             <div class="max-h-48 overflow-y-auto border border-[#2d1f85] rounded-xl bg-[#0e092e] custom-scrollbar">
               <table class="w-full text-base text-left text-slate-300">
-                <thead class="bg-[#140e40] text-blue-200 sticky top-0text-base uppercase font-bold">
+                <thead class="bg-[#140e40] text-blue-200 sticky top-0 text-base uppercase font-bold">
                   <tr>
                     <th class="p-2 text-center w-8">#</th>
                     <th class="p-2">Cédula</th>
@@ -559,7 +555,7 @@
             <!-- Botón Final de Inyección a la Central -->
             <button type="button" id="btn-confirmar-inyeccion-masiva" class="w-full py-3.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black text-sm uppercase tracking-wider rounded-2xl shadow-xl shadow-emerald-950/60 transition flex items-center justify-center gap-2 active:scale-95 cursor-pointer">
               <i data-lucide="check-check" class="w-4 h-4"></i>
-              <span id="text-confirmar-masivo">Confirmar y Cargar a la Central</span>
+              <span id="text-confirmar-masivo">Cargar a la Central</span>
             </button>
           </div>
 

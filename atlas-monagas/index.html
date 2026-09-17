@@ -53,7 +53,7 @@
           <input type="text" id="input-search-territorio" placeholder="Buscar municipio o parroquia..." class="w-full pl-9 pr-3 py-2 text-sm bg-[#0e092e] border border-[#2d1f85] rounded-xl text-white placeholder-slate-400 focus:border-amber-500 transition">
         </div>
 
-        <a href="../" class="p-2 rounded-xl bg-[#18114a] hover:bg-[#23176d] text-slate-300 hover:text-white transition shrink-0" title="Ir al Portal Principal">
+        <a href="../" class="p-2 rounded-xl bg-[#18114a] hover:bg-[#23176d] text-slate-300 hover:text-white transition shrink-0" aria-label="Ir al portal principal">
           <i data-lucide="home" class="w-4 h-4"></i>
         </a>
       </div>
@@ -71,25 +71,21 @@
         <div class="bg-[#18114a] border border-[#2d1f85] p-3.5 sm:p-4 rounded-2xl shadow-sm">
           <span class="text-base sm:text-base font-bold text-slate-300 uppercase block">Municipios</span>
           <span id="kpi-mun-total" class="text-2xl sm:text-3xl font-black font-mono text-white block mt-0.5">13</span>
-          <span class="text-base sm:text-base text-slate-400">100% catalogados</span>
         </div>
 
         <div class="bg-[#18114a] border border-[#2d1f85] p-3.5 sm:p-4 rounded-2xl shadow-sm">
           <span class="text-base sm:text-base font-bold text-slate-300 uppercase block">Parroquias Oficiales</span>
           <span id="kpi-parroq-total" class="text-2xl sm:text-3xl font-black font-mono text-amber-400 block mt-0.5">44</span>
-          <span class="text-base sm:text-base text-slate-400">Listas para mapear</span>
         </div>
 
         <div class="bg-[#18114a] border border-[#2d1f85] p-3.5 sm:p-4 rounded-2xl shadow-sm">
           <span class="text-base sm:text-base font-bold text-slate-300 uppercase block">Calles Trazadas</span>
           <span id="kpi-lineas-total" class="text-2xl sm:text-3xl font-black font-mono text-sky-400 block mt-0.5">0</span>
-          <span class="text-base sm:text-base text-slate-400">Líneas independientes</span>
         </div>
 
         <div class="bg-[#18114a] border border-[#2d1f85] p-3.5 sm:p-4 rounded-2xl shadow-sm">
           <span class="text-base sm:text-base font-bold text-slate-300 uppercase block">Metros de Vialidad</span>
           <span id="kpi-metros-total" class="text-2xl sm:text-3xl font-black font-mono text-emerald-400 block mt-0.5">0.0 km</span>
-          <span class="text-base sm:text-base text-slate-400">Total acumulado</span>
         </div>
       </div>
 
@@ -99,7 +95,7 @@
           <i data-lucide="smartphone" class="w-4 h-4"></i>
         </span>
         <p class="text-base text-slate-300">
-          Toca cualquier municipio y parroquia para abrir el mapa satelital. En tu teléfono podrás <strong>subrayar calles con el pulgar</strong> o <strong>usar tu GPS en la calle</strong>.
+          Toca un municipio o parroquia para abrir el mapa satelital.
         </p>
       </div>
 
@@ -126,7 +122,7 @@
           <span class="text-base font-bold text-amber-400 uppercase tracking-wider" id="modal-mun-count">Parroquias Oficiales</span>
           <h3 id="modal-mun-title" class="text-lg sm:text-xl font-black text-white mt-0.5">Municipio</h3>
         </div>
-        <button id="btn-close-mun-modal" class="p-1.5 rounded-xl bg-[#18114a] text-slate-300 hover:text-white hover:bg-[#23176d] active:scale-95 transition">
+        <button id="btn-close-mun-modal" class="p-1.5 rounded-xl bg-[#18114a] text-slate-300 hover:text-white hover:bg-[#23176d] active:scale-95 transition" aria-label="Cerrar">
           <i data-lucide="x" class="w-5 h-5"></i>
         </button>
       </div>
@@ -180,7 +176,7 @@
         </button>
 
         <!-- Botón Exportar KML -->
-        <button id="btn-export-parish-kml" class="hidden sm:flex px-2.5 py-1.5 rounded-xl bg-[#18114a] hover:bg-[#23176d] border border-[#2d1f85] text-slate-200 text-sm font-bold transition items-center gap-1" title="Descargar KML para Google Earth">
+        <button id="btn-export-parish-kml" class="hidden sm:flex px-2.5 py-1.5 rounded-xl bg-[#18114a] hover:bg-[#23176d] border border-[#2d1f85] text-slate-200 text-sm font-bold transition items-center gap-1" aria-label="Exportar KML">
           <i data-lucide="download" class="w-3.5 h-3.5 text-emerald-400"></i>
           <span>KML</span>
         </button>
@@ -203,8 +199,8 @@
 
           <!-- Cabecera Móvil del Sidebar para Cerrarlo -->
           <div class="flex items-center justify-between md:hidden border-b border-[#2d1f85] pb-2">
-            <span class="text-base font-bold text-slate-300 uppercase">Resumen de la Parroquia</span>
-            <button id="btn-close-mobile-sidebar" class="p-1 rounded-lg bg-[#18114a] text-slate-300">
+            <span class="text-base font-bold text-slate-300 uppercase">Parroquia</span>
+            <button id="btn-close-mobile-sidebar" class="p-1 rounded-lg bg-[#18114a] text-slate-300" aria-label="Cerrar menú">
               <i data-lucide="x" class="w-4 h-4"></i>
             </button>
           </div>
@@ -234,7 +230,7 @@
           <!-- Métricas Rápidas -->
           <div class="grid grid-cols-2 gap-2">
             <div class="bg-[#0e092e] p-2.5 rounded-xl border border-[#2d1f85]">
-              <span class="text-base font-bold text-slate-300 uppercase block">Calles Trazadas</span>
+              <span class="text-base font-bold text-slate-300 uppercase block">Calles</span>
               <span id="side-stat-total-lineas" class="text-xl sm:text-2xl font-black font-mono text-white block">0</span>
             </div>
             <div class="bg-[#0e092e] p-2.5 rounded-xl border border-[#2d1f85]">
@@ -247,15 +243,15 @@
           <div class="bg-[#0e092e] p-2.5 rounded-xl border border-[#2d1f85] text-base sm:text-base grid grid-cols-2 gap-1.5">
             <div class="flex items-center gap-1.5">
               <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 shrink-0"></span>
-              <span>🟢 Bueno / Óptimo</span>
+              <span>🟢 Bueno</span>
             </div>
             <div class="flex items-center gap-1.5">
               <span class="w-2.5 h-2.5 rounded-full bg-amber-500 shrink-0"></span>
-              <span>🟡 Regular / Baches</span>
+              <span>🟡 Regular</span>
             </div>
             <div class="flex items-center gap-1.5">
               <span class="w-2.5 h-2.5 rounded-full bg-orange-500 shrink-0"></span>
-              <span>🟠 Malo / Huecos</span>
+              <span>🟠 Malo</span>
             </div>
             <div class="flex items-center gap-1.5">
               <span class="w-2.5 h-2.5 rounded-full bg-red-500 shrink-0"></span>
@@ -266,7 +262,7 @@
           <!-- Lista de Calles de la Parroquia -->
           <div class="space-y-2">
             <div class="flex items-center justify-between">
-              <span class="text-base sm:text-base font-bold text-slate-300 uppercase tracking-wider">Calles Trazadas:</span>
+              <span class="text-base font-bold text-slate-300 uppercase tracking-wider">Calles:</span>
               <button id="btn-clear-parish-lines" class="text-sm text-red-400 hover:text-red-300 font-bold transition">
                 Borrar Todo
               </button>
@@ -371,7 +367,7 @@
           <span class="text-base font-bold text-amber-400 uppercase tracking-wider">Condición del Tramo</span>
           <h3 id="modal-line-length" class="text-xl font-black font-mono text-white mt-0.5">0 metros</h3>
         </div>
-        <button id="btn-close-modal" class="text-slate-400 hover:text-white p-1">
+        <button id="btn-close-modal" class="text-slate-400 hover:text-white p-1" aria-label="Cerrar">
           <i data-lucide="x" class="w-5 h-5"></i>
         </button>
       </div>

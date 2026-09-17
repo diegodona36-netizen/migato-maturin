@@ -490,7 +490,7 @@ function actualizarPuntoInspectorGmaps(lat, lng, recentrar = false) {
   if (inLng) inLng.value = lng.toFixed(6);
 
   if (dispEstado) {
-    dispEstado.innerHTML = `<span class="text-emerald-400 font-bold">📍 Coordenada Capturada:</span> <span class="font-mono text-white font-bold">${lat.toFixed(6)}, ${lng.toFixed(6)}</span>`;
+    dispEstado.innerHTML = `<span class="text-emerald-400 font-bold">📍 Coordenada:</span> <span class="font-mono text-white font-bold">${lat.toFixed(5)}, ${lng.toFixed(5)}</span>`;
   }
 
   // Crear o mover el marcador interactivo estilo cruz/pin Google Maps
@@ -520,7 +520,7 @@ function actualizarPuntoInspectorGmaps(lat, lng, recentrar = false) {
       if (inLat) inLat.value = pos.lat.toFixed(6);
       if (inLng) inLng.value = pos.lng.toFixed(6);
       if (dispEstado) {
-        dispEstado.innerHTML = `<span class="text-sky-400 font-bold">🎯 Arrastrando sobre el techo:</span> <span class="font-mono text-white">${pos.lat.toFixed(6)}, ${pos.lng.toFixed(6)}</span>`;
+        dispEstado.innerHTML = `<span class="text-sky-400 font-bold">🎯 Arrastrando:</span> <span class="font-mono text-white">${pos.lat.toFixed(5)}, ${pos.lng.toFixed(5)}</span>`;
       }
     });
 
@@ -1020,7 +1020,7 @@ function actualizarCentrosMunicipioForm(municipioId) {
   }).sort((a, b) => (a.nombre || '').localeCompare(b.nombre || ''));
 
   if (labelConteo) {
-    labelConteo.textContent = `[${centrosMun.length} centros]`;
+    labelConteo.textContent = `${centrosMun.length} centros`;
   }
 
   if (centrosMun.length > 0) {
@@ -1029,7 +1029,7 @@ function actualizarCentrosMunicipioForm(municipioId) {
     centrosMun.forEach(c => {
       const opt = document.createElement('option');
       opt.value = c.id;
-      opt.textContent = `${c.nombre} (${c.parroquia || 'Sin Parroquia'})`;
+      opt.textContent = `${c.nombre} (${c.parroquia || 'S/Parroquia'})`;
       optgroup.appendChild(opt);
     });
     selCentrosMun.appendChild(optgroup);
@@ -1785,7 +1785,7 @@ function actualizarUICalibrador(centro) {
   const elUbic = document.getElementById('calibrator-ubicacion');
   if (elUbic) {
     const mun = (centro.municipio || '').replace('Municipio ', '');
-    elUbic.textContent = `${mun} • ${centro.parroquia || ''} • ${centro.sector || 'Casco Central'}`;
+    elUbic.textContent = `${mun} • ${centro.parroquia || ''} • ${centro.sector || 'Casco'}`;
   }
 
   const badgePrec = document.getElementById('calibrator-badge-precision');
@@ -2003,7 +2003,7 @@ function editarCentro(id) {
   const badgeNuevo = document.getElementById('badge-modo-nuevo-info');
 
   if (badgeCargado) badgeCargado.classList.remove('hidden');
-  if (txtCargado) txtCargado.textContent = `Centro cargado: ${centro.nombre}`;
+  if (txtCargado) txtCargado.textContent = `Cargado: ${centro.nombre}`;
   if (txtCargadoId) txtCargadoId.textContent = `ID: ${centro.id}`;
   if (badgeNuevo) badgeNuevo.classList.add('hidden');
 
@@ -2160,7 +2160,7 @@ function abrirModalCrearCentroRapido() {
 
   const subCoords = document.getElementById('modal-rapido-coords-sub');
   if (subCoords) {
-    subCoords.textContent = `Coords: ${lat.toFixed(6)}, ${lng.toFixed(6)}`;
+    subCoords.textContent = `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
   }
 
   // Poblar select de municipios si está vacío o solo con la opción por defecto

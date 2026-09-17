@@ -739,8 +739,8 @@
           <div class="bg-[#18114a] p-3.5 rounded-2xl border border-amber-500/30 space-y-2">
             <span class="px-2 py-0.5 rounded bg-amber-500/20 text-amber-400 font-bold text-base">CAPA 1 • ESTADO</span>
             <h4 class="font-black text-white text-base">Monagas</h4>
-            <p class="text-slate-300text-sm font-sans">
-              Entidad federal autoritativa. Consolida los 13 municipios y el padrón electoral global.
+            <p class="text-slate-300 text-base font-sans">
+              Consolida los 13 municipios y el padrón electoral global.
             </p>
             <div class="text-base text-amber-300 pt-1 border-t border-[#2d1f85]">
               ID: "monagas"
@@ -750,8 +750,8 @@
           <div class="bg-[#18114a] p-3.5 rounded-2xl border border-sky-500/30 space-y-2">
             <span class="px-2 py-0.5 rounded bg-sky-500/20 text-sky-400 font-bold text-base">CAPA 2 • MUNICIPIO</span>
             <h4 class="font-black text-white text-base">13 Municipios</h4>
-            <p class="text-slate-300text-sm font-sans">
-              División político-administrativa primaria. Maturín agrupa el 60%+ del electorado.
+            <p class="text-slate-300 text-base font-sans">
+              Maturín agrupa el 60%+ del electorado.
             </p>
             <div class="text-base text-sky-300 pt-1 border-t border-[#2d1f85]">
               Campo: <code>munId</code>
@@ -761,8 +761,8 @@
           <div class="bg-[#18114a] p-3.5 rounded-2xl border border-emerald-500/30 space-y-2">
             <span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 font-bold text-base">CAPA 3 • PARROQUIA</span>
             <h4 class="font-black text-white text-base">44 Parroquias</h4>
-            <p class="text-slate-300text-sm font-sans">
-              Perímetro geográfico oficial delimitado con polígonos GeoJSON y coordenadas oficiales.
+            <p class="text-slate-300 text-base font-sans">
+              Perímetro geográfico oficial con polígonos GeoJSON.
             </p>
             <div class="text-base text-emerald-300 pt-1 border-t border-[#2d1f85]">
               Campo: <code>parishId</code>
@@ -772,8 +772,8 @@
           <div class="bg-[#18114a] p-3.5 rounded-2xl border border-purple-500/30 space-y-2">
             <span class="px-2 py-0.5 rounded bg-purple-500/20 text-purple-400 font-bold text-base">CAPA 4 • EJE TERRITORIAL</span>
             <h4 class="font-black text-white text-base">120+ Ejes</h4>
-            <p class="text-slate-300text-sm font-sans">
-              Sub-parroquia o circuito territorial organizativo. Agrupa entre 3 y 8 sectores adyacentes.
+            <p class="text-slate-300 text-base font-sans">
+              Circuito territorial. Agrupa 3-8 sectores.
             </p>
             <div class="text-base text-purple-300 pt-1 border-t border-[#2d1f85]">
               Campo: <code>subParroquiaId</code>
@@ -783,8 +783,8 @@
           <div class="bg-[#18114a] p-3.5 rounded-2xl border border-orange-500/30 space-y-2">
             <span class="px-2 py-0.5 rounded bg-orange-500/20 text-orange-400 font-bold text-base">CAPA 5 • SECTOR</span>
             <h4 class="font-black text-white text-base">350+ Polígonos</h4>
-            <p class="text-slate-300text-sm font-sans">
-              Unidad atómica trazada en satélite 3D. Contiene los 4 datos censales y el centro CNE.
+            <p class="text-slate-300 text-base font-sans">
+              Unidad mínima trazada en satélite 3D. Incluye los 4 datos censales y el centro CNE.
             </p>
             <div class="text-base text-orange-300 pt-1 border-t border-[#2d1f85]">
               Polígono Leaflet/GE
@@ -798,10 +798,10 @@
       <div class="bg-[#140e40]/90 border border-[#2d1f85] rounded-3xl p-5 shadow-xl space-y-3">
         <h4 class="text-base font-black uppercase text-amber-400 tracking-wider flex items-center gap-2">
           <i data-lucide="database" class="w-4 h-4"></i>
-          <span>Esquema de Datos de un Sector Vecinal (JSON Schema)</span>
+          <span>Esquema JSON de Sector Vecinal</span>
         </h4>
         
-        <pre class="bg-[#0e092e] border border-[#2d1f85] p-4 rounded-2xl font-monotext-sm text-amber-300/90 overflow-x-auto">
+        <pre class="bg-[#0e092e] border border-[#2d1f85] p-4 rounded-2xl font-mono text-base text-amber-300/90 overflow-x-auto">
 {
   "id": "POL-GOD-001",
   "nombre": "La Puente Sector 1 (Plaza)",
@@ -852,7 +852,7 @@
           <span class="text-amber-400 text-lg">📑</span>
           <h3 class="text-base font-black text-white uppercase tracking-wider">Informe de Sala Situacional</h3>
         </div>
-        <button type="button" id="btn-close-report-modal" class="p-1 rounded-lg text-slate-400 hover:text-white hover:bg-[#18114a] transition cursor-pointer">
+        <button type="button" id="btn-close-report-modal" class="p-1 rounded-lg text-slate-400 hover:text-white hover:bg-[#18114a] transition cursor-pointer" aria-label="Cerrar">
           <i data-lucide="x" class="w-4 h-4"></i>
         </button>
       </div>
@@ -875,7 +875,7 @@
   <!-- ============================================================== -->
   <!-- PIE DE PÁGINA                                                  -->
   <!-- ============================================================== -->
-  <footer class="bg-[#100b33] border-t border-[#2d1f85] py-4 text-centertext-sm text-slate-400 font-mono shrink-0">
+  <footer class="bg-[#100b33] border-t border-[#2d1f85] py-4 text-center text-sm text-slate-400 font-mono shrink-0">
     <p>MIGATO • Plataforma de Inteligencia Territorial del Estado Monagas • Modo Demostración de Ingeniería</p>
   </footer>
 
