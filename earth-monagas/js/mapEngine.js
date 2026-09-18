@@ -1552,6 +1552,13 @@ export class EarthMapEngine {
         }
       });
 
+      // Cargar asignaciones de comando sectorial para visualización táctica
+      let comandosAsignadosMap = {};
+      try {
+        const rawCmd = localStorage.getItem("migato_comandos_asignados");
+        if (rawCmd) comandosAsignadosMap = JSON.parse(rawCmd);
+      } catch(e) {}
+
       // 1. Polígonos de Sectores Vecinales (Nivel 5)
       (pData.poligonos || []).forEach(poly => {
         try {
@@ -1559,18 +1566,61 @@ export class EarthMapEngine {
           if (!poly.vertices && poly.poligono) poly.vertices = poly.poligono;
           if (poly.visible === false || rawCoords.length < 3) return;
 
+          // Comprobar si este sector tiene comando asignado
+          const assignedComando = poly.id ? (comandosAsignadosMap[String(poly.id)] || null) : null;
+          const isAssigned = !!assignedComando;
+
+          // Semáforo de Cobertura de Comandos:
+          // 🟢 Asignado: Borde continuo verde esmeralda brillante (#10b981), relleno verde (#059669)
+          // ⚪ Vacante: Borde discontinuo/punteado ámbar (#f59e0b, "6, 6") con menor opacidad
+          const strokeColor = isAssigned ? "#10b981" : (poly.colorBorde || "#f59e0b");
+          const fillColor = isAssigned ? "#059669" : (poly.colorRelleno || "#f59e0b");
+          const strokeWidth = isAssigned ? (poly.anchoBorde ? Math.max(poly.anchoBorde, 2.6) : (isActiveParish ? 2.8 : 2.4)) : (poly.anchoBorde || 2.0);
+          const strokeDash = isAssigned ? null : "6, 6";
+          const normalFillOpacity = isAssigned 
+            ? (poly.opacidad !== undefined ? Math.max(0.32, poly.opacidad) : (isActiveParish ? 0.36 : 0.28))
+            : (poly.opacidad !== undefined ? Math.min(0.20, poly.opacidad) : (isActiveParish ? 0.18 : 0.14));
+
           const pLayer = L.polygon(rawCoords, {
-            color: poly.colorBorde || "#38bdf8",
-            weight: poly.anchoBorde || (isActiveParish ? 2.5 : 2),
+            color: strokeColor,
+            weight: strokeWidth,
+            dashArray: strokeDash,
             opacity: isActiveParish ? 0.95 : 0.85,
-            fillColor: poly.colorRelleno || "#38bdf8",
-            fillOpacity: poly.opacidad !== undefined ? poly.opacidad : (isActiveParish ? 0.35 : 0.25),
+            fillColor: fillColor,
+            fillOpacity: normalFillOpacity,
             interactive: !isDrawing,
             renderer: this.canvasRenderer
           });
 
           if (poly && poly.id) {
             this.leafletLayersMap.set(String(poly.id), pLayer);
+          }
+
+          // Etiqueta táctica de centroide (Badge)
+          if (this.sectorLabelsLayer) {
+            const centroid = this.calculateCentroid(rawCoords);
+            if (centroid) {
+              const labelIcon = L.divIcon({
+                className: "earth-sector-centroid-label",
+                html: isAssigned ? `
+                  <div class="px-2 py-0.5 rounded-full bg-emerald-950/90 border border-emerald-400/90 text-emerald-200 text-[11px] font-black flex items-center gap-1 shadow-lg backdrop-blur-sm pointer-events-none whitespace-nowrap transform -translate-x-1/2 -translate-y-1/2">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_6px_#10b981]"></span>
+                    <span>${poly.nombre}</span>
+                    <span class="text-[9px] text-emerald-300 font-semibold truncate max-w-[80px]">(${assignedComando.nombre.split(' ')[0]})</span>
+                  </div>
+                ` : `
+                  <div class="px-2 py-0.5 rounded-full bg-[#0e092e]/90 border border-dashed border-amber-400/80 text-amber-300 text-[11px] font-bold flex items-center gap-1 shadow-lg backdrop-blur-sm pointer-events-none whitespace-nowrap transform -translate-x-1/2 -translate-y-1/2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span>
+                    <span>${poly.nombre}</span>
+                    <span class="text-[9px] text-amber-400 font-mono">[Vacante]</span>
+                  </div>
+                `,
+                iconSize: [0, 0],
+                iconAnchor: [0, 0]
+              });
+              const cMarker = L.marker(centroid, { icon: labelIcon, interactive: false });
+              this.sectorLabelsLayer.addLayer(cMarker);
+            }
           }
 
           const milCount = poly.militantes !== undefined ? poly.militantes : (poly.habitantes || 0);
@@ -1586,11 +1636,34 @@ export class EarthMapEngine {
           const nuevoCount = poly.votoNuevo !== undefined ? poly.votoNuevo : Math.max(0, milCount - duroCount - blandoCount);
 
           if (!isDrawing && !this.isTouchDevice) {
+            const statusBanner = isAssigned ? `
+              <div class="flex items-center justify-between gap-1.5 px-2 py-1 mb-1.5 rounded-lg bg-emerald-950/90 border border-emerald-500/60 text-emerald-200">
+                <div class="flex items-center gap-1.5 truncate">
+                  <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 shrink-0 shadow-[0_0_8px_#10b981]"></span>
+                  <span class="text-xs font-black truncate">${assignedComando.nombre}</span>
+                </div>
+                <span class="text-[10px] font-mono font-bold bg-emerald-800/80 text-white px-1.5 py-0.2 rounded shrink-0">
+                  ${assignedComando.cargo || "Jefe Comando"}
+                </span>
+              </div>
+            ` : `
+              <div class="flex items-center justify-between gap-1.5 px-2 py-1 mb-1.5 rounded-lg bg-amber-950/80 border border-amber-500/50 text-amber-200">
+                <div class="flex items-center gap-1.5">
+                  <span class="w-2.5 h-2.5 rounded-full bg-amber-400 shrink-0 animate-pulse"></span>
+                  <span class="text-xs font-black">⚪ Vacante / Sin Comando</span>
+                </div>
+                <span class="text-[10px] font-mono font-bold bg-amber-900/90 text-amber-100 px-1.5 py-0.2 rounded shrink-0">
+                  Por Asignar
+                </span>
+              </div>
+            `;
+
             pLayer.bindTooltip(`
-              <div class="p-2 font-mono text-sm max-w-[260px] bg-[#140e40]/95 rounded-xl border border-sky-500/50 shadow-2xl">
-                <div class="flex items-center justify-between gap-2 border-b border-sky-800/60 pb-1.5 mb-1.5">
+              <div class="p-2 font-mono text-sm max-w-[270px] bg-[#140e40]/95 rounded-xl border ${isAssigned ? 'border-emerald-500/60' : 'border-amber-500/60'} shadow-2xl">
+                ${statusBanner}
+                <div class="flex items-center justify-between gap-2 border-b border-sky-800/60 pb-1 mb-1">
                   <span class="text-sm uppercase tracking-wider text-sky-400 font-black flex items-center gap-1 truncate">
-                    <span class="w-2 h-2 rounded-full bg-sky-400"></span>
+                    <span class="w-2 h-2 rounded-full ${isAssigned ? 'bg-emerald-400' : 'bg-amber-400'}"></span>
                     <span class="truncate">Sector Vecinal${spTag}</span>
                   </span>
                   <span class="text-sm font-bold text-emerald-300 bg-emerald-950/80 px-1.5 py-0.5 rounded border border-emerald-700 shrink-0">
@@ -1633,20 +1706,28 @@ export class EarthMapEngine {
                   <span>Área: ${poly.areaHa || 0} Ha</span>
                   <span>Perímetro: ${poly.perimetroM || 0} m</span>
                 </div>
-                <span class="text-sm text-sky-300 font-bold block mt-1 text-center">👉 Clic para abrir Ficha / Modificar</span>
+                <span class="text-sm ${isAssigned ? 'text-emerald-300' : 'text-amber-300'} font-bold block mt-1 text-center">
+                  ${isAssigned ? '👉 Clic para consultar ficha técnica' : '👉 Clic para consultar o + Asignar'}
+                </span>
               </div>
             `, { sticky: true, className: "earth-tooltip" });
           }
 
           pLayer.on({
             mouseover: () => {
-              pLayer.setStyle({ weight: (poly.anchoBorde || 2) + 1.5, color: "#facc15", fillOpacity: Math.min(0.85, (poly.opacidad || 0.35) + 0.25) });
+              pLayer.setStyle({ 
+                weight: strokeWidth + 1.5, 
+                color: "#facc15", 
+                fillOpacity: Math.min(0.85, normalFillOpacity + 0.25) 
+              });
             },
             mouseout: () => {
               pLayer.setStyle({
-                weight: poly.anchoBorde || (isActiveParish ? 2.5 : 2),
-                color: poly.colorBorde || "#38bdf8",
-                fillOpacity: poly.opacidad !== undefined ? poly.opacidad : (isActiveParish ? 0.35 : 0.25)
+                weight: strokeWidth,
+                color: strokeColor,
+                dashArray: strokeDash,
+                fillColor: fillColor,
+                fillOpacity: normalFillOpacity
               });
             },
             click: (e) => {

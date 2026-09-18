@@ -171,9 +171,27 @@ class EarthMonagasApp {
     window.clearSubParishFocus = () => window.earthApp?.clearSubParishFocus();
     window.clearSectorFocus = (toSub = true) => window.earthApp?.clearSectorFocus(toSub);
     window.focusMunicipio = (m, fly = true) => window.earthApp?.focusMunicipio(m, fly);
-    window.focusEstado = (fly = true) => window.earthApp?.focusEstado(fly);
+    window.refreshComandosMap = () => this.refreshComandosMapStyles();
+
+    // Sincronización reactiva de asignación de comandos entre pestañas y al volver al mapa
+    window.addEventListener("storage", (e) => {
+      if (e.key === "migato_comandos_asignados") {
+        this.refreshComandosMapStyles();
+      }
+    });
+    window.addEventListener("focus", () => {
+      this.refreshComandosMapStyles();
+    });
 
     this.init();
+  }
+
+  refreshComandosMapStyles() {
+    if (!this.store || !this.mapEngine) return;
+    const parish = this.store.getParish(this.selectedMunId, this.selectedParishId);
+    if (parish && typeof this.mapEngine.renderParishItems === "function") {
+      this.mapEngine.renderParishItems(parish, (type, item) => this.showQuickStats(type, item));
+    }
   }
 
   init() {

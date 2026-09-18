@@ -881,8 +881,20 @@
   <!-- 3. BARRA DE ESTADO INFERIOR (COORDENADAS GOOGLE EARTH PRO)     -->
   <!-- ============================================================== -->
   <footer class="earth-status-bar h-7 px-2.5 sm:px-3 hidden sm:flex items-center justify-between font-mono shrink-0 select-text w-full overflow-hidden bg-[#100b33] border-t border-[#2d1f85] text-slate-400">
-    <div class="flex items-center gap-2 truncate">
+    <div class="flex items-center gap-3 truncate">
       <span id="status-coords" class="text-slate-300 font-bold text-base sm:text-base truncate">9°44'51.2"N 63°11'05.4"W</span>
+      <span class="text-slate-600">|</span>
+      <!-- Semáforo de Comandos -->
+      <div class="flex items-center gap-3 text-xs font-sans">
+        <span class="flex items-center gap-1.5 text-emerald-300 font-bold" title="Polígono verde continuo con dirigente designado">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 shadow-[0_0_6px_#10b981]"></span>
+          <span>🟢 Asignado (Línea Continua)</span>
+        </span>
+        <span class="flex items-center gap-1.5 text-amber-300 font-bold" title="Polígono con línea punteada pendiente por asignar dirigente">
+          <span class="w-3.5 h-0.5 border-b-2 border-dashed border-amber-400"></span>
+          <span>⚪ Vacante (Línea Punteada)</span>
+        </span>
+      </div>
     </div>
 
     <div class="flex items-center gap-3 text-base sm:text-base shrink-0">
@@ -891,6 +903,19 @@
       <span id="status-eye-alt">Ojo: 8.5 km</span>
     </div>
   </footer>
+
+  <!-- Leyenda Táctica Flotante de Cobertura de Comandos (Móvil) -->
+  <div id="map-legend-comandos" style="z-index: 1000;" class="fixed bottom-9 left-3 sm:hidden pointer-events-none flex items-center gap-2 px-2.5 py-1 rounded-xl bg-[#100b33]/90 border border-[#2d1f85] backdrop-blur-md text-[11px] font-sans shadow-xl">
+    <span class="flex items-center gap-1 text-emerald-300 font-black">
+      <span class="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_6px_#10b981]"></span>
+      <span>Asignado</span>
+    </span>
+    <span class="text-slate-600">|</span>
+    <span class="flex items-center gap-1 text-amber-300 font-bold">
+      <span class="w-2.5 h-0.5 border-b border-dashed border-amber-400"></span>
+      <span>Vacante</span>
+    </span>
+  </div>
 
   <!-- ============================================================== -->
   <!-- 3.9. FICHA EJECUTIVA / HOJA TÁCTIL INFERIOR (BOTTOM SHEET)       -->
