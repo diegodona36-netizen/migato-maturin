@@ -84,12 +84,10 @@ export class AuditLogger {
     const badge = document.getElementById("session-audit-badge");
     if (badge) {
       badge.innerHTML = `
-        <span class="w-2 h-2 rounded-full bg-emerald-500 shrink-0"></span>
-        <span class="font-bold text-slate-800">${this.session.name}</span>
-        <span class="text-slate-400">|</span>
-        <span class="font-mono text-slate-500 text-xs">${this.clientIP}</span>
+        <span class="w-2 h-2 rounded-full bg-emerald-500 shrink-0 animate-pulse"></span>
+        <span>Sala Situacional • MIGATO 2026</span>
       `;
-      badge.title = `Sesión iniciada: ${new Date(this.session.loginTime).toLocaleTimeString('es-VE')} • IP: ${this.clientIP}`;
+      badge.title = `Operación Activa • Sala Situacional MIGATO 2026`;
     }
   }
 }

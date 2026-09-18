@@ -120,7 +120,7 @@ html, body {
 #lamina-side-panel {
   position: absolute;
   top: 88px;
-  bottom: 12px;
+  bottom: 20px;
   right: 20px;
   width: 360px;
   max-width: calc(100vw - 40px);
@@ -312,48 +312,15 @@ html, body {
   display: none !important;
 }
 
-/* ==========================================================================
-   BARRA CARTOGRÁFICA INFERIOR (DATUM, COORDENADAS Y ESCALA)
-   ========================================================================== */
-
-#lamina-footer {
-  position: absolute;
-  bottom: 12px;
-  left: 20px;
-  right: 395px; /* Detener antes del panel lateral para evitar solapamientos */
-  height: 38px;
-  z-index: 1000;
-  pointer-events: auto;
-  background: rgba(255, 255, 255, 0.96);
-  backdrop-filter: blur(12px);
-  border: 1.5px solid #0f172a;
-  border-radius: 12px;
-  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.14);
-  padding: 0 16px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  font-size: 11px;
-  font-weight: 800;
-  color: #334155;
-  transition: right 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-@media (max-width: 1024px) {
-  #lamina-footer {
-    right: 20px;
-  }
-}
-
-/* Control de Zoom en esquina inferior izquierda, justo encima de la barra footer */
+/* Control de Zoom en esquina inferior izquierda */
 .leaflet-bottom.leaflet-left {
-  bottom: 58px !important;
-  left: 20px !important;
+  bottom: 24px !important;
+  left: 24px !important;
 }
 .leaflet-control-zoom {
   border: 1.5px solid #0f172a !important;
   border-radius: 10px !important;
-  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.15) !important;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.18) !important;
   overflow: hidden;
 }
 

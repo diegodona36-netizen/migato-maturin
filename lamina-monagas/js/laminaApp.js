@@ -28,6 +28,29 @@ const WORLD_BOX = [
   [85.0511, -180]
 ];
 
+function formatTitleCase(str) {
+  if (!str) return "";
+  const clean = String(str)
+    .replace(/_/g, " ")
+    .replace(/-/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+  
+  return clean
+    .split(" ")
+    .map(w => {
+      const lower = w.toLowerCase();
+      if (["de", "del", "la", "las", "los", "el", "y", "en"].includes(lower)) {
+        return lower;
+      }
+      return lower.charAt(0).toUpperCase() + lower.slice(1);
+    })
+    .join(" ")
+    .replace(/^De\b/i, "De")
+    .replace(/^La\b/i, "La")
+    .replace(/^El\b/i, "El");
+}
+
 export class LaminaApp {
   constructor() {
     this.map = null;
@@ -36,6 +59,12 @@ export class LaminaApp {
     this.activeParishId = null;
     this.activeSubParishId = null;
     this.activeSectorId = null;
+    this.activeSubParishName = null;
+    this.activeSectorName = null;
+
+    // Foco fijo de parroquia para no alterar el zoom en subparroquias ni sectores
+    this.currentParishBounds = null;
+    this.currentParishRings = null;
 
     // Capas Leaflet
     this.maskLayer = null;
@@ -75,16 +104,8 @@ export class LaminaApp {
       layers: [googleHybrid]
     });
 
-    // Control de zoom discreto abajo a la izquierda (sobre el footer)
+    // Control de zoom discreto abajo a la izquierda
     L.control.zoom({ position: "bottomleft" }).addTo(this.map);
-
-    // Rastreo dinámico de coordenadas en la barra cartográfica inferior
-    this.map.on("mousemove", (e) => {
-      const coordsEl = document.getElementById("footer-coords");
-      if (coordsEl && e.latlng) {
-        coordsEl.textContent = `LAT: ${e.latlng.lat.toFixed(4)}° N • LON: ${e.latlng.lng.toFixed(4)}° W`;
-      }
-    });
 
     // Pane exclusivo para el Velo Blanco exterior (z-index 450, no intercepta clics del usuario)
     this.map.createPane("spotlightPane");
@@ -640,6 +661,8 @@ export class LaminaApp {
     this.activeParishId = parishId;
     this.activeSubParishId = null;
     this.activeSectorId = null;
+    this.activeSubParishName = null;
+    this.activeSectorName = null;
 
     const cleanMunId = String(munId).toLowerCase().replace(/_/g, "-").trim();
     const cleanPId = String(parishId).toLowerCase().replace(/_/g, "-").trim();
@@ -653,92 +676,32 @@ export class LaminaApp {
     });
 
     const rings = feat ? this.geoJsonCoordsToLeaflet(feat.geometry) : [];
+    this.currentParishRings = rings;
 
     // APLICAR EL RECORTE EXACTO DEL VELO BLANCO A ESTA PARROQUIA
-    this.applySpotlightMask(rings, pColor, 4);
+    this.applySpotlightMask(rings, pColor, 3.5);
     this.childEntitiesLayer.clearLayers();
     this.centrosLayer.clearLayers();
 
-    const pName = feat?.properties?.nombre || (CATALOGO_MONAGAS.find(m => m.id === cleanMunId)?.parroquias || []).find(p => p.id === cleanPId)?.nombre || cleanPId;
-
-    // Obtener polígonos exactos del Módulo 4
-    const { subparroquias, poligonos } = this.getParishPolygonsData(cleanMunId, resolvedPId);
-
-    // 1. Dibujar polígonos de Sub-Parroquias / Ejes Territoriales (Nivel 4) idénticos al Módulo 4
-    if (Array.isArray(subparroquias) && subparroquias.length > 0) {
-      subparroquias.forEach(sp => {
-        const coords = sp.vertices || sp.poligono;
-        if (coords && coords.length >= 3) {
-          const spColor = sp.colorBorde || "#c084fc";
-          const spPoly = L.polygon(coords, {
-            color: spColor,
-            weight: 2.5,
-            opacity: 0.95,
-            fillColor: sp.colorRelleno || "#a855f7",
-            fillOpacity: 0.12,
-            dashArray: "6, 4"
-          });
-
-          spPoly.bindTooltip(`
-            <div style="font-family: inherit; font-size: 11px; padding: 2px;">
-              <span style="color: #a855f7; font-weight: 900; font-size: 9.5px; text-transform: uppercase;">Nivel 4 • Eje Territorial</span><br>
-              <strong style="color: #0f172a; font-size: 11.5px;">${sp.nombre}</strong>
-            </div>
-          `, { sticky: true });
-
-          spPoly.on({
-            mouseover: () => spPoly.setStyle({ weight: 4, fillOpacity: 0.25 }),
-            mouseout: () => spPoly.setStyle({ weight: 2.5, fillOpacity: 0.12 }),
-            click: () => this.selectSubParroquia(sp.id, cleanPId, cleanMunId)
-          });
-          this.childEntitiesLayer.addLayer(spPoly);
-        }
-      });
-    }
-
-    // 2. Dibujar polígonos de Sectores Vecinales (Nivel 5) idénticos al Módulo 4
-    if (Array.isArray(poligonos) && poligonos.length > 0) {
-      poligonos.forEach(sec => {
-        const coords = sec.vertices || sec.poligono;
-        if (coords && coords.length >= 3) {
-          const secColor = sec.colorBorde || sec.color || "#38bdf8";
-          const secPoly = L.polygon(coords, {
-            color: secColor,
-            weight: sec.anchoBorde || 2,
-            opacity: 0.95,
-            fillColor: sec.colorRelleno || secColor,
-            fillOpacity: sec.opacidad !== undefined ? sec.opacidad : 0.32
-          });
-
-          secPoly.bindTooltip(`
-            <div style="font-family: inherit; font-size: 11px; padding: 2px;">
-              <span style="color: #0284c7; font-weight: 900; font-size: 9.5px; text-transform: uppercase;">Nivel 5 • Sector Vecinal</span><br>
-              <strong style="color: #0f172a; font-size: 11.5px;">${sec.nombre}</strong>
-            </div>
-          `, { sticky: true });
-
-          secPoly.on({
-            mouseover: () => secPoly.setStyle({ weight: 3.5, fillOpacity: 0.55 }),
-            mouseout: () => secPoly.setStyle({ weight: sec.anchoBorde || 2, fillOpacity: sec.opacidad !== undefined ? sec.opacidad : 0.32 }),
-            click: () => this.selectSector(sec.id, cleanPId, cleanMunId)
-          });
-          this.childEntitiesLayer.addLayer(secPoly);
-        }
-      });
-    }
-
-    // Ajustar cámara a la parroquia
+    // Ajustar cámara a la parroquia como cota máxima de zoom
     if (rings && rings.length > 0) {
       try {
         const bounds = Array.isArray(rings[0][0]) ? L.polygon(rings[0]).getBounds() : L.polygon(rings).getBounds();
-        this.map.flyToBounds(bounds, { padding: [40, 40], duration: 1.2 });
+        this.currentParishBounds = bounds;
+        this.map.flyToBounds(bounds, { padding: [40, 40], duration: 1.0 });
       } catch(e){}
     }
 
+    const rawPName = feat?.properties?.nombre || (CATALOGO_MONAGAS.find(m => m.id === cleanMunId)?.parroquias || []).find(p => p.id === cleanPId)?.nombre || cleanPId;
+    const cleanPName = formatTitleCase(rawPName);
+
+    // Obtener subparroquias y sectores para el directorio lateral
+    const { subparroquias, poligonos } = this.getParishPolygonsData(cleanMunId, resolvedPId);
+
     const pDem = getParishDemographics(cleanMunId, resolvedPId);
-    this.updateHeaderUI(`PARROQUIA ${pName.toUpperCase()}`, `MUNICIPIO MATURÍN • ESTADO MONAGAS • SALA SITUACIONAL 2026`);
+    this.updateHeaderUI(`PARROQUIA ${cleanPName.toUpperCase()}`, `MUNICIPIO MATURÍN • ESTADO MONAGAS • SALA SITUACIONAL 2026`);
     
-    // Preparar lista de sectores/ejes para el panel lateral
+    // Preparar lista amigable de sectores/ejes para el panel lateral
     let listItems = [];
     if (subparroquias && subparroquias.length > 0) {
       listItems = subparroquias.map(sp => ({
@@ -751,7 +714,7 @@ export class LaminaApp {
     } else if (poligonos && poligonos.length > 0) {
       listItems = poligonos.map(sec => ({
         id: sec.id,
-        nombre: sec.nombre,
+        nombre: formatTitleCase(sec.nombre),
         color: sec.colorBorde || pColor,
         badge: "Sector",
         onClick: `laminaApp.selectSector('${sec.id}', '${cleanPId}', '${cleanMunId}')`
@@ -759,15 +722,15 @@ export class LaminaApp {
     }
 
     this.renderSideStats({
-      title: pName.toUpperCase(),
+      title: cleanPName.toUpperCase(),
       color: pColor,
-      type: `Parroquia • Municipio Maturín`,
+      type: `Parroquia Oficial • Municipio Maturín`,
       code: "OFICIAL CNE",
       hab: pDem?.habitantes ? pDem.habitantes.toLocaleString("es-VE") : "—",
       vot: pDem?.votantes ? pDem.votantes.toLocaleString("es-VE") : "—",
       cen: pDem?.centros ? `${pDem.centros} Centros` : "—",
       cas: pDem?.casas ? pDem.casas.toLocaleString("es-VE") : "—",
-      listTitle: subparroquias.length > 0 ? "Ejes Territoriales (Clic para enfocar)" : "Sectores Censados (Clic para enfocar)",
+      listTitle: subparroquias.length > 0 ? "Ejes Territoriales / Sub-Parroquias" : "Sectores Censados",
       listCount: listItems.length,
       backBtn: {
         label: "Ver todas las 11 parroquias",
@@ -778,10 +741,10 @@ export class LaminaApp {
     });
     this.renderComandoSection();
     this.updateBreadcrumbs();
-    auditLogger.logEvent("SELECCION_PARROQUIA", { parroquiaId: cleanPId, municipioId: cleanMunId, nombre: pName });
+    auditLogger.logEvent("SELECCION_PARROQUIA", { parroquiaId: cleanPId, municipioId: cleanMunId, nombre: cleanPName });
   }
 
-  // 4. NIVEL SUB-PARROQUIA / EJE TERRITORIAL
+  // 4. NIVEL SUB-PARROQUIA / EJE TERRITORIAL (EL MAPA SE QUEDA EN ZOOM PARROQUIAL)
   selectSubParroquia(spId, parishId = "alto-de-los-godos", munId = "maturin") {
     this.level = "subparroquia";
     this.activeMunId = munId;
@@ -800,16 +763,41 @@ export class LaminaApp {
 
     // Buscar el eje
     const eje = subparroquias.find(e => String(e.id) === String(spId) || String(e.nombre).toLowerCase().includes(String(spId).toLowerCase())) || { id: spId, nombre: spId };
+    this.activeSubParishName = eje.nombre;
 
-    const ejeCoords = eje.vertices || eje.poligono;
-    if (ejeCoords && ejeCoords.length >= 3) {
-      // APLICAR RECORTE EXACTO DEL VELO BLANCO AL EJE TERRITORIAL
-      this.applySpotlightMask(ejeCoords, eje.colorBorde || "#c084fc", 4);
+    // REGLA CRÍTICA: Mantener el zoom y el Velo Blanco fijos en la PARROQUIA
+    if (!this.currentParishRings || this.currentParishRings.length === 0) {
+      const feat = (GEO_PARROQUIAS_OFICIAL.features || []).find(f => {
+        const id = String(f.properties?.id || "").toLowerCase().replace(/_/g, "-").trim();
+        return id === cleanPId || resolveParishId(id) === cleanPId;
+      });
+      if (feat) {
+        this.currentParishRings = this.geoJsonCoordsToLeaflet(feat.geometry);
+      }
+    }
+    if (this.currentParishRings && this.currentParishRings.length > 0) {
+      this.applySpotlightMask(this.currentParishRings, pColor, 3.5);
+    }
+    if (this.currentParishBounds) {
+      this.map.flyToBounds(this.currentParishBounds, { padding: [40, 40], duration: 0.8 });
+    }
 
-      try {
-        const bounds = L.polygon(ejeCoords).getBounds();
-        this.map.flyToBounds(bounds, { padding: [50, 50], duration: 1.2 });
-      } catch(e){}
+    // Marcador sutil y elegante en el mapa si el eje tiene punto central
+    if (eje.centro) {
+      const ejeMarker = L.circleMarker(eje.centro, {
+        radius: 8,
+        fillColor: "#a855f7",
+        fillOpacity: 0.95,
+        color: "#ffffff",
+        weight: 2
+      });
+      ejeMarker.bindTooltip(`
+        <div style="font-family: inherit; font-size: 11px; padding: 2px;">
+          <span style="color: #a855f7; font-weight: 900; font-size: 9.5px; text-transform: uppercase;">Eje Territorial</span><br>
+          <strong style="color: #0f172a; font-size: 12px;">${eje.nombre}</strong>
+        </div>
+      `, { permanent: false, sticky: true });
+      this.childEntitiesLayer.addLayer(ejeMarker);
     }
 
     // Sectores del eje
@@ -820,56 +808,28 @@ export class LaminaApp {
     });
 
     const sectoresToRender = childSectores.length > 0 ? childSectores : poligonos;
+    const cleanPName = formatTitleCase(cleanPId);
 
-    // Dibujar sectores del eje idénticos al Módulo 4
-    sectoresToRender.forEach(sec => {
-      const sCoords = sec.vertices || sec.poligono;
-      if (sCoords && sCoords.length >= 3) {
-        const secColor = sec.colorBorde || sec.color || "#38bdf8";
-        const secPoly = L.polygon(sCoords, {
-          color: secColor,
-          weight: sec.anchoBorde || 2,
-          opacity: 0.95,
-          fillColor: sec.colorRelleno || secColor,
-          fillOpacity: sec.opacidad !== undefined ? sec.opacidad : 0.35
-        });
-
-        secPoly.bindTooltip(`
-          <div style="font-family: inherit; font-size: 11px; padding: 2px;">
-            <span style="color: #0284c7; font-weight: 900; font-size: 9.5px; text-transform: uppercase;">Nivel 5 • Sector</span><br>
-            <strong style="color: #0f172a; font-size: 11.5px;">${sec.nombre}</strong>
-          </div>
-        `, { sticky: true });
-
-        secPoly.on({
-          mouseover: () => secPoly.setStyle({ weight: 3.5, fillOpacity: 0.55 }),
-          mouseout: () => secPoly.setStyle({ weight: sec.anchoBorde || 2, fillOpacity: sec.opacidad !== undefined ? sec.opacidad : 0.35 }),
-          click: () => this.selectSector(sec.id, cleanPId, cleanMunId)
-        });
-        this.childEntitiesLayer.addLayer(secPoly);
-      }
-    });
-
-    this.updateHeaderUI(`${eje.nombre.toUpperCase()}`, `PARROQUIA ${cleanPId.toUpperCase()} • MUNICIPIO MATURÍN`);
+    this.updateHeaderUI(`${eje.nombre.toUpperCase()}`, `PARROQUIA ${cleanPName.toUpperCase()} • MUNICIPIO MATURÍN`);
     this.renderSideStats({
       title: eje.nombre.toUpperCase(),
       color: eje.colorBorde || "#a855f7",
-      type: "Eje Territorial • Nivel 4",
-      code: eje.codigo || "MÓDULO 4",
+      type: `Eje Comunal • Parroquia ${cleanPName}`,
+      code: "TERRITORIO",
       hab: eje.habitantes ? eje.habitantes.toLocaleString("es-VE") : "16,162",
       vot: eje.electores ? eje.electores.toLocaleString("es-VE") : "10,728",
       cen: eje.centros ? `${eje.centros} Centros` : "5 Centros",
       cas: eje.casas ? eje.casas.toLocaleString("es-VE") : "5,309",
-      listTitle: "Sectores del Eje (Clic para enfocar)",
+      listTitle: `Sectores de este Eje (${sectoresToRender.length})`,
       listCount: sectoresToRender.length,
       backBtn: {
-        label: `Volver a Parroquia`,
+        label: `Volver a Ejes de ${cleanPName}`,
         count: "⬅",
         onClick: `laminaApp.selectParroquia('${cleanPId}', '${cleanMunId}')`
       },
       items: sectoresToRender.map(s => ({
         id: s.id,
-        nombre: s.nombre,
+        nombre: formatTitleCase(s.nombre),
         color: s.colorBorde || "#38bdf8",
         badge: "Sector",
         onClick: `laminaApp.selectSector('${s.id}', '${cleanPId}', '${cleanMunId}')`
@@ -881,7 +841,7 @@ export class LaminaApp {
     auditLogger.logEvent("SELECCION_SUBPARROQUIA_EJE", { ejeId: spId, parroquiaId: cleanPId, municipioId: cleanMunId, nombre: eje.nombre });
   }
 
-  // 5. NIVEL SECTOR VECINAL
+  // 5. NIVEL SECTOR VECINAL (EL MAPA SE QUEDA EN ZOOM PARROQUIAL)
   selectSector(secId, parishId = "alto-de-los-godos", munId = "maturin") {
     this.level = "sector";
     this.activeMunId = munId;
@@ -900,51 +860,66 @@ export class LaminaApp {
     if (!sec) {
       sec = { id: secId, nombre: secId };
     }
+    this.activeSectorName = sec.nombre;
 
-    const sCoords = sec.vertices || sec.poligono;
-    if (sCoords && sCoords.length >= 3) {
-      // RECORTE DEL VELO BLANCO DIRECTO AL SECTOR
-      this.applySpotlightMask(sCoords, sec.colorBorde || sec.color || pColor, 4);
-      try {
-        const bounds = L.polygon(sCoords).getBounds();
-        this.map.flyToBounds(bounds, { padding: [60, 60], maxZoom: 17, duration: 1.2 });
-      } catch(e){}
-
-      // Dibujar el polígono enfocado con estilo destacado
-      const secPoly = L.polygon(sCoords, {
-        color: sec.colorBorde || sec.color || "#38bdf8",
-        weight: 3,
-        opacity: 1,
-        fillColor: sec.colorRelleno || sec.color || "#38bdf8",
-        fillOpacity: 0.4
-      });
-      secPoly.bindTooltip(`<strong>${sec.nombre.toUpperCase()}</strong>`, { sticky: true, direction: "center" });
-      this.childEntitiesLayer.addLayer(secPoly);
-    } else if (sec.centro) {
-      this.map.flyTo(sec.centro, 16, { duration: 1.2 });
+    // REGLA CRÍTICA: Mantener el zoom y el Velo Blanco fijos en la PARROQUIA
+    if (this.currentParishRings && this.currentParishRings.length > 0) {
+      this.applySpotlightMask(this.currentParishRings, pColor, 3.5);
+    }
+    if (this.currentParishBounds) {
+      this.map.flyToBounds(this.currentParishBounds, { padding: [40, 40], duration: 0.8 });
     }
 
-    this.updateHeaderUI(`SECTOR ${sec.nombre.toUpperCase()}`, `PARROQUIA ${cleanPId.toUpperCase()} • MUNICIPIO MATURÍN`);
+    // Marcador de ubicación para el sector en el mapa de la parroquia
+    const sCoords = sec.vertices || sec.poligono;
+    let markerPos = sec.centro;
+    if (!markerPos && sCoords && sCoords.length > 0) {
+      const avgLat = sCoords.reduce((sum, p) => sum + p[0], 0) / sCoords.length;
+      const avgLng = sCoords.reduce((sum, p) => sum + p[1], 0) / sCoords.length;
+      markerPos = [avgLat, avgLng];
+    }
+
+    if (markerPos) {
+      const secMarker = L.circleMarker(markerPos, {
+        radius: 7,
+        fillColor: sec.colorBorde || sec.color || "#0284c7",
+        fillOpacity: 0.95,
+        color: "#ffffff",
+        weight: 2
+      });
+      secMarker.bindTooltip(`
+        <div style="font-family: inherit; font-size: 11px; padding: 2px;">
+          <span style="color: #0284c7; font-weight: 900; font-size: 9.5px; text-transform: uppercase;">Sector Comunitario</span><br>
+          <strong style="color: #0f172a; font-size: 12px;">${formatTitleCase(sec.nombre)}</strong>
+        </div>
+      `, { permanent: true, direction: "top", offset: [0, -6] });
+      this.childEntitiesLayer.addLayer(secMarker);
+    }
+
+    const cleanPName = formatTitleCase(cleanPId);
+    const cleanSecName = formatTitleCase(sec.nombre);
+
+    this.updateHeaderUI(`SECTOR ${cleanSecName.toUpperCase()}`, `PARROQUIA ${cleanPName.toUpperCase()} • MUNICIPIO MATURÍN`);
     this.renderSideStats({
-      title: sec.nombre.toUpperCase(),
+      title: `SECTOR ${cleanSecName.toUpperCase()}`,
       color: sec.colorBorde || sec.color || pColor,
-      type: "Sector Vecinal Censado • Nivel 5",
-      code: "COMUNIDAD",
+      type: `Sector Comunitario • Parroquia ${cleanPName}`,
+      code: "CENSADO",
       hab: sec.habitantes ? sec.habitantes.toLocaleString("es-VE") : "2,450",
       vot: sec.electores ? sec.electores.toLocaleString("es-VE") : "1,200",
-      cen: "1 Centro",
+      cen: sec.centroVotacion || "1 Centro CNE",
       cas: sec.casas ? sec.casas.toLocaleString("es-VE") : "640",
-      listTitle: "Datos del Sector",
+      listTitle: "Información de la Comunidad",
       listCount: 1,
       backBtn: {
-        label: `Volver a la Parroquia`,
+        label: `Volver a Parroquia ${cleanPName}`,
         count: "⬅",
         onClick: `laminaApp.selectParroquia('${cleanPId}', '${cleanMunId}')`
       },
       items: [
         {
           id: sec.id,
-          nombre: `Sector ${sec.nombre}`,
+          nombre: `Comunidad ${cleanSecName}`,
           color: sec.colorBorde || sec.color || pColor,
           badge: "Activo",
           onClick: ""
@@ -953,7 +928,7 @@ export class LaminaApp {
     });
     this.renderComandoSection();
     this.updateBreadcrumbs();
-    auditLogger.logEvent("SELECCION_SECTOR", { sectorId: secId, parroquiaId: cleanPId, municipioId: cleanMunId, nombre: sec.nombre });
+    auditLogger.logEvent("SELECCION_SECTOR", { sectorId: secId, parroquiaId: cleanPId, municipioId: cleanMunId, nombre: cleanSecName });
   }
 
   // Renderizar centros de votación en el mapa
@@ -1034,19 +1009,21 @@ export class LaminaApp {
     }
 
     if (this.activeSubParishId) {
+      const spTitle = this.activeSubParishName ? formatTitleCase(this.activeSubParishName) : "Eje";
       html += `
         <span class="text-slate-400">/</span>
-        <span class="breadcrumb-item ${this.level === 'subparroquia' ? 'active' : ''}">
-          <span>Eje</span>
+        <span class="breadcrumb-item ${this.level === 'subparroquia' ? 'active' : ''}" onclick="laminaApp.selectSubParroquia('${this.activeSubParishId}', '${this.activeParishId}', '${this.activeMunId}')">
+          <span>${spTitle}</span>
         </span>
       `;
     }
 
     if (this.activeSectorId) {
+      const secTitle = this.activeSectorName ? formatTitleCase(this.activeSectorName) : "Sector";
       html += `
         <span class="text-slate-400">/</span>
         <span class="breadcrumb-item ${this.level === 'sector' ? 'active' : ''}">
-          <span>Sector</span>
+          <span>${secTitle}</span>
         </span>
       `;
     }

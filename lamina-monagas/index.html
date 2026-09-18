@@ -36,7 +36,7 @@
   <script src="../centros-maturin/js/centrosData.js"></script>
 
   <!-- Estilos de Lámina Ejecutiva 120" -->
-  <link rel="stylesheet" href="css/lamina.css?v=240" />
+  <link rel="stylesheet" href="css/lamina.css?v=241" />
 
   <!-- Anti-Cache Meta Tags -->
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate, max-age=0" />
@@ -84,10 +84,10 @@
 
     <!-- Bloque de Controles Rápidos Derecho -->
     <div class="lamina-header-card flex items-center gap-2 no-print">
-      <!-- Indicador de Sesión Auditada y Usuario -->
-      <div id="session-audit-badge" class="hidden lg:flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-700">
-        <span class="w-2 h-2 rounded-full bg-emerald-500 shrink-0"></span>
-        <span class="font-bold">Sala Situacional</span>
+      <!-- Indicador de Sala Situacional Limpio y Oficial (Sin IPs) -->
+      <div id="session-audit-badge" class="hidden lg:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-50 border border-emerald-200 text-xs font-bold text-emerald-900">
+        <span class="w-2 h-2 rounded-full bg-emerald-500 shrink-0 animate-pulse"></span>
+        <span>Sala Situacional • MIGATO 2026</span>
       </div>
 
       <button type="button" onclick="window.print()" class="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-black text-sm flex items-center gap-1.5 shadow-sm transition active:scale-95 cursor-pointer" title="Exportar Lámina a PDF o Imprimir">
@@ -124,9 +124,9 @@
     
     <!-- Encabezado del Panel Lateral -->
     <div class="flex items-center justify-between pb-2 border-b border-slate-200 shrink-0">
-      <div class="flex items-center gap-2 min-w-0">
+      <div class="flex items-center gap-2 min-w-0 flex-1">
         <span id="side-badge-color" class="w-3.5 h-3.5 rounded-full bg-sky-600 shadow-sm shrink-0"></span>
-        <h3 id="side-entity-title" class="font-black text-base text-slate-950 uppercase tracking-tight truncate max-w-[180px]">
+        <h3 id="side-entity-title" class="font-black text-base text-slate-950 uppercase tracking-tight truncate flex-1 min-w-0">
           MUNICIPIO MATURÍN
         </h3>
       </div>
@@ -307,27 +307,6 @@
     </div>
   </aside>
 
-  <!-- 4. BARRA CARTOGRÁFICA INFERIOR (DATUM, COORDENADAS Y TRAZABILIDAD OFICIAL) -->
-  <footer id="lamina-footer" class="no-print">
-    <div class="flex items-center gap-2 text-[11px] font-bold">
-      <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shrink-0"></span>
-      <span class="text-slate-800">DATUM: <strong class="text-slate-950 font-black">SIRGAS-REGVEN / WGS-84</strong> • UTM HUSO 20N</span>
-      <span class="text-slate-300 mx-1 hidden sm:inline">|</span>
-      <span id="footer-coords" class="font-mono text-sky-900 font-bold hidden sm:inline">LAT: 9.7469° N • LON: -63.1812° W</span>
-    </div>
-    <div class="hidden xl:flex items-center gap-2 font-black text-slate-900 tracking-wider text-xs">
-      <span class="text-amber-500">★</span>
-      <span>MIGATO GANAMOS TODOS</span>
-      <span class="text-slate-400 font-normal">•</span>
-      <span class="text-slate-700">DIVISIÓN DE CIENCIA Y TECNOLOGÍA</span>
-      <span class="text-slate-400 font-normal">•</span>
-      <span class="text-sky-700">MONAGAS 2026</span>
-    </div>
-    <div class="flex items-center gap-2 text-sky-900 font-black text-[11px]">
-      <span class="w-2 h-2 rounded-xs bg-sky-600 shrink-0"></span>
-      <span>SATÉLITE HD 100% • ALTA RESOLUCIÓN</span>
-    </div>
-  </footer>
 
   <!-- MODAL DE ASIGNACIÓN DIRECTA DE COMANDO SECTORIAL -->
   <div id="modal-asignar-comando" class="fixed inset-0 z-[2000] bg-slate-950/70 backdrop-blur-sm hidden items-center justify-center p-4">
@@ -412,7 +391,7 @@
 
   <!-- 5. AUTENTICACIÓN Y CONTROLADOR PRINCIPAL DEL MÓDULO -->
   <script src="../js/auth.js"></script>
-  <script type="module" src="js/laminaApp.js?v=240"></script>
+  <script type="module" src="js/laminaApp.js?v=241"></script>
   <script>
     if (window.lucide && typeof window.lucide.createIcons === 'function') {
       window.lucide.createIcons();
