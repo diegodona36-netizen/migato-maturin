@@ -969,7 +969,7 @@ export class LaminaApp {
     this.renderSideStats({
       title: formatTitleCase(eje.nombre).toUpperCase(),
       color: eje.colorBorde || "#a855f7",
-      type: "Eje Comunal / Sub-Parroquia",
+      type: "Eje Territorial / Sub-Parroquia",
       sub: `Parroquia ${cleanPName} • Maturín`,
       code: "TERRITORIO",
       hab: eje.habitantes ? eje.habitantes.toLocaleString("es-VE") : "16,162",

@@ -26,9 +26,9 @@ export const DEFAULT_DIRIGENTES = [
     nombre: "María Elena Rodríguez",
     cedula: "V-18.452.120",
     telefono: "+58 412-3344556",
-    cargo: "Coordinadora de Eje Comunal",
+    cargo: "Coordinador de Eje",
     profesion: "Docente / Organización",
-    notas: "Coordinadora Eje Los Godos Casco Viejo",
+    notas: "Coordinador Eje Los Godos Casco Viejo",
     fechaRegistro: "2026-03-02T11:30:00.000Z"
   },
   {
@@ -36,9 +36,9 @@ export const DEFAULT_DIRIGENTES = [
     nombre: "Carlos Eduardo Mendoza",
     cedula: "V-16.321.908",
     telefono: "+58 424-9182736",
-    cargo: "Testigo Principal CNE",
-    profesion: "Abogado / Auditor Electoral",
-    notas: "Auditoría de testigos parroquiales",
+    cargo: "Responsable de Organización",
+    profesion: "Abogado",
+    notas: "Organización y movilización sectorial",
     fechaRegistro: "2026-03-05T09:15:00.000Z"
   }
 ];
@@ -183,8 +183,27 @@ export function getLeaderPool() {
       localStorage.setItem(STORAGE_KEY_POOL, JSON.stringify(DEFAULT_DIRIGENTES));
       return DEFAULT_DIRIGENTES;
     }
-    const list = JSON.parse(raw);
-    return Array.isArray(list) ? list : DEFAULT_DIRIGENTES;
+    let list = JSON.parse(raw);
+    if (!Array.isArray(list)) return DEFAULT_DIRIGENTES;
+
+    // Sanitizar automáticamente cargos no deseados (comunal, testigo CNE)
+    let dirty = false;
+    list.forEach(d => {
+      if (d.cargo && d.cargo.includes("Comunal")) {
+        d.cargo = d.cargo.replace(/Comunal/gi, "").trim();
+        dirty = true;
+      }
+      if (d.cargo && d.cargo.includes("Testigo")) {
+        d.cargo = "Responsable de Organización";
+        dirty = true;
+      }
+    });
+
+    if (dirty) {
+      localStorage.setItem(STORAGE_KEY_POOL, JSON.stringify(list));
+    }
+
+    return list;
   } catch (e) {
     console.warn("[ComandoStorage] Error leyendo pool de dirigentes:", e);
     return DEFAULT_DIRIGENTES;

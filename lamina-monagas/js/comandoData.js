@@ -5,7 +5,7 @@
  * 1. Comando Regional (Estado Monagas)
  * 2. Comandos Municipales (13 Municipios)
  * 3. Comandos Parroquiales (11 Parroquias de Maturín / 44 del Estado)
- * 4. Comandos Sectoriales / Ejes Comunales (Polígonos de Subparroquias y Sectores)
+ * 4. Comandos Sectoriales / Ejes Territoriales (Polígonos de Subparroquias y Sectores)
  */
 
 export const COMANDO_ESTADAL = {
@@ -18,7 +18,7 @@ export const COMANDO_ESTADAL = {
   rolesClave: [
     { cargo: "Coordinador Regional", responsable: "Comando Regional MIGATO", estado: "Activo", icono: "shield" },
     { cargo: "Ciencia y Tecnología", responsable: "Ing. Diego Donado", estado: "En Operación", icono: "cpu" },
-    { cargo: "Comisión Electoral CNE", responsable: "Auditoría Regional de Testigos", estado: "Acreditado", icono: "check-circle" },
+    { cargo: "Comisión Electoral CNE", responsable: "Auditoría Electoral Regional", estado: "Acreditado", icono: "check-circle" },
     { cargo: "Operaciones y Logística", responsable: "Despacho Central de Mando", estado: "En Guardia", icono: "radio" }
   ]
 };
@@ -31,7 +31,7 @@ export const COMANDOS_MUNICIPALES = {
     telefono: "+58 414-7654321",
     rolesClave: [
       { cargo: "Coordinador Municipal", responsable: "Comando Municipal Maturín", estado: "Activo", icono: "user-check" },
-      { cargo: "Coordinador Electoral CNE", responsable: "Auditoría de Testigos Maturín", estado: "Acreditado", icono: "vote" },
+      { cargo: "Coordinador Electoral CNE", responsable: "Auditoría Electoral Maturín", estado: "Acreditado", icono: "vote" },
       { cargo: "Enlace de Logística", responsable: "Operaciones y Movilización", estado: "Listo", icono: "truck" },
       { cargo: "Enlace Parroquial", responsable: "Supervisión 11 Parroquias", estado: "En Línea", icono: "network" }
     ],
@@ -46,7 +46,7 @@ export const COMANDOS_MUNICIPALES = {
     telefono: "+58 412-3456789",
     rolesClave: [
       { cargo: "Coordinador Municipal", responsable: "Comando Caripe", estado: "Activo", icono: "user-check" },
-      { cargo: "Enlace Electoral CNE", responsable: "Testigos Caripe", estado: "Acreditado", icono: "vote" }
+      { cargo: "Enlace Electoral CNE", responsable: "Coordinación Electoral Caripe", estado: "Acreditado", icono: "vote" }
     ],
     parroquiasCount: 6,
     centrosCount: 38,
@@ -59,7 +59,7 @@ export const COMANDOS_MUNICIPALES = {
     telefono: "+58 414-9876543",
     rolesClave: [
       { cargo: "Coordinador Municipal", responsable: "Comando Punta de Mata", estado: "Activo", icono: "user-check" },
-      { cargo: "Enlace Electoral CNE", responsable: "Testigos Zamora", estado: "Acreditado", icono: "vote" }
+      { cargo: "Enlace Electoral CNE", responsable: "Coordinación Electoral Zamora", estado: "Acreditado", icono: "vote" }
     ],
     parroquiasCount: 2,
     centrosCount: 42,
@@ -72,7 +72,7 @@ export const COMANDOS_MUNICIPALES = {
     telefono: "+58 416-1234567",
     rolesClave: [
       { cargo: "Coordinador Municipal", responsable: "Comando Caripito", estado: "Activo", icono: "user-check" },
-      { cargo: "Enlace Electoral CNE", responsable: "Testigos Caripito", estado: "Acreditado", icono: "vote" }
+      { cargo: "Enlace Electoral CNE", responsable: "Coordinación Electoral Caripito", estado: "Acreditado", icono: "vote" }
     ],
     parroquiasCount: 1,
     centrosCount: 35,
@@ -85,7 +85,7 @@ export const COMANDOS_MUNICIPALES = {
     telefono: "+58 424-5551212",
     rolesClave: [
       { cargo: "Coordinador Municipal", responsable: "Comando Piar", estado: "Activo", icono: "user-check" },
-      { cargo: "Enlace Electoral CNE", responsable: "Testigos Piar", estado: "Acreditado", icono: "vote" }
+      { cargo: "Enlace Electoral CNE", responsable: "Coordinación Electoral Piar", estado: "Acreditado", icono: "vote" }
     ],
     parroquiasCount: 7,
     centrosCount: 44,
@@ -98,7 +98,7 @@ export const COMANDOS_MUNICIPALES = {
     telefono: "+58 412-8889900",
     rolesClave: [
       { cargo: "Coordinador Municipal", responsable: "Comando Caicara", estado: "Activo", icono: "user-check" },
-      { cargo: "Enlace Electoral CNE", responsable: "Testigos Cedeño", estado: "Acreditado", icono: "vote" }
+      { cargo: "Enlace Electoral CNE", responsable: "Coordinación Electoral Cedeño", estado: "Acreditado", icono: "vote" }
     ],
     parroquiasCount: 4,
     centrosCount: 32,
@@ -111,7 +111,7 @@ export const COMANDOS_MUNICIPALES = {
     telefono: "+58 414-3334455",
     rolesClave: [
       { cargo: "Coordinador Municipal", responsable: "Comando Quiriquire", estado: "Activo", icono: "user-check" },
-      { cargo: "Enlace Electoral CNE", responsable: "Testigos Punceres", estado: "Acreditado", icono: "vote" }
+      { cargo: "Enlace Electoral CNE", responsable: "Coordinación Electoral Punceres", estado: "Acreditado", icono: "vote" }
     ],
     parroquiasCount: 2,
     centrosCount: 22,
@@ -124,7 +124,7 @@ export const COMANDOS_MUNICIPALES = {
     telefono: "+58 416-7778899",
     rolesClave: [
       { cargo: "Coordinador Municipal", responsable: "Comando San Antonio de Capayacuar", estado: "Activo", icono: "user-check" },
-      { cargo: "Enlace Electoral CNE", responsable: "Testigos Acosta", estado: "Acreditado", icono: "vote" }
+      { cargo: "Enlace Electoral CNE", responsable: "Coordinación Electoral Acosta", estado: "Acreditado", icono: "vote" }
     ],
     parroquiasCount: 2,
     centrosCount: 25,
@@ -137,7 +137,7 @@ export const COMANDOS_MUNICIPALES = {
     telefono: "+58 424-6667788",
     rolesClave: [
       { cargo: "Coordinador Municipal", responsable: "Comando Aguasay", estado: "Activo", icono: "user-check" },
-      { cargo: "Enlace Electoral CNE", responsable: "Testigos Aguasay", estado: "Acreditado", icono: "vote" }
+      { cargo: "Enlace Electoral CNE", responsable: "Coordinación Electoral Aguasay", estado: "Acreditado", icono: "vote" }
     ],
     parroquiasCount: 1,
     centrosCount: 14,
@@ -150,7 +150,7 @@ export const COMANDOS_MUNICIPALES = {
     telefono: "+58 412-2223344",
     rolesClave: [
       { cargo: "Coordinador Municipal", responsable: "Comando Santa Bárbara", estado: "Activo", icono: "user-check" },
-      { cargo: "Enlace Electoral CNE", responsable: "Testigos Santa Bárbara", estado: "Acreditado", icono: "vote" }
+      { cargo: "Enlace Electoral CNE", responsable: "Coordinación Electoral Santa Bárbara", estado: "Acreditado", icono: "vote" }
     ],
     parroquiasCount: 1,
     centrosCount: 12,
@@ -163,7 +163,7 @@ export const COMANDOS_MUNICIPALES = {
     telefono: "+58 414-1119988",
     rolesClave: [
       { cargo: "Coordinador Municipal", responsable: "Comando Uracoa", estado: "Activo", icono: "user-check" },
-      { cargo: "Enlace Electoral CNE", responsable: "Testigos Uracoa", estado: "Acreditado", icono: "vote" }
+      { cargo: "Enlace Electoral CNE", responsable: "Coordinación Electoral Uracoa", estado: "Acreditado", icono: "vote" }
     ],
     parroquiasCount: 1,
     centrosCount: 11,
@@ -176,7 +176,7 @@ export const COMANDOS_MUNICIPALES = {
     telefono: "+58 416-4445566",
     rolesClave: [
       { cargo: "Coordinador Municipal", responsable: "Comando Temblador", estado: "Activo", icono: "user-check" },
-      { cargo: "Enlace Electoral CNE", responsable: "Testigos Temblador", estado: "Acreditado", icono: "vote" }
+      { cargo: "Enlace Electoral CNE", responsable: "Coordinación Electoral Temblador", estado: "Acreditado", icono: "vote" }
     ],
     parroquiasCount: 4,
     centrosCount: 30,
@@ -189,7 +189,7 @@ export const COMANDOS_MUNICIPALES = {
     telefono: "+58 424-9990011",
     rolesClave: [
       { cargo: "Coordinador Municipal", responsable: "Comando Barrancas del Orinoco", estado: "Activo", icono: "user-check" },
-      { cargo: "Enlace Electoral CNE", responsable: "Testigos Sotillo", estado: "Acreditado", icono: "vote" }
+      { cargo: "Enlace Electoral CNE", responsable: "Coordinación Electoral Sotillo", estado: "Acreditado", icono: "vote" }
     ],
     parroquiasCount: 2,
     centrosCount: 26,
@@ -206,9 +206,9 @@ export const COMANDOS_PARROQUIALES = {
     telefono: "+58 412-1234567",
     rolesClave: [
       { cargo: "Responsable Parroquial", responsable: "Responsable Parroquia Los Godos", estado: "Activo", icono: "user-check" },
-      { cargo: "Testigo Principal CNE", responsable: "Auditoría Parroquial Godos", estado: "Acreditado", icono: "vote" },
-      { cargo: "Enlace Territorial de Ejes", responsable: "Coordinación de 3 Ejes Comunales", estado: "En Campo", icono: "map-pin" },
-      { cargo: "Control de 40 Centros CNE", responsable: "Mesa Técnica Electoral", estado: "Verificado", icono: "check-circle-2" }
+      { cargo: "Responsable de Organización", responsable: "Organización Parroquial Godos", estado: "Acreditado", icono: "users" },
+      { cargo: "Enlace Territorial de Ejes", responsable: "Coordinación de 3 Ejes Territoriales", estado: "En Campo", icono: "map-pin" },
+      { cargo: "Control de Centros Electorales", responsable: "Mesa Técnica Electoral", estado: "Verificado", icono: "check-circle-2" }
     ],
     centrosCount: 40,
     electores: 80630
@@ -221,7 +221,7 @@ export const COMANDOS_PARROQUIALES = {
     telefono: "+58 414-7654321",
     rolesClave: [
       { cargo: "Responsable Parroquial", responsable: "Comando San Simón Centro", estado: "Activo", icono: "user-check" },
-      { cargo: "Testigo Principal CNE", responsable: "Auditoría Casco Central", estado: "Acreditado", icono: "vote" },
+      { cargo: "Responsable de Organización", responsable: "Organización Electoral", estado: "Acreditado", icono: "users" },
       { cargo: "Enlace Territorial", responsable: "Supervisión Sectores Centrales", estado: "En Campo", icono: "map-pin" }
     ],
     centrosCount: 45,
@@ -235,7 +235,7 @@ export const COMANDOS_PARROQUIALES = {
     telefono: "+58 424-9876543",
     rolesClave: [
       { cargo: "Responsable Parroquial", responsable: "Comando Boquerón / Tipuro", estado: "Activo", icono: "user-check" },
-      { cargo: "Testigo Principal CNE", responsable: "Testigos Eje Norte", estado: "Acreditado", icono: "vote" }
+      { cargo: "Responsable de Organización", responsable: "Organización Eje Norte", estado: "Acreditado", icono: "users" }
     ],
     centrosCount: 28,
     electores: 61200
@@ -248,7 +248,7 @@ export const COMANDOS_PARROQUIALES = {
     telefono: "+58 416-5551234",
     rolesClave: [
       { cargo: "Responsable Parroquial", responsable: "Comando Las Cocuizas", estado: "Activo", icono: "user-check" },
-      { cargo: "Testigo Principal CNE", responsable: "Testigos Las Cocuizas", estado: "Acreditado", icono: "vote" }
+      { cargo: "Responsable de Organización", responsable: "Organización Las Cocuizas", estado: "Acreditado", icono: "users" }
     ],
     centrosCount: 32,
     electores: 68500
@@ -261,7 +261,7 @@ export const COMANDOS_PARROQUIALES = {
     telefono: "+58 414-3332211",
     rolesClave: [
       { cargo: "Responsable Parroquial", responsable: "Comando Santa Cruz", estado: "Activo", icono: "user-check" },
-      { cargo: "Testigo Principal CNE", responsable: "Testigos Zona Industrial", estado: "Acreditado", icono: "vote" }
+      { cargo: "Responsable de Organización", responsable: "Organización Zona Industrial", estado: "Acreditado", icono: "users" }
     ],
     centrosCount: 16,
     electores: 34100
@@ -274,7 +274,7 @@ export const COMANDOS_PARROQUIALES = {
     telefono: "+58 412-4443322",
     rolesClave: [
       { cargo: "Responsable Parroquial", responsable: "Comando La Pica", estado: "Activo", icono: "user-check" },
-      { cargo: "Testigo Principal CNE", responsable: "Testigos Rural La Pica", estado: "Acreditado", icono: "vote" }
+      { cargo: "Responsable de Organización", responsable: "Organización Rural La Pica", estado: "Acreditado", icono: "users" }
     ],
     centrosCount: 14,
     electores: 21800
@@ -287,7 +287,7 @@ export const COMANDOS_PARROQUIALES = {
     telefono: "+58 414-5556677",
     rolesClave: [
       { cargo: "Responsable Parroquial", responsable: "Comando El Corozo", estado: "Activo", icono: "user-check" },
-      { cargo: "Testigo Principal CNE", responsable: "Testigos El Corozo", estado: "Acreditado", icono: "vote" }
+      { cargo: "Responsable de Organización", responsable: "Organización El Corozo", estado: "Acreditado", icono: "users" }
     ],
     centrosCount: 8,
     electores: 11400
@@ -300,7 +300,7 @@ export const COMANDOS_PARROQUIALES = {
     telefono: "+58 424-7778899",
     rolesClave: [
       { cargo: "Responsable Parroquial", responsable: "Comando El Furrial", estado: "Activo", icono: "user-check" },
-      { cargo: "Testigo Principal CNE", responsable: "Testigos Zona Petrolera Furrial", estado: "Acreditado", icono: "vote" }
+      { cargo: "Responsable de Organización", responsable: "Organización Furrial", estado: "Acreditado", icono: "users" }
     ],
     centrosCount: 10,
     electores: 15300
@@ -313,7 +313,7 @@ export const COMANDOS_PARROQUIALES = {
     telefono: "+58 416-8881122",
     rolesClave: [
       { cargo: "Responsable Parroquial", responsable: "Comando Jusepín", estado: "Activo", icono: "user-check" },
-      { cargo: "Testigo Principal CNE", responsable: "Testigos Jusepín", estado: "Acreditado", icono: "vote" }
+      { cargo: "Responsable de Organización", responsable: "Organización Jusepín", estado: "Acreditado", icono: "users" }
     ],
     centrosCount: 7,
     electores: 10200
@@ -326,7 +326,7 @@ export const COMANDOS_PARROQUIALES = {
     telefono: "+58 412-9993344",
     rolesClave: [
       { cargo: "Responsable Parroquial", responsable: "Comando San Vicente", estado: "Activo", icono: "user-check" },
-      { cargo: "Testigo Principal CNE", responsable: "Testigos San Vicente", estado: "Acreditado", icono: "vote" }
+      { cargo: "Responsable de Organización", responsable: "Organización San Vicente", estado: "Acreditado", icono: "users" }
     ],
     centrosCount: 9,
     electores: 12800
@@ -546,7 +546,7 @@ export function getComandoInfo(level, entityId, parishId = null, munId = null) {
       telefono: "+58 412-0000000",
       rolesClave: [
         { cargo: "Responsable Parroquial", responsable: `Comando ${cleanPId}`, estado: "Activo", icono: "user-check" },
-        { cargo: "Testigo Principal CNE", responsable: "Auditoría CNE", estado: "Acreditado", icono: "vote" }
+        { cargo: "Responsable de Organización", responsable: "Auditoría CNE", estado: "Acreditado", icono: "vote" }
       ],
       centrosCount: 10
     };
@@ -616,8 +616,8 @@ export function getComandoInfo(level, entityId, parishId = null, munId = null) {
       sectores: ejeComando.sectores || [],
       roles: [
         { cargo: "Responsable del Eje", responsable: respNombre, estado: "En Campo", icono: "shield" },
-        { cargo: "Enlace con Testigos CNE", responsable: "Veeduría en Mesas", estado: "Acreditado", icono: "vote" },
-        { cargo: "Movilización y Defensa", responsable: "Brigada Sectorial", estado: "Activo", icono: "users" }
+        { cargo: "Responsable de Organización", responsable: "Estructura y Organización", estado: "Acreditado", icono: "users" },
+        { cargo: "Movilización y Logística", responsable: "Brigada Sectorial", estado: "Activo", icono: "users" }
       ],
       subdirectorios: []
     };

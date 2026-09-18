@@ -16,11 +16,25 @@ import {
   importAllData
 } from "./comandoStorage.js?v=243";
 
+function isMatchingEje(secEjeId, filterEjeId) {
+  if (!filterEjeId || filterEjeId === "todos") return true;
+  if (!secEjeId) return false;
+  const s1 = String(secEjeId).trim().toLowerCase();
+  const s2 = String(filterEjeId).trim().toLowerCase();
+  if (s1 === s2) return true;
+  // Soportar alias entre SUBPAR-1788965549962 y sub-godos-6 (Subparroquia 6 La Puente)
+  const isP1 = s1 === "subpar-1788965549962" || s1 === "sub-godos-6" || s1.includes("puente") || s1.includes("godos-6");
+  const isP2 = s2 === "subpar-1788965549962" || s2 === "sub-godos-6" || s2.includes("puente") || s2.includes("godos-6");
+  if (isP1 && isP2) return true;
+  return false;
+}
+
 class ComandosApp {
   constructor() {
     this.currentMunId = "maturin";
     this.currentParishId = "alto-de-los-godos";
     this.currentEjeId = "todos";
+    this.initialSecId = null;
     this.selectedSectorIds = new Set();
     this.activeTab = "tab-asignacion";
 
@@ -35,6 +49,20 @@ class ComandosApp {
     this.setupEventListeners();
     this.renderActiveView();
     this.setupStorageSync();
+
+    // Auto-focus y scroll hacia el sector preseleccionado si viene desde el mapa
+    if (this.initialSecId) {
+      setTimeout(() => {
+        const targetCard = document.querySelector(`[data-sector-id="${this.initialSecId}"]`);
+        if (targetCard) {
+          targetCard.scrollIntoView({ behavior: "smooth", block: "center" });
+          targetCard.classList.add("ring-2", "ring-amber-400", "border-amber-400", "bg-amber-950/40");
+        }
+        const inputNombre = document.getElementById("input-leader-nombre");
+        if (inputNombre) inputNombre.focus();
+        this.showToast(`Sector preseleccionado. Asigna el responsable en 1 clic.`, "info");
+      }, 350);
+    }
   }
 
   readUrlParams() {
@@ -43,11 +71,16 @@ class ComandosApp {
       const mun = url.searchParams.get("mun");
       const p = url.searchParams.get("p");
       const eje = url.searchParams.get("eje");
+      const sec = url.searchParams.get("sec");
       const tab = url.searchParams.get("tab");
 
       if (mun) this.currentMunId = mun.toLowerCase().trim();
       if (p) this.currentParishId = p.toLowerCase().trim();
       if (eje) this.currentEjeId = eje.trim();
+      if (sec) {
+        this.initialSecId = sec.trim();
+        this.selectedSectorIds.add(this.initialSecId);
+      }
       if (tab) this.activeTab = tab;
     } catch (e) {}
   }
@@ -169,7 +202,7 @@ class ComandosApp {
 
     selectEje.innerHTML = '<option value="todos">🌟 Todos los Ejes Territoriales</option>';
 
-    let subparroquias = parish?.subparroquias || [];
+    let subparroquias = parish?.subparroquias ? [...parish.subparroquias] : [];
 
     // Caso especial Alto de los Godos: enriquecer con SUBPARROQUIAS_GODOS
     if (this.currentParishId === "alto-de-los-godos") {
@@ -185,29 +218,41 @@ class ComandosApp {
       });
     }
 
+    // Si viene un sector preseleccionado (sec), buscar a qué eje pertenece para auto-enfocarlo
+    if (this.initialSecId) {
+      const allSecs = this.getActiveSectores(true);
+      const targetSec = allSecs.find(s => String(s.id) === String(this.initialSecId));
+      if (targetSec && targetSec.subParroquiaId) {
+        this.currentEjeId = targetSec.subParroquiaId;
+        this.selectedSectorIds.add(String(this.initialSecId));
+      }
+    }
+
     subparroquias.forEach(sp => {
       const opt = document.createElement("option");
       opt.value = sp.id;
       opt.textContent = sp.nombre || `Eje ${sp.id}`;
-      if (sp.id === this.currentEjeId) opt.selected = true;
+      if (sp.id === this.currentEjeId || isMatchingEje(sp.id, this.currentEjeId)) {
+        opt.selected = true;
+        this.currentEjeId = sp.id; // normalizar con la opción del select
+      }
       selectEje.appendChild(opt);
     });
 
-    this.selectedSectorIds.clear();
     this.renderSectoresList();
   }
 
   /**
    * Obtiene la lista unificada de sectores para el municipio, parroquia y eje activos
    */
-  getActiveSectores() {
+  getActiveSectores(ignoreEjeFilter = false) {
     const mun = MONAGAS_TERRITORIO_COMPLETO.find(m => m.id === this.currentMunId);
     const parish = (mun?.parroquias || []).find(p => p.id === this.currentParishId);
     if (!parish) return [];
 
     let rawSectores = [];
 
-    // Si es Alto de los Godos y Eje La Puente (sub-godos-6), usar SECTORES_LAPUENTE
+    // Si es Alto de los Godos, integrar sectores oficiales + SECTORES_LAPUENTE
     if (this.currentParishId === "alto-de-los-godos") {
       // 1. Agregar sectores oficiales de la base
       (parish.subparroquias || []).forEach(sp => {
@@ -222,12 +267,12 @@ class ComandosApp {
         });
       });
 
-      // 2. Integrar SECTORES_LAPUENTE
+      // 2. Integrar SECTORES_LAPUENTE preservando su ID de eje oficial
       SECTORES_LAPUENTE.forEach(sec => {
         if (!rawSectores.some(s => String(s.id) === String(sec.id))) {
           rawSectores.push({
             ...sec,
-            subParroquiaId: "sub-godos-6",
+            subParroquiaId: sec.subParroquiaId || "SUBPAR-1788965549962",
             subParroquiaNombre: "Subparroquia 6 • La Puente",
             parroquiaId: "alto-de-los-godos",
             municipioId: "maturin"
@@ -248,9 +293,9 @@ class ComandosApp {
       });
     }
 
-    // Filtrar por eje si no está en "todos"
-    if (this.currentEjeId && this.currentEjeId !== "todos") {
-      rawSectores = rawSectores.filter(s => String(s.subParroquiaId) === String(this.currentEjeId));
+    // Filtrar por eje si no está en "todos" y no se ignora el filtro
+    if (!ignoreEjeFilter && this.currentEjeId && this.currentEjeId !== "todos") {
+      rawSectores = rawSectores.filter(s => isMatchingEje(s.subParroquiaId, this.currentEjeId));
     }
 
     return rawSectores;
@@ -419,9 +464,10 @@ class ComandosApp {
       const assignment = assignments[secId];
 
       const itemCard = document.createElement("div");
+      itemCard.setAttribute("data-sector-id", secId);
       itemCard.className = `p-3 rounded-xl border transition flex flex-col sm:flex-row sm:items-center justify-between gap-3 ${
         isSelected
-          ? "bg-amber-950/20 border-amber-500/60 shadow-sm"
+          ? "bg-amber-950/30 border-amber-400 shadow-md ring-2 ring-amber-400/50"
           : assignment
           ? "bg-[#140e40]/70 border-emerald-500/30 hover:border-emerald-500/60"
           : "bg-[#140e40]/40 border-[#2d1f85]/60 hover:border-slate-600"

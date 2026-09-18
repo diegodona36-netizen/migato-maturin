@@ -628,7 +628,7 @@ export const SUBPARROQUIAS_GODOS = [
   {
     "id": "SUBPAR-1788965549962",
     "nombre": "sub-parroquia 6",
-    "descripcion": "Eje o Circuito Comunal",
+    "descripcion": "Eje Territorial",
     "militantes": 0,
     "casas": 0,
     "habitantes": 0,
@@ -840,7 +840,7 @@ export const SECTORES_LAPUENTE = [
   {
     "id": "POLY-1788966016501",
     "nombre": "villa de los angeles",
-    "descripcion": "Comunidad / Consejo Comunal",
+    "descripcion": "Sector Vecinal / Base",
     "militantes": 0,
     "casas": 0,
     "habitantes": 0,
@@ -981,7 +981,7 @@ export const SECTORES_LAPUENTE = [
   {
     "id": "POLY-1788967024859",
     "nombre": "el mangozal",
-    "descripcion": "Comunidad / Consejo Comunal",
+    "descripcion": "Sector Vecinal / Base",
     "militantes": 0,
     "casas": 0,
     "habitantes": 0,
@@ -1142,7 +1142,7 @@ export const SECTORES_LAPUENTE = [
   {
     "id": "POLY-1788967978671",
     "nombre": "las vigenes",
-    "descripcion": "Comunidad / Consejo Comunal",
+    "descripcion": "Sector Vecinal / Base",
     "militantes": 0,
     "casas": 0,
     "habitantes": 0,
@@ -1180,7 +1180,7 @@ export const SECTORES_LAPUENTE = [
   {
     "id": "POLY-1788968547771",
     "nombre": "hugo chavez ll",
-    "descripcion": "Comunidad / Consejo Comunal",
+    "descripcion": "Sector Vecinal / Base",
     "militantes": 0,
     "casas": 0,
     "habitantes": 0,
@@ -1269,7 +1269,7 @@ export const SECTORES_LAPUENTE = [
   {
     "id": "POLY-1788968986348",
     "nombre": "la lucha",
-    "descripcion": "Comunidad / Consejo Comunal",
+    "descripcion": "Sector Vecinal / Base",
     "militantes": 0,
     "casas": 0,
     "habitantes": 0,
@@ -1398,7 +1398,7 @@ export const SECTORES_LAPUENTE = [
   {
     "id": "POLY-1788969435080",
     "nombre": "sector ll",
-    "descripcion": "Comunidad / Consejo Comunal",
+    "descripcion": "Sector Vecinal / Base",
     "militantes": 0,
     "casas": 0,
     "habitantes": 0,
@@ -1539,7 +1539,7 @@ export const SECTORES_LAPUENTE = [
   {
     "id": "POLY-1788969661840",
     "nombre": "la canada",
-    "descripcion": "Comunidad / Consejo Comunal",
+    "descripcion": "Sector Vecinal / Base",
     "militantes": 0,
     "casas": 0,
     "habitantes": 0,
@@ -1632,7 +1632,7 @@ export const SECTORES_LAPUENTE = [
   {
     "id": "POLY-1788969880668",
     "nombre": "la laguna",
-    "descripcion": "Comunidad / Consejo Comunal",
+    "descripcion": "Sector Vecinal / Base",
     "militantes": 0,
     "casas": 0,
     "habitantes": 0,
@@ -1697,7 +1697,7 @@ export const SECTORES_LAPUENTE = [
   {
     "id": "POLY-1788970000212",
     "nombre": "las flores",
-    "descripcion": "Comunidad / Consejo Comunal",
+    "descripcion": "Sector Vecinal / Base",
     "militantes": 0,
     "casas": 0,
     "habitantes": 0,
@@ -1774,7 +1774,7 @@ export const SECTORES_LAPUENTE = [
   {
     "id": "POLY-1788970154079",
     "nombre": "Sector 1 A",
-    "descripcion": "Comunidad / Consejo Comunal",
+    "descripcion": "Sector Vecinal / Base",
     "militantes": 0,
     "casas": 0,
     "habitantes": 0,
@@ -1855,7 +1855,7 @@ export const SECTORES_LAPUENTE = [
   {
     "id": "POLY-1788970445669",
     "nombre": "el caro",
-    "descripcion": "Comunidad / Consejo Comunal",
+    "descripcion": "Sector Vecinal / Base",
     "militantes": 0,
     "casas": 0,
     "habitantes": 0,
@@ -2040,7 +2040,7 @@ export const SECTORES_LAPUENTE = [
   {
     "id": "POLY-1789054804245",
     "nombre": "Sector l",
-    "descripcion": "Comunidad / Consejo Comunal",
+    "descripcion": "Sector Vecinal / Base",
     "militantes": 0,
     "casas": 0,
     "habitantes": 0,
