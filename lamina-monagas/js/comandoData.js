@@ -376,6 +376,7 @@ export const COMANDOS_SECTORIALES = {
 };
 
 export const STORAGE_KEY_ASIGNADOS = "migato_comandos_asignados";
+export const STORAGE_KEY_POOL = "migato_pool_dirigentes_v1";
 
 export function getAssignedComandos() {
   try {
@@ -392,6 +393,58 @@ export function getAssignedLeader(ejeOrSectorId) {
   return map[ejeOrSectorId] || null;
 }
 
+export function getLeaderPool() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY_POOL);
+    return raw ? JSON.parse(raw) : [];
+  } catch(e) {
+    console.warn("Error leyendo pool de dirigentes:", e);
+    return [];
+  }
+}
+
+export function upsertDirigenteInPool(dirigente) {
+  if (!dirigente || !dirigente.nombre || !dirigente.nombre.trim()) return;
+  try {
+    const pool = getLeaderPool();
+    const cleanNombre = dirigente.nombre.trim();
+    const cleanCedula = (dirigente.cedula || "").trim().toUpperCase();
+
+    let index = -1;
+    if (cleanCedula) {
+      index = pool.findIndex(d => (d.cedula || "").trim().toUpperCase() === cleanCedula);
+    }
+    if (index === -1) {
+      index = pool.findIndex(d => d.nombre.trim().toLowerCase() === cleanNombre.toLowerCase());
+    }
+
+    if (index >= 0) {
+      pool[index] = {
+        ...pool[index],
+        nombre: cleanNombre,
+        cedula: cleanCedula || pool[index].cedula || "",
+        telefono: dirigente.telefono || pool[index].telefono || "",
+        cargo: dirigente.cargo || pool[index].cargo || "Jefe de Comando Sectorial",
+        profesion: dirigente.profesion || pool[index].profesion || "",
+        ultimaActualizacion: new Date().toISOString()
+      };
+    } else {
+      pool.push({
+        id: `dir-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
+        nombre: cleanNombre,
+        cedula: cleanCedula,
+        telefono: dirigente.telefono || "",
+        cargo: dirigente.cargo || "Jefe de Comando Sectorial",
+        profesion: dirigente.profesion || "",
+        fechaRegistro: new Date().toISOString()
+      });
+    }
+    localStorage.setItem(STORAGE_KEY_POOL, JSON.stringify(pool));
+  } catch(e) {
+    console.warn("Error actualizando pool de dirigentes:", e);
+  }
+}
+
 export function saveAssignedComando(id, payload) {
   try {
     const map = getAssignedComandos();
@@ -406,6 +459,16 @@ export function saveAssignedComando(id, payload) {
       fechaAsignacion: new Date().toISOString()
     };
     localStorage.setItem(STORAGE_KEY_ASIGNADOS, JSON.stringify(map));
+
+    // Autoguardar en pool de dirigentes
+    upsertDirigenteInPool({
+      nombre: map[id].nombre,
+      telefono: map[id].telefono,
+      cargo: map[id].cargo,
+      cedula: map[id].cedula,
+      profesion: map[id].profesion
+    });
+
     return map[id];
   } catch(e) {
     console.warn("Error guardando comando asignado:", e);

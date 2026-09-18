@@ -18,7 +18,7 @@ import {
   ALL_SECTORES_FLAT 
 } from "../../earth-monagas/js/monagasSectoresCatalog.js?v=230";
 import { SUBPARROQUIAS_MONAGAS, SUBPARROQUIAS_GODOS, SECTORES_LAPUENTE } from "../../earth-monagas/js/geoMonagas.js?v=230";
-import { getComandoInfo, getAssignedLeader, saveAssignedComando } from "./comandoData.js";
+import { getComandoInfo, getAssignedLeader, saveAssignedComando, getLeaderPool } from "./comandoData.js?v=244";
 import { auditLogger } from "./auditLogger.js";
 
 const WORLD_BOX = [
@@ -195,11 +195,42 @@ export class LaminaApp {
         this.handleSaveAsignacion();
       });
     }
+
+    const inputAsignarNombre = document.getElementById("input-asignar-nombre");
+    if (inputAsignarNombre) {
+      inputAsignarNombre.addEventListener("input", () => {
+        const val = inputAsignarNombre.value.trim().toLowerCase();
+        if (!val) return;
+        const pool = getLeaderPool();
+        const match = pool.find(d => d.nombre.trim().toLowerCase() === val || (d.cedula && d.cedula.toLowerCase() === val));
+        if (match) {
+          const inputTelf = document.getElementById("input-asignar-telefono");
+          const inputCargo = document.getElementById("input-asignar-cargo");
+          const inputProf = document.getElementById("input-asignar-profesion");
+          if (inputTelf) inputTelf.value = match.telefono || "";
+          if (inputCargo && match.cargo) inputCargo.value = match.cargo;
+          if (inputProf) inputProf.value = match.profesion || match.cedula || "";
+        }
+      });
+    }
   }
 
   openAsignarModal(entityId, entityName = "", parroquiaId = "") {
     const modal = document.getElementById("modal-asignar-comando");
     if (!modal) return;
+
+    // Poblar datalist del pool de dirigentes
+    const datalist = document.getElementById("datalist-pool-dirigentes");
+    if (datalist) {
+      const pool = getLeaderPool();
+      datalist.innerHTML = "";
+      pool.forEach(d => {
+        const opt = document.createElement("option");
+        opt.value = d.nombre;
+        opt.textContent = `${d.cedula ? d.cedula + ' • ' : ''}${d.cargo || 'Dirigente'}`;
+        datalist.appendChild(opt);
+      });
+    }
 
     const targetId = entityId || this.activeSectorId || this.activeSubParishId || this.activeParishId || this.activeMunId || "eje-1";
     const targetPId = parroquiaId || this.activeParishId || "alto-de-los-godos";

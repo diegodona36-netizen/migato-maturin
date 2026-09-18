@@ -1,0 +1,132 @@
+/**
+ * Estilos Tácticos • Submódulo de Comandos Territoriales MIGATO
+ */
+
+:root {
+  color-scheme: dark;
+  --migato-bg: #0b0724;
+  --migato-card: #150f44;
+  --migato-border: #2c1e7a;
+  --migato-accent: #f59e0b;
+}
+
+body {
+  background-color: var(--migato-bg);
+  background-image: 
+    radial-gradient(circle at 10% 20%, rgba(59, 130, 246, 0.08) 0%, transparent 40%),
+    radial-gradient(circle at 90% 80%, rgba(245, 158, 11, 0.06) 0%, transparent 40%),
+    linear-gradient(180deg, #0e092e 0%, #08041a 100%);
+  color: #f1f5f9;
+  font-family: 'Public Sans', system-ui, -apple-system, sans-serif;
+  min-height: 100vh;
+}
+
+.font-display {
+  font-family: 'Outfit', system-ui, sans-serif;
+}
+
+.font-mono {
+  font-family: 'JetBrains Mono', monospace;
+  font-feature-settings: "tnum" 1, "zero" 1;
+}
+
+/* Scrollbar Personalizada */
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+::-webkit-scrollbar-track {
+  background: #080518;
+}
+::-webkit-scrollbar-thumb {
+  background: #2d1f85;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #4330ad;
+}
+
+/* Efectos de Cristal Táctico */
+.glass-panel {
+  background: rgba(21, 15, 68, 0.82);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(67, 48, 173, 0.45);
+}
+
+.glass-panel-hover:hover {
+  border-color: rgba(245, 158, 11, 0.5);
+  box-shadow: 0 10px 25px -5px rgba(14, 9, 46, 0.6), 0 0 15px -3px rgba(245, 158, 11, 0.15);
+}
+
+/* Transición de Pestañas */
+.tab-content {
+  display: none;
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.tab-content.active {
+  display: block;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Checkbox estilizado */
+.custom-checkbox {
+  appearance: none;
+  background-color: #0b0724;
+  border: 1.5px solid #4330ad;
+  border-radius: 6px;
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.15s ease;
+}
+
+.custom-checkbox:checked {
+  background-color: #f59e0b;
+  border-color: #f59e0b;
+}
+
+.custom-checkbox:checked::after {
+  content: "✓";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #000;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+/* Toast Notificaciones */
+#toast-notification {
+  transform: translateY(100px);
+  opacity: 0;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+#toast-notification.show {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+/* Estilos de Impresión */
+@media print {
+  body {
+    background: white !important;
+    color: black !important;
+  }
+  .no-print, nav, header, button, .actions-column {
+    display: none !important;
+  }
+  .glass-panel {
+    background: transparent !important;
+    border: 1px solid #ccc !important;
+    color: black !important;
+    box-shadow: none !important;
+  }
+}
