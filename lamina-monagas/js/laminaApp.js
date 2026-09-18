@@ -18,6 +18,8 @@ import {
   ALL_SECTORES_FLAT 
 } from "../../earth-monagas/js/monagasSectoresCatalog.js?v=230";
 import { SUBPARROQUIAS_GODOS, SECTORES_LAPUENTE } from "../../earth-monagas/js/geoMonagas.js?v=230";
+import { getComandoInfo } from "./comandoData.js";
+import { auditLogger } from "./auditLogger.js";
 
 const WORLD_BOX = [
   [-85.0511, -180],
@@ -118,11 +120,14 @@ export class LaminaApp {
   initUIListeners() {
     window.laminaApp = this;
 
-    // Conmutador de pestaña lateral
-    const btnTab = document.getElementById("btn-toggle-side-tab");
-    if (btnTab) {
-      btnTab.addEventListener("click", () => this.toggleSideTab());
-    }
+    // Navegación por pestañas: [ Datos | Comando | Leyenda ]
+    const tabStats = document.getElementById("tab-btn-stats");
+    const tabComando = document.getElementById("tab-btn-comando");
+    const tabSymbols = document.getElementById("tab-btn-symbols");
+
+    if (tabStats) tabStats.addEventListener("click", () => this.switchTab("stats"));
+    if (tabComando) tabComando.addEventListener("click", () => this.switchTab("comando"));
+    if (tabSymbols) tabSymbols.addEventListener("click", () => this.switchTab("symbols"));
 
     // Botón Minimizar / Expandir panel
     const btnMin = document.getElementById("btn-toggle-minimize-panel");
@@ -150,21 +155,39 @@ export class LaminaApp {
     }
   }
 
-  toggleSideTab() {
+  switchTab(tabName) {
+    this.activeTab = tabName;
     const statsSec = document.getElementById("side-stats-section");
+    const comandoSec = document.getElementById("side-comando-section");
     const symbolsSec = document.getElementById("side-symbols-section");
-    const tabLabel = document.getElementById("side-tab-label");
 
-    if (this.activeTab === "stats") {
-      this.activeTab = "symbols";
-      if (statsSec) statsSec.style.display = "none";
-      if (symbolsSec) symbolsSec.style.display = "block";
-      if (tabLabel) tabLabel.textContent = "Estadísticas";
-    } else {
-      this.activeTab = "stats";
-      if (symbolsSec) symbolsSec.style.display = "none";
-      if (statsSec) statsSec.style.display = "block";
-      if (tabLabel) tabLabel.textContent = "Simbología";
+    const btnStats = document.getElementById("tab-btn-stats");
+    const btnComando = document.getElementById("tab-btn-comando");
+    const btnSymbols = document.getElementById("tab-btn-symbols");
+
+    [btnStats, btnComando, btnSymbols].forEach(btn => {
+      if (btn) {
+        btn.classList.remove("active", "bg-white", "text-slate-950", "shadow-sm");
+        btn.classList.add("text-slate-600");
+      }
+    });
+
+    if (statsSec) statsSec.style.display = tabName === "stats" ? "flex" : "none";
+    if (comandoSec) comandoSec.style.display = tabName === "comando" ? "flex" : "none";
+    if (symbolsSec) symbolsSec.style.display = tabName === "symbols" ? "block" : "none";
+
+    const activeBtn = tabName === "stats" ? btnStats : tabName === "comando" ? btnComando : btnSymbols;
+    if (activeBtn) {
+      activeBtn.classList.add("active", "bg-white", "text-slate-950", "shadow-sm");
+      activeBtn.classList.remove("text-slate-600");
+    }
+
+    if (tabName === "comando") {
+      this.renderComandoSection();
+    }
+
+    if (window.lucide && typeof window.lucide.createIcons === "function") {
+      window.lucide.createIcons();
     }
   }
 
@@ -241,34 +264,35 @@ export class LaminaApp {
   // 1. NIVEL ESTADO MONAGAS
   selectEstado() {
     this.level = "estado";
+    this.activeMunId = null;
     this.activeParishId = null;
     this.activeSubParishId = null;
     this.activeSectorId = null;
 
-    const feat = GEO_ESTADO_OFICIAL;
+    const feat = GEO_ESTADO_OFICIAL.features ? GEO_ESTADO_OFICIAL.features[0] : GEO_ESTADO_OFICIAL;
     const rings = this.geoJsonCoordsToLeaflet(feat.geometry);
 
     this.applySpotlightMask(rings, "#f59e0b", 4);
     this.childEntitiesLayer.clearLayers();
     this.centrosLayer.clearLayers();
 
-    // Dibujar los 13 Municipios en el canvas
+    // Dibujar los 13 Municipios en el canvas con colores diferenciados
     (GEO_MUNICIPIOS_OFICIAL.features || []).forEach(f => {
       const mId = f.properties?.id;
+      const munColor = f.properties?.color || (CATALOGO_MONAGAS || []).find(m => m.id === mId)?.color || "#0284c7";
       const mName = f.properties?.nombre || "Municipio";
-      const mRings = this.geoJsonCoordsToLeaflet(f.geometry);
       const layer = L.geoJSON(f, {
         style: {
-          color: "#0284c7",
-          weight: 2,
-          opacity: 0.9,
-          fillColor: "#0284c7",
-          fillOpacity: 0.15
+          color: munColor,
+          weight: 2.2,
+          opacity: 0.95,
+          fillColor: munColor,
+          fillOpacity: 0.22
         }
       });
       layer.on({
-        mouseover: () => layer.setStyle({ weight: 3.5, fillOpacity: 0.35 }),
-        mouseout: () => layer.setStyle({ weight: 2, fillOpacity: 0.15 }),
+        mouseover: () => layer.setStyle({ weight: 3.8, fillOpacity: 0.45 }),
+        mouseout: () => layer.setStyle({ weight: 2.2, fillOpacity: 0.22 }),
         click: () => this.selectMunicipio(mId)
       });
       this.childEntitiesLayer.addLayer(layer);
@@ -293,15 +317,21 @@ export class LaminaApp {
       cas: "285,000",
       listTitle: "Municipios (Clic para enfocar)",
       listCount: (GEO_MUNICIPIOS_OFICIAL.features || []).length,
-      items: (CATALOGO_MONAGAS || []).map(m => ({
-        id: m.id,
-        nombre: m.nombre,
-        color: "#0284c7",
-        badge: `${(m.parroquias || []).length} parr.`,
-        onClick: `laminaApp.selectMunicipio('${m.id}')`
-      }))
+      items: (CATALOGO_MONAGAS || []).map(m => {
+        const feat = (GEO_MUNICIPIOS_OFICIAL.features || []).find(f => f.properties?.id === m.id);
+        const color = feat?.properties?.color || m.color || "#0284c7";
+        return {
+          id: m.id,
+          nombre: m.nombre,
+          color: color,
+          badge: `${(m.parroquias || []).length} parr.`,
+          onClick: `laminaApp.selectMunicipio('${m.id}')`
+        };
+      })
     });
+    this.renderComandoSection();
     this.updateBreadcrumbs();
+    auditLogger.logEvent("SELECCION_ESTADO", { entidad: "Estado Monagas" });
   }
 
   // 2. NIVEL MUNICIPIO (MATURÍN)
@@ -397,7 +427,9 @@ export class LaminaApp {
         };
       })
     });
+    this.renderComandoSection();
     this.updateBreadcrumbs();
+    auditLogger.logEvent("SELECCION_MUNICIPIO", { municipioId: cleanMunId, nombre: munObj.nombre });
   }
 
   // 3. NIVEL PARROQUIA (ALTO DE LOS GODOS, LA PICA, SAN SIMÓN, ETC.)
@@ -534,7 +566,9 @@ export class LaminaApp {
       },
       items: listItems
     });
+    this.renderComandoSection();
     this.updateBreadcrumbs();
+    auditLogger.logEvent("SELECCION_PARROQUIA", { parroquiaId: cleanPId, municipioId: cleanMunId, nombre: pName });
   }
 
   // 4. NIVEL SUB-PARROQUIA / EJE TERRITORIAL
@@ -593,7 +627,9 @@ export class LaminaApp {
         onClick: `laminaApp.selectSector('${s.id}', '${parishId}', '${munId}')`
       }))
     });
+    this.renderComandoSection();
     this.updateBreadcrumbs();
+    auditLogger.logEvent("SELECCION_SUBPARROQUIA_EJE", { ejeId: spId, parroquiaId, municipioId: munId, nombre: eje.nombre });
   }
 
   // 5. NIVEL SECTOR VECINAL
@@ -655,7 +691,9 @@ export class LaminaApp {
         }
       ]
     });
+    this.renderComandoSection();
     this.updateBreadcrumbs();
+    auditLogger.logEvent("SELECCION_SECTOR", { sectorId: secId, parroquiaId, municipioId: munId, nombre: sec.nombre });
   }
 
   // Renderizar centros de votación en el mapa
@@ -824,6 +862,121 @@ export class LaminaApp {
       }
 
       listEl.innerHTML = html;
+    }
+  }
+
+  // Renderizar la Estructura de Comando y Responsables Dinámica
+  renderComandoSection() {
+    const activeEntityId = this.activeSectorId || this.activeSubParishId || this.activeParishId || this.activeMunId || "estado";
+    const info = getComandoInfo(this.level, activeEntityId, this.activeParishId, this.activeMunId);
+    if (!info) return;
+
+    const levelEl = document.getElementById("comando-level-label");
+    const cargoEl = document.getElementById("comando-cargo-label");
+    const nombreEl = document.getElementById("comando-nombre-label");
+    const divisionEl = document.getElementById("comando-division-label");
+    const telfEl = document.getElementById("comando-telf-label");
+    const rolesContainer = document.getElementById("comando-roles-container");
+    const subTitleEl = document.getElementById("comando-sub-title");
+    const subCountEl = document.getElementById("comando-sub-count");
+    const listEl = document.getElementById("comando-interactive-list");
+
+    if (levelEl) levelEl.textContent = info.nivel;
+    if (cargoEl) cargoEl.textContent = info.nivel.includes("Sectorial") ? "Comando Sectorial" : "Responsable Principal";
+    if (nombreEl) nombreEl.textContent = info.general;
+    if (divisionEl) divisionEl.textContent = info.division;
+    if (telfEl) telfEl.innerHTML = `<span>📱</span><span>${info.telefono}</span>`;
+
+    // Renderizar roles clave
+    if (rolesContainer) {
+      if (info.roles && info.roles.length > 0) {
+        rolesContainer.innerHTML = info.roles.map(r => `
+          <div class="comando-role-row">
+            <div class="flex items-center gap-1.5 min-w-0">
+              <span class="w-1.5 h-1.5 rounded-full bg-amber-500 shrink-0"></span>
+              <span class="role-title truncate">${r.cargo}:</span>
+              <span class="role-person truncate font-semibold text-slate-800">${r.responsable}</span>
+            </div>
+            <span class="text-[9.5px] px-1.5 py-0.2 rounded font-bold uppercase ${r.estado === 'Activo' || r.estado === 'En Operación' ? 'bg-emerald-100 text-emerald-800' : 'bg-sky-100 text-sky-800'}">
+              ${r.estado}
+            </span>
+          </div>
+        `).join("");
+      } else {
+        rolesContainer.innerHTML = "";
+      }
+    }
+
+    // Subdirectorios según nivel
+    if (subTitleEl) {
+      if (this.level === "estado") subTitleEl.textContent = "Comandos Municipales (13)";
+      else if (this.level === "municipio") subTitleEl.textContent = "Comandos Parroquiales";
+      else if (this.level === "parroquia") subTitleEl.textContent = "Comandos Sectoriales / Ejes";
+      else subTitleEl.textContent = "Centros y Sectores del Eje";
+    }
+
+    if (subCountEl) {
+      subCountEl.textContent = String((info.subdirectorios || []).length || (info.centrosAsignados || []).length || 0);
+    }
+
+    if (listEl) {
+      let html = "";
+      if (info.subdirectorios && info.subdirectorios.length > 0) {
+        html = info.subdirectorios.map(sub => `
+          <div onclick="${sub.onClick}" 
+               class="territory-row hover:border-amber-400" 
+               title="Ver comando de ${sub.nombre} • Clic para enfocar">
+            <div class="flex flex-col min-w-0">
+              <div class="flex items-center gap-1.5">
+                <span class="w-2 h-2 rounded-full bg-amber-500 shrink-0"></span>
+                <span class="font-bold text-xs text-slate-900 truncate">${sub.nombre}</span>
+              </div>
+              <span class="text-[10.5px] text-slate-500 truncate ml-3.5">
+                👤 ${sub.responsable}
+              </span>
+            </div>
+            <span class="text-[10px] font-extrabold text-amber-700 bg-amber-50 px-1.5 py-0.5 rounded border border-amber-200 shrink-0">
+              ${sub.parroquias ? `${sub.parroquias} parr.` : sub.centros ? `${sub.centros} centros` : 'Ver'}
+            </span>
+          </div>
+        `).join("");
+      } else if (info.centrosAsignados && info.centrosAsignados.length > 0) {
+        html += `
+          <div class="p-2 rounded-xl bg-slate-50 border border-slate-200 mb-2 space-y-1">
+            <span class="text-[10px] font-black uppercase text-slate-500 tracking-wider block">Centros CNE Asignados:</span>
+            ${info.centrosAsignados.map(c => `
+              <div class="flex items-center gap-1.5 text-xs text-slate-800 font-bold">
+                <span class="w-1.5 h-1.5 rounded-full bg-rose-600 shrink-0"></span>
+                <span class="truncate">${c}</span>
+              </div>
+            `).join("")}
+          </div>
+        `;
+        if (info.sectores && info.sectores.length > 0) {
+          html += `
+            <div class="p-2 rounded-xl bg-slate-50 border border-slate-200 space-y-1">
+              <span class="text-[10px] font-black uppercase text-slate-500 tracking-wider block">Sectores del Circuito:</span>
+              ${info.sectores.map(s => `
+                <div class="flex items-center gap-1.5 text-xs text-slate-700 font-medium">
+                  <span class="w-1.5 h-1.5 rounded-full bg-teal-500 shrink-0"></span>
+                  <span class="truncate">${s}</span>
+                </div>
+              `).join("")}
+            </div>
+          `;
+        }
+      } else {
+        html = `
+          <div class="p-3 text-center text-xs text-slate-500 italic">
+            Directorio consolidado en este nivel
+          </div>
+        `;
+      }
+      listEl.innerHTML = html;
+    }
+
+    if (window.lucide && typeof window.lucide.createIcons === "function") {
+      window.lucide.createIcons();
     }
   }
 }

@@ -229,6 +229,39 @@ html, body {
   box-shadow: 0 0 0 1.5px #0284c7;
 }
 
+/* Estilos de Pestañas del Panel Lateral */
+.side-tab-btn {
+  user-select: none;
+  border: 1px solid transparent;
+}
+.side-tab-btn.active {
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+  border-color: #cbd5e1 !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08) !important;
+}
+
+/* Fila de Roles de Comando */
+.comando-role-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px 8px;
+  border-radius: 8px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  font-size: 11px;
+}
+.comando-role-row .role-title {
+  font-weight: 800;
+  color: #475569;
+}
+.comando-role-row .role-person {
+  font-weight: 700;
+  color: #0f172a;
+}
+
+
 /* ==========================================================================
    BARRA CARTOGRÁFICA INFERIOR (DATUM Y ESCALA)
    ========================================================================== */

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Lámina Cartográfica 120" • Sala Situacional Monagas 2026</title>
+  <title>Lámina Cartográfica 120" • Sala Situacional de Ciencia y Tecnología • MIGATO 2026</title>
   <link rel="icon" type="image/png" href="../assets/logo-migato.png">
 
   <!-- Tailwind CSS -->
@@ -36,7 +36,7 @@
   <script src="../centros-maturin/js/centrosData.js"></script>
 
   <!-- Estilos de Lámina Ejecutiva 120" -->
-  <link rel="stylesheet" href="css/lamina.css?v=230" />
+  <link rel="stylesheet" href="css/lamina.css?v=237" />
 
   <!-- Anti-Cache Meta Tags -->
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate, max-age=0" />
@@ -48,21 +48,21 @@
   <!-- 1. LIENZO CARTOGRÁFICO SATELITAL PANTALLA COMPLETA -->
   <div id="map-lamina"></div>
 
-  <!-- 2. ENCABEZADO OFICIAL DE GOBIERNO (TOP BANNER) -->
+  <!-- 2. ENCABEZADO OFICIAL MIGATO (TOP BANNER) -->
   <header id="lamina-header">
     
     <!-- Bloque Institucional Izquierdo -->
     <div class="lamina-header-card flex items-center gap-3">
-      <img src="../assets/logo-migato.png" alt="MIGATO" class="w-9 h-9 object-contain shrink-0" onerror="this.style.display='none'">
+      <img src="../assets/logo-migato.png" alt="MIGATO" class="w-10 h-10 object-contain shrink-0" onerror="this.style.display='none'">
       <div>
-        <span class="text-base font-black uppercase tracking-wider text-slate-500 block leading-none mb-0.5">
-          República Bolivariana de Venezuela
+        <span class="text-xs font-black uppercase tracking-wider text-amber-600 block leading-none mb-1">
+          MIGATO • GANAMOS TODOS
         </span>
-        <h1 class="text-base font-black text-slate-950 uppercase tracking-tight flex items-center gap-1.5">
-          <span>Gobernación del Estado Monagas</span>
-          <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0"></span>
+        <h1 class="text-base font-black text-slate-950 uppercase tracking-tight flex items-center gap-1.5 leading-none mb-1">
+          <span>DIVISIÓN DE CIENCIA Y TECNOLOGÍA</span>
+          <span class="w-2 h-2 rounded-full bg-emerald-500 shrink-0 animate-pulse" title="Sistema Activo en Tiempo Real"></span>
         </h1>
-        <span class="text-base font-bold text-sky-700 block leading-tight">
+        <span class="text-xs font-bold text-sky-800 block leading-tight">
           Sala Situacional • Cartografía Estratégica 2026
         </span>
       </div>
@@ -84,6 +84,12 @@
 
     <!-- Bloque de Controles Rápidos Derecho -->
     <div class="lamina-header-card flex items-center gap-2 no-print">
+      <!-- Indicador de Sesión Auditada y Usuario -->
+      <div id="session-audit-badge" class="hidden lg:flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-700">
+        <span class="w-2 h-2 rounded-full bg-emerald-500 shrink-0"></span>
+        <span class="font-bold">Sala Situacional</span>
+      </div>
+
       <button type="button" onclick="window.print()" class="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-black text-sm flex items-center gap-1.5 shadow-sm transition active:scale-95 cursor-pointer" title="Exportar Lámina a PDF o Imprimir">
         <i data-lucide="printer" class="w-3.5 h-3.5 text-amber-400"></i>
         <span>Imprimir / PDF</span>
@@ -98,16 +104,20 @@
         <span class="hidden sm:inline">Modo GIS</span>
       </a>
 
+      <a href="../login.html" class="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition" title="Cambiar Usuario / Auditoría de Seguridad">
+        <i data-lucide="user" class="w-4 h-4"></i>
+      </a>
+
       <a href="../" class="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition" title="Volver al Menú Principal">
         <i data-lucide="home" class="w-4 h-4"></i>
       </a>
-    </div>
 
-            <button type="button" id="btn-toggle-contrast" class="px-2.5 py-1.5 rounded-xl bg-[#1d1554] hover:bg-[#23176d] text-amber-400 border border-amber-500/40 text-sm font-bold flex items-center gap-1.5 shadow transition active:scale-95" title="Alto contraste" aria-label="Activar modo alto contraste">
-            <span aria-hidden="true">◐</span>
-            <span class="hidden sm:inline">Contraste</span>
-          </button>
-        </header>
+      <button type="button" id="btn-toggle-contrast" class="px-2.5 py-1.5 rounded-xl bg-[#1d1554] hover:bg-[#23176d] text-amber-400 border border-amber-500/40 text-sm font-bold flex items-center gap-1.5 shadow transition active:scale-95" title="Alto contraste" aria-label="Activar modo alto contraste">
+        <span aria-hidden="true">◐</span>
+        <span class="hidden sm:inline">Contraste</span>
+      </button>
+    </div>
+  </header>
 
   <!-- 3. PANEL LATERAL DERECHO DE ESTADÍSTICAS Y LEYENDA CROMÁTICA -->
   <aside id="lamina-side-panel">
@@ -121,17 +131,30 @@
         </h3>
       </div>
       <div class="flex items-center gap-1 shrink-0 no-print">
-        <button id="btn-toggle-side-tab" type="button" class="text-sm font-extrabold px-2 py-0.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 transition cursor-pointer" title="Alternar entre Estadísticas y Simbología">
-          <span id="side-tab-label">Simbología</span>
-        </button>
         <button id="btn-toggle-minimize-panel" type="button" class="text-slate-400 hover:text-slate-700 text-sm font-black px-1.5 py-0.5 rounded hover:bg-slate-100 cursor-pointer" title="Minimizar panel">
           —
         </button>
       </div>
     </div>
 
+    <!-- Navegación Multinivel por Pestañas del Panel: [ 📊 Datos | 👥 Comando | 🏷️ Simbología ] -->
+    <div class="grid grid-cols-3 gap-1 p-1 bg-slate-100 rounded-xl my-2 shrink-0 no-print">
+      <button id="tab-btn-stats" type="button" class="side-tab-btn active py-1 px-1.5 rounded-lg text-xs font-black transition flex items-center justify-center gap-1 bg-white text-slate-950 shadow-sm cursor-pointer" title="Ver métricas y electores CNE">
+        <i data-lucide="bar-chart-2" class="w-3.5 h-3.5 text-sky-600"></i>
+        <span>Datos</span>
+      </button>
+      <button id="tab-btn-comando" type="button" class="side-tab-btn py-1 px-1.5 rounded-lg text-xs font-black transition flex items-center justify-center gap-1 text-slate-600 hover:text-slate-900 cursor-pointer" title="Estructura del comando y responsables">
+        <i data-lucide="shield" class="w-3.5 h-3.5 text-amber-500"></i>
+        <span>Comando</span>
+      </button>
+      <button id="tab-btn-symbols" type="button" class="side-tab-btn py-1 px-1.5 rounded-lg text-xs font-black transition flex items-center justify-center gap-1 text-slate-600 hover:text-slate-900 cursor-pointer" title="Convenios y simbología técnica CNE">
+        <i data-lucide="map" class="w-3.5 h-3.5 text-purple-600"></i>
+        <span>Leyenda</span>
+      </button>
+    </div>
+
     <!-- Cuerpo del Panel -->
-    <div class="side-panel-body pt-2">
+    <div class="side-panel-body pt-1">
       
       <!-- VISTA 1: FICHA DE ESTADÍSTICAS Y LISTA CROMÁTICA -->
       <div id="side-stats-section" class="flex flex-col flex-1 min-h-0 gap-2">
@@ -179,7 +202,68 @@
 
       </div>
 
-      <!-- VISTA 2: SIMBOLOGÍA TÉCNICA CNE (Oculta por defecto) -->
+      <!-- VISTA 2: ESTRUCTURA DE COMANDO Y RESPONSABLES (DINÁMICA MULTINIVEL) -->
+      <div id="side-comando-section" style="display: none;" class="flex flex-col flex-1 min-h-0 gap-2">
+        
+        <!-- Nivel y Estado del Comando -->
+        <div class="flex items-center justify-between text-xs font-bold text-slate-600">
+          <span id="comando-level-label">Comando Municipal Oficial</span>
+          <span class="font-mono text-amber-600 font-extrabold flex items-center gap-1">
+            <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+            MIGATO 2026
+          </span>
+        </div>
+
+        <!-- Ficha Destacada del Responsable General -->
+        <div class="p-2.5 rounded-xl bg-amber-50/90 border border-amber-300 flex items-start gap-2.5 shrink-0 shadow-xs">
+          <div class="w-8 h-8 rounded-full bg-amber-500 text-white flex items-center justify-center font-black text-sm shrink-0 shadow-xs">
+            <i data-lucide="shield" class="w-4 h-4"></i>
+          </div>
+          <div class="min-w-0 flex-1">
+            <span class="text-[9.5px] uppercase font-black tracking-wider text-amber-800 block leading-none mb-0.5" id="comando-cargo-label">
+              Responsable General
+            </span>
+            <strong class="text-sm font-black text-slate-950 block truncate" id="comando-nombre-label">
+              Coordinador Municipal
+            </strong>
+            <span class="text-xs font-bold text-slate-600 block truncate" id="comando-division-label">
+              División de Operaciones y Mando
+            </span>
+            <div class="mt-1 flex items-center justify-between text-[10.5px] font-mono">
+              <span id="comando-telf-label" class="text-sky-800 font-extrabold flex items-center gap-1">
+                <span>📱</span>
+                <span>+58 412-0000000</span>
+              </span>
+              <span class="px-1.5 py-0.2 rounded bg-emerald-100 text-emerald-800 font-bold text-[9px] uppercase">
+                En Guardia
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Roles Clave en este Nivel -->
+        <div class="space-y-1 shrink-0" id="comando-roles-container">
+          <!-- Inyectado dinámicamente -->
+        </div>
+
+        <!-- Título de Subdirectorio (Parroquias / Ejes / Sectores) -->
+        <div class="flex items-center justify-between pt-1 border-t border-slate-200 shrink-0">
+          <span id="comando-sub-title" class="text-xs font-black uppercase text-slate-700 tracking-wider">
+            Responsables Parroquiales
+          </span>
+          <span id="comando-sub-count" class="text-xs font-extrabold text-amber-700 bg-amber-100 px-1.5 py-0.2 rounded-full">
+            11
+          </span>
+        </div>
+
+        <!-- Subdirectorio Interactivo con Scroll -->
+        <div id="comando-interactive-list" class="interactive-list-container">
+          <!-- Inyectado dinámicamente -->
+        </div>
+
+      </div>
+
+      <!-- VISTA 3: SIMBOLOGÍA TÉCNICA CNE (Oculta por defecto) -->
       <div id="side-symbols-section" style="display: none;" class="space-y-2 pt-1 text-base text-slate-800">
         <div class="p-2 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
           <span class="text-base font-black uppercase text-slate-500 tracking-wider block">
@@ -224,15 +308,16 @@
       <span>DATUM: WGS-84 / PROYECCIÓN CARTOGRÁFICA MERCATOR</span>
     </div>
     <div class="font-black text-slate-900 tracking-wider">
-      SISTEMA INTEGRADO DE INFORMACIÓN GEOGRÁFICA • MONAGAS 2026
+      MIGATO - GANAMOS TODOS • DIVISIÓN DE CIENCIA Y TECNOLOGÍA • MONAGAS 2026
     </div>
     <div class="text-sky-700">
       COBERTURA SATELITAL: 100% ALTA RESOLUCIÓN
     </div>
   </footer>
 
-  <!-- 5. CONTROLADOR PRINCIPAL DEL MÓDULO -->
-  <script type="module" src="js/laminaApp.js?v=230"></script>
+  <!-- 5. AUTENTICACIÓN Y CONTROLADOR PRINCIPAL DEL MÓDULO -->
+  <script src="../js/auth.js"></script>
+  <script type="module" src="js/laminaApp.js?v=237"></script>
   <script>
     if (window.lucide && typeof window.lucide.createIcons === 'function') {
       window.lucide.createIcons();
