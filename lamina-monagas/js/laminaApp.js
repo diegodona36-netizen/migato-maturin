@@ -17,7 +17,7 @@ import {
   findSectorById, 
   ALL_SECTORES_FLAT 
 } from "../../earth-monagas/js/monagasSectoresCatalog.js?v=230";
-import { SUBPARROQUIAS_GODOS, SECTORES_LAPUENTE } from "../../earth-monagas/js/geoMonagas.js?v=230";
+import { SUBPARROQUIAS_MONAGAS, SUBPARROQUIAS_GODOS, SECTORES_LAPUENTE } from "../../earth-monagas/js/geoMonagas.js?v=230";
 import { getComandoInfo, getAssignedLeader, saveAssignedComando } from "./comandoData.js";
 import { auditLogger } from "./auditLogger.js";
 
@@ -500,20 +500,13 @@ export class LaminaApp {
       });
       this.childEntitiesLayer.addLayer(layer);
 
-      // Etiqueta flotante vectorial de alta legibilidad para pantalla de 100"
-      try {
-        const center = layer.getBounds().getCenter();
-        const pMarker = L.marker(center, {
-          icon: L.divIcon({
-            className: "eje-polygon-label-marker",
-            html: `<div class="eje-polygon-label" style="border-color: ${pColor}; font-size: 11px; padding: 4px 10px;">${pName.toUpperCase()}</div>`,
-            iconSize: [140, 30],
-            iconAnchor: [70, 15]
-          }),
-          interactive: false
-        });
-        this.childEntitiesLayer.addLayer(pMarker);
-      } catch(e) {}
+      // Tooltip suave al pasar el cursor (sin saturar la pantalla con etiquetas fijas)
+      layer.bindTooltip(`
+        <div style="font-family: inherit; font-size: 11px; padding: 2px;">
+          <span style="color: #64748b; font-weight: 800; font-size: 9px; text-transform: uppercase;">Parroquia Oficial</span><br>
+          <strong style="color: #0f172a; font-size: 12px; font-weight: 900;">${pName.toUpperCase()}</strong>
+        </div>
+      `, { sticky: true, opacity: 0.95 });
     });
 
     if (rings && rings.length > 0) {
@@ -582,79 +575,175 @@ export class LaminaApp {
 
     const pName = feat?.properties?.nombre || (CATALOGO_MONAGAS.find(m => m.id === cleanMunId)?.parroquias || []).find(p => p.id === cleanPId)?.nombre || cleanPId;
 
-    // Obtener Ejes / Subparroquias
-    let ejes = getEjesByParish(cleanMunId, resolvedPId) || [];
-    if (resolvedPId === "alto-de-los-godos" && (!ejes || ejes.length === 0)) {
-      ejes = SUBPARROQUIAS_GODOS || [];
+  /**
+   * Obtiene las subparroquias y polígonos comunitarios idénticos al Módulo 4 (Earth Monagas)
+   * 1. Consulta primero el almacenamiento local de Módulo 4 (earth_monagas_places_v10_prod)
+   * 2. Si no hay datos en caché local, carga los catálogos nativos completos de Módulo 4:
+   *    - SUBPARROQUIAS_MONAGAS (10 subparroquias oficiales con polígono)
+   *    - SUBPARROQUIAS_GODOS (Trazo de alta precisión de La Puente)
+   *    - SECTORES_LAPUENTE (18 sectores comunitarios reales con polígono)
+   */
+  getParishPolygonsData(munId, parishId) {
+    const cleanMunId = String(munId || "maturin").toLowerCase().replace(/_/g, "-").trim();
+    const cleanPId = String(parishId || "alto-de-los-godos").toLowerCase().replace(/_/g, "-").trim();
+    const resolvedPId = resolveParishId(cleanPId);
+
+    let subparroquias = [];
+    let poligonos = [];
+
+    // 1. Cargar desde el almacenamiento de Módulo 4 (Earth Monagas) si el usuario ya tiene datos locales
+    try {
+      const raw = localStorage.getItem("earth_monagas_places_v10_prod");
+      if (raw) {
+        const state = JSON.parse(raw);
+        const mun = state.municipios?.[cleanMunId];
+        const p = mun?.parroquias?.[resolvedPId] || mun?.parroquias?.[cleanPId];
+        if (p) {
+          if (Array.isArray(p.subparroquias) && p.subparroquias.length > 0) {
+            subparroquias = p.subparroquias.filter(sp => (sp.vertices || sp.poligono) && (sp.vertices || sp.poligono).length >= 3);
+          }
+          if (Array.isArray(p.poligonos) && p.poligonos.length > 0) {
+            poligonos = p.poligonos.filter(sec => (sec.vertices || sec.poligono) && (sec.vertices || sec.poligono).length >= 3);
+          }
+        }
+      }
+    } catch (e) {
+      console.warn("[LaminaApp] Error leyendo datos locales de Módulo 4:", e);
     }
 
-    // Dibujar polígonos de Ejes / Subparroquias dentro de la parroquia
-    if (Array.isArray(ejes) && ejes.length > 0) {
-      ejes.forEach(eje => {
-        if (eje.vertices && eje.vertices.length >= 3) {
-          const poly = L.polygon(eje.vertices, {
-            color: eje.colorBorde || pColor,
+    // 2. Si no hay en localStorage, usar los polígonos nativos del Módulo 4
+    if (resolvedPId === "alto-de-los-godos") {
+      if (subparroquias.length === 0) {
+        // Cargar las 10 subparroquias oficiales del Módulo 4
+        subparroquias = (SUBPARROQUIAS_MONAGAS || []).map(sp => ({
+          id: sp.id,
+          nombre: sp.nombre,
+          alias: sp.alias || sp.nombre,
+          colorBorde: sp.colorBorde || "#c084fc",
+          colorRelleno: sp.colorRelleno || "#a855f7",
+          anchoBorde: 2.5,
+          vertices: sp.vertices || sp.poligono,
+          sectoresCount: sp.sectoresCount || 0
+        }));
+
+        // Integrar el trazo de alta precisión de La Puente de SUBPARROQUIAS_GODOS
+        if (Array.isArray(SUBPARROQUIAS_GODOS) && SUBPARROQUIAS_GODOS.length > 0) {
+          SUBPARROQUIAS_GODOS.forEach(gSp => {
+            const idx = subparroquias.findIndex(s => s.id === gSp.id || String(s.nombre).toLowerCase().includes("puente"));
+            if (idx >= 0) {
+              subparroquias[idx] = { ...subparroquias[idx], ...gSp, vertices: gSp.vertices || gSp.poligono };
+            } else {
+              subparroquias.push({ ...gSp, vertices: gSp.vertices || gSp.poligono });
+            }
+          });
+        }
+      }
+
+      if (poligonos.length === 0) {
+        // Cargar los 18 sectores comunitarios de La Puente de Módulo 4
+        poligonos = (SECTORES_LAPUENTE || []).map(sec => ({
+          ...sec,
+          vertices: sec.vertices || sec.poligono
+        }));
+      }
+    }
+
+    return { subparroquias, poligonos };
+  }
+
+  // 3. NIVEL PARROQUIA (ALTO DE LOS GODOS, LA PICA, SAN SIMÓN, ETC.)
+  selectParroquia(parishId, munId = "maturin") {
+    this.level = "parroquia";
+    this.activeMunId = munId;
+    this.activeParishId = parishId;
+    this.activeSubParishId = null;
+    this.activeSectorId = null;
+
+    const cleanMunId = String(munId).toLowerCase().replace(/_/g, "-").trim();
+    const cleanPId = String(parishId).toLowerCase().replace(/_/g, "-").trim();
+    const resolvedPId = resolveParishId(cleanPId);
+    const pColor = getParishColor(resolvedPId);
+
+    // Localizar geometría de la parroquia
+    const feat = (GEO_PARROQUIAS_OFICIAL.features || []).find(f => {
+      const id = String(f.properties?.id || "").toLowerCase().replace(/_/g, "-").trim();
+      return id === cleanPId || id === resolvedPId || resolveParishId(id) === resolvedPId;
+    });
+
+    const rings = feat ? this.geoJsonCoordsToLeaflet(feat.geometry) : [];
+
+    // APLICAR EL RECORTE EXACTO DEL VELO BLANCO A ESTA PARROQUIA
+    this.applySpotlightMask(rings, pColor, 4);
+    this.childEntitiesLayer.clearLayers();
+    this.centrosLayer.clearLayers();
+
+    const pName = feat?.properties?.nombre || (CATALOGO_MONAGAS.find(m => m.id === cleanMunId)?.parroquias || []).find(p => p.id === cleanPId)?.nombre || cleanPId;
+
+    // Obtener polígonos exactos del Módulo 4
+    const { subparroquias, poligonos } = this.getParishPolygonsData(cleanMunId, resolvedPId);
+
+    // 1. Dibujar polígonos de Sub-Parroquias / Ejes Territoriales (Nivel 4) idénticos al Módulo 4
+    if (Array.isArray(subparroquias) && subparroquias.length > 0) {
+      subparroquias.forEach(sp => {
+        const coords = sp.vertices || sp.poligono;
+        if (coords && coords.length >= 3) {
+          const spColor = sp.colorBorde || "#c084fc";
+          const spPoly = L.polygon(coords, {
+            color: spColor,
             weight: 2.5,
             opacity: 0.95,
-            fillColor: eje.colorRelleno || pColor,
-            fillOpacity: eje.opacidad || 0.22,
-            dashArray: "4, 4"
+            fillColor: sp.colorRelleno || "#a855f7",
+            fillOpacity: 0.12,
+            dashArray: "6, 4"
           });
-          poly.on({
-            mouseover: () => poly.setStyle({ weight: 4, fillOpacity: 0.45 }),
-            mouseout: () => poly.setStyle({ weight: 2.5, fillOpacity: eje.opacidad || 0.22 }),
-            click: () => this.selectSubParroquia(eje.id, cleanPId, cleanMunId)
-          });
-          this.childEntitiesLayer.addLayer(poly);
 
-          // Etiqueta flotante vectorial de alta legibilidad para pantalla de 100" con Líder Asignado
-          try {
-            const center = L.polygon(eje.vertices).getBounds().getCenter();
-            const assigned = getAssignedLeader(eje.id);
-            const labelHtml = `
-              <div class="eje-polygon-label" style="border-color: ${eje.colorBorde || pColor};">
-                <div class="text-[12px] font-black uppercase tracking-wide text-white">${eje.nombre}</div>
-                ${assigned ? `<div class="text-[9.5px] text-amber-300 font-bold mt-0.5">👤 ${assigned.nombre} • ${assigned.cargo || 'Comando'}</div>` : `<div class="text-[9px] text-slate-300 font-medium mt-0.5">Comando Sectorial</div>`}
-              </div>
-            `;
-            const labelMarker = L.marker(center, {
-              icon: L.divIcon({
-                className: "eje-polygon-label-marker",
-                html: labelHtml,
-                iconSize: [180, 42],
-                iconAnchor: [90, 21]
-              }),
-              interactive: false
-            });
-            this.childEntitiesLayer.addLayer(labelMarker);
-          } catch(e) {}
+          spPoly.bindTooltip(`
+            <div style="font-family: inherit; font-size: 11px; padding: 2px;">
+              <span style="color: #a855f7; font-weight: 900; font-size: 9.5px; text-transform: uppercase;">Nivel 4 • Eje Territorial</span><br>
+              <strong style="color: #0f172a; font-size: 11.5px;">${sp.nombre}</strong>
+            </div>
+          `, { sticky: true });
+
+          spPoly.on({
+            mouseover: () => spPoly.setStyle({ weight: 4, fillOpacity: 0.25 }),
+            mouseout: () => spPoly.setStyle({ weight: 2.5, fillOpacity: 0.12 }),
+            click: () => this.selectSubParroquia(sp.id, cleanPId, cleanMunId)
+          });
+          this.childEntitiesLayer.addLayer(spPoly);
         }
       });
     }
 
-    // Dibujar sectores mapeados si no hay ejes o como capas complementarias
-    if (!ejes || ejes.length === 0) {
-      sectores.forEach(sec => {
-        const sCoords = sec.vertices || sec.poligono;
-        if (sCoords && sCoords.length >= 3) {
-          const sPoly = L.polygon(sCoords, {
-            color: sec.color || "#06b6d4",
-            weight: 1.5,
-            opacity: 0.85,
-            fillColor: sec.color || "#06b6d4",
-            fillOpacity: 0.2
+    // 2. Dibujar polígonos de Sectores Vecinales (Nivel 5) idénticos al Módulo 4
+    if (Array.isArray(poligonos) && poligonos.length > 0) {
+      poligonos.forEach(sec => {
+        const coords = sec.vertices || sec.poligono;
+        if (coords && coords.length >= 3) {
+          const secColor = sec.colorBorde || sec.color || "#38bdf8";
+          const secPoly = L.polygon(coords, {
+            color: secColor,
+            weight: sec.anchoBorde || 2,
+            opacity: 0.95,
+            fillColor: sec.colorRelleno || secColor,
+            fillOpacity: sec.opacidad !== undefined ? sec.opacidad : 0.32
           });
-          sPoly.on({
-            mouseover: () => sPoly.setStyle({ weight: 3, fillOpacity: 0.4 }),
-            mouseout: () => sPoly.setStyle({ weight: 1.5, fillOpacity: 0.2 }),
+
+          secPoly.bindTooltip(`
+            <div style="font-family: inherit; font-size: 11px; padding: 2px;">
+              <span style="color: #0284c7; font-weight: 900; font-size: 9.5px; text-transform: uppercase;">Nivel 5 • Sector Vecinal</span><br>
+              <strong style="color: #0f172a; font-size: 11.5px;">${sec.nombre}</strong>
+            </div>
+          `, { sticky: true });
+
+          secPoly.on({
+            mouseover: () => secPoly.setStyle({ weight: 3.5, fillOpacity: 0.55 }),
+            mouseout: () => secPoly.setStyle({ weight: sec.anchoBorde || 2, fillOpacity: sec.opacidad !== undefined ? sec.opacidad : 0.32 }),
             click: () => this.selectSector(sec.id, cleanPId, cleanMunId)
           });
-          this.childEntitiesLayer.addLayer(sPoly);
+          this.childEntitiesLayer.addLayer(secPoly);
         }
       });
     }
-
-    // Nota: Centros de votación no se proyectan por defecto para mantener la lámina limpia y ejecutiva.
 
     // Ajustar cámara a la parroquia
     if (rings && rings.length > 0) {
@@ -669,21 +758,21 @@ export class LaminaApp {
     
     // Preparar lista de sectores/ejes para el panel lateral
     let listItems = [];
-    if (ejes && ejes.length > 0) {
-      listItems = ejes.map(e => ({
-        id: e.id,
-        nombre: e.nombre,
-        color: e.colorBorde || pColor,
-        badge: `${(e.sectores || []).length || 1} sect.`,
-        onClick: `laminaApp.selectSubParroquia('${e.id}', '${cleanPId}', '${cleanMunId}')`
+    if (subparroquias && subparroquias.length > 0) {
+      listItems = subparroquias.map(sp => ({
+        id: sp.id,
+        nombre: sp.nombre,
+        color: sp.colorBorde || pColor,
+        badge: `${(sp.sectores || []).length || sp.sectoresCount || 1} sect.`,
+        onClick: `laminaApp.selectSubParroquia('${sp.id}', '${cleanPId}', '${cleanMunId}')`
       }));
-    } else if (sectores && sectores.length > 0) {
-      listItems = sectores.map(s => ({
-        id: s.id,
-        nombre: s.nombre,
-        color: pColor,
-        badge: s.electores ? `${s.electores.toLocaleString("es-VE")} elect.` : "Sector",
-        onClick: `laminaApp.selectSector('${s.id}', '${cleanPId}', '${cleanMunId}')`
+    } else if (poligonos && poligonos.length > 0) {
+      listItems = poligonos.map(sec => ({
+        id: sec.id,
+        nombre: sec.nombre,
+        color: sec.colorBorde || pColor,
+        badge: "Sector",
+        onClick: `laminaApp.selectSector('${sec.id}', '${cleanPId}', '${cleanMunId}')`
       }));
     }
 
@@ -696,7 +785,7 @@ export class LaminaApp {
       vot: pDem?.votantes ? pDem.votantes.toLocaleString("es-VE") : "—",
       cen: pDem?.centros ? `${pDem.centros} Centros` : "—",
       cas: pDem?.casas ? pDem.casas.toLocaleString("es-VE") : "—",
-      listTitle: ejes.length > 0 ? "Ejes Territoriales (Clic para enfocar)" : "Sectores Censados (Clic para enfocar)",
+      listTitle: subparroquias.length > 0 ? "Ejes Territoriales (Clic para enfocar)" : "Sectores Censados (Clic para enfocar)",
       listCount: listItems.length,
       backBtn: {
         label: "Ver todas las 11 parroquias",
@@ -718,127 +807,96 @@ export class LaminaApp {
     this.activeSubParishId = spId;
     this.activeSectorId = null;
 
+    const cleanMunId = String(munId || "maturin").toLowerCase().replace(/_/g, "-").trim();
     const cleanPId = resolveParishId(parishId);
     const pColor = getParishColor(cleanPId);
 
     this.childEntitiesLayer.clearLayers();
     this.centrosLayer.clearLayers();
 
-    // Buscar el eje
-    let ejes = getEjesByParish(munId, cleanPId) || [];
-    if (cleanPId === "alto-de-los-godos" && (!ejes || ejes.length === 0)) {
-      ejes = SUBPARROQUIAS_GODOS || [];
-    }
-    const eje = (ejes || []).find(e => String(e.id) === String(spId)) || { id: spId, nombre: spId };
+    const { subparroquias, poligonos } = this.getParishPolygonsData(cleanMunId, cleanPId);
 
-    if (eje.vertices && eje.vertices.length >= 3) {
+    // Buscar el eje
+    const eje = subparroquias.find(e => String(e.id) === String(spId) || String(e.nombre).toLowerCase().includes(String(spId).toLowerCase())) || { id: spId, nombre: spId };
+
+    const ejeCoords = eje.vertices || eje.poligono;
+    if (ejeCoords && ejeCoords.length >= 3) {
       // APLICAR RECORTE EXACTO DEL VELO BLANCO AL EJE TERRITORIAL
-      this.applySpotlightMask(eje.vertices, eje.colorBorde || pColor, 4);
+      this.applySpotlightMask(ejeCoords, eje.colorBorde || "#c084fc", 4);
 
       try {
-        const bounds = L.polygon(eje.vertices).getBounds();
+        const bounds = L.polygon(ejeCoords).getBounds();
         this.map.flyToBounds(bounds, { padding: [50, 50], duration: 1.2 });
       } catch(e){}
+    }
 
-      // Etiqueta flotante del Eje activo
-      try {
-        const center = L.polygon(eje.vertices).getBounds().getCenter();
-        const assigned = getAssignedLeader(eje.id);
-        const labelHtml = `
-          <div class="eje-polygon-label" style="border-color: ${eje.colorBorde || pColor};">
-            <div class="text-[13px] font-black uppercase text-white">${eje.nombre}</div>
-            ${assigned ? `<div class="text-[10px] text-amber-300 font-bold mt-0.5">👤 ${assigned.nombre} • ${assigned.cargo || 'Comando'}</div>` : `<div class="text-[9.5px] text-slate-300 font-medium mt-0.5">Comando Sectorial</div>`}
-          </div>
-        `;
-        const labelMarker = L.marker(center, {
-          icon: L.divIcon({
-            className: "eje-polygon-label-marker",
-            html: labelHtml,
-            iconSize: [200, 48],
-            iconAnchor: [100, 24]
-          }),
-          interactive: false
+    // Sectores del eje
+    const childSectores = poligonos.filter(p => {
+      if (p.subParroquiaId && String(p.subParroquiaId) === String(spId)) return true;
+      if (String(spId).toLowerCase().includes("puente") || String(spId).includes("6") || String(spId).includes("SUBPAR")) return true;
+      return false;
+    });
+
+    const sectoresToRender = childSectores.length > 0 ? childSectores : poligonos;
+
+    // Dibujar sectores del eje idénticos al Módulo 4
+    sectoresToRender.forEach(sec => {
+      const sCoords = sec.vertices || sec.poligono;
+      if (sCoords && sCoords.length >= 3) {
+        const secColor = sec.colorBorde || sec.color || "#38bdf8";
+        const secPoly = L.polygon(sCoords, {
+          color: secColor,
+          weight: sec.anchoBorde || 2,
+          opacity: 0.95,
+          fillColor: sec.colorRelleno || secColor,
+          fillOpacity: sec.opacidad !== undefined ? sec.opacidad : 0.35
         });
-        this.childEntitiesLayer.addLayer(labelMarker);
-      } catch(e) {}
-    }
 
-    // Obtener y dibujar sectores del eje con sus etiquetas
-    let secGeoms = [];
-    if (String(spId).toLowerCase().includes("puente")) {
-      secGeoms = SECTORES_LAPUENTE || [];
-    } else if (Array.isArray(eje.sectores) && eje.sectores.some(s => s.vertices || s.poligono)) {
-      secGeoms = eje.sectores;
-    }
+        secPoly.bindTooltip(`
+          <div style="font-family: inherit; font-size: 11px; padding: 2px;">
+            <span style="color: #0284c7; font-weight: 900; font-size: 9.5px; text-transform: uppercase;">Nivel 5 • Sector</span><br>
+            <strong style="color: #0f172a; font-size: 11.5px;">${sec.nombre}</strong>
+          </div>
+        `, { sticky: true });
 
-    if (secGeoms && secGeoms.length > 0) {
-      secGeoms.forEach(sec => {
-        const sCoords = sec.vertices || sec.poligono;
-        if (sCoords && sCoords.length >= 3) {
-          const sColor = sec.colorBorde || sec.color || "#06b6d4";
-          const sPoly = L.polygon(sCoords, {
-            color: sColor,
-            weight: 2,
-            opacity: 0.9,
-            fillColor: sec.colorRelleno || sColor,
-            fillOpacity: sec.opacidad || 0.22
-          });
-          sPoly.on({
-            mouseover: () => sPoly.setStyle({ weight: 3.5, fillOpacity: 0.45 }),
-            mouseout: () => sPoly.setStyle({ weight: 2, fillOpacity: sec.opacidad || 0.22 }),
-            click: () => this.selectSector(sec.id, cleanPId, munId)
-          });
-          this.childEntitiesLayer.addLayer(sPoly);
+        secPoly.on({
+          mouseover: () => secPoly.setStyle({ weight: 3.5, fillOpacity: 0.55 }),
+          mouseout: () => secPoly.setStyle({ weight: sec.anchoBorde || 2, fillOpacity: sec.opacidad !== undefined ? sec.opacidad : 0.35 }),
+          click: () => this.selectSector(sec.id, cleanPId, cleanMunId)
+        });
+        this.childEntitiesLayer.addLayer(secPoly);
+      }
+    });
 
-          // Etiqueta flotante del sector
-          try {
-            const center = L.polygon(sCoords).getBounds().getCenter();
-            const sMarker = L.marker(center, {
-              icon: L.divIcon({
-                className: "eje-polygon-label-marker",
-                html: `<div class="sector-polygon-label" style="border-color: ${sColor};">${sec.nombre}</div>`,
-                iconSize: [130, 26],
-                iconAnchor: [65, 13]
-              }),
-              interactive: false
-            });
-            this.childEntitiesLayer.addLayer(sMarker);
-          } catch(e) {}
-        }
-      });
-    }
-
-    // Sectores para el listado
-    const sectores = eje.sectores || secGeoms || [];
-
-    this.updateHeaderUI(`${eje.nombre.toUpperCase()}`, `PARROQUIA ${(parishId || '').toUpperCase()} • MUNICIPIO MATURÍN`);
+    this.updateHeaderUI(`${eje.nombre.toUpperCase()}`, `PARROQUIA ${cleanPId.toUpperCase()} • MUNICIPIO MATURÍN`);
     this.renderSideStats({
       title: eje.nombre.toUpperCase(),
-      color: eje.colorBorde || pColor,
-      type: "Eje Territorial",
-      code: eje.codigo || "EJE-CNE",
-      hab: eje.habitantes ? eje.habitantes.toLocaleString("es-VE") : "28,400",
-      vot: eje.electores ? eje.electores.toLocaleString("es-VE") : "16,850",
-      cen: eje.centros ? `${eje.centros} Centros` : "8 Centros",
-      cas: eje.casas ? eje.casas.toLocaleString("es-VE") : "7,200",
+      color: eje.colorBorde || "#a855f7",
+      type: "Eje Territorial • Nivel 4",
+      code: eje.codigo || "MÓDULO 4",
+      hab: eje.habitantes ? eje.habitantes.toLocaleString("es-VE") : "16,162",
+      vot: eje.electores ? eje.electores.toLocaleString("es-VE") : "10,728",
+      cen: eje.centros ? `${eje.centros} Centros` : "5 Centros",
+      cas: eje.casas ? eje.casas.toLocaleString("es-VE") : "5,309",
       listTitle: "Sectores del Eje (Clic para enfocar)",
-      listCount: sectores.length,
+      listCount: sectoresToRender.length,
       backBtn: {
         label: `Volver a Parroquia`,
         count: "⬅",
-        onClick: `laminaApp.selectParroquia('${parishId}', '${munId}')`
+        onClick: `laminaApp.selectParroquia('${cleanPId}', '${cleanMunId}')`
       },
-      items: sectores.map(s => ({
+      items: sectoresToRender.map(s => ({
         id: s.id,
         nombre: s.nombre,
-        color: pColor,
-        badge: s.electores ? `${s.electores.toLocaleString("es-VE")} elect.` : "Sector",
-        onClick: `laminaApp.selectSector('${s.id}', '${parishId}', '${munId}')`
+        color: s.colorBorde || "#38bdf8",
+        badge: "Sector",
+        onClick: `laminaApp.selectSector('${s.id}', '${cleanPId}', '${cleanMunId}')`
       }))
     });
+
     this.renderComandoSection();
     this.updateBreadcrumbs();
-    auditLogger.logEvent("SELECCION_SUBPARROQUIA_EJE", { ejeId: spId, parroquiaId, municipioId: munId, nombre: eje.nombre });
+    auditLogger.logEvent("SELECCION_SUBPARROQUIA_EJE", { ejeId: spId, parroquiaId: cleanPId, municipioId: cleanMunId, nombre: eje.nombre });
   }
 
   // 5. NIVEL SECTOR VECINAL
@@ -848,18 +906,15 @@ export class LaminaApp {
     this.activeParishId = parishId;
     this.activeSectorId = secId;
 
+    const cleanMunId = String(munId || "maturin").toLowerCase().replace(/_/g, "-").trim();
     const cleanPId = resolveParishId(parishId);
     const pColor = getParishColor(cleanPId);
 
     this.childEntitiesLayer.clearLayers();
     this.centrosLayer.clearLayers();
 
-    // Buscar sector
-    let sec = findSectorById(secId);
-    if (!sec) {
-      const allSec = getSectoresByParish(munId, cleanPId) || [];
-      sec = allSec.find(s => String(s.id) === String(secId)) || (SECTORES_LAPUENTE || []).find(s => String(s.id) === String(secId));
-    }
+    const { poligonos } = this.getParishPolygonsData(cleanMunId, cleanPId);
+    let sec = poligonos.find(s => String(s.id) === String(secId) || String(s.nombre).toLowerCase() === String(secId).toLowerCase()) || findSectorById(secId);
     if (!sec) {
       sec = { id: secId, nombre: secId };
     }
@@ -867,20 +922,31 @@ export class LaminaApp {
     const sCoords = sec.vertices || sec.poligono;
     if (sCoords && sCoords.length >= 3) {
       // RECORTE DEL VELO BLANCO DIRECTO AL SECTOR
-      this.applySpotlightMask(sCoords, sec.color || pColor, 4);
+      this.applySpotlightMask(sCoords, sec.colorBorde || sec.color || pColor, 4);
       try {
         const bounds = L.polygon(sCoords).getBounds();
         this.map.flyToBounds(bounds, { padding: [60, 60], maxZoom: 17, duration: 1.2 });
       } catch(e){}
+
+      // Dibujar el polígono enfocado con estilo destacado
+      const secPoly = L.polygon(sCoords, {
+        color: sec.colorBorde || sec.color || "#38bdf8",
+        weight: 3,
+        opacity: 1,
+        fillColor: sec.colorRelleno || sec.color || "#38bdf8",
+        fillOpacity: 0.4
+      });
+      secPoly.bindTooltip(`<strong>${sec.nombre.toUpperCase()}</strong>`, { sticky: true, direction: "center" });
+      this.childEntitiesLayer.addLayer(secPoly);
     } else if (sec.centro) {
       this.map.flyTo(sec.centro, 16, { duration: 1.2 });
     }
 
-    this.updateHeaderUI(`SECTOR ${sec.nombre.toUpperCase()}`, `PARROQUIA ${(parishId || '').toUpperCase()} • MUNICIPIO MATURÍN`);
+    this.updateHeaderUI(`SECTOR ${sec.nombre.toUpperCase()}`, `PARROQUIA ${cleanPId.toUpperCase()} • MUNICIPIO MATURÍN`);
     this.renderSideStats({
       title: sec.nombre.toUpperCase(),
-      color: sec.color || pColor,
-      type: "Sector Vecinal Censado",
+      color: sec.colorBorde || sec.color || pColor,
+      type: "Sector Vecinal Censado • Nivel 5",
       code: "COMUNIDAD",
       hab: sec.habitantes ? sec.habitantes.toLocaleString("es-VE") : "2,450",
       vot: sec.electores ? sec.electores.toLocaleString("es-VE") : "1,200",
@@ -891,13 +957,13 @@ export class LaminaApp {
       backBtn: {
         label: `Volver a la Parroquia`,
         count: "⬅",
-        onClick: `laminaApp.selectParroquia('${parishId}', '${munId}')`
+        onClick: `laminaApp.selectParroquia('${cleanPId}', '${cleanMunId}')`
       },
       items: [
         {
           id: sec.id,
           nombre: `Sector ${sec.nombre}`,
-          color: sec.color || pColor,
+          color: sec.colorBorde || sec.color || pColor,
           badge: "Activo",
           onClick: ""
         }
@@ -905,7 +971,7 @@ export class LaminaApp {
     });
     this.renderComandoSection();
     this.updateBreadcrumbs();
-    auditLogger.logEvent("SELECCION_SECTOR", { sectorId: secId, parroquiaId, municipioId: munId, nombre: sec.nombre });
+    auditLogger.logEvent("SELECCION_SECTOR", { sectorId: secId, parroquiaId: cleanPId, municipioId: cleanMunId, nombre: sec.nombre });
   }
 
   // Renderizar centros de votación en el mapa
