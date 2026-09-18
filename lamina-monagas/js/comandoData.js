@@ -375,6 +375,44 @@ export const COMANDOS_SECTORIALES = {
   }
 };
 
+export const STORAGE_KEY_ASIGNADOS = "migato_comandos_asignados";
+
+export function getAssignedComandos() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY_ASIGNADOS);
+    return raw ? JSON.parse(raw) : {};
+  } catch(e) {
+    console.warn("Error leyendo comandos asignados:", e);
+    return {};
+  }
+}
+
+export function getAssignedLeader(ejeOrSectorId) {
+  const map = getAssignedComandos();
+  return map[ejeOrSectorId] || null;
+}
+
+export function saveAssignedComando(id, payload) {
+  try {
+    const map = getAssignedComandos();
+    map[id] = {
+      id,
+      nombre: payload.nombre || "Responsable Asignado",
+      telefono: payload.telefono || "",
+      cargo: payload.cargo || "Jefe de Comando Sectorial",
+      cedula: payload.cedula || "",
+      profesion: payload.profesion || "",
+      parroquiaId: payload.parroquiaId || "",
+      fechaAsignacion: new Date().toISOString()
+    };
+    localStorage.setItem(STORAGE_KEY_ASIGNADOS, JSON.stringify(map));
+    return map[id];
+  } catch(e) {
+    console.warn("Error guardando comando asignado:", e);
+    return null;
+  }
+}
+
 /**
  * Obtiene la información de comando correspondiente al nivel y entidad activa
  */
@@ -461,14 +499,20 @@ export function getComandoInfo(level, entityId, parishId = null, munId = null) {
       telefono: parishComando.telefono,
       roles: parishComando.rolesClave,
       centros: parishComando.centrosCount,
-      subdirectorios: ejesList.map(e => ({
-        id: e.ejeId,
-        nombre: e.nombre,
-        responsable: e.responsableSectorial,
-        tipo: "Comando Sectorial",
-        centros: (e.centrosAsignados || []).length,
-        onClick: `laminaApp.selectSubParroquia('${e.ejeId}', '${cleanPId}', '${cleanMunId}')`
-      }))
+      subdirectorios: ejesList.map(e => {
+        const assigned = getAssignedLeader(e.ejeId);
+        return {
+          id: e.ejeId,
+          nombre: e.nombre,
+          responsable: assigned ? assigned.nombre : e.responsableSectorial,
+          telefono: assigned ? assigned.telefono : e.telefono,
+          cargo: assigned ? assigned.cargo : e.cargo,
+          tipo: "Comando Sectorial",
+          centros: (e.centrosAsignados || []).length,
+          isAssigned: !!assigned,
+          onClick: `laminaApp.selectSubParroquia('${e.ejeId}', '${cleanPId}', '${cleanMunId}')`
+        };
+      })
     };
   }
 
@@ -487,18 +531,28 @@ export function getComandoInfo(level, entityId, parishId = null, munId = null) {
       sectores: ["Sectores Asociados al Circuito"]
     };
 
+    const assigned = getAssignedLeader(cleanEjeId);
+    const respNombre = assigned ? assigned.nombre : ejeComando.responsableSectorial;
+    const respTel = assigned ? assigned.telefono : ejeComando.telefono;
+    const respCargo = assigned ? assigned.cargo : (ejeComando.cargo || "Jefe de Comando Sectorial");
+    const respDetalle = assigned ? (assigned.profesion || assigned.cedula || "Acreditado") : (ejeComando.cargo || "Responsable de Polígono");
+
     return {
       nivel: "Comando Sectorial / Eje Territorial",
+      ejeId: cleanEjeId,
+      parroquiaId: cleanPId,
       entidad: ejeComando.nombre,
-      general: ejeComando.responsableSectorial,
-      division: ejeComando.cargo || "Responsable de Polígono y Centros",
-      telefono: ejeComando.telefono,
+      general: respNombre,
+      division: respCargo,
+      telefono: respTel,
+      detalle: respDetalle,
+      isAssigned: !!assigned,
       centrosAsignados: ejeComando.centrosAsignados || [],
       mesas: ejeComando.mesasSupervisadas || 4,
       electores: ejeComando.electoresAprox || 5000,
       sectores: ejeComando.sectores || [],
       roles: [
-        { cargo: "Responsable del Eje", responsable: ejeComando.responsableSectorial, estado: "En Campo", icono: "shield" },
+        { cargo: "Responsable del Eje", responsable: respNombre, estado: "En Campo", icono: "shield" },
         { cargo: "Enlace con Testigos CNE", responsable: "Veeduría en Mesas", estado: "Acreditado", icono: "vote" },
         { cargo: "Movilización y Defensa", responsable: "Brigada Sectorial", estado: "Activo", icono: "users" }
       ],

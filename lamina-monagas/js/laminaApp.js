@@ -18,7 +18,7 @@ import {
   ALL_SECTORES_FLAT 
 } from "../../earth-monagas/js/monagasSectoresCatalog.js?v=230";
 import { SUBPARROQUIAS_GODOS, SECTORES_LAPUENTE } from "../../earth-monagas/js/geoMonagas.js?v=230";
-import { getComandoInfo } from "./comandoData.js";
+import { getComandoInfo, getAssignedLeader, saveAssignedComando } from "./comandoData.js";
 import { auditLogger } from "./auditLogger.js";
 
 const WORLD_BOX = [
@@ -142,6 +142,113 @@ export class LaminaApp {
     const btnFull = document.getElementById("btn-fullscreen");
     if (btnFull) {
       btnFull.addEventListener("click", () => this.toggleFullscreen());
+    }
+
+    // Modal de Asignación Directa de Comando Sectorial
+    const btnOpenAsignar = document.getElementById("btn-open-asignar-modal");
+    if (btnOpenAsignar) {
+      btnOpenAsignar.addEventListener("click", () => {
+        const currentId = this.activeSectorId || this.activeSubParishId || this.activeParishId || this.activeMunId;
+        const currentName = document.getElementById("comando-nombre-label")?.textContent || currentId;
+        this.openAsignarModal(currentId, currentName, this.activeParishId);
+      });
+    }
+
+    const btnCloseModal = document.getElementById("btn-close-modal-asignar");
+    const btnCancelModal = document.getElementById("btn-cancel-asignar");
+    if (btnCloseModal) btnCloseModal.addEventListener("click", () => this.closeAsignarModal());
+    if (btnCancelModal) btnCancelModal.addEventListener("click", () => this.closeAsignarModal());
+
+    const formAsignar = document.getElementById("form-asignar-comando");
+    if (formAsignar) {
+      formAsignar.addEventListener("submit", (e) => {
+        e.preventDefault();
+        this.handleSaveAsignacion();
+      });
+    }
+  }
+
+  openAsignarModal(entityId, entityName = "", parroquiaId = "") {
+    const modal = document.getElementById("modal-asignar-comando");
+    if (!modal) return;
+
+    const targetId = entityId || this.activeSectorId || this.activeSubParishId || this.activeParishId || this.activeMunId || "eje-1";
+    const targetPId = parroquiaId || this.activeParishId || "alto-de-los-godos";
+    const titleEl = document.getElementById("modal-asignar-title");
+    const subEl = document.getElementById("modal-asignar-subtitle");
+    const inputId = document.getElementById("input-asignar-id");
+    const inputPId = document.getElementById("input-asignar-parroquia");
+    const inputNombre = document.getElementById("input-asignar-nombre");
+    const inputTelf = document.getElementById("input-asignar-telefono");
+    const inputCargo = document.getElementById("input-asignar-cargo");
+    const inputProf = document.getElementById("input-asignar-profesion");
+
+    if (inputId) inputId.value = targetId;
+    if (inputPId) inputPId.value = targetPId;
+
+    const displayName = entityName || targetId;
+    if (titleEl) titleEl.textContent = `Asignar Responsable: ${displayName}`;
+    if (subEl) subEl.textContent = `Polígono / Entidad ID: ${targetId}`;
+
+    // Cargar datos previos si existen
+    const prevAssigned = getAssignedLeader(targetId);
+    if (prevAssigned) {
+      if (inputNombre) inputNombre.value = prevAssigned.nombre || "";
+      if (inputTelf) inputTelf.value = prevAssigned.telefono || "";
+      if (inputCargo) inputCargo.value = prevAssigned.cargo || "Jefe de Comando Sectorial";
+      if (inputProf) inputProf.value = prevAssigned.profesion || prevAssigned.cedula || "";
+    } else {
+      const info = getComandoInfo(this.level, targetId, targetPId, this.activeMunId);
+      if (inputNombre) inputNombre.value = (info && info.general && !info.general.includes("Coordinador") && !info.general.includes("Responsable")) ? info.general : "";
+      if (inputTelf) inputTelf.value = (info && info.telefono && !info.telefono.includes("0000")) ? info.telefono : "";
+      if (inputCargo) inputCargo.value = "Jefe de Comando Sectorial";
+      if (inputProf) inputProf.value = "";
+    }
+
+    modal.classList.remove("hidden");
+    modal.classList.add("flex");
+    if (inputNombre) inputNombre.focus();
+  }
+
+  closeAsignarModal() {
+    const modal = document.getElementById("modal-asignar-comando");
+    if (!modal) return;
+    modal.classList.add("hidden");
+    modal.classList.remove("flex");
+  }
+
+  handleSaveAsignacion() {
+    const id = document.getElementById("input-asignar-id")?.value;
+    const pId = document.getElementById("input-asignar-parroquia")?.value;
+    const nombre = document.getElementById("input-asignar-nombre")?.value?.trim();
+    const telefono = document.getElementById("input-asignar-telefono")?.value?.trim();
+    const cargo = document.getElementById("input-asignar-cargo")?.value;
+    const profesion = document.getElementById("input-asignar-profesion")?.value?.trim();
+
+    if (!id || !nombre) {
+      alert("Por favor ingrese el nombre del responsable.");
+      return;
+    }
+
+    const payload = {
+      nombre,
+      telefono,
+      cargo,
+      profesion,
+      parroquiaId: pId
+    };
+
+    saveAssignedComando(id, payload);
+    auditLogger.logEvent("ASIGNACION_COMANDO_SECTORIAL", { id, payload });
+
+    this.closeAsignarModal();
+
+    // Refrescar vistas en vivo
+    this.renderComandoSection();
+    if (this.level === "parroquia") {
+      this.selectParroquia(this.activeParishId, this.activeMunId);
+    } else if (this.level === "subparroquia") {
+      this.selectSubParroquia(this.activeSubParishId, this.activeParishId, this.activeMunId);
     }
   }
 
@@ -392,6 +499,21 @@ export class LaminaApp {
         }
       });
       this.childEntitiesLayer.addLayer(layer);
+
+      // Etiqueta flotante vectorial de alta legibilidad para pantalla de 100"
+      try {
+        const center = layer.getBounds().getCenter();
+        const pMarker = L.marker(center, {
+          icon: L.divIcon({
+            className: "eje-polygon-label-marker",
+            html: `<div class="eje-polygon-label" style="border-color: ${pColor}; font-size: 11px; padding: 4px 10px;">${pName.toUpperCase()}</div>`,
+            iconSize: [140, 30],
+            iconAnchor: [70, 15]
+          }),
+          interactive: false
+        });
+        this.childEntitiesLayer.addLayer(pMarker);
+      } catch(e) {}
     });
 
     if (rings && rings.length > 0) {
@@ -472,50 +594,67 @@ export class LaminaApp {
         if (eje.vertices && eje.vertices.length >= 3) {
           const poly = L.polygon(eje.vertices, {
             color: eje.colorBorde || pColor,
-            weight: 2,
-            opacity: 0.9,
+            weight: 2.5,
+            opacity: 0.95,
             fillColor: eje.colorRelleno || pColor,
             fillOpacity: eje.opacidad || 0.22,
             dashArray: "4, 4"
           });
           poly.on({
-            mouseover: () => poly.setStyle({ weight: 3.5, fillOpacity: 0.45 }),
-            mouseout: () => poly.setStyle({ weight: 2, fillOpacity: eje.opacidad || 0.22 }),
+            mouseover: () => poly.setStyle({ weight: 4, fillOpacity: 0.45 }),
+            mouseout: () => poly.setStyle({ weight: 2.5, fillOpacity: eje.opacidad || 0.22 }),
             click: () => this.selectSubParroquia(eje.id, cleanPId, cleanMunId)
           });
           this.childEntitiesLayer.addLayer(poly);
+
+          // Etiqueta flotante vectorial de alta legibilidad para pantalla de 100" con Líder Asignado
+          try {
+            const center = L.polygon(eje.vertices).getBounds().getCenter();
+            const assigned = getAssignedLeader(eje.id);
+            const labelHtml = `
+              <div class="eje-polygon-label" style="border-color: ${eje.colorBorde || pColor};">
+                <div class="text-[12px] font-black uppercase tracking-wide text-white">${eje.nombre}</div>
+                ${assigned ? `<div class="text-[9.5px] text-amber-300 font-bold mt-0.5">👤 ${assigned.nombre} • ${assigned.cargo || 'Comando'}</div>` : `<div class="text-[9px] text-slate-300 font-medium mt-0.5">Comando Sectorial</div>`}
+              </div>
+            `;
+            const labelMarker = L.marker(center, {
+              icon: L.divIcon({
+                className: "eje-polygon-label-marker",
+                html: labelHtml,
+                iconSize: [180, 42],
+                iconAnchor: [90, 21]
+              }),
+              interactive: false
+            });
+            this.childEntitiesLayer.addLayer(labelMarker);
+          } catch(e) {}
         }
       });
     }
 
-    // Obtener sectores censados
-    let sectores = getSectoresByParish(cleanMunId, resolvedPId) || [];
-    if (resolvedPId === "alto-de-los-godos" && (!sectores || sectores.length === 0)) {
-      sectores = SECTORES_LAPUENTE || [];
+    // Dibujar sectores mapeados si no hay ejes o como capas complementarias
+    if (!ejes || ejes.length === 0) {
+      sectores.forEach(sec => {
+        const sCoords = sec.vertices || sec.poligono;
+        if (sCoords && sCoords.length >= 3) {
+          const sPoly = L.polygon(sCoords, {
+            color: sec.color || "#06b6d4",
+            weight: 1.5,
+            opacity: 0.85,
+            fillColor: sec.color || "#06b6d4",
+            fillOpacity: 0.2
+          });
+          sPoly.on({
+            mouseover: () => sPoly.setStyle({ weight: 3, fillOpacity: 0.4 }),
+            mouseout: () => sPoly.setStyle({ weight: 1.5, fillOpacity: 0.2 }),
+            click: () => this.selectSector(sec.id, cleanPId, cleanMunId)
+          });
+          this.childEntitiesLayer.addLayer(sPoly);
+        }
+      });
     }
 
-    // Dibujar sectores mapeados (si tienen geometría)
-    sectores.forEach(sec => {
-      const sCoords = sec.vertices || sec.poligono;
-      if (sCoords && sCoords.length >= 3) {
-        const sPoly = L.polygon(sCoords, {
-          color: sec.color || "#06b6d4",
-          weight: 1.5,
-          opacity: 0.85,
-          fillColor: sec.color || "#06b6d4",
-          fillOpacity: 0.2
-        });
-        sPoly.on({
-          mouseover: () => sPoly.setStyle({ weight: 3, fillOpacity: 0.4 }),
-          mouseout: () => sPoly.setStyle({ weight: 1.5, fillOpacity: 0.2 }),
-          click: () => this.selectSector(sec.id, cleanPId, cleanMunId)
-        });
-        this.childEntitiesLayer.addLayer(sPoly);
-      }
-    });
-
-    // Cargar Centros de Votación CNE de esta parroquia si están disponibles
-    this.renderCentrosVotacion(resolvedPId);
+    // Nota: Centros de votación no se proyectan por defecto para mantener la lámina limpia y ejecutiva.
 
     // Ajustar cámara a la parroquia
     if (rings && rings.length > 0) {
@@ -582,6 +721,9 @@ export class LaminaApp {
     const cleanPId = resolveParishId(parishId);
     const pColor = getParishColor(cleanPId);
 
+    this.childEntitiesLayer.clearLayers();
+    this.centrosLayer.clearLayers();
+
     // Buscar el eje
     let ejes = getEjesByParish(munId, cleanPId) || [];
     if (cleanPId === "alto-de-los-godos" && (!ejes || ejes.length === 0)) {
@@ -597,10 +739,77 @@ export class LaminaApp {
         const bounds = L.polygon(eje.vertices).getBounds();
         this.map.flyToBounds(bounds, { padding: [50, 50], duration: 1.2 });
       } catch(e){}
+
+      // Etiqueta flotante del Eje activo
+      try {
+        const center = L.polygon(eje.vertices).getBounds().getCenter();
+        const assigned = getAssignedLeader(eje.id);
+        const labelHtml = `
+          <div class="eje-polygon-label" style="border-color: ${eje.colorBorde || pColor};">
+            <div class="text-[13px] font-black uppercase text-white">${eje.nombre}</div>
+            ${assigned ? `<div class="text-[10px] text-amber-300 font-bold mt-0.5">👤 ${assigned.nombre} • ${assigned.cargo || 'Comando'}</div>` : `<div class="text-[9.5px] text-slate-300 font-medium mt-0.5">Comando Sectorial</div>`}
+          </div>
+        `;
+        const labelMarker = L.marker(center, {
+          icon: L.divIcon({
+            className: "eje-polygon-label-marker",
+            html: labelHtml,
+            iconSize: [200, 48],
+            iconAnchor: [100, 24]
+          }),
+          interactive: false
+        });
+        this.childEntitiesLayer.addLayer(labelMarker);
+      } catch(e) {}
     }
 
-    // Obtener sectores del eje
-    const sectores = eje.sectores || [];
+    // Obtener y dibujar sectores del eje con sus etiquetas
+    let secGeoms = [];
+    if (String(spId).toLowerCase().includes("puente")) {
+      secGeoms = SECTORES_LAPUENTE || [];
+    } else if (Array.isArray(eje.sectores) && eje.sectores.some(s => s.vertices || s.poligono)) {
+      secGeoms = eje.sectores;
+    }
+
+    if (secGeoms && secGeoms.length > 0) {
+      secGeoms.forEach(sec => {
+        const sCoords = sec.vertices || sec.poligono;
+        if (sCoords && sCoords.length >= 3) {
+          const sColor = sec.colorBorde || sec.color || "#06b6d4";
+          const sPoly = L.polygon(sCoords, {
+            color: sColor,
+            weight: 2,
+            opacity: 0.9,
+            fillColor: sec.colorRelleno || sColor,
+            fillOpacity: sec.opacidad || 0.22
+          });
+          sPoly.on({
+            mouseover: () => sPoly.setStyle({ weight: 3.5, fillOpacity: 0.45 }),
+            mouseout: () => sPoly.setStyle({ weight: 2, fillOpacity: sec.opacidad || 0.22 }),
+            click: () => this.selectSector(sec.id, cleanPId, munId)
+          });
+          this.childEntitiesLayer.addLayer(sPoly);
+
+          // Etiqueta flotante del sector
+          try {
+            const center = L.polygon(sCoords).getBounds().getCenter();
+            const sMarker = L.marker(center, {
+              icon: L.divIcon({
+                className: "eje-polygon-label-marker",
+                html: `<div class="sector-polygon-label" style="border-color: ${sColor};">${sec.nombre}</div>`,
+                iconSize: [130, 26],
+                iconAnchor: [65, 13]
+              }),
+              interactive: false
+            });
+            this.childEntitiesLayer.addLayer(sMarker);
+          } catch(e) {}
+        }
+      });
+    }
+
+    // Sectores para el listado
+    const sectores = eje.sectores || secGeoms || [];
 
     this.updateHeaderUI(`${eje.nombre.toUpperCase()}`, `PARROQUIA ${(parishId || '').toUpperCase()} • MUNICIPIO MATURÍN`);
     this.renderSideStats({
@@ -641,6 +850,9 @@ export class LaminaApp {
 
     const cleanPId = resolveParishId(parishId);
     const pColor = getParishColor(cleanPId);
+
+    this.childEntitiesLayer.clearLayers();
+    this.centrosLayer.clearLayers();
 
     // Buscar sector
     let sec = findSectorById(secId);
@@ -923,10 +1135,10 @@ export class LaminaApp {
       let html = "";
       if (info.subdirectorios && info.subdirectorios.length > 0) {
         html = info.subdirectorios.map(sub => `
-          <div onclick="${sub.onClick}" 
-               class="territory-row hover:border-amber-400" 
-               title="Ver comando de ${sub.nombre} • Clic para enfocar">
-            <div class="flex flex-col min-w-0">
+          <div class="territory-row hover:border-amber-400 flex items-center justify-between gap-1">
+            <div onclick="${sub.onClick}" 
+                 class="flex flex-col min-w-0 flex-1 cursor-pointer" 
+                 title="Ver comando de ${sub.nombre} • Clic para enfocar">
               <div class="flex items-center gap-1.5">
                 <span class="w-2 h-2 rounded-full bg-amber-500 shrink-0"></span>
                 <span class="font-bold text-xs text-slate-900 truncate">${sub.nombre}</span>
@@ -935,9 +1147,17 @@ export class LaminaApp {
                 👤 ${sub.responsable}
               </span>
             </div>
-            <span class="text-[10px] font-extrabold text-amber-700 bg-amber-50 px-1.5 py-0.5 rounded border border-amber-200 shrink-0">
-              ${sub.parroquias ? `${sub.parroquias} parr.` : sub.centros ? `${sub.centros} centros` : 'Ver'}
-            </span>
+            <div class="flex items-center gap-1 shrink-0 ml-1">
+              <button type="button" 
+                      onclick="event.stopPropagation(); laminaApp.openAsignarModal('${sub.id}', '${sub.nombre.replace(/'/g, "\\'")}', '${this.activeParishId || 'alto-de-los-godos'}')"
+                      class="px-1.5 py-0.5 rounded bg-amber-100 hover:bg-amber-200 text-amber-900 text-[10px] font-black border border-amber-300 shadow-2xs transition active:scale-95 cursor-pointer"
+                      title="Asignar o editar responsable">
+                ✏️ Asignar
+              </button>
+              <span class="text-[10px] font-extrabold text-amber-700 bg-amber-50 px-1.5 py-0.5 rounded border border-amber-200">
+                ${sub.parroquias ? `${sub.parroquias} parr.` : sub.centros ? `${sub.centros} centros` : 'Ver'}
+              </span>
+            </div>
           </div>
         `).join("");
       } else if (info.centrosAsignados && info.centrosAsignados.length > 0) {

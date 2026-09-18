@@ -261,6 +261,51 @@ html, body {
   color: #0f172a;
 }
 
+/* Etiqueta Flotante sobre Polígono de Eje (Pantalla 100 Pulgadas) */
+.eje-polygon-label-marker {
+  pointer-events: none !important;
+  background: transparent !important;
+  border: none !important;
+}
+.eje-polygon-label {
+  display: inline-block;
+  background: rgba(15, 23, 42, 0.94);
+  backdrop-filter: blur(8px);
+  color: #ffffff;
+  padding: 5px 12px;
+  border-radius: 10px;
+  border: 1.5px solid #f59e0b;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 11.5px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  text-align: center;
+  white-space: nowrap;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+  pointer-events: none !important;
+}
+
+.sector-polygon-label {
+  display: inline-block;
+  background: rgba(15, 23, 42, 0.88);
+  backdrop-filter: blur(6px);
+  color: #f8fafc;
+  padding: 3px 8px;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  font-family: var(--font-sans);
+  font-weight: 800;
+  font-size: 10px;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  text-align: center;
+  white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  pointer-events: none !important;
+}
+
+
 
 /* ==========================================================================
    BARRA CARTOGRÁFICA INFERIOR (DATUM Y ESCALA)

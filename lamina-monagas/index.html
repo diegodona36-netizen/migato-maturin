@@ -36,7 +36,7 @@
   <script src="../centros-maturin/js/centrosData.js"></script>
 
   <!-- Estilos de Lámina Ejecutiva 120" -->
-  <link rel="stylesheet" href="css/lamina.css?v=237" />
+  <link rel="stylesheet" href="css/lamina.css?v=238" />
 
   <!-- Anti-Cache Meta Tags -->
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate, max-age=0" />
@@ -238,6 +238,12 @@
                 En Guardia
               </span>
             </div>
+
+            <!-- Botón de Asignación / Edición Directa -->
+            <button type="button" id="btn-open-asignar-modal" class="mt-2 w-full py-1 px-2 rounded-lg bg-amber-500 hover:bg-amber-600 text-slate-950 font-black text-xs uppercase flex items-center justify-center gap-1.5 shadow-xs transition active:scale-95 cursor-pointer">
+              <i data-lucide="user-plus" class="w-3.5 h-3.5"></i>
+              <span>Asignar / Editar Responsable</span>
+            </button>
           </div>
         </div>
 
@@ -315,9 +321,90 @@
     </div>
   </footer>
 
+  <!-- MODAL DE ASIGNACIÓN DIRECTA DE COMANDO SECTORIAL -->
+  <div id="modal-asignar-comando" class="fixed inset-0 z-[2000] bg-slate-950/70 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-2xl border-2 border-slate-800 w-full max-w-md overflow-hidden transform transition-all">
+      <!-- Encabezado Modal -->
+      <div class="bg-gradient-to-r from-[#1d1554] to-[#2d1f85] text-white p-4 flex items-center justify-between">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-xl bg-amber-500/20 border border-amber-400/40 text-amber-300 flex items-center justify-center">
+            <i data-lucide="shield-check" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h3 class="font-black text-sm uppercase tracking-tight text-white" id="modal-asignar-title">
+              Asignar Comando Sectorial
+            </h3>
+            <span class="text-[11px] font-mono text-amber-300/90 block" id="modal-asignar-subtitle">
+              Eje o Circuito Comunal
+            </span>
+          </div>
+        </div>
+        <button type="button" id="btn-close-modal-asignar" class="text-slate-300 hover:text-white p-1 rounded-lg hover:bg-white/10 text-xl font-bold cursor-pointer">
+          ✕
+        </button>
+      </div>
+
+      <!-- Formulario de 4 Campos -->
+      <form id="form-asignar-comando" class="p-5 space-y-3.5">
+        <input type="hidden" id="input-asignar-id" value="">
+        <input type="hidden" id="input-asignar-parroquia" value="">
+
+        <div>
+          <label class="text-xs font-black uppercase text-slate-700 tracking-wider block mb-1">
+            Nombre y Apellido del Responsable *
+          </label>
+          <input type="text" id="input-asignar-nombre" required placeholder="Ej: Carlos Mendoza"
+                 class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-sm font-bold text-slate-900 focus:outline-none focus:border-amber-500 focus:bg-white transition">
+        </div>
+
+        <div>
+          <label class="text-xs font-black uppercase text-slate-700 tracking-wider block mb-1">
+            Teléfono / WhatsApp *
+          </label>
+          <input type="tel" id="input-asignar-telefono" required placeholder="Ej: 0412-1234567"
+                 class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-sm font-mono font-bold text-slate-900 focus:outline-none focus:border-amber-500 focus:bg-white transition">
+        </div>
+
+        <div class="grid grid-cols-2 gap-2.5">
+          <div>
+            <label class="text-xs font-black uppercase text-slate-700 tracking-wider block mb-1">
+              Cargo / Rol
+            </label>
+            <select id="input-asignar-cargo" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-2.5 py-2 text-xs font-bold text-slate-900 focus:outline-none focus:border-amber-500 focus:bg-white transition">
+              <option value="Jefe de Comando Sectorial">Jefe de Comando Sectorial</option>
+              <option value="Coordinador de Eje Comunal">Coordinador de Eje Comunal</option>
+              <option value="Testigo Principal CNE">Testigo Principal CNE</option>
+              <option value="Enlace de Movilización">Enlace de Movilización</option>
+              <option value="Responsable de Sector">Responsable de Sector</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="text-xs font-black uppercase text-slate-700 tracking-wider block mb-1">
+              Cédula / Profesión
+            </label>
+            <input type="text" id="input-asignar-profesion" placeholder="Ej: V-18.452.120 / Docente"
+                   class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs font-medium text-slate-900 focus:outline-none focus:border-amber-500 focus:bg-white transition">
+          </div>
+        </div>
+
+        <!-- Botones de Acción -->
+        <div class="flex items-center gap-2 pt-2 border-t border-slate-200">
+          <button type="button" id="btn-cancel-asignar" class="flex-1 py-2.5 rounded-xl border border-slate-300 text-slate-700 font-black text-xs uppercase hover:bg-slate-100 transition cursor-pointer">
+            Cancelar
+          </button>
+          <button type="submit" class="flex-1 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-black text-xs uppercase shadow-sm transition active:scale-95 cursor-pointer flex items-center justify-center gap-1.5">
+            <i data-lucide="check" class="w-4 h-4"></i>
+            <span>Guardar Asignación</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <!-- 5. AUTENTICACIÓN Y CONTROLADOR PRINCIPAL DEL MÓDULO -->
   <script src="../js/auth.js"></script>
-  <script type="module" src="js/laminaApp.js?v=237"></script>
+  <script type="module" src="js/laminaApp.js?v=238"></script>
   <script>
     if (window.lucide && typeof window.lucide.createIcons === 'function') {
       window.lucide.createIcons();
