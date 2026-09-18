@@ -886,14 +886,15 @@ export class LaminaApp {
       }
     });
 
-    // 2. DIBUJAR LOS POLÍGONOS DE LOS SECTORES DE ESTE EJE
+    // 2. DIBUJAR ÚNICAMENTE LOS POLÍGONOS DE LOS SECTORES QUE PERTENECEN A ESTE EJE
+    const isLaPuente = String(spId).toLowerCase().includes("puente") || String(spId).includes("6") || String(spId).includes("SUBPAR");
     const childSectores = poligonos.filter(p => {
       if (p.subParroquiaId && String(p.subParroquiaId) === String(spId)) return true;
-      if (String(spId).toLowerCase().includes("puente") || String(spId).includes("6") || String(spId).includes("SUBPAR")) return true;
+      if (isLaPuente && (String(p.id).startsWith("POLY-") || p.subParroquiaId === "sub-godos-6" || !p.subParroquiaId)) return true;
       return false;
     });
 
-    const sectoresToRender = childSectores.length > 0 ? childSectores : poligonos;
+    const sectoresToRender = childSectores;
     sectoresToRender.forEach(sec => {
       const sCoords = sec.vertices || sec.poligono;
       if (sCoords && sCoords.length >= 3) {
@@ -1011,9 +1012,15 @@ export class LaminaApp {
       }
     });
 
-    // 2. Dibujar los demás sectores de fondo con opacidad suave
+    // 2. Dibujar los demás sectores de este mismo eje con opacidad suave
+    const isLaPuente = String(sec.subParroquiaId || sec.id || "").toLowerCase().includes("puente") || String(sec.subParroquiaId || sec.id || "").includes("6") || String(sec.id).startsWith("POLY-");
+    const activeSubParishId = sec.subParroquiaId || (isLaPuente ? "sub-godos-6" : null);
+
     poligonos.forEach(s => {
       if (String(s.id) === String(secId)) return;
+      if (activeSubParishId && s.subParroquiaId && s.subParroquiaId !== activeSubParishId) return;
+      if (!isLaPuente && (String(s.id).startsWith("POLY-") || !s.subParroquiaId)) return;
+
       const sCoords = s.vertices || s.poligono;
       if (sCoords && sCoords.length >= 3) {
         const otherSecPoly = L.polygon(sCoords, {
