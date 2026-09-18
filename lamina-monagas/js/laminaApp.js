@@ -75,8 +75,16 @@ export class LaminaApp {
       layers: [googleHybrid]
     });
 
-    // Control de zoom discreto abajo a la derecha
-    L.control.zoom({ position: "bottomright" }).addTo(this.map);
+    // Control de zoom discreto abajo a la izquierda (sobre el footer)
+    L.control.zoom({ position: "bottomleft" }).addTo(this.map);
+
+    // Rastreo dinámico de coordenadas en la barra cartográfica inferior
+    this.map.on("mousemove", (e) => {
+      const coordsEl = document.getElementById("footer-coords");
+      if (coordsEl && e.latlng) {
+        coordsEl.textContent = `LAT: ${e.latlng.lat.toFixed(4)}° N • LON: ${e.latlng.lng.toFixed(4)}° W`;
+      }
+    });
 
     // Pane exclusivo para el Velo Blanco exterior (z-index 450, no intercepta clics del usuario)
     this.map.createPane("spotlightPane");
@@ -318,6 +326,8 @@ export class LaminaApp {
       normalizedRings = rings;
     }
 
+    if (!normalizedRings || normalizedRings.length === 0) return;
+
     // 1. Polígono Inverso: WORLD_BOX exterior + anillos interiores recortados
     const maskPoly = L.polygon([WORLD_BOX, ...normalizedRings], {
       pane: "spotlightPane",
@@ -546,34 +556,6 @@ export class LaminaApp {
     this.updateBreadcrumbs();
     auditLogger.logEvent("SELECCION_MUNICIPIO", { municipioId: cleanMunId, nombre: munObj.nombre });
   }
-
-  // 3. NIVEL PARROQUIA (ALTO DE LOS GODOS, LA PICA, SAN SIMÓN, ETC.)
-  selectParroquia(parishId, munId = "maturin") {
-    this.level = "parroquia";
-    this.activeMunId = munId;
-    this.activeParishId = parishId;
-    this.activeSubParishId = null;
-    this.activeSectorId = null;
-
-    const cleanMunId = String(munId).toLowerCase().replace(/_/g, "-").trim();
-    const cleanPId = String(parishId).toLowerCase().replace(/_/g, "-").trim();
-    const resolvedPId = resolveParishId(cleanPId);
-    const pColor = getParishColor(resolvedPId);
-
-    // Localizar geometría de la parroquia
-    const feat = (GEO_PARROQUIAS_OFICIAL.features || []).find(f => {
-      const id = String(f.properties?.id || "").toLowerCase().replace(/_/g, "-").trim();
-      return id === cleanPId || id === resolvedPId || resolveParishId(id) === resolvedPId;
-    });
-
-    const rings = feat ? this.geoJsonCoordsToLeaflet(feat.geometry) : [];
-
-    // APLICAR EL RECORTE EXACTO DEL VELO BLANCO A ESTA PARROQUIA
-    this.applySpotlightMask(rings, pColor, 4);
-    this.childEntitiesLayer.clearLayers();
-    this.centrosLayer.clearLayers();
-
-    const pName = feat?.properties?.nombre || (CATALOGO_MONAGAS.find(m => m.id === cleanMunId)?.parroquias || []).find(p => p.id === cleanPId)?.nombre || cleanPId;
 
   /**
    * Obtiene las subparroquias y polígonos comunitarios idénticos al Módulo 4 (Earth Monagas)
@@ -1267,7 +1249,15 @@ export class LaminaApp {
   }
 }
 
-// Inicialización Automática
-document.addEventListener("DOMContentLoaded", () => {
-  new LaminaApp();
-});
+// Inicialización Segura y Exposición Global para Pantallas de Alta Resolución
+function initLaminaApp() {
+  if (!window.laminaApp) {
+    window.laminaApp = new LaminaApp();
+  }
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", initLaminaApp);
+} else {
+  initLaminaApp();
+}

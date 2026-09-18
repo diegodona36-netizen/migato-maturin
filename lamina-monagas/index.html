@@ -36,7 +36,7 @@
   <script src="../centros-maturin/js/centrosData.js"></script>
 
   <!-- Estilos de Lámina Ejecutiva 120" -->
-  <link rel="stylesheet" href="css/lamina.css?v=239" />
+  <link rel="stylesheet" href="css/lamina.css?v=240" />
 
   <!-- Anti-Cache Meta Tags -->
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate, max-age=0" />
@@ -307,17 +307,25 @@
     </div>
   </aside>
 
-  <!-- 4. BARRA CARTOGRÁFICA INFERIOR (DATUM Y ESCALA) -->
-  <footer id="lamina-footer">
-    <div class="flex items-center gap-2">
-      <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-      <span>DATUM: WGS-84 / PROYECCIÓN CARTOGRÁFICA MERCATOR</span>
+  <!-- 4. BARRA CARTOGRÁFICA INFERIOR (DATUM, COORDENADAS Y TRAZABILIDAD OFICIAL) -->
+  <footer id="lamina-footer" class="no-print">
+    <div class="flex items-center gap-2 text-[11px] font-bold">
+      <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shrink-0"></span>
+      <span class="text-slate-800">DATUM: <strong class="text-slate-950 font-black">SIRGAS-REGVEN / WGS-84</strong> • UTM HUSO 20N</span>
+      <span class="text-slate-300 mx-1 hidden sm:inline">|</span>
+      <span id="footer-coords" class="font-mono text-sky-900 font-bold hidden sm:inline">LAT: 9.7469° N • LON: -63.1812° W</span>
     </div>
-    <div class="font-black text-slate-900 tracking-wider">
-      MIGATO - GANAMOS TODOS • DIVISIÓN DE CIENCIA Y TECNOLOGÍA • MONAGAS 2026
+    <div class="hidden xl:flex items-center gap-2 font-black text-slate-900 tracking-wider text-xs">
+      <span class="text-amber-500">★</span>
+      <span>MIGATO GANAMOS TODOS</span>
+      <span class="text-slate-400 font-normal">•</span>
+      <span class="text-slate-700">DIVISIÓN DE CIENCIA Y TECNOLOGÍA</span>
+      <span class="text-slate-400 font-normal">•</span>
+      <span class="text-sky-700">MONAGAS 2026</span>
     </div>
-    <div class="text-sky-700">
-      COBERTURA SATELITAL: 100% ALTA RESOLUCIÓN
+    <div class="flex items-center gap-2 text-sky-900 font-black text-[11px]">
+      <span class="w-2 h-2 rounded-xs bg-sky-600 shrink-0"></span>
+      <span>SATÉLITE HD 100% • ALTA RESOLUCIÓN</span>
     </div>
   </footer>
 
@@ -404,7 +412,7 @@
 
   <!-- 5. AUTENTICACIÓN Y CONTROLADOR PRINCIPAL DEL MÓDULO -->
   <script src="../js/auth.js"></script>
-  <script type="module" src="js/laminaApp.js?v=239"></script>
+  <script type="module" src="js/laminaApp.js?v=240"></script>
   <script>
     if (window.lucide && typeof window.lucide.createIcons === 'function') {
       window.lucide.createIcons();
