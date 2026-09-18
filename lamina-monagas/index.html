@@ -36,7 +36,7 @@
   <script src="../centros-maturin/js/centrosData.js"></script>
 
   <!-- Estilos de Lámina Ejecutiva 120" -->
-  <link rel="stylesheet" href="css/lamina.css?v=241" />
+  <link rel="stylesheet" href="css/lamina.css?v=242" />
 
   <!-- Anti-Cache Meta Tags -->
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate, max-age=0" />
@@ -52,45 +52,38 @@
   <header id="lamina-header">
     
     <!-- Bloque Institucional Izquierdo -->
-    <div class="lamina-header-card flex items-center gap-3">
+    <div class="lamina-header-card flex items-center gap-3 shrink-0">
       <img src="../assets/logo-migato.png" alt="MIGATO" class="w-10 h-10 object-contain shrink-0" onerror="this.style.display='none'">
       <div>
-        <span class="text-xs font-black uppercase tracking-wider text-amber-600 block leading-none mb-1">
+        <span class="text-xs font-black uppercase tracking-wider text-[#1e1261] block leading-none mb-1">
           MIGATO • GANAMOS TODOS
         </span>
-        <h1 class="text-base font-black text-slate-950 uppercase tracking-tight flex items-center gap-1.5 leading-none mb-1">
-          <span>DIVISIÓN DE CIENCIA Y TECNOLOGÍA</span>
-          <span class="w-2 h-2 rounded-full bg-emerald-500 shrink-0 animate-pulse" title="Sistema Activo en Tiempo Real"></span>
+        <h1 class="text-sm font-black text-slate-900 uppercase tracking-tight leading-none mb-1">
+          DIVISIÓN DE CIENCIA Y TECNOLOGÍA
         </h1>
-        <span class="text-xs font-bold text-sky-800 block leading-tight">
-          Sala Situacional • Cartografía Estratégica 2026
+        <span class="text-[11px] font-semibold text-slate-500 block leading-tight">
+          Cartografía Estratégica Oficial • Monagas
         </span>
       </div>
     </div>
 
     <!-- Bloque Central: Título Dinámico de la Entidad y Migas de Pan -->
-    <div class="lamina-header-card flex flex-col items-center justify-center text-center px-6">
-      <h2 id="lamina-entity-title" class="font-display text-base sm:text-base font-black text-slate-950 uppercase tracking-tight">
+    <div class="lamina-header-card flex flex-col items-center justify-center text-center px-6 min-w-[280px]">
+      <h2 id="lamina-entity-title" class="font-display text-base font-black text-slate-900 uppercase tracking-tight leading-snug">
         MUNICIPIO MATURÍN
       </h2>
-      <span id="lamina-entity-subtitle" class="text-base font-extrabold text-slate-500 uppercase tracking-wider mb-1">
+      <span id="lamina-entity-subtitle" class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">
         ESTADO MONAGAS • 11 PARROQUIAS OFICIALES
       </span>
       <!-- Migas de Pan Interactivas -->
-      <div id="lamina-breadcrumbs" class="flex items-center gap-1.5 text-base">
+      <div id="lamina-breadcrumbs" class="flex items-center justify-center flex-wrap gap-1.5 text-xs">
         <!-- Inyectado dinámicamente -->
       </div>
     </div>
 
     <!-- Bloque de Controles Rápidos Derecho -->
-    <div class="lamina-header-card flex items-center gap-2 no-print">
-      <!-- Indicador de Sala Situacional Limpio y Oficial (Sin IPs) -->
-      <div id="session-audit-badge" class="hidden lg:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-50 border border-emerald-200 text-xs font-bold text-emerald-900">
-        <span class="w-2 h-2 rounded-full bg-emerald-500 shrink-0 animate-pulse"></span>
-        <span>Sala Situacional • MIGATO 2026</span>
-      </div>
-
-      <button type="button" onclick="window.print()" class="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-black text-sm flex items-center gap-1.5 shadow-sm transition active:scale-95 cursor-pointer" title="Exportar Lámina a PDF o Imprimir">
+    <div class="lamina-header-card flex items-center gap-2 shrink-0 no-print">
+      <button type="button" onclick="window.print()" class="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-black text-xs flex items-center gap-1.5 shadow-sm transition active:scale-95 cursor-pointer" title="Exportar Lámina a PDF o Imprimir">
         <i data-lucide="printer" class="w-3.5 h-3.5 text-amber-400"></i>
         <span>Imprimir / PDF</span>
       </button>
@@ -99,7 +92,7 @@
         <i data-lucide="maximize" class="w-4 h-4"></i>
       </button>
 
-      <a href="../earth-monagas/" class="px-2.5 py-1.5 rounded-xl bg-sky-50 hover:bg-sky-100 text-sky-800 border border-sky-200 font-bold text-base flex items-center gap-1 transition" title="Abrir en Editor GIS Satelital">
+      <a href="../earth-monagas/" class="px-2.5 py-1.5 rounded-xl bg-sky-50 hover:bg-sky-100 text-sky-800 border border-sky-200 font-bold text-xs flex items-center gap-1 transition" title="Abrir en Editor GIS Satelital">
         <i data-lucide="globe" class="w-3.5 h-3.5"></i>
         <span class="hidden sm:inline">Modo GIS</span>
       </a>
@@ -112,7 +105,7 @@
         <i data-lucide="home" class="w-4 h-4"></i>
       </a>
 
-      <button type="button" id="btn-toggle-contrast" class="px-2.5 py-1.5 rounded-xl bg-[#1d1554] hover:bg-[#23176d] text-amber-400 border border-amber-500/40 text-sm font-bold flex items-center gap-1.5 shadow transition active:scale-95" title="Alto contraste" aria-label="Activar modo alto contraste">
+      <button type="button" id="btn-toggle-contrast" class="px-2.5 py-1.5 rounded-xl bg-[#1d1554] hover:bg-[#23176d] text-amber-400 border border-amber-500/40 text-xs font-bold flex items-center gap-1.5 shadow transition active:scale-95" title="Alto contraste" aria-label="Activar modo alto contraste">
         <span aria-hidden="true">◐</span>
         <span class="hidden sm:inline">Contraste</span>
       </button>
@@ -159,10 +152,19 @@
       <!-- VISTA 1: FICHA DE ESTADÍSTICAS Y LISTA CROMÁTICA -->
       <div id="side-stats-section" class="flex flex-col flex-1 min-h-0 gap-2">
         
-        <!-- Nivel y Código Oficial -->
-        <div class="flex items-center justify-between text-base font-bold text-slate-600">
-          <span id="side-entity-type">Resumen Municipal Oficial</span>
-          <span id="side-entity-code" class="font-mono text-sky-700 font-extrabold">11 PARROQUIAS</span>
+        <!-- Nivel, Ubicación y Código Oficial -->
+        <div class="flex items-center justify-between gap-2 pb-2 border-b border-slate-100 shrink-0">
+          <div class="flex flex-col min-w-0 flex-1">
+            <span id="side-entity-type" class="text-xs font-black text-slate-900 uppercase tracking-tight truncate">
+              Resumen Municipal Oficial
+            </span>
+            <span id="side-entity-sub" class="text-[11px] font-semibold text-slate-500 truncate">
+              Estado Monagas • 11 Parroquias
+            </span>
+          </div>
+          <span id="side-entity-code" class="px-2 py-0.5 rounded-full bg-slate-100 text-slate-700 text-[10px] font-mono font-bold shrink-0 border border-slate-200">
+            11 PARROQUIAS
+          </span>
         </div>
 
         <!-- 4 Métricas Clave -->
@@ -391,7 +393,7 @@
 
   <!-- 5. AUTENTICACIÓN Y CONTROLADOR PRINCIPAL DEL MÓDULO -->
   <script src="../js/auth.js"></script>
-  <script type="module" src="js/laminaApp.js?v=241"></script>
+  <script type="module" src="js/laminaApp.js?v=242"></script>
   <script>
     if (window.lucide && typeof window.lucide.createIcons === 'function') {
       window.lucide.createIcons();

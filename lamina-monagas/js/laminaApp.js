@@ -553,6 +553,7 @@ export class LaminaApp {
       title: `MUNICIPIO ${cleanMunName.toUpperCase()}`,
       color: "#0284c7",
       type: "Resumen Municipal Oficial",
+      sub: `Estado Monagas • ${(munObj.parroquias || []).length} Parroquias`,
       code: `${(munObj.parroquias || []).length} PARROQUIAS`,
       hab: munDem?.habitantes ? munDem.habitantes.toLocaleString("es-VE") : "547,000",
       vot: munDem?.votantes ? munDem.votantes.toLocaleString("es-VE") : "346,988",
@@ -695,11 +696,74 @@ export class LaminaApp {
     const rawPName = feat?.properties?.nombre || (CATALOGO_MONAGAS.find(m => m.id === cleanMunId)?.parroquias || []).find(p => p.id === cleanPId)?.nombre || cleanPId;
     const cleanPName = formatTitleCase(rawPName);
 
-    // Obtener subparroquias y sectores para el directorio lateral
+    // Obtener subparroquias y sectores para el directorio lateral y el mapa
     const { subparroquias, poligonos } = this.getParishPolygonsData(cleanMunId, resolvedPId);
 
+    // DIBUJAR LOS POLÍGONOS DE TODAS LAS SUBPARROQUIAS (EJES) EN EL MAPA
+    if (subparroquias && subparroquias.length > 0) {
+      subparroquias.forEach(sp => {
+        const coords = sp.vertices || sp.poligono;
+        if (coords && coords.length >= 3) {
+          const spColor = sp.colorBorde || sp.color || "#8b5cf6";
+          const spPoly = L.polygon(coords, {
+            color: spColor,
+            weight: 2.2,
+            opacity: 0.95,
+            fillColor: sp.colorRelleno || spColor,
+            fillOpacity: 0.22,
+            dashArray: "4, 4"
+          });
+
+          spPoly.bindTooltip(`
+            <div style="font-family: inherit; font-size: 11px; padding: 2px;">
+              <span style="color: ${spColor}; font-weight: 800; font-size: 9.5px; text-transform: uppercase;">Sub-Parroquia / Eje</span><br>
+              <strong style="color: #0f172a; font-size: 12px; font-weight: 900;">${formatTitleCase(sp.nombre)}</strong>
+            </div>
+          `, { sticky: true, opacity: 0.95 });
+
+          spPoly.on({
+            mouseover: () => spPoly.setStyle({ weight: 3.8, fillOpacity: 0.45 }),
+            mouseout: () => spPoly.setStyle({ weight: 2.2, fillOpacity: 0.22 }),
+            click: () => this.selectSubParroquia(sp.id, cleanPId, cleanMunId)
+          });
+
+          this.childEntitiesLayer.addLayer(spPoly);
+        }
+      });
+    } else if (poligonos && poligonos.length > 0) {
+      poligonos.forEach(sec => {
+        const coords = sec.vertices || sec.poligono;
+        if (coords && coords.length >= 3) {
+          const sColor = sec.colorBorde || sec.color || "#0284c7";
+          const secPoly = L.polygon(coords, {
+            color: sColor,
+            weight: 1.8,
+            opacity: 0.9,
+            fillColor: sec.colorRelleno || sColor,
+            fillOpacity: 0.2,
+            dashArray: "3, 3"
+          });
+
+          secPoly.bindTooltip(`
+            <div style="font-family: inherit; font-size: 11px; padding: 2px;">
+              <span style="color: #0284c7; font-weight: 800; font-size: 9.5px; text-transform: uppercase;">Sector Comunitario</span><br>
+              <strong style="color: #0f172a; font-size: 12px; font-weight: 900;">${formatTitleCase(sec.nombre)}</strong>
+            </div>
+          `, { sticky: true, opacity: 0.95 });
+
+          secPoly.on({
+            mouseover: () => secPoly.setStyle({ weight: 3.2, fillOpacity: 0.4 }),
+            mouseout: () => secPoly.setStyle({ weight: 1.8, fillOpacity: 0.2 }),
+            click: () => this.selectSector(sec.id, cleanPId, cleanMunId)
+          });
+
+          this.childEntitiesLayer.addLayer(secPoly);
+        }
+      });
+    }
+
     const pDem = getParishDemographics(cleanMunId, resolvedPId);
-    this.updateHeaderUI(`PARROQUIA ${cleanPName.toUpperCase()}`, `MUNICIPIO MATURÍN • ESTADO MONAGAS • SALA SITUACIONAL 2026`);
+    this.updateHeaderUI(`PARROQUIA ${cleanPName.toUpperCase()}`, `MUNICIPIO MATURÍN • ESTADO MONAGAS`);
     
     // Preparar lista amigable de sectores/ejes para el panel lateral
     let listItems = [];
@@ -724,7 +788,8 @@ export class LaminaApp {
     this.renderSideStats({
       title: cleanPName.toUpperCase(),
       color: pColor,
-      type: `Parroquia Oficial • Municipio Maturín`,
+      type: "Parroquia Oficial",
+      sub: "Municipio Maturín • Estado Monagas",
       code: "OFICIAL CNE",
       hab: pDem?.habitantes ? pDem.habitantes.toLocaleString("es-VE") : "—",
       vot: pDem?.votantes ? pDem.votantes.toLocaleString("es-VE") : "—",
@@ -782,25 +847,46 @@ export class LaminaApp {
       this.map.flyToBounds(this.currentParishBounds, { padding: [40, 40], duration: 0.8 });
     }
 
-    // Marcador sutil y elegante en el mapa si el eje tiene punto central
-    if (eje.centro) {
-      const ejeMarker = L.circleMarker(eje.centro, {
-        radius: 8,
-        fillColor: "#a855f7",
-        fillOpacity: 0.95,
-        color: "#ffffff",
-        weight: 2
-      });
-      ejeMarker.bindTooltip(`
-        <div style="font-family: inherit; font-size: 11px; padding: 2px;">
-          <span style="color: #a855f7; font-weight: 900; font-size: 9.5px; text-transform: uppercase;">Eje Territorial</span><br>
-          <strong style="color: #0f172a; font-size: 12px;">${eje.nombre}</strong>
-        </div>
-      `, { permanent: false, sticky: true });
-      this.childEntitiesLayer.addLayer(ejeMarker);
-    }
+    // 1. DIBUJAR TODAS LAS SUBPARROQUIAS (LA SELECCIONADA DESTACADA, LAS DEMÁS DE FONDO)
+    subparroquias.forEach(sp => {
+      const coords = sp.vertices || sp.poligono;
+      if (!coords || coords.length < 3) return;
+      const isSelected = String(sp.id) === String(spId) || String(sp.nombre).toLowerCase() === String(eje.nombre).toLowerCase();
+      if (isSelected) {
+        const activeSpPoly = L.polygon(coords, {
+          color: sp.colorBorde || "#7c3aed",
+          weight: 3.5,
+          opacity: 1,
+          fillColor: sp.colorRelleno || "#a855f7",
+          fillOpacity: 0.32
+        });
+        activeSpPoly.bindTooltip(`
+          <div style="font-family: inherit; font-size: 11px; padding: 2px;">
+            <span style="color: #7c3aed; font-weight: 800; font-size: 9.5px; text-transform: uppercase;">Eje Seleccionado</span><br>
+            <strong style="color: #0f172a; font-size: 12px; font-weight: 900;">${formatTitleCase(sp.nombre)}</strong>
+          </div>
+        `, { sticky: true, opacity: 0.95 });
+        this.childEntitiesLayer.addLayer(activeSpPoly);
+      } else {
+        const otherSpPoly = L.polygon(coords, {
+          color: "#94a3b8",
+          weight: 1.2,
+          opacity: 0.65,
+          fillColor: "#cbd5e1",
+          fillOpacity: 0.08,
+          dashArray: "3, 3"
+        });
+        otherSpPoly.bindTooltip(`
+          <div style="font-family: inherit; font-size: 10px; padding: 2px;">
+            <strong style="color: #475569;">${formatTitleCase(sp.nombre)}</strong>
+          </div>
+        `, { sticky: true, opacity: 0.9 });
+        otherSpPoly.on("click", () => this.selectSubParroquia(sp.id, cleanPId, cleanMunId));
+        this.childEntitiesLayer.addLayer(otherSpPoly);
+      }
+    });
 
-    // Sectores del eje
+    // 2. DIBUJAR LOS POLÍGONOS DE LOS SECTORES DE ESTE EJE
     const childSectores = poligonos.filter(p => {
       if (p.subParroquiaId && String(p.subParroquiaId) === String(spId)) return true;
       if (String(spId).toLowerCase().includes("puente") || String(spId).includes("6") || String(spId).includes("SUBPAR")) return true;
@@ -808,13 +894,51 @@ export class LaminaApp {
     });
 
     const sectoresToRender = childSectores.length > 0 ? childSectores : poligonos;
+    sectoresToRender.forEach(sec => {
+      const sCoords = sec.vertices || sec.poligono;
+      if (sCoords && sCoords.length >= 3) {
+        const secPoly = L.polygon(sCoords, {
+          color: sec.colorBorde || sec.color || "#0284c7",
+          weight: 1.8,
+          opacity: 0.95,
+          fillColor: sec.colorRelleno || sec.color || "#38bdf8",
+          fillOpacity: 0.28
+        });
+        secPoly.bindTooltip(`
+          <div style="font-family: inherit; font-size: 11px; padding: 2px;">
+            <span style="color: #0284c7; font-weight: 800; font-size: 9.5px; text-transform: uppercase;">Sector Comunitario</span><br>
+            <strong style="color: #0f172a; font-size: 12px; font-weight: 900;">${formatTitleCase(sec.nombre)}</strong>
+          </div>
+        `, { sticky: true, opacity: 0.95 });
+        secPoly.on({
+          mouseover: () => secPoly.setStyle({ weight: 3.2, fillOpacity: 0.5 }),
+          mouseout: () => secPoly.setStyle({ weight: 1.8, fillOpacity: 0.28 }),
+          click: () => this.selectSector(sec.id, cleanPId, cleanMunId)
+        });
+        this.childEntitiesLayer.addLayer(secPoly);
+      }
+    });
+
+    // Marcador central opcional
+    if (eje.centro) {
+      const ejeMarker = L.circleMarker(eje.centro, {
+        radius: 7,
+        fillColor: "#a855f7",
+        fillOpacity: 0.95,
+        color: "#ffffff",
+        weight: 2
+      });
+      this.childEntitiesLayer.addLayer(ejeMarker);
+    }
+
     const cleanPName = formatTitleCase(cleanPId);
 
-    this.updateHeaderUI(`${eje.nombre.toUpperCase()}`, `PARROQUIA ${cleanPName.toUpperCase()} • MUNICIPIO MATURÍN`);
+    this.updateHeaderUI(`${formatTitleCase(eje.nombre).toUpperCase()}`, `PARROQUIA ${cleanPName.toUpperCase()} • MUNICIPIO MATURÍN`);
     this.renderSideStats({
-      title: eje.nombre.toUpperCase(),
+      title: formatTitleCase(eje.nombre).toUpperCase(),
       color: eje.colorBorde || "#a855f7",
-      type: `Eje Comunal • Parroquia ${cleanPName}`,
+      type: "Eje Comunal / Sub-Parroquia",
+      sub: `Parroquia ${cleanPName} • Maturín`,
       code: "TERRITORIO",
       hab: eje.habitantes ? eje.habitantes.toLocaleString("es-VE") : "16,162",
       vot: eje.electores ? eje.electores.toLocaleString("es-VE") : "10,728",
@@ -855,7 +979,7 @@ export class LaminaApp {
     this.childEntitiesLayer.clearLayers();
     this.centrosLayer.clearLayers();
 
-    const { poligonos } = this.getParishPolygonsData(cleanMunId, cleanPId);
+    const { subparroquias, poligonos } = this.getParishPolygonsData(cleanMunId, cleanPId);
     let sec = poligonos.find(s => String(s.id) === String(secId) || String(s.nombre).toLowerCase() === String(secId).toLowerCase()) || findSectorById(secId);
     if (!sec) {
       sec = { id: secId, nombre: secId };
@@ -870,8 +994,60 @@ export class LaminaApp {
       this.map.flyToBounds(this.currentParishBounds, { padding: [40, 40], duration: 0.8 });
     }
 
-    // Marcador de ubicación para el sector en el mapa de la parroquia
+    // 1. Dibujar las subparroquias de fondo con trazo sutil
+    subparroquias.forEach(sp => {
+      const coords = sp.vertices || sp.poligono;
+      if (coords && coords.length >= 3) {
+        const otherSp = L.polygon(coords, {
+          color: "#94a3b8",
+          weight: 1,
+          opacity: 0.5,
+          fillColor: "#cbd5e1",
+          fillOpacity: 0.05,
+          dashArray: "3, 3"
+        });
+        otherSp.on("click", () => this.selectSubParroquia(sp.id, cleanPId, cleanMunId));
+        this.childEntitiesLayer.addLayer(otherSp);
+      }
+    });
+
+    // 2. Dibujar los demás sectores de fondo con opacidad suave
+    poligonos.forEach(s => {
+      if (String(s.id) === String(secId)) return;
+      const sCoords = s.vertices || s.poligono;
+      if (sCoords && sCoords.length >= 3) {
+        const otherSecPoly = L.polygon(sCoords, {
+          color: "#94a3b8",
+          weight: 1.2,
+          opacity: 0.6,
+          fillColor: "#e2e8f0",
+          fillOpacity: 0.15
+        });
+        otherSecPoly.bindTooltip(`<strong>${formatTitleCase(s.nombre)}</strong>`, { sticky: true, opacity: 0.85 });
+        otherSecPoly.on("click", () => this.selectSector(s.id, cleanPId, cleanMunId));
+        this.childEntitiesLayer.addLayer(otherSecPoly);
+      }
+    });
+
+    // 3. Destacar el polígono del sector seleccionado con máxima nitidez
     const sCoords = sec.vertices || sec.poligono;
+    if (sCoords && sCoords.length >= 3) {
+      const secPoly = L.polygon(sCoords, {
+        color: sec.colorBorde || sec.color || "#0284c7",
+        weight: 3.8,
+        opacity: 1,
+        fillColor: sec.colorRelleno || sec.color || "#38bdf8",
+        fillOpacity: 0.55
+      });
+      secPoly.bindTooltip(`
+        <div style="font-family: inherit; font-size: 11px; padding: 2px;">
+          <span style="color: #0284c7; font-weight: 900; font-size: 9.5px; text-transform: uppercase;">Sector Seleccionado</span><br>
+          <strong style="color: #0f172a; font-size: 12px; font-weight: 900;">${formatTitleCase(sec.nombre)}</strong>
+        </div>
+      `, { permanent: true, direction: "top", offset: [0, -6] });
+      this.childEntitiesLayer.addLayer(secPoly);
+    }
+
     let markerPos = sec.centro;
     if (!markerPos && sCoords && sCoords.length > 0) {
       const avgLat = sCoords.reduce((sum, p) => sum + p[0], 0) / sCoords.length;
@@ -881,18 +1057,12 @@ export class LaminaApp {
 
     if (markerPos) {
       const secMarker = L.circleMarker(markerPos, {
-        radius: 7,
+        radius: 6,
         fillColor: sec.colorBorde || sec.color || "#0284c7",
         fillOpacity: 0.95,
         color: "#ffffff",
         weight: 2
       });
-      secMarker.bindTooltip(`
-        <div style="font-family: inherit; font-size: 11px; padding: 2px;">
-          <span style="color: #0284c7; font-weight: 900; font-size: 9.5px; text-transform: uppercase;">Sector Comunitario</span><br>
-          <strong style="color: #0f172a; font-size: 12px;">${formatTitleCase(sec.nombre)}</strong>
-        </div>
-      `, { permanent: true, direction: "top", offset: [0, -6] });
       this.childEntitiesLayer.addLayer(secMarker);
     }
 
@@ -903,7 +1073,8 @@ export class LaminaApp {
     this.renderSideStats({
       title: `SECTOR ${cleanSecName.toUpperCase()}`,
       color: sec.colorBorde || sec.color || pColor,
-      type: `Sector Comunitario • Parroquia ${cleanPName}`,
+      type: "Sector Comunitario",
+      sub: `Parroquia ${cleanPName} • Maturín`,
       code: "CENSADO",
       hab: sec.habitantes ? sec.habitantes.toLocaleString("es-VE") : "2,450",
       vot: sec.electores ? sec.electores.toLocaleString("es-VE") : "1,200",
@@ -1035,6 +1206,7 @@ export class LaminaApp {
     const badgeEl = document.getElementById("side-badge-color");
     const titleEl = document.getElementById("side-entity-title");
     const typeEl = document.getElementById("side-entity-type");
+    const subEl = document.getElementById("side-entity-sub");
     const codeEl = document.getElementById("side-entity-code");
     const habEl = document.getElementById("stat-val-hab");
     const votEl = document.getElementById("stat-val-vot");
@@ -1050,6 +1222,7 @@ export class LaminaApp {
     }
     if (titleEl) titleEl.textContent = data.title;
     if (typeEl) typeEl.textContent = data.type;
+    if (subEl) subEl.textContent = data.sub || "";
     if (codeEl) codeEl.textContent = data.code;
 
     if (habEl) habEl.textContent = data.hab;
