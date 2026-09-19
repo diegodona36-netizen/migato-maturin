@@ -82,27 +82,6 @@ export const MONAGAS_DEMO_DATA = {
                 { id: "POL-GOD-004", nombre: "La Puente Sector 4 (Quebrada)", casas: 590, familias: 720, habitantes: 2240, votantes: 1500, centroVotacion: "E.B. Cacique Guanaguanay", cobertura: 97 },
                 { id: "POL-GOD-005", nombre: "Villas de La Puente", casas: 390, familias: 470, habitantes: 1480, votantes: 990, centroVotacion: "C.E.I. Los Samanes", cobertura: 100 }
               ]
-            },
-            {
-              id: "sub-godos-central",
-              nombre: "Eje 1 • Los Godos Casco Viejo - Fundemos",
-              codigo: "EJE-GOD-01",
-              sectores: [
-                { id: "POL-GOD-006", nombre: "Los Godos 1", casas: 680, familias: 820, habitantes: 2580, votantes: 1730, centroVotacion: "Liceo Los Godos", cobertura: 100 },
-                { id: "POL-GOD-007", nombre: "Los Godos 2", casas: 720, familias: 870, habitantes: 2740, votantes: 1830, centroVotacion: "E.B. Félix Armando Núñez", cobertura: 99 },
-                { id: "POL-GOD-008", nombre: "Fundemos I", casas: 510, familias: 620, habitantes: 1940, votantes: 1300, centroVotacion: "U.E. Fundemos", cobertura: 98 },
-                { id: "POL-GOD-009", nombre: "Fundemos II", casas: 470, familias: 570, habitantes: 1790, votantes: 1200, centroVotacion: "U.E. Fundemos", cobertura: 96 }
-              ]
-            },
-            {
-              id: "sub-godos-morichal",
-              nombre: "Eje 4 • Morichal - Los Guaros",
-              codigo: "EJE-GOD-04",
-              sectores: [
-                { id: "POL-GOD-010", nombre: "Morichal Sector Grande", casas: 810, familias: 980, habitantes: 3080, votantes: 2060, centroVotacion: "U.E. José Antonio Páez", cobertura: 100 },
-                { id: "POL-GOD-011", nombre: "Morichalito", casas: 430, familias: 520, habitantes: 1630, votantes: 1090, centroVotacion: "E.B. Morichal", cobertura: 98 },
-                { id: "POL-GOD-012", nombre: "Los Guaros Central", casas: 620, familias: 750, habitantes: 2360, votantes: 1580, centroVotacion: "C.E.I. Los Guaros", cobertura: 100 }
-              ]
             }
           ]
         },

@@ -206,18 +206,15 @@ class ComandosApp {
 
     let subparroquias = parish?.subparroquias ? [...parish.subparroquias] : [];
 
-    // Caso especial Alto de los Godos: enriquecer con SUBPARROQUIAS_GODOS
+    // Caso especial Alto de los Godos: únicamente Sub-Parroquia 6 La Puente
     if (this.currentParishId === "alto-de-los-godos") {
-      const existingIds = new Set(subparroquias.map(s => s.id));
-      SUBPARROQUIAS_GODOS.forEach(sg => {
-        if (!existingIds.has(sg.id)) {
-          subparroquias.push({
-            id: sg.id,
-            nombre: sg.nombre,
-            sectores: []
-          });
+      subparroquias = [
+        {
+          id: "SUBPAR-1788965549962",
+          nombre: "Sub-Parroquia 6 • La Puente",
+          sectores: []
         }
-      });
+      ];
     }
 
     // Si viene un sector preseleccionado (sec), buscar a qué eje pertenece para auto-enfocarlo

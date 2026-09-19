@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Dictamen Técnico y Presupuesto de Servidor Físico • MIGATO 2026</title>
+  <style>
+    @page {
+      size: letter portrait;
+      margin: 18mm 18mm 20mm 18mm;
+    }
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      color: #0f172a;
+      line-height: 1.5;
+      font-size: 10.5pt;
+      margin: 0;
+      padding: 0;
+      background: #ffffff;
+    }
+    .header-box {
+      text-align: center;
+      border-bottom: 2.5px solid #0284c7;
+      padding-bottom: 12px;
+      margin-bottom: 20px;
+    }
+    .inst-title {
+      font-size: 11pt;
+      font-weight: 900;
+      color: #0f172a;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin: 0 0 4px 0;
+    }
+    .inst-sub {
+      font-size: 13pt;
+      font-weight: 900;
+      color: #0284c7;
+      margin: 0 0 4px 0;
+    }
+    .doc-title {
+      font-size: 14pt;
+      font-weight: 900;
+      color: #0f172a;
+      margin: 14px 0 0 0;
+      line-height: 1.3;
+    }
+    h1 {
+      font-size: 12pt;
+      font-weight: 900;
+      color: #0f172a;
+      border-left: 4px solid #0284c7;
+      padding-left: 8px;
+      margin: 22px 0 10px 0;
+      text-transform: uppercase;
+    }
+    h2 {
+      font-size: 11pt;
+      font-weight: 800;
+      color: #0284c7;
+      margin: 14px 0 6px 0;
+    }
+    p {
+      margin: 0 0 8px 0;
+      text-align: justify;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 12px 0;
+      font-size: 9.5pt;
+    }
+    th {
+      background: #0f172a;
+      color: #ffffff;
+      font-weight: 800;
+      text-align: left;
+      padding: 6px 8px;
+      border: 1px solid #0f172a;
+    }
+    td {
+      padding: 5px 8px;
+      border-bottom: 1px solid #e2e8f0;
+      color: #1e293b;
+    }
+    tr:nth-child(even) td {
+      background: #f8fafc;
+    }
+    .total-row td {
+      background: #fef3c7 !important;
+      font-weight: 900;
+      color: #0f172a;
+      border-top: 1.5px solid #d97706;
+      border-bottom: 1.5px solid #d97706;
+    }
+    .callout {
+      background: #f0f9ff;
+      border-left: 4px solid #0284c7;
+      padding: 10px 12px;
+      border-radius: 4px;
+      margin: 14px 0;
+      font-size: 9.5pt;
+    }
+    .callout-title {
+      font-weight: 900;
+      color: #0369a1;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+      display: block;
+    }
+    .signatures-table {
+      margin-top: 40px;
+      width: 100%;
+      border: none;
+    }
+    .signatures-table td {
+      border: none;
+      text-align: center;
+      background: transparent !important;
+      padding: 0 20px;
+    }
+    .sign-line {
+      border-top: 1.5px solid #475569;
+      display: block;
+      width: 80%;
+      margin: 0 auto 8px auto;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header-box">
+    <div class="inst-title">República Bolivariana de Venezuela • Estado Monagas</div>
+    <div class="inst-sub">MOVIMIENTO INDEPENDIENTE GANAMOS TODOS (MIGATO)</div>
+    <div style="font-size: 10pt; font-weight: 800; color: #f59e0b;">COMANDO ESTRATÉGICO DE CAMPAÑA • SALA SITUACIONAL EL GATO BRICEÑO</div>
+    <div class="doc-title">DICTAMEN TÉCNICO Y PRESUPUESTO FORMAL: INFRAESTRUCTURA DE SERVIDOR FÍSICO, ALMACENAMIENTO RAID 1 Y GATEWAY MIKROTIK</div>
+  </div>
+
+  <table style="margin-bottom: 16px;">
+    <tr><th>Campo Institucional</th><th>Detalle Oficial</th></tr>
+    <tr><td><b>Proyecto Tecnológico</b></td><td>Plataforma Territorial y Sala Situacional de Mando MIGATO 2026</td></tr>
+    <tr><td><b>Ámbito de Aplicación</b></td><td>Estado Monagas (Maturín y 13 Municipios)</td></tr>
+    <tr><td><b>Responsable Técnico</b></td><td>Ing. Diego Donado • División de Ciencia, Tecnología y Ciberdefensa</td></tr>
+    <tr><td><b>Destino del Equipamiento</b></td><td>Sede Central de Campaña y Sala Situacional de El Gato Briceño</td></tr>
+    <tr><td><b>Fuente de Cotizaciones</b></td><td>Precios Referenciales del Mercado Nacional • Mercado Libre Venezuela</td></tr>
+    <tr><td><b>Fecha de Emisión</b></td><td>Septiembre 2026</td></tr>
+  </table>
+
+  <h1>Capítulo I: Justificación de la Arquitectura de Hardware y Almacenamiento</h1>
+  <p>Para operar de forma autónoma, rápida y segura los módulos cartográficos y electorales de la plataforma MIGATO (Lámina 120", Comandos, Estimación del Voto, Earth Monagas 3D GIS y Dashboard), se ha diseñado una arquitectura adaptada a las condiciones eléctricas y operativas de Maturín, sustituyendo los servidores antiguos de alto consumo por una estación compacta de alto desempeño.</p>
+
+  <h2>1.1. Ventajas de la Plataforma Dell OptiPlex Core i7 (8va Generación)</h2>
+  <p>• <b>Alto Desempeño por Núcleo (IPC):</b> El procesador Intel Core i7-8700 (6 núcleos / 12 hilos hasta 4.6 GHz) supera a procesadores Xeon de generaciones previas en el procesamiento de transacciones web y operaciones geoespaciales PostgreSQL/PostGIS.</p>
+  <p>• <b>Eficiencia Energética (Consumo de sólo 65W):</b> Consume una fracción de la energía de un servidor de rack convencional (300W a 500W). Esto permite que el sistema de respaldo eléctrico (UPS) rinda más del doble de autonomía (45 a 60 minutos continuos) frente a los cortes de Corpoelec.</p>
+  <p>• <b>Operación Silenciosa y Compacta:</b> No genera el ruido ensordecedor de un servidor industrial ni requiere climatización forzada de centro de datos.</p>
+
+  <h2>1.2. Arquitectura de Discos 100% Estado Sólido en RAID 1 (Espejo)</h2>
+  <p>Se descarta el uso de discos mecánicos (HDD) tradicionales debido a su lentitud, fragilidad y peso. Toda la base de datos de Monagas, polígonos cartográficos y fotos de actas electorales ocupan menos de 30 GB, por lo que 1 TB SSD ofrece más de 950 GB de espacio libre excedente.</p>
+  <p>• <b>Banco de Estado Sólido Dual (2x SSD 1TB SATA en RAID 1):</b> Ambos discos operan de forma sincronizada y simultánea a nivel de bloque.</p>
+  <p>• <b>Escritura Simultánea en Espejo:</b> Cada vez que se registra un voto, un dirigente o un acta escaneada, la información se escribe al mismo microsegundo en ambos discos.</p>
+  <p>• <b>Lectura Acelerada:</b> El sistema lee de ambas unidades en paralelo, duplicando la velocidad de respuesta.</p>
+  <p>• <b>Tolerancia a Fallas Absoluta:</b> Si uno de los discos SSD llegase a fallar o quemarse, el segundo disco mantiene el servidor 100% operativo sin caída de servicio ni pérdida de información. No se requieren caddys hot-plug propietarios costosos, ya que se montan en bahías estándar internas.</p>
+
+  <h1>Capítulo II: Topología de Red, MikroTik y Switch Gigabit</h1>
+  <p>La infraestructura de red de la Sala Situacional se estructura en dos niveles fundamentales:</p>
+  <p>• <b>FLUJO DE RED:</b> Internet Proveedor 1 / Proveedor 2 ──► MikroTik hEX RB750Gr3 (Gateway/Firewall) ──► Switch Gigabit (Distribuidor) ──► Servidor Dell + PCs de Sala + Pantallas + Videovigilancia.</p>
+  <p>• <b>1. Router Gateway MikroTik hEX:</b> Actúa como la puerta de enlace física y cortafuegos perimetral blindado. Realiza conmutación automática de internet (Failover) entre dos proveedores para que la sala nunca se quede sin conexión, y provee túnel VPN seguro (WireGuard) para acceso remoto.</p>
+  <p>• <b>2. Switch Gigabit de Sala (Hikvision / TP-Link):</b> Conectado directamente a la salida LAN del MikroTik para multiplicar las bocas de red a 16 puertos Gigabit metálicos, enlazando el servidor, las computadoras de los operadores, las pantallas de sala y futuras cámaras de seguridad.</p>
+  <p>• <b>3. Bobina de Cableado Cat6 (305 metros):</b> Se incorpora una bobina completa de 305 metros de cable UTP Cat6 junto con conectores RJ45 para realizar el cableado estructurado formal de la sala, oficinas del comando y las conexiones a los equipos de cómputo y cámaras.</p>
+
+  <h1>Capítulo III: Desglose de Costos en Mercado Libre Venezuela</h1>
+  <p>A continuación se detallan los costos individuales de cada componente físico investigados en el mercado venezolano (expresados en dólares estadounidenses USD, pagaderos a la tasa oficial BCV):</p>
+
+  <table>
+    <tr>
+      <th>Componente / Dispositivo</th>
+      <th>Especificación Técnica Real</th>
+      <th style="text-align:center;">Cant.</th>
+      <th style="text-align:right;">Costo Unit.</th>
+      <th style="text-align:right;">Total (USD)</th>
+    </tr>
+    <tr>
+      <td><b>Computador Servidor Dell OptiPlex</b></td>
+      <td>Core i7 8va Gen (i7-8700 6C/12T), 32GB RAM DDR4, Chasis Torre/SFF silencioso</td>
+      <td style="text-align:center;">1</td>
+      <td style="text-align:right;">$230.00</td>
+      <td style="text-align:right;">$230.00</td>
+    </tr>
+    <tr>
+      <td><b>Discos Sólidos SSD 1TB (RAID 1)</b></td>
+      <td>2x SSD 1TB SATA 2.5" Kingston KC600 / Crucial MX500 en Espejo (Sistema & Datos)</td>
+      <td style="text-align:center;">2</td>
+      <td style="text-align:right;">$120.00</td>
+      <td style="text-align:right;">$240.00</td>
+    </tr>
+    <tr>
+      <td><b>Gateway MikroTik RouterBOARD</b></td>
+      <td>MikroTik hEX RB750Gr3 (Dual Core 880MHz, 256MB RAM, 5 Puertos Gigabit, RouterOS)</td>
+      <td style="text-align:center;">1</td>
+      <td style="text-align:right;">$105.00</td>
+      <td style="text-align:right;">$105.00</td>
+    </tr>
+    <tr>
+      <td><b>Switch de Distribución de Red</b></td>
+      <td>Switch Hikvision / TP-Link 16 Puertos Gigabit 10/100/1000 Mbps metálico</td>
+      <td style="text-align:center;">1</td>
+      <td style="text-align:right;">$65.00</td>
+      <td style="text-align:right;">$65.00</td>
+    </tr>
+    <tr>
+      <td><b>Bobina Cable UTP Cat6 (305m)</b></td>
+      <td>Bobina 305 metros Cat6 interior de alta velocidad + caja de 100 conectores RJ45</td>
+      <td style="text-align:center;">1</td>
+      <td style="text-align:right;">$95.00</td>
+      <td style="text-align:right;">$95.00</td>
+    </tr>
+    <tr>
+      <td><b>UPS de Respaldo Eléctrico</b></td>
+      <td>UPS 1.200 VA a 1.500 VA con supresor de picos (45 a 60 min autonomía con bajo consumo)</td>
+      <td style="text-align:center;">1</td>
+      <td style="text-align:right;">$165.00</td>
+      <td style="text-align:right;">$165.00</td>
+    </tr>
+    <tr class="total-row">
+      <td colspan="4"><b>TOTAL GENERAL DE INVERSIÓN FÍSICA (EQUIPAMIENTO COMPLETO)</b></td>
+      <td style="text-align:right;"><b>$900.00 USD</b></td>
+    </tr>
+  </table>
+
+  <h1>Capítulo IV: Resumen de Opciones para Decisión del Comando</h1>
+  <table>
+    <tr><th>Opción Presupuestaria</th><th>Alcance y Componentes</th><th>Autonomía Eléctrica</th><th style="text-align:right;">Inversión Total</th></tr>
+    <tr style="background:#fef3c7;">
+      <td><b>Opción 1: Recomendada ★</b></td>
+      <td>Dell OptiPlex Core i7 (8va Gen 6C/12T), 32GB RAM + 2x SSD 1TB RAID 1 + MikroTik hEX + Switch 16p + Cat6 305m + UPS 1.500VA</td>
+      <td>45 a 60 minutos (Bajo consumo 65W)</td>
+      <td style="text-align:right; color:#b45309;"><b>$900.00 USD</b></td>
+    </tr>
+    <tr>
+      <td><b>Opción 2: Entrada Básica</b></td>
+      <td>Dell OptiPlex Core i5/i7 + 16GB RAM + 1x SSD 1TB (sin espejo) + Router estándar + Switch 8p + UPS 800VA</td>
+      <td>30 a 40 minutos</td>
+      <td style="text-align:right;"><b>$520.00 USD</b></td>
+    </tr>
+    <tr>
+      <td><b>Opción 3: Servidor Tradicional (Descartada)</b></td>
+      <td>Servidor Dell PowerEdge antiguo (Doble Xeon 350W) + Discos Mecánicos SAS + Caddys + UPS 2.000VA</td>
+      <td>20 a 30 minutos (Agotamiento rápido UPS)</td>
+      <td style="text-align:right;"><b>$2,480.00 USD</b></td>
+    </tr>
+  </table>
+
+  <div class="callout">
+    <span class="callout-title">Dictamen Técnico y Recomendación:</span>
+    Se recomienda formalmente la <b>APROBACIÓN DE LA OPCIÓN 1: ARQUITECTURA OPTIMIZADA ($900.00 USD)</b>. Proporciona la solución más rápida (100% SSD), tolerante a fallas (RAID 1), con conmutación de internet MikroTik, cableado estructurado completo de sala y máxima eficiencia energética (45 a 60 min de autonomía eléctrica ante apagones).
+  </div>
+
+  <h1>Capítulo V: Conformidad y Firmas Autorizadas</h1>
+  <p>El presente dictamen técnico se emite en la ciudad de Maturín, Estado Monagas, a los efectos de su evaluación y aprobación formal por parte del Comando Estratégico:</p>
+
+  <table class="signatures-table">
+    <tr>
+      <td>
+        <div style="height: 50px;"></div>
+        <span class="sign-line"></span>
+        <b>COMANDO ESTRATÉGICO MIGATO</b><br>
+        <span style="font-size: 9pt; color: #64748b;">Dirección de Operaciones • El Gato Briceño</span>
+      </td>
+      <td>
+        <div style="height: 50px;"></div>
+        <span class="sign-line"></span>
+        <b>ING. DIEGO DONADO</b><br>
+        <span style="font-size: 9pt; color: #64748b;">Responsable de Ciencia y Tecnología MIGATO</span>
+      </td>
+    </tr>
+  </table>
+
+</body>
+</html>

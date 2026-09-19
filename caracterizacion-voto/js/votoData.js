@@ -3,15 +3,18 @@
  * Técnica Electoral • Alto de Los Godos / Maturín, Monagas
  */
 
-// Sub-Parroquias y Sectores Oficiales de Alto de Los Godos
+// Sub-Parroquias y Sectores Oficiales de Alto de Los Godos (Único eje oficial digitalizado)
 export const SUBPARROQUIAS_GODOS = [
   {
     id: "sub-godos-6",
-    nombre: "Sub-Parroquia 6 • La Puente (Eje Central)",
+    nombre: "Sub-Parroquia 6 • La Puente",
     sectores: [
-      "Monagzal",
-      "Las Vírgenes",
       "Villa de los Ángeles",
+      "El Mangozal",
+      "Las Vírgenes",
+      "Hugo Chávez II",
+      "La Lucha",
+      "El Caro",
       "La Puente Sector 1 (Plaza)",
       "La Puente Sector 2 (Cancha)",
       "La Puente Sector 3 (Vialidad)",
@@ -22,104 +25,6 @@ export const SUBPARROQUIAS_GODOS = [
       "Simoncito"
     ],
     centroPrincipal: "Cruz Hernández Quijada"
-  },
-  {
-    id: "sub-godos-1",
-    nombre: "Sub-Parroquia 1 • Casco Los Godos",
-    sectores: [
-      "Los Godos 1 (Plaza)",
-      "Los Godos 2",
-      "Calle El Sol",
-      "Av. Principal Los Godos",
-      "Bloques de Los Godos"
-    ],
-    centroPrincipal: "Centro De Educación Inicial Alto De Los Godos I"
-  },
-  {
-    id: "sub-godos-2",
-    nombre: "Sub-Parroquia 2 • Morichal",
-    sectores: [
-      "Morichal Sector 1",
-      "Morichal Sector 2",
-      "Valles del Morichal",
-      "Calle Los Claveles",
-      "Brisas del Morichal"
-    ],
-    centroPrincipal: "Centro De Votación Brisas De Venezuela"
-  },
-  {
-    id: "sub-godos-3",
-    nombre: "Sub-Parroquia 3 • Fundemos",
-    sectores: [
-      "Fundemos I",
-      "Fundemos II",
-      "Fundemos III",
-      "El Tejar",
-      "Urbanización Fundemos"
-    ],
-    centroPrincipal: "Centro De Formación Integral Para El Trabajo"
-  },
-  {
-    id: "sub-godos-4",
-    nombre: "Sub-Parroquia 4 • Los Guaros",
-    sectores: [
-      "Los Guaros 1",
-      "Los Guaros 2",
-      "Calle Sucre",
-      "La Pica de Los Guaros"
-    ],
-    centroPrincipal: "Centro De Votacion San Rafael"
-  },
-  {
-    id: "sub-godos-5",
-    nombre: "Sub-Parroquia 5 • El Silencio",
-    sectores: [
-      "El Silencio Campo Alegre",
-      "Sector La Manga Godos",
-      "Calle Bolívar El Silencio"
-    ],
-    centroPrincipal: "Centro Del Niño Y La Familia Simoncito Moscu"
-  },
-  {
-    id: "sub-godos-7",
-    nombre: "Sub-Parroquia 7 • Rómulo Betancourt",
-    sectores: [
-      "Rómulo Gallegos",
-      "El Paraíso de Godos",
-      "Sector La Lagunita"
-    ],
-    centroPrincipal: "Centro De Votación La Pastora"
-  },
-  {
-    id: "sub-godos-8",
-    nombre: "Sub-Parroquia 8 • Las Brisas / Alberto Ravell",
-    sectores: [
-      "Alberto Ravell I",
-      "Alberto Ravell II",
-      "Las Brisas del Aeropuerto"
-    ],
-    centroPrincipal: "Centro Del Niño Y La Familia Bolivariano Prado Del Sur"
-  },
-  {
-    id: "sub-godos-9",
-    nombre: "Sub-Parroquia 9 • San Rafael",
-    sectores: [
-      "San Rafael Sector Arriba",
-      "San Rafael Casco",
-      "Calle Páez"
-    ],
-    centroPrincipal: "Centro De Votacion San Rafael"
-  },
-  {
-    id: "sub-godos-10",
-    nombre: "Sub-Parroquia 10 • Paramaconi",
-    sectores: [
-      "Paramaconi I",
-      "Paramaconi II",
-      "Corapal",
-      "Brisas de Paramaconi"
-    ],
-    centroPrincipal: "Centro Del Niño Y La Familia Bolivariano Nuevo Horizonte"
   }
 ];
 
