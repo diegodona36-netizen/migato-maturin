@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Dictamen Técnico y Presupuesto de Servidor Físico • MIGATO 2026</title>
+  <style>
+    @page {
+      size: letter portrait;
+      margin: 18mm 18mm 20mm 18mm;
+    }
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      color: #0f172a;
+      line-height: 1.5;
+      font-size: 10.5pt;
+      margin: 0;
+      padding: 0;
+      background: #ffffff;
+    }
+    .header-box {
+      text-align: center;
+      border-bottom: 2.5px solid #0284c7;
+      padding-bottom: 12px;
+      margin-bottom: 20px;
+    }
+    .inst-title {
+      font-size: 11pt;
+      font-weight: 900;
+      color: #0f172a;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin: 0 0 4px 0;
+    }
+    .inst-sub {
+      font-size: 13pt;
+      font-weight: 900;
+      color: #0284c7;
+      margin: 0 0 4px 0;
+    }
+    .doc-title {
+      font-size: 14pt;
+      font-weight: 900;
+      color: #0f172a;
+      margin: 14px 0 0 0;
+      line-height: 1.3;
+    }
+    h1 {
+      font-size: 12pt;
+      font-weight: 900;
+      color: #0f172a;
+      border-left: 4px solid #0284c7;
+      padding-left: 8px;
+      margin: 22px 0 10px 0;
+      text-transform: uppercase;
+    }
+    h2 {
+      font-size: 11pt;
+      font-weight: 800;
+      color: #0284c7;
+      margin: 14px 0 6px 0;
+    }
+    p {
+      margin: 0 0 8px 0;
+      text-align: justify;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 12px 0;
+      font-size: 9.5pt;
+    }
+    th {
+      background: #0f172a;
+      color: #ffffff;
+      font-weight: 800;
+      text-align: left;
+      padding: 6px 8px;
+      border: 1px solid #0f172a;
+    }
+    td {
+      padding: 5px 8px;
+      border-bottom: 1px solid #e2e8f0;
+      color: #1e293b;
+    }
+    tr:nth-child(even) td {
+      background: #f8fafc;
+    }
+    .total-row td {
+      background: #fef3c7 !important;
+      font-weight: 900;
+      color: #0f172a;
+      border-top: 1.5px solid #d97706;
+      border-bottom: 1.5px solid #d97706;
+    }
+    .callout {
+      background: #f0f9ff;
+      border-left: 4px solid #0284c7;
+      padding: 10px 12px;
+      border-radius: 4px;
+      margin: 14px 0;
+      font-size: 9.5pt;
+    }
+    .callout-title {
+      font-weight: 900;
+      color: #0369a1;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+      display: block;
+    }
+    .signatures-table {
+      margin-top: 40px;
+      width: 100%;
+      border: none;
+    }
+    .signatures-table td {
+      border: none;
+      text-align: center;
+      background: transparent !important;
+      padding: 0 20px;
+    }
+    .sign-line {
+      border-top: 1.5px solid #475569;
+      display: block;
+      width: 80%;
+      margin: 0 auto 8px auto;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header-box">
+    <div class="inst-title">República Bolivariana de Venezuela • Estado Monagas</div>
+    <div class="inst-sub">MOVIMIENTO INDEPENDIENTE GANAMOS TODOS (MIGATO)</div>
+    <div style="font-size: 10pt; font-weight: 800; color: #f59e0b;">COMANDO ESTRATÉGICO DE CAMPAÑA • SALA SITUACIONAL EL GATO BRICEÑO</div>
+    <div class="doc-title">DICTAMEN TÉCNICO Y PRESUPUESTO FORMAL: INFRAESTRUCTURA DE SERVIDOR FÍSICO, ALMACENAMIENTO HÍBRIDO RAID Y GATEWAY MIKROTIK</div>
+  </div>
+
+  <table style="margin-bottom: 16px;">
+    <tr><th>Campo Institucional</th><th>Detalle Oficial</th></tr>
+    <tr><td><b>Proyecto Tecnológico</b></td><td>Plataforma Territorial y Sala Situacional de Mando MIGATO 2026</td></tr>
+    <tr><td><b>Ámbito de Aplicación</b></td><td>Estado Monagas (Maturín y 13 Municipios)</td></tr>
+    <tr><td><b>Responsable Técnico</b></td><td>Ing. Diego Donado • División de Ciencia, Tecnología y Ciberdefensa</td></tr>
+    <tr><td><b>Destino del Equipamiento</b></td><td>Sede Central de Campaña y Sala Situacional de El Gato Briceño</td></tr>
+    <tr><td><b>Fuente de Cotizaciones</b></td><td>Precios Referenciales del Mercado Nacional • Mercado Libre Venezuela</td></tr>
+    <tr><td><b>Fecha de Emisión</b></td><td>Septiembre 2026</td></tr>
+  </table>
+
+  <h1>Capítulo I: Justificación de la Arquitectura de Hardware</h1>
+  <p>Para dar soporte físico autónomo a los cinco módulos del sistema (Lámina 120", Comandos, Estimación del Voto, Earth Monagas 3D GIS y Dashboard de Campaña), se requiere un equipo de grado empresarial que opere de forma ininterrumpida. A diferencia de un computador convencional, un servidor corporativo posee fuentes redundantes, ventilación balanceada para operación 24/7 y memoria con corrección de errores (ECC).</p>
+
+  <h2>1.1. Arquitectura de Almacenamiento Híbrido Redundante (SSD + HDD en RAID 1)</h2>
+  <p>El motor geoespacial procesa polígonos vectoriales con miles de coordenadas. Para evitar cuellos de botella y garantizar la supervivencia de los datos, se implementa una topología híbrida:</p>
+  <p>• <b>Banco de Estado Sólido (2x SSD 1TB en RAID 1 - Espejo):</b> Destinado al Sistema Operativo Linux Ubuntu Server 24.04, motor PostgreSQL con extensión PostGIS, Nginx y caché Redis. Su velocidad superior a 500 MB/s permite que las consultas cartográficas y de votantes respondan en milisegundos.</p>
+  <p>• <b>Banco Mecánico Empresarial (2x HDD 2TB SAS/SATA en RAID 1 - Espejo):</b> Destinado al almacenamiento masivo de respaldos automáticos diarios, digitalización de actas de escrutinio CNE y logs históricos de auditoría.</p>
+  <p>• <b>Tolerancia a Fallas en Espejo:</b> Cada archivo se escribe simultáneamente en dos unidades físicas. Si un disco sufre una avería, la controladora PERC mantiene la plataforma encendida con el disco gemelo sin pérdida de datos ni interrupción.</p>
+
+  <h1>Capítulo II: Integración del Gateway y Firewall MikroTik</h1>
+  <p>Para asegurar la puerta de enlace a internet de la Sala Situacional y proteger el servidor físico contra intrusiones o ataques de red, se incorpora un routerboard especializado <b>MikroTik hEX (RB750Gr3)</b>, aprovechando el dominio técnico y capacidad de administración del equipo técnico de sistemas:</p>
+  
+  <p>• <b>Seguridad y Firewall SPI:</b> El MikroTik actúa como barrera perimetral blindada, cerrando puertos innecesarios e implementando reglas de inspección profunda de paquetes para que nadie en la red local o externa pueda vulnerar la base de datos PostgreSQL.</p>
+  <p>• <b>Conmutación Automática de Internet (Failover / Multi-WAN):</b> Permite conectar simultáneamente dos proveedores de internet (ej. WAN 1: Fibra Principal CANTV/Inter/NetUno y WAN 2: Enlace de Respaldo Starlink o Módem LTE). En caso de corte en la fibra óptica, el MikroTik conmuta el tráfico en menos de 1 segundo sin interrumpir el funcionamiento del servidor.</p>
+  <p>• <b>Servidor VPN Seguro (WireGuard / IPsec):</b> Permite al Ingeniero Responsable y a los directivos del Comando conectarse de forma remota y cifrada al servidor desde laptops o dispositivos móviles fuera de la sede, sin exponer la plataforma a los riesgos de la internet pública.</p>
+
+  <h1>Capítulo III: Desglose de Costos en Mercado Libre Venezuela</h1>
+  <p>A continuación se detallan los costos individuales de cada componente físico investigados en el mercado venezolano (expresados en dólares estadounidenses USD, pagaderos a la tasa oficial BCV):</p>
+
+  <table>
+    <tr>
+      <th>Componente / Dispositivo</th>
+      <th>Especificación Técnica</th>
+      <th style="text-align:center;">Cant.</th>
+      <th style="text-align:right;">Costo Unit.</th>
+      <th style="text-align:right;">Total (USD)</th>
+    </tr>
+    <tr>
+      <td><b>Servidor Torre Dell PowerEdge</b></td>
+      <td>Modelo T330/T430 (Xeon 8 Cores, 64GB RAM ECC, 2 Fuentes Hot-Plug, PERC)</td>
+      <td style="text-align:center;">1</td>
+      <td style="text-align:right;">$1,200.00</td>
+      <td style="text-align:right;">$1,200.00</td>
+    </tr>
+    <tr>
+      <td><b>Discos Sólidos SSD 1TB (RAID 1)</b></td>
+      <td>Kingston KC600 / Crucial MX500 SATA 2.5" (Sistema Operativo & Base de Datos)</td>
+      <td style="text-align:center;">2</td>
+      <td style="text-align:right;">$140.00</td>
+      <td style="text-align:right;">$280.00</td>
+    </tr>
+    <tr>
+      <td><b>Discos Duros HDD 2TB (RAID 1)</b></td>
+      <td>Dell Constellation / WD Red Plus Enterprise 7.200 RPM SAS/SATA (Backups & Actas)</td>
+      <td style="text-align:center;">2</td>
+      <td style="text-align:right;">$190.00</td>
+      <td style="text-align:right;">$380.00</td>
+    </tr>
+    <tr>
+      <td><b>Bandejas Caddys Dell</b></td>
+      <td>Bandejas originales con seguro Hot-Plug para bahías de 3.5"/2.5"</td>
+      <td style="text-align:center;">4</td>
+      <td style="text-align:right;">$22.50</td>
+      <td style="text-align:right;">$90.00</td>
+    </tr>
+    <tr>
+      <td><b>Gateway MikroTik RouterBOARD</b></td>
+      <td>MikroTik hEX RB750Gr3 (Dual Core 880MHz, 256MB RAM, 5 Puertos Gigabit, RouterOS)</td>
+      <td style="text-align:center;">1</td>
+      <td style="text-align:right;">$105.00</td>
+      <td style="text-align:right;">$105.00</td>
+    </tr>
+    <tr>
+      <td><b>UPS de Respaldo Eléctrico</b></td>
+      <td>UPS 2.000 VA Interactivo con supresor de picos industrial (30 a 45 min autonomía)</td>
+      <td style="text-align:center;">1</td>
+      <td style="text-align:right;">$320.00</td>
+      <td style="text-align:right;">$320.00</td>
+    </tr>
+    <tr>
+      <td><b>Switch de Distribución de Sala</b></td>
+      <td>Switch Gigabit 16 Puertos 10/100/1000 Mbps TP-Link metálico</td>
+      <td style="text-align:center;">1</td>
+      <td style="text-align:right;">$65.00</td>
+      <td style="text-align:right;">$65.00</td>
+    </tr>
+    <tr>
+      <td><b>Cableado y Accesorios</b></td>
+      <td>Patch Cords Cat6 100% Cobre blindado + regleta industrial</td>
+      <td style="text-align:center;">1</td>
+      <td style="text-align:right;">$40.00</td>
+      <td style="text-align:right;">$40.00</td>
+    </tr>
+    <tr class="total-row">
+      <td colspan="4"><b>TOTAL GENERAL DE INVERSIÓN FÍSICA (EQUIPAMIENTO COMPLETO)</b></td>
+      <td style="text-align:right;"><b>$2,480.00 USD</b></td>
+    </tr>
+  </table>
+
+  <h1>Capítulo IV: Resumen de Opciones para Decisión del Comando</h1>
+  <table>
+    <tr><th>Opción Presupuestaria</th><th>Alcance y Componentes</th><th>Autonomía Eléctrica</th><th style="text-align:right;">Inversión Total</th></tr>
+    <tr>
+      <td><b>Opción 1: Esencial</b></td>
+      <td>Servidor Torre + 2 SSD 1TB + UPS 1.500 VA + Switch 8 bocas</td>
+      <td>20 a 30 minutos</td>
+      <td style="text-align:right;"><b>$1,550.00 USD</b></td>
+    </tr>
+    <tr style="background:#fef3c7;">
+      <td><b>Opción 2: Recomendada ★</b></td>
+      <td>Servidor Torre + 2 SSD 1TB + 2 HDD 2TB + MikroTik hEX + UPS 2.000 VA + Switch 16 bocas</td>
+      <td>30 a 45 minutos</td>
+      <td style="text-align:right; color:#b45309;"><b>$2,480.00 USD</b></td>
+    </tr>
+    <tr>
+      <td><b>Opción 3: Servidor Rack 2U</b></td>
+      <td>Servidor Rack Dell R730 Doble Xeon + Discos Full + MikroTik + Inversor con Baterías</td>
+      <td>4 a 6 horas</td>
+      <td style="text-align:right;"><b>$3,550.00 USD</b></td>
+    </tr>
+  </table>
+
+  <div class="callout">
+    <span class="callout-title">Dictamen Técnico y Recomendación:</span>
+    Se recomienda formalmente la <b>APROBACIÓN DE LA OPCIÓN 2 ($2,480.00 USD)</b>. Representa la configuración más robusta, balanceada y segura para la Sala Situacional de El Gato Briceño, contando con almacenamiento espejo contra fallas y puerta de enlace MikroTik.
+  </div>
+
+  <h1>Capítulo V: Conformidad y Firmas Autorizadas</h1>
+  <p>El presente dictamen técnico se emite en la ciudad de Maturín, Estado Monagas, a los efectos de su evaluación y aprobación formal por parte del Comando Estratégico:</p>
+
+  <table class="signatures-table">
+    <tr>
+      <td>
+        <div style="height: 50px;"></div>
+        <span class="sign-line"></span>
+        <b>COMANDO ESTRATÉGICO MIGATO</b><br>
+        <span style="font-size: 9pt; color: #64748b;">Dirección de Operaciones • El Gato Briceño</span>
+      </td>
+      <td>
+        <div style="height: 50px;"></div>
+        <span class="sign-line"></span>
+        <b>ING. DIEGO DONADO</b><br>
+        <span style="font-size: 9pt; color: #64748b;">Responsable de Ciencia y Tecnología MIGATO</span>
+      </td>
+    </tr>
+  </table>
+
+</body>
+</html>
