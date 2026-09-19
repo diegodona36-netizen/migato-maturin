@@ -350,8 +350,14 @@ export class TerritorialDashboardApp {
         let subparroquias = tData.subparroquias || [];
         let poligonos = tData.poligonos || [];
 
-        if (subparroquias.length === 0) {
-          if (mun.id === "maturin" && p.id === "alto-de-los-godos") subparroquias = SUBPARROQUIAS_GODOS || [];
+        if (subparroquias.length === 0 || (mun.id === "maturin" && p.id === "alto-de-los-godos")) {
+          if (mun.id === "maturin" && p.id === "alto-de-los-godos") {
+            subparroquias = (subparroquias || []).filter(s => {
+              const id = String(s.id || "").toLowerCase();
+              return id === "subpar-1788965549962" || id === "sub-godos-6" || id === "sub-godos-lapuente" || String(s.nombre || "").toLowerCase().includes("puente");
+            });
+            if (subparroquias.length === 0) subparroquias = SUBPARROQUIAS_GODOS || [];
+          }
           if (mun.id === "maturin" && p.id === "san-simon") subparroquias = DEFAULT_SAN_SIMON_SUBPARROQUIAS || [];
           if (mun.id === "maturin" && p.id === "el-corozo") subparroquias = DEFAULT_COROZO_SUBPARROQUIAS || [];
         }

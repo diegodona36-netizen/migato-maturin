@@ -459,180 +459,21 @@ export const PARROQUIAS_MONAGAS = [
   }
 ];
 
-// 4. NIVEL 4: SUB-PARROQUIAS (EJES TERRITORIALES DE ALTO DE LOS GODOS)
-export const SUBPARROQUIAS_MONAGAS = [
-  {
-    id: "sub-godos-1",
-    parroquiaId: "alto-de-los-godos",
-    nombre: "Sub-Parroquia 1 • Casco Los Godos",
-    alias: "Los Godos I y II",
-    centro: [9.7390, -63.2040],
-    zoomDefault: 15,
-    poblacion: 4050,
-    electores: 4770,
-    centrosVotacion: 2,
-    poligono: [
-      [9.7440, -63.2100], [9.7460, -63.2000], [9.7360, -63.1970],
-      [9.7320, -63.2070], [9.7440, -63.2100]
-    ]
-  },
-  {
-    id: "sub-godos-2",
-    parroquiaId: "alto-de-los-godos",
-    nombre: "Sub-Parroquia 2 • Morichal",
-    alias: "Morichal",
-    centro: [9.7340, -63.2120],
-    zoomDefault: 15,
-    poblacion: 2780,
-    electores: 2450,
-    centrosVotacion: 1,
-    poligono: [
-      [9.7380, -63.2180], [9.7400, -63.2080], [9.7280, -63.2050],
-      [9.7250, -63.2160], [9.7380, -63.2180]
-    ]
-  },
-  {
-    id: "sub-godos-3",
-    parroquiaId: "alto-de-los-godos",
-    nombre: "Sub-Parroquia 3 • Fundemos",
-    alias: "Fundemos I, II y III",
-    centro: [9.7420, -63.1960],
-    zoomDefault: 15,
-    poblacion: 4650,
-    electores: 3890,
-    centrosVotacion: 1,
-    poligono: [
-      [9.7470, -63.2010], [9.7480, -63.1920], [9.7360, -63.1900],
-      [9.7350, -63.1980], [9.7470, -63.2010]
-    ]
-  },
-  {
-    id: "sub-godos-4",
-    parroquiaId: "alto-de-los-godos",
-    nombre: "Sub-Parroquia 4 • Los Guaros",
-    alias: "Los Guaros",
-    centro: [9.7280, -63.1960],
-    zoomDefault: 15,
-    poblacion: 2630,
-    electores: 2100,
-    centrosVotacion: 1,
-    poligono: [
-      [9.7340, -63.2010], [9.7330, -63.1910], [9.7220, -63.1930],
-      [9.7230, -63.2020], [9.7340, -63.2010]
-    ]
-  },
-  {
-    id: "sub-godos-5",
-    parroquiaId: "alto-de-los-godos",
-    nombre: "Sub-Parroquia 5 • El Silencio",
-    alias: "El Silencio de Campo Alegre",
-    centro: [9.7180, -63.2040],
-    zoomDefault: 15,
-    poblacion: 3130,
-    electores: 2600,
-    centrosVotacion: 1,
-    poligono: [
-      [9.7240, -63.2120], [9.7230, -63.1970], [9.7120, -63.1980],
-      [9.7110, -63.2140], [9.7240, -63.2120]
-    ]
-  },
-  {
-    // === SUB-PARROQUIA 6 (LA PUENTE - FICHA OFICIAL) ===
-    id: "sub-godos-6",
-    parroquiaId: "alto-de-los-godos",
-    nombre: 'Sub-Parroquia 6 • Alto De Los Godos "La Puente"',
-    alias: "La Puente",
-    esPrincipalModelo: true,
-    centro: [9.7260, -63.2210],
-    zoomDefault: 15,
-    poblacion: 16162,
-    casas: 5309,
-    familias: 6090,
-    electores: 10728,
-    centrosVotacion: 5,
-    sectoresCount: 11,
-    // Perímetro envolvente de La Puente
-    poligono: [
-      [9.7390, -63.2280],
-      [9.7420, -63.2140],
-      [9.7300, -63.2100],
-      [9.7180, -63.2120],
-      [9.7120, -63.2260],
-      [9.7250, -63.2320],
-      [9.7390, -63.2280]
-    ]
-  },
-  {
-    id: "sub-godos-7",
-    parroquiaId: "alto-de-los-godos",
-    nombre: "Sub-Parroquia 7 • 19 de Abril",
-    alias: "19 de Abril",
-    centro: [9.7150, -63.2240],
-    zoomDefault: 15,
-    poblacion: 1260,
-    electores: 1750,
-    centrosVotacion: 1,
-    poligono: [
-      [9.7200, -63.2300], [9.7190, -63.2180], [9.7090, -63.2190],
-      [9.7100, -63.2310], [9.7200, -63.2300]
-    ]
-  },
-  {
-    id: "sub-godos-8",
-    parroquiaId: "alto-de-los-godos",
-    nombre: "Sub-Parroquia 8 • Las Brisas",
-    alias: "Alberto Ravell",
-    centro: [9.7380, -63.1920],
-    zoomDefault: 15,
-    poblacion: 1380,
-    electores: 2200,
-    centrosVotacion: 1,
-    poligono: [
-      [9.7440, -63.1950], [9.7430, -63.1870], [9.7320, -63.1890],
-      [9.7330, -63.1960], [9.7440, -63.1950]
-    ]
-  },
-  {
-    id: "sub-godos-9",
-    parroquiaId: "alto-de-los-godos",
-    nombre: "Sub-Parroquia 9 • San Rafael",
-    alias: "San Rafael",
-    centro: [9.7220, -63.1910],
-    zoomDefault: 15,
-    poblacion: 1280,
-    electores: 1840,
-    centrosVotacion: 1,
-    poligono: [
-      [9.7280, -63.1950], [9.7270, -63.1880], [9.7160, -63.1890],
-      [9.7170, -63.1960], [9.7280, -63.1950]
-    ]
-  },
-  {
-    id: "sub-godos-10",
-    parroquiaId: "alto-de-los-godos",
-    nombre: "Sub-Parroquia 10 • Paramaconi",
-    alias: "Paramaconi / Corapal",
-    centro: [9.7320, -63.2320],
-    zoomDefault: 15,
-    poblacion: 2790,
-    electores: 2420,
-    centrosVotacion: 1,
-    poligono: [
-      [9.7420, -63.2360], [9.7390, -63.2270], [9.7240, -63.2300],
-      [9.7260, -63.2390], [9.7420, -63.2360]
-    ]
-  }
-];
+// 4. NIVEL 4: SUB-PARROQUIAS (ÚNICO EJE OFICIAL DIGITALIZADO: SUB-PARROQUIA 6 LA PUENTE)
 
 export const SUBPARROQUIAS_GODOS = [
   {
     "id": "SUBPAR-1788965549962",
-    "nombre": "sub-parroquia 6",
-    "descripcion": "Eje Territorial",
+    "nombre": "Sub-Parroquia 6 • La Puente",
+    "alias": "La Puente",
+    "descripcion": "Eje Territorial Oficial La Puente",
+    "centro": [9.718, -63.218],
+    "zoomDefault": 15,
     "militantes": 0,
     "casas": 0,
     "habitantes": 0,
     "familias": 0,
+    "sectoresCount": 18,
     "colorBorde": "#a855f7",
     "anchoBorde": 2,
     "colorRelleno": "#a855f7",
@@ -835,6 +676,14 @@ export const SUBPARROQUIAS_GODOS = [
     "isNew": false
   }
 ];
+
+// Compatibilidad: SUBPARROQUIAS_GODOS[0].poligono es referencia a sus vertices
+if (SUBPARROQUIAS_GODOS[0]) {
+  SUBPARROQUIAS_GODOS[0].poligono = SUBPARROQUIAS_GODOS[0].vertices;
+}
+
+// Exportar SUBPARROQUIAS_MONAGAS apuntando al único eje oficial digitalizado
+export const SUBPARROQUIAS_MONAGAS = SUBPARROQUIAS_GODOS;
 
 export const SECTORES_LAPUENTE = [
   {

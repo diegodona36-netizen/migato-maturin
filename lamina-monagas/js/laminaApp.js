@@ -670,9 +670,16 @@ export class LaminaApp {
 
     // 2. Si no hay en localStorage, usar los polígonos nativos del Módulo 4
     if (resolvedPId === "alto-de-los-godos") {
+      // Filtrar cualquier residuo sintético: Solo la Sub-Parroquia 6 (La Puente) es oficial
+      subparroquias = subparroquias.filter(sp => {
+        const id = String(sp.id || "").toLowerCase();
+        const nom = String(sp.nombre || "").toLowerCase();
+        return id === "subpar-1788965549962" || id === "sub-godos-6" || id === "sub-godos-lapuente" || nom.includes("puente") || nom.includes("parroquia 6");
+      });
+
       if (subparroquias.length === 0) {
-        // Cargar las 10 subparroquias oficiales del Módulo 4
-        subparroquias = (SUBPARROQUIAS_MONAGAS || []).map(sp => ({
+        // Cargar el único eje oficial digitalizado de Alto de los Godos: Sub-Parroquia 6 La Puente
+        subparroquias = (SUBPARROQUIAS_GODOS || []).map(sp => ({
           id: sp.id,
           nombre: sp.nombre,
           alias: sp.alias || sp.nombre,
@@ -680,24 +687,12 @@ export class LaminaApp {
           colorRelleno: sp.colorRelleno || "#a855f7",
           anchoBorde: 2.5,
           vertices: sp.vertices || sp.poligono,
-          sectoresCount: sp.sectoresCount || 0
+          sectoresCount: sp.sectoresCount || 18
         }));
-
-        // Integrar el trazo de alta precisión de La Puente de SUBPARROQUIAS_GODOS
-        if (Array.isArray(SUBPARROQUIAS_GODOS) && SUBPARROQUIAS_GODOS.length > 0) {
-          SUBPARROQUIAS_GODOS.forEach(gSp => {
-            const idx = subparroquias.findIndex(s => s.id === gSp.id || String(s.nombre).toLowerCase().includes("puente"));
-            if (idx >= 0) {
-              subparroquias[idx] = { ...subparroquias[idx], ...gSp, vertices: gSp.vertices || gSp.poligono };
-            } else {
-              subparroquias.push({ ...gSp, vertices: gSp.vertices || gSp.poligono });
-            }
-          });
-        }
       }
 
       if (poligonos.length === 0) {
-        // Cargar los 18 sectores comunitarios de La Puente de Módulo 4
+        // Cargar los sectores comunitarios reales de La Puente de Módulo 4
         poligonos = (SECTORES_LAPUENTE || []).map(sec => ({
           ...sec,
           vertices: sec.vertices || sec.poligono
