@@ -256,42 +256,43 @@ def build_docx(output_path):
 
     # CAPÍTULO I
     body.append(add_h1("CAPÍTULO I: JUSTIFICACIÓN DE LA ARQUITECTURA DE HARDWARE"))
-    body.append(add_p("Para dar soporte físico autónomo a los cinco (5) módulos del sistema (Lámina 120\", Comandos, Estimación del Voto, Earth Monagas 3D GIS y Dashboard de Campaña), se selecciona una arquitectura de alta eficiencia energética y excelente relación costo-rendimiento basada en una estación de trabajo corporativa Dell OptiPlex con procesador Intel Core i7 de 8va Generación y 32 GB de memoria RAM DDR4."))
+    body.append(add_p("Para dar soporte físico autónomo a los cinco (5) módulos del sistema (Lámina 120\", Comandos, Estimación del Voto, Earth Monagas 3D GIS y Dashboard de Campaña), se selecciona una arquitectura de alta eficiencia energética y excelente relación costo-rendimiento basada en una estación de trabajo corporativa Dell OptiPlex con procesador Intel Core i7-6700 y 8 GB de memoria RAM DDR4."))
 
-    body.append(add_h2("1.1. Ventajas de la Plataforma Dell OptiPlex Core i7 (8va Generación)"))
-    body.append(add_p("• Alto Desempeño por Núcleo (IPC): El procesador Intel Core i7-8700 (6 núcleos / 12 hilos a 4.6 GHz) supera ampliamente a procesadores Xeon de generaciones anteriores en el procesamiento de consultas web y motor geoespacial PostgreSQL/PostGIS."))
-    body.append(add_p("• Eficiencia Energética (Bajo Consumo de 65W): Consume una fracción de la energía de un servidor de rack antiguo (que consumen entre 300W y 500W). Esto permite que el sistema de respaldo eléctrico (UPS) rinda más del doble de tiempo de autonomía ante los apagones de Corpoelec."))
-    body.append(add_p("• Operación Silenciosa y Compacta: No requiere salas de servidores con aire acondicionado industrial ni muebles pesados de rack."))
+    body.append(add_h2("1.1. Ventajas de la Plataforma Dell OptiPlex Core i7"))
+    body.append(add_p("• Alto Desempeño por Núcleo (IPC): El procesador Intel Core i7-6700 (4 núcleos / 8 hilos a 3.4 GHz - 4.0 GHz Turbo) supera ampliamente a procesadores Xeon de generaciones anteriores en el procesamiento de consultas web y motor geoespacial PostgreSQL/PostGIS."))
+    body.append(add_p("• Eficiencia Energética (Bajo Consumo de 65W): Consume una fracción de la energía de un servidor de rack antiguo (que consumen entre 300W y 500W). Esto permite que el sistema de respaldo eléctrico (UPS) rinda entre 45 y 60 minutos continuos de autonomía ante los apagones de Corpoelec."))
+    body.append(add_p("• Capacidad de Memoria RAM: Los 8 GB DDR4 incluidos de fábrica son suficientes para Ubuntu Server y PostgreSQL (que consumen ~3.6 GB). No se requiere inversión adicional en memoria RAM."))
 
     body.append(add_h2("1.2. Arquitectura de Discos 100% Estado Sólido en RAID 1 (Espejo)"))
-    body.append(add_p("Se descarta el uso de discos duros mecánicos (HDD) tradicionales debido a su lentitud, fragilidad y peso. Toda la base de datos de Monagas, polígonos cartográficos y fotos de actas electorales ocupan menos de 30 GB, por lo que un sistema con discos mecánicos representaría un gasto innecesario."))
-    body.append(add_p("• Banco de Estado Sólido Dual (2x SSD 1TB SATA en RAID 1): Ambos discos operan de forma sincronizada y simultánea."))
-    body.append(add_p("• Escritura Simultánea en Espejo: Cada vez que se registra un voto, un dirigente o un acta, la información se escribe al mismo microsegundo en ambos discos."))
-    body.append(add_p("• Lectura Acelerada: El sistema lee de ambas unidades en paralelo, duplicando la velocidad de respuesta."))
-    body.append(add_p("• Tolerancia a Fallas Absoluta: Si uno de los discos SSD llegase a fallar o quemarse, el segundo disco mantiene el servidor 100% operativo sin pérdida de datos ni caída del servicio. Al colocar un disco nuevo, el sistema se reconstruye automáticamente en segundo plano."))
+    body.append(add_p("Se descarta el uso de discos mecánicos (HDD) y discos de 1 TB sobrecosteados ($350-$400). Toda la base de datos electoral de Monagas, polígonos cartográficos y fotos de actas ocupan menos de 16 GB, por lo que dos unidades de 480 GB ofrecen más de 460 GB de espacio libre."))
+    body.append(add_p("• Banco de Estado Sólido Dual (2x SSD 480GB SATA 2.5\" en RAID 1): Ambos discos operan de forma sincronizada en los puertos SATA nativos de la placa Dell 5040."))
+    body.append(add_p("• Escritura Simultánea en Espejo: Cada vez que se registra un voto o un acta, la información se escribe al mismo microsegundo en ambos discos."))
+    body.append(add_p("• Tolerancia a Fallas Absoluta: Si uno de los discos SSD llegase a fallar o quemarse por fluctuaciones de voltaje, el segundo disco mantiene el servidor 100% operativo sin pérdida de datos ni caída del servicio."))
 
     # CAPÍTULO II
     body.append(add_h1("CAPÍTULO II: TOPOLOGÍA DE RED, MIKROTIK Y SWITCH GIGABIT"))
     body.append(add_p("La infraestructura de red de la Sala Situacional se estructura en dos niveles fundamentales:"))
     body.append(add_p("Internet Proveedor 1 / Proveedor 2 ──► MikroTik hEX RB750Gr3 (Gateway/Firewall) ──► Switch Gigabit (Distribuidor) ──► Servidor Dell + PCs de Sala + Pantallas + Videovigilancia.", bold_prefix="• FLUJO DE RED:"))
 
-    body.append(add_p("Actúa como la puerta de enlace física y cortafuegos perimetral. Realiza conmutación automática de internet (Failover) entre dos proveedores para que la sala nunca se quede sin conexión, y provee túnel VPN seguro (WireGuard) para acceso remoto.", bold_prefix="• 1. Router Gateway MikroTik hEX:"))
-    body.append(add_p("El MikroTik posee 5 puertos, por lo que se requiere un switch Gigabit (marca Hikvision o TP-Link) de 16 puertos conectado directamente a él para multiplicar las bocas de red y enlazar el servidor, las computadoras de los operadores, las pantallas de sala y futuras cámaras de seguridad.", bold_prefix="• 2. Switch Gigabit de Sala (Hikvision / TP-Link):"))
-    body.append(add_p("Se incorpora una bobina completa de 305 metros de cable UTP Cat6 para realizar el cableado estructurado formal de la sala, oficinas del comando y las conexiones a los equipos de cómputo y cámaras.", bold_prefix="• 3. Bobina de Cableado Cat6 (305 metros):"))
+    body.append(add_p("Actúa como la puerta de enlace física y cortafuegos perimetral. Realiza conmutación automática de internet (Failover) entre dos proveedores para que la sala nunca se quede sin conexión, y provee túnel VPN seguro (WireGuard) hacia el Cloud VPS.", bold_prefix="• 1. Router Gateway MikroTik hEX:"))
+    body.append(add_p("Switch TP-Link metálico de 16 puertos Gigabit (10/100/1000 Mbps) conectado al MikroTik para distribuir red a operadores y pantallas gigantes de la sala.", bold_prefix="• 2. Switch Gigabit de Sala (TP-Link 16P):"))
+    body.append(add_p("Bobina completa de 305 metros Cat6 STC 100% cobre + 100 conectores RJ45 + kit de herramientas (ponchadora/tester) para el cableado estructurado formal de la sala.", bold_prefix="• 3. Cableado e Instrumental UTP:"))
 
     # CAPÍTULO III
     body.append(add_h1("CAPÍTULO III: DESGLOSE DE COSTOS EN MERCADO LIBRE VENEZUELA"))
-    body.append(add_p("A continuación se detallan los costos individuales de cada componente físico investigados en el mercado venezolano (expresados en dólares estadounidenses USD, pagaderos a la tasa oficial BCV):"))
+    body.append(add_p("A continuación se detallan los costos individuales de cada componente físico investigados en tiempo real en el mercado venezolano (expresados en dólares estadounidenses USD, pagaderos a la tasa oficial BCV):"))
 
-    headers_piezas = ["Componente / Dispositivo", "Especificación Técnica Real", "Cant.", "Costo Unit. (USD)", "Total (USD)"]
+    headers_piezas = ["N°", "Componente / Dispositivo", "Especificación Técnica Cotizada", "Cant.", "Costo Unit. (USD)", "Total (USD)"]
     rows_piezas = [
-        ["Computador Servidor Dell OptiPlex", "Core i7 8va Gen (i7-8700 6C/12T), 32GB RAM DDR4, Chasis Torre/SFF silencioso", "1", "$230.00", "$230.00"],
-        ["Discos Sólidos SSD 1TB (RAID 1)", "2x SSD 1TB SATA 2.5\" Kingston KC600 / Crucial MX500 en Espejo (Sistema & Datos)", "2", "$120.00", "$240.00"],
-        ["Gateway MikroTik RouterBOARD", "MikroTik hEX RB750Gr3 (Dual Core 880MHz, 256MB RAM, 5 Puertos Gigabit, RouterOS)", "1", "$105.00", "$105.00"],
-        ["Switch de Distribución de Red", "Switch Hikvision / TP-Link 16 Puertos Gigabit 10/100/1000 Mbps metálico", "1", "$65.00", "$65.00"],
-        ["Bobina Cable UTP Cat6 (305m)", "Bobina 305 metros Cat6 interior de alta velocidad + caja de 100 conectores RJ45", "1", "$95.00", "$95.00"],
-        ["UPS de Respaldo Eléctrico", "UPS 1.200 VA a 1.500 VA con supresor de picos (45 a 60 min autonomía con bajo consumo)", "1", "$165.00", "$165.00"],
-        ["TOTAL GENERAL DE INVERSIÓN FÍSICA", "Equipamiento completo optimizado de servidor, almacenamiento RAID, red y protección", "—", "—", "$900.00 USD"]
+        ["1", "Computador Servidor Dell OptiPlex", "Core i7-6700 (3.40 GHz), 8 GB RAM DDR4, Chasis SFF silencioso (65W)", "1", "$215.00", "$215.00 USD"],
+        ["2", "Discos Sólidos SSD 480GB (RAID 1)", "2x SSD SATA 2.5\" 480GB WD Green en Espejo simétrico (Sistema y Base de Datos)", "2", "$109.99", "$219.98 USD"],
+        ["3", "Gateway MikroTik RouterBOARD", "MikroTik hEX RB750Gr3 (Dual Core 880MHz, 5 Puertos Gigabit, Firewall/VPN)", "1", "$105.00", "$105.00 USD"],
+        ["4", "Switch de Distribución de Red", "TP-Link TL-SG1016D 16 Puertos Gigabit 10/100/1000 Mbps chasis metálico", "1", "$99.96", "$99.96 USD"],
+        ["5", "Bobina Cable UTP Cat6 (305m)", "Bobina 305 metros Cat6 STC interior 100% cobre para puestos de red", "1", "$72.99", "$72.99 USD"],
+        ["6", "Conectores RJ45 Cat6 (Caja 100 un.)", "Conectores RJ45 Cat6 con contactos dorados de alta conductividad", "1", "$6.62", "$6.62 USD"],
+        ["7", "Kit de Herramientas de Red UTP", "Kit completo: ponchadora/crimpeadora RJ45-RJ11 + tester probador de red", "1", "$12.50", "$12.50 USD"],
+        ["8", "UPS de Respaldo Eléctrico 1.200 VA", "UPS Epcom EPU1200LCD 1.200 VA con pantalla digital interactiva y regulador AVR", "1", "$130.41", "$130.41 USD"],
+        ["—", "TOTAL GENERAL DE INVERSIÓN FÍSICA", "Equipamiento completo optimizado de servidor, almacenamiento RAID 1, red y protección", "—", "—", "$862.46 USD"]
     ]
     body.append(add_table(headers_piezas, rows_piezas))
 
@@ -301,13 +302,13 @@ def build_docx(output_path):
 
     headers_opciones = ["Opción Presupuestaria", "Alcance y Componentes", "Autonomía Eléctrica", "Inversión Total (USD)"]
     rows_opciones = [
-        ["Opción 1: Recomendada ★", "Dell OptiPlex Core i7 (8va Gen 6C/12T), 32GB RAM + 2x SSD 1TB RAID 1 + MikroTik hEX + Switch 16p + Cat6 305m + UPS 1.500VA", "45 a 60 minutos (Bajo consumo 65W)", "$900.00 USD"],
-        ["Opción 2: Entrada Básica", "Dell OptiPlex Core i5/i7 + 16GB RAM + 1x SSD 1TB (sin espejo) + Router estándar + Switch 8p + UPS 800VA", "30 a 40 minutos", "$520.00 USD"],
+        ["Opción 1: Recomendada ★", "Dell OptiPlex Core i7, 8GB RAM + 2x SSD 480GB RAID 1 + MikroTik hEX + Switch 16p + Cat6 305m + Kit Red + UPS 1.200VA", "45 a 60 minutos (Bajo consumo ~80W)", "$862.46 USD"],
+        ["Opción 2: Entrada Básica", "Dell OptiPlex Core i5/i7 + 8GB RAM + 1x SSD (sin espejo) + Router estándar + Switch 8p + UPS 800VA", "30 a 40 minutos", "$520.00 USD"],
         ["Opción 3: Servidor Tradicional (Descartada)", "Servidor Dell PowerEdge antiguo (Doble Xeon 350W) + Discos Mecánicos SAS + Caddys + UPS 2.000VA", "20 a 30 minutos (Agotamiento rápido UPS)", "$2,480.00 USD"]
     ]
     body.append(add_table(headers_opciones, rows_opciones))
 
-    body.append(add_callout("DICTAMEN TÉCNICO: Se recomienda formalmente la APROBACIÓN DE LA OPCIÓN 1: ARQUITECTURA OPTIMIZADA ($900.00 USD). Proporciona la solución más rápida (100% SSD), tolerante a fallas (RAID 1), con conmutación de internet MikroTik, cableado estructurado completo de sala y máxima eficiencia energética (45 a 60 min de autonomía eléctrica ante apagones)."))
+    body.append(add_callout("DICTAMEN TÉCNICO: Se recomienda formalmente la APROBACIÓN DE LA OPCIÓN 1: ARQUITECTURA OPTIMIZADA ($862.46 USD). Proporciona la solución más rápida (100% SSD), tolerante a fallas (RAID 1), con conmutación de internet MikroTik, cableado estructurado completo de sala y máxima eficiencia energética (45 a 60 min de autonomía eléctrica ante apagones)."))
 
     # CAPÍTULO V: FIRMAS
     body.append(add_h1("CAPÍTULO V: CONFORMIDAD Y FIRMAS AUTORIZADAS"))

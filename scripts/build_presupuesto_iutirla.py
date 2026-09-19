@@ -562,8 +562,8 @@ def build_docx(output_path):
     doc_body.append(p_logo())
     doc_body.append(p_blank(60))
 
-    doc_body.append(p_title("PROPUESTA TÉCNICA Y PRESUPUESTO DE INFRAESTRUCTURA: SERVIDOR LOCAL Y NUBE"))
-    doc_body.append(p_subtitle("Informe Técnico-Económico para la Puesta en Marcha de la Sala Situacional de Campaña, Servidor Físico RAID 1, Gateway MikroTik y Servidor Cloud VPS MIGATO 2026"))
+    doc_body.append(p_title("PROPUESTA TÉCNICA Y PRESUPUESTO ESTIMADO DE EQUIPAMIENTO FÍSICO: SALA SITUACIONAL MATURÍN"))
+    doc_body.append(p_subtitle("Informe Técnico-Económico de Dotación de Cómputo, Almacenamiento Local RAID 1, Electrónica de Red y Respaldo Eléctrico para la Plataforma Electoral MIGATO 2026"))
     doc_body.append(p_blank(100))
 
     doc_body.append(p_author_block())
@@ -573,91 +573,75 @@ def build_docx(output_path):
     doc_body.append(p_page_break())
 
     # ==========================================
-    # PÁGINA 2: INTRODUCCIÓN Y EQUIPAMIENTO FÍSICO
+    # PÁGINA 2: INTRODUCCIÓN, PREMISAS Y DETALLE FÍSICO
     # ==========================================
-    doc_body.append(p_section_title("INTRODUCCIÓN", space_before=10, space_after=15))
+    doc_body.append(p_section_title("INTRODUCCIÓN Y PREMISAS DE INSTALACIÓN", space_before=10, space_after=8))
     doc_body.append(p_body(
-        "El presente informe tiene como propósito exponer ante la directiva del partido y el comando de campaña "
-        "la propuesta técnica y el presupuesto definitivo para la puesta en marcha de la infraestructura informática de la "
-        "Sala Situacional de Maturín y la plataforma electoral del Movimiento Independiente Ganamos Todos (MIGATO) para los 13 municipios del Estado Monagas. "
-        "Se plantea una arquitectura híbrida optimizada que garantiza alta velocidad en consultas cartográficas, cero pérdida de información y plena autonomía ante contingencias eléctricas."
-    , indent=True, space_after=18))
+        "El presente informe técnico-económico tiene como propósito someter a consideración de la directiva regional del Movimiento Independiente Ganamos Todos (MIGATO) y el comando de campaña de José Gregorio \"El Gato\" Briceño el presupuesto estimado de dotación física, instalación y puesta en marcha de la Sala Situacional de Maturín. "
+        "Premisa Operativa de Alcance: La propuesta se circunscribe de manera estricta a la dotación de hardware de cómputo, almacenamiento masivo redundante en espejo (RAID 1), conmutación de red estructurada y respaldo eléctrico. Se asume como premisa que la sede central ya dispone del área de centro de cómputo, rack de comunicaciones y acometida eléctrica operativa. "
+        "En caso de que la dirección requiera adecuaciones civiles complementarias (suministro de racks de piso adicionales, marquesinas de tendido perimetral o cableado de potencia), estas se canalizarán en un anexo independiente, al igual que los servicios en la nube (Cloud VPS, dominios y telefonía IP) que cuentan con su respectivo presupuesto especializado."
+    , indent=True, space_after=12))
 
-    doc_body.append(p_section_title("1. RESUMEN EJECUTIVO DE INVERSIÓN", space_before=15, space_after=10))
+    doc_body.append(p_section_title("1. DESGLOSE PRESUPUESTARIO DE EQUIPAMIENTO FÍSICO", space_before=8, space_after=6))
     doc_body.append(p_body(
-        "Para lograr un despliegue equilibrado, la inversión se divide en dos componentes: 1) Equipamiento físico de sala para procesamiento local de alta velocidad sin saturar el ancho de banda; y 2) Servidor en la nube (Cloud VPS) con disponibilidad 24/7 para el reporte móvil de los testigos en centros electorales.",
-        indent=True, space_after=12
+        "Se descarta el uso de servidores industriales antiguos de rack (Dell PowerEdge) por su alto consumo eléctrico (300W a 500W), ruido y rápida descarga de baterías. En su lugar, se implementa una estación de trabajo Dell OptiPlex Core i7 de alta eficiencia energética (65W) con almacenamiento simétrico en estado sólido. A continuación se detalla el presupuesto estimado con base en valores referenciales del mercado tecnológico nacional:",
+        indent=True, space_after=8
     ))
 
-    resumen_headers = ["Componente / Ámbito", "Modalidad de Inversión", "Cobertura Operativa", "Inversión (USD)"]
-    resumen_rows = [
-        ["A. Equipamiento Físico de Sala", "Pago Único (Hardware)", "45 a 60 min de respaldo en apagones", "$900,00 USD"],
-        ["B. Servidor Cloud VPS (Nube)", "Suscripción Mensual", "24/7 en línea para los 13 municipios", "$24,50 USD / mes"],
-        ["TOTAL INVERSIÓN INTEGRAL", "Equipos físicos + 1 año de Servidor Cloud", "Sala Situacional + Cobertura Total", "$1.194,00 USD"]
-    ]
-    doc_body.append(build_iutirla_table(resumen_headers, resumen_rows, [3000, 2400, 2400, 1800]))
-    doc_body.append(p_blank(20))
-
-    doc_body.append(p_section_title("2. DETALLE DE EQUIPOS FÍSICOS (SALA SITUACIONAL)", space_before=15, space_after=10))
-    doc_body.append(p_body(
-        "Se descartan servidores industriales pesados de rack (Dell PowerEdge antiguos de $1.200 USD) debido a su alto consumo eléctrico (300W a 500W), ruido y baja autonomía en UPS. "
-        "En su lugar, se implementa una estación de alto rendimiento Dell OptiPlex Core i7 de 8va Generación con 32 GB RAM DDR4, de consumo eficiente (65W) y almacenamiento 100% en estado sólido en arreglo espejo (RAID 1). "
-        "A continuación se detallan los costos cotizados en Mercado Libre Venezuela:",
-        indent=True, space_after=12
-    ))
-
-    piezas_headers = ["N°", "Equipo / Dispositivo", "Especificación Técnica Real", "Cant.", "Costo Unit.", "Total (USD)"]
+    piezas_headers = ["N°", "Equipo / Dispositivo", "Especificación Técnica Real", "Cant.", "Ref. Unit.", "Total Estimado"]
     piezas_rows = [
-        ["1", "Computador Servidor Dell OptiPlex", "Core i7 8va Gen (i7-8700 6C/12T), 32 GB RAM DDR4, Chasis silencioso Torre/SFF (65W)", "1", "$230,00", "$230,00 USD"],
-        ["2", "Discos Sólidos SSD 1TB (RAID 1)", "2x SSD 1TB SATA 2.5\" Kingston KC600 / Crucial MX500 en Espejo (Sistema & Base de Datos)", "2", "$120,00", "$240,00 USD"],
-        ["3", "Router Gateway MikroTik hEX", "MikroTik RB750Gr3 (Dual Core 880MHz, 5 Puertos Gigabit). Firewall y Failover automático", "1", "$105,00", "$105,00 USD"],
-        ["4", "Switch Gigabit de Sala (16 Puertos)", "Switch Hikvision / TP-Link 16 Puertos 10/100/1000 Mbps chasis metálico para distribución", "1", "$65,00", "$65,00 USD"],
-        ["5", "Bobina Cable UTP Cat6 (305 metros)", "Bobina 305 metros Cat6 interior alta velocidad + caja de 100 conectores RJ45 para la sala", "1", "$95,00", "$95,00 USD"],
-        ["6", "UPS de Respaldo Eléctrico", "UPS 1.200 VA a 1.500 VA con supresor de picos (45 a 60 min de autonomía por bajo consumo)", "1", "$165,00", "$165,00 USD"],
-        ["—", "TOTAL EQUIPAMIENTO FÍSICO", "Equipamiento completo de cómputo, almacenamiento RAID, red y protección eléctrica", "—", "—", "$900,00 USD"]
+        ["1", "Computador Servidor Dell OptiPlex", "Core i7-6700 (3.40 GHz), 8 GB RAM DDR4 (expandible), chasis SFF silencioso (65W)", "1", "$215,00", "$215,00 USD"],
+        ["2", "Discos Sólidos SSD 480GB (RAID 1)", "2x SSD SATA 2.5\" 480GB WD Green en Espejo simétrico (Sistema y Base de Datos)", "2", "$109,99", "$219,98 USD"],
+        ["3", "Router Gateway MikroTik hEX", "MikroTik RB750Gr3 (Dual Core 880MHz, 5 Puertos Gigabit). Firewall y gestión de tráfico", "1", "$105,00", "$105,00 USD"],
+        ["4", "Switch Gigabit de Sala (16 Puertos)", "TP-Link TL-SG1016D 16 Puertos 10/100/1000 Mbps chasis metálico para distribución", "1", "$99,96", "$99,96 USD"],
+        ["5", "Bobina Cable UTP Cat6 (305 metros)", "Bobina 305m Cat6 STC interior 100% cobre para cableado estructurado de puestos", "1", "$72,99", "$72,99 USD"],
+        ["6", "Conectores RJ45 Cat6 (Caja 100 un.)", "Conectores RJ45 Cat6 con contactos dorados de alta conductividad para patch cords", "1", "$6,62", "$6,62 USD"],
+        ["7", "Kit de Herramientas de Red UTP", "Kit completo: ponchadora/crimpeadora RJ45-RJ11 + tester UTP probador de cable", "1", "$12,50", "$12,50 USD"],
+        ["8", "UPS de Respaldo Eléctrico 1.200 VA", "UPS Epcom EPU1200LCD 1.200 VA con pantalla digital interactiva y regulador AVR", "1", "$130,41", "$130,41 USD"],
+        ["—", "TOTAL EQUIPAMIENTO FÍSICO", "Dotación completa de cómputo, almacenamiento RAID 1, red y respaldo eléctrico", "—", "—", "$862,46 USD"]
     ]
     doc_body.append(build_iutirla_table(piezas_headers, piezas_rows, [400, 2400, 3800, 600, 1100, 1300]))
     doc_body.append(p_table_note(
-        "* Nota Aclaratoria de Hardware: Se eliminaron las bandejas costosas (caddys propietarios de $25 c/u) y los discos mecánicos lentos. Los dos SSD se conectan directamente en las bahías y puertos SATA de fábrica de la placa OptiPlex, ahorrando $470 USD de forma inmediata."
+        "* Nota de Presupuesto: Los valores reflejados corresponden a un presupuesto estimativo con precios referenciales de mercado y no constituyen una cotización formal ni oferta comercial vinculante de un proveedor en específico. Placa OptiPlex 5040 posee 1 slot M.2 y 2 puertos SATA III; para RAID 1 simétrico estable sin recalentamiento en SFF, se emplean dos discos SSD SATA nativos."
     ))
 
     # Salto a Página 3
     doc_body.append(p_page_break())
 
     # ==========================================
-    # PÁGINA 3: SINCRONIZACIÓN, NUBE Y FIRMAS
+    # PÁGINA 3: ARQUITECTURA LOCAL, RECOMENDACIÓN Y FIRMAS
     # ==========================================
-    doc_body.append(p_section_title("3. ARQUITECTURA DE SINCRONIZACIÓN Y TOLERANCIA A FALLAS", space_before=10, space_after=15))
+    doc_body.append(p_section_title("3. ARQUITECTURA DE LA BÓVEDA LOCAL DE DATOS (DATA VAULT)", space_before=10, space_after=15))
     doc_body.append(p_body(
-        "Para impedir colisiones de información y asegurar que la plataforma nunca se detenga, el flujo de datos se estructura en cuatro etapas operativas:",
+        "Para garantizar que el comando de campaña disponga de una infraestructura resiliente, inconfiscable e inmune a contingencias externas, el despliegue físico se fundamenta en cuatro pilares de ingeniería:",
         indent=True, space_after=12
     ))
 
     doc_body.append(p_bullet_bold(
-        "1. Reporte Móvil en los 13 Municipios",
-        "Los testigos de centro y dirigentes parroquiales transmiten los votos y fotos de actas directamente al Servidor Cloud VPS a través de telefonía celular. Al residir en un centro de datos protegido, la nube nunca se apaga ni depende del servicio eléctrico local.",
+        "1. Procesamiento Local Autónomo de Alta Velocidad",
+        "La estación Dell OptiPlex Core i7 con 8 GB de memoria RAM DDR4 procesa localmente la cartografía electoral, el padrón de electores de Monagas y los tableros analíticos en pantallas de sala con tiempos de respuesta inmediatos y sin saturar el enlace de datos.",
         space_after=10
     ))
     doc_body.append(p_bullet_bold(
-        "2. Enlace Cifrado con la Sala Situacional",
-        "El Servidor Cloud VPS retransmite las transacciones en tiempo real al computador Dell de la oficina en Maturín a través de un túnel seguro VPN WireGuard gestionado por el router MikroTik.",
+        "2. Bóveda Física en Espejo (Arreglo RAID 1)",
+        "Toda información de mesas, electores y actas se graba de forma redundante y simultánea en dos discos de estado sólido independientes. Si cualquiera de las unidades sufriera un daño mecánico o lógico, el sistema continúa operando sin interrupción ni pérdida de un solo registro.",
         space_after=10
     ))
     doc_body.append(p_bullet_bold(
-        "3. Almacenamiento Dual en Espejo (RAID 1)",
-        "El computador Dell en sala graba cada dato simultáneamente en sus dos unidades SSD. Si un disco sufre una avería o fluctuación de voltaje, el segundo disco mantiene el sistema 100% operativo sin caída de servicio ni pérdida de información.",
+        "3. Electrónica de Red Segura y Segmentada",
+        "El router profesional MikroTik hEX administra la seguridad perimetral de la sala y prioriza el ancho de banda para las computadoras de digitación de actas, mientras que el switch Gigabit de 16 puertos interconecta de forma cableada y estable los puestos de trabajo.",
         space_after=10
     ))
     doc_body.append(p_bullet_bold(
-        "4. Respaldo Integral ante Apagones",
-        "En caso de corte de suministro eléctrico en Maturín, el UPS mantiene la estación Dell, el switch y el MikroTik operando durante 45 a 60 minutos continuos. Si el corte persiste, los testigos en campo continúan reportando con normalidad en la nube sin enterarse de la interrupción en la sede.",
+        "4. Respaldo Energético Crítico ante Apagones",
+        "El UPS de 1.200 VA con regulador automático de voltaje (AVR) garantiza una ventana de autonomía de 45 a 60 minutos para el servidor y la electrónica de red durante cortes de energía, permitiendo mantener la sala operativa y protegiendo el equipamiento contra fluctuaciones de corriente.",
         space_after=18
     ))
 
     doc_body.append(p_section_title("4. RECOMENDACIÓN FINAL Y DECISIÓN", space_before=15, space_after=10))
     doc_body.append(p_body(
-        "Se recomienda formalmente la aprobación del presupuesto físico de $900,00 USD para la dotación de la Sala Situacional y la suscripción del Servidor Cloud VPS ($24,50 USD/mes), otorgando a MIGATO una plataforma territorial moderna, de máxima velocidad y blindada contra fallas. "
-        "Nota de Seguridad: El sistema de cámaras de videovigilancia (CCTV) se cotizará por separado más adelante según lo instruido; no obstante, el switch de 16 puertos y la bobina de cable Cat6 presupuestados en este documento ya dejan instalados los puntos de red requeridos.",
+        "Se recomienda formalmente a la dirección política del partido la aprobación del presupuesto estimado de $862,46 USD para la dotación e instalación del equipamiento físico de la Sala Situacional de Maturín. Esta inversión dotará a MIGATO de un centro de cómputo robusto, eficiente y bajo control 100% propio. "
+        "Nota de Seguridad: El sistema de cámaras de videovigilancia (CCTV) se presupuestará por separado según lo acordado; no obstante, el switch de 16 puertos, la bobina Cat6 y el kit de herramientas presupuestados en este informe dejan instalados los puntos de red requeridos.",
         indent=True, space_after=25
     ))
 
