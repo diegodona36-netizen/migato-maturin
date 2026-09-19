@@ -512,7 +512,11 @@
 
           <!-- Menú flotante de opciones -->
           <div id="menu-options-dropdown" class="hidden absolute right-0 mt-2 w-56 bg-[#140e40]/98 border border-[#2d1f85] rounded-2xl shadow-2xl p-1.5 z-50 flex flex-col gap-1 text-base backdrop-blur-md">
-            <a href="../lamina-monagas/?v=236" class="px-3 py-2 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/40 text-amber-300 font-bold flex items-center gap-2.5 transition">
+            <a href="../comandos/" class="px-3 py-2 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/40 text-amber-300 font-bold flex items-center gap-2.5 transition">
+              <i data-lucide="shield-check" class="w-4 h-4 text-amber-400"></i>
+              <span>Comandos Territoriales</span>
+            </a>
+            <a href="../lamina-monagas/?v=244" class="px-3 py-2 rounded-xl bg-slate-900/60 hover:bg-[#23176d] border border-amber-500/30 text-amber-200 font-bold flex items-center gap-2.5 transition">
               <i data-lucide="tv" class="w-4 h-4 text-amber-400"></i>
               <span>Lámina Ejecutiva 120"</span>
             </a>
@@ -957,19 +961,28 @@
         </div>
       </div>
 
-      <!-- Barra de Acciones de la Ficha -->
+      <!-- Ficha de Comando y Liderazgo Territorial -->
+      <div id="quick-stats-comando-box" class="bg-[#0e092e] p-2.5 rounded-xl border border-amber-500/30 text-xs space-y-1.5">
+        <div class="flex items-center justify-between">
+          <span class="text-amber-300 font-black uppercase text-[10px] tracking-wider flex items-center gap-1">
+            <i data-lucide="shield" class="w-3 h-3 text-amber-400"></i> Comando Territorial
+          </span>
+          <span id="quick-stats-comando-status" class="font-mono text-[10px] px-1.5 py-0.2 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30">
+            Estructura
+          </span>
+        </div>
+        <div id="quick-stats-comando-content" class="text-white">
+          <!-- Inyectado dinámicamente -->
+        </div>
+      </div>
       <div class="flex items-center gap-2 pt-0.5">
-        <a id="btn-quick-stats-dashboard-link" href="../dashboard-campana/" target="_blank" class="py-2 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-black text-base flex items-center justify-center gap-1.5 shadow-lg active:scale-95 transition cursor-pointer" title="Abrir en Tablero Estadístico del Censo (Nueva Ventana)">
+        <a id="btn-quick-stats-dashboard-link" href="../dashboard-campana/" target="_blank" class="flex-1 py-2 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-black text-sm flex items-center justify-center gap-1.5 shadow-lg active:scale-95 transition cursor-pointer" title="Abrir en Tablero Estadístico del Censo (Nueva Ventana)">
           <i data-lucide="bar-chart-2" class="w-3.5 h-3.5"></i>
-          <span>Estadísticas 📊 (Nueva Ventana)</span>
+          <span>📊 Tablero Estadístico y Censo</span>
         </a>
         <button type="button" id="btn-quick-stats-action-sector" style="display: none;" class="py-2 px-3 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-black text-sm flex items-center justify-center gap-1.5 shadow-lg active:scale-95 transition cursor-pointer">
           <i data-lucide="plus-circle" class="w-3.5 h-3.5"></i>
           <span>+ Trazar Sector</span>
-        </button>
-        <button type="button" id="btn-quick-stats-edit" class="flex-1 py-2 px-3 rounded-xl bg-gradient-to-r from-sky-600 to-blue-600 hover:from-sky-500 hover:to-blue-500 text-white font-black text-sm flex items-center justify-center gap-1.5 shadow-lg active:scale-95 transition cursor-pointer">
-          <i data-lucide="edit-2" class="w-3.5 h-3.5"></i>
-          <span>✏️ Modificar Datos</span>
         </button>
         <button type="button" onclick="window.earthApp?.closeQuickStats()" class="py-2 px-3 rounded-xl bg-[#140e40] hover:bg-[#23176d] border border-[#2d1f85] text-slate-300 font-medium text-sm transition cursor-pointer" title="Cerrar">
           ✕
@@ -2199,7 +2212,7 @@
   </div>
 
   <!-- SCRIPT -->
-  <script type="module" src="js/app.js?v=236"></script>
+  <script type="module" src="js/app.js?v=249"></script>
   <script>
     if (window.lucide && typeof window.lucide.createIcons === 'function') {
       window.lucide.createIcons();

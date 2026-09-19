@@ -1633,19 +1633,24 @@ export class EarthMapEngine {
                   <span>Área: ${poly.areaHa || 0} Ha</span>
                   <span>Perímetro: ${poly.perimetroM || 0} m</span>
                 </div>
-                <span class="text-sm text-sky-300 font-bold block mt-1 text-center">👉 Clic para abrir Ficha / Modificar</span>
+                <span class="text-sm text-sky-300 font-bold block mt-1 text-center">👉 Clic para consultar ficha y comando</span>
               </div>
             `, { sticky: true, className: "earth-tooltip" });
           }
 
           pLayer.on({
             mouseover: () => {
-              pLayer.setStyle({ weight: (poly.anchoBorde || 2) + 1.5, color: "#facc15", fillOpacity: Math.min(0.85, (poly.opacidad || 0.35) + 0.25) });
+              pLayer.setStyle({ 
+                weight: (poly.anchoBorde || (isActiveParish ? 2.5 : 2)) + 1.5, 
+                color: "#facc15", 
+                fillOpacity: Math.min(0.85, (poly.opacidad !== undefined ? poly.opacidad : (isActiveParish ? 0.35 : 0.25)) + 0.25) 
+              });
             },
             mouseout: () => {
               pLayer.setStyle({
                 weight: poly.anchoBorde || (isActiveParish ? 2.5 : 2),
                 color: poly.colorBorde || "#38bdf8",
+                fillColor: poly.colorRelleno || "#38bdf8",
                 fillOpacity: poly.opacidad !== undefined ? poly.opacidad : (isActiveParish ? 0.35 : 0.25)
               });
             },

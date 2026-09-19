@@ -171,9 +171,27 @@ class EarthMonagasApp {
     window.clearSubParishFocus = () => window.earthApp?.clearSubParishFocus();
     window.clearSectorFocus = (toSub = true) => window.earthApp?.clearSectorFocus(toSub);
     window.focusMunicipio = (m, fly = true) => window.earthApp?.focusMunicipio(m, fly);
-    window.focusEstado = (fly = true) => window.earthApp?.focusEstado(fly);
+    window.refreshComandosMap = () => this.refreshComandosMapStyles();
+
+    // Sincronización reactiva de asignación de comandos entre pestañas y al volver al mapa
+    window.addEventListener("storage", (e) => {
+      if (e.key === "migato_comandos_asignados") {
+        this.refreshComandosMapStyles();
+      }
+    });
+    window.addEventListener("focus", () => {
+      this.refreshComandosMapStyles();
+    });
 
     this.init();
+  }
+
+  refreshComandosMapStyles() {
+    if (!this.store || !this.mapEngine) return;
+    const parish = this.store.getParish(this.selectedMunId, this.selectedParishId);
+    if (parish && typeof this.mapEngine.renderParishItems === "function") {
+      this.mapEngine.renderParishItems(parish, (type, item) => this.showQuickStats(type, item));
+    }
   }
 
   init() {
@@ -211,6 +229,12 @@ class EarthMonagasApp {
           break;
         }
       }
+    }
+
+    // Garantizar parroquia por defecto (Maturín • Alto de los Godos) si no hay selección previa ni en URL
+    if (!this.selectedMunId || !this.selectedParishId) {
+      this.selectedMunId = "maturin";
+      this.selectedParishId = "alto-de-los-godos";
     }
 
     this.mapEngine = new EarthMapEngine("earth-canvas", (lat, lng, eyeAlt) => {
@@ -3150,6 +3174,71 @@ class EarthMonagasApp {
           this.propDialog?.open(curType, curItem, curMun, curPar);
         }, 50);
       };
+    }
+
+    // Renderizado de Liderazgo / Comando Territorial
+    const boxComando = document.getElementById("quick-stats-comando-box");
+    const contentComando = document.getElementById("quick-stats-comando-content");
+    const statusComando = document.getElementById("quick-stats-comando-status");
+
+    if (boxComando && contentComando) {
+      let assigned = null;
+      try {
+        const raw = localStorage.getItem("migato_comandos_asignados");
+        const map = raw ? JSON.parse(raw) : {};
+        assigned = map[String(item.id)] || map[String(item.ejeId)] || null;
+      } catch(e) {}
+
+      if (assigned) {
+        if (statusComando) {
+          statusComando.className = "font-mono text-[10px] px-1.5 py-0.2 rounded bg-emerald-950 text-emerald-300 border border-emerald-500/40";
+          statusComando.textContent = "🟢 Asignado";
+        }
+        const cleanTelf = (assigned.telefono || "").replace(/[^0-9+]/g, "");
+        const waLink = cleanTelf ? `https://wa.me/${cleanTelf.replace('+', '')}` : null;
+        const targetEje = (type === "subparroquia") ? (item.id || '') : (item.subParroquiaId || item.subparroquiaId || item.ejeId || '');
+        const secParam = (type === "sector" || type === "poligono") && item.id ? `&sec=${encodeURIComponent(item.id)}` : '';
+        const cmdUrl = `../comandos/?mun=${this.selectedMunId}&p=${this.selectedParishId}&eje=${encodeURIComponent(targetEje)}${secParam}&tab=tab-asignacion`;
+
+        contentComando.innerHTML = `
+          <div class="flex items-center justify-between gap-2">
+            <div class="min-w-0">
+              <span class="text-emerald-400 font-black text-[11px] block truncate">${assigned.cargo || "Jefe de Comando"}</span>
+              <div class="font-extrabold text-white text-xs truncate">${assigned.nombre}</div>
+              <div class="text-[10px] font-mono text-slate-300">${assigned.telefono || "Sin teléfono"} ${assigned.cedula ? '• ' + assigned.cedula : ''}</div>
+            </div>
+            <div class="flex items-center gap-1.5 shrink-0">
+              ${waLink ? `
+                <a href="${waLink}" target="_blank" class="p-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white transition flex items-center justify-center shadow" title="Chat directo de WhatsApp">
+                  <i data-lucide="message-circle" class="w-3.5 h-3.5"></i>
+                </a>
+              ` : ''}
+              <a href="${cmdUrl}" target="_blank" class="py-1 px-2 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 border border-amber-400/40 text-amber-300 text-[11px] font-black transition flex items-center gap-1" title="Gestionar en Submódulo de Comandos">
+                <span>Editar</span>
+                <i data-lucide="arrow-up-right" class="w-3 h-3"></i>
+              </a>
+            </div>
+          </div>
+        `;
+      } else {
+        if (statusComando) {
+          statusComando.className = "font-mono text-[10px] px-1.5 py-0.2 rounded bg-slate-900 text-amber-300 border border-amber-500/30";
+          statusComando.textContent = "⚪ Vacante";
+        }
+        const targetEje = (type === "subparroquia") ? (item.id || '') : (item.subParroquiaId || item.subparroquiaId || item.ejeId || '');
+        const secParam = (type === "sector" || type === "poligono") && item.id ? `&sec=${encodeURIComponent(item.id)}` : '';
+        const cmdUrl = `../comandos/?mun=${this.selectedMunId}&p=${this.selectedParishId}&eje=${encodeURIComponent(targetEje)}${secParam}&tab=tab-asignacion`;
+
+        contentComando.innerHTML = `
+          <div class="flex items-center justify-between gap-2 py-0.5">
+            <span class="text-[11px] text-slate-300">Sin responsable de comando asignado</span>
+            <a href="${cmdUrl}" target="_blank" class="py-1 px-2.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 text-[11px] font-black transition flex items-center gap-1 shadow cursor-pointer shrink-0" title="Asignar Responsable en Submódulo">
+              <i data-lucide="user-plus" class="w-3 h-3"></i>
+              <span>+ Asignar</span>
+            </a>
+          </div>
+        `;
+      }
     }
 
     card.style.display = "block";

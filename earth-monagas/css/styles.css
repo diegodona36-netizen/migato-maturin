@@ -57,7 +57,7 @@ input, select, textarea {
   border-bottom-color: rgba(14, 9, 46, 0.96) !important;
 }
 
-/* Popup de Acción Rápida para Sub-Parroquias / Ejes Comunales */
+/* Popup de Acción Rápida para Sub-Parroquias / Ejes Territoriales */
 .earth-popup-subparish .leaflet-popup-content-wrapper {
   background: rgba(20, 14, 64, 0.96) !important;
   backdrop-filter: blur(16px) !important;
