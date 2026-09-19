@@ -583,42 +583,44 @@ def build_docx(output_path):
         "Se plantea una arquitectura híbrida optimizada que garantiza alta velocidad en consultas cartográficas, cero pérdida de información y plena autonomía ante contingencias eléctricas."
     , indent=True, space_after=18))
 
-    doc_body.append(p_section_title("1. RESUMEN EJECUTIVO DE INVERSIÓN", space_before=15, space_after=10))
+    doc_body.append(p_section_title("1. RESUMEN EJECUTIVO DE INVERSIÓN", space_before=12, space_after=8))
     doc_body.append(p_body(
         "Para lograr un despliegue equilibrado, la inversión se divide en dos componentes: 1) Equipamiento físico de sala para procesamiento local de alta velocidad sin saturar el ancho de banda; y 2) Servidor en la nube (Cloud VPS) con disponibilidad 24/7 para el reporte móvil de los testigos en centros electorales.",
-        indent=True, space_after=12
+        indent=True, space_after=10
     ))
 
     resumen_headers = ["Componente / Ámbito", "Modalidad de Inversión", "Cobertura Operativa", "Inversión (USD)"]
     resumen_rows = [
-        ["A. Equipamiento Físico de Sala", "Pago Único (Hardware)", "45 a 60 min de respaldo en apagones", "$900,00 USD"],
+        ["A. Equipamiento Físico de Sala", "Pago Único (Hardware)", "45 a 60 min de respaldo en apagones", "$862,46 USD"],
         ["B. Servidor Cloud VPS (Nube)", "Suscripción Mensual", "24/7 en línea para los 13 municipios", "$24,50 USD / mes"],
-        ["TOTAL INVERSIÓN INTEGRAL", "Equipos físicos + 1 año de Servidor Cloud", "Sala Situacional + Cobertura Total", "$1.194,00 USD"]
+        ["TOTAL INVERSIÓN INTEGRAL", "Equipos físicos + 1 año de Servidor Cloud", "Sala Situacional + Cobertura Total", "$1.156,46 USD"]
     ]
     doc_body.append(build_iutirla_table(resumen_headers, resumen_rows, [3000, 2400, 2400, 1800]))
-    doc_body.append(p_blank(20))
+    doc_body.append(p_blank(15))
 
-    doc_body.append(p_section_title("2. DETALLE DE EQUIPOS FÍSICOS (SALA SITUACIONAL)", space_before=15, space_after=10))
+    doc_body.append(p_section_title("2. DETALLE DE EQUIPOS FÍSICOS (SALA SITUACIONAL)", space_before=12, space_after=8))
     doc_body.append(p_body(
-        "Se descartan servidores industriales pesados de rack (Dell PowerEdge antiguos de $1.200 USD) debido a su alto consumo eléctrico (300W a 500W), ruido y baja autonomía en UPS. "
-        "En su lugar, se implementa una estación de alto rendimiento Dell OptiPlex Core i7 de 8va Generación con 32 GB RAM DDR4, de consumo eficiente (65W) y almacenamiento 100% en estado sólido en arreglo espejo (RAID 1). "
-        "A continuación se detallan los costos cotizados en Mercado Libre Venezuela:",
-        indent=True, space_after=12
+        "Se descartan servidores industriales pesados de rack (Dell PowerEdge antiguos) debido a su excesivo consumo eléctrico (300W a 500W), ruido ensordecedor y escasa autonomía en UPS. "
+        "En su lugar, se implementa una estación de trabajo Dell OptiPlex Core i7 con almacenamiento dual 100% en estado sólido en arreglo espejo (RAID 1) y consumo eficiente (65W). "
+        "A continuación se detallan los costos cotizados en tiempo real en Mercado Libre Venezuela:",
+        indent=True, space_after=10
     ))
 
     piezas_headers = ["N°", "Equipo / Dispositivo", "Especificación Técnica Real", "Cant.", "Costo Unit.", "Total (USD)"]
     piezas_rows = [
-        ["1", "Computador Servidor Dell OptiPlex", "Core i7 8va Gen (i7-8700 6C/12T), 32 GB RAM DDR4, Chasis silencioso Torre/SFF (65W)", "1", "$230,00", "$230,00 USD"],
-        ["2", "Discos Sólidos SSD 1TB (RAID 1)", "2x SSD 1TB SATA 2.5\" Kingston KC600 / Crucial MX500 en Espejo (Sistema & Base de Datos)", "2", "$120,00", "$240,00 USD"],
-        ["3", "Router Gateway MikroTik hEX", "MikroTik RB750Gr3 (Dual Core 880MHz, 5 Puertos Gigabit). Firewall y Failover automático", "1", "$105,00", "$105,00 USD"],
-        ["4", "Switch Gigabit de Sala (16 Puertos)", "Switch Hikvision / TP-Link 16 Puertos 10/100/1000 Mbps chasis metálico para distribución", "1", "$65,00", "$65,00 USD"],
-        ["5", "Bobina Cable UTP Cat6 (305 metros)", "Bobina 305 metros Cat6 interior alta velocidad + caja de 100 conectores RJ45 para la sala", "1", "$95,00", "$95,00 USD"],
-        ["6", "UPS de Respaldo Eléctrico", "UPS 1.200 VA a 1.500 VA con supresor de picos (45 a 60 min de autonomía por bajo consumo)", "1", "$165,00", "$165,00 USD"],
-        ["—", "TOTAL EQUIPAMIENTO FÍSICO", "Equipamiento completo de cómputo, almacenamiento RAID, red y protección eléctrica", "—", "—", "$900,00 USD"]
+        ["1", "Computador Servidor Dell OptiPlex", "Core i7-6700 (3.40 GHz), 8 GB RAM DDR4 (expandible), chasis SFF silencioso (65W)", "1", "$215,00", "$215,00 USD"],
+        ["2", "Discos Sólidos SSD 480GB (RAID 1)", "2x SSD SATA 2.5\" 480GB WD Green en Espejo simétrico (Sistema y Base de Datos)", "2", "$109,99", "$219,98 USD"],
+        ["3", "Router Gateway MikroTik hEX", "MikroTik RB750Gr3 (Dual Core 880MHz, 5 Puertos Gigabit). Firewall y túnel WireGuard", "1", "$105,00", "$105,00 USD"],
+        ["4", "Switch Gigabit de Sala (16 Puertos)", "TP-Link TL-SG1016D 16 Puertos 10/100/1000 Mbps chasis metálico para distribución", "1", "$99,96", "$99,96 USD"],
+        ["5", "Bobina Cable UTP Cat6 (305 metros)", "Bobina 305m Cat6 STC interior 100% cobre para cableado estructurado de puestos", "1", "$72,99", "$72,99 USD"],
+        ["6", "Conectores RJ45 Cat6 (Caja 100 un.)", "Conectores RJ45 Cat6 con contactos dorados de alta conductividad para patch cords", "1", "$6,62", "$6,62 USD"],
+        ["7", "Kit de Herramientas de Red UTP", "Kit completo: ponchadora/crimpeadora RJ45-RJ11 + tester UTP probador de cable", "1", "$12,50", "$12,50 USD"],
+        ["8", "UPS de Respaldo Eléctrico 1.200 VA", "UPS Epcom EPU1200LCD 1.200 VA con pantalla digital interactiva y regulador AVR", "1", "$130,41", "$130,41 USD"],
+        ["—", "TOTAL EQUIPAMIENTO FÍSICO", "Dotación completa de cómputo, almacenamiento RAID 1, red y respaldo eléctrico", "—", "—", "$862,46 USD"]
     ]
     doc_body.append(build_iutirla_table(piezas_headers, piezas_rows, [400, 2400, 3800, 600, 1100, 1300]))
     doc_body.append(p_table_note(
-        "* Nota Aclaratoria de Hardware: Se eliminaron las bandejas costosas (caddys propietarios de $25 c/u) y los discos mecánicos lentos. Los dos SSD se conectan directamente en las bahías y puertos SATA de fábrica de la placa OptiPlex, ahorrando $470 USD de forma inmediata."
+        "* Nota Técnica sobre Almacenamiento (SATA vs. M.2 NVMe): La placa base del Dell OptiPlex 5040 posee una sola ranura M.2 de almacenamiento y dos puertos SATA III. Para asegurar redundancia simétrica RAID 1 (espejo en tiempo real) sin adaptadores PCIe adicionales ni sobrecalentamiento en chasis SFF, se emplean dos discos SSD SATA 2.5\" nativos."
     ))
 
     # Salto a Página 3
@@ -656,8 +658,8 @@ def build_docx(output_path):
 
     doc_body.append(p_section_title("4. RECOMENDACIÓN FINAL Y DECISIÓN", space_before=15, space_after=10))
     doc_body.append(p_body(
-        "Se recomienda formalmente la aprobación del presupuesto físico de $900,00 USD para la dotación de la Sala Situacional y la suscripción del Servidor Cloud VPS ($24,50 USD/mes), otorgando a MIGATO una plataforma territorial moderna, de máxima velocidad y blindada contra fallas. "
-        "Nota de Seguridad: El sistema de cámaras de videovigilancia (CCTV) se cotizará por separado más adelante según lo instruido; no obstante, el switch de 16 puertos y la bobina de cable Cat6 presupuestados en este documento ya dejan instalados los puntos de red requeridos.",
+        "Se recomienda formalmente la aprobación del presupuesto físico de $862,46 USD para la dotación de la Sala Situacional y la suscripción del Servidor Cloud VPS ($24,50 USD/mes), otorgando a MIGATO una plataforma territorial moderna, de máxima velocidad y blindada contra fallas. "
+        "Nota de Seguridad: El sistema de cámaras de videovigilancia (CCTV) se cotizará por separado más adelante según lo instruido; no obstante, el switch de 16 puertos, el kit de herramientas y la bobina Cat6 presupuestados en este documento ya dejan instalados los puntos de red requeridos.",
         indent=True, space_after=25
     ))
 
