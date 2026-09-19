@@ -36,7 +36,7 @@
   <script src="../centros-maturin/js/centrosData.js"></script>
 
   <!-- Estilos de Lámina Ejecutiva 120" -->
-  <link rel="stylesheet" href="css/lamina.css?v=251" />
+  <link rel="stylesheet" href="css/lamina.css?v=252" />
 
   <!-- Anti-Cache Meta Tags -->
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate, max-age=0" />
@@ -283,43 +283,50 @@
           <div class="flex items-center justify-between">
             <span id="legend-territory-title" class="text-xs font-black uppercase text-slate-800 tracking-wider flex items-center gap-1.5">
               <span class="w-2.5 h-2.5 rounded-full bg-sky-500"></span>
-              <span>Parroquias (Código de Color)</span>
+              <span>Estructura Territorial y Mando</span>
             </span>
             <span id="legend-territory-count" class="text-[10px] font-extrabold text-sky-700 bg-sky-100 px-1.5 py-0.2 rounded-full">
               11
             </span>
           </div>
-          <div id="legend-territory-list" class="space-y-1 max-h-56 overflow-y-auto pr-1">
-            <!-- Inyectado dinámicamente con los colores reales de cada parroquia -->
+          <div id="legend-territory-list" class="space-y-1">
+            <!-- Inyectado dinámicamente: Árbol Jerárquico de Mando y Territorio -->
           </div>
         </div>
 
-        <!-- Bloque 2: Leyenda de Estructura y Estados de Comandos MIGATO -->
+        <!-- Bloque 2: Leyenda de Niveles de Mando Territorial MIGATO -->
         <div class="p-2.5 rounded-xl bg-amber-50/70 border border-amber-200 shrink-0 space-y-2">
           <span class="text-xs font-black uppercase text-amber-900 tracking-wider flex items-center gap-1.5">
             <i data-lucide="shield" class="w-3.5 h-3.5 text-amber-600"></i>
-            <span>Estructura de Comandos MIGATO 2026</span>
+            <span>Niveles Operativos de Mando MIGATO</span>
           </span>
           <div class="grid grid-cols-1 gap-1.5 text-[11px]">
             <div class="p-1.5 rounded-lg bg-white border border-amber-200 flex items-start gap-2">
-              <span class="px-1.5 py-0.5 rounded bg-amber-100 text-amber-900 font-extrabold text-[9.5px] uppercase shrink-0">Mando</span>
+              <span class="px-1.5 py-0.5 rounded bg-sky-100 text-sky-900 font-extrabold text-[9.5px] uppercase shrink-0">🏛️ Mun.</span>
               <div>
-                <strong class="text-slate-900 block leading-tight">Responsable General / Parroquial</strong>
-                <span class="text-slate-600 text-[10px]">Conducción política, enlace institucional y toma de decisiones.</span>
+                <strong class="text-slate-900 block leading-tight">Nivel 1 • Municipal</strong>
+                <span class="text-slate-600 text-[10px]">Conducción política general, enlaces institucionales y sala situacional.</span>
               </div>
             </div>
             <div class="p-1.5 rounded-lg bg-white border border-amber-200 flex items-start gap-2">
-              <span class="px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-900 font-extrabold text-[9.5px] uppercase shrink-0">Eje</span>
+              <span class="px-1.5 py-0.5 rounded bg-purple-100 text-purple-900 font-extrabold text-[9.5px] uppercase shrink-0">📍 Parr.</span>
               <div>
-                <strong class="text-slate-900 block leading-tight">Comando Sectorial / Eje Comunal</strong>
-                <span class="text-slate-600 text-[10px]">Coordinación directa de comunidades y patrullas de base.</span>
+                <strong class="text-slate-900 block leading-tight">Nivel 2 • Parroquial</strong>
+                <span class="text-slate-600 text-[10px]">Coordinación de centros electorales y supervisión de ejes territoriales.</span>
               </div>
             </div>
             <div class="p-1.5 rounded-lg bg-white border border-amber-200 flex items-start gap-2">
-              <span class="px-1.5 py-0.5 rounded bg-sky-100 text-sky-900 font-extrabold text-[9.5px] uppercase shrink-0">Mesa</span>
+              <span class="px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-900 font-extrabold text-[9.5px] uppercase shrink-0">🛡️ Eje</span>
               <div>
-                <strong class="text-slate-900 block leading-tight">Mesa Técnica y Testigos CNE</strong>
-                <span class="text-slate-600 text-[10px]">Defensa del voto, auditoría de actas y control de centros.</span>
+                <strong class="text-slate-900 block leading-tight">Nivel 3 • Eje / Subparroquia</strong>
+                <span class="text-slate-600 text-[10px]">Custodia directa de centros CNE, mesas de votación y cuadrantes.</span>
+              </div>
+            </div>
+            <div class="p-1.5 rounded-lg bg-white border border-amber-200 flex items-start gap-2">
+              <span class="px-1.5 py-0.5 rounded bg-amber-100 text-amber-900 font-extrabold text-[9.5px] uppercase shrink-0">👥 Sector</span>
+              <div>
+                <strong class="text-slate-900 block leading-tight">Nivel 4 • Sector Comunitario</strong>
+                <span class="text-slate-600 text-[10px]">Jefatura de comunidad de base, 1x10 electoral y movilización vecinal.</span>
               </div>
             </div>
           </div>
@@ -449,7 +456,7 @@
 
   <!-- 5. AUTENTICACIÓN Y CONTROLADOR PRINCIPAL DEL MÓDULO -->
   <script src="../js/auth.js"></script>
-  <script type="module" src="js/laminaApp.js?v=251"></script>
+  <script type="module" src="js/laminaApp.js?v=252"></script>
   <script>
     if (window.lucide && typeof window.lucide.createIcons === 'function') {
       window.lucide.createIcons();

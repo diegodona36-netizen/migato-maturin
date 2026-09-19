@@ -271,6 +271,83 @@ html, body {
   color: #0f172a;
 }
 
+/* ==========================================================================
+   Árbol Jerárquico de Mando y Territorio (Leyenda Multinivel)
+   ========================================================================== */
+.chain-breadcrumb-card {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 8px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+}
+
+.eje-matrix-card {
+  background: linear-gradient(135deg, #faf5ff 0%, #f3e8ff 100%);
+  border: 2px solid #c084fc;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(168, 85, 247, 0.08);
+  transition: all 0.2s ease;
+}
+.eje-matrix-card:hover {
+  border-color: #a855f7;
+  box-shadow: 0 4px 12px rgba(168, 85, 247, 0.14);
+}
+
+/* Contenedor colapsable de sectores anidados */
+.sectors-accordion {
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #e9d5ff;
+  background: rgba(255, 255, 255, 0.9);
+}
+.sectors-accordion summary {
+  list-style: none;
+  cursor: pointer;
+  user-select: none;
+}
+.sectors-accordion summary::-webkit-details-marker {
+  display: none;
+}
+.sectors-accordion[open] summary .accordion-chevron {
+  transform: rotate(90deg);
+}
+.accordion-chevron {
+  transition: transform 0.2s ease;
+  display: inline-block;
+}
+
+/* Fila compacta de sector comunitario anidado */
+.sector-tree-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px 8px;
+  border-radius: 7px;
+  border: 1px solid #e2e8f0;
+  background: #ffffff;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  position: relative;
+}
+.sector-tree-row:hover {
+  background: #f8fafc;
+  border-color: #38bdf8;
+  transform: translateX(2px);
+}
+.sector-tree-row.active {
+  background: #f0f9ff;
+  border-color: #0284c7;
+  box-shadow: 0 0 0 1.5px #0284c7;
+}
+
+/* Conector de árbol jerárquico */
+.tree-connector-line {
+  border-left: 2px solid #d8b4fe;
+  margin-left: 8px;
+  padding-left: 8px;
+}
+
 /* Etiqueta Flotante sobre Polígono de Eje (Pantalla 100 Pulgadas) */
 .eje-polygon-label-marker {
   pointer-events: none !important;
@@ -459,6 +536,20 @@ html, body {
     border: 1px solid #cbd5e1 !important;
     break-inside: avoid !important;
     padding: 4px 8px !important;
+  }
+
+  /* Tarjetas jerárquicas ocupan ancho completo en impresión */
+  .chain-breadcrumb-card,
+  .eje-matrix-card,
+  .sectors-accordion {
+    grid-column: 1 / -1 !important;
+    break-inside: avoid !important;
+  }
+
+  .sector-tree-row {
+    border: 1px solid #cbd5e1 !important;
+    break-inside: avoid !important;
+    padding: 3px 6px !important;
   }
 
   /* Fila de roles de comando en 2 columnas */
