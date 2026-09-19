@@ -1673,25 +1673,6 @@ export class EarthMapEngine {
           console.warn("[MapEngine] Error renderizando sector vecinal:", poly, err);
         }
       });
-            click: (e) => {
-              if (e.originalEvent?.target?.blur) e.originalEvent.target.blur();
-              if (document.activeElement?.blur) document.activeElement.blur();
-              if (window.earthApp?.toolsManager?.activeTool) {
-                L.DomEvent.stopPropagation(e);
-                window.earthApp.toolsManager.handleMapClick(e);
-                return;
-              }
-              L.DomEvent.stopPropagation(e);
-
-              if (onSelectCallback) onSelectCallback("poligono", poly);
-            }
-          });
-
-          this.polygonsLayer.addLayer(pLayer);
-        } catch (err) {
-          console.warn("[MapEngine] Error renderizando sector vecinal:", poly, err);
-        }
-      });
 
       // 2. Rutas / Calles
       (pData.rutas || []).forEach(r => {

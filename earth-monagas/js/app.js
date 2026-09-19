@@ -231,6 +231,12 @@ class EarthMonagasApp {
       }
     }
 
+    // Garantizar parroquia por defecto (Maturín • Alto de los Godos) si no hay selección previa ni en URL
+    if (!this.selectedMunId || !this.selectedParishId) {
+      this.selectedMunId = "maturin";
+      this.selectedParishId = "alto-de-los-godos";
+    }
+
     this.mapEngine = new EarthMapEngine("earth-canvas", (lat, lng, eyeAlt) => {
       this.updateStatusBar(lat, lng, eyeAlt);
     });
