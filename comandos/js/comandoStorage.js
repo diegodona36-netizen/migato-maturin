@@ -66,20 +66,34 @@ export function getAssignment(targetId) {
 }
 
 /**
- * Guarda o actualiza una asignación territorial y auto-guarda el dirigente en el pool
+ * Guarda o actualiza una asignación territorial preservando el cargo institucional del dirigente
  */
 export function saveAssignment(targetId, payload) {
   try {
     const map = getAllAssignments();
     const cleanId = String(targetId).trim();
 
+    // Consultar el pool para obtener los datos oficiales del dirigente
+    const pool = getLeaderPool();
+    const dir = pool.find(d => 
+      (payload.id && String(d.id) === String(payload.id)) ||
+      (payload.cedula && (d.cedula || "").trim().toUpperCase() === (payload.cedula || "").trim().toUpperCase()) ||
+      d.nombre.trim().toLowerCase() === (payload.nombre || "").trim().toLowerCase()
+    );
+
+    const cargoOficial = dir?.cargo || payload.cargo || "Jefe de Comando Sectorial";
+    const nombreOficial = dir?.nombre || payload.nombre || "Responsable Asignado";
+    const cedulaOficial = dir?.cedula || payload.cedula || "";
+    const telefonoOficial = dir?.telefono || payload.telefono || "";
+    const profesionOficial = dir?.profesion || payload.profesion || "";
+
     const record = {
       id: cleanId,
-      nombre: payload.nombre || "Responsable Asignado",
-      telefono: payload.telefono || "",
-      cargo: payload.cargo || "Jefe de Comando Sectorial",
-      cedula: payload.cedula || "",
-      profesion: payload.profesion || "",
+      nombre: nombreOficial,
+      telefono: telefonoOficial,
+      cargo: cargoOficial,
+      cedula: cedulaOficial,
+      profesion: profesionOficial,
       municipioId: payload.municipioId || "maturin",
       parroquiaId: payload.parroquiaId || "",
       subParroquiaId: payload.subParroquiaId || "",
@@ -91,13 +105,14 @@ export function saveAssignment(targetId, payload) {
     map[cleanId] = record;
     localStorage.setItem(STORAGE_KEY_ASIGNADOS, JSON.stringify(map));
 
-    // Autoguardar dirigente en el pool central
+    // Asegurar registro en el pool sin alterar el cargo existente
     upsertDirigente({
-      nombre: record.nombre,
-      cedula: record.cedula,
-      telefono: record.telefono,
-      cargo: record.cargo,
-      profesion: record.profesion
+      id: dir?.id,
+      nombre: nombreOficial,
+      cedula: cedulaOficial,
+      telefono: telefonoOficial,
+      cargo: cargoOficial,
+      profesion: profesionOficial
     });
 
     notifyStorageChange();
@@ -110,30 +125,46 @@ export function saveAssignment(targetId, payload) {
 
 /**
  * Asigna en 1 clic un mismo responsable a múltiples sectores simultáneos
+ * respetando estrictamente su cargo institucional fijado en el pool.
  */
 export function bulkAssign(targetList, leaderPayload) {
   try {
     const map = getAllAssignments();
     const assignedIds = [];
 
-    // Primero registrar o actualizar dirigente en el pool
+    // Buscar dirigente en el pool para garantizar su rol oficial único
+    const pool = getLeaderPool();
+    const dir = pool.find(d => 
+      (leaderPayload.id && String(d.id) === String(leaderPayload.id)) ||
+      (leaderPayload.cedula && (d.cedula || "").trim().toUpperCase() === (leaderPayload.cedula || "").trim().toUpperCase()) ||
+      d.nombre.trim().toLowerCase() === (leaderPayload.nombre || "").trim().toLowerCase()
+    );
+
+    const cargoOficial = dir?.cargo || leaderPayload.cargo || "Jefe de Comando Sectorial";
+    const nombreOficial = dir?.nombre || leaderPayload.nombre || "Responsable Asignado";
+    const cedulaOficial = dir?.cedula || leaderPayload.cedula || "";
+    const telefonoOficial = dir?.telefono || leaderPayload.telefono || "";
+    const profesionOficial = dir?.profesion || leaderPayload.profesion || "";
+
+    // Asegurar sincronización en el pool
     upsertDirigente({
-      nombre: leaderPayload.nombre,
-      cedula: leaderPayload.cedula,
-      telefono: leaderPayload.telefono,
-      cargo: leaderPayload.cargo,
-      profesion: leaderPayload.profesion
+      id: dir?.id,
+      nombre: nombreOficial,
+      cedula: cedulaOficial,
+      telefono: telefonoOficial,
+      cargo: cargoOficial,
+      profesion: profesionOficial
     });
 
     targetList.forEach(target => {
       const cleanId = String(target.id || target).trim();
       const record = {
         id: cleanId,
-        nombre: leaderPayload.nombre || "Responsable Asignado",
-        telefono: leaderPayload.telefono || "",
-        cargo: leaderPayload.cargo || "Jefe de Comando Sectorial",
-        cedula: leaderPayload.cedula || "",
-        profesion: leaderPayload.profesion || "",
+        nombre: nombreOficial,
+        telefono: telefonoOficial,
+        cargo: cargoOficial,
+        cedula: cedulaOficial,
+        profesion: profesionOficial,
         municipioId: target.municipioId || leaderPayload.municipioId || "maturin",
         parroquiaId: target.parroquiaId || leaderPayload.parroquiaId || "",
         subParroquiaId: target.subParroquiaId || leaderPayload.subParroquiaId || "",

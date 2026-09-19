@@ -35,6 +35,7 @@ class ComandosApp {
     this.currentParishId = "alto-de-los-godos";
     this.currentEjeId = "todos";
     this.initialSecId = null;
+    this.selectedLeaderId = null;
     this.selectedSectorIds = new Set();
     this.activeTab = "tab-asignacion";
 
@@ -45,7 +46,8 @@ class ComandosApp {
     this.readUrlParams();
     this.setupTabs();
     this.setupTerritorySelectors();
-    this.setupAutocomplete();
+    this.setupLeaderPoolSelector();
+    this.setupModalDirigente();
     this.setupEventListeners();
     this.renderActiveView();
     this.setupStorageSync();
@@ -58,9 +60,9 @@ class ComandosApp {
           targetCard.scrollIntoView({ behavior: "smooth", block: "center" });
           targetCard.classList.add("ring-2", "ring-amber-400", "border-amber-400", "bg-amber-950/40");
         }
-        const inputNombre = document.getElementById("input-leader-nombre");
-        if (inputNombre) inputNombre.focus();
-        this.showToast(`Sector preseleccionado. Asigna el responsable en 1 clic.`, "info");
+        const selectLeader = document.getElementById("select-leader-pool");
+        if (selectLeader) selectLeader.focus();
+        this.showToast(`Sector preseleccionado. Selecciona un dirigente y asigna en 1 clic.`, "info");
       }, 350);
     }
   }
@@ -302,51 +304,251 @@ class ComandosApp {
   }
 
   /**
-   * Configura el autoguardado y autocompletado en tiempo real al escribir el nombre
+   * Configura el selector de dirigentes del pool central
    */
-  setupAutocomplete() {
-    this.refreshDatalist();
+  setupLeaderPoolSelector() {
+    this.refreshLeaderPoolSelector();
 
-    const inputNombre = document.getElementById("input-leader-nombre");
-    const inputCedula = document.getElementById("input-leader-cedula");
-    const inputTelf = document.getElementById("input-leader-telf");
-    const inputCargo = document.getElementById("input-leader-cargo");
-    const inputProf = document.getElementById("input-leader-prof");
-
-    if (!inputNombre) return;
-
-    // Al tipear o elegir un nombre del datalist, buscar si ya existe en el pool
-    inputNombre.addEventListener("input", () => {
-      const val = inputNombre.value.trim().toLowerCase();
-      if (!val) return;
-
-      const pool = getLeaderPool();
-      const match = pool.find(d => d.nombre.trim().toLowerCase() === val || (d.cedula && d.cedula.toLowerCase() === val));
-
-      if (match) {
-        if (inputCedula && !inputCedula.value) inputCedula.value = match.cedula || "";
-        if (inputTelf && !inputTelf.value) inputTelf.value = match.telefono || "";
-        if (inputCargo) inputCargo.value = match.cargo || "Jefe de Comando Sectorial";
-        if (inputProf && !inputProf.value) inputProf.value = match.profesion || "";
-
-        this.showToast(`Autocompletado: ${match.nombre} (${match.cargo})`, "info");
-      }
-    });
+    const select = document.getElementById("select-leader-pool");
+    if (select) {
+      select.addEventListener("change", () => {
+        this.selectedLeaderId = select.value || null;
+        this.renderSelectedLeaderDetails();
+      });
+    }
   }
 
-  refreshDatalist() {
-    const datalist = document.getElementById("datalist-dirigentes-pool");
-    if (!datalist) return;
+  refreshLeaderPoolSelector() {
+    const select = document.getElementById("select-leader-pool");
+    if (!select) return;
 
     const pool = getLeaderPool();
-    datalist.innerHTML = "";
+    const currentVal = this.selectedLeaderId || select.value;
+
+    select.innerHTML = '<option value="">-- Seleccionar Dirigente del Pool --</option>';
 
     pool.forEach(dir => {
       const opt = document.createElement("option");
-      opt.value = dir.nombre;
-      opt.textContent = `${dir.cedula ? dir.cedula + ' • ' : ''}${dir.cargo || 'Dirigente'}`;
-      datalist.appendChild(opt);
+      opt.value = dir.id;
+      opt.textContent = `${dir.nombre} • ${dir.cargo || "Dirigente"}${dir.cedula ? ' (' + dir.cedula + ')' : ''}`;
+      if (String(dir.id) === String(currentVal)) {
+        opt.selected = true;
+        this.selectedLeaderId = dir.id;
+      }
+      select.appendChild(opt);
     });
+
+    this.renderSelectedLeaderDetails();
+  }
+
+  renderSelectedLeaderDetails() {
+    const box = document.getElementById("box-leader-details");
+    if (!box) return;
+
+    if (!this.selectedLeaderId) {
+      box.innerHTML = `
+        <div class="text-center py-4 text-slate-400 text-xs">
+          <i data-lucide="user-check" class="w-7 h-7 mx-auto text-slate-500 mb-1.5 opacity-60"></i>
+          <p>Selecciona un dirigente para ver su credencial fija y asignarlo a los sectores marcados.</p>
+        </div>
+      `;
+      if (window.lucide) window.lucide.createIcons();
+      return;
+    }
+
+    const pool = getLeaderPool();
+    const dir = pool.find(d => String(d.id) === String(this.selectedLeaderId));
+    if (!dir) {
+      this.selectedLeaderId = null;
+      box.innerHTML = `
+        <div class="text-center py-4 text-slate-400 text-xs">
+          <p class="text-rose-400">Dirigente no encontrado en el pool.</p>
+        </div>
+      `;
+      return;
+    }
+
+    // Contar sectores asignados actualmente
+    const assignments = getAllAssignments();
+    const assignedSectors = Object.values(assignments).filter(as => 
+      (as.cedula && dir.cedula && as.cedula.trim().toUpperCase() === dir.cedula.trim().toUpperCase()) ||
+      (as.nombre && as.nombre.trim().toLowerCase() === dir.nombre.trim().toLowerCase())
+    );
+
+    const cleanTelf = (dir.telefono || "").replace(/[^0-9+]/g, "");
+    const waLink = cleanTelf ? `https://wa.me/${cleanTelf.replace('+', '')}` : null;
+
+    box.innerHTML = `
+      <div class="flex items-start justify-between gap-2 border-b border-[#2d1f85]/80 pb-2.5">
+        <div>
+          <span class="text-[10px] font-mono uppercase tracking-widest text-slate-400 block">Credencial Oficial</span>
+          <h4 class="font-black text-sm text-white flex items-center gap-1.5 mt-0.5">
+            ${dir.nombre}
+          </h4>
+        </div>
+        <button type="button" class="btn-edit-current-leader text-[11px] font-bold text-amber-400 hover:text-amber-300 flex items-center gap-1 transition cursor-pointer" title="Editar datos institucionales de este dirigente">
+          <i data-lucide="edit-3" class="w-3 h-3"></i>
+          <span>Editar</span>
+        </button>
+      </div>
+
+      <!-- Cargo Institucional Fijo -->
+      <div class="bg-purple-950/60 border border-purple-500/40 rounded-xl p-2.5 flex items-center justify-between gap-2">
+        <div class="flex items-center gap-2 min-w-0">
+          <div class="w-7 h-7 rounded-lg bg-purple-500/20 text-purple-300 flex items-center justify-center shrink-0">
+            <i data-lucide="shield-check" class="w-4 h-4"></i>
+          </div>
+          <div class="min-w-0">
+            <span class="text-[10px] font-black uppercase tracking-wider text-purple-300 block">Cargo Institucional Fijo</span>
+            <span class="font-black text-xs text-white truncate block">${dir.cargo || "Jefe de Comando Sectorial"}</span>
+          </div>
+        </div>
+        <span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-emerald-950 text-emerald-300 border border-emerald-500/40 shrink-0">
+          ${assignedSectors.length} Sectores
+        </span>
+      </div>
+
+      <!-- Datos de Contacto y Profesión -->
+      <div class="grid grid-cols-2 gap-2 text-xs">
+        <div class="bg-slate-900/60 p-2 rounded-lg border border-slate-800">
+          <span class="text-[10px] text-slate-400 uppercase tracking-wider block font-bold">Cédula</span>
+          <span class="font-mono font-bold text-amber-300">${dir.cedula || "No registrada"}</span>
+        </div>
+        <div class="bg-slate-900/60 p-2 rounded-lg border border-slate-800">
+          <span class="text-[10px] text-slate-400 uppercase tracking-wider block font-bold">Profesión</span>
+          <span class="font-medium text-slate-200 truncate block">${dir.profesion || "No especificada"}</span>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-between gap-2 pt-1">
+        <div class="flex items-center gap-1.5 text-xs font-mono text-slate-300 truncate">
+          <i data-lucide="phone" class="w-3.5 h-3.5 text-slate-400 shrink-0"></i>
+          <span class="truncate">${dir.telefono || "Sin teléfono"}</span>
+        </div>
+        ${waLink ? `
+          <a href="${waLink}" target="_blank" class="py-1 px-2.5 rounded-lg bg-emerald-600/20 hover:bg-emerald-600/30 border border-emerald-500/40 text-emerald-300 text-[11px] font-bold flex items-center gap-1 transition" title="Contactar por WhatsApp">
+            <i data-lucide="message-circle" class="w-3.5 h-3.5"></i>
+            <span>WhatsApp</span>
+          </a>
+        ` : ''}
+      </div>
+    `;
+
+    box.querySelector(".btn-edit-current-leader")?.addEventListener("click", () => {
+      this.openModalDirigente(dir);
+    });
+
+    if (window.lucide) window.lucide.createIcons();
+  }
+
+  /**
+   * Configura la ventana modal para crear y editar dirigentes en el pool
+   */
+  setupModalDirigente() {
+    const modal = document.getElementById("modal-dirigente");
+    const btnClose = document.getElementById("btn-modal-close");
+    const btnCancel = document.getElementById("btn-modal-cancel");
+    const form = document.getElementById("form-modal-dirigente");
+
+    const quickNewBtn = document.getElementById("btn-quick-new-dirigente");
+    const tab2NewBtn = document.getElementById("btn-nuevo-dirigente-tab2");
+
+    quickNewBtn?.addEventListener("click", () => this.openModalDirigente());
+    tab2NewBtn?.addEventListener("click", () => this.openModalDirigente());
+
+    btnClose?.addEventListener("click", () => this.closeModalDirigente());
+    btnCancel?.addEventListener("click", () => this.closeModalDirigente());
+
+    modal?.addEventListener("click", (e) => {
+      if (e.target === modal) this.closeModalDirigente();
+    });
+
+    form?.addEventListener("submit", (e) => {
+      e.preventDefault();
+      this.handleSaveModalDirigente();
+    });
+  }
+
+  openModalDirigente(dir = null) {
+    const modal = document.getElementById("modal-dirigente");
+    const title = document.getElementById("modal-dirigente-title");
+    const inputId = document.getElementById("modal-input-id");
+    const inputNombre = document.getElementById("modal-input-nombre");
+    const inputCedula = document.getElementById("modal-input-cedula");
+    const inputTelf = document.getElementById("modal-input-telefono");
+    const inputCargo = document.getElementById("modal-input-cargo");
+    const inputProf = document.getElementById("modal-input-profesion");
+    const inputNotas = document.getElementById("modal-input-notas");
+
+    if (!modal) return;
+
+    if (dir) {
+      if (title) title.textContent = "Editar Dirigente en Pool";
+      if (inputId) inputId.value = dir.id || "";
+      if (inputNombre) inputNombre.value = dir.nombre || "";
+      if (inputCedula) inputCedula.value = dir.cedula || "";
+      if (inputTelf) inputTelf.value = dir.telefono || "";
+      if (inputCargo) inputCargo.value = dir.cargo || "Jefe de Comando Sectorial";
+      if (inputProf) inputProf.value = dir.profesion || "";
+      if (inputNotas) inputNotas.value = dir.notas || "";
+    } else {
+      if (title) title.textContent = "Registrar Nuevo Dirigente";
+      if (inputId) inputId.value = "";
+      if (inputNombre) inputNombre.value = "";
+      if (inputCedula) inputCedula.value = "";
+      if (inputTelf) inputTelf.value = "";
+      if (inputCargo) inputCargo.value = "Jefe de Comando Sectorial";
+      if (inputProf) inputProf.value = "";
+      if (inputNotas) inputNotas.value = "";
+    }
+
+    modal.classList.remove("hidden");
+    modal.classList.add("flex");
+    inputNombre?.focus();
+    if (window.lucide) window.lucide.createIcons();
+  }
+
+  closeModalDirigente() {
+    const modal = document.getElementById("modal-dirigente");
+    if (!modal) return;
+    modal.classList.add("hidden");
+    modal.classList.remove("flex");
+  }
+
+  handleSaveModalDirigente() {
+    const inputId = document.getElementById("modal-input-id");
+    const inputNombre = document.getElementById("modal-input-nombre");
+    const inputCedula = document.getElementById("modal-input-cedula");
+    const inputTelf = document.getElementById("modal-input-telefono");
+    const inputCargo = document.getElementById("modal-input-cargo");
+    const inputProf = document.getElementById("modal-input-profesion");
+    const inputNotas = document.getElementById("modal-input-notas");
+
+    const nombre = inputNombre?.value?.trim();
+    if (!nombre) {
+      alert("Debes ingresar el nombre del dirigente.");
+      inputNombre?.focus();
+      return;
+    }
+
+    const payload = {
+      id: inputId?.value || undefined,
+      nombre,
+      cedula: inputCedula?.value?.trim() || "",
+      telefono: inputTelf?.value?.trim() || "",
+      cargo: inputCargo?.value || "Jefe de Comando Sectorial",
+      profesion: inputProf?.value?.trim() || "",
+      notas: inputNotas?.value?.trim() || ""
+    };
+
+    const saved = upsertDirigente(payload);
+    if (saved) {
+      this.selectedLeaderId = saved.id;
+      this.refreshLeaderPoolSelector();
+      this.renderDirectorio();
+      this.closeModalDirigente();
+      this.showToast(`✅ Dirigente ${saved.nombre} guardado en el pool`, "success");
+    }
   }
 
   setupEventListeners() {
@@ -403,13 +605,13 @@ class ComandosApp {
   setupStorageSync() {
     window.addEventListener("storage", (e) => {
       if (e.key === "migato_comandos_asignados" || e.key === "migato_pool_dirigentes_v1") {
-        this.refreshDatalist();
+        this.refreshLeaderPoolSelector();
         this.renderActiveView();
       }
     });
 
     window.addEventListener("migato:comandos-updated", () => {
-      this.refreshDatalist();
+      this.refreshLeaderPoolSelector();
       this.renderActiveView();
     });
   }
@@ -567,7 +769,7 @@ class ComandosApp {
             this.selectedSectorIds.clear();
             this.selectedSectorIds.add(secId);
             this.renderSectoresList();
-            document.getElementById("input-leader-nombre")?.focus();
+            document.getElementById("select-leader-pool")?.focus();
           });
         }
       }
@@ -583,7 +785,7 @@ class ComandosApp {
   }
 
   /**
-   * Ejecuta la asignación en lote a todos los sectores seleccionados
+   * Ejecuta la asignación en lote del dirigente seleccionado a todos los sectores marcados
    */
   handleBulkAssignment() {
     if (this.selectedSectorIds.size === 0) {
@@ -591,34 +793,19 @@ class ComandosApp {
       return;
     }
 
-    const inputNombre = document.getElementById("input-leader-nombre");
-    const inputCedula = document.getElementById("input-leader-cedula");
-    const inputTelf = document.getElementById("input-leader-telf");
-    const inputCargo = document.getElementById("input-leader-cargo");
-    const inputProf = document.getElementById("input-leader-prof");
-
-    const nombre = inputNombre?.value?.trim();
-    const cedula = inputCedula?.value?.trim();
-    const telefono = inputTelf?.value?.trim();
-    const cargo = inputCargo?.value || "Jefe de Comando Sectorial";
-    const profesion = inputProf?.value?.trim();
-
-    if (!nombre) {
-      alert("Debes ingresar el nombre y apellido del responsable.");
-      inputNombre?.focus();
+    if (!this.selectedLeaderId) {
+      alert("Por favor selecciona un dirigente del pool para asignarlo a los sectores marcados.");
+      const sel = document.getElementById("select-leader-pool");
+      if (sel) sel.focus();
       return;
     }
 
-    const leaderPayload = {
-      nombre,
-      cedula,
-      telefono,
-      cargo,
-      profesion,
-      municipioId: this.currentMunId,
-      parroquiaId: this.currentParishId,
-      subParroquiaId: this.currentEjeId !== "todos" ? this.currentEjeId : ""
-    };
+    const pool = getLeaderPool();
+    const leader = pool.find(d => String(d.id) === String(this.selectedLeaderId));
+    if (!leader) {
+      alert("El dirigente seleccionado no se encuentra en el pool.");
+      return;
+    }
 
     const targetList = [];
     const allSectores = this.getActiveSectores();
@@ -635,14 +822,15 @@ class ComandosApp {
       });
     });
 
-    const assigned = bulkAssign(targetList, leaderPayload);
+    const assigned = bulkAssign(targetList, leader);
 
-    this.showToast(`✅ ${nombre} asignado con éxito a ${assigned.length} sectores.`, "success");
+    this.showToast(`✅ ${leader.nombre} (${leader.cargo}) asignado con éxito a ${assigned.length} sectores.`, "success");
 
-    // Limpiar selección y refrescar
+    // Limpiar selección y refrescar vistas
     this.selectedSectorIds.clear();
-    this.refreshDatalist();
     this.renderSectoresList();
+    this.renderSelectedLeaderDetails();
+    this.renderDirectorio();
   }
 
   /**
@@ -728,9 +916,12 @@ class ComandosApp {
             ${secCount}
           </span>
         </td>
-        <td class="p-3.5 text-right">
-          <button type="button" class="btn-use-leader p-1.5 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 font-bold text-xs border border-amber-400/40 transition cursor-pointer mr-1" title="Usar en Asignación">
-            Asignar
+        <td class="p-3.5 text-right whitespace-nowrap">
+          <button type="button" class="btn-use-leader py-1.5 px-2.5 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 font-bold text-xs border border-amber-400/40 transition cursor-pointer mr-1" title="Asignar este dirigente a sectores">
+            ⚡ Asignar
+          </button>
+          <button type="button" class="btn-edit-leader p-1.5 rounded-lg bg-sky-950/40 hover:bg-sky-900/60 text-sky-300 border border-sky-500/40 transition cursor-pointer mr-1" title="Editar datos institucionales del dirigente">
+            <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
           </button>
           <button type="button" class="btn-delete-leader p-1.5 rounded-lg bg-rose-950/40 hover:bg-rose-900/60 text-rose-300 border border-rose-500/40 transition cursor-pointer" title="Eliminar del Pool">
             <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
@@ -738,29 +929,27 @@ class ComandosApp {
         </td>
       `;
 
-      // Botón Usar Dirigente
+      // Botón Usar Dirigente (Asignar)
       tr.querySelector(".btn-use-leader")?.addEventListener("click", () => {
+        this.selectedLeaderId = dir.id;
         this.switchTab("tab-asignacion");
-        const inputNombre = document.getElementById("input-leader-nombre");
-        const inputCedula = document.getElementById("input-leader-cedula");
-        const inputTelf = document.getElementById("input-leader-telf");
-        const inputCargo = document.getElementById("input-leader-cargo");
-        const inputProf = document.getElementById("input-leader-prof");
+        this.refreshLeaderPoolSelector();
+        const container = document.getElementById("sectores-list-container");
+        if (container) container.scrollIntoView({ behavior: "smooth", block: "start" });
+        this.showToast(`Dirigente preparado: ${dir.nombre} (${dir.cargo}). Selecciona los sectores a asignar.`, "info");
+      });
 
-        if (inputNombre) inputNombre.value = dir.nombre || "";
-        if (inputCedula) inputCedula.value = dir.cedula || "";
-        if (inputTelf) inputTelf.value = dir.telefono || "";
-        if (inputCargo) inputCargo.value = dir.cargo || "Jefe de Comando Sectorial";
-        if (inputProf) inputProf.value = dir.profesion || "";
-
-        this.showToast(`Cargado en formulario: ${dir.nombre}`, "info");
+      // Botón Editar Dirigente
+      tr.querySelector(".btn-edit-leader")?.addEventListener("click", () => {
+        this.openModalDirigente(dir);
       });
 
       // Botón Eliminar Dirigente
       tr.querySelector(".btn-delete-leader")?.addEventListener("click", () => {
         if (confirm(`¿Eliminar a ${dir.nombre} del pool de dirigentes?`)) {
           deleteDirigente(dir.id);
-          this.refreshDatalist();
+          if (this.selectedLeaderId === dir.id) this.selectedLeaderId = null;
+          this.refreshLeaderPoolSelector();
           this.renderDirectorio(filterQuery);
           this.showToast(`Dirigente eliminado`, "warning");
         }
@@ -933,7 +1122,7 @@ class ComandosApp {
         const json = JSON.parse(event.target.result);
         if (importAllData(json)) {
           this.showToast("Backup importado y sincronizado con éxito", "success");
-          this.refreshDatalist();
+          this.refreshLeaderPoolSelector();
           this.renderActiveView();
         } else {
           alert("El archivo no tiene el formato esperado.");

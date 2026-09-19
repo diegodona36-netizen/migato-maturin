@@ -167,66 +167,33 @@
           </div>
 
           <form id="form-bulk-assignment" class="space-y-3.5">
-            <!-- Datalist para Autocompletado Instantáneo -->
-            <datalist id="datalist-dirigentes-pool"></datalist>
-
             <div>
-              <label class="text-[11px] font-black uppercase text-slate-300 tracking-wider block mb-1">
-                Nombre y Apellido *
-              </label>
-              <div class="relative">
-                <input type="text" id="input-leader-nombre" required list="datalist-dirigentes-pool"
-                       placeholder="Escribe o selecciona un dirigente..."
-                       class="w-full bg-[#0d0929] border border-[#2d1f85] rounded-xl px-3 py-2 text-xs font-bold text-white focus:outline-none focus:border-amber-500 transition">
-                <i data-lucide="search" class="w-3.5 h-3.5 text-slate-500 absolute right-3 top-2.5 pointer-events-none"></i>
-              </div>
-              <span class="text-[10px] text-slate-400 mt-1 block">
-                💡 Si el nombre ya está registrado, autocompletará sus datos automáticamente.
-              </span>
-            </div>
-
-            <div class="grid grid-cols-2 gap-2.5">
-              <div>
-                <label class="text-[11px] font-black uppercase text-slate-300 tracking-wider block mb-1">
-                  Cédula
+              <div class="flex items-center justify-between mb-1.5">
+                <label class="text-[11px] font-black uppercase text-slate-300 tracking-wider">
+                  Dirigente del Pool *
                 </label>
-                <input type="text" id="input-leader-cedula" placeholder="Ej: V-19.882.314"
-                       class="w-full bg-[#0d0929] border border-[#2d1f85] rounded-xl px-3 py-2 text-xs font-mono font-bold text-amber-300 focus:outline-none focus:border-amber-500 transition">
+                <button type="button" id="btn-quick-new-dirigente" class="text-[11px] text-amber-400 hover:text-amber-300 font-bold flex items-center gap-1 transition cursor-pointer">
+                  <i data-lucide="user-plus" class="w-3.5 h-3.5"></i>
+                  <span>+ Nuevo</span>
+                </button>
               </div>
-
-              <div>
-                <label class="text-[11px] font-black uppercase text-slate-300 tracking-wider block mb-1">
-                  Teléfono / WhatsApp *
-                </label>
-                <input type="tel" id="input-leader-telf" required placeholder="0414-1234567"
-                       class="w-full bg-[#0d0929] border border-[#2d1f85] rounded-xl px-3 py-2 text-xs font-mono font-bold text-white focus:outline-none focus:border-amber-500 transition">
-              </div>
-            </div>
-
-            <div>
-              <label class="text-[11px] font-black uppercase text-slate-300 tracking-wider block mb-1">
-                Cargo / Responsabilidad
-              </label>
-              <select id="input-leader-cargo" class="w-full bg-[#0d0929] border border-[#2d1f85] rounded-xl px-2.5 py-2 text-xs font-bold text-white focus:outline-none focus:border-amber-500 transition">
-                <option value="Jefe de Comando Sectorial">Jefe de Comando Sectorial</option>
-                <option value="Coordinador de Eje">Coordinador de Eje</option>
-                <option value="Responsable de Sector">Responsable de Sector</option>
-                <option value="Responsable de Organización">Responsable de Organización</option>
-                <option value="Responsable de Movilización">Responsable de Movilización</option>
+              <select id="select-leader-pool" required
+                      class="w-full bg-[#0d0929] border border-[#2d1f85] rounded-xl px-3 py-2.5 text-xs font-bold text-white focus:outline-none focus:border-amber-500 transition cursor-pointer">
+                <option value="">-- Seleccionar Dirigente del Pool --</option>
               </select>
             </div>
 
-            <div>
-              <label class="text-[11px] font-black uppercase text-slate-300 tracking-wider block mb-1">
-                Profesión / Especialidad
-              </label>
-              <input type="text" id="input-leader-prof" placeholder="Ej: Docente, Administrador, Ingeniero"
-                     class="w-full bg-[#0d0929] border border-[#2d1f85] rounded-xl px-3 py-2 text-xs font-medium text-slate-200 focus:outline-none focus:border-amber-500 transition">
+            <!-- Ficha Credencial Institucional del Dirigente Seleccionado (Solo Lectura) -->
+            <div id="box-leader-details" class="p-3.5 rounded-xl bg-[#0d0929]/90 border border-[#2d1f85] space-y-2.5">
+              <div class="text-center py-4 text-slate-400 text-xs">
+                <i data-lucide="user-check" class="w-7 h-7 mx-auto text-slate-500 mb-1.5 opacity-60"></i>
+                <p>Selecciona un dirigente para ver su credencial fija y asignarlo a los sectores marcados.</p>
+              </div>
             </div>
 
-            <button type="submit" class="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-xl shadow-amber-500/20 active:scale-95 transition cursor-pointer">
+            <button type="submit" id="btn-submit-bulk-assign" class="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-xl shadow-amber-500/20 active:scale-95 transition cursor-pointer">
               <i data-lucide="zap" class="w-4 h-4 fill-current"></i>
-              <span>⚡ Asignar y Guardar en 1 Clic</span>
+              <span>⚡ Asignar Responsable en 1 Clic</span>
             </button>
           </form>
         </div>
@@ -249,6 +216,10 @@
           <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3 top-3"></i>
         </div>
         <div class="flex items-center gap-2">
+          <button type="button" id="btn-nuevo-dirigente-tab2" class="py-2 px-3.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs uppercase flex items-center gap-1.5 shadow-lg shadow-amber-500/20 transition cursor-pointer">
+            <i data-lucide="user-plus" class="w-4 h-4"></i>
+            <span>+ Registrar Dirigente</span>
+          </button>
           <span id="total-dirigentes-badge" class="text-xs font-mono font-bold px-3 py-1.5 rounded-xl bg-purple-950 text-purple-300 border border-purple-500/40">
             0 Registrados
           </span>
@@ -375,7 +346,99 @@
     <span id="toast-message" class="text-xs">Operación realizada con éxito</span>
   </div>
 
+  <!-- Modal Crear / Editar Dirigente en el Pool Institucional -->
+  <div id="modal-dirigente" class="fixed inset-0 z-[9990] bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="glass-panel w-full max-w-md rounded-2xl border border-amber-500/40 p-5 space-y-4 shadow-2xl">
+      <div class="flex items-center justify-between pb-3 border-b border-[#2d1f85]">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-xl bg-amber-500/20 border border-amber-400/40 text-amber-300 flex items-center justify-center">
+            <i data-lucide="user-cog" class="w-4 h-4"></i>
+          </div>
+          <div>
+            <h3 id="modal-dirigente-title" class="font-black text-sm uppercase text-white">Registrar en Pool</h3>
+            <p class="text-[11px] text-slate-400">El cargo institucional es único y fijo por dirigente.</p>
+          </div>
+        </div>
+        <button type="button" id="btn-modal-close" class="p-1 rounded-lg text-slate-400 hover:text-white transition cursor-pointer">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <form id="form-modal-dirigente" class="space-y-3.5">
+        <input type="hidden" id="modal-input-id">
+
+        <div>
+          <label class="text-[11px] font-black uppercase text-slate-300 tracking-wider block mb-1">
+            Nombre y Apellido *
+          </label>
+          <input type="text" id="modal-input-nombre" required placeholder="Ej: Ing. Carlos Salazar"
+                 class="w-full bg-[#0d0929] border border-[#2d1f85] rounded-xl px-3 py-2 text-xs font-bold text-white focus:outline-none focus:border-amber-500 transition">
+        </div>
+
+        <div class="grid grid-cols-2 gap-2.5">
+          <div>
+            <label class="text-[11px] font-black uppercase text-slate-300 tracking-wider block mb-1">
+              Cédula
+            </label>
+            <input type="text" id="modal-input-cedula" placeholder="V-12.345.678"
+                   class="w-full bg-[#0d0929] border border-[#2d1f85] rounded-xl px-3 py-2 text-xs font-mono font-bold text-amber-300 focus:outline-none focus:border-amber-500 transition">
+          </div>
+
+          <div>
+            <label class="text-[11px] font-black uppercase text-slate-300 tracking-wider block mb-1">
+              Teléfono / WhatsApp *
+            </label>
+            <input type="tel" id="modal-input-telefono" required placeholder="0414-1234567"
+                   class="w-full bg-[#0d0929] border border-[#2d1f85] rounded-xl px-3 py-2 text-xs font-mono font-bold text-white focus:outline-none focus:border-amber-500 transition">
+          </div>
+        </div>
+
+        <div>
+          <label class="text-[11px] font-black uppercase text-slate-300 tracking-wider block mb-1">
+            Cargo Institucional Oficial *
+          </label>
+          <select id="modal-input-cargo" required class="w-full bg-[#0d0929] border border-[#2d1f85] rounded-xl px-2.5 py-2 text-xs font-bold text-white focus:outline-none focus:border-amber-500 transition cursor-pointer">
+            <option value="Jefe de Comando Sectorial">Jefe de Comando Sectorial</option>
+            <option value="Coordinador de Eje">Coordinador de Eje</option>
+            <option value="Responsable de Sector">Responsable de Sector</option>
+            <option value="Responsable de Organización">Responsable de Organización</option>
+            <option value="Responsable de Movilización">Responsable de Movilización</option>
+          </select>
+          <span class="text-[10px] text-slate-400 mt-1 block">
+            🔒 Este cargo quedará asignado a esta persona en todos los sectores donde opere.
+          </span>
+        </div>
+
+        <div>
+          <label class="text-[11px] font-black uppercase text-slate-300 tracking-wider block mb-1">
+            Profesión / Especialidad
+          </label>
+          <input type="text" id="modal-input-profesion" placeholder="Ej: Educador, Médico, Ingeniero"
+                 class="w-full bg-[#0d0929] border border-[#2d1f85] rounded-xl px-3 py-2 text-xs font-medium text-slate-200 focus:outline-none focus:border-amber-500 transition">
+        </div>
+
+        <div>
+          <label class="text-[11px] font-black uppercase text-slate-300 tracking-wider block mb-1">
+            Territorio / Notas de Enlace
+          </label>
+          <input type="text" id="modal-input-notas" placeholder="Ej: Enlace Parroquial Los Godos"
+                 class="w-full bg-[#0d0929] border border-[#2d1f85] rounded-xl px-3 py-2 text-xs font-medium text-slate-200 focus:outline-none focus:border-amber-500 transition">
+        </div>
+
+        <div class="flex items-center justify-end gap-2 pt-2 border-t border-[#2d1f85]">
+          <button type="button" id="btn-modal-cancel" class="py-2 px-3.5 rounded-xl border border-slate-700 text-slate-300 hover:bg-slate-800 text-xs font-bold transition cursor-pointer">
+            Cancelar
+          </button>
+          <button type="submit" class="py-2 px-4 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs uppercase flex items-center gap-1.5 shadow-lg shadow-amber-500/20 transition cursor-pointer">
+            <i data-lucide="save" class="w-4 h-4"></i>
+            <span>Guardar en Pool</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <!-- Inicialización de Scripts -->
-  <script type="module" src="js/comandosApp.js?v=243"></script>
+  <script type="module" src="js/comandosApp.js?v=248"></script>
 </body>
 </html>
