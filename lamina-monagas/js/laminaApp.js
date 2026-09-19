@@ -173,6 +173,20 @@ export class LaminaApp {
       btnFull.addEventListener("click", () => this.toggleFullscreen());
     }
 
+    // Adaptación automática para Impresión y Exportación a PDF en orientación vertical
+    window.addEventListener("beforeprint", () => {
+      document.body.classList.add("printing-mode");
+      if (this.map) {
+        setTimeout(() => this.map.invalidateSize(), 50);
+      }
+    });
+    window.addEventListener("afterprint", () => {
+      document.body.classList.remove("printing-mode");
+      if (this.map) {
+        setTimeout(() => this.map.invalidateSize(), 100);
+      }
+    });
+
     // Modal de Asignación Directa de Comando Sectorial
     const btnOpenAsignar = document.getElementById("btn-open-asignar-modal");
     if (btnOpenAsignar) {
@@ -371,8 +385,11 @@ export class LaminaApp {
       activeBtn.classList.remove("text-slate-600");
     }
 
+    this.activeTab = tabName;
     if (tabName === "comando") {
       this.renderComandoSection();
+    } else if (tabName === "symbols") {
+      this.renderSymbolsSection();
     }
 
     if (window.lucide && typeof window.lucide.createIcons === "function") {
@@ -521,6 +538,7 @@ export class LaminaApp {
       })
     });
     this.renderComandoSection();
+    this.renderSymbolsSection();
     this.updateBreadcrumbs();
     auditLogger.logEvent("SELECCION_ESTADO", { entidad: "Estado Monagas" });
   }
@@ -628,6 +646,7 @@ export class LaminaApp {
       })
     });
     this.renderComandoSection();
+    this.renderSymbolsSection();
     this.updateBreadcrumbs();
     auditLogger.logEvent("SELECCION_MUNICIPIO", { municipioId: cleanMunId, nombre: munObj.nombre });
   }
@@ -853,6 +872,7 @@ export class LaminaApp {
       items: listItems
     });
     this.renderComandoSection();
+    this.renderSymbolsSection();
     this.updateBreadcrumbs();
     auditLogger.logEvent("SELECCION_PARROQUIA", { parroquiaId: cleanPId, municipioId: cleanMunId, nombre: cleanPName });
   }
@@ -1010,6 +1030,7 @@ export class LaminaApp {
     });
 
     this.renderComandoSection();
+    this.renderSymbolsSection();
     this.updateBreadcrumbs();
     auditLogger.logEvent("SELECCION_SUBPARROQUIA_EJE", { ejeId: spId, parroquiaId: cleanPId, municipioId: cleanMunId, nombre: eje.nombre });
   }
@@ -1153,6 +1174,7 @@ export class LaminaApp {
       ]
     });
     this.renderComandoSection();
+    this.renderSymbolsSection();
     this.updateBreadcrumbs();
     auditLogger.logEvent("SELECCION_SECTOR", { sectorId: secId, parroquiaId: cleanPId, municipioId: cleanMunId, nombre: cleanSecName });
   }
@@ -1446,6 +1468,117 @@ export class LaminaApp {
         `;
       }
       listEl.innerHTML = html;
+    }
+
+    if (window.lucide && typeof window.lucide.createIcons === "function") {
+      window.lucide.createIcons();
+    }
+  }
+
+  // Renderizar la Leyenda Territorial Dinámica y Simbología de Comandos
+  renderSymbolsSection() {
+    const listEl = document.getElementById("legend-territory-list");
+    const titleEl = document.getElementById("legend-territory-title");
+    const countEl = document.getElementById("legend-territory-count");
+    if (!listEl) return;
+
+    let items = [];
+    let titleText = "Parroquias (Código de Color)";
+
+    if (this.level === "estado") {
+      titleText = "Municipios del Estado Monagas";
+      const municipios = CATALOGO_MONAGAS || [];
+      items = municipios.map(m => {
+        const demo = getMunicipioDemographics(m.id);
+        const mColor = m.id === "maturin" ? "#0284c7" : "#0d9488";
+        return {
+          id: m.id,
+          nombre: m.nombre,
+          color: mColor,
+          extra: demo?.votantes ? `${Number(demo.votantes).toLocaleString("es-VE")} elect.` : `${(m.parroquias || []).length} parr.`,
+          onClick: `laminaApp.selectMunicipio('${m.id}')`
+        };
+      });
+    } else if (this.level === "municipio") {
+      const cleanMunId = String(this.activeMunId || "maturin").toLowerCase().replace(/_/g, "-").trim();
+      const munObj = CATALOGO_MONAGAS.find(m => m.id === cleanMunId) || { nombre: "Maturín", parroquias: [] };
+      const rawMunName = munObj.nombre || "Maturín";
+      const cleanMunName = rawMunName.replace(/^municipio\s+/i, '').trim();
+      titleText = `Parroquias de ${cleanMunName}`;
+
+      const parroquias = munObj.parroquias || [];
+      items = parroquias.map(p => {
+        const resolvedPId = resolveParishId(p.id);
+        const pColor = getParishColor(resolvedPId);
+        const pDem = getParishDemographics(cleanMunId, resolvedPId);
+        return {
+          id: p.id,
+          nombre: p.nombre,
+          color: pColor,
+          extra: pDem?.votantes ? `${Number(pDem.votantes).toLocaleString("es-VE")} elect.` : `${pDem?.centros || 0} centros`,
+          onClick: `laminaApp.selectParroquia('${p.id}', '${cleanMunId}')`
+        };
+      });
+    } else if (this.level === "parroquia" || this.level === "subparroquia" || this.level === "sector") {
+      const cleanMunId = String(this.activeMunId || "maturin").toLowerCase().replace(/_/g, "-").trim();
+      const cleanPId = String(this.activeParishId || "alto-de-los-godos").toLowerCase().replace(/_/g, "-").trim();
+      const resolvedPId = resolveParishId(cleanPId);
+      const { subparroquias, poligonos } = this.getParishPolygonsData(cleanMunId, resolvedPId);
+      titleText = `Ejes y Sectores Censados`;
+
+      // Sub-Parroquia 6 oficial
+      subparroquias.forEach(sp => {
+        items.push({
+          id: sp.id,
+          nombre: sp.nombre || "Sub-Parroquia 6 • La Puente",
+          color: sp.colorBorde || sp.colorRelleno || "#a855f7",
+          extra: "Eje Oficial",
+          isHeader: true,
+          onClick: `laminaApp.selectSubParroquia('${sp.id}', '${cleanPId}', '${cleanMunId}')`
+        });
+      });
+
+      // Sectores comunitarios reales (SECTORES_LAPUENTE)
+      poligonos.forEach(sec => {
+        items.push({
+          id: sec.id,
+          nombre: sec.nombre,
+          color: sec.colorBorde || sec.colorRelleno || sec.color || "#0284c7",
+          extra: sec.votantes ? `${Number(sec.votantes).toLocaleString("es-VE")} elect.` : (sec.casas ? `${sec.casas} casas` : "Sector Base"),
+          onClick: `laminaApp.selectSector('${sec.id}', '${cleanPId}', '${cleanMunId}')`
+        });
+      });
+    }
+
+    if (titleEl) {
+      titleEl.innerHTML = `
+        <span class="w-2.5 h-2.5 rounded-full bg-sky-500 shrink-0"></span>
+        <span class="truncate">${titleText}</span>
+      `;
+    }
+    if (countEl) {
+      countEl.textContent = String(items.length);
+    }
+
+    if (items.length > 0) {
+      listEl.innerHTML = items.map(it => `
+        <div onclick="${it.onClick}" 
+             class="territory-row hover:border-sky-400 flex items-center justify-between gap-2 p-1.5 rounded-lg border ${it.isHeader ? 'border-purple-300 bg-purple-50/60 font-black' : 'border-slate-200 bg-white'} cursor-pointer transition">
+          <div class="flex items-center gap-2 min-w-0">
+            <span class="w-3.5 h-3.5 rounded-md shrink-0 border border-black/15 shadow-2xs" style="background-color: ${it.color};"></span>
+            <span class="font-bold text-xs text-slate-900 truncate">${formatTitleCase(it.nombre)}</span>
+          </div>
+          <span class="text-[10px] font-extrabold ${it.isHeader ? 'text-purple-700' : 'text-slate-500'} font-mono shrink-0">
+            ${it.extra}
+          </span>
+        </div>
+      `).join("");
+    } else {
+      listEl.innerHTML = `
+        <div class="p-2 text-center text-xs text-slate-500 italic">
+          Sin entidades cartográficas específicas en este nivel
+        </div>
+      `;
     }
 
     if (window.lucide && typeof window.lucide.createIcons === "function") {
