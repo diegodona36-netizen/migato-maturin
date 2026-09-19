@@ -595,10 +595,11 @@ def build_docx(output_path):
     resumen_rows = [
         ["A. Equipamiento Físico de Sala", "Pago Único (Hardware)", "45 a 60 min de respaldo en apagones", "$862,46 USD"],
         ["B. Servidor Cloud VPS (Nube)", "Suscripción Mensual", "24/7 en línea para los 13 municipios", "$24,50 USD / mes"],
-        ["TOTAL INVERSIÓN INTEGRAL", "Equipos físicos + 1 año de Servidor Cloud", "Sala Situacional + Cobertura Total", "$1.156,46 USD"]
+        ["TOTAL INVERSIÓN INICIAL (EQUIPOS)", "Pago Único (Dotación Completa)", "Sala Situacional + Puesta en Marcha", "$862,46 USD"]
     ]
     doc_body.append(build_iutirla_table(resumen_headers, resumen_rows, [3000, 2400, 2400, 1800]))
-    doc_body.append(p_blank(12))
+    doc_body.append(p_table_note("* Nota: El Servidor Cloud VPS constituye un costo operativo recurrente de $24,50 USD/mes pagadero mes a mes según el período de campaña."))
+    doc_body.append(p_blank(10))
 
     doc_body.append(p_section_title("2. DETALLE DE EQUIPAMIENTO E INSTALACIÓN (SALA SITUACIONAL)", space_before=10, space_after=6))
     doc_body.append(p_body(
