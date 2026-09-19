@@ -784,49 +784,29 @@ export class LaminaApp {
         }
       });
     } else if (poligonos && poligonos.length > 0) {
-      let comandosMap = {};
-      try {
-        const raw = localStorage.getItem("migato_comandos_asignados");
-        if (raw) comandosMap = JSON.parse(raw);
-      } catch(e) {}
-
       poligonos.forEach(sec => {
         const coords = sec.vertices || sec.poligono;
         if (coords && coords.length >= 3) {
-          const assigned = sec.id ? comandosMap[String(sec.id)] : null;
-          const isAssigned = !!assigned;
-
-          const sColor = isAssigned ? "#10b981" : (sec.colorBorde || sec.color || "#f59e0b");
-          const fColor = isAssigned ? "#059669" : (sec.colorRelleno || sec.color || "#f59e0b");
-          const sWeight = isAssigned ? 2.5 : 1.8;
-          const sDash = isAssigned ? null : "5, 5";
-          const fOpacity = isAssigned ? 0.32 : 0.16;
-
+          const sColor = sec.colorBorde || sec.color || "#0284c7";
           const secPoly = L.polygon(coords, {
             color: sColor,
-            weight: sWeight,
-            opacity: 0.95,
-            fillColor: fColor,
-            fillOpacity: fOpacity,
-            dashArray: sDash
+            weight: 1.8,
+            opacity: 0.9,
+            fillColor: sec.colorRelleno || sColor,
+            fillOpacity: 0.2,
+            dashArray: "3, 3"
           });
 
           secPoly.bindTooltip(`
             <div style="font-family: inherit; font-size: 11px; padding: 2px;">
-              <div style="display: flex; align-items: center; justify-content: space-between; gap: 4px; margin-bottom: 2px;">
-                <span style="color: ${isAssigned ? '#10b981' : '#f59e0b'}; font-weight: 800; font-size: 9.5px; text-transform: uppercase;">
-                  ${isAssigned ? '🟢 Con Comando' : '⚪ Vacante'}
-                </span>
-                ${isAssigned ? `<span style="background: #064e3b; color: #6ee7b7; font-size: 8.5px; padding: 1px 4px; border-radius: 4px; font-weight: 700;">${assigned.cargo || 'Jefe'}</span>` : ''}
-              </div>
+              <span style="color: #0284c7; font-weight: 800; font-size: 9.5px; text-transform: uppercase;">Sector Vecinal</span><br>
               <strong style="color: #0f172a; font-size: 12px; font-weight: 900;">${formatTitleCase(sec.nombre)}</strong>
-              ${isAssigned ? `<div style="font-size: 10px; color: #334155; font-weight: 700; margin-top: 1px;">👤 ${assigned.nombre}</div>` : ''}
             </div>
           `, { sticky: true, opacity: 0.95 });
 
           secPoly.on({
-            mouseover: () => secPoly.setStyle({ weight: 3.5, fillOpacity: Math.min(0.6, fOpacity + 0.25) }),
-            mouseout: () => secPoly.setStyle({ weight: sWeight, fillOpacity: fOpacity, color: sColor, dashArray: sDash }),
+            mouseover: () => secPoly.setStyle({ weight: 3.2, fillOpacity: 0.4 }),
+            mouseout: () => secPoly.setStyle({ weight: 1.8, fillOpacity: 0.2 }),
             click: () => this.selectSector(sec.id, cleanPId, cleanMunId)
           });
 
@@ -967,48 +947,26 @@ export class LaminaApp {
       return false;
     });
 
-    let comandosMap = {};
-    try {
-      const raw = localStorage.getItem("migato_comandos_asignados");
-      if (raw) comandosMap = JSON.parse(raw);
-    } catch(e) {}
-
     const sectoresToRender = childSectores;
     sectoresToRender.forEach(sec => {
       const sCoords = sec.vertices || sec.poligono;
       if (sCoords && sCoords.length >= 3) {
-        const assigned = sec.id ? comandosMap[String(sec.id)] : null;
-        const isAssigned = !!assigned;
-
-        const sColor = isAssigned ? "#10b981" : (sec.colorBorde || sec.color || "#f59e0b");
-        const fColor = isAssigned ? "#059669" : (sec.colorRelleno || sec.color || "#f59e0b");
-        const sWeight = isAssigned ? 2.6 : 1.8;
-        const sDash = isAssigned ? null : "5, 5";
-        const fOpacity = isAssigned ? 0.35 : 0.18;
-
         const secPoly = L.polygon(sCoords, {
-          color: sColor,
-          weight: sWeight,
+          color: sec.colorBorde || sec.color || "#0284c7",
+          weight: 1.8,
           opacity: 0.95,
-          fillColor: fColor,
-          fillOpacity: fOpacity,
-          dashArray: sDash
+          fillColor: sec.colorRelleno || sec.color || "#38bdf8",
+          fillOpacity: 0.28
         });
         secPoly.bindTooltip(`
           <div style="font-family: inherit; font-size: 11px; padding: 2px;">
-            <div style="display: flex; align-items: center; justify-content: space-between; gap: 4px; margin-bottom: 2px;">
-              <span style="color: ${isAssigned ? '#10b981' : '#f59e0b'}; font-weight: 800; font-size: 9.5px; text-transform: uppercase;">
-                ${isAssigned ? '🟢 Con Comando' : '⚪ Vacante'}
-              </span>
-              ${isAssigned ? `<span style="background: #064e3b; color: #6ee7b7; font-size: 8.5px; padding: 1px 4px; border-radius: 4px; font-weight: 700;">${assigned.cargo || 'Jefe'}</span>` : ''}
-            </div>
+            <span style="color: #0284c7; font-weight: 800; font-size: 9.5px; text-transform: uppercase;">Sector Vecinal</span><br>
             <strong style="color: #0f172a; font-size: 12px; font-weight: 900;">${formatTitleCase(sec.nombre)}</strong>
-            ${isAssigned ? `<div style="font-size: 10px; color: #334155; font-weight: 700; margin-top: 1px;">👤 ${assigned.nombre}</div>` : ''}
           </div>
         `, { sticky: true, opacity: 0.95 });
         secPoly.on({
-          mouseover: () => secPoly.setStyle({ weight: 3.5, fillOpacity: Math.min(0.6, fOpacity + 0.25) }),
-          mouseout: () => secPoly.setStyle({ weight: sWeight, fillOpacity: fOpacity, color: sColor, dashArray: sDash }),
+          mouseover: () => secPoly.setStyle({ weight: 3.2, fillOpacity: 0.5 }),
+          mouseout: () => secPoly.setStyle({ weight: 1.8, fillOpacity: 0.28 }),
           click: () => this.selectSector(sec.id, cleanPId, cleanMunId)
         });
         this.childEntitiesLayer.addLayer(secPoly);
