@@ -132,7 +132,7 @@
     <div class="inst-title">República Bolivariana de Venezuela • Estado Monagas</div>
     <div class="inst-sub">MOVIMIENTO INDEPENDIENTE GANAMOS TODOS (MIGATO)</div>
     <div style="font-size: 10pt; font-weight: 800; color: #f59e0b;">COMANDO ESTRATÉGICO DE CAMPAÑA • SALA SITUACIONAL EL GATO BRICEÑO</div>
-    <div class="doc-title">DICTAMEN TÉCNICO Y PRESUPUESTO FORMAL: INFRAESTRUCTURA DE SERVIDOR FÍSICO, ALMACENAMIENTO HÍBRIDO RAID Y GATEWAY MIKROTIK</div>
+    <div class="doc-title">DICTAMEN TÉCNICO Y PRESUPUESTO FORMAL: INFRAESTRUCTURA DE SERVIDOR FÍSICO, ALMACENAMIENTO RAID 1 Y GATEWAY MIKROTIK</div>
   </div>
 
   <table style="margin-bottom: 16px;">
@@ -145,21 +145,27 @@
     <tr><td><b>Fecha de Emisión</b></td><td>Septiembre 2026</td></tr>
   </table>
 
-  <h1>Capítulo I: Justificación de la Arquitectura de Hardware</h1>
-  <p>Para dar soporte físico autónomo a los cinco módulos del sistema (Lámina 120", Comandos, Estimación del Voto, Earth Monagas 3D GIS y Dashboard de Campaña), se requiere un equipo de grado empresarial que opere de forma ininterrumpida. A diferencia de un computador convencional, un servidor corporativo posee fuentes redundantes, ventilación balanceada para operación 24/7 y memoria con corrección de errores (ECC).</p>
+  <h1>Capítulo I: Justificación de la Arquitectura de Hardware y Almacenamiento</h1>
+  <p>Para operar de forma autónoma, rápida y segura los módulos cartográficos y electorales de la plataforma MIGATO (Lámina 120", Comandos, Estimación del Voto, Earth Monagas 3D GIS y Dashboard), se ha diseñado una arquitectura adaptada a las condiciones eléctricas y operativas de Maturín, sustituyendo los servidores antiguos de alto consumo por una estación compacta de alto desempeño.</p>
 
-  <h2>1.1. Arquitectura de Almacenamiento Híbrido Redundante (SSD + HDD en RAID 1)</h2>
-  <p>El motor geoespacial procesa polígonos vectoriales con miles de coordenadas. Para evitar cuellos de botella y garantizar la supervivencia de los datos, se implementa una topología híbrida:</p>
-  <p>• <b>Banco de Estado Sólido (2x SSD 1TB en RAID 1 - Espejo):</b> Destinado al Sistema Operativo Linux Ubuntu Server 24.04, motor PostgreSQL con extensión PostGIS, Nginx y caché Redis. Su velocidad superior a 500 MB/s permite que las consultas cartográficas y de votantes respondan en milisegundos.</p>
-  <p>• <b>Banco Mecánico Empresarial (2x HDD 2TB SAS/SATA en RAID 1 - Espejo):</b> Destinado al almacenamiento masivo de respaldos automáticos diarios, digitalización de actas de escrutinio CNE y logs históricos de auditoría.</p>
-  <p>• <b>Tolerancia a Fallas en Espejo:</b> Cada archivo se escribe simultáneamente en dos unidades físicas. Si un disco sufre una avería, la controladora PERC mantiene la plataforma encendida con el disco gemelo sin pérdida de datos ni interrupción.</p>
+  <h2>1.1. Ventajas de la Plataforma Dell OptiPlex Core i7 (8va Generación)</h2>
+  <p>• <b>Alto Desempeño por Núcleo (IPC):</b> El procesador Intel Core i7-8700 (6 núcleos / 12 hilos hasta 4.6 GHz) supera a procesadores Xeon de generaciones previas en el procesamiento de transacciones web y operaciones geoespaciales PostgreSQL/PostGIS.</p>
+  <p>• <b>Eficiencia Energética (Consumo de sólo 65W):</b> Consume una fracción de la energía de un servidor de rack convencional (300W a 500W). Esto permite que el sistema de respaldo eléctrico (UPS) rinda más del doble de autonomía (45 a 60 minutos continuos) frente a los cortes de Corpoelec.</p>
+  <p>• <b>Operación Silenciosa y Compacta:</b> No genera el ruido ensordecedor de un servidor industrial ni requiere climatización forzada de centro de datos.</p>
 
-  <h1>Capítulo II: Integración del Gateway y Firewall MikroTik</h1>
-  <p>Para asegurar la puerta de enlace a internet de la Sala Situacional y proteger el servidor físico contra intrusiones o ataques de red, se incorpora un routerboard especializado <b>MikroTik hEX (RB750Gr3)</b>, aprovechando el dominio técnico y capacidad de administración del equipo técnico de sistemas:</p>
-  
-  <p>• <b>Seguridad y Firewall SPI:</b> El MikroTik actúa como barrera perimetral blindada, cerrando puertos innecesarios e implementando reglas de inspección profunda de paquetes para que nadie en la red local o externa pueda vulnerar la base de datos PostgreSQL.</p>
-  <p>• <b>Conmutación Automática de Internet (Failover / Multi-WAN):</b> Permite conectar simultáneamente dos proveedores de internet (ej. WAN 1: Fibra Principal CANTV/Inter/NetUno y WAN 2: Enlace de Respaldo Starlink o Módem LTE). En caso de corte en la fibra óptica, el MikroTik conmuta el tráfico en menos de 1 segundo sin interrumpir el funcionamiento del servidor.</p>
-  <p>• <b>Servidor VPN Seguro (WireGuard / IPsec):</b> Permite al Ingeniero Responsable y a los directivos del Comando conectarse de forma remota y cifrada al servidor desde laptops o dispositivos móviles fuera de la sede, sin exponer la plataforma a los riesgos de la internet pública.</p>
+  <h2>1.2. Arquitectura de Discos 100% Estado Sólido en RAID 1 (Espejo)</h2>
+  <p>Se descarta el uso de discos mecánicos (HDD) tradicionales debido a su lentitud, fragilidad y peso. Toda la base de datos de Monagas, polígonos cartográficos y fotos de actas electorales ocupan menos de 30 GB, por lo que 1 TB SSD ofrece más de 950 GB de espacio libre excedente.</p>
+  <p>• <b>Banco de Estado Sólido Dual (2x SSD 1TB SATA en RAID 1):</b> Ambos discos operan de forma sincronizada y simultánea a nivel de bloque.</p>
+  <p>• <b>Escritura Simultánea en Espejo:</b> Cada vez que se registra un voto, un dirigente o un acta escaneada, la información se escribe al mismo microsegundo en ambos discos.</p>
+  <p>• <b>Lectura Acelerada:</b> El sistema lee de ambas unidades en paralelo, duplicando la velocidad de respuesta.</p>
+  <p>• <b>Tolerancia a Fallas Absoluta:</b> Si uno de los discos SSD llegase a fallar o quemarse, el segundo disco mantiene el servidor 100% operativo sin caída de servicio ni pérdida de información. No se requieren caddys hot-plug propietarios costosos, ya que se montan en bahías estándar internas.</p>
+
+  <h1>Capítulo II: Topología de Red, MikroTik y Switch Gigabit</h1>
+  <p>La infraestructura de red de la Sala Situacional se estructura en dos niveles fundamentales:</p>
+  <p>• <b>FLUJO DE RED:</b> Internet Proveedor 1 / Proveedor 2 ──► MikroTik hEX RB750Gr3 (Gateway/Firewall) ──► Switch Gigabit (Distribuidor) ──► Servidor Dell + PCs de Sala + Pantallas + Videovigilancia.</p>
+  <p>• <b>1. Router Gateway MikroTik hEX:</b> Actúa como la puerta de enlace física y cortafuegos perimetral blindado. Realiza conmutación automática de internet (Failover) entre dos proveedores para que la sala nunca se quede sin conexión, y provee túnel VPN seguro (WireGuard) para acceso remoto.</p>
+  <p>• <b>2. Switch Gigabit de Sala (Hikvision / TP-Link):</b> Conectado directamente a la salida LAN del MikroTik para multiplicar las bocas de red a 16 puertos Gigabit metálicos, enlazando el servidor, las computadoras de los operadores, las pantallas de sala y futuras cámaras de seguridad.</p>
+  <p>• <b>3. Bobina de Cableado Cat6 (305 metros):</b> Se incorpora una bobina completa de 305 metros de cable UTP Cat6 junto con conectores RJ45 para realizar el cableado estructurado formal de la sala, oficinas del comando y las conexiones a los equipos de cómputo y cámaras.</p>
 
   <h1>Capítulo III: Desglose de Costos en Mercado Libre Venezuela</h1>
   <p>A continuación se detallan los costos individuales de cada componente físico investigados en el mercado venezolano (expresados en dólares estadounidenses USD, pagaderos a la tasa oficial BCV):</p>
@@ -167,38 +173,24 @@
   <table>
     <tr>
       <th>Componente / Dispositivo</th>
-      <th>Especificación Técnica</th>
+      <th>Especificación Técnica Real</th>
       <th style="text-align:center;">Cant.</th>
       <th style="text-align:right;">Costo Unit.</th>
       <th style="text-align:right;">Total (USD)</th>
     </tr>
     <tr>
-      <td><b>Servidor Torre Dell PowerEdge</b></td>
-      <td>Modelo T330/T430 (Xeon 8 Cores, 64GB RAM ECC, 2 Fuentes Hot-Plug, PERC)</td>
+      <td><b>Computador Servidor Dell OptiPlex</b></td>
+      <td>Core i7 8va Gen (i7-8700 6C/12T), 32GB RAM DDR4, Chasis Torre/SFF silencioso</td>
       <td style="text-align:center;">1</td>
-      <td style="text-align:right;">$1,200.00</td>
-      <td style="text-align:right;">$1,200.00</td>
+      <td style="text-align:right;">$230.00</td>
+      <td style="text-align:right;">$230.00</td>
     </tr>
     <tr>
       <td><b>Discos Sólidos SSD 1TB (RAID 1)</b></td>
-      <td>Kingston KC600 / Crucial MX500 SATA 2.5" (Sistema Operativo & Base de Datos)</td>
+      <td>2x SSD 1TB SATA 2.5" Kingston KC600 / Crucial MX500 en Espejo (Sistema & Datos)</td>
       <td style="text-align:center;">2</td>
-      <td style="text-align:right;">$140.00</td>
-      <td style="text-align:right;">$280.00</td>
-    </tr>
-    <tr>
-      <td><b>Discos Duros HDD 2TB (RAID 1)</b></td>
-      <td>Dell Constellation / WD Red Plus Enterprise 7.200 RPM SAS/SATA (Backups & Actas)</td>
-      <td style="text-align:center;">2</td>
-      <td style="text-align:right;">$190.00</td>
-      <td style="text-align:right;">$380.00</td>
-    </tr>
-    <tr>
-      <td><b>Bandejas Caddys Dell</b></td>
-      <td>Bandejas originales con seguro Hot-Plug para bahías de 3.5"/2.5"</td>
-      <td style="text-align:center;">4</td>
-      <td style="text-align:right;">$22.50</td>
-      <td style="text-align:right;">$90.00</td>
+      <td style="text-align:right;">$120.00</td>
+      <td style="text-align:right;">$240.00</td>
     </tr>
     <tr>
       <td><b>Gateway MikroTik RouterBOARD</b></td>
@@ -208,58 +200,58 @@
       <td style="text-align:right;">$105.00</td>
     </tr>
     <tr>
+      <td><b>Switch de Distribución de Red</b></td>
+      <td>Switch Hikvision / TP-Link 16 Puertos Gigabit 10/100/1000 Mbps metálico</td>
+      <td style="text-align:center;">1</td>
+      <td style="text-align:right;">$65.00</td>
+      <td style="text-align:right;">$65.00</td>
+    </tr>
+    <tr>
+      <td><b>Bobina Cable UTP Cat6 (305m)</b></td>
+      <td>Bobina 305 metros Cat6 interior de alta velocidad + caja de 100 conectores RJ45</td>
+      <td style="text-align:center;">1</td>
+      <td style="text-align:right;">$95.00</td>
+      <td style="text-align:right;">$95.00</td>
+    </tr>
+    <tr>
       <td><b>UPS de Respaldo Eléctrico</b></td>
-      <td>UPS 2.000 VA Interactivo con supresor de picos industrial (30 a 45 min autonomía)</td>
+      <td>UPS 1.200 VA a 1.500 VA con supresor de picos (45 a 60 min autonomía con bajo consumo)</td>
       <td style="text-align:center;">1</td>
-      <td style="text-align:right;">$320.00</td>
-      <td style="text-align:right;">$320.00</td>
-    </tr>
-    <tr>
-      <td><b>Switch de Distribución de Sala</b></td>
-      <td>Switch Gigabit 16 Puertos 10/100/1000 Mbps TP-Link metálico</td>
-      <td style="text-align:center;">1</td>
-      <td style="text-align:right;">$65.00</td>
-      <td style="text-align:right;">$65.00</td>
-    </tr>
-    <tr>
-      <td><b>Cableado y Accesorios</b></td>
-      <td>Patch Cords Cat6 100% Cobre blindado + regleta industrial</td>
-      <td style="text-align:center;">1</td>
-      <td style="text-align:right;">$40.00</td>
-      <td style="text-align:right;">$40.00</td>
+      <td style="text-align:right;">$165.00</td>
+      <td style="text-align:right;">$165.00</td>
     </tr>
     <tr class="total-row">
       <td colspan="4"><b>TOTAL GENERAL DE INVERSIÓN FÍSICA (EQUIPAMIENTO COMPLETO)</b></td>
-      <td style="text-align:right;"><b>$2,480.00 USD</b></td>
+      <td style="text-align:right;"><b>$900.00 USD</b></td>
     </tr>
   </table>
 
   <h1>Capítulo IV: Resumen de Opciones para Decisión del Comando</h1>
   <table>
     <tr><th>Opción Presupuestaria</th><th>Alcance y Componentes</th><th>Autonomía Eléctrica</th><th style="text-align:right;">Inversión Total</th></tr>
-    <tr>
-      <td><b>Opción 1: Esencial</b></td>
-      <td>Servidor Torre + 2 SSD 1TB + UPS 1.500 VA + Switch 8 bocas</td>
-      <td>20 a 30 minutos</td>
-      <td style="text-align:right;"><b>$1,550.00 USD</b></td>
-    </tr>
     <tr style="background:#fef3c7;">
-      <td><b>Opción 2: Recomendada ★</b></td>
-      <td>Servidor Torre + 2 SSD 1TB + 2 HDD 2TB + MikroTik hEX + UPS 2.000 VA + Switch 16 bocas</td>
-      <td>30 a 45 minutos</td>
-      <td style="text-align:right; color:#b45309;"><b>$2,480.00 USD</b></td>
+      <td><b>Opción 1: Recomendada ★</b></td>
+      <td>Dell OptiPlex Core i7 (8va Gen 6C/12T), 32GB RAM + 2x SSD 1TB RAID 1 + MikroTik hEX + Switch 16p + Cat6 305m + UPS 1.500VA</td>
+      <td>45 a 60 minutos (Bajo consumo 65W)</td>
+      <td style="text-align:right; color:#b45309;"><b>$900.00 USD</b></td>
     </tr>
     <tr>
-      <td><b>Opción 3: Servidor Rack 2U</b></td>
-      <td>Servidor Rack Dell R730 Doble Xeon + Discos Full + MikroTik + Inversor con Baterías</td>
-      <td>4 a 6 horas</td>
-      <td style="text-align:right;"><b>$3,550.00 USD</b></td>
+      <td><b>Opción 2: Entrada Básica</b></td>
+      <td>Dell OptiPlex Core i5/i7 + 16GB RAM + 1x SSD 1TB (sin espejo) + Router estándar + Switch 8p + UPS 800VA</td>
+      <td>30 a 40 minutos</td>
+      <td style="text-align:right;"><b>$520.00 USD</b></td>
+    </tr>
+    <tr>
+      <td><b>Opción 3: Servidor Tradicional (Descartada)</b></td>
+      <td>Servidor Dell PowerEdge antiguo (Doble Xeon 350W) + Discos Mecánicos SAS + Caddys + UPS 2.000VA</td>
+      <td>20 a 30 minutos (Agotamiento rápido UPS)</td>
+      <td style="text-align:right;"><b>$2,480.00 USD</b></td>
     </tr>
   </table>
 
   <div class="callout">
     <span class="callout-title">Dictamen Técnico y Recomendación:</span>
-    Se recomienda formalmente la <b>APROBACIÓN DE LA OPCIÓN 2 ($2,480.00 USD)</b>. Representa la configuración más robusta, balanceada y segura para la Sala Situacional de El Gato Briceño, contando con almacenamiento espejo contra fallas y puerta de enlace MikroTik.
+    Se recomienda formalmente la <b>APROBACIÓN DE LA OPCIÓN 1: ARQUITECTURA OPTIMIZADA ($900.00 USD)</b>. Proporciona la solución más rápida (100% SSD), tolerante a fallas (RAID 1), con conmutación de internet MikroTik, cableado estructurado completo de sala y máxima eficiencia energética (45 a 60 min de autonomía eléctrica ante apagones).
   </div>
 
   <h1>Capítulo V: Conformidad y Firmas Autorizadas</h1>
