@@ -575,18 +575,20 @@ def build_docx(output_path):
     # ==========================================
     # PÁGINA 2: INTRODUCCIÓN Y EQUIPAMIENTO FÍSICO
     # ==========================================
-    doc_body.append(p_section_title("INTRODUCCIÓN", space_before=10, space_after=15))
+    doc_body.append(p_section_title("INTRODUCCIÓN Y PREMISA OPERATIVA", space_before=10, space_after=12))
     doc_body.append(p_body(
         "El presente informe tiene como propósito exponer ante la directiva del partido y el comando de campaña "
-        "la propuesta técnica y el presupuesto definitivo para la puesta en marcha de la infraestructura informática de la "
-        "Sala Situacional de Maturín y la plataforma electoral del Movimiento Independiente Ganamos Todos (MIGATO) para los 13 municipios del Estado Monagas. "
-        "Se plantea una arquitectura híbrida optimizada que garantiza alta velocidad en consultas cartográficas, cero pérdida de información y plena autonomía ante contingencias eléctricas."
-    , indent=True, space_after=18))
+        "la propuesta técnica y el presupuesto de dotación tecnológica, instalación y puesta en marcha para la "
+        "Sala Situacional de Maturín y la plataforma electoral del Movimiento Independiente Ganamos Todos (MIGATO) en el Estado Monagas. "
+        "Premisa de Alcance: El presente proyecto se enfoca estrictamente en el equipamiento de cómputo, almacenamiento RAID 1, electrónica de red y conectividad lógica, "
+        "bajo la premisa de que la sede ya cuenta con el centro de cómputo acondicionado (rack de comunicaciones existente y acometida eléctrica base). "
+        "De requerirse obras civiles adicionales (suministro de rack de piso, marquesinas o cableado de potencia), se presupuestarán en una fase anexa independiente."
+    , indent=True, space_after=14))
 
-    doc_body.append(p_section_title("1. RESUMEN EJECUTIVO DE INVERSIÓN", space_before=12, space_after=8))
+    doc_body.append(p_section_title("1. RESUMEN EJECUTIVO DE INVERSIÓN", space_before=10, space_after=6))
     doc_body.append(p_body(
         "Para lograr un despliegue equilibrado, la inversión se divide en dos componentes: 1) Equipamiento físico de sala para procesamiento local de alta velocidad sin saturar el ancho de banda; y 2) Servidor en la nube (Cloud VPS) con disponibilidad 24/7 para el reporte móvil de los testigos en centros electorales.",
-        indent=True, space_after=10
+        indent=True, space_after=8
     ))
 
     resumen_headers = ["Componente / Ámbito", "Modalidad de Inversión", "Cobertura Operativa", "Inversión (USD)"]
@@ -596,14 +598,14 @@ def build_docx(output_path):
         ["TOTAL INVERSIÓN INTEGRAL", "Equipos físicos + 1 año de Servidor Cloud", "Sala Situacional + Cobertura Total", "$1.156,46 USD"]
     ]
     doc_body.append(build_iutirla_table(resumen_headers, resumen_rows, [3000, 2400, 2400, 1800]))
-    doc_body.append(p_blank(15))
+    doc_body.append(p_blank(12))
 
-    doc_body.append(p_section_title("2. DETALLE DE EQUIPOS FÍSICOS (SALA SITUACIONAL)", space_before=12, space_after=8))
+    doc_body.append(p_section_title("2. DETALLE DE EQUIPAMIENTO E INSTALACIÓN (SALA SITUACIONAL)", space_before=10, space_after=6))
     doc_body.append(p_body(
         "Se descartan servidores industriales pesados de rack (Dell PowerEdge antiguos) debido a su excesivo consumo eléctrico (300W a 500W), ruido ensordecedor y escasa autonomía en UPS. "
         "En su lugar, se implementa una estación de trabajo Dell OptiPlex Core i7 con almacenamiento dual 100% en estado sólido en arreglo espejo (RAID 1) y consumo eficiente (65W). "
         "A continuación se detallan los costos cotizados en tiempo real en Mercado Libre Venezuela:",
-        indent=True, space_after=10
+        indent=True, space_after=8
     ))
 
     piezas_headers = ["N°", "Equipo / Dispositivo", "Especificación Técnica Real", "Cant.", "Costo Unit.", "Total (USD)"]
@@ -629,30 +631,30 @@ def build_docx(output_path):
     # ==========================================
     # PÁGINA 3: SINCRONIZACIÓN, NUBE Y FIRMAS
     # ==========================================
-    doc_body.append(p_section_title("3. ARQUITECTURA DE SINCRONIZACIÓN Y TOLERANCIA A FALLAS", space_before=10, space_after=15))
+    doc_body.append(p_section_title("3. ARQUITECTURA: VANGUARDIA EN LA NUBE Y BÓVEDA FÍSICA", space_before=10, space_after=15))
     doc_body.append(p_body(
-        "Para impedir colisiones de información y asegurar que la plataforma nunca se detenga, el flujo de datos se estructura en cuatro etapas operativas:",
+        "Para blindar la plataforma política contra sabotajes, bloqueos o apagones, la infraestructura opera bajo un modelo de dos capas: Vanguardia en la Nube (Front-line) y Bóveda Blindada en Físico (Data Vault):",
         indent=True, space_after=12
     ))
 
     doc_body.append(p_bullet_bold(
-        "1. Reporte Móvil en los 13 Municipios",
-        "Los testigos de centro y dirigentes parroquiales transmiten los votos y fotos de actas directamente al Servidor Cloud VPS a través de telefonía celular. Al residir en un centro de datos protegido, la nube nunca se apaga ni depende del servicio eléctrico local.",
+        "1. Vanguardia en la Nube (Cloud VPS Front-line)",
+        "Constituye la primera línea de recepción. Recibe el tráfico masivo de teléfonos de testigos en los 13 municipios, valida reportes y absorbe cualquier ataque cibernético (DDoS) sin exponer la dirección IP ni la ubicación física de la sede en Maturín.",
         space_after=10
     ))
     doc_body.append(p_bullet_bold(
-        "2. Enlace Cifrado con la Sala Situacional",
+        "2. Enlace Cifrado y Replicación Continua",
         "El Servidor Cloud VPS retransmite las transacciones en tiempo real al computador Dell de la oficina en Maturín a través de un túnel seguro VPN WireGuard gestionado por el router MikroTik.",
         space_after=10
     ))
     doc_body.append(p_bullet_bold(
-        "3. Almacenamiento Dual en Espejo (RAID 1)",
-        "El computador Dell en sala graba cada dato simultáneamente en sus dos unidades SSD. Si un disco sufre una avería o fluctuación de voltaje, el segundo disco mantiene el sistema 100% operativo sin caída de servicio ni pérdida de información.",
+        "3. Bóveda Física en Espejo (RAID 1)",
+        "El computador Dell en sala graba cada voto y acta simultáneamente en sus dos unidades SSD. Si Conatel bloquea la nube o se corta el internet internacional, MIGATO conserva el 100% de la información físicamente en sus manos, inconfiscable e imborrable.",
         space_after=10
     ))
     doc_body.append(p_bullet_bold(
-        "4. Respaldo Integral ante Apagones",
-        "En caso de corte de suministro eléctrico en Maturín, el UPS mantiene la estación Dell, el switch y el MikroTik operando durante 45 a 60 minutos continuos. Si el corte persiste, los testigos en campo continúan reportando con normalidad en la nube sin enterarse de la interrupción en la sede.",
+        "4. Respaldo Eléctrico y Autonomía Local",
+        "En caso de corte eléctrico en Maturín, el UPS mantiene la estación Dell, el switch y el MikroTik operando durante 45 a 60 minutos. Si el corte persiste, la sala continúa procesando actas en red local por llamadas directas sin depender de la nube.",
         space_after=18
     ))
 
