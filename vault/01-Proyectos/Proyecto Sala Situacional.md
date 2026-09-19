@@ -10,7 +10,7 @@ Centro neurálgico de mando y cómputo electoral ubicado en Maturín.
 
 ### Decisiones Clave Aprobadas:
 - **Premisa de Instalación:** Se asume centro de cómputo y rack existente en la sede.
-- **Inversión Inicial de Equipos:** 62,46 USD (pago único de hardware cotizado en Mercado Libre).
+- **Inversión Inicial de Equipos:** $862,46 USD (presupuesto estimativo con valores referenciales de mercado).
 - **Servidor Físico:** [[Servidor Fisico Dell OptiPlex 5040]].
 - **Almacenamiento:** [[Almacenamiento RAID 1 Espejo]] con 2 discos SSD SATA de 480 GB.
 - **Red:** [[Gateway MikroTik hEX]] con conmutación automática de internet y switch de 16 puertos.

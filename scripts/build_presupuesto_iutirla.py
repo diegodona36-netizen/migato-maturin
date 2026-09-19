@@ -605,11 +605,11 @@ def build_docx(output_path):
     doc_body.append(p_body(
         "Se descartan servidores industriales pesados de rack (Dell PowerEdge antiguos) debido a su excesivo consumo eléctrico (300W a 500W), ruido ensordecedor y escasa autonomía en UPS. "
         "En su lugar, se implementa una estación de trabajo Dell OptiPlex Core i7 con almacenamiento dual 100% en estado sólido en arreglo espejo (RAID 1) y consumo eficiente (65W). "
-        "A continuación se detallan los costos cotizados en tiempo real en Mercado Libre Venezuela:",
+        "A continuación se presenta el desglose presupuestario estimado a partir de valores referenciales del mercado nacional (precios referenciales sujetos a disponibilidad de proveedores al momento de la compra):",
         indent=True, space_after=8
     ))
 
-    piezas_headers = ["N°", "Equipo / Dispositivo", "Especificación Técnica Real", "Cant.", "Costo Unit.", "Total (USD)"]
+    piezas_headers = ["N°", "Equipo / Dispositivo", "Especificación Técnica Real", "Cant.", "Ref. Unit.", "Total Estimado"]
     piezas_rows = [
         ["1", "Computador Servidor Dell OptiPlex", "Core i7-6700 (3.40 GHz), 8 GB RAM DDR4 (expandible), chasis SFF silencioso (65W)", "1", "$215,00", "$215,00 USD"],
         ["2", "Discos Sólidos SSD 480GB (RAID 1)", "2x SSD SATA 2.5\" 480GB WD Green en Espejo simétrico (Sistema y Base de Datos)", "2", "$109,99", "$219,98 USD"],
@@ -619,11 +619,11 @@ def build_docx(output_path):
         ["6", "Conectores RJ45 Cat6 (Caja 100 un.)", "Conectores RJ45 Cat6 con contactos dorados de alta conductividad para patch cords", "1", "$6,62", "$6,62 USD"],
         ["7", "Kit de Herramientas de Red UTP", "Kit completo: ponchadora/crimpeadora RJ45-RJ11 + tester UTP probador de cable", "1", "$12,50", "$12,50 USD"],
         ["8", "UPS de Respaldo Eléctrico 1.200 VA", "UPS Epcom EPU1200LCD 1.200 VA con pantalla digital interactiva y regulador AVR", "1", "$130,41", "$130,41 USD"],
-        ["—", "TOTAL EQUIPAMIENTO FÍSICO", "Dotación completa de cómputo, almacenamiento RAID 1, red y respaldo eléctrico", "—", "—", "$862,46 USD"]
+        ["—", "TOTAL PRESUPUESTO ESTIMADO", "Dotación completa de cómputo, almacenamiento RAID 1, red y respaldo eléctrico", "—", "—", "$862,46 USD"]
     ]
     doc_body.append(build_iutirla_table(piezas_headers, piezas_rows, [400, 2400, 3800, 600, 1100, 1300]))
     doc_body.append(p_table_note(
-        "* Nota Técnica sobre Almacenamiento (SATA vs. M.2 NVMe): La placa base del Dell OptiPlex 5040 posee una sola ranura M.2 de almacenamiento y dos puertos SATA III. Para asegurar redundancia simétrica RAID 1 (espejo en tiempo real) sin adaptadores PCIe adicionales ni sobrecalentamiento en chasis SFF, se emplean dos discos SSD SATA 2.5\" nativos."
+        "* Nota de Presupuesto: Los valores reflejados corresponden a un presupuesto estimativo con precios referenciales de mercado y no constituyen una cotización formal ni oferta comercial vinculante de un proveedor en específico. Placa OptiPlex 5040 posee 1 slot M.2 y 2 puertos SATA III; para RAID 1 simétrico estable sin recalentamiento en SFF, se emplean dos discos SSD SATA nativos."
     ))
 
     # Salto a Página 3
@@ -661,8 +661,8 @@ def build_docx(output_path):
 
     doc_body.append(p_section_title("4. RECOMENDACIÓN FINAL Y DECISIÓN", space_before=15, space_after=10))
     doc_body.append(p_body(
-        "Se recomienda formalmente la aprobación del presupuesto físico de $862,46 USD para la dotación de la Sala Situacional y la suscripción del Servidor Cloud VPS ($24,50 USD/mes), otorgando a MIGATO una plataforma territorial moderna, de máxima velocidad y blindada contra fallas. "
-        "Nota de Seguridad: El sistema de cámaras de videovigilancia (CCTV) se cotizará por separado más adelante según lo instruido; no obstante, el switch de 16 puertos, el kit de herramientas y la bobina Cat6 presupuestados en este documento ya dejan instalados los puntos de red requeridos.",
+        "Se recomienda formalmente la aprobación del presupuesto estimado de $862,46 USD para la dotación de la Sala Situacional y la suscripción del Servidor Cloud VPS ($24,50 USD/mes), otorgando a MIGATO una plataforma territorial moderna, de máxima velocidad y blindada contra fallas. "
+        "Nota de Seguridad: El sistema de cámaras de videovigilancia (CCTV) se presupuestará por separado más adelante según lo instruido; no obstante, el switch de 16 puertos, el kit de herramientas y la bobina Cat6 presupuestados en este documento ya dejan instalados los puntos de red requeridos.",
         indent=True, space_after=25
     ))
 
