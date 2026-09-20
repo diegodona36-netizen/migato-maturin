@@ -1229,7 +1229,7 @@ export class LaminaApp {
     const rawMunName = munObj.nombre || "Maturín";
     const cleanMunName = rawMunName.replace(/^municipio\s+/i, '').trim();
 
-    this.updateHeaderUI(`SECTOR ${cleanSecName.toUpperCase()}`, `PARROQUIA ${cleanPName.toUpperCase()} • MUNICIPIO ${cleanMunName.toUpperCase()}`);
+    this.updateHeaderUI(`SECTOR ${cleanSecName.toUpperCase()}`, `${cleanPName.toUpperCase()} • ${cleanMunName.toUpperCase()}`);
     this.renderSideStats({
       title: `SECTOR ${cleanSecName.toUpperCase()}`,
       color: sec.colorBorde || sec.color || pColor,

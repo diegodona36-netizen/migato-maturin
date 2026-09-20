@@ -88,10 +88,10 @@ html, body {
   right: 14px;
   z-index: 1000;
   pointer-events: none;
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
   align-items: flex-start;
-  justify-content: space-between;
-  gap: 10px;
+  gap: 12px;
   max-width: calc(100vw - 28px);
 }
 
@@ -105,16 +105,26 @@ html, body {
   padding: 6px 12px;
 }
 
-/* Tarjeta central dinámica: Bloqueada al centro geométrico absoluto de la pantalla */
+/* Tarjeta izquierda */
+.lamina-header-left {
+  justify-self: start;
+}
+
+/* Tarjeta central dinámica: Centrada matemáticamente en el grid sin solapamiento */
 .lamina-header-center {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  top: 0;
-  min-width: 260px;
-  max-width: 520px;
+  justify-self: center;
+  min-width: 220px;
+  max-width: 480px;
   text-align: center;
-  z-index: 1001;
+  position: static !important;
+  transform: none !important;
+  left: auto !important;
+  top: auto !important;
+}
+
+/* Tarjeta derecha */
+.lamina-header-right {
+  justify-self: end;
 }
 
 /* Migas de pan de navegación jerárquica blindadas contra quiebre vertical */
@@ -496,9 +506,8 @@ html, body {
     top: 12px !important;
     left: 14px !important;
     right: 14px !important;
-    display: flex !important;
-    flex-direction: row !important;
-    justify-content: space-between !important;
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) !important;
     align-items: flex-start !important;
     z-index: 1000 !important;
     border: none !important;
@@ -514,11 +523,20 @@ html, body {
     padding: 6px 12px !important;
   }
 
+  .lamina-header-left {
+    justify-self: start !important;
+  }
+
   .lamina-header-center {
-    position: absolute !important;
-    left: 50% !important;
-    transform: translateX(-50%) !important;
-    top: 0 !important;
+    justify-self: center !important;
+    position: static !important;
+    transform: none !important;
+    left: auto !important;
+    top: auto !important;
+  }
+
+  .lamina-header-right {
+    justify-self: end !important;
   }
 
   /* Panel Lateral: Flotando a la derecha sin alterar el lienzo */

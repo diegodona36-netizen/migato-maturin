@@ -36,7 +36,7 @@
   <script src="../centros-maturin/js/centrosData.js"></script>
 
   <!-- Estilos de Lámina Ejecutiva 120" -->
-  <link rel="stylesheet" href="css/lamina.css?v=262" />
+  <link rel="stylesheet" href="css/lamina.css?v=263" />
 
   <!-- Anti-Cache Meta Tags -->
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate, max-age=0" />
@@ -50,29 +50,29 @@
   <header id="lamina-header">
     
     <!-- Bloque Institucional Izquierdo -->
-    <div class="lamina-header-card flex items-center gap-3.5 shrink-0">
-      <div class="w-16 h-16 sm:w-20 sm:h-20 lg:w-22 lg:h-22 rounded-2xl bg-[#23176d] p-1 border border-sky-400/40 shadow-xl shadow-[#1e1261]/35 flex items-center justify-center shrink-0">
+    <div class="lamina-header-card lamina-header-left flex items-center gap-3.5 shrink-0">
+      <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-[#23176d] p-1 border border-sky-400/40 shadow-xl shadow-[#1e1261]/35 flex items-center justify-center shrink-0">
         <img src="../assets/logo-migato.png" alt="MIGATO" class="w-full h-full object-contain drop-shadow-md" onerror="this.style.display='none'">
       </div>
       <div class="flex flex-col justify-center">
-        <span class="text-[10px] sm:text-xs font-black uppercase tracking-wider text-[#1e1261] block leading-tight mb-1 whitespace-nowrap">
+        <span class="text-[10px] sm:text-[11px] font-black uppercase tracking-wider text-[#1e1261] block leading-tight mb-0.5 whitespace-nowrap">
           MOVIMIENTO INDEPENDIENTE GANAMOS TODOS
         </span>
-        <h1 class="text-xs sm:text-sm lg:text-base font-black text-slate-900 uppercase tracking-tight leading-tight mb-1 whitespace-nowrap">
-          MIGATO • DIVISIÓN DE CIENCIA Y TECNOLOGÍA
+        <h1 class="text-xs sm:text-sm lg:text-base font-black text-slate-900 uppercase tracking-tight leading-tight mb-0.5 whitespace-nowrap">
+          CIENCIA Y TECNOLOGÍA • MONAGAS
         </h1>
         <span class="text-[9px] sm:text-[10px] font-extrabold text-sky-800 uppercase tracking-wider block leading-tight whitespace-nowrap">
-          SALA SITUACIONAL • ESTADO MONAGAS
+          SALA SITUACIONAL 2026
         </span>
       </div>
     </div>
 
-    <!-- Bloque Central: Título Dinámico de la Entidad y Migas de Pan (Centrado Absoluto) -->
-    <div class="lamina-header-card lamina-header-center flex flex-col items-center justify-center text-center px-5 py-2.5">
+    <!-- Bloque Central: Título Dinámico de la Entidad y Migas de Pan (Columna Central del Grid) -->
+    <div class="lamina-header-card lamina-header-center flex flex-col items-center justify-center text-center px-4 py-2 sm:px-5 sm:py-2.5">
       <h2 id="lamina-entity-title" class="font-display text-sm sm:text-base lg:text-lg font-black text-slate-900 uppercase tracking-tight leading-snug truncate max-w-full">
         ESTADO MONAGAS
       </h2>
-      <span id="lamina-entity-subtitle" class="text-xs sm:text-sm font-bold text-slate-500 uppercase tracking-wider mb-1 max-w-full whitespace-nowrap">
+      <span id="lamina-entity-subtitle" class="text-xs sm:text-sm font-bold text-slate-500 uppercase tracking-wider mb-1 max-w-full">
         13 MUNICIPIOS • SALA SITUACIONAL 2026
       </span>
       <div id="lamina-breadcrumbs" class="flex items-center justify-center flex-wrap gap-1.5 text-[11px] sm:text-xs font-mono font-bold text-slate-600 max-w-full">
@@ -81,7 +81,7 @@
     </div>
 
     <!-- Bloque Derecho: Acciones de Sala, Zoom y Fecha -->
-    <div class="lamina-header-card flex items-center gap-1.5 sm:gap-2 shrink-0">
+    <div class="lamina-header-card lamina-header-right flex items-center gap-1.5 sm:gap-2 shrink-0">
       <div class="hidden 2xl:flex flex-col text-right mr-1 font-mono">
         <span class="text-[9px] font-bold text-slate-400 uppercase leading-none">TRANSMISIÓN</span>
         <span id="header-clock" class="text-xs font-black text-slate-900 leading-tight">2026 • SALA ACTIVA</span>
@@ -561,7 +561,7 @@
 
   <!-- 5. AUTENTICACIÓN Y CONTROLADOR PRINCIPAL DEL MÓDULO -->
   <script src="../js/auth.js"></script>
-  <script type="module" src="js/laminaApp.js?v=262"></script>
+  <script type="module" src="js/laminaApp.js?v=263"></script>
   <script>
     if (window.lucide && typeof window.lucide.createIcons === 'function') {
       window.lucide.createIcons();
