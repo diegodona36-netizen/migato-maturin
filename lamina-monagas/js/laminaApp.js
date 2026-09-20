@@ -97,10 +97,10 @@ export class LaminaApp {
     // Canvas acelerado por GPU
     const canvasRenderer = L.canvas({ padding: 0.5 });
 
-    // Satélite Google Híbrido HD
+    // Satélite Google Híbrido HD (con CORS activo para rasterización limpia a PNG)
     const googleHybrid = L.tileLayer(
       "https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}",
-      { maxZoom: 21, maxNativeZoom: 20, attribution: "" }
+      { maxZoom: 21, maxNativeZoom: 20, attribution: "", crossOrigin: true }
     );
 
     this.map = L.map("map-lamina", {
@@ -1933,66 +1933,69 @@ export class LaminaApp {
     const btn = document.getElementById("btn-header-capture-png") || document.getElementById("btn-do-capture-png");
     const originalContent = btn ? btn.innerHTML : "";
     if (btn) {
-      btn.innerHTML = `<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i><span>Capturando...</span>`;
+      btn.innerHTML = `<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i><span>Generando PNG...</span>`;
       if (window.lucide && typeof window.lucide.createIcons === "function") {
         window.lucide.createIcons();
       }
     }
 
     try {
-      if (!navigator.mediaDevices || !navigator.mediaDevices.getDisplayMedia) {
-        alert("La captura automática no está soportada en este navegador.\n\nAlternativa recomendada: Presiona Win + Shift + S (Windows) o Cmd + Shift + 4 (Mac) para capturar la lámina directamente.");
+      // Ocultar modal para que no interfiera en la toma de imagen
+      this.closeExportModal();
+      await new Promise(r => setTimeout(r, 80));
+
+      // Verificar que html2canvas esté disponible
+      if (typeof window.html2canvas !== "function") {
+        console.error("html2canvas no está cargado");
+        alert("El motor de renderizado gráfico no se encuentra disponible. Por favor recarga la página con Ctrl + F5.");
         return;
       }
 
-      // Ocultar modal para que no interfiera en la toma de imagen
-      this.closeExportModal();
-      await new Promise(r => setTimeout(r, 150));
-
-      const stream = await navigator.mediaDevices.getDisplayMedia({
-        video: {
-          displaySurface: "browser",
-          width: { ideal: 3840 },
-          height: { ideal: 2160 }
-        },
-        audio: false
-      });
-
-      const video = document.createElement("video");
-      video.srcObject = stream;
-      video.muted = true;
-      await video.play();
-
-      // Esperar brevemente a que el fotograma esté nítido
-      await new Promise(r => setTimeout(r, 350));
-
-      const canvas = document.createElement("canvas");
-      canvas.width = video.videoWidth || window.innerWidth;
-      canvas.height = video.videoHeight || window.innerHeight;
-      const ctx = canvas.getContext("2d");
-      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-
-      // Detener transmisión de pantalla inmediatamente
-      stream.getTracks().forEach(t => t.stop());
-
-      // Generar nombre descriptivo oficial
+      // Generar nombre descriptivo oficial MIGATO
       const d = new Date().toISOString().slice(0, 10);
       const entity = (this.activeSectorName || this.activeSubParishName || this.activeParishId || this.activeMunId || "Monagas").replace(/[^a-zA-Z0-9_-]/g, "_");
       const filename = `Lamina_MIGATO_${entity}_${d}.png`;
 
-      // Descarga de archivo PNG
-      const a = document.createElement("a");
-      a.href = canvas.toDataURL("image/png");
-      a.download = filename;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-    } catch (err) {
-      console.warn("Captura asistida:", err);
-      // Si el usuario canceló la selección de ventana, reabrimos el modal
-      if (err.name !== "NotAllowedError") {
-        this.openExportModal();
+      // Renderizado directo en memoria vía Canvas sin ningún diálogo ni permiso de pantalla
+      const canvas = await window.html2canvas(document.body, {
+        useCORS: true,
+        allowTaint: false,
+        scale: 2, // Ultra HD 2x para máxima nitidez y fidelidad gráfica
+        backgroundColor: "#020617",
+        logging: false,
+        ignoreElements: (el) => {
+          return (
+            el.id === "modal-exportar-lamina" ||
+            el.id === "modal-asignar-comando" ||
+            el.classList.contains("leaflet-control-zoom") ||
+            el.classList.contains("no-print")
+          );
+        },
+        onclone: (clonedDoc) => {
+          const clonedBtn = clonedDoc.getElementById("btn-header-capture-png");
+          if (clonedBtn) {
+            clonedBtn.innerHTML = originalContent;
+          }
+        }
+      });
+
+      // Descarga directa e instantánea del archivo PNG en el navegador
+      if (canvas.toBlob) {
+        canvas.toBlob((blob) => {
+          if (!blob) {
+            this._descargarArchivoPNG(canvas.toDataURL("image/png"), filename);
+            return;
+          }
+          const url = URL.createObjectURL(blob);
+          this._descargarArchivoPNG(url, filename);
+          setTimeout(() => URL.revokeObjectURL(url), 4000);
+        }, "image/png");
+      } else {
+        this._descargarArchivoPNG(canvas.toDataURL("image/png"), filename);
       }
+    } catch (err) {
+      console.error("Error durante la generación de imagen PNG:", err);
+      alert("No se pudo generar la imagen automáticamente. Puedes utilizar el atajo Win + Shift + S o Impr Pant en tu teclado.");
     } finally {
       if (btn) {
         btn.innerHTML = originalContent;
@@ -2001,6 +2004,15 @@ export class LaminaApp {
         }
       }
     }
+  }
+
+  _descargarArchivoPNG(url, filename) {
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
   }
 }
 
