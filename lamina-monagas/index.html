@@ -44,7 +44,7 @@
   <script src="../centros-maturin/js/centrosData.js"></script>
 
   <!-- Estilos de Lámina Ejecutiva 120" -->
-  <link rel="stylesheet" href="css/lamina.css?v=265" />
+  <link rel="stylesheet" href="css/lamina.css?v=266" />
 
   <!-- Anti-Cache Meta Tags -->
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate, max-age=0" />
@@ -58,18 +58,18 @@
   <header id="lamina-header">
     
     <!-- Bloque Institucional Izquierdo -->
-    <div class="lamina-header-card lamina-header-left flex items-center gap-3.5 shrink-0">
-      <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-[#23176d] p-1 border border-sky-400/40 shadow-xl shadow-[#1e1261]/35 flex items-center justify-center shrink-0">
+    <div class="lamina-header-card lamina-header-left flex items-center gap-3.5 sm:gap-4 p-2 sm:p-2.5 sm:px-3.5 shrink-0">
+      <div class="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-[#23176d] p-1.5 border border-sky-400/40 shadow-xl shadow-[#1e1261]/35 flex items-center justify-center shrink-0">
         <img src="../assets/logo-migato.png" alt="MIGATO" class="w-full h-full object-contain drop-shadow-md" onerror="this.style.display='none'">
       </div>
       <div class="flex flex-col justify-center">
-        <span class="text-[10px] sm:text-[11px] font-black uppercase tracking-wider text-[#1e1261] block leading-tight mb-0.5 whitespace-nowrap">
+        <span class="text-[11px] sm:text-xs font-black uppercase tracking-wider text-[#1e1261] block leading-tight mb-0.5 whitespace-nowrap">
           MOVIMIENTO INDEPENDIENTE GANAMOS TODOS
         </span>
-        <h1 class="text-xs sm:text-sm lg:text-base font-black text-slate-900 uppercase tracking-tight leading-tight mb-0.5 whitespace-nowrap">
+        <h1 class="text-sm sm:text-base lg:text-lg font-black text-slate-900 uppercase tracking-tight leading-tight mb-0.5 whitespace-nowrap">
           CIENCIA Y TECNOLOGÍA • MONAGAS
         </h1>
-        <span class="text-[9px] sm:text-[10px] font-extrabold text-sky-800 uppercase tracking-wider block leading-tight whitespace-nowrap">
+        <span class="text-[10px] sm:text-[11px] font-black text-sky-800 uppercase tracking-wider block leading-tight whitespace-nowrap">
           SALA SITUACIONAL 2026
         </span>
       </div>
@@ -90,17 +90,7 @@
 
     <!-- Bloque Derecho: Acciones de Sala, Zoom y Fecha -->
     <div class="lamina-header-card lamina-header-right flex items-center gap-1.5 sm:gap-2 shrink-0">
-      <div class="hidden 2xl:flex flex-col text-right mr-1 font-mono">
-        <span class="text-[9px] font-bold text-slate-400 uppercase leading-none">TRANSMISIÓN</span>
-        <span id="header-clock" class="text-xs font-black text-slate-900 leading-tight">2026 • SALA ACTIVA</span>
-      </div>
-
-      <div class="hidden 2xl:inline-flex items-center gap-1 px-1.5 py-0.5 rounded-lg bg-emerald-50 text-emerald-700 font-bold text-[10px] border border-emerald-200 shrink-0">
-        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-        <span>EN VIVO</span>
-      </div>
-
-      <button type="button" id="btn-header-capture-png" onclick="laminaApp.capturarPantallaHD()" class="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center gap-1.5 shadow-sm transition active:scale-95 cursor-pointer shrink-0" title="Capturar y Descargar Lámina en Imagen PNG HD (1 Clic)">
+      <button type="button" id="btn-header-capture-png" onclick="laminaApp.capturarPantallaHD()" class="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs flex items-center gap-1.5 shadow-sm transition active:scale-95 cursor-pointer shrink-0" title="Capturar y Descargar Lámina en Imagen PNG HD (1 Clic)">
         <i data-lucide="download" class="w-4 h-4 text-emerald-200"></i>
         <span>Descargar PNG</span>
       </button>
@@ -550,7 +540,7 @@
 
   <!-- 5. AUTENTICACIÓN Y CONTROLADOR PRINCIPAL DEL MÓDULO -->
   <script src="../js/auth.js"></script>
-  <script type="module" src="js/laminaApp.js?v=265"></script>
+  <script type="module" src="js/laminaApp.js?v=266"></script>
   <script>
     if (window.lucide && typeof window.lucide.createIcons === 'function') {
       window.lucide.createIcons();
