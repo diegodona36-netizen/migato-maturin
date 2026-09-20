@@ -566,7 +566,7 @@ html, body {
 
   /* Pie de página institucional oficial */
   body::after {
-    content: "MIGATO 2026 • SALA SITUACIONAL DE CIENCIA Y TECNOLOGÍA • CARTOGRAFÍA ESTRATÉGICA OFICIAL DEL ESTADO MONAGAS";
+    content: "MOVIMIENTO INDEPENDIENTE GANAMOS TODOS • MIGATO 2026 • SALA SITUACIONAL • ESTADO MONAGAS";
     display: block;
     margin-top: 10px;
     padding-top: 6px;

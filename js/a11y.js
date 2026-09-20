@@ -15,22 +15,6 @@
     if (residualBtn) {
       residualBtn.remove();
     }
-
-    const skipLink = document.querySelector('.skip-link');
-    if (skipLink) {
-      skipLink.addEventListener('click', function (e) {
-        const targetId = skipLink.getAttribute('href');
-        if (!targetId || targetId === '#') return;
-
-        const target = document.querySelector(targetId);
-        if (target) {
-          e.preventDefault();
-          target.setAttribute('tabindex', '-1');
-          target.focus();
-          target.scrollIntoView({ behavior: 'smooth' });
-        }
-      });
-    }
   }
 
   function trapFocus(containerElement) {
