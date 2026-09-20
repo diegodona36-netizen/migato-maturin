@@ -579,10 +579,6 @@ export class LaminaApp {
     this.childEntitiesLayer.clearLayers();
     this.centrosLayer.clearLayers();
 
-    const munObj = CATALOGO_MONAGAS.find(m => m.id === cleanMunId) || { id: "maturin", nombre: "Maturín", parroquias: [] };
-    const rawMunName = munObj.nombre || "Maturín";
-    const cleanMunName = rawMunName.replace(/^municipio\s+/i, '').trim();
-
     // Renderizar las 11 Parroquias oficiales con sus colores asignados
     const parishFeats = (GEO_PARROQUIAS_OFICIAL.features || []).filter(f => {
       const fMun = String(f.properties?.municipioId || f.properties?.ADM2_ES || "maturin").toLowerCase().replace(/_/g, "-").trim();
