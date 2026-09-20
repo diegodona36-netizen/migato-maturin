@@ -8,7 +8,7 @@ const MIGATO_AUTH = (function() {
     gobernador: {
       id: "gobernador",
       title: "Comando de Dirección Regional",
-      level: "Máxima Autoridad MIGATO",
+      level: "Comando Regional",
       badgeColor: "bg-amber-500/20 text-amber-300 border-amber-500/40",
       dotColor: "bg-amber-400",
       permissions: ["read_all", "executive_dashboard", "approve_orders", "module_4_3d_map", "certify_regional", "export_reports"]
@@ -91,35 +91,11 @@ const MIGATO_AUTH = (function() {
   }
 
   function renderUserBadge() {
-    const session = getSession();
-    const roleDef = ROLES[session.role] || ROLES.gobernador;
-    const loginUrl = (window.location.pathname.includes("/despacho/") || window.location.pathname.includes("/earth-monagas/")) ? "../login.html" : "login.html";
-    
-    // Buscar contenedor o inyectar flotante si no existe
-    let badgeEl = document.getElementById("migato-user-badge");
-    if (!badgeEl) {
-      badgeEl = document.createElement("div");
-      badgeEl.id = "migato-user-badge";
-      badgeEl.className = "fixed bottom-4 right-4 z-50 flex items-center gap-3 bg-[#140e40]/95 backdrop-blur border border-[#2d1f85] rounded-full px-4 py-2 shadow-2xl text-sm font-medium text-slate-200";
-      document.body.appendChild(badgeEl);
+    // Neutralizado: no se inyecta badge flotante
+    const existing = document.getElementById("migato-user-badge");
+    if (existing) {
+      existing.remove();
     }
-
-    badgeEl.innerHTML = `
-      <div class="flex items-center gap-2">
-        <span class="relative flex h-2.5 w-2.5">
-          <span class="animate-ping absolute inline-flex h-full w-full rounded-full ${roleDef.dotColor} opacity-75"></span>
-          <span class="relative inline-flex rounded-full h-2.5 w-2.5 ${roleDef.dotColor}"></span>
-        </span>
-        <span class="text-slate-300 font-mono hidden sm:inline">${roleDef.level}:</span>
-        <span class="font-bold text-white">${session.name}</span>
-      </div>
-      <span class="px-2 py-0.5 border text-sm font-mono ${roleDef.badgeColor}">
-        ${roleDef.title}
-      </span>
-      <a href="${loginUrl}" title="Cambiar rol o usuario" class="text-slate-300 hover:text-white transition px-1.5 py-0.5 border border-slate-600 bg-slate-800">
-        Cambiar
-      </a>
-    `;
   }
 
   function hasPermission(permissionName) {
@@ -137,11 +113,6 @@ const MIGATO_AUTH = (function() {
     }
     // Módulo 1, 2, 3 accesibles según jerarquía
     return true;
-  }
-
-  // Auto-iniciar al cargar el DOM
-  if (typeof window !== "undefined") {
-    document.addEventListener("DOMContentLoaded", renderUserBadge);
   }
 
   return {

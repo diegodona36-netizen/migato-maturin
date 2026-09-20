@@ -114,7 +114,7 @@
       
       <!-- Brand, Big Logo & Institutional Hierarchy -->
       <a href="./" class="flex items-center gap-3.5 group">
-        <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-[#23176d] p-1.5 border-2 border-amber-400/40 flex items-center justify-center shadow-lg shadow-[#23176d]/60 transition group-hover:scale-105 shrink-0">
+        <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-[#23176d] p-2 border-2 border-amber-400/50 flex items-center justify-center shadow-lg shadow-[#23176d]/60 transition group-hover:scale-105 shrink-0">
           <img src="assets/logo-migato.png" alt="MIGATO - El Gato Briceño" class="w-full h-full object-contain drop-shadow-md">
         </div>
         <div class="space-y-0.5">
@@ -145,24 +145,14 @@
         </div>
       </a>
 
-      <!-- Minimal Executive Header Nav -->
+      <!-- Minimal Executive Header Nav (Solo Módulos y Acceso) -->
       <nav class="flex items-center gap-2 sm:gap-3" aria-label="Navegación Principal">
-        <a href="#modulos" class="px-3 py-1.5 text-sm sm:text-base font-semibold text-slate-200 hover:text-white hover:bg-white/5 rounded-xl transition flex items-center gap-1.5">
+        <a href="#modulos" class="px-3.5 py-2 text-sm sm:text-base font-semibold text-slate-200 hover:text-white hover:bg-white/5 rounded-xl transition flex items-center gap-1.5">
           <i data-lucide="layout-grid" class="w-4 h-4 text-sky-400"></i>
           <span>Módulos</span>
         </a>
 
-        <a href="presentacion/" class="px-3 sm:px-3.5 py-1.5 text-sm sm:text-base font-bold text-sky-200 hover:text-white bg-sky-950/80 hover:bg-sky-900 border border-sky-500/40 rounded-xl transition flex items-center gap-1.5 shadow-sm active:scale-95" title="Presentación Ejecutiva Oficial">
-          <i data-lucide="presentation" class="w-4 h-4 text-sky-400"></i>
-          <span>Presentación</span>
-        </a>
-
-        <a href="documento_partido.html" class="hidden md:flex px-3 py-1.5 text-sm sm:text-base font-semibold text-blue-200 hover:text-white hover:bg-blue-950/40 border border-blue-500/30 rounded-xl transition items-center gap-1.5" title="Propuesta Oficial y Presupuesto Mínimo V3">
-          <i data-lucide="file-text" class="w-4 h-4 text-blue-400"></i>
-          <span>Propuesta V3</span>
-        </a>
-
-        <a href="login.html" class="px-3 py-1.5 text-sm sm:text-base font-bold text-amber-300 hover:text-white bg-[#1a134d] hover:bg-[#251b68] border border-amber-500/40 rounded-xl transition flex items-center gap-1.5" title="Acceso Institucional por Roles">
+        <a href="login.html" class="px-3.5 py-2 text-sm sm:text-base font-bold text-amber-300 hover:text-white bg-[#1a134d] hover:bg-[#251b68] border border-amber-500/40 rounded-xl transition flex items-center gap-1.5 shadow-sm active:scale-95" title="Acceso Institucional por Roles">
           <i data-lucide="shield" class="w-3.5 h-3.5 text-amber-400"></i>
           <span>Acceso</span>
         </a>
@@ -177,39 +167,26 @@
   <main class="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8 sm:py-10 space-y-8 sm:space-y-10">
 
     <!-- HERO PRINCIPAL DE LA CENTRAL -->
-    <section class="text-center max-w-4xl mx-auto space-y-4 pt-1">
+    <section class="text-center max-w-4xl mx-auto space-y-5 pt-2">
+      <!-- Big Central Logo -->
+      <div class="mx-auto w-24 h-24 sm:w-28 sm:h-28 rounded-3xl bg-[#23176d] p-3 border-2 border-amber-400/50 flex items-center justify-center shadow-2xl shadow-[#23176d]/80 transition hover:scale-105">
+        <img src="assets/logo-migato.png" alt="MIGATO - El Gato Briceño" class="w-full h-full object-contain drop-shadow-lg">
+      </div>
+
       <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-sky-950/80 border border-sky-500/40 text-sky-300 text-xs sm:text-sm font-mono font-bold shadow-sm">
         <i data-lucide="shield-check" class="w-4 h-4 text-sky-400"></i>
         <span>SISTEMA CENTRAL DE OPERACIONES Y MANDO ELECTORAL 2026</span>
       </div>
 
-      <h2 class="font-display text-3xl sm:text-5xl font-black text-white tracking-tight leading-tight">
-        Central de Mando y Control Electoral
+      <h2 class="font-display text-3xl sm:text-5xl font-black text-white tracking-tight leading-tight uppercase">
+        MIGATO • SALA SITUACIONAL
       </h2>
-      <p class="text-sm sm:text-base text-blue-100/90 leading-relaxed max-w-2xl mx-auto font-medium">
-        Plataforma unificada para la auditoría electoral de 175 escuelas CNE, control cartográfico satelital 3D, organización de comandos y movilización territorial en los 13 municipios del Estado Monagas.
+      <p class="text-xs sm:text-sm font-mono font-bold text-sky-300 uppercase tracking-widest">
+        ESTADO MONAGAS 2026 • 13 MUNICIPIOS • 44 PARROQUIAS
       </p>
-
-      <!-- Buscador Rápido Interactivo de Parroquias y Sectores -->
-      <div class="pt-1 max-w-md mx-auto">
-        <div class="relative flex items-center">
-          <i data-lucide="search" class="w-4 h-4 text-blue-300 absolute left-3.5 pointer-events-none"></i>
-          <input 
-            id="searchParroquia" 
-            type="text" 
-            placeholder="Buscar parroquia, sector o municipio... (ej. Godos, Boquerón, Caripito)"
-            class="w-full pl-10 pr-10 py-2.5 bg-[#140e40]/90 border border-[#2d1f85] rounded-xl text-sm sm:text-base text-white placeholder-blue-300/60 focus:border-sky-400 focus:bg-[#18114a] transition"
-          >
-          <button 
-            id="clearSearch" 
-            type="button" 
-            class="hidden absolute right-3 text-slate-400 hover:text-white transition"
-            aria-label="Limpiar búsqueda"
-          >
-            <i data-lucide="x" class="w-4 h-4"></i>
-          </button>
-        </div>
-      </div>
+      <p class="text-sm sm:text-base text-slate-200/90 leading-relaxed max-w-2xl mx-auto font-medium">
+        Plataforma unificada para la auditoría electoral de 175 escuelas CNE, control cartográfico satelital 3D, organización de comandos y movilización territorial en el Estado Monagas.
+      </p>
     </section>
 
     <!-- ============================================================== -->
@@ -517,101 +494,72 @@
 
 
     <!-- ============================================================== -->
-    <!-- 5. ACCESO DIRECTO RÁPIDO A LAS 10 PARROQUIAS DE MATURÍN       -->
+    <!-- 5. NORMAS Y DOCTRINA OPERATIVA DE CAMPAÑA MIGATO 2026          -->
     <!-- ============================================================== -->
-    <section class="p-6 bg-[#18114a]/90 border border-[#2d1f85] rounded-3xl space-y-4 shadow-xl shadow-indigo-950/50">
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#2d1f85] pb-3">
+    <section class="p-6 sm:p-8 bg-[#18114a]/90 border border-[#2d1f85] rounded-3xl space-y-6 shadow-xl shadow-indigo-950/50">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#2d1f85] pb-4">
         <div>
-          <h3 class="text-base font-black text-white uppercase tracking-wider flex items-center gap-2">
-            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-            Acceso Rápido por Parroquias de Maturín (Módulo 4 • Satélite 3D)
+          <span class="text-xs font-mono font-bold uppercase tracking-widest text-amber-400 block mb-1">
+            Doctrina de Mando y Control Territorial
+          </span>
+          <h3 class="text-lg sm:text-xl font-display font-black text-white uppercase tracking-tight flex items-center gap-2.5">
+            <i data-lucide="scale" class="w-5 h-5 text-amber-400 shrink-0"></i>
+            <span>Normas y Doctrina Operativa de Campaña MIGATO 2026</span>
           </h3>
-          <p class="text-sm text-blue-200">Selecciona una parroquia para abrir la cartografía satelital individualizada en tiempo real:</p>
+          <p class="text-xs sm:text-sm text-blue-200 mt-0.5">
+            Directrices institucionales para la disciplina de comando, auditoría del padrón y resguardo territorial en los 13 municipios:
+          </p>
         </div>
-        <span id="parroquiaCounter" class="text-xs sm:text-sm font-mono text-blue-200 font-bold self-start sm:self-auto">10 Parroquias</span>
+        <span class="text-xs font-mono text-amber-300 font-bold bg-[#140e40] border border-amber-500/40 px-3 py-1 rounded-full self-start sm:self-auto shrink-0 shadow-sm">
+          Mando Centralizado
+        </span>
       </div>
 
-      <div id="parroquiasGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2.5 text-xs sm:text-sm font-mono">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         
-        <a href="earth-monagas/?v=251&mun=maturin&p=alto-de-los-godos" data-name="alto de los godos la puente" class="parroquia-card p-3 bg-[#130d38] border border-[#2d1f85] hover:border-sky-400/60 rounded-xl transition flex flex-col justify-between group shadow-sm">
-          <div class="flex items-center justify-between mb-1">
-            <span class="font-display font-bold text-white group-hover:text-sky-300 truncate">Alto de Los Godos</span>
-            <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-blue-300 group-hover:text-sky-400 transition"></i>
+        <!-- Norma 1: Comando y Disciplina -->
+        <div class="p-4 rounded-2xl bg-[#130d38] border border-[#2d1f85] space-y-2.5 shadow-sm">
+          <div class="flex items-center gap-2 text-sky-400">
+            <i data-lucide="shield" class="w-5 h-5"></i>
+            <h4 class="font-display font-bold text-sm sm:text-base text-white">Línea de Mando</h4>
           </div>
-          <span class="text-xs text-emerald-400 font-semibold tabular-nums">81.085 Votantes</span>
-        </a>
+          <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+            Conducción política unificada bajo el liderazgo histórico de <strong>José Gregorio "El Gato" Briceño</strong>. Las directivas de campaña se canalizan estrictamente desde la Sala Situacional Regional hacia los 13 comandos municipales.
+          </p>
+        </div>
 
-        <a href="earth-monagas/?v=251&mun=maturin&p=san-simon" data-name="san simon casco central" class="parroquia-card p-3 bg-[#130d38] border border-[#2d1f85] hover:border-sky-400/60 rounded-xl transition flex flex-col justify-between group shadow-sm">
-          <div class="flex items-center justify-between mb-1">
-            <span class="font-display font-bold text-white group-hover:text-sky-300 truncate">San Simón</span>
-            <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-blue-300 group-hover:text-sky-400 transition"></i>
+        <!-- Norma 2: Despliegue Territorial -->
+        <div class="p-4 rounded-2xl bg-[#130d38] border border-[#2d1f85] space-y-2.5 shadow-sm">
+          <div class="flex items-center gap-2 text-sky-400">
+            <i data-lucide="map-pin" class="w-5 h-5"></i>
+            <h4 class="font-display font-bold text-sm sm:text-base text-white">Estructura Territorial</h4>
           </div>
-          <span class="text-xs text-emerald-400 font-semibold tabular-nums">64.502 Votantes</span>
-        </a>
+          <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+            Presencia auditada de coordinadores, enlaces y testigos electorales en las <strong>175 escuelas oficiales del CNE</strong>. Cada mesa cuenta con doble testigo juramentado y canal de reporte inmediato para actas de escrutinio.
+          </p>
+        </div>
 
-        <a href="earth-monagas/?v=251&mun=maturin&p=las-cocuizas" data-name="las cocuizas aeropuerto" class="parroquia-card p-3 bg-[#130d38] border border-[#2d1f85] hover:border-sky-400/60 rounded-xl transition flex flex-col justify-between group shadow-sm">
-          <div class="flex items-center justify-between mb-1">
-            <span class="font-display font-bold text-white group-hover:text-sky-300 truncate">Las Cocuizas</span>
-            <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-blue-300 group-hover:text-sky-400 transition"></i>
+        <!-- Norma 3: Auditoría y Voto -->
+        <div class="p-4 rounded-2xl bg-[#130d38] border border-[#2d1f85] space-y-2.5 shadow-sm">
+          <div class="flex items-center gap-2 text-amber-400">
+            <i data-lucide="check-check" class="w-5 h-5"></i>
+            <h4 class="font-display font-bold text-sm sm:text-base text-white">Caracterización del Voto</h4>
           </div>
-          <span class="text-xs text-emerald-400 font-semibold tabular-nums">58.986 Votantes</span>
-        </a>
+          <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+            Clasificación rigurosa y contrastada de electores en <strong>voto duro, simpatizantes y electores por convencer</strong>. Queda prohibida la carga de datos sin contacto cara a cara o sin confirmación de cédula en padrón oficial.
+          </p>
+        </div>
 
-        <a href="earth-monagas/?v=251&mun=maturin&p=boqueron" data-name="boqueron tipuro" class="parroquia-card p-3 bg-[#130d38] border border-[#2d1f85] hover:border-sky-400/60 rounded-xl transition flex flex-col justify-between group shadow-sm">
-          <div class="flex items-center justify-between mb-1">
-            <span class="font-display font-bold text-white group-hover:text-sky-300 truncate">Boquerón</span>
-            <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-blue-300 group-hover:text-sky-400 transition"></i>
+        <!-- Norma 4: Ciberdefensa y Soberanía -->
+        <div class="p-4 rounded-2xl bg-[#130d38] border border-[#2d1f85] space-y-2.5 shadow-sm">
+          <div class="flex items-center gap-2 text-emerald-400">
+            <i data-lucide="lock" class="w-5 h-5"></i>
+            <h4 class="font-display font-bold text-sm sm:text-base text-white">Ciberdefensa y Resguardo</h4>
           </div>
-          <span class="text-xs text-emerald-400 font-semibold tabular-nums">42.274 Votantes</span>
-        </a>
-
-        <a href="earth-monagas/?v=251&mun=maturin&p=santa-cruz" data-name="santa cruz zona industrial" class="parroquia-card p-3 bg-[#130d38] border border-[#2d1f85] hover:border-sky-400/60 rounded-xl transition flex flex-col justify-between group shadow-sm">
-          <div class="flex items-center justify-between mb-1">
-            <span class="font-display font-bold text-white group-hover:text-sky-300 truncate">Santa Cruz</span>
-            <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-blue-300 group-hover:text-sky-400 transition"></i>
-          </div>
-          <span class="text-xs text-emerald-400 font-semibold tabular-nums">29.747 Votantes</span>
-        </a>
-
-        <a href="earth-monagas/?v=251&mun=maturin&p=la-pica" data-name="la pica" class="parroquia-card p-3 bg-[#130d38] border border-[#2d1f85] hover:border-sky-400/60 rounded-xl transition flex flex-col justify-between group shadow-sm">
-          <div class="flex items-center justify-between mb-1">
-            <span class="font-display font-bold text-white group-hover:text-sky-300 truncate">La Pica</span>
-            <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-blue-300 group-hover:text-sky-400 transition"></i>
-          </div>
-          <span class="text-xs text-emerald-400 font-semibold tabular-nums">14.076 Votantes</span>
-        </a>
-
-        <a href="earth-monagas/?v=251&mun=maturin&p=jusepin" data-name="jusepin" class="parroquia-card p-3 bg-[#130d38] border border-[#2d1f85] hover:border-sky-400/60 rounded-xl transition flex flex-col justify-between group shadow-sm">
-          <div class="flex items-center justify-between mb-1">
-            <span class="font-display font-bold text-white group-hover:text-sky-300 truncate">Jusepín</span>
-            <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-blue-300 group-hover:text-sky-400 transition"></i>
-          </div>
-          <span class="text-xs text-emerald-400 font-semibold tabular-nums">9.056 Votantes</span>
-        </a>
-
-        <a href="earth-monagas/?v=251&mun=maturin&p=el-furrial" data-name="el furrial" class="parroquia-card p-3 bg-[#130d38] border border-[#2d1f85] hover:border-sky-400/60 rounded-xl transition flex flex-col justify-between group shadow-sm">
-          <div class="flex items-center justify-between mb-1">
-            <span class="font-display font-bold text-white group-hover:text-sky-300 truncate">El Furrial</span>
-            <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-blue-300 group-hover:text-sky-400 transition"></i>
-          </div>
-          <span class="text-xs text-emerald-400 font-semibold tabular-nums">8.966 Votantes</span>
-        </a>
-
-        <a href="earth-monagas/?v=251&mun=maturin&p=san-vicente" data-name="san vicente" class="parroquia-card p-3 bg-[#130d38] border border-[#2d1f85] hover:border-sky-400/60 rounded-xl transition flex flex-col justify-between group shadow-sm">
-          <div class="flex items-center justify-between mb-1">
-            <span class="font-display font-bold text-white group-hover:text-sky-300 truncate">San Vicente</span>
-            <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-blue-300 group-hover:text-sky-400 transition"></i>
-          </div>
-          <span class="text-xs text-emerald-400 font-semibold tabular-nums">7.425 Votantes</span>
-        </a>
-
-        <a href="earth-monagas/?v=251&mun=maturin&p=el-corozo" data-name="el corozo" class="parroquia-card p-3 bg-[#130d38] border border-[#2d1f85] hover:border-sky-400/60 rounded-xl transition flex flex-col justify-between group shadow-sm">
-          <div class="flex items-center justify-between mb-1">
-            <span class="font-display font-bold text-white group-hover:text-sky-300 truncate">El Corozo</span>
-            <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-blue-300 group-hover:text-sky-400 transition"></i>
-          </div>
-          <span class="text-xs text-emerald-400 font-semibold tabular-nums">2.484 Votantes</span>
-        </a>
+          <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+            Arquitectura soberana Cloud VPS con réplica en <strong>Bóveda Local RAID 1</strong>. Cifrado integral de expedientes, telefonía VoIP segura y resguardo de actas para garantizar autonomía operativa absoluta sin depender de servicios vulnerables.
+          </p>
+        </div>
 
       </div>
     </section>
@@ -621,19 +569,19 @@
   <!-- ============================================================== -->
   <!-- 7. FOOTER INSTITUCIONAL                                        -->
   <!-- ============================================================== -->
-  <footer class="border-t border-[#2d1f85] bg-[#100b33] py-6 sm:py-8text-sm text-slate-300">
+  <footer class="border-t border-[#2d1f85] bg-[#100b33] py-6 sm:py-8 text-sm text-slate-300">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
       
       <div class="flex items-center gap-2.5">
-        <div class="w-6 h-6 rounded-lg bg-[#23176d] border border-white/20 flex items-center justify-center p-0.5">
+        <div class="w-8 h-8 rounded-lg bg-[#23176d] border border-white/20 flex items-center justify-center p-1">
           <img src="assets/logo-migato.png" alt="MIGATO" class="w-full h-full object-contain">
         </div>
         <p class="text-slate-300 font-medium">
-          MIGATO 2026 • Sala de Mando y Cartografía Estratégica del Estado Monagas
+          MIGATO 2026 • Sala Situacional y Cartografía Estratégica del Estado Monagas
         </p>
       </div>
 
-      <nav class="flex flex-wrap items-center justify-center gap-4 sm:gap-6 font-monotext-sm" aria-label="Enlaces de Pie de Página">
+      <nav class="flex flex-wrap items-center justify-center gap-4 sm:gap-6 font-mono text-sm" aria-label="Enlaces de Pie de Página">
         <a href="presentacion/" class="text-sky-400 hover:text-sky-300 transition font-bold">Presentación</a>
         <a href="documento_partido.html" class="text-blue-400 hover:text-blue-300 transition font-bold">Propuesta V3</a>
         <a href="despacho/" class="text-slate-400 hover:text-slate-200 transition">Despacho</a>
@@ -655,63 +603,6 @@
     if (window.lucide && typeof window.lucide.createIcons === "function") {
       window.lucide.createIcons();
     }
-
-    // Filtro interactivo en vivo para las 10 parroquias de Maturín
-    (function() {
-      const searchInput = document.getElementById("searchParroquia");
-      const clearBtn = document.getElementById("clearSearch");
-      const cards = document.querySelectorAll(".parroquia-card");
-      const counter = document.getElementById("parroquiaCounter");
-
-      if (!searchInput || !cards.length) return;
-
-      function filterParroquias() {
-        const query = searchInput.value.toLowerCase().trim();
-        let visibleCount = 0;
-
-        cards.forEach(card => {
-          const text = (card.getAttribute("data-name") || "") + " " + card.textContent.toLowerCase();
-          if (!query || text.includes(query)) {
-            card.style.display = "";
-            visibleCount++;
-          } else {
-            card.style.display = "none";
-          }
-        });
-
-        if (clearBtn) {
-          if (query) {
-            clearBtn.classList.remove("hidden");
-          } else {
-            clearBtn.classList.add("hidden");
-          }
-        }
-
-        if (counter) {
-          counter.textContent = query 
-            ? `${visibleCount} de ${cards.length} Parroquias` 
-            : `${cards.length} Parroquias`;
-        }
-      }
-
-      searchInput.addEventListener("input", filterParroquias);
-
-      if (clearBtn) {
-        clearBtn.addEventListener("click", () => {
-          searchInput.value = "";
-          filterParroquias();
-          searchInput.focus();
-        });
-      }
-
-      // Atajo de teclado: presionar '/' para enfocar el buscador
-      document.addEventListener("keydown", (e) => {
-        if (e.key === "/" && document.activeElement !== searchInput) {
-          e.preventDefault();
-          searchInput.focus();
-        }
-      });
-    })();
   </script>
   <script src="config.js"></script>
   <script src="js/auth.js"></script>

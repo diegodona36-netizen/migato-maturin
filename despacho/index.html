@@ -108,12 +108,12 @@
 <!-- ============================================================== -->
   <!-- 1. ENCABEZADO INSTITUCIONAL GUBERNAMENTAL (SIN COSAS RARAS)    -->
   <!-- ============================================================== -->
-  <header class="bg-[#0b1322] text-white border-b-2 border-[#1e2f4a] py-3 px-4 sm:px-8">
+  <header class="bg-[#0b1322] text-white border-b-2 border-[#1e2f4a] py-3.5 px-4 sm:px-8">
     <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
       
       <!-- Título Institucional y Logo Prominente -->
       <div class="flex items-center gap-3.5">
-        <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-[#23176d] p-1.5 border-2 border-amber-400/40 flex items-center justify-center shadow-lg shadow-[#23176d]/60 shrink-0">
+        <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-[#23176d] p-2 border-2 border-amber-400/50 flex items-center justify-center shadow-lg shadow-[#23176d]/60 shrink-0">
           <img src="../assets/logo-migato.png" alt="MIGATO - El Gato Briceño" class="w-full h-full object-contain drop-shadow-md">
         </div>
         <div class="space-y-0.5">
@@ -121,14 +121,14 @@
             MOVIMIENTO INDEPENDIENTE GANAMOS TODOS
           </span>
           <div class="flex items-center gap-2 flex-wrap">
-            <h1 class="font-display font-black text-white text-base sm:text-xl tracking-tight leading-none uppercase">
-              MÓDULO 1 • <span class="text-emerald-400">COMANDO DATERO Y ENLACES</span>
+            <h1 class="font-display font-black text-white text-base sm:text-2xl tracking-tight leading-none uppercase">
+              MÓDULO 1 • COMANDO DATERO Y ENLACES
             </h1>
-            <span class="text-xs bg-slate-800 text-amber-400 border border-amber-500/60 font-black px-2 py-0.5 rounded font-mono">
+            <span class="text-xs bg-[#140e40] text-sky-200 border border-[#2d1f85] font-bold px-2.5 py-0.5 rounded font-mono">
               MONAGAS 2026
             </span>
           </div>
-          <p class="text-xs sm:text-sm font-bold text-amber-300 tracking-wide uppercase">
+          <p class="text-xs sm:text-sm font-bold text-slate-200 tracking-wide uppercase">
             SALA SITUACIONAL • DESPACHO CENTRAL DE ENLACES PARROQUIALES
           </p>
           <p class="text-[11px] text-slate-400 font-medium hidden sm:block">
@@ -137,20 +137,20 @@
         </div>
       </div>
 
-      <!-- Barra de Acciones Principales (Estilo ERP / Excel) -->
+      <!-- Barra de Acciones Principales (Estilo ERP Sobrio) -->
       <div class="flex items-center gap-2 shrink-0 flex-nowrap">
-        <button onclick="exportToExcel()" class="btn-excel bg-[#059669] hover:bg-[#047857] text-white border-[#10b981]/50 shadow-sm">
-          <i data-lucide="file-spreadsheet" class="w-4 h-4"></i>
+        <button onclick="exportToExcel()" class="btn-excel bg-[#1e293b] hover:bg-[#2e3e55] text-white border-slate-600 shadow-sm">
+          <i data-lucide="file-spreadsheet" class="w-4 h-4 text-sky-400"></i>
           <span>DESCARGAR EXCEL</span>
         </button>
 
-        <button onclick="window.location.reload()" class="btn-excel bg-[#1e293b] hover:bg-[#334155] text-slate-200 border-slate-600 shadow-sm">
-          <i data-lucide="refresh-cw" class="w-4 h-4"></i>
+        <button onclick="window.location.reload()" class="btn-excel bg-[#1e293b] hover:bg-[#2e3e55] text-slate-200 border-slate-600 shadow-sm">
+          <i data-lucide="refresh-cw" class="w-4 h-4 text-slate-300"></i>
           <span>ACTUALIZAR</span>
         </button>
 
-        <a href="../login.html" class="btn-excel bg-[#881337] hover:bg-[#9f1239] text-rose-100 border-rose-800 shadow-sm text-decoration-none">
-          <i data-lucide="log-out" class="w-4 h-4"></i>
+        <a href="../login.html" class="btn-excel bg-[#1e293b] hover:bg-[#2e3e55] text-slate-300 hover:text-white border-slate-600 shadow-sm text-decoration-none">
+          <i data-lucide="log-out" class="w-4 h-4 text-slate-400"></i>
           <span>SALIR</span>
         </a>
       </div>
@@ -166,13 +166,13 @@
       <div class="flex items-center gap-4 flex-wrap">
         <div>
           <span class="text-slate-400 uppercase text-base">VOTANTES CERTIFICADOS:</span>
-          <strong id="kpi-certificados" class="text-emerald-400 font-mono text-base ml-1">0</strong>
+          <strong id="kpi-certificados" class="text-white font-mono text-base ml-1">0</strong>
         </div>
         <span class="text-slate-700">|</span>
         <div>
           <span class="text-slate-400 uppercase text-base">COBERTURA PARROQUIAL:</span>
-          <strong id="kpi-cobertura" class="text-sky-400 font-mono text-base ml-1">0 / 44</strong>
-          <span id="kpi-cobertura-pct" class="text-base bg-sky-950 text-sky-300 border border-sky-800 px-1.5 py-0.5 rounded ml-1 font-mono">0%</span>
+          <strong id="kpi-cobertura" class="text-sky-300 font-mono text-base ml-1">0 / 44</strong>
+          <span id="kpi-cobertura-pct" class="text-base bg-[#140e40] text-sky-200 border border-[#2d1f85] px-1.5 py-0.5 rounded ml-1 font-mono">0%</span>
         </div>
         <span class="text-slate-700">|</span>
         <div>
@@ -181,8 +181,8 @@
         </div>
       </div>
 
-      <div class="text-base font-bold text-emerald-400 flex items-center gap-2">
-        <span class="w-2 h-2 bg-emerald-500 rounded-full inline-block"></span>
+      <div class="text-base font-bold text-slate-300 flex items-center gap-2">
+        <span class="w-2 h-2 bg-sky-400 rounded-full inline-block animate-pulse"></span>
         <span>CANAL BOT WHATSAPP ACTIVO • RECEPCIÓN REGIONAL</span>
       </div>
     </div>
@@ -203,23 +203,23 @@
                class="w-full bg-[#080e18] border border-[#334155] px-3.5 py-2 text-sm font-bold text-white placeholder-slate-500 focus:border-blue-500 rounded">
       </div>
 
-      <!-- Filtros Planos (Sin emojis, 100% funcionales) -->
+      <!-- Filtros Planos (Sin estridencias, 100% funcionales) -->
       <div class="flex items-center gap-2 w-full md:w-auto flex-wrap">
         <span class="text-base font-black text-slate-400 uppercase mr-1">ESTADO:</span>
         
-        <button onclick="setFilterStatus('todos')" id="btn-filter-todos" class="btn-excel bg-slate-200 text-black font-black text-sm uppercase rounded">
+        <button onclick="setFilterStatus('todos')" id="btn-filter-todos" class="btn-excel bg-[#23176d] text-white font-bold text-sm uppercase rounded border border-[#4338ca]">
           TODAS (<span id="count-filter-todos">0</span>)
         </button>
 
-        <button onclick="setFilterStatus('pendiente')" id="btn-filter-pendientes" class="btn-excel bg-[#1e293b] hover:bg-[#334155] text-amber-300 border border-amber-500/50 font-black text-sm uppercase rounded">
+        <button onclick="setFilterStatus('pendiente')" id="btn-filter-pendientes" class="btn-excel bg-[#1e293b] hover:bg-[#334155] text-slate-300 border border-slate-700 font-bold text-sm uppercase rounded">
           PENDIENTES (<span id="count-filter-pendientes">0</span>)
         </button>
 
-        <button onclick="setFilterStatus('certificado')" id="btn-filter-certificados" class="btn-excel bg-[#1e293b] hover:bg-[#334155] text-emerald-300 border border-emerald-500/50 font-black text-sm uppercase rounded">
+        <button onclick="setFilterStatus('certificado')" id="btn-filter-certificados" class="btn-excel bg-[#1e293b] hover:bg-[#334155] text-slate-300 border border-slate-700 font-bold text-sm uppercase rounded">
           APROBADAS (<span id="count-filter-certificados">0</span>)
         </button>
 
-        <button onclick="showWhitelistModal()" class="btn-excel bg-[#1e293b] hover:bg-[#334155] text-slate-300 border border-slate-600 font-black text-sm uppercase rounded" title="Ver enlaces autorizados">
+        <button onclick="showWhitelistModal()" class="btn-excel bg-[#1e293b] hover:bg-[#334155] text-slate-300 border border-slate-600 font-bold text-sm uppercase rounded" title="Ver enlaces autorizados">
           LÍNEAS WHITELIST
         </button>
       </div>
@@ -580,17 +580,17 @@
       // Resetear estilos a estado inactivo plano
       [btnTodos, btnPend, btnCert].forEach(b => {
         if (b) {
-          b.className = "btn-excel bg-[#1e293b] hover:bg-[#334155] text-slate-300 border border-slate-700 font-black text-base uppercase rounded";
+          b.className = "btn-excel bg-[#1e293b] hover:bg-[#334155] text-slate-300 border border-slate-700 font-bold text-sm uppercase rounded";
         }
       });
 
-      // Aplicar estilo activo sólido
+      // Aplicar estilo activo sobrio y legible
       if (status === 'todos' && btnTodos) {
-        btnTodos.className = "btn-excel bg-slate-200 text-black font-black text-base uppercase rounded";
+        btnTodos.className = "btn-excel bg-[#23176d] text-white font-bold text-sm uppercase rounded border border-[#4338ca]";
       } else if (status === 'pendiente' && btnPend) {
-        btnPend.className = "btn-excel bg-amber-500 text-black font-black text-base uppercase rounded";
+        btnPend.className = "btn-excel bg-[#332814] text-amber-200 border border-amber-600 font-bold text-sm uppercase rounded";
       } else if (status === 'certificado' && btnCert) {
-        btnCert.className = "btn-excel bg-emerald-600 text-white font-black text-base uppercase rounded";
+        btnCert.className = "btn-excel bg-[#14283d] text-sky-200 border border-sky-500 font-bold text-sm uppercase rounded";
       }
 
       renderSimpleTable();
