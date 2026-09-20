@@ -116,8 +116,8 @@ export class Whiteboard {
       this.toolbar.classList.add("flex");
     }
     if (this.toggleBtn) {
-      this.toggleBtn.classList.add("ring-4", "ring-yellow-400", "bg-yellow-500", "text-slate-950");
-      this.toggleBtn.classList.remove("bg-slate-900/90", "text-white");
+      this.toggleBtn.classList.add("bg-sky-100", "text-sky-700", "border-sky-300");
+      this.toggleBtn.classList.remove("bg-slate-100", "text-slate-700");
     }
 
     // Bloquear arrastre y zoom del mapa para permitir dibujar con los dedos
@@ -143,8 +143,8 @@ export class Whiteboard {
       this.toolbar.classList.remove("flex");
     }
     if (this.toggleBtn) {
-      this.toggleBtn.classList.remove("ring-4", "ring-yellow-400", "bg-yellow-500", "text-slate-950");
-      this.toggleBtn.classList.add("bg-slate-900/90", "text-white");
+      this.toggleBtn.classList.remove("bg-sky-100", "text-sky-700", "border-sky-300");
+      this.toggleBtn.classList.add("bg-slate-100", "text-slate-700");
     }
 
     // Reactivar mapa para navegación normal

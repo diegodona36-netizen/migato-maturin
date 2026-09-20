@@ -44,7 +44,7 @@
   <script src="../centros-maturin/js/centrosData.js"></script>
 
   <!-- Estilos de Lámina Ejecutiva 120" -->
-  <link rel="stylesheet" href="css/lamina.css?v=268" />
+  <link rel="stylesheet" href="css/lamina.css?v=269" />
 
   <!-- Anti-Cache Meta Tags -->
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate, max-age=0" />
@@ -96,6 +96,10 @@
       <button type="button" id="btn-header-capture-png" onclick="laminaApp.capturarPantallaHD()" class="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs flex items-center gap-1.5 shadow-sm transition active:scale-95 cursor-pointer shrink-0" title="Capturar y Descargar Lámina en Imagen PNG HD (1 Clic)">
         <i data-lucide="download" class="w-4 h-4 text-emerald-200"></i>
         <span>Descargar PNG</span>
+      </button>
+
+      <button type="button" id="btn-toggle-whiteboard" onclick="window.laminaApp && window.laminaApp.whiteboard && window.laminaApp.whiteboard.toggle()" class="p-1.5 sm:p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-slate-900 border border-slate-300 font-bold text-xs flex items-center justify-center transition cursor-pointer shrink-0" title="Lápiz / Pizarra (Escribir y Subrayar en el Mapa)">
+        <i data-lucide="pencil" class="w-4 h-4 text-slate-700"></i>
       </button>
 
       <button id="btn-fullscreen" type="button" class="p-1.5 sm:p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 transition cursor-pointer shrink-0" title="Modo Pantalla Completa (120 pulgadas)">
@@ -381,19 +385,8 @@
     </div>
   </aside>
 
-  <!-- 4. BOTÓN FLOTANTE INFERIOR: ACTIVAR PIZARRA TÁCTICA (TELEVISOR TÁCTIL) -->
-  <div class="fixed bottom-4 left-1/2 -translate-x-1/2 z-[1000] no-print">
-    <button type="button" id="btn-toggle-whiteboard" 
-            onclick="window.laminaApp && window.laminaApp.whiteboard && window.laminaApp.whiteboard.toggle()"
-            class="px-4 py-2 rounded-full bg-slate-900/90 hover:bg-slate-900 text-white font-bold text-xs uppercase flex items-center gap-2 shadow-2xl border border-slate-700/80 backdrop-blur-md transition active:scale-95 cursor-pointer"
-            title="Activar / Desactivar Lápiz Táctil para Rayar el Mapa con los Dedos o Stylus">
-      <i data-lucide="edit-3" class="w-4 h-4 text-yellow-400"></i>
-      <span>Pizarra Táctica</span>
-    </button>
-  </div>
-
-  <!-- 4.1 BARRA DE HERRAMIENTAS TÁCTILES TIPO PAINT (FLOTANTE INFERIOR) -->
-  <div id="whiteboard-toolbar" class="fixed bottom-16 left-1/2 -translate-x-1/2 z-[1001] hidden items-center gap-2 p-2 px-3 rounded-2xl bg-slate-950/92 border border-slate-700/80 shadow-2xl backdrop-blur-xl no-print text-white">
+  <!-- 4. BARRA DE HERRAMIENTAS TÁCTILES TIPO PAINT (FLOTANTE INFERIOR) -->
+  <div id="whiteboard-toolbar" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-[1001] hidden items-center gap-2 p-2 px-3 rounded-2xl bg-slate-950/92 border border-slate-700/80 shadow-2xl backdrop-blur-xl no-print text-white">
     <!-- Indicador Lápiz -->
     <div class="flex items-center gap-1.5 pr-2 border-r border-slate-700/80 shrink-0 font-mono text-[11px] font-bold text-yellow-400">
       <i data-lucide="pen-tool" class="w-4 h-4"></i>
@@ -612,7 +605,7 @@
 
   <!-- 5. AUTENTICACIÓN Y CONTROLADOR PRINCIPAL DEL MÓDULO -->
   <script src="../js/auth.js"></script>
-  <script type="module" src="js/laminaApp.js?v=268"></script>
+  <script type="module" src="js/laminaApp.js?v=269"></script>
   <script>
     if (window.lucide && typeof window.lucide.createIcons === 'function') {
       window.lucide.createIcons();
