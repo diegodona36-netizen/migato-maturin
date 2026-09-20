@@ -1080,7 +1080,8 @@ export class LaminaApp {
     const rawMunName = munObj.nombre || "Maturín";
     const cleanMunName = rawMunName.replace(/^municipio\s+/i, '').trim();
 
-    this.updateHeaderUI(`${formatTitleCase(eje.nombre).toUpperCase()}`, `PARROQUIA ${cleanPName.toUpperCase()} • MUNICIPIO ${cleanMunName.toUpperCase()}`);
+    const cleanEjeTitle = formatTitleCase(eje.nombre).replace(/^sub\s*parroquia\s*/i, 'EJE ').trim();
+    this.updateHeaderUI(`${cleanEjeTitle.toUpperCase()}`, `PARROQUIA ${cleanPName.toUpperCase()} • MUNICIPIO ${cleanMunName.toUpperCase()}`);
     this.renderSideStats({
       title: formatTitleCase(eje.nombre).toUpperCase(),
       color: eje.colorBorde || "#a855f7",
@@ -1221,7 +1222,8 @@ export class LaminaApp {
     }
 
     const cleanPName = formatTitleCase(cleanPId);
-    const cleanSecName = formatTitleCase(sec.nombre);
+    let cleanSecName = formatTitleCase(sec.nombre);
+    if (/las\s+vigenes/i.test(cleanSecName)) cleanSecName = "Las Vírgenes";
 
     const munObj = CATALOGO_MONAGAS.find(m => m.id === cleanMunId) || { nombre: "Maturín" };
     const rawMunName = munObj.nombre || "Maturín";
@@ -1312,53 +1314,60 @@ export class LaminaApp {
     const bcContainer = document.getElementById("lamina-breadcrumbs");
     if (!bcContainer) return;
 
-    let html = `
-      <span class="breadcrumb-item ${this.level === 'estado' ? 'active' : ''}" onclick="laminaApp.selectEstado()">
+    const items = [];
+
+    // Nivel 1: Estado
+    items.push(`
+      <span class="breadcrumb-item ${this.level === 'estado' ? 'active' : ''}" onclick="laminaApp.selectEstado()" title="Ver todo el Estado Monagas">
         <span>🇻🇪 Monagas</span>
       </span>
-    `;
+    `);
 
+    // Nivel 2: Municipio
     if (this.activeMunId) {
       const munObj = CATALOGO_MONAGAS.find(m => m.id === this.activeMunId) || { nombre: "Maturín" };
-      html += `
-        <span class="text-slate-400">/</span>
-        <span class="breadcrumb-item ${this.level === 'municipio' ? 'active' : ''}" onclick="laminaApp.selectMunicipio('${this.activeMunId}')">
-          <span>${munObj.nombre}</span>
+      const munClean = (munObj.nombre || "Maturín").replace(/^municipio\s+/i, '').trim();
+      items.push(`
+        <span class="breadcrumb-item ${this.level === 'municipio' ? 'active' : ''}" onclick="laminaApp.selectMunicipio('${this.activeMunId}')" title="Ver Municipio ${munClean}">
+          <span>${munClean}</span>
         </span>
-      `;
+      `);
     }
 
+    // Nivel 3: Parroquia
     if (this.activeParishId) {
       const pObj = (CATALOGO_MONAGAS.find(m => m.id === this.activeMunId)?.parroquias || []).find(p => p.id === this.activeParishId) || { nombre: this.activeParishId };
-      html += `
-        <span class="text-slate-400">/</span>
-        <span class="breadcrumb-item ${this.level === 'parroquia' ? 'active' : ''}" onclick="laminaApp.selectParroquia('${this.activeParishId}', '${this.activeMunId}')">
-          <span>${pObj.nombre}</span>
+      const parishClean = (pObj.nombre || this.activeParishId).replace(/^parroquia\s+/i, '').trim();
+      items.push(`
+        <span class="breadcrumb-item ${this.level === 'parroquia' ? 'active' : ''}" onclick="laminaApp.selectParroquia('${this.activeParishId}', '${this.activeMunId}')" title="Ver Parroquia ${parishClean}">
+          <span>${parishClean}</span>
         </span>
-      `;
+      `);
     }
 
+    // Nivel 4: Sub-Parroquia / Eje
     if (this.activeSubParishId) {
-      const spTitle = this.activeSubParishName ? formatTitleCase(this.activeSubParishName) : "Eje";
-      html += `
-        <span class="text-slate-400">/</span>
-        <span class="breadcrumb-item ${this.level === 'subparroquia' ? 'active' : ''}" onclick="laminaApp.selectSubParroquia('${this.activeSubParishId}', '${this.activeParishId}', '${this.activeMunId}')">
+      let spTitle = this.activeSubParishName ? formatTitleCase(this.activeSubParishName) : "Eje";
+      spTitle = spTitle.replace(/^sub\s*parroquia\s*/i, 'Eje ').replace(/^eje\s*eje\s*/i, 'Eje ').trim();
+      items.push(`
+        <span class="breadcrumb-item ${this.level === 'subparroquia' ? 'active' : ''}" onclick="laminaApp.selectSubParroquia('${this.activeSubParishId}', '${this.activeParishId}', '${this.activeMunId}')" title="Ver ${spTitle}">
           <span>${spTitle}</span>
         </span>
-      `;
+      `);
     }
 
+    // Nivel 5: Sector
     if (this.activeSectorId) {
-      const secTitle = this.activeSectorName ? formatTitleCase(this.activeSectorName) : "Sector";
-      html += `
-        <span class="text-slate-400">/</span>
-        <span class="breadcrumb-item ${this.level === 'sector' ? 'active' : ''}">
+      let secTitle = this.activeSectorName ? formatTitleCase(this.activeSectorName) : "Sector";
+      if (/las\s+vigenes/i.test(secTitle)) secTitle = "Las Vírgenes";
+      items.push(`
+        <span class="breadcrumb-item ${this.level === 'sector' ? 'active' : ''}" title="Sector Activo: ${secTitle}">
           <span>${secTitle}</span>
         </span>
-      `;
+      `);
     }
 
-    bcContainer.innerHTML = html;
+    bcContainer.innerHTML = items.join('<span class="text-slate-300 font-bold px-0.5 select-none">/</span>');
   }
 
   renderSideStats(data) {

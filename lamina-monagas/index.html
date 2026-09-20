@@ -36,7 +36,7 @@
   <script src="../centros-maturin/js/centrosData.js"></script>
 
   <!-- Estilos de Lámina Ejecutiva 120" -->
-  <link rel="stylesheet" href="css/lamina.css?v=256" />
+  <link rel="stylesheet" href="css/lamina.css?v=257" />
 
   <!-- Anti-Cache Meta Tags -->
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate, max-age=0" />
@@ -50,46 +50,51 @@
   <header id="lamina-header">
     
     <!-- Bloque Institucional Izquierdo -->
-    <div class="lamina-header-card flex items-center gap-3.5 shrink-0">
-      <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-[#23176d] p-1.5 border-2 border-amber-400/70 flex items-center justify-center shrink-0 shadow-lg shadow-[#1e1261]/25">
+    <div class="lamina-header-card flex items-center gap-4 shrink-0">
+      <div class="w-20 h-20 sm:w-24 sm:h-24 xl:w-28 xl:h-28 rounded-2xl bg-[#23176d] p-1.5 border-[2.5px] border-amber-400 shadow-xl shadow-[#1e1261]/35 flex items-center justify-center shrink-0">
         <img src="../assets/logo-migato.png" alt="MIGATO" class="w-full h-full object-contain drop-shadow-md" onerror="this.style.display='none'">
       </div>
       <div class="flex flex-col justify-center">
-        <span class="text-[11px] sm:text-xs font-black uppercase tracking-wider text-[#1e1261] block leading-tight mb-1">
+        <span class="text-xs sm:text-sm font-black uppercase tracking-wider text-[#1e1261] block leading-tight mb-1">
           MOVIMIENTO INDEPENDIENTE GANAMOS TODOS
         </span>
-        <h1 class="text-sm sm:text-base font-black text-slate-900 uppercase tracking-tight leading-tight mb-1">
+        <h1 class="text-base sm:text-lg font-black text-slate-900 uppercase tracking-tight leading-tight mb-1">
           MIGATO • DIVISIÓN DE CIENCIA Y TECNOLOGÍA
         </h1>
-        <span class="text-[11px] sm:text-xs font-bold text-sky-800 uppercase tracking-wider block leading-tight">
+        <span class="text-xs sm:text-xs font-extrabold text-sky-800 uppercase tracking-wider block leading-tight">
           SALA SITUACIONAL • ESTADO MONAGAS
         </span>
       </div>
     </div>
 
     <!-- Bloque Central: Título Dinámico de la Entidad y Migas de Pan -->
-    <div class="lamina-header-card flex flex-col items-center justify-center text-center px-6 min-w-[280px]">
-      <h2 id="lamina-entity-title" class="font-display text-base font-black text-slate-900 uppercase tracking-tight leading-snug">
+    <div class="lamina-header-card lamina-header-center flex flex-col items-center justify-center text-center px-5 py-2.5">
+      <h2 id="lamina-entity-title" class="font-display text-sm sm:text-base font-black text-slate-900 uppercase tracking-tight leading-snug truncate max-w-full">
         MUNICIPIO MATURÍN
       </h2>
-      <span id="lamina-entity-subtitle" class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">
+      <span id="lamina-entity-subtitle" class="text-[11px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider mb-1 line-clamp-1 max-w-full">
         11 PARROQUIAS OFICIALES • VANGUARDIA ELECTORAL 2026
       </span>
-      <div id="lamina-breadcrumbs" class="flex items-center gap-1.5 text-xs font-mono font-bold text-slate-600">
+      <div id="lamina-breadcrumbs" class="flex items-center justify-center flex-wrap gap-1 text-[11px] font-mono font-bold text-slate-600 max-w-full">
         <!-- Inyectado dinámicamente -->
       </div>
     </div>
 
     <!-- Bloque Derecho: Acciones de Sala, Zoom y Fecha -->
     <div class="lamina-header-card flex items-center gap-2 shrink-0">
-      <div class="hidden xl:flex flex-col text-right mr-2 font-mono">
-        <span class="text-xs font-bold text-slate-500 uppercase">TRANSMISIÓN EN VIVO</span>
-        <span id="header-clock" class="text-xs font-black text-slate-900">2026 • SALA ACTIVA</span>
+      <div class="hidden 2xl:flex flex-col text-right mr-1.5 font-mono">
+        <span class="text-[10px] font-bold text-slate-400 uppercase leading-none">TRANSMISIÓN</span>
+        <span id="header-clock" class="text-xs font-black text-slate-900 leading-tight">2026 • SALA ACTIVA</span>
       </div>
 
-      <button type="button" onclick="window.print()" class="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-black text-xs flex items-center gap-1.5 shadow-sm transition active:scale-95 cursor-pointer" title="Exportar Lámina a PDF o Imprimir">
+      <div class="hidden xl:inline-flex 2xl:hidden items-center gap-1.5 px-2 py-1 rounded-lg bg-emerald-50 text-emerald-700 font-bold text-xs border border-emerald-200 shrink-0">
+        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+        <span>EN VIVO</span>
+      </div>
+
+      <button type="button" onclick="window.print()" class="px-2.5 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs flex items-center gap-1.5 shadow-sm transition active:scale-95 cursor-pointer" title="Exportar Lámina a PDF o Imprimir">
         <i data-lucide="printer" class="w-3.5 h-3.5 text-sky-400"></i>
-        <span>Imprimir / PDF</span>
+        <span>PDF</span>
       </button>
 
       <button id="btn-fullscreen" type="button" class="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 transition cursor-pointer" title="Modo Pantalla Completa (120 pulgadas)">
@@ -98,12 +103,12 @@
 
       <a href="../comandos/" class="px-2.5 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-300 font-bold text-xs flex items-center gap-1 transition" title="Abrir Submódulo de Gestión de Comandos y Dirigentes">
         <i data-lucide="shield-check" class="w-3.5 h-3.5 text-sky-600"></i>
-        <span class="hidden sm:inline">Comandos</span>
+        <span class="hidden lg:inline">Comandos</span>
       </a>
 
       <a href="../earth-monagas/" class="px-2.5 py-1.5 rounded-xl bg-sky-50 hover:bg-sky-100 text-sky-800 border border-sky-200 font-bold text-xs flex items-center gap-1 transition" title="Abrir en Editor GIS Satelital">
         <i data-lucide="globe" class="w-3.5 h-3.5"></i>
-        <span class="hidden sm:inline">Modo GIS</span>
+        <span class="hidden lg:inline">Modo GIS</span>
       </a>
 
       <a href="../login.html" class="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition" title="Cambiar Usuario / Auditoría de Seguridad">
@@ -460,7 +465,7 @@
 
   <!-- 5. AUTENTICACIÓN Y CONTROLADOR PRINCIPAL DEL MÓDULO -->
   <script src="../js/auth.js"></script>
-  <script type="module" src="js/laminaApp.js?v=256"></script>
+  <script type="module" src="js/laminaApp.js?v=257"></script>
   <script>
     if (window.lucide && typeof window.lucide.createIcons === 'function') {
       window.lucide.createIcons();
