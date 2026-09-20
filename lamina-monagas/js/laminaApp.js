@@ -1930,7 +1930,7 @@ export class LaminaApp {
   }
 
   async capturarPantallaHD() {
-    const btn = document.getElementById("btn-do-capture-png");
+    const btn = document.getElementById("btn-header-capture-png") || document.getElementById("btn-do-capture-png");
     const originalContent = btn ? btn.innerHTML : "";
     if (btn) {
       btn.innerHTML = `<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i><span>Capturando...</span>`;
