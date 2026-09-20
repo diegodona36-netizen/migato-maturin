@@ -36,7 +36,7 @@
   <script src="../centros-maturin/js/centrosData.js"></script>
 
   <!-- Estilos de Lámina Ejecutiva 120" -->
-  <link rel="stylesheet" href="css/lamina.css?v=252" />
+  <link rel="stylesheet" href="css/lamina.css?v=256" />
 
   <!-- Anti-Cache Meta Tags -->
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate, max-age=0" />
@@ -50,18 +50,18 @@
   <header id="lamina-header">
     
     <!-- Bloque Institucional Izquierdo -->
-    <div class="lamina-header-card flex items-center gap-3 shrink-0">
-      <div class="w-12 h-12 rounded-xl bg-[#23176d] p-1 border border-sky-400/40 flex items-center justify-center shrink-0 shadow-sm">
-        <img src="../assets/logo-migato.png" alt="MIGATO" class="w-full h-full object-contain" onerror="this.style.display='none'">
+    <div class="lamina-header-card flex items-center gap-3.5 shrink-0">
+      <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-[#23176d] p-1.5 border-2 border-amber-400/70 flex items-center justify-center shrink-0 shadow-lg shadow-[#1e1261]/25">
+        <img src="../assets/logo-migato.png" alt="MIGATO" class="w-full h-full object-contain drop-shadow-md" onerror="this.style.display='none'">
       </div>
-      <div>
-        <span class="text-xs font-black uppercase tracking-wider text-[#1e1261] block leading-none mb-1">
+      <div class="flex flex-col justify-center">
+        <span class="text-[11px] sm:text-xs font-black uppercase tracking-wider text-[#1e1261] block leading-tight mb-1">
           MOVIMIENTO INDEPENDIENTE GANAMOS TODOS
         </span>
-        <h1 class="text-sm font-black text-slate-900 uppercase tracking-tight leading-none mb-1">
+        <h1 class="text-sm sm:text-base font-black text-slate-900 uppercase tracking-tight leading-tight mb-1">
           MIGATO • DIVISIÓN DE CIENCIA Y TECNOLOGÍA
         </h1>
-        <span class="text-[11px] font-bold text-sky-800 uppercase tracking-wider block leading-tight">
+        <span class="text-[11px] sm:text-xs font-bold text-sky-800 uppercase tracking-wider block leading-tight">
           SALA SITUACIONAL • ESTADO MONAGAS
         </span>
       </div>
@@ -460,7 +460,7 @@
 
   <!-- 5. AUTENTICACIÓN Y CONTROLADOR PRINCIPAL DEL MÓDULO -->
   <script src="../js/auth.js"></script>
-  <script type="module" src="js/laminaApp.js?v=255"></script>
+  <script type="module" src="js/laminaApp.js?v=256"></script>
   <script>
     if (window.lucide && typeof window.lucide.createIcons === 'function') {
       window.lucide.createIcons();
