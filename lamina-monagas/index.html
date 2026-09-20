@@ -36,7 +36,7 @@
   <script src="../centros-maturin/js/centrosData.js"></script>
 
   <!-- Estilos de Lámina Ejecutiva 120" -->
-  <link rel="stylesheet" href="css/lamina.css?v=260" />
+  <link rel="stylesheet" href="css/lamina.css?v=261" />
 
   <!-- Anti-Cache Meta Tags -->
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate, max-age=0" />
@@ -50,18 +50,18 @@
   <header id="lamina-header">
     
     <!-- Bloque Institucional Izquierdo -->
-    <div class="lamina-header-card flex items-center gap-3 shrink-0">
-      <div class="w-14 h-14 sm:w-16 sm:h-16 lg:w-18 lg:h-18 rounded-2xl bg-[#23176d] p-1.5 border border-sky-400/40 shadow-xl shadow-[#1e1261]/35 flex items-center justify-center shrink-0">
+    <div class="lamina-header-card flex items-center gap-3.5 sm:gap-4 shrink-0">
+      <div class="w-20 h-20 sm:w-24 sm:h-24 xl:w-28 xl:h-28 rounded-2xl bg-[#23176d] p-1 border border-sky-400/40 shadow-xl shadow-[#1e1261]/35 flex items-center justify-center shrink-0">
         <img src="../assets/logo-migato.png" alt="MIGATO" class="w-full h-full object-contain drop-shadow-md" onerror="this.style.display='none'">
       </div>
       <div class="flex flex-col justify-center">
-        <span class="text-[10px] sm:text-[11px] font-black uppercase tracking-wider text-[#1e1261] block leading-tight mb-0.5 whitespace-nowrap">
+        <span class="text-xs sm:text-sm font-black uppercase tracking-wider text-[#1e1261] block leading-tight mb-1 whitespace-nowrap">
           MOVIMIENTO INDEPENDIENTE GANAMOS TODOS
         </span>
-        <h1 class="text-xs sm:text-sm lg:text-base font-black text-slate-900 uppercase tracking-tight leading-tight mb-0.5 whitespace-nowrap">
+        <h1 class="text-sm sm:text-base lg:text-lg font-black text-slate-900 uppercase tracking-tight leading-tight mb-1 whitespace-nowrap">
           MIGATO • DIVISIÓN DE CIENCIA Y TECNOLOGÍA
         </h1>
-        <span class="text-[9px] sm:text-[10px] font-extrabold text-sky-800 uppercase tracking-wider block leading-tight whitespace-nowrap">
+        <span class="text-[10px] sm:text-xs font-extrabold text-sky-800 uppercase tracking-wider block leading-tight whitespace-nowrap">
           SALA SITUACIONAL • ESTADO MONAGAS
         </span>
       </div>
@@ -87,7 +87,7 @@
         <span id="header-clock" class="text-xs font-black text-slate-900 leading-tight">2026 • SALA ACTIVA</span>
       </div>
 
-      <div class="hidden xl:inline-flex 2xl:hidden items-center gap-1 px-1.5 py-0.5 rounded-lg bg-emerald-50 text-emerald-700 font-bold text-[10px] border border-emerald-200 shrink-0">
+      <div class="hidden 2xl:inline-flex items-center gap-1 px-1.5 py-0.5 rounded-lg bg-emerald-50 text-emerald-700 font-bold text-[10px] border border-emerald-200 shrink-0">
         <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
         <span>EN VIVO</span>
       </div>
@@ -103,12 +103,12 @@
 
       <a href="../comandos/" class="px-2 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-300 font-bold text-xs flex items-center gap-1 transition shrink-0" title="Abrir Submódulo de Gestión de Comandos y Dirigentes">
         <i data-lucide="shield-check" class="w-3.5 h-3.5 text-sky-600"></i>
-        <span class="hidden xl:inline">Comandos</span>
+        <span class="hidden 2xl:inline">Comandos</span>
       </a>
 
       <a href="../earth-monagas/" class="px-2 py-1.5 rounded-xl bg-sky-50 hover:bg-sky-100 text-sky-800 border border-sky-200 font-bold text-xs flex items-center gap-1 transition shrink-0" title="Abrir en Editor GIS Satelital">
         <i data-lucide="globe" class="w-3.5 h-3.5"></i>
-        <span class="hidden xl:inline">Modo GIS</span>
+        <span class="hidden 2xl:inline">Modo GIS</span>
       </a>
 
       <a href="../login.html" class="p-1.5 sm:p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition shrink-0" title="Cambiar Usuario / Auditoría de Seguridad">
@@ -561,7 +561,7 @@
 
   <!-- 5. AUTENTICACIÓN Y CONTROLADOR PRINCIPAL DEL MÓDULO -->
   <script src="../js/auth.js"></script>
-  <script type="module" src="js/laminaApp.js?v=260"></script>
+  <script type="module" src="js/laminaApp.js?v=261"></script>
   <script>
     if (window.lucide && typeof window.lucide.createIcons === 'function') {
       window.lucide.createIcons();
