@@ -632,7 +632,7 @@ export class LaminaApp {
     }
 
     const munDem = getMunicipioDemographics(cleanMunId);
-    this.updateHeaderUI(`MUNICIPIO ${cleanMunName.toUpperCase()}`, `ESTADO MONAGAS • ${(munObj.parroquias || []).length} PARROQUIAS OFICIALES`);
+    this.updateHeaderUI(`MUNICIPIO ${cleanMunName.toUpperCase()}`, `MONAGAS • ${(munObj.parroquias || []).length} PARROQUIAS`);
     this.renderSideStats({
       title: `MUNICIPIO ${cleanMunName.toUpperCase()}`,
       color: munColor,
@@ -906,7 +906,7 @@ export class LaminaApp {
     const totalParrs = (munObj.parroquias || []).length || 11;
 
     const pDem = getParishDemographics(cleanMunId, resolvedPId);
-    this.updateHeaderUI(`PARROQUIA ${cleanPName.toUpperCase()}`, `MUNICIPIO ${cleanMunName.toUpperCase()} • ESTADO MONAGAS`);
+    this.updateHeaderUI(`PARROQUIA ${cleanPName.toUpperCase()}`, `MUN. ${cleanMunName.toUpperCase()} • MONAGAS`);
     
     // Preparar lista amigable de sectores/ejes para el panel lateral
     let listItems = [];
@@ -1081,7 +1081,7 @@ export class LaminaApp {
     const cleanMunName = rawMunName.replace(/^municipio\s+/i, '').trim();
 
     const cleanEjeTitle = formatTitleCase(eje.nombre).replace(/^sub\s*parroquia\s*/i, 'EJE ').trim();
-    this.updateHeaderUI(`${cleanEjeTitle.toUpperCase()}`, `PARROQUIA ${cleanPName.toUpperCase()} • MUNICIPIO ${cleanMunName.toUpperCase()}`);
+    this.updateHeaderUI(`${cleanEjeTitle.toUpperCase()}`, `PARR. ${cleanPName.toUpperCase()} • ${cleanMunName.toUpperCase()}`);
     this.renderSideStats({
       title: formatTitleCase(eje.nombre).toUpperCase(),
       color: eje.colorBorde || "#a855f7",
@@ -1229,7 +1229,7 @@ export class LaminaApp {
     const rawMunName = munObj.nombre || "Maturín";
     const cleanMunName = rawMunName.replace(/^municipio\s+/i, '').trim();
 
-    this.updateHeaderUI(`SECTOR ${cleanSecName.toUpperCase()}`, `PARROQUIA ${cleanPName.toUpperCase()} • MUNICIPIO ${cleanMunName.toUpperCase()}`);
+    this.updateHeaderUI(`SECTOR ${cleanSecName.toUpperCase()}`, `PARR. ${cleanPName.toUpperCase()} • ${cleanMunName.toUpperCase()}`);
     this.renderSideStats({
       title: `SECTOR ${cleanSecName.toUpperCase()}`,
       color: sec.colorBorde || sec.color || pColor,
