@@ -29,7 +29,7 @@ import {
   COMANDOS_SECTORIALES
 } from "./comandoData.js?v=252";
 import { auditLogger } from "./auditLogger.js";
-import { Whiteboard } from "./whiteboard.js?v=268";
+import { Whiteboard } from "./whiteboard.js?v=271";
 
 const WORLD_BOX = [
   [-85.0511, -180],
@@ -1962,7 +1962,12 @@ export class LaminaApp {
     try {
       // Ocultar modal si estuviese abierto
       this.closeExportModal();
-      await new Promise(r => setTimeout(r, 80));
+
+      // Asegurar que todas las fuentes oficiales de MIGATO estén completamente renderizadas
+      if (document.fonts && document.fonts.ready) {
+        await document.fonts.ready;
+      }
+      await new Promise(r => setTimeout(r, 120));
 
       // Verificar que html2canvas esté disponible
       if (typeof window.html2canvas !== "function") {
@@ -1976,16 +1981,19 @@ export class LaminaApp {
       const entity = (this.activeSectorName || this.activeSubParishName || this.activeParishId || this.activeMunId || "Monagas").replace(/[^a-zA-Z0-9_-]/g, "_");
       const filename = `Lamina_MIGATO_${entity}_${d}.${ext}`;
 
+      const clientW = document.documentElement.clientWidth || window.innerWidth;
+      const clientH = document.documentElement.clientHeight || window.innerHeight;
+
       // Renderizado 100% Horizontal Panorámico (16:9 estricto del televisor/pantalla)
       const canvas = await window.html2canvas(document.body, {
         useCORS: true,
         allowTaint: false,
         scale: 2, // Ultra HD 2x panorámico horizontal
         backgroundColor: "#020617",
-        width: window.innerWidth,
-        height: window.innerHeight,
-        windowWidth: window.innerWidth,
-        windowHeight: window.innerHeight,
+        width: clientW,
+        height: clientH,
+        windowWidth: clientW,
+        windowHeight: clientH,
         scrollX: 0,
         scrollY: 0,
         logging: false,
@@ -2000,10 +2008,57 @@ export class LaminaApp {
           );
         },
         onclone: (clonedDoc) => {
+          // 1. Restaurar contenido del botón de captura si cambió por el spinner
           const clonedBtn = clonedDoc.getElementById("btn-header-capture-png");
           if (clonedBtn) {
             clonedBtn.innerHTML = originalContent;
           }
+
+          const mapContainer = clonedDoc.getElementById("map-lamina");
+
+          // 2. Corregir desalineación y recorte del Velo Blanco (spotlightPane canvas)
+          const liveSpotlight = document.querySelector(".leaflet-spotlightPane canvas");
+          if (liveSpotlight && mapContainer) {
+            const clonedSpotlight = clonedDoc.querySelector(".leaflet-spotlightPane canvas");
+            if (clonedSpotlight) {
+              const rect = liveSpotlight.getBoundingClientRect();
+              clonedSpotlight.style.position = "absolute";
+              clonedSpotlight.style.left = `${Math.round(rect.left)}px`;
+              clonedSpotlight.style.top = `${Math.round(rect.top)}px`;
+              clonedSpotlight.style.width = `${Math.round(rect.width)}px`;
+              clonedSpotlight.style.height = `${Math.round(rect.height)}px`;
+              clonedSpotlight.style.transform = "none";
+              clonedSpotlight.style.zIndex = "450";
+              mapContainer.appendChild(clonedSpotlight);
+            }
+          }
+
+          // 3. Corregir desalineación del Canvas de vectores (overlayPane canvas)
+          const liveOverlay = document.querySelector(".leaflet-overlay-pane canvas");
+          if (liveOverlay && mapContainer) {
+            const clonedOverlay = clonedDoc.querySelector(".leaflet-overlay-pane canvas");
+            if (clonedOverlay) {
+              const rect = liveOverlay.getBoundingClientRect();
+              clonedOverlay.style.position = "absolute";
+              clonedOverlay.style.left = `${Math.round(rect.left)}px`;
+              clonedOverlay.style.top = `${Math.round(rect.top)}px`;
+              clonedOverlay.style.width = `${Math.round(rect.width)}px`;
+              clonedOverlay.style.height = `${Math.round(rect.height)}px`;
+              clonedOverlay.style.transform = "none";
+              clonedOverlay.style.zIndex = "400";
+              mapContainer.appendChild(clonedOverlay);
+            }
+          }
+
+          // 4. Prevenir recorte horizontal o vertical de textos y números estadísticos
+          const textNodes = clonedDoc.querySelectorAll(
+            ".truncate, .territory-row, .territory-row span, .stat-val, #lamina-header span, #lamina-header h1, #lamina-header h2, #sidebar-lamina span, #sidebar-lamina h2, #sidebar-lamina h3, #sidebar-lamina div, .chain-breadcrumb-card, .eje-matrix-card, .sectors-accordion"
+          );
+          textNodes.forEach(node => {
+            node.style.overflow = "visible";
+            node.style.textOverflow = "clip";
+            node.style.lineHeight = "1.35";
+          });
         }
       });
 

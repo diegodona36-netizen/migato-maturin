@@ -43,8 +43,13 @@
   <!-- Base de datos de Centros CNE Oficiales -->
   <script src="../centros-maturin/js/centrosData.js"></script>
 
+  <!-- Google Fonts Preconnect & Stylesheets (Renderizado nítido sin recortes) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700;800&family=Outfit:wght@500;600;700;800;900&family=Public+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
   <!-- Estilos de Lámina Ejecutiva 120" -->
-  <link rel="stylesheet" href="css/lamina.css?v=269" />
+  <link rel="stylesheet" href="css/lamina.css?v=271" />
 
   <!-- Anti-Cache Meta Tags -->
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate, max-age=0" />
@@ -98,8 +103,8 @@
         <span>Descargar PNG</span>
       </button>
 
-      <button type="button" id="btn-toggle-whiteboard" onclick="window.laminaApp && window.laminaApp.whiteboard && window.laminaApp.whiteboard.toggle()" class="p-1.5 sm:p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-slate-900 border border-slate-300 font-bold text-xs flex items-center justify-center transition cursor-pointer shrink-0" title="Lápiz / Pizarra (Escribir y Subrayar en el Mapa)">
-        <i data-lucide="pencil" class="w-4 h-4 text-slate-700"></i>
+      <button type="button" id="btn-toggle-whiteboard" onclick="window.laminaApp && window.laminaApp.whiteboard && window.laminaApp.whiteboard.toggle()" class="w-8 h-8 rounded-lg bg-slate-100/90 hover:bg-slate-200 text-slate-600 hover:text-slate-900 border border-slate-300 flex items-center justify-center transition cursor-pointer shrink-0 shadow-xs" title="Lápiz Táctico (Escribir, Dibujar y Subrayar en el Mapa)">
+        <i data-lucide="pencil" class="w-3.5 h-3.5"></i>
       </button>
 
       <button id="btn-fullscreen" type="button" class="p-1.5 sm:p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 transition cursor-pointer shrink-0" title="Modo Pantalla Completa (120 pulgadas)">
@@ -419,11 +424,24 @@
       <button type="button" id="wb-btn-eraser" onclick="window.laminaApp.whiteboard.setTool('eraser')" class="p-2 rounded-xl bg-white/10 hover:bg-white/20 text-slate-200 transition cursor-pointer" title="Borrador Táctil">
         <i data-lucide="eraser" class="w-4 h-4"></i>
       </button>
-      <button type="button" onclick="window.laminaApp.whiteboard.undo()" class="p-2 rounded-xl bg-white/10 hover:bg-white/20 text-slate-200 transition cursor-pointer" title="Deshacer Último Trazo">
+      <button type="button" onclick="window.laminaApp.whiteboard.undo()" class="p-2 rounded-xl bg-white/10 hover:bg-white/20 text-slate-200 transition cursor-pointer" title="Deshacer Último Trazo (Ctrl + Z)">
         <i data-lucide="undo-2" class="w-4 h-4"></i>
       </button>
       <button type="button" onclick="window.laminaApp.whiteboard.clear()" class="p-2 rounded-xl bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 border border-rose-500/30 transition cursor-pointer" title="Limpiar Pizarra (Borrar Todo)">
         <i data-lucide="trash-2" class="w-4 h-4"></i>
+      </button>
+    </div>
+
+    <!-- Navegación, Mover Mapa y Zoom Desbloqueado -->
+    <div class="flex items-center gap-1 px-1.5 border-l border-slate-700/80 shrink-0">
+      <button type="button" id="wb-btn-pan" onclick="window.laminaApp.whiteboard.setTool('pan')" class="p-2 rounded-xl bg-white/10 hover:bg-white/20 text-slate-200 transition cursor-pointer" title="Mover Mapa (Desplazar con Mouse o Dedos)">
+        <i data-lucide="hand" class="w-4 h-4"></i>
+      </button>
+      <button type="button" onclick="window.laminaApp && window.laminaApp.map && window.laminaApp.map.zoomIn()" class="p-2 rounded-xl bg-white/10 hover:bg-white/20 text-slate-200 transition cursor-pointer" title="Acercar Zoom (+)">
+        <i data-lucide="zoom-in" class="w-4 h-4"></i>
+      </button>
+      <button type="button" onclick="window.laminaApp && window.laminaApp.map && window.laminaApp.map.zoomOut()" class="p-2 rounded-xl bg-white/10 hover:bg-white/20 text-slate-200 transition cursor-pointer" title="Alejar Zoom (-)">
+        <i data-lucide="zoom-out" class="w-4 h-4"></i>
       </button>
     </div>
 
@@ -605,7 +623,7 @@
 
   <!-- 5. AUTENTICACIÓN Y CONTROLADOR PRINCIPAL DEL MÓDULO -->
   <script src="../js/auth.js"></script>
-  <script type="module" src="js/laminaApp.js?v=269"></script>
+  <script type="module" src="js/laminaApp.js?v=271"></script>
   <script>
     if (window.lucide && typeof window.lucide.createIcons === 'function') {
       window.lucide.createIcons();

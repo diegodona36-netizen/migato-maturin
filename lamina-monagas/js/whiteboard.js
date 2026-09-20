@@ -43,12 +43,33 @@ export class Whiteboard {
     this.canvas.addEventListener("pointerup", (e) => this.onPointerUp(e));
     this.canvas.addEventListener("pointercancel", (e) => this.onPointerUp(e));
 
+    // Permitir zoom fluido con la rueda del ratón directamente sobre el lienzo de dibujo
+    this.canvas.addEventListener("wheel", (e) => {
+      if (this.map) {
+        if (e.deltaY < 0) {
+          this.map.zoomIn();
+        } else if (e.deltaY > 0) {
+          this.map.zoomOut();
+        }
+      }
+    }, { passive: true });
+
+    // Atajo global de teclado: Ctrl + Z / Cmd + Z para Deshacer trazos inmediatamente
+    window.addEventListener("keydown", (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "z") {
+        if (this.isActive || this.hasDrawings()) {
+          e.preventDefault();
+          this.undo();
+        }
+      }
+    });
+
     // Prevenir gestos predeterminados del navegador al tocar el canvas
     this.canvas.addEventListener("touchstart", (e) => {
-      if (this.isActive) e.preventDefault();
+      if (this.isActive && this.currentTool !== "pan") e.preventDefault();
     }, { passive: false });
     this.canvas.addEventListener("touchmove", (e) => {
-      if (this.isActive) e.preventDefault();
+      if (this.isActive && this.currentTool !== "pan") e.preventDefault();
     }, { passive: false });
 
     this.saveState();
@@ -116,17 +137,18 @@ export class Whiteboard {
       this.toolbar.classList.add("flex");
     }
     if (this.toggleBtn) {
-      this.toggleBtn.classList.add("bg-sky-100", "text-sky-700", "border-sky-300");
-      this.toggleBtn.classList.remove("bg-slate-100", "text-slate-700");
+      this.toggleBtn.classList.add("bg-slate-300", "text-slate-950", "border-slate-400");
+      this.toggleBtn.classList.remove("bg-slate-100", "text-slate-600", "border-slate-300");
     }
 
-    // Bloquear arrastre y zoom del mapa para permitir dibujar con los dedos
+    // Mantener zoom del mapa siempre desbloqueado. Solo bloquear arrastre cuando se está en modo lápiz
     if (this.map) {
-      this.map.dragging.disable();
-      this.map.touchZoom.disable();
-      this.map.doubleClickZoom.disable();
-      this.map.scrollWheelZoom.disable();
-      this.map.boxZoom.disable();
+      if (this.currentTool !== "pan") {
+        this.map.dragging.disable();
+      }
+      this.map.scrollWheelZoom.enable();
+      this.map.doubleClickZoom.enable();
+      this.map.touchZoom.enable();
     }
   }
 
@@ -143,11 +165,11 @@ export class Whiteboard {
       this.toolbar.classList.remove("flex");
     }
     if (this.toggleBtn) {
-      this.toggleBtn.classList.remove("bg-sky-100", "text-sky-700", "border-sky-300");
-      this.toggleBtn.classList.add("bg-slate-100", "text-slate-700");
+      this.toggleBtn.classList.remove("bg-slate-300", "text-slate-950", "border-slate-400");
+      this.toggleBtn.classList.add("bg-slate-100", "text-slate-600", "border-slate-300");
     }
 
-    // Reactivar mapa para navegación normal
+    // Reactivar mapa para navegación normal completa
     if (this.map) {
       this.map.dragging.enable();
       this.map.touchZoom.enable();
@@ -158,13 +180,41 @@ export class Whiteboard {
   }
 
   setTool(tool) {
-    this.currentTool = tool; // "pen" | "eraser"
+    this.currentTool = tool; // "pen" | "eraser" | "pan"
+    if (tool === "pan") {
+      // Modo Mover / Ajustar Mapa: el lienzo no intercepta clics para permitir arrastre
+      if (this.canvas) {
+        this.canvas.classList.remove("pointer-events-auto");
+        this.canvas.classList.add("pointer-events-none");
+      }
+      if (this.map) {
+        this.map.dragging.enable();
+      }
+    } else {
+      // Modo Dibujo o Borrador
+      if (this.canvas) {
+        this.canvas.classList.remove("pointer-events-none");
+        this.canvas.classList.add("pointer-events-auto");
+        this.canvas.style.cursor = tool === "eraser" ? "cell" : "crosshair";
+      }
+      if (this.map) {
+        this.map.dragging.disable();
+      }
+    }
     this.updateToolUI();
   }
 
   setColor(color) {
     this.currentColor = color;
     this.currentTool = "pen";
+    if (this.canvas) {
+      this.canvas.classList.remove("pointer-events-none");
+      this.canvas.classList.add("pointer-events-auto");
+      this.canvas.style.cursor = "crosshair";
+    }
+    if (this.map) {
+      this.map.dragging.disable();
+    }
     this.updateToolUI();
   }
 
@@ -189,10 +239,22 @@ export class Whiteboard {
     if (eraserBtn) {
       if (this.currentTool === "eraser") {
         eraserBtn.classList.add("bg-amber-500", "text-slate-950");
-        eraserBtn.classList.remove("bg-white/10", "text-white");
+        eraserBtn.classList.remove("bg-white/10", "text-slate-200");
       } else {
         eraserBtn.classList.remove("bg-amber-500", "text-slate-950");
-        eraserBtn.classList.add("bg-white/10", "text-white");
+        eraserBtn.classList.add("bg-white/10", "text-slate-200");
+      }
+    }
+
+    // Actualizar botón de mover/ajustar mapa
+    const panBtn = document.getElementById("wb-btn-pan");
+    if (panBtn) {
+      if (this.currentTool === "pan") {
+        panBtn.classList.add("bg-sky-500", "text-slate-950");
+        panBtn.classList.remove("bg-white/10", "text-slate-200");
+      } else {
+        panBtn.classList.remove("bg-sky-500", "text-slate-950");
+        panBtn.classList.add("bg-white/10", "text-slate-200");
       }
     }
   }
