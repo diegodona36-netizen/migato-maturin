@@ -105,11 +105,16 @@ html, body {
   padding: 6px 12px;
 }
 
-/* Tarjeta central dinámica con contención de ancho y centrado */
+/* Tarjeta central dinámica: Bloqueada al centro geométrico absoluto de la pantalla */
 .lamina-header-center {
-  flex: 0 1 auto;
-  min-width: 180px;
-  max-width: 440px;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 0;
+  min-width: 260px;
+  max-width: 520px;
+  text-align: center;
+  z-index: 1001;
 }
 
 /* Migas de pan de navegación jerárquica blindadas contra quiebre vertical */
@@ -507,6 +512,13 @@ html, body {
     background: rgba(255, 255, 255, 0.98) !important;
     border-radius: 12px !important;
     padding: 6px 12px !important;
+  }
+
+  .lamina-header-center {
+    position: absolute !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    top: 0 !important;
   }
 
   /* Panel Lateral: Flotando a la derecha sin alterar el lienzo */
