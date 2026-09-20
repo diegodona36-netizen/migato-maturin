@@ -15,11 +15,6 @@
   --a11y-font-body: 'Inter', 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --a11y-font-display: 'Plus Jakarta Sans', 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 
-  /* Contraste (texto normal AA) */
-  --a11y-contrast-text: #F8FAFC;
-  --a11y-contrast-bg: #0F172A;
-  --a11y-contrast-border: #334155;
-
   /* Focus */
   --a11y-focus-ring: 2px solid #60A5FA;
   --a11y-focus-offset: 2px;
@@ -40,8 +35,8 @@ body {
   font-family: var(--a11y-font-body);
   font-size: var(--a11y-text-base);
   line-height: var(--a11y-line-height);
-  color: var(--a11y-contrast-text);
-  background-color: var(--a11y-contrast-bg);
+  color: #f1f5f9;
+  background-color: #0e092e;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -93,57 +88,6 @@ body, p, li, td, th {
 }
 .skip-link:focus {
   top: 0;
-}
-
-/* Alto contraste */
-.high-contrast-mode,
-body.high-contrast-mode {
-  --a11y-contrast-text: #000000;
-  --a11y-contrast-bg: #FFFFFF;
-  --a11y-contrast-border: #000000;
-  background-color: #FFF !important;
-  color: #000 !important;
-}
-
-body.high-contrast-mode .card,
-body.high-contrast-mode [class*="card"],
-body.high-contrast-mode article {
-  border: 2px solid #000 !important;
-}
-
-body.high-contrast-mode input,
-body.high-contrast-mode select,
-body.high-contrast-mode textarea {
-  border: 2px solid #000 !important;
-  background-color: #FFF !important;
-  color: #000 !important;
-}
-
-body.high-contrast-mode button,
-body.high-contrast-mode a {
-  border: 2px solid #000 !important;
-}
-
-body.high-contrast-mode .text-white,
-body.high-contrast-mode .text-slate-100,
-body.high-contrast-mode .text-slate-200,
-body.high-contrast-mode .text-blue-100,
-body.high-contrast-mode .text-blue-200 {
-  color: #000 !important;
-}
-
-body.high-contrast-mode .bg-\[#0e092e\],
-body.high-contrast-mode .bg-\[#140e40\],
-body.high-contrast-mode .bg-\[#18114a\],
-body.high-contrast-mode .bg-slate-900,
-body.high-contrast-mode .bg-slate-800,
-body.high-contrast-mode .bg-indigo-950,
-body.high-contrast-mode .bg-sky-950,
-body.high-contrast-mode .bg-emerald-950,
-body.high-contrast-mode .bg-rose-950,
-body.high-contrast-mode .bg-amber-950 {
-  background-color: #FFF !important;
-  color: #000 !important;
 }
 
 /* Movimiento reducido */
