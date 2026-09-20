@@ -1422,13 +1422,13 @@ export class LaminaApp {
       if (data.backBtn) {
         html += `
           <div onclick="${data.backBtn.onClick}" 
-               class="flex items-center justify-between p-2 rounded-xl bg-sky-50 hover:bg-sky-100 text-sky-900 border border-sky-200 cursor-pointer mb-2 transition text-sm font-black"
+               class="flex items-center justify-between p-2.5 px-3 rounded-xl bg-sky-50 hover:bg-sky-100 text-sky-900 border border-sky-200 cursor-pointer mb-2 transition text-sm font-black"
                title="${data.backBtn.label}">
             <span class="flex items-center gap-1.5">
               <span>⬅</span>
               <span>${data.backBtn.label}</span>
             </span>
-            <span class="bg-sky-200/80 text-sky-950 px-1.5 py-0.5 rounded font-mono text-sm">${data.backBtn.count}</span>
+            <span class="bg-sky-200/80 text-sky-950 px-2 py-0.5 rounded font-mono text-xs font-bold leading-normal">${data.backBtn.count}</span>
           </div>
         `;
       }
@@ -1438,11 +1438,11 @@ export class LaminaApp {
           <div onclick="${item.onClick}" 
                class="territory-row" 
                title="${item.nombre} • Clic para enfocar">
-            <div class="flex items-center gap-2 truncate">
+            <div class="flex items-center gap-2 min-w-0 flex-1">
               <span class="w-2.5 h-2.5 rounded-full shrink-0 shadow-xs" style="background-color: ${item.color || '#0284c7'};"></span>
-              <span class="font-bold text-sm text-slate-900 truncate">${item.nombre}</span>
+              <span class="font-bold text-sm text-slate-900 leading-snug">${item.nombre}</span>
             </div>
-            <span class="text-sm font-extrabold text-slate-700 shrink-0 ml-1">
+            <span class="text-sm font-extrabold text-slate-700 shrink-0 ml-1 leading-snug">
               ${item.badge}
             </span>
           </div>
@@ -2050,14 +2050,29 @@ export class LaminaApp {
             }
           }
 
-          // 4. Prevenir recorte horizontal o vertical de textos y números estadísticos
-          const textNodes = clonedDoc.querySelectorAll(
-            ".truncate, .territory-row, .territory-row span, .stat-val, #lamina-header span, #lamina-header h1, #lamina-header h2, #sidebar-lamina span, #sidebar-lamina h2, #sidebar-lamina h3, #sidebar-lamina div, .chain-breadcrumb-card, .eje-matrix-card, .sectors-accordion"
+          // 4. Prevenir recorte ("que los campos se coman al propio campo")
+          // Desbloquear overflow y forzar line-height holgado en todo el panel lateral, tarjetas métricas y cabecera
+          const allPanelsAndTexts = clonedDoc.querySelectorAll(
+            "#lamina-side-panel, #lamina-side-panel *, #lamina-header, #lamina-header *, .metric-card, .metric-value, .metric-label, .territory-row, .territory-row *, .truncate"
           );
-          textNodes.forEach(node => {
+          allPanelsAndTexts.forEach(node => {
+            if (node.classList && node.classList.contains("truncate")) {
+              node.classList.remove("truncate");
+            }
             node.style.overflow = "visible";
+            node.style.overflowX = "visible";
+            node.style.overflowY = "visible";
             node.style.textOverflow = "clip";
-            node.style.lineHeight = "1.35";
+            if (node.classList && node.classList.contains("metric-value")) {
+              node.style.lineHeight = "1.45";
+              node.style.paddingBottom = "3px";
+              node.style.display = "block";
+            } else if (node.classList && node.classList.contains("metric-card")) {
+              node.style.padding = "9px 12px 11px 12px";
+              node.style.overflow = "visible";
+            } else if (node.tagName === "STRONG" || node.tagName === "SPAN" || node.tagName === "H1" || node.tagName === "H2" || node.tagName === "H3") {
+              node.style.lineHeight = "1.35";
+            }
           });
         }
       });
