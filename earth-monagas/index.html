@@ -450,18 +450,18 @@
       <!-- LADO IZQUIERDO: Identidad MIGATO + Selector Territorial -->
       <div class="flex items-center gap-2 shrink min-w-0">
         <a href="./" class="flex items-center gap-2.5 shrink-0 group" title="MIGATO • Módulo 4">
-          <div class="w-10 h-10 rounded-xl bg-[#23176d] p-1 border border-amber-400/50 flex items-center justify-center shrink-0 shadow-sm">
+          <div class="w-10 h-10 rounded-xl bg-[#1e1554] p-1 border border-white/20 flex items-center justify-center shrink-0 shadow-sm">
             <img src="../assets/logo-migato.png" alt="MIGATO" class="w-full h-full object-contain">
           </div>
-          <div class="space-y-0 hidden sm:block">
-            <span class="text-[9px] font-mono font-black uppercase tracking-widest text-blue-300 block leading-tight">
+          <div class="space-y-0.5 hidden sm:block">
+            <span class="text-[10px] font-semibold uppercase tracking-wider text-slate-300 block leading-tight">
               MOVIMIENTO INDEPENDIENTE GANAMOS TODOS
             </span>
-            <span class="font-display text-sm font-black text-white tracking-wide whitespace-nowrap block leading-none">
-              MÓDULO 4 • <span class="text-sky-400 font-bold">CARTOGRAFÍA SATELITAL 3D</span>
+            <span class="font-display text-sm sm:text-base font-black text-white tracking-wide whitespace-nowrap block leading-none uppercase">
+              MÓDULO 4 • CARTOGRAFÍA SATELITAL 3D
             </span>
-            <span class="text-[10px] text-amber-300 font-bold uppercase tracking-wider block leading-tight">
-              SALA SITUACIONAL • VISOR TÁCTICO
+            <span class="text-[10px] text-slate-300 font-medium uppercase tracking-wider block leading-tight">
+              SALA SITUACIONAL • CARTOGRAFÍA TERRITORIAL
             </span>
           </div>
         </a>
@@ -470,7 +470,7 @@
 
         <!-- Selector Territorial (Parroquia Activa con buen ancho en móvil) -->
         <button id="btn-open-parish-modal" type="button" onclick="window.openParishSelectorGlobal()" class="px-3 sm:px-4 py-2 rounded-xl bg-[#18114a] hover:bg-[#23176d] border-2 border-sky-400/60 text-white text-sm sm:text-base font-black flex items-center gap-2 transition active:scale-95 cursor-pointer max-w-[220px] sm:max-w-xs shrink min-w-0 shadow-md" style="pointer-events: auto !important; cursor: pointer !important;" title="Seleccionar Parroquia de Trabajo y Ver Sectores (Clic para abrir panel)">
-          <i data-lucide="map-pin" class="w-4 h-4 text-amber-400 shrink-0 pointer-events-none"></i>
+          <i data-lucide="map-pin" class="w-4 h-4 text-sky-400 shrink-0 pointer-events-none"></i>
           <span id="nav-current-location" class="truncate font-black text-base sm:text-base text-sky-100 cursor-pointer" onclick="event.stopPropagation(); window.openParishSelectorGlobal()">📍 Seleccionar Parroquia / Municipio ▾</span>
           <i id="nav-arrow-icon" data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-300 shrink-0 pointer-events-none"></i>
         </button>

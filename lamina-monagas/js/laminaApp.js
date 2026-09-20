@@ -1003,7 +1003,18 @@ export class LaminaApp {
     if (this.currentParishRings && this.currentParishRings.length > 0) {
       this.applySpotlightMask(this.currentParishRings, pColor, 3.5);
     }
-    if (this.currentParishBounds) {
+    // Navegación de cámara fluida e inteligente hacia el Eje / Sub-Parroquia:
+    // NUNCA retroceder el zoom hacia toda la parroquia si el usuario ya está explorando cerca
+    const ejeCoords = eje.vertices || eje.poligono;
+    if (ejeCoords && ejeCoords.length >= 3) {
+      const ejeBounds = L.polygon(ejeCoords).getBounds();
+      const curZoom = this.map.getZoom();
+      if (curZoom >= 14.5 && ejeBounds.contains(this.map.getCenter())) {
+        this.map.panTo(ejeBounds.getCenter(), { duration: 0.6 });
+      } else {
+        this.map.flyToBounds(ejeBounds, { padding: [45, 45], maxZoom: 15.5, duration: 0.9 });
+      }
+    } else if (this.currentParishBounds && this.map.getZoom() < 12.5) {
       this.map.flyToBounds(this.currentParishBounds, { padding: [40, 40], duration: 0.8 });
     }
 
@@ -1151,11 +1162,29 @@ export class LaminaApp {
     }
     this.activeSectorName = sec.nombre;
 
-    // REGLA CRÍTICA: Mantener el zoom y el Velo Blanco fijos en la PARROQUIA
     if (this.currentParishRings && this.currentParishRings.length > 0) {
       this.applySpotlightMask(this.currentParishRings, pColor, 3.5);
     }
-    if (this.currentParishBounds) {
+    // Navegación de cámara fluida y amigable hacia el Sector Vecinal:
+    // Centra y aproxima el mapa al sector (zoom 16.5-17.5) sin retroceder la vista hacia toda la parroquia
+    const sCoords = sec.vertices || sec.poligono;
+    let markerPos = sec.centro;
+    if (!markerPos && sCoords && sCoords.length > 0) {
+      const avgLat = sCoords.reduce((sum, p) => sum + p[0], 0) / sCoords.length;
+      const avgLng = sCoords.reduce((sum, p) => sum + p[1], 0) / sCoords.length;
+      markerPos = [avgLat, avgLng];
+    }
+    if (sCoords && sCoords.length >= 3) {
+      const secBounds = L.polygon(sCoords).getBounds();
+      const curZoom = this.map.getZoom();
+      if (curZoom >= 16 && secBounds.contains(this.map.getCenter())) {
+        this.map.panTo(secBounds.getCenter(), { duration: 0.5 });
+      } else {
+        this.map.flyToBounds(secBounds, { padding: [55, 55], maxZoom: 17, duration: 0.8 });
+      }
+    } else if (markerPos) {
+      this.map.flyTo(markerPos, Math.max(this.map.getZoom(), 16), { duration: 0.8 });
+    } else if (this.currentParishBounds && this.map.getZoom() < 12.5) {
       this.map.flyToBounds(this.currentParishBounds, { padding: [40, 40], duration: 0.8 });
     }
 

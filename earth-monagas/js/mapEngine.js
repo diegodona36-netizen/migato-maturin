@@ -1187,7 +1187,13 @@ export class EarthMapEngine {
     const parishCoords = this.getParishCoordinates(this.currentParishId || window.earthApp?.selectedParishId);
     const bPoly = this.renderSpotlightMask(spVertices, "#c084fc", "6, 4", 3.2, parishCoords);
     if (bPoly && flyCamera) {
-      this.map.flyToBounds(bPoly.getBounds(), { padding: [50, 50], duration: 1.2 });
+      const spBounds = bPoly.getBounds();
+      const currentZoom = this.map.getZoom();
+      if (currentZoom >= 15 && spBounds.contains(this.map.getCenter())) {
+        this.map.panTo(spBounds.getCenter(), { duration: 0.6 });
+      } else {
+        this.map.flyToBounds(spBounds, { padding: [50, 50], maxZoom: Math.max(currentZoom, 15.5), duration: 1.0 });
+      }
     }
   }
 

@@ -3299,7 +3299,13 @@ class EarthMonagasApp {
         this.activeSubParroquiaId = String(item.subParroquiaId);
       }
       if (this.mapEngine) {
-        this.mapEngine.map.flyToBounds(L.polygon(item.vertices).getBounds(), { padding: [50, 50], maxZoom: 17, duration: 1.0 });
+        const pBounds = L.polygon(item.vertices).getBounds();
+        const curZoom = this.mapEngine.map.getZoom();
+        if (curZoom >= 16.5 && pBounds.contains(this.mapEngine.map.getCenter())) {
+          this.mapEngine.map.panTo(pBounds.getCenter(), { duration: 0.5 });
+        } else {
+          this.mapEngine.map.flyToBounds(pBounds, { padding: [50, 50], maxZoom: Math.max(curZoom, 17), duration: 0.8 });
+        }
         this.mapEngine.highlightPolygon(item.id);
         if (this.mapEngine.spotlightEnabled) {
           const rawCoords = item.vertices || item.poligono;
