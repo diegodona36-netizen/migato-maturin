@@ -220,264 +220,312 @@
     <!-- ============================================================== -->
     <section id="modulos" aria-label="Módulos Operativos de Mando" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
 
-      <!-- MÓDULO 1: ORGANIZACIÓN • COMANDO DATERO -->
-      <article class="bg-[#18114a]/95 border border-[#2d1f85] hover:border-white/30 rounded-2xl p-5 sm:p-6 flex flex-col justify-between space-y-5 transition shadow-xl shadow-indigo-950/50">
+      <!-- MÓDULO I: ORGANIZACIÓN • COMANDO DATERO -->
+      <article class="bg-[#18114a]/95 border border-[#2d1f85] hover:border-emerald-500/50 rounded-2xl p-5 sm:p-6 flex flex-col justify-between space-y-5 transition shadow-xl shadow-indigo-950/50">
         <div class="space-y-4">
           <div class="flex items-center justify-between gap-3">
-            <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-[#1e1554] border border-white/20 flex items-center justify-center text-white shrink-0 shadow-md">
-              <i data-lucide="send" class="w-8 h-8 sm:w-10 sm:h-10 text-white"></i>
+            <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-emerald-950/70 border border-emerald-500/40 flex items-center justify-center text-emerald-400 shrink-0 shadow-lg shadow-emerald-950/40">
+              <i data-lucide="send" class="w-8 h-8 sm:w-10 sm:h-10 text-emerald-400"></i>
             </div>
-            <span class="text-xs sm:text-sm font-bold uppercase tracking-wider bg-[#130d38] text-white border border-white/20 px-3.5 py-1.5 rounded-xl shadow-sm text-right">
-              Módulo 1 • Organización
+            <span class="text-xs sm:text-sm font-bold uppercase tracking-wider bg-emerald-950/80 text-emerald-300 border border-emerald-500/40 px-3.5 py-1.5 rounded-xl shadow-sm text-right">
+              Módulo I
             </span>
           </div>
 
           <div class="space-y-1.5">
-            <h3 class="font-display text-xl sm:text-2xl font-bold text-white tracking-tight">Comando Datero</h3>
-            <p class="text-sm text-slate-200 leading-relaxed">
+            <div class="flex items-center gap-2">
+              <span class="text-xs sm:text-sm font-bold uppercase tracking-widest text-emerald-400 font-mono">
+                Organización
+              </span>
+              <span class="h-px flex-1 bg-gradient-to-r from-emerald-500/40 to-transparent"></span>
+            </div>
+            <h3 class="font-display text-xl sm:text-2xl font-bold text-white tracking-tight">
+              Comando Datero
+            </h3>
+            <p class="text-sm text-slate-200 leading-relaxed pt-0.5">
               Distribución con 1 toque de enlaces y credenciales de acceso a los coordinadores de las 10 parroquias para carga independiente y asignación jerárquica de comandos.
             </p>
           </div>
 
-          <ul class="space-y-1.5 pt-2 border-t border-white/10 text-xs sm:text-sm text-slate-300">
+          <ul class="space-y-2 pt-2 border-t border-white/10 text-xs sm:text-sm text-slate-300">
             <li class="flex items-center gap-2">
-              <i data-lucide="check-circle" class="w-4 h-4 text-blue-300 shrink-0"></i>
+              <i data-lucide="check-circle" class="w-4 h-4 text-emerald-400 shrink-0"></i>
               <span>10 Parroquias con enlaces aislados WhatsApp</span>
             </li>
             <li class="flex items-center gap-2">
-              <i data-lucide="check-circle" class="w-4 h-4 text-blue-300 shrink-0"></i>
+              <i data-lucide="check-circle" class="w-4 h-4 text-emerald-400 shrink-0"></i>
               <span>Estructura de comandos y dirigentes reales</span>
             </li>
           </ul>
         </div>
 
         <div class="space-y-2 pt-3">
-          <a href="despacho/" class="w-full py-3 px-4 bg-[#23176d] hover:bg-[#322099] border border-white/20 text-white font-bold text-sm sm:text-base rounded-xl shadow transition flex items-center justify-center gap-2 active:scale-95">
+          <a href="despacho/" class="w-full py-3 px-4 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm sm:text-base rounded-xl shadow transition flex items-center justify-center gap-2 active:scale-95">
             <span>Abrir Despacho de Enlaces</span>
             <i data-lucide="arrow-right" class="w-4 h-4"></i>
           </a>
-          <a href="comandos/?v=244" class="w-full py-2.5 px-3 bg-[#130d38] hover:bg-[#1a124a] border border-white/15 text-slate-200 font-semibold text-xs sm:text-sm rounded-xl transition flex items-center justify-center gap-1.5 active:scale-95" title="Gestión y Asignación de Comandos">
-            <i data-lucide="shield-check" class="w-4 h-4 text-blue-300"></i>
+          <a href="comandos/?v=244" class="w-full py-2.5 px-3 bg-[#130d38] hover:bg-[#1a124a] border border-emerald-500/30 text-emerald-300 font-semibold text-xs sm:text-sm rounded-xl transition flex items-center justify-center gap-1.5 active:scale-95" title="Gestión y Asignación de Comandos">
+            <i data-lucide="shield-check" class="w-4 h-4 text-emerald-400"></i>
             <span>Asignación de Comandos</span>
           </a>
           <span class="block text-xs text-slate-400 text-center font-mono">Rutas: /despacho/ • /comandos/</span>
         </div>
       </article>
 
-      <!-- MÓDULO 2: ESTADÍSTICA • ESTADÍSTICA Y GRÁFICAS -->
-      <article class="bg-[#18114a]/95 border border-[#2d1f85] hover:border-white/30 rounded-2xl p-5 sm:p-6 flex flex-col justify-between space-y-5 transition shadow-xl shadow-indigo-950/50">
+      <!-- MÓDULO II: ESTADÍSTICA • ESTADÍSTICA Y GRÁFICAS -->
+      <article class="bg-[#18114a]/95 border border-[#2d1f85] hover:border-amber-500/50 rounded-2xl p-5 sm:p-6 flex flex-col justify-between space-y-5 transition shadow-xl shadow-indigo-950/50">
         <div class="space-y-4">
           <div class="flex items-center justify-between gap-3">
-            <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-[#1e1554] border border-white/20 flex items-center justify-center text-white shrink-0 shadow-md">
-              <i data-lucide="bar-chart-3" class="w-8 h-8 sm:w-10 sm:h-10 text-white"></i>
+            <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-amber-950/70 border border-amber-500/40 flex items-center justify-center text-amber-400 shrink-0 shadow-lg shadow-amber-950/40">
+              <i data-lucide="bar-chart-3" class="w-8 h-8 sm:w-10 sm:h-10 text-amber-400"></i>
             </div>
-            <span class="text-xs sm:text-sm font-bold uppercase tracking-wider bg-[#130d38] text-white border border-white/20 px-3.5 py-1.5 rounded-xl shadow-sm text-right">
-              Módulo 2 • Estadística
+            <span class="text-xs sm:text-sm font-bold uppercase tracking-wider bg-amber-950/80 text-amber-300 border border-amber-500/40 px-3.5 py-1.5 rounded-xl shadow-sm text-right">
+              Módulo II
             </span>
           </div>
 
           <div class="space-y-1.5">
-            <h3 class="font-display text-xl sm:text-2xl font-bold text-white tracking-tight">Estadística y Gráficas</h3>
-            <p class="text-sm text-slate-200 leading-relaxed">
+            <div class="flex items-center gap-2">
+              <span class="text-xs sm:text-sm font-bold uppercase tracking-widest text-amber-400 font-mono">
+                Estadística
+              </span>
+              <span class="h-px flex-1 bg-gradient-to-r from-amber-500/40 to-transparent"></span>
+            </div>
+            <h3 class="font-display text-xl sm:text-2xl font-bold text-white tracking-tight">
+              Estadística y Gráficas
+            </h3>
+            <p class="text-sm text-slate-200 leading-relaxed pt-0.5">
               Consolidación en cascada de 5 niveles: Casas, Familias, Habitantes y Votantes organizados por sector, eje y parroquia con métricas demográficas.
             </p>
           </div>
 
-          <ul class="space-y-1.5 pt-2 border-t border-white/10 text-xs sm:text-sm text-slate-300">
+          <ul class="space-y-2 pt-2 border-t border-white/10 text-xs sm:text-sm text-slate-300">
             <li class="flex items-center gap-2">
-              <i data-lucide="check-circle" class="w-4 h-4 text-blue-300 shrink-0"></i>
+              <i data-lucide="check-circle" class="w-4 h-4 text-amber-400 shrink-0"></i>
               <span>Cómputo demográfico automático en tiempo real</span>
             </li>
             <li class="flex items-center gap-2">
-              <i data-lucide="check-circle" class="w-4 h-4 text-blue-300 shrink-0"></i>
+              <i data-lucide="check-circle" class="w-4 h-4 text-amber-400 shrink-0"></i>
               <span>Exportación a Excel / CSV en 1 clic</span>
             </li>
           </ul>
         </div>
 
         <div class="space-y-2 pt-3">
-          <a href="dashboard-campana/" class="w-full py-3 px-4 bg-[#23176d] hover:bg-[#322099] border border-white/20 text-white font-bold text-sm sm:text-base rounded-xl shadow transition flex items-center justify-center gap-2 active:scale-95">
+          <a href="dashboard-campana/" class="w-full py-3 px-4 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-sm sm:text-base rounded-xl shadow transition flex items-center justify-center gap-2 active:scale-95">
             <span>Ver Tablero de Censo</span>
             <i data-lucide="arrow-right" class="w-4 h-4"></i>
           </a>
-          <a href="demo-estadisticas/" class="w-full py-2.5 px-3 bg-[#130d38] hover:bg-[#1a124a] border border-white/15 text-slate-200 font-semibold text-xs sm:text-sm rounded-xl transition flex items-center justify-center gap-1.5 active:scale-95" title="Gráficas y Comparativas">
-            <i data-lucide="line-chart" class="w-4 h-4 text-blue-300"></i>
+          <a href="demo-estadisticas/" class="w-full py-2.5 px-3 bg-[#130d38] hover:bg-[#1a124a] border border-amber-500/30 text-amber-300 font-semibold text-xs sm:text-sm rounded-xl transition flex items-center justify-center gap-1.5 active:scale-95" title="Gráficas y Comparativas">
+            <i data-lucide="line-chart" class="w-4 h-4 text-amber-400"></i>
             <span>Gráficas y Comparativas</span>
           </a>
           <span class="block text-xs text-slate-400 text-center font-mono">Rutas: /dashboard-campana/ • /demo-estadisticas/</span>
         </div>
       </article>
 
-      <!-- MÓDULO 3: ELECTORAL • PADRÓN ELECTORAL -->
-      <article class="bg-[#18114a]/95 border border-[#2d1f85] hover:border-white/30 rounded-2xl p-5 sm:p-6 flex flex-col justify-between space-y-5 transition shadow-xl shadow-indigo-950/50">
+      <!-- MÓDULO III: ELECTORAL • PADRÓN ELECTORAL -->
+      <article class="bg-[#18114a]/95 border border-[#2d1f85] hover:border-indigo-500/50 rounded-2xl p-5 sm:p-6 flex flex-col justify-between space-y-5 transition shadow-xl shadow-indigo-950/50">
         <div class="space-y-4">
           <div class="flex items-center justify-between gap-3">
-            <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-[#1e1554] border border-white/20 flex items-center justify-center text-white shrink-0 shadow-md">
-              <i data-lucide="school" class="w-8 h-8 sm:w-10 sm:h-10 text-white"></i>
+            <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-indigo-950/70 border border-indigo-500/40 flex items-center justify-center text-indigo-400 shrink-0 shadow-lg shadow-indigo-950/40">
+              <i data-lucide="school" class="w-8 h-8 sm:w-10 sm:h-10 text-indigo-400"></i>
             </div>
-            <span class="text-xs sm:text-sm font-bold uppercase tracking-wider bg-[#130d38] text-white border border-white/20 px-3.5 py-1.5 rounded-xl shadow-sm text-right">
-              Módulo 3 • Electoral
+            <span class="text-xs sm:text-sm font-bold uppercase tracking-wider bg-indigo-950/80 text-indigo-300 border border-indigo-500/40 px-3.5 py-1.5 rounded-xl shadow-sm text-right">
+              Módulo III
             </span>
           </div>
 
           <div class="space-y-1.5">
-            <h3 class="font-display text-xl sm:text-2xl font-bold text-white tracking-tight">Padrón Electoral</h3>
-            <p class="text-sm text-slate-200 leading-relaxed">
+            <div class="flex items-center gap-2">
+              <span class="text-xs sm:text-sm font-bold uppercase tracking-widest text-indigo-400 font-mono">
+                Electoral
+              </span>
+              <span class="h-px flex-1 bg-gradient-to-r from-indigo-500/40 to-transparent"></span>
+            </div>
+            <h3 class="font-display text-xl sm:text-2xl font-bold text-white tracking-tight">
+              Padrón Electoral
+            </h3>
+            <p class="text-sm text-slate-200 leading-relaxed pt-0.5">
               Catálogo oficial de escuelas con padrón, código CNE, mesas, auditoría de actas QR en tiempo real, sábana de escrutinio y caracterización nominal del voto.
             </p>
           </div>
 
-          <ul class="space-y-1.5 pt-2 border-t border-white/10 text-xs sm:text-sm text-slate-300">
+          <ul class="space-y-2 pt-2 border-t border-white/10 text-xs sm:text-sm text-slate-300">
             <li class="flex items-center gap-2">
-              <i data-lucide="check-circle" class="w-4 h-4 text-blue-300 shrink-0"></i>
+              <i data-lucide="check-circle" class="w-4 h-4 text-indigo-400 shrink-0"></i>
               <span>Tablilla, Sábana Electoral y Actas QR CNE</span>
             </li>
             <li class="flex items-center gap-2">
-              <i data-lucide="check-circle" class="w-4 h-4 text-blue-300 shrink-0"></i>
+              <i data-lucide="check-circle" class="w-4 h-4 text-indigo-400 shrink-0"></i>
               <span>Caracterización del voto: Duros, Blandos y Nuevos</span>
             </li>
           </ul>
         </div>
 
         <div class="space-y-2 pt-3">
-          <a href="centros-maturin/?v=137" class="w-full py-3 px-4 bg-[#23176d] hover:bg-[#322099] border border-white/20 text-white font-bold text-sm sm:text-base rounded-xl shadow transition flex items-center justify-center gap-2 active:scale-95">
+          <a href="centros-maturin/?v=137" class="w-full py-3 px-4 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-sm sm:text-base rounded-xl shadow transition flex items-center justify-center gap-2 active:scale-95">
             <span>Explorar Tablilla y Actas CNE</span>
             <i data-lucide="arrow-right" class="w-4 h-4"></i>
           </a>
-          <a href="caracterizacion-voto/" class="w-full py-2.5 px-3 bg-[#130d38] hover:bg-[#1a124a] border border-white/15 text-slate-200 font-semibold text-xs sm:text-sm rounded-xl transition flex items-center justify-center gap-1.5 active:scale-95" title="Caracterización Del Voto">
-            <i data-lucide="user-check" class="w-4 h-4 text-blue-300"></i>
+          <a href="caracterizacion-voto/" class="w-full py-2.5 px-3 bg-[#130d38] hover:bg-[#1a124a] border border-indigo-500/30 text-indigo-300 font-semibold text-xs sm:text-sm rounded-xl transition flex items-center justify-center gap-1.5 active:scale-95" title="Caracterización Del Voto">
+            <i data-lucide="user-check" class="w-4 h-4 text-indigo-400"></i>
             <span>Caracterización del Voto</span>
           </a>
           <span class="block text-xs text-slate-400 text-center font-mono">Rutas: /centros-maturin/ • /caracterizacion-voto/</span>
         </div>
       </article>
 
-      <!-- MÓDULO 4: CIENCIA Y TECNOLOGÍA • MAPAS INTERACTIVOS Y 3D -->
-      <article class="bg-[#18114a]/95 border border-[#2d1f85] hover:border-white/30 rounded-2xl p-5 sm:p-6 flex flex-col justify-between space-y-5 transition shadow-xl shadow-indigo-950/50">
+      <!-- MÓDULO IV: CIENCIA Y TECNOLOGÍA • MAPA INTERACTIVO Y CARTOGRAFÍA -->
+      <article class="bg-[#18114a]/95 border border-[#2d1f85] hover:border-sky-500/50 rounded-2xl p-5 sm:p-6 flex flex-col justify-between space-y-5 transition shadow-xl shadow-indigo-950/50">
         <div class="space-y-4">
           <div class="flex items-center justify-between gap-3">
-            <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-[#1e1554] border border-white/20 flex items-center justify-center text-white shrink-0 shadow-md">
-              <i data-lucide="globe" class="w-8 h-8 sm:w-10 sm:h-10 text-white"></i>
+            <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-sky-950/70 border border-sky-500/40 flex items-center justify-center text-sky-400 shrink-0 shadow-lg shadow-sky-950/40">
+              <i data-lucide="globe" class="w-8 h-8 sm:w-10 sm:h-10 text-sky-400"></i>
             </div>
-            <span class="text-xs sm:text-sm font-bold uppercase tracking-wider bg-[#130d38] text-white border border-white/20 px-3.5 py-1.5 rounded-xl shadow-sm text-right">
-              Módulo 4 • Ciencia y Tecnología
+            <span class="text-xs sm:text-sm font-bold uppercase tracking-wider bg-sky-950/80 text-sky-300 border border-sky-500/40 px-3.5 py-1.5 rounded-xl shadow-sm text-right">
+              Módulo IV
             </span>
           </div>
 
           <div class="space-y-1.5">
-            <h3 class="font-display text-xl sm:text-2xl font-bold text-white tracking-tight">Mapas Interactivos y Cartografía 3D</h3>
-            <p class="text-sm text-slate-200 leading-relaxed">
+            <div class="flex items-center gap-2">
+              <span class="text-xs sm:text-sm font-bold uppercase tracking-widest text-sky-400 font-mono">
+                Ciencia y Tecnología
+              </span>
+              <span class="h-px flex-1 bg-gradient-to-r from-sky-500/40 to-transparent"></span>
+            </div>
+            <h3 class="font-display text-xl sm:text-2xl font-bold text-white tracking-tight">
+              Mapa Interactivo y Cartografía
+            </h3>
+            <p class="text-sm text-slate-200 leading-relaxed pt-0.5">
               Consola satelital de análisis estilo Google Earth Pro con polígonos de sectores y lámina de alta definición para proyección en Sala Situacional.
             </p>
           </div>
 
-          <ul class="space-y-1.5 pt-2 border-t border-white/10 text-xs sm:text-sm text-slate-300">
+          <ul class="space-y-2 pt-2 border-t border-white/10 text-xs sm:text-sm text-slate-300">
             <li class="flex items-center gap-2">
-              <i data-lucide="check-circle" class="w-4 h-4 text-blue-300 shrink-0"></i>
+              <i data-lucide="check-circle" class="w-4 h-4 text-sky-400 shrink-0"></i>
               <span>Navegación satelital e inspección de centros CNE</span>
             </li>
             <li class="flex items-center gap-2">
-              <i data-lucide="check-circle" class="w-4 h-4 text-blue-300 shrink-0"></i>
+              <i data-lucide="check-circle" class="w-4 h-4 text-sky-400 shrink-0"></i>
               <span>Lámina Cartográfica 120" con control territorial</span>
             </li>
           </ul>
         </div>
 
         <div class="space-y-2 pt-3">
-          <a href="earth-monagas/?v=251" class="w-full py-3 px-4 bg-[#23176d] hover:bg-[#322099] border border-white/20 text-white font-bold text-sm sm:text-base rounded-xl shadow transition flex items-center justify-center gap-2 active:scale-95">
+          <a href="earth-monagas/?v=251" class="w-full py-3 px-4 bg-sky-600 hover:bg-sky-500 text-white font-bold text-sm sm:text-base rounded-xl shadow transition flex items-center justify-center gap-2 active:scale-95">
             <span>Abrir Satélite Master (GIS 3D)</span>
             <i data-lucide="arrow-right" class="w-4 h-4"></i>
           </a>
-          <a href="lamina-monagas/" class="w-full py-2.5 px-3 bg-[#130d38] hover:bg-[#1a124a] border border-white/15 text-slate-200 font-semibold text-xs sm:text-sm rounded-xl transition flex items-center justify-center gap-1.5 active:scale-95" title="Lámina Cartográfica 120 Pulgadas">
-            <i data-lucide="tv" class="w-4 h-4 text-blue-300"></i>
+          <a href="lamina-monagas/" class="w-full py-2.5 px-3 bg-[#130d38] hover:bg-[#1a124a] border border-sky-500/30 text-sky-300 font-semibold text-xs sm:text-sm rounded-xl transition flex items-center justify-center gap-1.5 active:scale-95" title="Lámina Cartográfica 120 Pulgadas">
+            <i data-lucide="tv" class="w-4 h-4 text-sky-400"></i>
             <span>Lámina Cartográfica 120"</span>
           </a>
           <span class="block text-xs text-slate-400 text-center font-mono">Rutas: /earth-monagas/ • /lamina-monagas/</span>
         </div>
       </article>
 
-      <!-- MÓDULO 5: PROFESIONALES Y TÉCNICOS • INFRAESTRUCTURA Y SERVICIOS PÚBLICOS -->
-      <article class="bg-[#18114a]/95 border border-[#2d1f85] hover:border-white/30 rounded-2xl p-5 sm:p-6 flex flex-col justify-between space-y-5 transition shadow-xl shadow-indigo-950/50">
+      <!-- MÓDULO V: PROFESIONALES Y TÉCNICOS • INFRAESTRUCTURA Y SERVICIOS PÚBLICOS -->
+      <article class="bg-[#18114a]/95 border border-[#2d1f85] hover:border-rose-500/50 rounded-2xl p-5 sm:p-6 flex flex-col justify-between space-y-5 transition shadow-xl shadow-indigo-950/50">
         <div class="space-y-4">
           <div class="flex items-center justify-between gap-3">
-            <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-[#1e1554] border border-white/20 flex items-center justify-center text-white shrink-0 shadow-md">
-              <i data-lucide="activity" class="w-8 h-8 sm:w-10 sm:h-10 text-white"></i>
+            <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-rose-950/70 border border-rose-500/40 flex items-center justify-center text-rose-400 shrink-0 shadow-lg shadow-rose-950/40">
+              <i data-lucide="activity" class="w-8 h-8 sm:w-10 sm:h-10 text-rose-400"></i>
             </div>
-            <span class="text-xs sm:text-sm font-bold uppercase tracking-wider bg-[#130d38] text-white border border-white/20 px-3.5 py-1.5 rounded-xl shadow-sm text-right">
-              Módulo 5 • Profesionales y Técnicos
+            <span class="text-xs sm:text-sm font-bold uppercase tracking-wider bg-rose-950/80 text-rose-300 border border-rose-500/40 px-3.5 py-1.5 rounded-xl shadow-sm text-right">
+              Módulo V
             </span>
           </div>
 
           <div class="space-y-1.5">
-            <h3 class="font-display text-xl sm:text-2xl font-bold text-white tracking-tight">Infraestructura y Servicios Públicos</h3>
-            <p class="text-sm text-slate-200 leading-relaxed">
+            <div class="flex items-center gap-2">
+              <span class="text-xs sm:text-sm font-bold uppercase tracking-widest text-rose-400 font-mono">
+                Profesionales y Técnicos
+              </span>
+              <span class="h-px flex-1 bg-gradient-to-r from-rose-500/40 to-transparent"></span>
+            </div>
+            <h3 class="font-display text-xl sm:text-2xl font-bold text-white tracking-tight">
+              Infraestructura y Servicios Públicos
+            </h3>
+            <p class="text-sm text-slate-200 leading-relaxed pt-0.5">
               Pre-diagnóstico de soporte vital (plantas, agua, gases y climatización) para la red hospitalaria, análisis de drenajes, vialidad urbana y monitoreo eléctrico.
             </p>
           </div>
 
-          <ul class="space-y-1.5 pt-2 border-t border-white/10 text-xs sm:text-sm text-slate-300">
+          <ul class="space-y-2 pt-2 border-t border-white/10 text-xs sm:text-sm text-slate-300">
             <li class="flex items-center gap-2">
-              <i data-lucide="check-circle" class="w-4 h-4 text-blue-300 shrink-0"></i>
+              <i data-lucide="check-circle" class="w-4 h-4 text-rose-400 shrink-0"></i>
               <span>Ficha oficial 1:1 de 84 centros de salud de Monagas</span>
             </li>
             <li class="flex items-center gap-2">
-              <i data-lucide="check-circle" class="w-4 h-4 text-blue-300 shrink-0"></i>
+              <i data-lucide="check-circle" class="w-4 h-4 text-rose-400 shrink-0"></i>
               <span>Monitoreo de drenajes, vialidad y sistema eléctrico</span>
             </li>
           </ul>
         </div>
 
         <div class="space-y-2 pt-3">
-          <a href="salud-monagas/?v=172" class="w-full py-3 px-4 bg-[#23176d] hover:bg-[#322099] border border-white/20 text-white font-bold text-sm sm:text-base rounded-xl shadow transition flex items-center justify-center gap-2 active:scale-95">
+          <a href="salud-monagas/?v=172" class="w-full py-3 px-4 bg-rose-600 hover:bg-rose-500 text-white font-bold text-sm sm:text-base rounded-xl shadow transition flex items-center justify-center gap-2 active:scale-95">
             <span>Abrir Red Hospitalaria y Salud</span>
             <i data-lucide="arrow-right" class="w-4 h-4"></i>
           </a>
-          <a href="drenajes-maturin/" class="w-full py-2.5 px-3 bg-[#130d38] hover:bg-[#1a124a] border border-white/15 text-slate-200 font-semibold text-xs sm:text-sm rounded-xl transition flex items-center justify-center gap-1.5 active:scale-95" title="Drenajes y Vialidad">
-            <i data-lucide="droplet" class="w-4 h-4 text-blue-300"></i>
+          <a href="drenajes-maturin/" class="w-full py-2.5 px-3 bg-[#130d38] hover:bg-[#1a124a] border border-rose-500/30 text-rose-300 font-semibold text-xs sm:text-sm rounded-xl transition flex items-center justify-center gap-1.5 active:scale-95" title="Drenajes y Vialidad">
+            <i data-lucide="droplet" class="w-4 h-4 text-rose-400"></i>
             <span>Drenajes y Vialidad Urbana</span>
           </a>
           <span class="block text-xs text-slate-400 text-center font-mono">Rutas: /salud-monagas/ • /drenajes-maturin/</span>
         </div>
       </article>
 
-      <!-- MÓDULO 6: ORGANIZACIÓN • SIMPATIZANTES Y ACTIVISTAS -->
-      <article class="bg-[#18114a]/95 border border-[#2d1f85] hover:border-white/30 rounded-2xl p-5 sm:p-6 flex flex-col justify-between space-y-5 transition shadow-xl shadow-indigo-950/50">
+      <!-- MÓDULO VI: ORGANIZACIÓN • SIMPATIZANTES Y ACTIVISTAS -->
+      <article class="bg-[#18114a]/95 border border-[#2d1f85] hover:border-purple-500/50 rounded-2xl p-5 sm:p-6 flex flex-col justify-between space-y-5 transition shadow-xl shadow-indigo-950/50">
         <div class="space-y-4">
           <div class="flex items-center justify-between gap-3">
-            <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-[#1e1554] border border-white/20 flex items-center justify-center text-white shrink-0 shadow-md">
-              <i data-lucide="heart-handshake" class="w-8 h-8 sm:w-10 sm:h-10 text-white"></i>
+            <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-purple-950/70 border border-purple-500/40 flex items-center justify-center text-purple-400 shrink-0 shadow-lg shadow-purple-950/40">
+              <i data-lucide="heart-handshake" class="w-8 h-8 sm:w-10 sm:h-10 text-purple-400"></i>
             </div>
-            <span class="text-xs sm:text-sm font-bold uppercase tracking-wider bg-[#130d38] text-white border border-white/20 px-3.5 py-1.5 rounded-xl shadow-sm text-right">
-              Módulo 6 • Organización
+            <span class="text-xs sm:text-sm font-bold uppercase tracking-wider bg-purple-950/80 text-purple-300 border border-purple-500/40 px-3.5 py-1.5 rounded-xl shadow-sm text-right">
+              Módulo VI
             </span>
           </div>
 
           <div class="space-y-1.5">
-            <h3 class="font-display text-xl sm:text-2xl font-bold text-white tracking-tight">Simpatizantes y Activistas</h3>
-            <p class="text-sm text-slate-200 leading-relaxed">
+            <div class="flex items-center gap-2">
+              <span class="text-xs sm:text-sm font-bold uppercase tracking-widest text-purple-400 font-mono">
+                Organización
+              </span>
+              <span class="h-px flex-1 bg-gradient-to-r from-purple-500/40 to-transparent"></span>
+            </div>
+            <h3 class="font-display text-xl sm:text-2xl font-bold text-white tracking-tight">
+              Simpatizantes y Activistas
+            </h3>
+            <p class="text-sm text-slate-200 leading-relaxed pt-0.5">
               Plataforma de captación, censo de voluntariado de base, red juvenil MIGATO y registro territorial de activistas comunitarios para el día de la elección.
             </p>
           </div>
 
-          <ul class="space-y-1.5 pt-2 border-t border-white/10 text-xs sm:text-sm text-slate-300">
+          <ul class="space-y-2 pt-2 border-t border-white/10 text-xs sm:text-sm text-slate-300">
             <li class="flex items-center gap-2">
-              <i data-lucide="check-circle" class="w-4 h-4 text-blue-300 shrink-0"></i>
+              <i data-lucide="check-circle" class="w-4 h-4 text-purple-400 shrink-0"></i>
               <span>Módulo de Activistas: Voluntariado territorial</span>
             </li>
             <li class="flex items-center gap-2">
-              <i data-lucide="check-circle" class="w-4 h-4 text-blue-300 shrink-0"></i>
+              <i data-lucide="check-circle" class="w-4 h-4 text-purple-400 shrink-0"></i>
               <span>Módulo de Simpatizantes: Formulario de captación directa</span>
             </li>
           </ul>
         </div>
 
         <div class="space-y-2 pt-3">
-          <a href="juventud-migato/" class="w-full py-3 px-4 bg-[#23176d] hover:bg-[#322099] border border-white/20 text-white font-bold text-sm sm:text-base rounded-xl shadow transition flex items-center justify-center gap-2 active:scale-95">
+          <a href="juventud-migato/" class="w-full py-3 px-4 bg-purple-600 hover:bg-purple-500 text-white font-bold text-sm sm:text-base rounded-xl shadow transition flex items-center justify-center gap-2 active:scale-95">
             <span>Módulo de Activistas (Juventud)</span>
             <i data-lucide="arrow-right" class="w-4 h-4"></i>
           </a>
-          <a href="juventud-migato/formulario.html" class="w-full py-2.5 px-3 bg-[#130d38] hover:bg-[#1a124a] border border-white/15 text-slate-200 font-semibold text-xs sm:text-sm rounded-xl transition flex items-center justify-center gap-1.5 active:scale-95" title="Formulario de Captación de Simpatizantes">
-            <i data-lucide="user-plus" class="w-4 h-4 text-blue-300"></i>
+          <a href="juventud-migato/formulario.html" class="w-full py-2.5 px-3 bg-[#130d38] hover:bg-[#1a124a] border border-purple-500/30 text-purple-300 font-semibold text-xs sm:text-sm rounded-xl transition flex items-center justify-center gap-1.5 active:scale-95" title="Formulario de Captación de Simpatizantes">
+            <i data-lucide="user-plus" class="w-4 h-4 text-purple-400"></i>
             <span>Módulo de Simpatizantes (Registro)</span>
           </a>
           <span class="block text-xs text-slate-400 text-center font-mono">Ruta: /juventud-migato/</span>
