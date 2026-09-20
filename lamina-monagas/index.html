@@ -44,7 +44,7 @@
   <script src="../centros-maturin/js/centrosData.js"></script>
 
   <!-- Estilos de Lámina Ejecutiva 120" -->
-  <link rel="stylesheet" href="css/lamina.css?v=267" />
+  <link rel="stylesheet" href="css/lamina.css?v=268" />
 
   <!-- Anti-Cache Meta Tags -->
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate, max-age=0" />
@@ -53,6 +53,9 @@
 <body class="bg-white text-slate-900 h-screen w-screen overflow-hidden select-none">
 <!-- 1. LIENZO CARTOGRÁFICO SATELITAL PANTALLA COMPLETA -->
   <div id="map-lamina"></div>
+
+  <!-- 1.1 LIENZO DE PIZARRA TÁCTICA PARA PANTALLAS TÁCTILES Y TELEVISORES -->
+  <canvas id="whiteboard-canvas" class="fixed inset-0 pointer-events-none z-[900]"></canvas>
 
   <!-- 2. ENCABEZADO OFICIAL MIGATO (TOP BANNER) -->
   <header id="lamina-header">
@@ -378,6 +381,75 @@
     </div>
   </aside>
 
+  <!-- 4. BOTÓN FLOTANTE INFERIOR: ACTIVAR PIZARRA TÁCTICA (TELEVISOR TÁCTIL) -->
+  <div class="fixed bottom-4 left-1/2 -translate-x-1/2 z-[1000] no-print">
+    <button type="button" id="btn-toggle-whiteboard" 
+            onclick="window.laminaApp && window.laminaApp.whiteboard && window.laminaApp.whiteboard.toggle()"
+            class="px-4 py-2 rounded-full bg-slate-900/90 hover:bg-slate-900 text-white font-bold text-xs uppercase flex items-center gap-2 shadow-2xl border border-slate-700/80 backdrop-blur-md transition active:scale-95 cursor-pointer"
+            title="Activar / Desactivar Lápiz Táctil para Rayar el Mapa con los Dedos o Stylus">
+      <i data-lucide="edit-3" class="w-4 h-4 text-yellow-400"></i>
+      <span>Pizarra Táctica</span>
+    </button>
+  </div>
+
+  <!-- 4.1 BARRA DE HERRAMIENTAS TÁCTILES TIPO PAINT (FLOTANTE INFERIOR) -->
+  <div id="whiteboard-toolbar" class="fixed bottom-16 left-1/2 -translate-x-1/2 z-[1001] hidden items-center gap-2 p-2 px-3 rounded-2xl bg-slate-950/92 border border-slate-700/80 shadow-2xl backdrop-blur-xl no-print text-white">
+    <!-- Indicador Lápiz -->
+    <div class="flex items-center gap-1.5 pr-2 border-r border-slate-700/80 shrink-0 font-mono text-[11px] font-bold text-yellow-400">
+      <i data-lucide="pen-tool" class="w-4 h-4"></i>
+      <span class="hidden sm:inline">LÁPIZ</span>
+    </div>
+
+    <!-- Selector de Colores Tácticos (Grandes para los dedos) -->
+    <div class="flex items-center gap-2 px-1 shrink-0">
+      <button type="button" class="wb-color-btn w-7 h-7 rounded-full bg-yellow-400 border-2 border-white/80 shadow-sm transition active:scale-90 scale-125 ring-2 ring-white cursor-pointer" data-color="#facc15" onclick="window.laminaApp.whiteboard.setColor('#facc15')" title="Amarillo Neón"></button>
+      <button type="button" class="wb-color-btn w-7 h-7 rounded-full bg-rose-500 border border-white/40 shadow-sm transition active:scale-90 cursor-pointer" data-color="#ef4444" onclick="window.laminaApp.whiteboard.setColor('#ef4444')" title="Rojo Táctico"></button>
+      <button type="button" class="wb-color-btn w-7 h-7 rounded-full bg-sky-400 border border-white/40 shadow-sm transition active:scale-90 cursor-pointer" data-color="#38bdf8" onclick="window.laminaApp.whiteboard.setColor('#38bdf8')" title="Azul Neón"></button>
+      <button type="button" class="wb-color-btn w-7 h-7 rounded-full bg-white border border-slate-300 shadow-sm transition active:scale-90 cursor-pointer" data-color="#ffffff" onclick="window.laminaApp.whiteboard.setColor('#ffffff')" title="Blanco Puro"></button>
+    </div>
+
+    <!-- Selector de Grosor -->
+    <div class="flex items-center gap-1 px-1.5 border-l border-slate-700/80 shrink-0">
+      <button type="button" onclick="window.laminaApp.whiteboard.setLineWidth(3)" class="p-2 rounded-lg hover:bg-white/10 text-xs font-bold text-slate-300 hover:text-white cursor-pointer" title="Trazo Fino (3px)">
+        <span class="block w-2 h-2 rounded-full bg-current mx-auto"></span>
+      </button>
+      <button type="button" onclick="window.laminaApp.whiteboard.setLineWidth(6)" class="p-2 rounded-lg hover:bg-white/10 text-xs font-bold text-slate-300 hover:text-white cursor-pointer" title="Trazo Medio (6px)">
+        <span class="block w-3.5 h-3.5 rounded-full bg-current mx-auto"></span>
+      </button>
+      <button type="button" onclick="window.laminaApp.whiteboard.setLineWidth(12)" class="p-2 rounded-lg hover:bg-white/10 text-xs font-bold text-slate-300 hover:text-white cursor-pointer" title="Trazo Grueso (12px)">
+        <span class="block w-5 h-5 rounded-full bg-current mx-auto"></span>
+      </button>
+    </div>
+
+    <!-- Borrador, Deshacer y Limpiar Todo -->
+    <div class="flex items-center gap-1 px-1.5 border-l border-slate-700/80 shrink-0">
+      <button type="button" id="wb-btn-eraser" onclick="window.laminaApp.whiteboard.setTool('eraser')" class="p-2 rounded-xl bg-white/10 hover:bg-white/20 text-slate-200 transition cursor-pointer" title="Borrador Táctil">
+        <i data-lucide="eraser" class="w-4 h-4"></i>
+      </button>
+      <button type="button" onclick="window.laminaApp.whiteboard.undo()" class="p-2 rounded-xl bg-white/10 hover:bg-white/20 text-slate-200 transition cursor-pointer" title="Deshacer Último Trazo">
+        <i data-lucide="undo-2" class="w-4 h-4"></i>
+      </button>
+      <button type="button" onclick="window.laminaApp.whiteboard.clear()" class="p-2 rounded-xl bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 border border-rose-500/30 transition cursor-pointer" title="Limpiar Pizarra (Borrar Todo)">
+        <i data-lucide="trash-2" class="w-4 h-4"></i>
+      </button>
+    </div>
+
+    <!-- Descarga Dual Rápida: PNG / JPG 100% Horizontal -->
+    <div class="flex items-center gap-1.5 pl-1.5 border-l border-slate-700/80 shrink-0">
+      <button type="button" onclick="window.laminaApp.capturarPantallaHD('png')" class="px-2.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs flex items-center gap-1 shadow-sm transition active:scale-95 cursor-pointer" title="Descargar en Imagen PNG 100% Horizontal">
+        <i data-lucide="download" class="w-3.5 h-3.5"></i>
+        <span>PNG</span>
+      </button>
+      <button type="button" onclick="window.laminaApp.capturarPantallaHD('jpg')" class="px-2.5 py-1.5 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-black text-xs flex items-center gap-1 shadow-sm transition active:scale-95 cursor-pointer" title="Descargar en Imagen JPG 100% Horizontal (Ligera para WhatsApp)">
+        <i data-lucide="file-image" class="w-3.5 h-3.5"></i>
+        <span>JPG</span>
+      </button>
+
+      <button type="button" onclick="window.laminaApp.whiteboard.deactivate()" class="p-1.5 rounded-xl text-slate-400 hover:text-white hover:bg-white/10 transition cursor-pointer ml-1" title="Cerrar Barra de Pizarra">
+        <i data-lucide="x" class="w-4 h-4"></i>
+      </button>
+    </div>
+  </div>
 
   <!-- MODAL DE ASIGNACIÓN DIRECTA DE COMANDO SECTORIAL -->
   <div id="modal-asignar-comando" class="fixed inset-0 z-[2000] bg-slate-950/70 backdrop-blur-sm hidden items-center justify-center p-4">
@@ -540,7 +612,7 @@
 
   <!-- 5. AUTENTICACIÓN Y CONTROLADOR PRINCIPAL DEL MÓDULO -->
   <script src="../js/auth.js"></script>
-  <script type="module" src="js/laminaApp.js?v=267"></script>
+  <script type="module" src="js/laminaApp.js?v=268"></script>
   <script>
     if (window.lucide && typeof window.lucide.createIcons === 'function') {
       window.lucide.createIcons();

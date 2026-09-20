@@ -29,6 +29,7 @@ import {
   COMANDOS_SECTORIALES
 } from "./comandoData.js?v=252";
 import { auditLogger } from "./auditLogger.js";
+import { Whiteboard } from "./whiteboard.js?v=268";
 
 const WORLD_BOX = [
   [-85.0511, -180],
@@ -90,7 +91,21 @@ export class LaminaApp {
   init() {
     this.initMap();
     this.initUIListeners();
+    this.initWhiteboard();
     this.parseURLParams();
+  }
+
+  initWhiteboard() {
+    try {
+      this.whiteboard = new Whiteboard({
+        canvasId: "whiteboard-canvas",
+        toolbarId: "whiteboard-toolbar",
+        toggleBtnId: "btn-toggle-whiteboard",
+        map: this.map
+      });
+    } catch (err) {
+      console.warn("No se pudo inicializar la pizarra táctica:", err);
+    }
   }
 
   initMap() {
@@ -1930,18 +1945,22 @@ export class LaminaApp {
     }
   }
 
-  async capturarPantallaHD() {
+  async capturarPantallaHD(format = "png") {
+    const isJpg = format === "jpg" || format === "jpeg";
+    const mimeType = isJpg ? "image/jpeg" : "image/png";
+    const ext = isJpg ? "jpg" : "png";
+
     const btn = document.getElementById("btn-header-capture-png") || document.getElementById("btn-do-capture-png");
     const originalContent = btn ? btn.innerHTML : "";
     if (btn) {
-      btn.innerHTML = `<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i><span>Generando PNG...</span>`;
+      btn.innerHTML = `<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i><span>Generando ${ext.toUpperCase()}...</span>`;
       if (window.lucide && typeof window.lucide.createIcons === "function") {
         window.lucide.createIcons();
       }
     }
 
     try {
-      // Ocultar modal para que no interfiera en la toma de imagen
+      // Ocultar modal si estuviese abierto
       this.closeExportModal();
       await new Promise(r => setTimeout(r, 80));
 
@@ -1955,19 +1974,27 @@ export class LaminaApp {
       // Generar nombre descriptivo oficial MIGATO
       const d = new Date().toISOString().slice(0, 10);
       const entity = (this.activeSectorName || this.activeSubParishName || this.activeParishId || this.activeMunId || "Monagas").replace(/[^a-zA-Z0-9_-]/g, "_");
-      const filename = `Lamina_MIGATO_${entity}_${d}.png`;
+      const filename = `Lamina_MIGATO_${entity}_${d}.${ext}`;
 
-      // Renderizado directo en memoria vía Canvas sin ningún diálogo ni permiso de pantalla
+      // Renderizado 100% Horizontal Panorámico (16:9 estricto del televisor/pantalla)
       const canvas = await window.html2canvas(document.body, {
         useCORS: true,
         allowTaint: false,
-        scale: 2, // Ultra HD 2x para máxima nitidez y fidelidad gráfica
+        scale: 2, // Ultra HD 2x panorámico horizontal
         backgroundColor: "#020617",
+        width: window.innerWidth,
+        height: window.innerHeight,
+        windowWidth: window.innerWidth,
+        windowHeight: window.innerHeight,
+        scrollX: 0,
+        scrollY: 0,
         logging: false,
         ignoreElements: (el) => {
           return (
             el.id === "modal-exportar-lamina" ||
             el.id === "modal-asignar-comando" ||
+            el.id === "whiteboard-toolbar" ||
+            el.id === "btn-toggle-whiteboard" ||
             el.classList.contains("leaflet-control-zoom") ||
             el.classList.contains("no-print")
           );
@@ -1980,22 +2007,22 @@ export class LaminaApp {
         }
       });
 
-      // Descarga directa e instantánea del archivo PNG en el navegador
+      // Descarga silenciosa directa del archivo en el formato solicitado (PNG o JPG)
       if (canvas.toBlob) {
         canvas.toBlob((blob) => {
           if (!blob) {
-            this._descargarArchivoPNG(canvas.toDataURL("image/png"), filename);
+            this._descargarArchivo(canvas.toDataURL(mimeType, 0.95), filename);
             return;
           }
           const url = URL.createObjectURL(blob);
-          this._descargarArchivoPNG(url, filename);
+          this._descargarArchivo(url, filename);
           setTimeout(() => URL.revokeObjectURL(url), 4000);
-        }, "image/png");
+        }, mimeType, 0.95);
       } else {
-        this._descargarArchivoPNG(canvas.toDataURL("image/png"), filename);
+        this._descargarArchivo(canvas.toDataURL(mimeType, 0.95), filename);
       }
     } catch (err) {
-      console.error("Error durante la generación de imagen PNG:", err);
+      console.error(`Error durante la generación de imagen ${ext.toUpperCase()}:`, err);
       alert("No se pudo generar la imagen automáticamente. Puedes utilizar el atajo Win + Shift + S o Impr Pant en tu teclado.");
     } finally {
       if (btn) {
@@ -2007,13 +2034,17 @@ export class LaminaApp {
     }
   }
 
-  _descargarArchivoPNG(url, filename) {
+  _descargarArchivo(url, filename) {
     const a = document.createElement("a");
     a.href = url;
     a.download = filename;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
+  }
+
+  _descargarArchivoPNG(url, filename) {
+    this._descargarArchivo(url, filename);
   }
 }
 

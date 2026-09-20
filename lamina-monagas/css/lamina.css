@@ -632,3 +632,34 @@ html, body {
     text-transform: uppercase;
   }
 }
+
+/* ==========================================================================
+   PIZARRA TÁCTICA PARA PANTALLAS TÁCTILES Y TELEVISORES (PAINT TÁCTICO)
+   ========================================================================== */
+
+#whiteboard-canvas {
+  touch-action: none;
+}
+
+#whiteboard-toolbar {
+  animation: slideUpToolbar 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes slideUpToolbar {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0) scale(1);
+  }
+}
+
+.wb-color-btn {
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.wb-color-btn:hover {
+  transform: scale(1.18);
+}
