@@ -124,7 +124,8 @@ export class LaminaApp {
       spPane.style.pointerEvents = "none";
     }
 
-    this.spotlightRenderer = L.svg({ pane: "spotlightPane", padding: 0.5 }).addTo(this.map);
+    // Renderer Canvas acelerado por GPU para el velo blanco (evita fallos de recorte SVG en html2canvas)
+    this.spotlightRenderer = L.canvas({ pane: "spotlightPane", padding: 0.5 }).addTo(this.map);
     if (this.spotlightRenderer && this.spotlightRenderer._container) {
       this.spotlightRenderer._container.style.pointerEvents = "none";
     }
