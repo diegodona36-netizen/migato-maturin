@@ -109,50 +109,38 @@
 <!-- ============================================================== -->
   <!-- 1. BARRA SUPERIOR INSTITUCIONAL • CENTRAL DE MANDO MIGATO      -->
   <!-- ============================================================== -->
-  <header class="border-b border-[#2d1f85] bg-[#140e40]/95 backdrop-blur-md sticky top-0 z-50 py-2.5 sm:py-3">
+  <header class="border-b border-[#2d1f85]/80 bg-[#120c38]/95 backdrop-blur-md sticky top-0 z-50 py-2 sm:py-2.5">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-3">
       
-      <!-- Brand, Big Logo & Institutional Hierarchy -->
-      <a href="./" class="flex items-center gap-3.5 group">
-        <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-[#23176d] p-2 border-2 border-amber-400/50 flex items-center justify-center shadow-lg shadow-[#23176d]/60 transition group-hover:scale-105 shrink-0">
-          <img src="assets/logo-migato.png" alt="MIGATO - El Gato Briceño" class="w-full h-full object-contain drop-shadow-md">
+      <!-- Brand & Direct Navigation -->
+      <a href="./" class="flex items-center gap-3 group">
+        <div class="w-11 h-11 sm:w-13 sm:h-13 rounded-xl bg-[#23176d] p-1.5 border border-amber-400/50 flex items-center justify-center shadow-md shadow-[#23176d]/50 transition group-hover:scale-105 shrink-0">
+          <img src="assets/logo-migato.png" alt="MIGATO - El Gato Briceño" class="w-full h-full object-contain drop-shadow-sm">
         </div>
         <div class="space-y-0.5">
-          <span class="text-[10px] sm:text-xs font-mono font-black uppercase tracking-widest text-blue-300 block leading-tight">
-            MOVIMIENTO INDEPENDIENTE GANAMOS TODOS
-          </span>
           <div class="flex items-center gap-2 flex-wrap">
-            <h1 class="font-display font-black text-white text-base sm:text-2xl tracking-tight leading-none uppercase">
+            <span class="font-display font-black text-white text-base sm:text-xl tracking-tight leading-none uppercase">
               MIGATO <span class="text-sky-400 font-extrabold">CENTRAL</span>
-            </h1>
-            <span class="inline-flex items-center gap-1.5 text-xs font-mono font-bold bg-emerald-950/90 text-emerald-300 border border-emerald-600/60 px-2 py-0.5 rounded-full shadow-sm">
-              <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            </span>
+            <span class="inline-flex items-center gap-1.5 text-[10px] sm:text-xs font-mono font-bold bg-emerald-950/90 text-emerald-300 border border-emerald-600/60 px-2 py-0.5 rounded-full shadow-sm">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
               EN VIVO
             </span>
           </div>
-          <div class="flex items-center gap-2 flex-wrap text-xs sm:text-sm">
-            <p class="font-bold text-amber-300 tracking-wide uppercase">
-              SALA SITUACIONAL
-            </p>
-            <span class="text-slate-400 hidden sm:inline">•</span>
-            <p class="text-blue-200 font-medium hidden sm:inline">
-              Estado Monagas (13 Municipios • 44 Parroquias)
-            </p>
-          </div>
-          <p class="text-[11px] text-amber-400/90 font-medium hidden sm:block">
-            Comando Regional de Campaña • Conducción: José Gregorio "El Gato" Briceño
+          <p class="text-[11px] sm:text-xs font-mono font-medium text-slate-300 tracking-wide">
+            Sala Situacional • Estado Monagas 2026
           </p>
         </div>
       </a>
 
       <!-- Minimal Executive Header Nav (Solo Módulos y Acceso) -->
       <nav class="flex items-center gap-2 sm:gap-3" aria-label="Navegación Principal">
-        <a href="#modulos" class="px-3.5 py-2 text-sm sm:text-base font-semibold text-slate-200 hover:text-white hover:bg-white/5 rounded-xl transition flex items-center gap-1.5">
+        <a href="#modulos" class="px-3.5 py-2 text-xs sm:text-sm font-semibold text-slate-200 hover:text-white hover:bg-white/5 rounded-xl transition flex items-center gap-1.5">
           <i data-lucide="layout-grid" class="w-4 h-4 text-sky-400"></i>
           <span>Módulos</span>
         </a>
 
-        <a href="login.html" class="px-3.5 py-2 text-sm sm:text-base font-bold text-amber-300 hover:text-white bg-[#1a134d] hover:bg-[#251b68] border border-amber-500/40 rounded-xl transition flex items-center gap-1.5 shadow-sm active:scale-95" title="Acceso Institucional por Roles">
+        <a href="login.html" class="px-3.5 py-2 text-xs sm:text-sm font-bold text-amber-300 hover:text-white bg-[#1a134d] hover:bg-[#251b68] border border-amber-500/40 rounded-xl transition flex items-center gap-1.5 shadow-sm active:scale-95" title="Acceso Institucional por Roles">
           <i data-lucide="shield" class="w-3.5 h-3.5 text-amber-400"></i>
           <span>Acceso</span>
         </a>
@@ -164,29 +152,47 @@
   <!-- ============================================================== -->
   <!-- 2. MAIN CONTENT AREA                                           -->
   <!-- ============================================================== -->
-  <main class="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8 sm:py-10 space-y-8 sm:space-y-10">
+  <main class="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-8 sm:space-y-10">
 
     <!-- HERO PRINCIPAL DE LA CENTRAL -->
-    <section class="text-center max-w-4xl mx-auto space-y-5 pt-2">
-      <!-- Big Central Logo -->
-      <div class="mx-auto w-24 h-24 sm:w-28 sm:h-28 rounded-3xl bg-[#23176d] p-3 border-2 border-amber-400/50 flex items-center justify-center shadow-2xl shadow-[#23176d]/80 transition hover:scale-105">
-        <img src="assets/logo-migato.png" alt="MIGATO - El Gato Briceño" class="w-full h-full object-contain drop-shadow-lg">
-      </div>
-
-      <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-sky-950/80 border border-sky-500/40 text-sky-300 text-xs sm:text-sm font-mono font-bold shadow-sm">
+    <section class="text-center max-w-4xl mx-auto space-y-4 pt-2">
+      <!-- Badge de Estado de Operaciones -->
+      <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-sky-950/80 border border-sky-500/40 text-sky-300 text-xs sm:text-sm font-mono font-bold shadow-md shadow-sky-950/40">
         <i data-lucide="shield-check" class="w-4 h-4 text-sky-400"></i>
         <span>SISTEMA CENTRAL DE OPERACIONES Y MANDO ELECTORAL 2026</span>
       </div>
 
-      <h2 class="font-display text-3xl sm:text-5xl font-black text-white tracking-tight leading-tight uppercase">
+      <!-- Título de Gran Impacto -->
+      <h1 class="font-display text-3xl sm:text-5xl lg:text-6xl font-black text-white tracking-tight leading-tight uppercase">
         MIGATO • SALA SITUACIONAL
-      </h2>
-      <p class="text-xs sm:text-sm font-mono font-bold text-sky-300 uppercase tracking-widest">
-        ESTADO MONAGAS 2026 • 13 MUNICIPIOS • 44 PARROQUIAS
-      </p>
-      <p class="text-sm sm:text-base text-slate-200/90 leading-relaxed max-w-2xl mx-auto font-medium">
+      </h1>
+
+      <!-- Conducción Política y Cobertura Territorial -->
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4 text-xs sm:text-sm font-mono">
+        <span class="font-bold text-amber-300 bg-amber-950/50 border border-amber-500/40 px-3.5 py-1 rounded-full shadow-sm">
+          Comando Regional • Conducción: José Gregorio "El Gato" Briceño
+        </span>
+        <span class="text-sky-300 font-bold uppercase tracking-wider">
+          13 Municipios • 44 Parroquias • Monagas
+        </span>
+      </div>
+
+      <!-- Misión de la Sala -->
+      <p class="text-sm sm:text-base text-slate-200/90 leading-relaxed max-w-2xl mx-auto font-normal pt-1">
         Plataforma unificada para la auditoría electoral de 175 escuelas CNE, control cartográfico satelital 3D, organización de comandos y movilización territorial en el Estado Monagas.
       </p>
+
+      <!-- Botones de Acción Directa Táctica -->
+      <div class="flex items-center justify-center gap-3 pt-2">
+        <a href="#modulos" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold text-xs sm:text-sm shadow-lg shadow-blue-900/40 transition active:scale-95">
+          <i data-lucide="layout-grid" class="w-4 h-4"></i>
+          <span>Explorar Módulos</span>
+        </a>
+        <a href="lamina-monagas/" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#1d164d] hover:bg-[#281e6a] border border-amber-400/40 text-amber-300 hover:text-white font-bold text-xs sm:text-sm shadow-md transition active:scale-95">
+          <i data-lucide="tv" class="w-4 h-4 text-amber-400"></i>
+          <span>Lámina Táctica 120"</span>
+        </a>
+      </div>
     </section>
 
     <!-- ============================================================== -->
