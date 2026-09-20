@@ -10,7 +10,7 @@ export const CATALOGO_MONAGAS = [
     id: "maturin",
     nombre: "Municipio Maturín",
     capital: "Maturín",
-    color: "#f59e0b",
+    color: "#2563eb",
     icon: "building-2",
     parroquias: [
       {
@@ -168,7 +168,7 @@ export const CATALOGO_MONAGAS = [
     id: "piar",
     nombre: "Municipio Piar",
     capital: "Aragua de Maturín",
-    color: "#a855f7",
+    color: "#059669",
     icon: "trees",
     parroquias: [
       {

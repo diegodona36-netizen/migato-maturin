@@ -7,23 +7,124 @@
 import { CATALOGO_MONAGAS } from "./catalogoMonagas.js?v=236";
 
 export const PARISH_COLORS = {
-  "alto-de-los-godos": "#2563eb", // Azul Royal
-  "la-pica": "#ef4444",          // Rojo Carmesí
-  "san-simon": "#10b981",        // Verde Esmeralda
-  "boqueron": "#f59e0b",         // Ámbar Dorado
-  "las-cocuizas": "#8b5cf6",     // Violeta Intenso
-  "santa-cruz": "#06b6d4",       // Cian Océano
-  "san-vicente": "#ea580c",      // Naranja Vivo
-  "jusepin": "#ec4899",          // Rosa Magenta
-  "el-furrial": "#84cc16",       // Verde Lima
-  "el-corozo": "#6366f1",        // Índigo Profundo
-  "san-simon-rural": "#0d9488"   // Teal Petróleo
+  // MATURÍN (11 Parroquias)
+  "san-simon": "#2563eb",         // Azul Royal
+  "alto-de-los-godos": "#7c3aed", // Violeta Intenso
+  "boqueron": "#ea580c",          // Naranja Vivo
+  "las-cocuizas": "#059669",      // Verde Esmeralda
+  "santa-cruz": "#0284c7",        // Cian Océano
+  "san-vicente": "#db2777",       // Rosa Magenta
+  "la-pica": "#dc2626",           // Rojo Carmesí
+  "jusepin": "#d97706",           // Ámbar Dorado
+  "el-furrial": "#65a30d",        // Verde Lima
+  "el-corozo": "#4f46e5",         // Índigo Profundo
+  "san-simon-sur": "#0d9488",     // Teal Petróleo
+  "san-simon-rural": "#0d9488",
+
+  // PIAR (7 Parroquias - Colores variados sin colisión)
+  "aragua": "#059669",            // Verde Esmeralda
+  "capital-piar": "#059669",
+  "aragua-de-maturin": "#059669",
+  "aparicio": "#2563eb",          // Azul Cobalto
+  "chaguaramal": "#d97706",       // Ámbar Dorado
+  "el-pinto": "#dc2626",          // Rojo Carmesí
+  "guanaguana": "#7c3aed",        // Violeta Profundo
+  "la-toscana": "#0284c7",        // Cian Océano
+  "taguaya": "#ea580c",           // Naranja Vivo
+
+  // CEDEÑO (4 Parroquias - 4 colores completamente distintos)
+  "caicara": "#8b5cf6",           // Púrpura Caicara
+  "capital-cedeno": "#8b5cf6",
+  "areo": "#059669",              // Verde Esmeralda
+  "san-felix": "#2563eb",         // Azul Royal
+  "san-felix-cedeno": "#2563eb",
+  "viento-fresco": "#ea580c",     // Naranja Vivo
+
+  // CARIPE (6 Parroquias)
+  "caripe": "#16a34a",            // Verde Montaña
+  "caripe-centro": "#16a34a",
+  "capital-caripe": "#16a34a",
+  "caripe-cabecera": "#16a34a",
+  "el-guacharo": "#8b5cf6",       // Púrpura Cueva
+  "la-guanota": "#0284c7",        // Cian
+  "sabana-de-piedra": "#ea580c",  // Naranja
+  "san-agustin": "#db2777",       // Rosa
+  "teresen": "#d97706",           // Ámbar
+
+  // LIBERTADOR (4 Parroquias)
+  "temblador": "#ea580c",         // Naranja Savana
+  "capital-libertador": "#ea580c",
+  "chaguaramas": "#2563eb",       // Azul
+  "las-alhuacas": "#059669",      // Esmeralda
+  "las-albarradas": "#059669",
+  "tabasca": "#7c3aed",           // Violeta
+
+  // EZEQUIEL ZAMORA (2 Parroquias)
+  "punta-de-mata": "#db2777",     // Rosa Fuerte
+  "capital-ezequiel-zamora": "#db2777",
+  "el-tejero": "#0891b2",         // Cian
+
+  // ACOSTA (2 Parroquias)
+  "san-antonio": "#0891b2",       // Cian Capayacuar
+  "capital-acosta": "#0891b2",
+  "san-antonio-acosta": "#0891b2",
+  "san-francisco": "#16a34a",     // Verde
+  "san-francisco-acosta": "#16a34a",
+
+  // PUNCERES (2 Parroquias)
+  "quiriquire": "#0d9488",        // Teal Petróleo
+  "capital-punceres": "#0d9488",
+  "cachipo": "#ea580c",           // Naranja
+
+  // SANTA BÁRBARA (2 Parroquias)
+  "santa-barbara": "#6366f1",     // Índigo
+  "santa-barbara-centro": "#6366f1",
+  "santa-barbara-parroquia": "#6366f1",
+  "moron": "#059669",             // Verde
+
+  // SOTILLO (2 Parroquias)
+  "barrancas": "#c026d3",         // Fucsia Orinoco
+  "capital-sotillo": "#c026d3",
+  "los-barrancos": "#2563eb",     // Azul Río
+  "los-barrancos-de-fajardo": "#2563eb",
+  "los-barrancos-fajardo": "#2563eb",
+
+  // BOLÍVAR (1 Parroquia)
+  "caripito": "#dc2626",          // Rojo Puerto
+  "bolivar": "#dc2626",
+  "san-antonio-bolivar": "#2563eb",
+  "la-candelaria-bolivar": "#059669",
+
+  // AGUASAY (1 Parroquia)
+  "aguasay": "#e11d48",           // Carmesí Kari'ña
+  "aguasay-centro": "#e11d48",
+  "aguasay-parroquia": "#e11d48",
+
+  // URACOA (1 Parroquia)
+  "uracoa": "#65a30d",            // Verde Lima
+  "uracoa-centro": "#65a30d",
+  "uracoa-parroquia": "#65a30d"
 };
 
 export function getParishColor(parishId) {
-  if (!parishId) return "#38bdf8";
+  if (!parishId) return "#2563eb";
   const cleanId = String(parishId).toLowerCase().replace(/_/g, "-").trim();
-  return PARISH_COLORS[cleanId] || "#38bdf8";
+  if (PARISH_COLORS[cleanId]) return PARISH_COLORS[cleanId];
+  
+  // Normalizar sufijos frecuentes
+  const norm = cleanId.replace(/-parroquia$|-cabecera$|-centro$|-cedeno$|-acosta$|-fajardo$|-de-maturin$/g, '');
+  if (PARISH_COLORS[norm]) return PARISH_COLORS[norm];
+
+  // Paleta de respaldo determinista y diversa (nunca todos azul)
+  const FALLBACK_PALETTE = [
+    "#2563eb", "#059669", "#7c3aed", "#ea580c", "#dc2626", 
+    "#0891b2", "#d97706", "#db2777", "#16a34a", "#4f46e5"
+  ];
+  let hash = 0;
+  for (let i = 0; i < cleanId.length; i++) {
+    hash = (hash * 31 + cleanId.charCodeAt(i)) & 0xffffffff;
+  }
+  return FALLBACK_PALETTE[Math.abs(hash) % FALLBACK_PALETTE.length];
 }
 
 export const MONAGAS_DEMOGRAPHICS = {

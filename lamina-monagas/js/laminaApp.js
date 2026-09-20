@@ -15,7 +15,8 @@ import {
   getSectoresByEje, 
   getSectoresByParish, 
   findSectorById, 
-  ALL_SECTORES_FLAT 
+  ALL_SECTORES_FLAT,
+  MONAGAS_TERRITORIO_COMPLETO
 } from "../../earth-monagas/js/monagasSectoresCatalog.js?v=230";
 import { SUBPARROQUIAS_MONAGAS, SUBPARROQUIAS_GODOS, SECTORES_LAPUENTE } from "../../earth-monagas/js/geoMonagas.js?v=230";
 import { 
@@ -491,7 +492,7 @@ export class LaminaApp {
     const feat = GEO_ESTADO_OFICIAL.features ? GEO_ESTADO_OFICIAL.features[0] : GEO_ESTADO_OFICIAL;
     const rings = this.geoJsonCoordsToLeaflet(feat.geometry);
 
-    this.applySpotlightMask(rings, "#f59e0b", 4);
+    this.applySpotlightMask(rings, "#2563eb", 4);
     this.childEntitiesLayer.clearLayers();
     this.centrosLayer.clearLayers();
 
@@ -527,7 +528,7 @@ export class LaminaApp {
     this.updateHeaderUI("ESTADO MONAGAS", "13 MUNICIPIOS • SALA SITUACIONAL 2026");
     this.renderSideStats({
       title: "ESTADO MONAGAS",
-      color: "#f59e0b",
+      color: "#2563eb",
       type: "Resumen Estadal",
       code: "13 MUNICIPIOS",
       hab: "1,020,000",
@@ -554,7 +555,7 @@ export class LaminaApp {
     auditLogger.logEvent("SELECCION_ESTADO", { entidad: "Estado Monagas" });
   }
 
-  // 2. NIVEL MUNICIPIO (MATURÍN)
+  // 2. NIVEL MUNICIPIO (MATURÍN, PIAR, CEDEÑO, ETC.)
   selectMunicipio(munId = "maturin") {
     this.level = "municipio";
     this.activeMunId = munId;
@@ -568,8 +569,13 @@ export class LaminaApp {
       return id === cleanMunId || id.includes(cleanMunId) || cleanMunId.includes(id);
     });
 
+    const munObj = CATALOGO_MONAGAS.find(m => m.id === cleanMunId) || { id: "maturin", nombre: "Maturín", color: "#2563eb", parroquias: [] };
+    const rawMunName = munObj.nombre || "Maturín";
+    const cleanMunName = rawMunName.replace(/^municipio\s+/i, '').trim();
+    const munColor = munObj.color || (cleanMunId === "maturin" ? "#2563eb" : "#059669");
+
     const rings = feat ? this.geoJsonCoordsToLeaflet(feat.geometry) : [];
-    this.applySpotlightMask(rings, "#0284c7", 3.5);
+    this.applySpotlightMask(rings, munColor, 3.5);
     this.childEntitiesLayer.clearLayers();
     this.centrosLayer.clearLayers();
 
@@ -633,7 +639,7 @@ export class LaminaApp {
     this.updateHeaderUI(`MUNICIPIO ${cleanMunName.toUpperCase()}`, `ESTADO MONAGAS • ${(munObj.parroquias || []).length} PARROQUIAS OFICIALES`);
     this.renderSideStats({
       title: `MUNICIPIO ${cleanMunName.toUpperCase()}`,
-      color: "#0284c7",
+      color: munColor,
       type: "Resumen Municipal Oficial",
       sub: `Estado Monagas • ${(munObj.parroquias || []).length} Parroquias`,
       code: `${(munObj.parroquias || []).length} PARROQUIAS`,
@@ -666,8 +672,8 @@ export class LaminaApp {
    * Obtiene las subparroquias y polígonos comunitarios idénticos al Módulo 4 (Earth Monagas)
    * 1. Consulta primero el almacenamiento local de Módulo 4 (earth_monagas_places_v10_prod)
    * 2. Si no hay datos en caché local, carga los catálogos nativos completos de Módulo 4:
-   *    - SUBPARROQUIAS_MONAGAS (10 subparroquias oficiales con polígono)
-   *    - SUBPARROQUIAS_GODOS (Trazo de alta precisión de La Puente)
+   *    - SUBPARROQUIAS_MONAGAS / SUBPARROQUIAS_GODOS (Alto de Los Godos • La Puente)
+   *    - MONAGAS_TERRITORIO_COMPLETO (San Simón • Casco, Palo Negro, La Muralla y municipios)
    *    - SECTORES_LAPUENTE (18 sectores comunitarios reales con polígono)
    */
   getParishPolygonsData(munId, parishId) {
@@ -725,8 +731,66 @@ export class LaminaApp {
         // Cargar los sectores comunitarios reales de La Puente de Módulo 4
         poligonos = (SECTORES_LAPUENTE || []).map(sec => ({
           ...sec,
+          subParroquiaId: "sub-godos-6",
           vertices: sec.vertices || sec.poligono
         }));
+      }
+    } else {
+      // Fallback a MONAGAS_TERRITORIO_COMPLETO para San Simón y el resto de parroquias
+      const munObj = (MONAGAS_TERRITORIO_COMPLETO || []).find(m => {
+        const mId = String(m.id || "").toLowerCase().replace(/_/g, "-");
+        return mId === cleanMunId || (cleanMunId.includes("maturin") && mId === "maturin");
+      });
+
+      if (munObj && Array.isArray(munObj.parroquias)) {
+        const pObj = munObj.parroquias.find(p => {
+          const pId = String(p.id || "").toLowerCase().replace(/_/g, "-");
+          return pId === cleanPId || pId === resolvedPId || resolveParishId(pId) === resolvedPId;
+        });
+
+        if (pObj) {
+          if (subparroquias.length === 0 && Array.isArray(pObj.subparroquias) && pObj.subparroquias.length > 0) {
+            subparroquias = pObj.subparroquias.map(sp => ({
+              id: sp.id,
+              nombre: sp.nombre,
+              alias: sp.alias || sp.nombre,
+              codigo: sp.codigo || "",
+              colorBorde: sp.colorBorde || "#7c3aed",
+              colorRelleno: sp.colorRelleno || "#a855f7",
+              anchoBorde: sp.anchoBorde || 2.5,
+              vertices: sp.vertices || sp.poligono || [],
+              sectoresCount: Array.isArray(sp.sectores) ? sp.sectores.length : 0
+            }));
+          }
+
+          if (poligonos.length === 0) {
+            const allSecs = [];
+            if (Array.isArray(pObj.subparroquias)) {
+              pObj.subparroquias.forEach(sp => {
+                if (Array.isArray(sp.sectores)) {
+                  sp.sectores.forEach(sec => {
+                    allSecs.push({
+                      ...sec,
+                      subParroquiaId: sp.id,
+                      vertices: sec.vertices || sec.poligono || []
+                    });
+                  });
+                }
+              });
+            }
+            if (Array.isArray(pObj.sectores)) {
+              pObj.sectores.forEach(sec => {
+                allSecs.push({
+                  ...sec,
+                  vertices: sec.vertices || sec.poligono || []
+                });
+              });
+            }
+            if (allSecs.length > 0) {
+              poligonos = allSecs;
+            }
+          }
+        }
       }
     }
 
@@ -840,8 +904,13 @@ export class LaminaApp {
       });
     }
 
+    const munObj = CATALOGO_MONAGAS.find(m => m.id === cleanMunId) || { nombre: "Maturín", parroquias: [] };
+    const rawMunName = munObj.nombre || "Maturín";
+    const cleanMunName = rawMunName.replace(/^municipio\s+/i, '').trim();
+    const totalParrs = (munObj.parroquias || []).length || 11;
+
     const pDem = getParishDemographics(cleanMunId, resolvedPId);
-    this.updateHeaderUI(`PARROQUIA ${cleanPName.toUpperCase()}`, `MUNICIPIO MATURÍN • ESTADO MONAGAS`);
+    this.updateHeaderUI(`PARROQUIA ${cleanPName.toUpperCase()}`, `MUNICIPIO ${cleanMunName.toUpperCase()} • ESTADO MONAGAS`);
     
     // Preparar lista amigable de sectores/ejes para el panel lateral
     let listItems = [];
@@ -867,7 +936,7 @@ export class LaminaApp {
       title: cleanPName.toUpperCase(),
       color: pColor,
       type: "Parroquia Oficial",
-      sub: "Municipio Maturín • Estado Monagas",
+      sub: `Municipio ${cleanMunName} • Estado Monagas`,
       code: "OFICIAL CNE",
       hab: pDem?.habitantes ? pDem.habitantes.toLocaleString("es-VE") : "—",
       vot: pDem?.votantes ? pDem.votantes.toLocaleString("es-VE") : "—",
@@ -876,8 +945,8 @@ export class LaminaApp {
       listTitle: subparroquias.length > 0 ? "Ejes Territoriales / Sub-Parroquias" : "Sectores Censados",
       listCount: listItems.length,
       backBtn: {
-        label: "Ver todas las 11 parroquias",
-        count: 11,
+        label: `Ver todas las ${totalParrs} parroquias`,
+        count: totalParrs,
         onClick: `laminaApp.selectMunicipio('${cleanMunId}')`
       },
       items: listItems
@@ -1011,14 +1080,16 @@ export class LaminaApp {
       this.childEntitiesLayer.addLayer(ejeMarker);
     }
 
-    const cleanPName = formatTitleCase(cleanPId);
+    const munObj = CATALOGO_MONAGAS.find(m => m.id === cleanMunId) || { nombre: "Maturín" };
+    const rawMunName = munObj.nombre || "Maturín";
+    const cleanMunName = rawMunName.replace(/^municipio\s+/i, '').trim();
 
-    this.updateHeaderUI(`${formatTitleCase(eje.nombre).toUpperCase()}`, `PARROQUIA ${cleanPName.toUpperCase()} • MUNICIPIO MATURÍN`);
+    this.updateHeaderUI(`${formatTitleCase(eje.nombre).toUpperCase()}`, `PARROQUIA ${cleanPName.toUpperCase()} • MUNICIPIO ${cleanMunName.toUpperCase()}`);
     this.renderSideStats({
       title: formatTitleCase(eje.nombre).toUpperCase(),
       color: eje.colorBorde || "#a855f7",
       type: "Eje Territorial / Sub-Parroquia",
-      sub: `Parroquia ${cleanPName} • Maturín`,
+      sub: `Parroquia ${cleanPName} • ${cleanMunName}`,
       code: "TERRITORIO",
       hab: eje.habitantes ? eje.habitantes.toLocaleString("es-VE") : "16,162",
       vot: eje.electores ? eje.electores.toLocaleString("es-VE") : "10,728",
@@ -1156,12 +1227,16 @@ export class LaminaApp {
     const cleanPName = formatTitleCase(cleanPId);
     const cleanSecName = formatTitleCase(sec.nombre);
 
-    this.updateHeaderUI(`SECTOR ${cleanSecName.toUpperCase()}`, `PARROQUIA ${cleanPName.toUpperCase()} • MUNICIPIO MATURÍN`);
+    const munObj = CATALOGO_MONAGAS.find(m => m.id === cleanMunId) || { nombre: "Maturín" };
+    const rawMunName = munObj.nombre || "Maturín";
+    const cleanMunName = rawMunName.replace(/^municipio\s+/i, '').trim();
+
+    this.updateHeaderUI(`SECTOR ${cleanSecName.toUpperCase()}`, `PARROQUIA ${cleanPName.toUpperCase()} • MUNICIPIO ${cleanMunName.toUpperCase()}`);
     this.renderSideStats({
       title: `SECTOR ${cleanSecName.toUpperCase()}`,
       color: sec.colorBorde || sec.color || pColor,
       type: "Sector Comunitario",
-      sub: `Parroquia ${cleanPName} • Maturín`,
+      sub: `Parroquia ${cleanPName} • ${cleanMunName}`,
       code: "CENSADO",
       hab: sec.habitantes ? sec.habitantes.toLocaleString("es-VE") : "2,450",
       vot: sec.electores ? sec.electores.toLocaleString("es-VE") : "1,200",
@@ -1391,7 +1466,7 @@ export class LaminaApp {
         rolesContainer.innerHTML = info.roles.map(r => `
           <div class="comando-role-row">
             <div class="flex items-center gap-1.5 min-w-0">
-              <span class="w-1.5 h-1.5 rounded-full bg-amber-500 shrink-0"></span>
+              <span class="w-1.5 h-1.5 rounded-full bg-sky-500 shrink-0"></span>
               <span class="role-title truncate">${r.cargo}:</span>
               <span class="role-person truncate font-semibold text-slate-800">${r.responsable}</span>
             </div>
@@ -1421,12 +1496,12 @@ export class LaminaApp {
       let html = "";
       if (info.subdirectorios && info.subdirectorios.length > 0) {
         html = info.subdirectorios.map(sub => `
-          <div class="territory-row hover:border-amber-400 flex items-center justify-between gap-1">
+          <div class="territory-row hover:border-sky-400 flex items-center justify-between gap-1">
             <div onclick="${sub.onClick}" 
                  class="flex flex-col min-w-0 flex-1 cursor-pointer" 
                  title="Ver comando de ${sub.nombre} • Clic para enfocar">
               <div class="flex items-center gap-1.5">
-                <span class="w-2 h-2 rounded-full bg-amber-500 shrink-0"></span>
+                <span class="w-2 h-2 rounded-full bg-sky-500 shrink-0"></span>
                 <span class="font-bold text-xs text-slate-900 truncate">${sub.nombre}</span>
               </div>
               <span class="text-[10.5px] text-slate-500 truncate ml-3.5">
@@ -1436,11 +1511,11 @@ export class LaminaApp {
             <div class="flex items-center gap-1 shrink-0 ml-1">
               <button type="button" 
                       onclick="event.stopPropagation(); laminaApp.openAsignarModal('${sub.id}', '${sub.nombre.replace(/'/g, "\\'")}', '${this.activeParishId || 'alto-de-los-godos'}')"
-                      class="px-1.5 py-0.5 rounded bg-amber-100 hover:bg-amber-200 text-amber-900 text-[10px] font-black border border-amber-300 shadow-2xs transition active:scale-95 cursor-pointer"
+                      class="px-1.5 py-0.5 rounded bg-sky-100 hover:bg-sky-200 text-sky-900 text-[10px] font-black border border-sky-300 shadow-2xs transition active:scale-95 cursor-pointer"
                       title="Asignar o editar responsable">
                 ✏️ Asignar
               </button>
-              <span class="text-[10px] font-extrabold text-amber-700 bg-amber-50 px-1.5 py-0.5 rounded border border-amber-200">
+              <span class="text-[10px] font-extrabold text-sky-800 bg-sky-50 px-1.5 py-0.5 rounded border border-sky-200">
                 ${sub.parroquias ? `${sub.parroquias} parr.` : sub.centros ? `${sub.centros} centros` : 'Ver'}
               </span>
             </div>
@@ -1505,7 +1580,7 @@ export class LaminaApp {
 
       listEl.innerHTML = municipios.map(m => {
         const demo = getMunicipioDemographics(m.id);
-        const mColor = m.id === "maturin" ? "#0284c7" : "#0d9488";
+        const mColor = m.color || (m.id === "maturin" ? "#2563eb" : "#059669");
         const munCmd = COMANDOS_MUNICIPALES[m.id] || {};
         const respName = munCmd.responsableGeneral || "Coordinador Municipal";
         const totalVot = demo?.votantes ? Number(demo.votantes).toLocaleString("es-VE") : "—";
@@ -1666,16 +1741,23 @@ export class LaminaApp {
         </div>
       `;
 
-      // Nivel 3: Tarjeta Matriz de Eje (Sub-Parroquia 6 • La Puente)
+      // Nivel 3: Tarjeta Matriz de Eje (Sub-Parroquias / Ejes Territoriales)
       subparroquias.forEach(sp => {
         const ejeId = sp.id || "subpar-1788965549962";
         const assignedEje = getAssignedLeader(ejeId);
         const fallbackEje = COMANDOS_SECTORIALES[ejeId] || COMANDOS_SECTORIALES["sub-godos-lapuente"] || {};
-        const ejeRespNombre = assignedEje ? assignedEje.nombre : (fallbackEje.responsableSectorial || "Responsable en Eje La Puente");
+        const ejeRespNombre = assignedEje ? assignedEje.nombre : (fallbackEje.responsableSectorial || `Responsable en Eje ${formatTitleCase(sp.nombre)}`);
         const ejeRespTel = assignedEje ? assignedEje.telefono : (fallbackEje.telefono || "+58 414-7654321");
         const ejeRespCargo = assignedEje ? assignedEje.cargo : (fallbackEje.cargo || "Jefe de Comando Sectorial");
         const isEjeAssigned = !!assignedEje;
         const ejeColor = sp.colorBorde || sp.colorRelleno || "#a855f7";
+
+        // Filtrar sectores pertenecientes a este eje específico
+        const spSectores = poligonos.filter(sec => {
+          if (sec.subParroquiaId && String(sec.subParroquiaId) === String(ejeId)) return true;
+          if (subparroquias.length === 1) return true;
+          return false;
+        });
 
         html += `
           <div class="eje-matrix-card p-2.5 space-y-2 mb-2">
@@ -1687,11 +1769,11 @@ export class LaminaApp {
                 <span class="w-4 h-4 rounded-md text-white flex items-center justify-center text-[10px] font-black shrink-0 shadow-2xs" style="background-color: ${ejeColor};">🛡️</span>
                 <div class="min-w-0">
                   <span class="text-[9px] font-black uppercase tracking-wider text-purple-800 block leading-none">Nivel 3 • Eje Matriz</span>
-                  <strong class="text-xs font-black text-slate-950 truncate block">${sp.nombre || 'Sub-Parroquia 6 • La Puente'}</strong>
+                  <strong class="text-xs font-black text-slate-950 truncate block">${sp.nombre || 'Sub-Parroquia / Eje'}</strong>
                 </div>
               </div>
               <button type="button" 
-                      onclick="event.stopPropagation(); laminaApp.openAsignarModal('${ejeId}', '${(sp.nombre || 'Sub-Parroquia 6 • La Puente').replace(/'/g, "\\'")}', '${cleanPId}')"
+                      onclick="event.stopPropagation(); laminaApp.openAsignarModal('${ejeId}', '${(sp.nombre || 'Sub-Parroquia / Eje').replace(/'/g, "\\'")}', '${cleanPId}')"
                       class="px-2 py-0.5 rounded bg-purple-600 hover:bg-purple-700 text-white font-black text-[9.5px] uppercase shadow-2xs transition active:scale-95 cursor-pointer shrink-0">
                 ✏️ Asignar
               </button>
@@ -1705,7 +1787,7 @@ export class LaminaApp {
               </div>
               <div class="flex flex-col items-end shrink-0 ml-2">
                 <span class="text-[9.5px] font-mono font-extrabold text-sky-800">${ejeRespTel}</span>
-                <span class="px-1.5 py-0.2 rounded text-[8.5px] font-extrabold uppercase ${isEjeAssigned ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}">
+                <span class="px-1.5 py-0.2 rounded text-[8.5px] font-extrabold uppercase ${isEjeAssigned ? 'bg-emerald-100 text-emerald-800' : 'bg-sky-100 text-sky-800'}">
                   ${isEjeAssigned ? '● Activo' : '● En Guardia'}
                 </span>
               </div>
@@ -1719,13 +1801,13 @@ export class LaminaApp {
                   <span>Nivel 4 • Sectores de Base</span>
                 </span>
                 <span class="text-[9.5px] font-bold text-purple-800 bg-white/90 px-2 py-0.2 rounded-full border border-purple-300">
-                  ${poligonos.length} sectores
+                  ${spSectores.length} sectores
                 </span>
               </summary>
 
               <!-- Lista interna con sangría y conectores -->
               <div class="p-1.5 tree-connector-line space-y-1 max-h-64 overflow-y-auto pr-1">
-                ${poligonos.map(sec => {
+                ${spSectores.map(sec => {
                   const assigned = getAssignedLeader(sec.id);
                   const isSelected = this.activeSectorId === sec.id;
                   const secColor = sec.colorBorde || sec.colorRelleno || sec.color || "#0284c7";
@@ -1747,7 +1829,7 @@ export class LaminaApp {
                       <div class="flex items-center gap-1 shrink-0 ml-1">
                         <button type="button" 
                                 onclick="event.stopPropagation(); laminaApp.openAsignarModal('${sec.id}', '${sec.nombre.replace(/'/g, "\\'")}', '${cleanPId}')"
-                                class="px-1.5 py-0.5 rounded bg-slate-100 hover:bg-amber-100 text-slate-700 hover:text-amber-900 text-[9px] font-bold border border-slate-200 shadow-2xs transition active:scale-95"
+                                class="px-1.5 py-0.5 rounded bg-slate-100 hover:bg-sky-100 text-slate-700 hover:text-sky-900 text-[9px] font-bold border border-slate-200 shadow-2xs transition active:scale-95"
                                 title="Asignar dirigente">
                           ✏️
                         </button>
@@ -1761,6 +1843,55 @@ export class LaminaApp {
           </div>
         `;
       });
+
+      if (subparroquias.length === 0 && poligonos.length > 0) {
+        html += `
+          <div class="eje-matrix-card p-2.5 space-y-2 mb-2">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-black uppercase tracking-wider text-slate-800">Sectores Comunitarios (${poligonos.length})</span>
+            </div>
+            <div class="p-1.5 tree-connector-line space-y-1 max-h-64 overflow-y-auto pr-1">
+              ${poligonos.map(sec => {
+                const assigned = getAssignedLeader(sec.id);
+                const isSelected = this.activeSectorId === sec.id;
+                const secColor = sec.colorBorde || sec.colorRelleno || sec.color || "#0284c7";
+                const secVot = sec.votantes ? `${Number(sec.votantes).toLocaleString("es-VE")} elect.` : (sec.casas ? `${sec.casas} casas` : "");
+
+                return `
+                  <div onclick="laminaApp.selectSector('${sec.id}', '${cleanPId}', '${cleanMunId}')"
+                       class="sector-tree-row ${isSelected ? 'active' : ''}"
+                       title="Clic para enfocar ${sec.nombre}">
+                    <div class="flex items-center gap-1.5 min-w-0 flex-1">
+                      <span class="w-2.5 h-2.5 rounded-full shrink-0 border border-black/15 shadow-2xs" style="background-color: ${secColor};"></span>
+                      <div class="flex flex-col min-w-0">
+                        <span class="font-bold text-[11px] text-slate-900 truncate leading-tight">${formatTitleCase(sec.nombre)}</span>
+                        <span class="text-[9.5px] text-slate-500 truncate">
+                          ${assigned ? `<span class="text-slate-700 font-semibold">👤 ${assigned.nombre}</span>` : '<span class="text-slate-400 italic">○ Vacante</span>'}
+                        </span>
+                      </div>
+                    </div>
+                    <div class="flex items-center gap-1 shrink-0 ml-1">
+                      <button type="button" 
+                              onclick="event.stopPropagation(); laminaApp.openAsignarModal('${sec.id}', '${sec.nombre.replace(/'/g, "\\'")}', '${cleanPId}')"
+                              class="px-1.5 py-0.5 rounded bg-slate-100 hover:bg-sky-100 text-slate-700 hover:text-sky-900 text-[9px] font-bold border border-slate-200 shadow-2xs transition active:scale-95"
+                              title="Asignar dirigente">
+                        ✏️
+                      </button>
+                      ${secVot ? `<span class="text-[9px] font-mono text-slate-400 shrink-0 font-bold">${secVot}</span>` : ''}
+                    </div>
+                  </div>
+                `;
+              }).join("")}
+            </div>
+          </div>
+        `;
+      } else if (subparroquias.length === 0 && poligonos.length === 0) {
+        html += `
+          <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 text-center">
+            <span class="text-xs text-slate-500 font-medium">No hay subdivisiones registradas para esta parroquia</span>
+          </div>
+        `;
+      }
 
       listEl.innerHTML = html;
     }
