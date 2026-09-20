@@ -1905,6 +1905,103 @@ export class LaminaApp {
       window.lucide.createIcons();
     }
   }
+
+  /* ========================================================================
+     EXPORTACIÓN Y CAPTURA DE PANTALLA HD (PNG 16:9 / 120 PULGADAS)
+     ======================================================================== */
+
+  openExportModal() {
+    const modal = document.getElementById("modal-exportar-lamina");
+    if (modal) {
+      modal.classList.remove("hidden");
+      modal.classList.add("flex");
+      if (window.lucide && typeof window.lucide.createIcons === "function") {
+        window.lucide.createIcons();
+      }
+    }
+  }
+
+  closeExportModal() {
+    const modal = document.getElementById("modal-exportar-lamina");
+    if (modal) {
+      modal.classList.add("hidden");
+      modal.classList.remove("flex");
+    }
+  }
+
+  async capturarPantallaHD() {
+    const btn = document.getElementById("btn-do-capture-png");
+    const originalContent = btn ? btn.innerHTML : "";
+    if (btn) {
+      btn.innerHTML = `<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i><span>Capturando...</span>`;
+      if (window.lucide && typeof window.lucide.createIcons === "function") {
+        window.lucide.createIcons();
+      }
+    }
+
+    try {
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getDisplayMedia) {
+        alert("La captura automática no está soportada en este navegador.\n\nAlternativa recomendada: Presiona Win + Shift + S (Windows) o Cmd + Shift + 4 (Mac) para capturar la lámina directamente.");
+        return;
+      }
+
+      // Ocultar modal para que no interfiera en la toma de imagen
+      this.closeExportModal();
+      await new Promise(r => setTimeout(r, 150));
+
+      const stream = await navigator.mediaDevices.getDisplayMedia({
+        video: {
+          displaySurface: "browser",
+          width: { ideal: 3840 },
+          height: { ideal: 2160 }
+        },
+        audio: false
+      });
+
+      const video = document.createElement("video");
+      video.srcObject = stream;
+      video.muted = true;
+      await video.play();
+
+      // Esperar brevemente a que el fotograma esté nítido
+      await new Promise(r => setTimeout(r, 350));
+
+      const canvas = document.createElement("canvas");
+      canvas.width = video.videoWidth || window.innerWidth;
+      canvas.height = video.videoHeight || window.innerHeight;
+      const ctx = canvas.getContext("2d");
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+      // Detener transmisión de pantalla inmediatamente
+      stream.getTracks().forEach(t => t.stop());
+
+      // Generar nombre descriptivo oficial
+      const d = new Date().toISOString().slice(0, 10);
+      const entity = (this.activeSectorName || this.activeSubParishName || this.activeParishId || this.activeMunId || "Monagas").replace(/[^a-zA-Z0-9_-]/g, "_");
+      const filename = `Lamina_MIGATO_${entity}_${d}.png`;
+
+      // Descarga de archivo PNG
+      const a = document.createElement("a");
+      a.href = canvas.toDataURL("image/png");
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    } catch (err) {
+      console.warn("Captura asistida:", err);
+      // Si el usuario canceló la selección de ventana, reabrimos el modal
+      if (err.name !== "NotAllowedError") {
+        this.openExportModal();
+      }
+    } finally {
+      if (btn) {
+        btn.innerHTML = originalContent;
+        if (window.lucide && typeof window.lucide.createIcons === "function") {
+          window.lucide.createIcons();
+        }
+      }
+    }
+  }
 }
 
 // Inicialización Segura y Exposición Global para Pantallas de Alta Resolución
