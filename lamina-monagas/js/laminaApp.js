@@ -82,6 +82,11 @@ export class LaminaApp {
     this.childEntitiesLayer = null;
     this.centrosLayer = null;
 
+    this.maskEnabled = false; // Velo blanco desactivado por defecto (muestra satélite completo y limpio)
+    this.lastSpotlightRings = null;
+    this.lastSpotlightColor = "#2563eb";
+    this.lastSpotlightWeight = 3.5;
+
     this.activeTab = "stats"; // "stats" | "symbols"
     this.showCentros = true;
 
@@ -118,6 +123,12 @@ export class LaminaApp {
       { maxZoom: 21, maxNativeZoom: 20, attribution: "Google Satélite Híbrido" }
     );
 
+    // Satélite Esri World Imagery (Respaldo Inmediato de Alta Fidelidad)
+    const esriSatellite = L.tileLayer(
+      "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+      { maxZoom: 21, maxNativeZoom: 17, attribution: "Esri World Imagery" }
+    );
+
     this.map = L.map("map-lamina", {
       center: [9.7469, -63.1812],
       zoom: 12,
@@ -125,7 +136,7 @@ export class LaminaApp {
       renderer: canvasRenderer,
       zoomControl: false,
       attributionControl: false,
-      layers: [googleHybrid]
+      layers: [esriSatellite, googleHybrid]
     });
 
     // Control de zoom discreto abajo a la izquierda
@@ -150,6 +161,14 @@ export class LaminaApp {
     this.boundaryLayer = L.layerGroup().addTo(this.map);
     this.childEntitiesLayer = L.layerGroup().addTo(this.map);
     this.centrosLayer = L.layerGroup().addTo(this.map);
+
+    // Recalibración reactiva del lienzo Leaflet para asegurar renderizado inmediato de los tiles
+    setTimeout(() => {
+      if (this.map) this.map.invalidateSize();
+    }, 150);
+    window.addEventListener("resize", () => {
+      if (this.map) this.map.invalidateSize();
+    });
   }
 
   parseURLParams() {
@@ -447,21 +466,28 @@ export class LaminaApp {
 
     if (!normalizedRings || normalizedRings.length === 0) return;
 
-    // 1. Polígono Inverso: WORLD_BOX exterior + anillos interiores recortados
-    const maskPoly = L.polygon([WORLD_BOX, ...normalizedRings], {
-      pane: "spotlightPane",
-      fillColor: "#ffffff",
-      fillOpacity: 0.96,
-      color: "#ffffff",
-      weight: 2,
-      opacity: 1.0,
-      fillRule: "evenodd",
-      interactive: false,
-      renderer: this.spotlightRenderer
-    });
-    this.maskLayer.addLayer(maskPoly);
+    this.lastSpotlightRings = normalizedRings;
+    this.lastSpotlightColor = strokeColor;
+    this.lastSpotlightWeight = strokeWeight;
 
-    // 2. Línea delimitadora nítida en el perímetro del territorio abierto
+    // 1. Polígono Inverso: WORLD_BOX exterior + anillos interiores recortados (Solo cuando el usuario activa el Velo Blanco)
+    if (this.maskEnabled) {
+      const maskPoly = L.polygon([WORLD_BOX, ...normalizedRings], {
+        pane: "spotlightPane",
+        fillColor: "#ffffff",
+        fillOpacity: 0.88,
+        color: "#ffffff",
+        weight: 1.5,
+        opacity: 0.9,
+        fillRule: "evenodd",
+        noClip: true,
+        interactive: false,
+        renderer: this.spotlightRenderer
+      });
+      this.maskLayer.addLayer(maskPoly);
+    }
+
+    // 2. Línea delimitadora nítida en el perímetro del territorio abierto (Siempre activa y visible)
     normalizedRings.forEach(ring => {
       const bPoly = L.polygon(ring, {
         pane: "spotlightPane",
@@ -475,6 +501,32 @@ export class LaminaApp {
       });
       this.boundaryLayer.addLayer(bPoly);
     });
+  }
+
+  toggleMask() {
+    this.maskEnabled = !this.maskEnabled;
+    this.updateMaskButtonUI();
+    if (this.lastSpotlightRings) {
+      this.applySpotlightMask(this.lastSpotlightRings, this.lastSpotlightColor, this.lastSpotlightWeight);
+    }
+  }
+
+  updateMaskButtonUI() {
+    const btn = document.getElementById("btn-toggle-mask");
+    if (!btn) return;
+    const txt = btn.querySelector(".mask-btn-text");
+    if (this.maskEnabled) {
+      btn.classList.remove("bg-slate-100", "text-slate-700", "border-slate-300");
+      btn.classList.add("bg-sky-600", "text-white", "border-sky-500");
+      if (txt) txt.textContent = "Velo: ON";
+    } else {
+      btn.classList.remove("bg-sky-600", "text-white", "border-sky-500");
+      btn.classList.add("bg-slate-100", "text-slate-700", "border-slate-300");
+      if (txt) txt.textContent = "Velo: OFF";
+    }
+    if (window.lucide && typeof window.lucide.createIcons === "function") {
+      window.lucide.createIcons();
+    }
   }
 
   // Helper para convertir coordenadas GeoJSON [lng, lat] a Leaflet [lat, lng]

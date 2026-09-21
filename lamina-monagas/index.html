@@ -49,7 +49,7 @@
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700;800&family=Outfit:wght@500;600;700;800;900&family=Public+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 
   <!-- Estilos de Lámina Ejecutiva 120" -->
-  <link rel="stylesheet" href="css/lamina.css?v=273" />
+  <link rel="stylesheet" href="css/lamina.css?v=275" />
 
   <!-- Anti-Cache Meta Tags -->
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate, max-age=0" />
@@ -101,6 +101,11 @@
       <button type="button" id="btn-header-capture-png" onclick="laminaApp.capturarPantallaHD()" class="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs flex items-center gap-1.5 shadow-sm transition active:scale-95 cursor-pointer shrink-0" title="Capturar y Descargar Lámina en Imagen PNG HD (1 Clic)">
         <i data-lucide="download" class="w-4 h-4 text-emerald-200"></i>
         <span>Descargar PNG</span>
+      </button>
+
+      <button type="button" id="btn-toggle-mask" onclick="window.laminaApp && window.laminaApp.toggleMask()" class="px-2.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300 font-bold text-xs flex items-center gap-1.5 transition cursor-pointer shrink-0" title="Activar / Desactivar Velo Blanco Exterior">
+        <i data-lucide="sun" class="w-3.5 h-3.5 text-amber-500"></i>
+        <span class="mask-btn-text">Velo: OFF</span>
       </button>
 
       <button type="button" id="btn-toggle-whiteboard" onclick="window.laminaApp && window.laminaApp.whiteboard && window.laminaApp.whiteboard.toggle()" class="w-8 h-8 rounded-lg bg-slate-100/90 hover:bg-slate-200 text-slate-600 hover:text-slate-900 border border-slate-300 flex items-center justify-center transition cursor-pointer shrink-0 shadow-xs" title="Lápiz Táctico (Escribir, Dibujar y Subrayar en el Mapa)">
@@ -623,7 +628,7 @@
 
   <!-- 5. AUTENTICACIÓN Y CONTROLADOR PRINCIPAL DEL MÓDULO -->
   <script src="../js/auth.js"></script>
-  <script type="module" src="js/laminaApp.js?v=273"></script>
+  <script type="module" src="js/laminaApp.js?v=275"></script>
   <script>
     if (window.lucide && typeof window.lucide.createIcons === 'function') {
       window.lucide.createIcons();
