@@ -371,3 +371,82 @@ body.high-contrast-mode .bg-amber-950 {
     break-inside: avoid;
   }
 }
+
+/* ============================================================
+   Utilidades Responsivas Globales
+   Prevención de rotura por texto largo en botones, cards y grids
+   ============================================================ */
+
+.btn-responsive {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  white-space: nowrap;
+  min-width: 0;
+}
+
+.btn-responsive span,
+.btn-responsive .btn-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+
+.card-text {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.truncate-fallback {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+
+/* Asegurar que hijos de flex/grid con texto se contraigan */
+.min-w-0-fix {
+  min-width: 0;
+}
+
+/* Tabla responsiva con scroll horizontal controlado */
+.table-responsive {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.table-responsive table {
+  min-width: 480px;
+  width: 100%;
+}
+
+/* Escala tipográfica adaptativa por breakpoint para elementos interactivos */
+@media (max-width: 480px) {
+  .btn-responsive,
+  .card-text,
+  .kpi-label {
+    font-size: 0.8125rem;
+  }
+  .btn-responsive {
+    padding: 0.5rem 0.75rem;
+  }
+}
+
+@media (min-width: 481px) and (max-width: 1024px) {
+  .btn-responsive,
+  .card-text,
+  .kpi-label {
+    font-size: 0.875rem;
+  }
+}
+
+@media (min-width: 1025px) {
+  .btn-responsive,
+  .card-text,
+  .kpi-label {
+    font-size: 1rem;
+  }
+}
+
