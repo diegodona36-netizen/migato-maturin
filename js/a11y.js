@@ -80,12 +80,12 @@
   }
 
   window.migatoA11y = {
-    toggleHighContrast: toggleHighContrast,
-    isHighContrast: isHighContrast,
+    toggleHighContrast: function () {},
+    isHighContrast: function () { return false; },
     init: init,
     trapFocus: trapFocus,
     restoreFocus: restoreFocus,
-    prefersReducedMotion: window.matchMedia('(prefers-reduced-motion: reduce)').matches,
+    prefersReducedMotion: (typeof window !== 'undefined' && window.matchMedia) ? window.matchMedia('(prefers-reduced-motion: reduce)').matches : false,
   };
 
   if (document.readyState === 'loading') {

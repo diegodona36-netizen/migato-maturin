@@ -97,7 +97,45 @@ export class LaminaApp {
     this.initMap();
     this.initUIListeners();
     this.initWhiteboard();
-    this.parseURLParams();
+
+    // Medición exacta y carga de entidad territorial tras el primer layout del DOM
+    setTimeout(() => {
+      if (this.map) {
+        this.map.invalidateSize();
+      }
+      this.parseURLParams();
+    }, 60);
+  }
+
+  safeFlyToBounds(bounds, options = {}) {
+    if (!this.map || !bounds) return;
+    try {
+      this.map.invalidateSize();
+      const size = this.map.getSize();
+      if (!size || size.x < 100 || size.y < 100) {
+        const center = (bounds && typeof bounds.getCenter === "function") ? bounds.getCenter() : [9.7469, -63.1812];
+        this.map.setView(center, options.fallbackZoom || 12);
+        return;
+      }
+      const pad = options.padding || [40, 40];
+      const targetZoom = this.map.getBoundsZoom(bounds, false, L.point(pad));
+      if (isNaN(targetZoom) || !isFinite(targetZoom) || targetZoom <= 0) {
+        const center = (bounds && typeof bounds.getCenter === "function") ? bounds.getCenter() : [9.7469, -63.1812];
+        this.map.setView(center, options.fallbackZoom || 12);
+        return;
+      }
+      this.map.flyToBounds(bounds, {
+        padding: pad,
+        maxZoom: options.maxZoom || 16,
+        duration: options.duration || 1.0
+      });
+    } catch (e) {
+      console.warn("safeFlyToBounds fallback:", e);
+      try {
+        const center = (bounds && typeof bounds.getCenter === "function") ? bounds.getCenter() : [9.7469, -63.1812];
+        this.map.setView(center, options.fallbackZoom || 12);
+      } catch (err) {}
+    }
   }
 
   initWhiteboard() {
@@ -115,7 +153,7 @@ export class LaminaApp {
 
   initMap() {
     // Canvas acelerado por GPU
-    const canvasRenderer = L.canvas({ padding: 0.5 });
+    this.canvasRenderer = L.canvas({ padding: 0.5, tolerance: 0 });
 
     // Satélite Google Híbrido HD Oficial
     const googleHybrid = L.tileLayer(
@@ -133,10 +171,17 @@ export class LaminaApp {
       center: [9.7469, -63.1812],
       zoom: 12,
       preferCanvas: true,
-      renderer: canvasRenderer,
+      renderer: this.canvasRenderer,
       zoomControl: false,
       attributionControl: false,
-      layers: [esriSatellite, googleHybrid]
+      layers: [googleHybrid]
+    });
+
+    // En caso de incidencia de red con Google Satélite, activar respaldo Esri World Imagery
+    googleHybrid.on("tileerror", () => {
+      if (!this.map.hasLayer(esriSatellite)) {
+        this.map.addLayer(esriSatellite);
+      }
     });
 
     // Control de zoom discreto abajo a la izquierda
@@ -570,6 +615,8 @@ export class LaminaApp {
       const munColor = f.properties?.color || (CATALOGO_MONAGAS || []).find(m => m.id === mId)?.color || "#0284c7";
       const mName = f.properties?.nombre || "Municipio";
       const layer = L.geoJSON(f, {
+        renderer: this.canvasRenderer,
+        interactive: true,
         style: {
           color: munColor,
           weight: 2.2,
@@ -589,8 +636,10 @@ export class LaminaApp {
     if (rings && rings.length > 0) {
       try {
         const bounds = L.polygon(rings).getBounds();
-        this.map.flyToBounds(bounds, { padding: [40, 40], duration: 1.2 });
-      } catch(e){}
+        this.safeFlyToBounds(bounds, { padding: [30, 30], duration: 1.0, fallbackZoom: 9.5 });
+      } catch(e){
+        try { this.map.setView([9.7469, -63.1812], 9.5); } catch(err){}
+      }
     }
 
     this.updateHeaderUI("ESTADO MONAGAS", "13 MUNICIPIOS • SALA SITUACIONAL 2026");
@@ -660,6 +709,8 @@ export class LaminaApp {
       const pName = f.properties?.nombre || "Parroquia";
 
       const layer = L.geoJSON(f, {
+        renderer: this.canvasRenderer,
+        interactive: true,
         style: {
           color: pColor,
           weight: 2,
@@ -695,8 +746,10 @@ export class LaminaApp {
     if (rings && rings.length > 0) {
       try {
         const bounds = Array.isArray(rings[0][0]) ? L.polygon(rings[0]).getBounds() : L.polygon(rings).getBounds();
-        this.map.flyToBounds(bounds, { padding: [40, 40], duration: 1.2 });
-      } catch(e){}
+        this.safeFlyToBounds(bounds, { padding: [40, 40], duration: 1.0, fallbackZoom: 12 });
+      } catch(e){
+        try { this.map.setView([9.7469, -63.1812], 12); } catch(err){}
+      }
     }
 
     const munDem = getMunicipioDemographics(cleanMunId);
@@ -895,8 +948,10 @@ export class LaminaApp {
       try {
         const bounds = Array.isArray(rings[0][0]) ? L.polygon(rings[0]).getBounds() : L.polygon(rings).getBounds();
         this.currentParishBounds = bounds;
-        this.map.flyToBounds(bounds, { padding: [40, 40], duration: 1.0 });
-      } catch(e){}
+        this.safeFlyToBounds(bounds, { padding: [40, 40], duration: 1.0, fallbackZoom: 13 });
+      } catch(e){
+        try { this.map.setView([9.7469, -63.1812], 13); } catch(err){}
+      }
     }
 
     const rawPName = feat?.properties?.nombre || (CATALOGO_MONAGAS.find(m => m.id === cleanMunId)?.parroquias || []).find(p => p.id === cleanPId)?.nombre || cleanPId;
@@ -1064,10 +1119,10 @@ export class LaminaApp {
       if (curZoom >= 14.5 && ejeBounds.contains(this.map.getCenter())) {
         this.map.panTo(ejeBounds.getCenter(), { duration: 0.6 });
       } else {
-        this.map.flyToBounds(ejeBounds, { padding: [45, 45], maxZoom: 15.5, duration: 0.9 });
+        this.safeFlyToBounds(ejeBounds, { padding: [45, 45], maxZoom: 15.5, duration: 0.9, fallbackZoom: 14 });
       }
     } else if (this.currentParishBounds && this.map.getZoom() < 12.5) {
-      this.map.flyToBounds(this.currentParishBounds, { padding: [40, 40], duration: 0.8 });
+      this.safeFlyToBounds(this.currentParishBounds, { padding: [40, 40], duration: 0.8, fallbackZoom: 13 });
     }
 
     // 1. DIBUJAR TODAS LAS SUBPARROQUIAS (LA SELECCIONADA DESTACADA, LAS DEMÁS DE FONDO)
@@ -1232,12 +1287,12 @@ export class LaminaApp {
       if (curZoom >= 16 && secBounds.contains(this.map.getCenter())) {
         this.map.panTo(secBounds.getCenter(), { duration: 0.5 });
       } else {
-        this.map.flyToBounds(secBounds, { padding: [55, 55], maxZoom: 17, duration: 0.8 });
+        this.safeFlyToBounds(secBounds, { padding: [55, 55], maxZoom: 17, duration: 0.8, fallbackZoom: 16 });
       }
     } else if (markerPos) {
-      this.map.flyTo(markerPos, Math.max(this.map.getZoom(), 16), { duration: 0.8 });
+      try { this.map.flyTo(markerPos, Math.max(this.map.getZoom(), 16), { duration: 0.8 }); } catch(e){ this.map.setView(markerPos, 16); }
     } else if (this.currentParishBounds && this.map.getZoom() < 12.5) {
-      this.map.flyToBounds(this.currentParishBounds, { padding: [40, 40], duration: 0.8 });
+      this.safeFlyToBounds(this.currentParishBounds, { padding: [40, 40], duration: 0.8, fallbackZoom: 13 });
     }
 
     // 1. Dibujar las subparroquias de fondo con trazo sutil
