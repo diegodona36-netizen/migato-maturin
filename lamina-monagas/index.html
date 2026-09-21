@@ -36,7 +36,7 @@
   <script src="../centros-maturin/js/centrosData.js"></script>
 
   <!-- Estilos de Lámina Ejecutiva 120" -->
-  <link rel="stylesheet" href="css/lamina.css?v=280" />
+  <link rel="stylesheet" href="css/lamina.css?v=281" />
 
   <!-- Anti-Cache Meta Tags -->
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate, max-age=0" />
@@ -90,6 +90,20 @@
       <div class="hidden 2xl:inline-flex items-center gap-1 px-1.5 py-0.5 rounded-lg bg-emerald-50 text-emerald-700 font-bold text-[10px] border border-emerald-200 shrink-0">
         <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
         <span>EN VIVO</span>
+      </div>
+
+      <!-- Selector de Tipo de Mapa: Satélite HD vs Plano Cartográfico -->
+      <div id="basemap-switcher" class="basemap-switcher-container shrink-0" role="group" aria-label="Tipo de Mapa Base">
+        <button type="button" id="btn-basemap-sat" onclick="window.laminaApp && window.laminaApp.setBaseMapType('satelite')" class="basemap-switcher-btn active" title="Vista Fotográfica Satelital Híbrida HD (Tecla M)">
+          <i data-lucide="satellite" class="w-3.5 h-3.5 text-sky-600"></i>
+          <span class="hidden sm:inline">Satélite HD</span>
+          <span class="sm:hidden">HD</span>
+        </button>
+        <button type="button" id="btn-basemap-plano" onclick="window.laminaApp && window.laminaApp.setBaseMapType('plano')" class="basemap-switcher-btn" title="Vista Plano Cartográfico Callejero (Tecla M)">
+          <i data-lucide="map" class="w-3.5 h-3.5 text-indigo-600"></i>
+          <span class="hidden sm:inline">Plano Cartográfico</span>
+          <span class="sm:hidden">Plano</span>
+        </button>
       </div>
 
       <button type="button" onclick="laminaApp.openExportModal()" class="px-2.5 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs flex items-center gap-1.5 shadow-sm transition active:scale-95 cursor-pointer shrink-0" title="Exportar o Capturar Lámina en Imagen HD / PDF">
@@ -561,7 +575,7 @@
 
   <!-- 5. AUTENTICACIÓN Y CONTROLADOR PRINCIPAL DEL MÓDULO -->
   <script src="../js/auth.js"></script>
-  <script type="module" src="js/laminaApp.js?v=280"></script>
+  <script type="module" src="js/laminaApp.js?v=281"></script>
   <script>
     if (window.lucide && typeof window.lucide.createIcons === 'function') {
       window.lucide.createIcons();

@@ -75,6 +75,10 @@ export class LaminaApp {
     this.currentParishBounds = null;
     this.currentParishRings = null;
 
+    // Capas Base y Modo de Mapa
+    this.baseLayers = {};
+    this.currentBaseLayer = "satelite";
+
     // Capas Leaflet
     this.maskLayer = null;
     this.boundaryLayer = null;
@@ -92,6 +96,7 @@ export class LaminaApp {
     this.initUIListeners();
     setTimeout(() => {
       if (this.map) this.map.invalidateSize();
+      this.updateBaseMapUI();
       this.parseURLParams();
     }, 50);
   }
@@ -106,6 +111,26 @@ export class LaminaApp {
       { maxZoom: 21, maxNativeZoom: 20, attribution: "" }
     );
 
+    // Plano Cartográfico Google (Calles, avenidas, urbanizaciones y manzanas)
+    const googleRoadmap = L.tileLayer(
+      "https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}",
+      { maxZoom: 21, maxNativeZoom: 20, attribution: "" }
+    );
+
+    this.baseLayers = {
+      satelite: googleHybrid,
+      plano: googleRoadmap
+    };
+
+    let savedBasemap = "satelite";
+    try {
+      savedBasemap = localStorage.getItem("migato_lamina_basemap") || "satelite";
+      if (!this.baseLayers[savedBasemap]) savedBasemap = "satelite";
+    } catch (e) {
+      savedBasemap = "satelite";
+    }
+    this.currentBaseLayer = savedBasemap;
+
     this.map = L.map("map-lamina", {
       center: [9.7469, -63.1812],
       zoom: 12,
@@ -113,7 +138,7 @@ export class LaminaApp {
       renderer: canvasRenderer,
       zoomControl: false,
       attributionControl: false,
-      layers: [googleHybrid]
+      layers: [this.baseLayers[savedBasemap]]
     });
 
     // Control de zoom discreto abajo a la izquierda
@@ -145,6 +170,11 @@ export class LaminaApp {
 
   parseURLParams() {
     const params = new URLSearchParams(window.location.search);
+    const bm = params.get("basemap") || params.get("mapa");
+    if (bm && (bm === "plano" || bm === "satelite")) {
+      this.setBaseMapType(bm);
+    }
+
     const m = params.get("m") || "maturin";
     const p = params.get("p");
     const sp = params.get("sp");
@@ -252,6 +282,14 @@ export class LaminaApp {
     });
     window.addEventListener("focus", () => {
       this.refreshCurrentView();
+    });
+
+    // Atajo de teclado para alternar capa base: Tecla 'M' (Satélite HD vs Plano Cartográfico)
+    window.addEventListener("keydown", (e) => {
+      if (["INPUT", "TEXTAREA", "SELECT"].includes(document.activeElement?.tagName)) return;
+      if (e.key === "m" || e.key === "M") {
+        this.toggleBaseMapType();
+      }
     });
   }
 
@@ -374,6 +412,61 @@ export class LaminaApp {
       });
     } else {
       document.exitFullscreen().catch(err => {});
+    }
+  }
+
+  /* ========================================================================
+     SELECTOR DE CAPA BASE: SATÉLITE HD VS PLANO CARTOGRÁFICO
+     ======================================================================== */
+
+  setBaseMapType(type) {
+    if (!this.map || !this.baseLayers || !this.baseLayers[type]) return;
+    if (type === this.currentBaseLayer && this.map.hasLayer(this.baseLayers[type])) {
+      this.updateBaseMapUI();
+      return;
+    }
+
+    const oldLayer = this.baseLayers[this.currentBaseLayer];
+    const newLayer = this.baseLayers[type];
+
+    if (oldLayer && this.map.hasLayer(oldLayer)) {
+      this.map.removeLayer(oldLayer);
+    }
+    if (newLayer && !this.map.hasLayer(newLayer)) {
+      newLayer.addTo(this.map);
+      if (typeof newLayer.bringToBack === "function") {
+        newLayer.bringToBack();
+      }
+    }
+
+    this.currentBaseLayer = type;
+    try {
+      localStorage.setItem("migato_lamina_basemap", type);
+    } catch (e) {}
+
+    this.updateBaseMapUI();
+  }
+
+  toggleBaseMapType() {
+    const next = this.currentBaseLayer === "satelite" ? "plano" : "satelite";
+    this.setBaseMapType(next);
+  }
+
+  updateBaseMapUI() {
+    const btnSat = document.getElementById("btn-basemap-sat");
+    const btnPlano = document.getElementById("btn-basemap-plano");
+    if (!btnSat || !btnPlano) return;
+
+    if (this.currentBaseLayer === "satelite") {
+      btnSat.classList.add("active");
+      btnPlano.classList.remove("active");
+    } else {
+      btnPlano.classList.add("active");
+      btnSat.classList.remove("active");
+    }
+
+    if (window.lucide && typeof window.lucide.createIcons === "function") {
+      window.lucide.createIcons();
     }
   }
 

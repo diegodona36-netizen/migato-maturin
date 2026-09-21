@@ -127,6 +127,45 @@ html, body {
   justify-self: end;
 }
 
+/* Selector de Mapa Base: Satélite HD vs Plano Cartográfico */
+.basemap-switcher-container {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px;
+  background-color: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  border-radius: 12px;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+.basemap-switcher-btn {
+  padding: 4px 10px;
+  border-radius: 9px;
+  font-size: 11px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: #475569;
+  background: transparent;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.15s ease-in-out;
+  user-select: none;
+  line-height: 1.2;
+}
+
+.basemap-switcher-btn:hover {
+  color: #0f172a;
+}
+
+.basemap-switcher-btn.active {
+  background-color: #ffffff;
+  color: #0f172a;
+  border-color: rgba(203, 213, 225, 0.9);
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.12), 0 1px 2px rgba(15, 23, 42, 0.06);
+}
+
 /* Migas de pan de navegación jerárquica blindadas contra quiebre vertical */
 #lamina-breadcrumbs {
   display: flex;
@@ -482,6 +521,7 @@ html, body {
   #btn-fullscreen,
   #btn-toggle-minimize-panel,
   #btn-open-asignar-modal,
+  .basemap-switcher-container,
   .skip-link {
     display: none !important;
   }
