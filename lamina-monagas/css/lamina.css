@@ -28,7 +28,7 @@ html, body {
   padding: 0;
   overflow: hidden;
   font-family: var(--font-sans);
-  background-color: #020617;
+  background-color: #ffffff;
   color: #0f172a;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -49,24 +49,11 @@ html, body {
 
 #map-lamina {
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  width: 100vw;
-  height: 100vh;
-  background-color: #020617;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #ffffff;
   z-index: 1;
-}
-
-.leaflet-container canvas {
-  will-change: transform;
-  image-rendering: -webkit-optimize-contrast;
-  image-rendering: crisp-edges;
-  pointer-events: auto !important;
-}
-.leaflet-container canvas.leaflet-interactive {
-  cursor: pointer !important;
 }
 
 /* Tooltips ejecutivos flotantes nítidos para entidades territoriales */
@@ -226,31 +213,26 @@ html, body {
   background: #f8fafc;
   border: 1px solid #e2e8f0;
   border-radius: 12px;
-  padding: 9px 12px 11px 12px;
+  padding: 8px 10px;
   display: flex;
   flex-direction: column;
   box-shadow: 0 1px 2px rgba(0,0,0,0.04);
-  overflow: visible;
 }
 .metric-label {
-  font-size: 9px;
+  font-size: 8.5px;
   font-weight: 900;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: #64748b;
-  margin-bottom: 3px;
-  line-height: 1.3;
-  overflow: visible;
+  margin-bottom: 2px;
 }
 .metric-value {
   font-size: 15px;
   font-weight: 900;
   color: #0f172a;
   white-space: nowrap;
-  overflow: visible;
-  line-height: 1.4;
-  padding-bottom: 2px;
-  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* Lista interactiva de entidades y sectores con colores asignados */
@@ -280,14 +262,12 @@ html, body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 8px 12px;
+  padding: 6px 10px;
   border-radius: 10px;
   border: 1px solid #e2e8f0;
   background: #ffffff;
   cursor: pointer;
-  margin-bottom: 5px;
-  line-height: 1.4;
-  overflow: visible;
+  margin-bottom: 4px;
   transition: all 0.15s ease;
 }
 .territory-row:hover {
@@ -465,14 +445,12 @@ html, body {
 .leaflet-bottom.leaflet-left {
   bottom: 24px !important;
   left: 24px !important;
-  z-index: 950 !important;
 }
 .leaflet-control-zoom {
   border: 1.5px solid #0f172a !important;
   border-radius: 10px !important;
   box-shadow: 0 4px 14px rgba(15, 23, 42, 0.18) !important;
   overflow: hidden;
-  background: rgba(255, 255, 255, 0.96) !important;
 }
 
 /* ==========================================================================
@@ -567,16 +545,16 @@ html, body {
     top: 100px !important;
     bottom: 20px !important;
     right: 20px !important;
-    width: 380px !important;
-    max-width: 380px !important;
+    width: 360px !important;
+    max-width: 360px !important;
     height: auto !important;
     margin: 0 !important;
-    padding: 14px 16px !important;
+    padding: 12px 14px !important;
     border: 1.5px solid #cbd5e1 !important;
     border-radius: 14px !important;
     background: rgba(255, 255, 255, 0.98) !important;
     box-shadow: 0 4px 14px rgba(15, 23, 42, 0.08) !important;
-    overflow: visible !important;
+    overflow: hidden !important;
     z-index: 1000 !important;
   }
 
@@ -584,23 +562,15 @@ html, body {
     border: 1px solid #cbd5e1 !important;
     box-shadow: none !important;
     background: #f8fafc !important;
-    padding: 9px 12px 11px 12px !important;
-    overflow: visible !important;
+    padding: 6px 8px !important;
   }
 
   .metric-label {
-    font-size: 8pt !important;
-    line-height: 1.3 !important;
-    margin-bottom: 3px !important;
-    overflow: visible !important;
+    font-size: 7.5pt !important;
   }
 
   .metric-value {
-    font-size: 14pt !important;
-    line-height: 1.4 !important;
-    overflow: visible !important;
-    white-space: nowrap !important;
-    text-overflow: clip !important;
+    font-size: 13pt !important;
   }
 
   /* Lista de entidades / sectores / leyenda en cuadrícula de 2 columnas */
@@ -661,35 +631,4 @@ html, body {
     letter-spacing: 0.05em;
     text-transform: uppercase;
   }
-}
-
-/* ==========================================================================
-   PIZARRA TÁCTICA PARA PANTALLAS TÁCTILES Y TELEVISORES (PAINT TÁCTICO)
-   ========================================================================== */
-
-#whiteboard-canvas {
-  touch-action: none;
-}
-
-#whiteboard-toolbar {
-  animation: slideUpToolbar 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-@keyframes slideUpToolbar {
-  from {
-    opacity: 0;
-    transform: translate(-50%, 20px) scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: translate(-50%, 0) scale(1);
-  }
-}
-
-.wb-color-btn {
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
-}
-
-.wb-color-btn:hover {
-  transform: scale(1.18);
 }

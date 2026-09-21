@@ -29,7 +29,6 @@ import {
   COMANDOS_SECTORIALES
 } from "./comandoData.js?v=252";
 import { auditLogger } from "./auditLogger.js";
-import { Whiteboard } from "./whiteboard.js?v=271";
 
 const WORLD_BOX = [
   [-85.0511, -180],
@@ -82,11 +81,6 @@ export class LaminaApp {
     this.childEntitiesLayer = null;
     this.centrosLayer = null;
 
-    this.maskEnabled = false; // Velo blanco desactivado por defecto (muestra satélite completo y limpio)
-    this.lastSpotlightRings = null;
-    this.lastSpotlightColor = "#2563eb";
-    this.lastSpotlightWeight = 3.5;
-
     this.activeTab = "stats"; // "stats" | "symbols"
     this.showCentros = true;
 
@@ -96,92 +90,30 @@ export class LaminaApp {
   init() {
     this.initMap();
     this.initUIListeners();
-    this.initWhiteboard();
-
-    // Medición exacta y carga de entidad territorial tras el primer layout del DOM
     setTimeout(() => {
-      if (this.map) {
-        this.map.invalidateSize();
-      }
+      if (this.map) this.map.invalidateSize();
       this.parseURLParams();
-    }, 60);
-  }
-
-  safeFlyToBounds(bounds, options = {}) {
-    if (!this.map || !bounds) return;
-    try {
-      this.map.invalidateSize();
-      const size = this.map.getSize();
-      if (!size || size.x < 100 || size.y < 100) {
-        const center = (bounds && typeof bounds.getCenter === "function") ? bounds.getCenter() : [9.7469, -63.1812];
-        this.map.setView(center, options.fallbackZoom || 12);
-        return;
-      }
-      const pad = options.padding || [40, 40];
-      const targetZoom = this.map.getBoundsZoom(bounds, false, L.point(pad));
-      if (isNaN(targetZoom) || !isFinite(targetZoom) || targetZoom <= 0) {
-        const center = (bounds && typeof bounds.getCenter === "function") ? bounds.getCenter() : [9.7469, -63.1812];
-        this.map.setView(center, options.fallbackZoom || 12);
-        return;
-      }
-      this.map.flyToBounds(bounds, {
-        padding: pad,
-        maxZoom: options.maxZoom || 16,
-        duration: options.duration || 1.0
-      });
-    } catch (e) {
-      console.warn("safeFlyToBounds fallback:", e);
-      try {
-        const center = (bounds && typeof bounds.getCenter === "function") ? bounds.getCenter() : [9.7469, -63.1812];
-        this.map.setView(center, options.fallbackZoom || 12);
-      } catch (err) {}
-    }
-  }
-
-  initWhiteboard() {
-    try {
-      this.whiteboard = new Whiteboard({
-        canvasId: "whiteboard-canvas",
-        toolbarId: "whiteboard-toolbar",
-        toggleBtnId: "btn-toggle-whiteboard",
-        map: this.map
-      });
-    } catch (err) {
-      console.warn("No se pudo inicializar la pizarra táctica:", err);
-    }
+    }, 50);
   }
 
   initMap() {
     // Canvas acelerado por GPU
-    this.canvasRenderer = L.canvas({ padding: 0.5, tolerance: 0 });
+    const canvasRenderer = L.canvas({ padding: 0.5 });
 
-    // Satélite Google Híbrido HD Oficial
+    // Satélite Google Híbrido HD
     const googleHybrid = L.tileLayer(
       "https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}",
-      { maxZoom: 21, maxNativeZoom: 20, attribution: "Google Satélite Híbrido" }
-    );
-
-    // Satélite Esri World Imagery (Respaldo Inmediato de Alta Fidelidad)
-    const esriSatellite = L.tileLayer(
-      "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
-      { maxZoom: 21, maxNativeZoom: 17, attribution: "Esri World Imagery" }
+      { maxZoom: 21, maxNativeZoom: 20, attribution: "" }
     );
 
     this.map = L.map("map-lamina", {
       center: [9.7469, -63.1812],
       zoom: 12,
       preferCanvas: true,
-      renderer: this.canvasRenderer,
+      renderer: canvasRenderer,
       zoomControl: false,
       attributionControl: false,
       layers: [googleHybrid]
-    });
-
-    // En caso de incidencia de red con Google Satélite, activar respaldo Esri World Imagery
-    googleHybrid.on("tileerror", () => {
-      if (!this.map.hasLayer(esriSatellite)) {
-        this.map.addLayer(esriSatellite);
-      }
     });
 
     // Control de zoom discreto abajo a la izquierda
@@ -195,7 +127,6 @@ export class LaminaApp {
       spPane.style.pointerEvents = "none";
     }
 
-    // Renderer SVG para el velo blanco (soporta recorte perfecto de donut invertido con fill-rule: evenodd)
     this.spotlightRenderer = L.svg({ pane: "spotlightPane", padding: 0.5 }).addTo(this.map);
     if (this.spotlightRenderer && this.spotlightRenderer._container) {
       this.spotlightRenderer._container.style.pointerEvents = "none";
@@ -207,10 +138,6 @@ export class LaminaApp {
     this.childEntitiesLayer = L.layerGroup().addTo(this.map);
     this.centrosLayer = L.layerGroup().addTo(this.map);
 
-    // Recalibración reactiva del lienzo Leaflet para asegurar renderizado inmediato de los tiles
-    setTimeout(() => {
-      if (this.map) this.map.invalidateSize();
-    }, 150);
     window.addEventListener("resize", () => {
       if (this.map) this.map.invalidateSize();
     });
@@ -511,28 +438,10 @@ export class LaminaApp {
 
     if (!normalizedRings || normalizedRings.length === 0) return;
 
-    this.lastSpotlightRings = normalizedRings;
-    this.lastSpotlightColor = strokeColor;
-    this.lastSpotlightWeight = strokeWeight;
+    // 1. Velo blanco desactivado para garantizar visualización satelital 100% limpia y nítida
+    // (evita cualquier pantalla blanca o recorte no deseado)
 
-    // 1. Polígono Inverso: WORLD_BOX exterior + anillos interiores recortados (Solo cuando el usuario activa el Velo Blanco)
-    if (this.maskEnabled) {
-      const maskPoly = L.polygon([WORLD_BOX, ...normalizedRings], {
-        pane: "spotlightPane",
-        fillColor: "#ffffff",
-        fillOpacity: 0.88,
-        color: "#ffffff",
-        weight: 1.5,
-        opacity: 0.9,
-        fillRule: "evenodd",
-        noClip: true,
-        interactive: false,
-        renderer: this.spotlightRenderer
-      });
-      this.maskLayer.addLayer(maskPoly);
-    }
-
-    // 2. Línea delimitadora nítida en el perímetro del territorio abierto (Siempre activa y visible)
+    // 2. Línea delimitadora nítida en el perímetro del territorio abierto
     normalizedRings.forEach(ring => {
       const bPoly = L.polygon(ring, {
         pane: "spotlightPane",
@@ -546,32 +455,6 @@ export class LaminaApp {
       });
       this.boundaryLayer.addLayer(bPoly);
     });
-  }
-
-  toggleMask() {
-    this.maskEnabled = !this.maskEnabled;
-    this.updateMaskButtonUI();
-    if (this.lastSpotlightRings) {
-      this.applySpotlightMask(this.lastSpotlightRings, this.lastSpotlightColor, this.lastSpotlightWeight);
-    }
-  }
-
-  updateMaskButtonUI() {
-    const btn = document.getElementById("btn-toggle-mask");
-    if (!btn) return;
-    const txt = btn.querySelector(".mask-btn-text");
-    if (this.maskEnabled) {
-      btn.classList.remove("bg-slate-100", "text-slate-700", "border-slate-300");
-      btn.classList.add("bg-sky-600", "text-white", "border-sky-500");
-      if (txt) txt.textContent = "Velo: ON";
-    } else {
-      btn.classList.remove("bg-sky-600", "text-white", "border-sky-500");
-      btn.classList.add("bg-slate-100", "text-slate-700", "border-slate-300");
-      if (txt) txt.textContent = "Velo: OFF";
-    }
-    if (window.lucide && typeof window.lucide.createIcons === "function") {
-      window.lucide.createIcons();
-    }
   }
 
   // Helper para convertir coordenadas GeoJSON [lng, lat] a Leaflet [lat, lng]
@@ -615,8 +498,6 @@ export class LaminaApp {
       const munColor = f.properties?.color || (CATALOGO_MONAGAS || []).find(m => m.id === mId)?.color || "#0284c7";
       const mName = f.properties?.nombre || "Municipio";
       const layer = L.geoJSON(f, {
-        renderer: this.canvasRenderer,
-        interactive: true,
         style: {
           color: munColor,
           weight: 2.2,
@@ -636,10 +517,8 @@ export class LaminaApp {
     if (rings && rings.length > 0) {
       try {
         const bounds = L.polygon(rings).getBounds();
-        this.safeFlyToBounds(bounds, { padding: [30, 30], duration: 1.0, fallbackZoom: 9.5 });
-      } catch(e){
-        try { this.map.setView([9.7469, -63.1812], 9.5); } catch(err){}
-      }
+        this.map.flyToBounds(bounds, { padding: [40, 40], duration: 1.2 });
+      } catch(e){}
     }
 
     this.updateHeaderUI("ESTADO MONAGAS", "13 MUNICIPIOS • SALA SITUACIONAL 2026");
@@ -709,8 +588,6 @@ export class LaminaApp {
       const pName = f.properties?.nombre || "Parroquia";
 
       const layer = L.geoJSON(f, {
-        renderer: this.canvasRenderer,
-        interactive: true,
         style: {
           color: pColor,
           weight: 2,
@@ -746,10 +623,8 @@ export class LaminaApp {
     if (rings && rings.length > 0) {
       try {
         const bounds = Array.isArray(rings[0][0]) ? L.polygon(rings[0]).getBounds() : L.polygon(rings).getBounds();
-        this.safeFlyToBounds(bounds, { padding: [40, 40], duration: 1.0, fallbackZoom: 12 });
-      } catch(e){
-        try { this.map.setView([9.7469, -63.1812], 12); } catch(err){}
-      }
+        this.map.flyToBounds(bounds, { padding: [40, 40], duration: 1.2 });
+      } catch(e){}
     }
 
     const munDem = getMunicipioDemographics(cleanMunId);
@@ -948,10 +823,8 @@ export class LaminaApp {
       try {
         const bounds = Array.isArray(rings[0][0]) ? L.polygon(rings[0]).getBounds() : L.polygon(rings).getBounds();
         this.currentParishBounds = bounds;
-        this.safeFlyToBounds(bounds, { padding: [40, 40], duration: 1.0, fallbackZoom: 13 });
-      } catch(e){
-        try { this.map.setView([9.7469, -63.1812], 13); } catch(err){}
-      }
+        this.map.flyToBounds(bounds, { padding: [40, 40], duration: 1.0 });
+      } catch(e){}
     }
 
     const rawPName = feat?.properties?.nombre || (CATALOGO_MONAGAS.find(m => m.id === cleanMunId)?.parroquias || []).find(p => p.id === cleanPId)?.nombre || cleanPId;
@@ -1110,19 +983,8 @@ export class LaminaApp {
     if (this.currentParishRings && this.currentParishRings.length > 0) {
       this.applySpotlightMask(this.currentParishRings, pColor, 3.5);
     }
-    // Navegación de cámara fluida e inteligente hacia el Eje / Sub-Parroquia:
-    // NUNCA retroceder el zoom hacia toda la parroquia si el usuario ya está explorando cerca
-    const ejeCoords = eje.vertices || eje.poligono;
-    if (ejeCoords && ejeCoords.length >= 3) {
-      const ejeBounds = L.polygon(ejeCoords).getBounds();
-      const curZoom = this.map.getZoom();
-      if (curZoom >= 14.5 && ejeBounds.contains(this.map.getCenter())) {
-        this.map.panTo(ejeBounds.getCenter(), { duration: 0.6 });
-      } else {
-        this.safeFlyToBounds(ejeBounds, { padding: [45, 45], maxZoom: 15.5, duration: 0.9, fallbackZoom: 14 });
-      }
-    } else if (this.currentParishBounds && this.map.getZoom() < 12.5) {
-      this.safeFlyToBounds(this.currentParishBounds, { padding: [40, 40], duration: 0.8, fallbackZoom: 13 });
+    if (this.currentParishBounds) {
+      this.map.flyToBounds(this.currentParishBounds, { padding: [40, 40], duration: 0.8 });
     }
 
     // 1. DIBUJAR TODAS LAS SUBPARROQUIAS (LA SELECCIONADA DESTACADA, LAS DEMÁS DE FONDO)
@@ -1269,30 +1131,12 @@ export class LaminaApp {
     }
     this.activeSectorName = sec.nombre;
 
+    // REGLA CRÍTICA: Mantener el zoom y el Velo Blanco fijos en la PARROQUIA
     if (this.currentParishRings && this.currentParishRings.length > 0) {
       this.applySpotlightMask(this.currentParishRings, pColor, 3.5);
     }
-    // Navegación de cámara fluida y amigable hacia el Sector Vecinal:
-    // Centra y aproxima el mapa al sector (zoom 16.5-17.5) sin retroceder la vista hacia toda la parroquia
-    const sCoords = sec.vertices || sec.poligono;
-    let markerPos = sec.centro;
-    if (!markerPos && sCoords && sCoords.length > 0) {
-      const avgLat = sCoords.reduce((sum, p) => sum + p[0], 0) / sCoords.length;
-      const avgLng = sCoords.reduce((sum, p) => sum + p[1], 0) / sCoords.length;
-      markerPos = [avgLat, avgLng];
-    }
-    if (sCoords && sCoords.length >= 3) {
-      const secBounds = L.polygon(sCoords).getBounds();
-      const curZoom = this.map.getZoom();
-      if (curZoom >= 16 && secBounds.contains(this.map.getCenter())) {
-        this.map.panTo(secBounds.getCenter(), { duration: 0.5 });
-      } else {
-        this.safeFlyToBounds(secBounds, { padding: [55, 55], maxZoom: 17, duration: 0.8, fallbackZoom: 16 });
-      }
-    } else if (markerPos) {
-      try { this.map.flyTo(markerPos, Math.max(this.map.getZoom(), 16), { duration: 0.8 }); } catch(e){ this.map.setView(markerPos, 16); }
-    } else if (this.currentParishBounds && this.map.getZoom() < 12.5) {
-      this.safeFlyToBounds(this.currentParishBounds, { padding: [40, 40], duration: 0.8, fallbackZoom: 13 });
+    if (this.currentParishBounds) {
+      this.map.flyToBounds(this.currentParishBounds, { padding: [40, 40], duration: 0.8 });
     }
 
     // 1. Dibujar las subparroquias de fondo con trazo sutil
@@ -1558,13 +1402,13 @@ export class LaminaApp {
       if (data.backBtn) {
         html += `
           <div onclick="${data.backBtn.onClick}" 
-               class="flex items-center justify-between p-2.5 px-3 rounded-xl bg-sky-50 hover:bg-sky-100 text-sky-900 border border-sky-200 cursor-pointer mb-2 transition text-sm font-black"
+               class="flex items-center justify-between p-2 rounded-xl bg-sky-50 hover:bg-sky-100 text-sky-900 border border-sky-200 cursor-pointer mb-2 transition text-sm font-black"
                title="${data.backBtn.label}">
             <span class="flex items-center gap-1.5">
               <span>⬅</span>
               <span>${data.backBtn.label}</span>
             </span>
-            <span class="bg-sky-200/80 text-sky-950 px-2 py-0.5 rounded font-mono text-xs font-bold leading-normal">${data.backBtn.count}</span>
+            <span class="bg-sky-200/80 text-sky-950 px-1.5 py-0.5 rounded font-mono text-sm">${data.backBtn.count}</span>
           </div>
         `;
       }
@@ -1574,11 +1418,11 @@ export class LaminaApp {
           <div onclick="${item.onClick}" 
                class="territory-row" 
                title="${item.nombre} • Clic para enfocar">
-            <div class="flex items-center gap-2 min-w-0 flex-1">
+            <div class="flex items-center gap-2 truncate">
               <span class="w-2.5 h-2.5 rounded-full shrink-0 shadow-xs" style="background-color: ${item.color || '#0284c7'};"></span>
-              <span class="font-bold text-sm text-slate-900 leading-snug">${item.nombre}</span>
+              <span class="font-bold text-sm text-slate-900 truncate">${item.nombre}</span>
             </div>
-            <span class="text-sm font-extrabold text-slate-700 shrink-0 ml-1 leading-snug">
+            <span class="text-sm font-extrabold text-slate-700 shrink-0 ml-1">
               ${item.badge}
             </span>
           </div>
@@ -2081,125 +1925,70 @@ export class LaminaApp {
     }
   }
 
-  async capturarPantallaHD(format = "png") {
-    const isJpg = format === "jpg" || format === "jpeg";
-    const mimeType = isJpg ? "image/jpeg" : "image/png";
-    const ext = isJpg ? "jpg" : "png";
-
-    const btn = document.getElementById("btn-header-capture-png") || document.getElementById("btn-do-capture-png");
+  async capturarPantallaHD() {
+    const btn = document.getElementById("btn-do-capture-png");
     const originalContent = btn ? btn.innerHTML : "";
     if (btn) {
-      btn.innerHTML = `<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i><span>Generando ${ext.toUpperCase()}...</span>`;
+      btn.innerHTML = `<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i><span>Capturando...</span>`;
       if (window.lucide && typeof window.lucide.createIcons === "function") {
         window.lucide.createIcons();
       }
     }
 
     try {
-      // Ocultar modal si estuviese abierto
-      this.closeExportModal();
-
-      // Asegurar que todas las fuentes oficiales de MIGATO estén completamente renderizadas
-      if (document.fonts && document.fonts.ready) {
-        await document.fonts.ready;
-      }
-      await new Promise(r => setTimeout(r, 100));
-
-      const d = new Date().toISOString().slice(0, 10);
-      const entity = (this.activeSectorName || this.activeSubParishName || this.activeParishId || this.activeMunId || "Monagas").replace(/[^a-zA-Z0-9_-]/g, "_");
-      const filename = `Lamina_MIGATO_${entity}_${d}.${ext}`;
-
-      let canvas = null;
-
-      // Método 1: Screen Capture API con preferCurrentTab (Captura de hardware 100% fiel con satélite HD y pizarra)
-      if (navigator.mediaDevices && typeof navigator.mediaDevices.getDisplayMedia === "function") {
-        try {
-          const stream = await navigator.mediaDevices.getDisplayMedia({
-            video: {
-              displaySurface: "browser",
-              width: { ideal: 3840 },
-              height: { ideal: 2160 }
-            },
-            audio: false,
-            preferCurrentTab: true
-          });
-
-          const video = document.createElement("video");
-          video.srcObject = stream;
-          video.muted = true;
-          await video.play();
-          await new Promise(r => setTimeout(r, 300));
-
-          canvas = document.createElement("canvas");
-          canvas.width = video.videoWidth || window.innerWidth;
-          canvas.height = video.videoHeight || window.innerHeight;
-          const ctx = canvas.getContext("2d");
-          ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-
-          stream.getTracks().forEach(t => t.stop());
-        } catch (mediaErr) {
-          if (mediaErr.name === "NotAllowedError") {
-            // El usuario canceló el diálogo de captura
-            return;
-          }
-          console.warn("Screen capture no disponible o bloqueado, activando fallback html2canvas:", mediaErr);
-        }
-      }
-
-      // Método 2 (Fallback): html2canvas si getDisplayMedia no está disponible
-      if (!canvas && typeof window.html2canvas === "function") {
-        const clientW = document.documentElement.clientWidth || window.innerWidth;
-        const clientH = document.documentElement.clientHeight || window.innerHeight;
-
-        canvas = await window.html2canvas(document.body, {
-          useCORS: true,
-          allowTaint: true,
-          scale: 2,
-          backgroundColor: "#020617",
-          width: clientW,
-          height: clientH,
-          logging: false,
-          ignoreElements: (el) => {
-            return (
-              el.id === "modal-exportar-lamina" ||
-              el.id === "modal-asignar-comando" ||
-              el.id === "whiteboard-toolbar" ||
-              el.id === "btn-toggle-whiteboard" ||
-              el.classList.contains("leaflet-control-zoom") ||
-              el.classList.contains("no-print")
-            );
-          },
-          onclone: (clonedDoc) => {
-            const clonedBtn = clonedDoc.getElementById("btn-header-capture-png");
-            if (clonedBtn) {
-              clonedBtn.innerHTML = originalContent;
-            }
-          }
-        });
-      }
-
-      if (!canvas) {
-        alert("No se pudo generar la imagen automáticamente. Puedes utilizar el atajo Win + Shift + S o Impr Pant en tu teclado.");
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getDisplayMedia) {
+        alert("La captura automática no está soportada en este navegador.\n\nAlternativa recomendada: Presiona Win + Shift + S (Windows) o Cmd + Shift + 4 (Mac) para capturar la lámina directamente.");
         return;
       }
 
-      // Descarga directa e instantánea del archivo en el formato solicitado (PNG o JPG)
-      if (canvas.toBlob) {
-        canvas.toBlob((blob) => {
-          if (!blob) {
-            this._descargarArchivo(canvas.toDataURL(mimeType, 0.95), filename);
-            return;
-          }
-          const url = URL.createObjectURL(blob);
-          this._descargarArchivo(url, filename);
-          setTimeout(() => URL.revokeObjectURL(url), 4000);
-        }, mimeType, 0.95);
-      } else {
-        this._descargarArchivo(canvas.toDataURL(mimeType, 0.95), filename);
-      }
+      // Ocultar modal para que no interfiera en la toma de imagen
+      this.closeExportModal();
+      await new Promise(r => setTimeout(r, 150));
+
+      const stream = await navigator.mediaDevices.getDisplayMedia({
+        video: {
+          displaySurface: "browser",
+          width: { ideal: 3840 },
+          height: { ideal: 2160 }
+        },
+        audio: false
+      });
+
+      const video = document.createElement("video");
+      video.srcObject = stream;
+      video.muted = true;
+      await video.play();
+
+      // Esperar brevemente a que el fotograma esté nítido
+      await new Promise(r => setTimeout(r, 350));
+
+      const canvas = document.createElement("canvas");
+      canvas.width = video.videoWidth || window.innerWidth;
+      canvas.height = video.videoHeight || window.innerHeight;
+      const ctx = canvas.getContext("2d");
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+      // Detener transmisión de pantalla inmediatamente
+      stream.getTracks().forEach(t => t.stop());
+
+      // Generar nombre descriptivo oficial
+      const d = new Date().toISOString().slice(0, 10);
+      const entity = (this.activeSectorName || this.activeSubParishName || this.activeParishId || this.activeMunId || "Monagas").replace(/[^a-zA-Z0-9_-]/g, "_");
+      const filename = `Lamina_MIGATO_${entity}_${d}.png`;
+
+      // Descarga de archivo PNG
+      const a = document.createElement("a");
+      a.href = canvas.toDataURL("image/png");
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
     } catch (err) {
-      console.error(`Error durante la generación de imagen ${ext.toUpperCase()}:`, err);
-      alert("No se pudo generar la imagen automáticamente. Puedes utilizar el atajo Win + Shift + S o Impr Pant en tu teclado.");
+      console.warn("Captura asistida:", err);
+      // Si el usuario canceló la selección de ventana, reabrimos el modal
+      if (err.name !== "NotAllowedError") {
+        this.openExportModal();
+      }
     } finally {
       if (btn) {
         btn.innerHTML = originalContent;
@@ -2208,19 +1997,6 @@ export class LaminaApp {
         }
       }
     }
-  }
-
-  _descargarArchivo(url, filename) {
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = filename;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-  }
-
-  _descargarArchivoPNG(url, filename) {
-    this._descargarArchivo(url, filename);
   }
 }
 
