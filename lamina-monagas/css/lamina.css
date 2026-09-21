@@ -88,9 +88,9 @@ html, body {
   right: 14px;
   z-index: 1000;
   pointer-events: none;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  display: flex;
   align-items: flex-start;
+  justify-content: space-between;
   gap: 12px;
   max-width: calc(100vw - 28px);
 }
@@ -105,16 +105,17 @@ html, body {
   padding: 6px 12px;
 }
 
-/* Tarjeta izquierda */
+/* Tarjeta izquierda: Logotipo y membrete oficial */
 .lamina-header-left {
-  justify-self: start;
+  flex-shrink: 0;
 }
 
-/* Tarjeta central dinámica: Centrada matemáticamente en el grid sin solapamiento */
+/* Tarjeta central dinámica: Centrada matemáticamente sin ningún solapamiento posible */
 .lamina-header-center {
-  justify-self: center;
-  min-width: 220px;
+  flex: 1;
+  min-width: 0;
   max-width: 480px;
+  margin: 0 auto;
   text-align: center;
   position: static !important;
   transform: none !important;
@@ -122,9 +123,9 @@ html, body {
   top: auto !important;
 }
 
-/* Tarjeta derecha */
+/* Tarjeta derecha: Acciones ejecutivas y conmutador */
 .lamina-header-right {
-  justify-self: end;
+  flex-shrink: 0;
 }
 
 /* Selector de Mapa Base: Satélite HD vs Plano Cartográfico */
@@ -521,6 +522,9 @@ html, body {
   #btn-fullscreen,
   #btn-toggle-minimize-panel,
   #btn-open-asignar-modal,
+  #btn-toggle-whiteboard,
+  #whiteboard-toolbar,
+  #btn-toggle-basemap,
   .basemap-switcher-container,
   .skip-link {
     display: none !important;
@@ -672,3 +676,31 @@ html, body {
     text-transform: uppercase;
   }
 }
+
+/* ==========================================================================
+   PIZARRA TÁCTICA PARA PANTALLAS TÁCTILES Y TELEVISORES (PAINT TÁCTICO)
+   ========================================================================== */
+
+#whiteboard-canvas {
+  touch-action: none;
+}
+
+#whiteboard-toolbar {
+  animation: slideUpToolbar 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes slideUpToolbar {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0) scale(1);
+  }
+}
+
+.wb-color-btn {
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+

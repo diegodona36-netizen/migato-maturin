@@ -29,6 +29,7 @@ import {
   COMANDOS_SECTORIALES
 } from "./comandoData.js?v=252";
 import { auditLogger } from "./auditLogger.js";
+import { Whiteboard } from "./whiteboard.js?v=282";
 
 const WORLD_BOX = [
   [-85.0511, -180],
@@ -87,6 +88,7 @@ export class LaminaApp {
 
     this.activeTab = "stats"; // "stats" | "symbols"
     this.showCentros = true;
+    this.whiteboard = null;
 
     this.init();
   }
@@ -94,11 +96,25 @@ export class LaminaApp {
   init() {
     this.initMap();
     this.initUIListeners();
+    this.initWhiteboard();
     setTimeout(() => {
       if (this.map) this.map.invalidateSize();
       this.updateBaseMapUI();
       this.parseURLParams();
     }, 50);
+  }
+
+  initWhiteboard() {
+    try {
+      this.whiteboard = new Whiteboard({
+        canvasId: "whiteboard-canvas",
+        toolbarId: "whiteboard-toolbar",
+        toggleBtnId: "btn-toggle-whiteboard",
+        map: this.map
+      });
+    } catch (err) {
+      console.warn("No se pudo inicializar la pizarra táctica:", err);
+    }
   }
 
   initMap() {
@@ -453,16 +469,40 @@ export class LaminaApp {
   }
 
   updateBaseMapUI() {
+    const btnToggle = document.getElementById("btn-toggle-basemap");
+    const iconEl = document.getElementById("icon-basemap-type");
+    const txtEl = document.getElementById("txt-basemap-type");
+
+    if (btnToggle && txtEl) {
+      if (this.currentBaseLayer === "satelite") {
+        txtEl.textContent = "Plano";
+        btnToggle.setAttribute("title", "Cambiar a Plano Cartográfico (Tecla M)");
+        btnToggle.className = "px-2.5 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-300 font-bold text-xs flex items-center gap-1.5 transition active:scale-95 cursor-pointer shrink-0 shadow-2xs";
+        if (iconEl) {
+          iconEl.setAttribute("data-lucide", "map");
+          iconEl.className = "w-4 h-4 text-indigo-600";
+        }
+      } else {
+        txtEl.textContent = "Satélite";
+        btnToggle.setAttribute("title", "Cambiar a Satélite HD (Tecla M)");
+        btnToggle.className = "px-2.5 py-1.5 rounded-xl bg-sky-50 hover:bg-sky-100 text-sky-900 border border-sky-300 font-bold text-xs flex items-center gap-1.5 transition active:scale-95 cursor-pointer shrink-0 shadow-2xs";
+        if (iconEl) {
+          iconEl.setAttribute("data-lucide", "satellite");
+          iconEl.className = "w-4 h-4 text-sky-600";
+        }
+      }
+    }
+
     const btnSat = document.getElementById("btn-basemap-sat");
     const btnPlano = document.getElementById("btn-basemap-plano");
-    if (!btnSat || !btnPlano) return;
-
-    if (this.currentBaseLayer === "satelite") {
-      btnSat.classList.add("active");
-      btnPlano.classList.remove("active");
-    } else {
-      btnPlano.classList.add("active");
-      btnSat.classList.remove("active");
+    if (btnSat && btnPlano) {
+      if (this.currentBaseLayer === "satelite") {
+        btnSat.classList.add("active");
+        btnPlano.classList.remove("active");
+      } else {
+        btnPlano.classList.add("active");
+        btnSat.classList.remove("active");
+      }
     }
 
     if (window.lucide && typeof window.lucide.createIcons === "function") {
