@@ -30,7 +30,12 @@ import {
   COMANDOS_SECTORIALES
 } from "./comandoData.js?v=252";
 import { auditLogger } from "./auditLogger.js";
-import { Whiteboard } from "./whiteboard.js?v=282";
+import { Whiteboard } from "./whiteboard.js?v=300";
+
+const BOUNDS_ESTADO_MONAGAS = [
+  [8.38245, -64.06290],
+  [10.32066, -61.99679]
+];
 
 const WORLD_BOX = [
   [-85.0511, -180],
@@ -99,29 +104,40 @@ export class LaminaApp {
     this.initUIListeners();
     this.initWhiteboard();
     this.updateBaseMapUI();
-    this.parseURLParams(true);
 
-    // Asegurar encuadre y renderizado inmediato del Estado Monagas al abrir sin requerir clic del usuario
+    // Iniciar renderizado cuando Leaflet esté completamente listo en el DOM
+    this.map.whenReady(() => {
+      this.map.invalidateSize();
+      this.parseURLParams(true);
+    });
+
+    // Fallbacks reactivos para garantizar encuadre y polígonos aún con latencia en layout de navegador
     requestAnimationFrame(() => {
       if (this.map) {
         this.map.invalidateSize();
-        this.reframeCurrentEntity(false);
+        if (this.level === "estado" && (!this.childEntitiesLayer || this.childEntitiesLayer.getLayers().length === 0)) {
+          this.selectEstado(false);
+        }
       }
     });
 
     setTimeout(() => {
       if (this.map) {
         this.map.invalidateSize();
-        this.reframeCurrentEntity(false);
+        if (this.level === "estado" && (!this.childEntitiesLayer || this.childEntitiesLayer.getLayers().length === 0)) {
+          this.selectEstado(false);
+        }
       }
-    }, 100);
+    }, 150);
 
     setTimeout(() => {
       if (this.map) {
         this.map.invalidateSize();
-        this.reframeCurrentEntity(false);
+        if (this.level === "estado" && (!this.childEntitiesLayer || this.childEntitiesLayer.getLayers().length === 0)) {
+          this.selectEstado(false);
+        }
       }
-    }, 300);
+    }, 350);
   }
 
   initWhiteboard() {
@@ -274,8 +290,7 @@ export class LaminaApp {
 
   reframeCurrentEntity(animate = true) {
     if (this.level === "estado") {
-      const feat = GEO_ESTADO_OFICIAL.features ? GEO_ESTADO_OFICIAL.features[0] : GEO_ESTADO_OFICIAL;
-      if (feat) this.safeFitBounds(L.geoJSON(feat).getBounds(), animate);
+      this.safeFitBounds(BOUNDS_ESTADO_MONAGAS, animate);
     } else if (this.level === "municipio" && this.activeMunId) {
       const cleanMunId = String(this.activeMunId).toLowerCase().replace(/_/g, "-").trim();
       const feat = (GEO_MUNICIPIOS_OFICIAL.features || []).find(f => {
@@ -734,49 +749,52 @@ export class LaminaApp {
     this.currentParishBounds = null;
     this.currentParishRings = null;
 
-    const feat = GEO_ESTADO_OFICIAL.features ? GEO_ESTADO_OFICIAL.features[0] : GEO_ESTADO_OFICIAL;
-    const rings = this.geoJsonCoordsToLeaflet(feat.geometry);
+    try {
+      const feat = GEO_ESTADO_OFICIAL.features ? GEO_ESTADO_OFICIAL.features[0] : GEO_ESTADO_OFICIAL;
+      const rings = this.geoJsonCoordsToLeaflet(feat.geometry);
 
-    this.applySpotlightMask(rings, "#2563eb", 4);
-    this.childEntitiesLayer.clearLayers();
-    this.centrosLayer.clearLayers();
+      this.applySpotlightMask(rings, "#2563eb", 4);
+      if (this.childEntitiesLayer) this.childEntitiesLayer.clearLayers();
+      if (this.centrosLayer) this.centrosLayer.clearLayers();
 
-    // Dibujar los 13 Municipios en el canvas con colores diferenciados y tooltips informativos
-    (GEO_MUNICIPIOS_OFICIAL.features || []).forEach(f => {
-      const mId = f.properties?.id;
-      const munColor = f.properties?.color || (CATALOGO_MONAGAS || []).find(m => m.id === mId)?.color || "#0284c7";
-      const mName = f.properties?.nombre || "Municipio";
-      const munObj = (CATALOGO_MONAGAS || []).find(m => m.id === mId);
-      const parishCount = (munObj?.parroquias || []).length || 0;
+      // Dibujar los 13 Municipios en el canvas con colores diferenciados y tooltips informativos
+      (GEO_MUNICIPIOS_OFICIAL.features || []).forEach(f => {
+        const mId = f.properties?.id;
+        const munColor = f.properties?.color || (CATALOGO_MONAGAS || []).find(m => m.id === mId)?.color || "#0284c7";
+        const mName = f.properties?.nombre || "Municipio";
+        const munObj = (CATALOGO_MONAGAS || []).find(m => m.id === mId);
+        const parishCount = (munObj?.parroquias || []).length || 0;
 
-      const layer = L.geoJSON(f, {
-        style: {
-          color: munColor,
-          weight: 2.2,
-          opacity: 0.95,
-          fillColor: munColor,
-          fillOpacity: 0.25
-        }
+        const layer = L.geoJSON(f, {
+          style: {
+            color: munColor,
+            weight: 2.2,
+            opacity: 0.95,
+            fillColor: munColor,
+            fillOpacity: 0.25
+          }
+        });
+        layer.on({
+          mouseover: () => layer.setStyle({ weight: 3.8, fillOpacity: 0.45 }),
+          mouseout: () => layer.setStyle({ weight: 2.2, fillOpacity: 0.25 }),
+          click: () => this.selectMunicipio(mId)
+        });
+
+        layer.bindTooltip(`
+          <div style="font-family: inherit; font-size: 11px; padding: 2px;">
+            <span style="color: #64748b; font-weight: 800; font-size: 9px; text-transform: uppercase;">Municipio Oficial</span><br>
+            <strong style="color: #0f172a; font-size: 12px; font-weight: 900;">MUNICIPIO ${mName.toUpperCase()}</strong><br>
+            <span style="color: ${munColor}; font-size: 10px; font-weight: 700;">${parishCount} Parroquias</span>
+          </div>
+        `, { sticky: true, opacity: 0.95 });
+
+        this.childEntitiesLayer.addLayer(layer);
       });
-      layer.on({
-        mouseover: () => layer.setStyle({ weight: 3.8, fillOpacity: 0.45 }),
-        mouseout: () => layer.setStyle({ weight: 2.2, fillOpacity: 0.25 }),
-        click: () => this.selectMunicipio(mId)
-      });
 
-      layer.bindTooltip(`
-        <div style="font-family: inherit; font-size: 11px; padding: 2px;">
-          <span style="color: #64748b; font-weight: 800; font-size: 9px; text-transform: uppercase;">Municipio Oficial</span><br>
-          <strong style="color: #0f172a; font-size: 12px; font-weight: 900;">MUNICIPIO ${mName.toUpperCase()}</strong><br>
-          <span style="color: ${munColor}; font-size: 10px; font-weight: 700;">${parishCount} Parroquias</span>
-        </div>
-      `, { sticky: true, opacity: 0.95 });
-
-      this.childEntitiesLayer.addLayer(layer);
-    });
-
-    const bounds = feat ? L.geoJSON(feat).getBounds() : (rings.length ? L.polygon(rings).getBounds() : null);
-    this.safeFitBounds(bounds, animate);
+      this.safeFitBounds(BOUNDS_ESTADO_MONAGAS, animate);
+    } catch (err) {
+      console.error("[LaminaApp] Error renderizando municipios en selectEstado:", err);
+    }
 
     this.updateHeaderUI("ESTADO MONAGAS", "13 MUNICIPIOS • SALA SITUACIONAL 2026");
     this.renderSideStats({
@@ -806,7 +824,9 @@ export class LaminaApp {
     this.renderComandoSection();
     this.renderSymbolsSection();
     this.updateBreadcrumbs();
-    auditLogger.logEvent("SELECCION_ESTADO", { entidad: "Estado Monagas" });
+    try {
+      auditLogger.logEvent("SELECCION_ESTADO", { entidad: "Estado Monagas" });
+    } catch (e) {}
   }
 
   // 2. NIVEL MUNICIPIO (MATURÍN, PIAR, CEDEÑO, ETC.)
