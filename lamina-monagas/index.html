@@ -71,17 +71,15 @@
     </div>
 
     <!-- Bloque Central: Título Dinámico de la Entidad y Migas de Pan (Columna Central del Grid) -->
-    <div class="lamina-header-card lamina-header-center flex flex-col items-center justify-center text-center px-4 py-2 sm:px-5 sm:py-2.5 cursor-pointer hover:bg-slate-50/90 transition shadow-2xs group"
-         onclick="window.laminaApp && window.laminaApp.selectMunicipio(window.laminaApp.activeMunId || 'maturin')"
-         title="Clic para abrir todo el Municipio Maturín y sus 11 parroquias">
-      <h2 id="lamina-entity-title" class="font-display text-sm sm:text-base lg:text-lg font-black text-slate-900 group-hover:text-blue-700 uppercase tracking-tight leading-snug truncate max-w-full transition">
+    <div class="lamina-header-card lamina-header-center flex flex-col items-center justify-center text-center px-4 py-2 sm:px-5 sm:py-2.5">
+      <h2 id="lamina-entity-title" class="font-display text-sm sm:text-base lg:text-lg font-black text-slate-900 uppercase tracking-tight leading-snug truncate max-w-full">
         ESTADO MONAGAS
       </h2>
       <span id="lamina-entity-subtitle" class="text-xs sm:text-sm font-bold text-slate-500 uppercase tracking-wider mb-1 max-w-full">
         13 MUNICIPIOS • SALA SITUACIONAL 2026
       </span>
       <div id="lamina-breadcrumbs" class="flex items-center justify-center flex-wrap gap-1.5 text-[11px] sm:text-xs font-mono font-bold text-slate-600 max-w-full">
-        <span class="breadcrumb-item active" onclick="event.stopPropagation(); laminaApp.selectMunicipio('maturin')" title="Abrir todo el Municipio Maturín y sus 11 parroquias">
+        <span class="breadcrumb-item active" onclick="laminaApp.selectEstado()" title="Ver todo el Estado Monagas">
           <span>🇻🇪 Monagas</span>
         </span>
       </div>

@@ -65,8 +65,8 @@ function formatTitleCase(str) {
 export class LaminaApp {
   constructor() {
     this.map = null;
-    this.level = "municipio"; // "estado" | "municipio" | "parroquia" | "subparroquia" | "sector"
-    this.activeMunId = "maturin";
+    this.level = "estado"; // "estado" | "municipio" | "parroquia" | "subparroquia" | "sector"
+    this.activeMunId = null;
     this.activeParishId = null;
     this.activeSubParishId = null;
     this.activeSectorId = null;
@@ -100,6 +100,28 @@ export class LaminaApp {
     this.initWhiteboard();
     this.updateBaseMapUI();
     this.parseURLParams(true);
+
+    // Asegurar encuadre y renderizado inmediato del Estado Monagas al abrir sin requerir clic del usuario
+    requestAnimationFrame(() => {
+      if (this.map) {
+        this.map.invalidateSize();
+        this.reframeCurrentEntity(false);
+      }
+    });
+
+    setTimeout(() => {
+      if (this.map) {
+        this.map.invalidateSize();
+        this.reframeCurrentEntity(false);
+      }
+    }, 100);
+
+    setTimeout(() => {
+      if (this.map) {
+        this.map.invalidateSize();
+        this.reframeCurrentEntity(false);
+      }
+    }, 300);
   }
 
   initWhiteboard() {
@@ -209,23 +231,44 @@ export class LaminaApp {
   safeFitBounds(bounds, animate = true) {
     if (!bounds || !this.map) return;
     try {
+      this.map.invalidateSize();
       const pad = this.getVisibleBoundsPadding();
+      const mapSize = this.map.getSize();
+
+      // Si el contenedor aún no tiene dimensiones en el DOM, reintentar al siguiente ciclo
+      if (!mapSize || mapSize.x <= 0 || mapSize.y <= 0) {
+        setTimeout(() => this.safeFitBounds(bounds, animate), 60);
+        return;
+      }
+
+      // Asegurar que los márgenes no superen el tamaño de la ventana
+      const safeLeft = Math.min(pad.paddingTopLeft[0], Math.floor(mapSize.x * 0.08));
+      const safeTop = Math.min(pad.paddingTopLeft[1], Math.floor(mapSize.y * 0.12));
+      const safeRight = Math.min(pad.paddingBottomRight[0], Math.floor(mapSize.x * 0.32));
+      const safeBottom = Math.min(pad.paddingBottomRight[1], Math.floor(mapSize.y * 0.08));
+
+      const finalPaddingTopLeft = [safeLeft, safeTop];
+      const finalPaddingBottomRight = [safeRight, safeBottom];
+
       if (animate) {
         this.map.flyToBounds(bounds, {
-          paddingTopLeft: pad.paddingTopLeft,
-          paddingBottomRight: pad.paddingBottomRight,
+          paddingTopLeft: finalPaddingTopLeft,
+          paddingBottomRight: finalPaddingBottomRight,
           duration: 0.65,
           easeLinearity: 0.25
         });
       } else {
         this.map.fitBounds(bounds, {
-          paddingTopLeft: pad.paddingTopLeft,
-          paddingBottomRight: pad.paddingBottomRight,
+          paddingTopLeft: finalPaddingTopLeft,
+          paddingBottomRight: finalPaddingBottomRight,
           animate: false
         });
       }
     } catch (e) {
       console.warn("[LaminaApp] Error ajustando encuadre de mapa:", e);
+      try {
+        this.map.fitBounds(bounds, { animate: false });
+      } catch (err2) {}
     }
   }
 
@@ -268,8 +311,8 @@ export class LaminaApp {
     } else if (m) {
       this.selectMunicipio(m, animate);
     } else {
-      // Abre directamente todo el Municipio Maturín (11 Parroquias oficiales) de una vez
-      this.selectMunicipio("maturin", animate);
+      // Abre directamente el Estado Monagas oficial (13 Municipios) de una vez
+      this.selectEstado(animate);
     }
   }
 
@@ -284,15 +327,6 @@ export class LaminaApp {
     if (tabStats) tabStats.addEventListener("click", () => this.switchTab("stats"));
     if (tabComando) tabComando.addEventListener("click", () => this.switchTab("comando"));
     if (tabSymbols) tabSymbols.addEventListener("click", () => this.switchTab("symbols"));
-
-    // Clic en la tarjeta central o título del encabezado para abrir todo el municipio directamente
-    const centerHeader = document.querySelector(".lamina-header-center");
-    if (centerHeader) {
-      centerHeader.addEventListener("click", (e) => {
-        if (e.target.closest(".breadcrumb-item")) return;
-        this.selectMunicipio(this.activeMunId || "maturin");
-      });
-    }
 
     // Botón Minimizar / Expandir panel
     const btnMin = document.getElementById("btn-toggle-minimize-panel");
@@ -744,7 +778,7 @@ export class LaminaApp {
     const bounds = feat ? L.geoJSON(feat).getBounds() : (rings.length ? L.polygon(rings).getBounds() : null);
     this.safeFitBounds(bounds, animate);
 
-    this.updateHeaderUI("ESTADO MONAGAS", "13 MUNICIPIOS • CLIC PARA ABRIR MUNICIPIO MATURÍN ↗");
+    this.updateHeaderUI("ESTADO MONAGAS", "13 MUNICIPIOS • SALA SITUACIONAL 2026");
     this.renderSideStats({
       title: "ESTADO MONAGAS",
       color: "#2563eb",
@@ -1561,11 +1595,9 @@ export class LaminaApp {
 
     const items = [];
 
-    // Nivel 1: Monagas -> Al dar clic en Monagas, abre directamente todo el Municipio
+    // Nivel 1: Estado Monagas
     items.push(`
-      <span class="breadcrumb-item ${this.level === 'municipio' && (!this.activeParishId) ? 'active' : ''}" 
-            onclick="laminaApp.selectMunicipio('${this.activeMunId || 'maturin'}')" 
-            title="Abrir todo el Municipio ${this.activeMunId ? formatTitleCase(this.activeMunId) : 'Maturín'} y sus 11 parroquias">
+      <span class="breadcrumb-item ${this.level === 'estado' ? 'active' : ''}" onclick="laminaApp.selectEstado()" title="Ver todo el Estado Monagas">
         <span>🇻🇪 Monagas</span>
       </span>
     `);
