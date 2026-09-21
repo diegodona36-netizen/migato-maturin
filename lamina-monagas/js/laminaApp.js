@@ -214,7 +214,7 @@ export class LaminaApp {
         this.map.flyToBounds(bounds, {
           paddingTopLeft: pad.paddingTopLeft,
           paddingBottomRight: pad.paddingBottomRight,
-          duration: 0.35,
+          duration: 0.65,
           easeLinearity: 0.25
         });
       } else {
@@ -742,10 +742,10 @@ export class LaminaApp {
       type: "Resumen Estadal Oficial",
       sub: "13 Municipios • 44 Parroquias",
       code: "13 MUNICIPIOS",
-      hab: "1,020,000",
-      vot: "678,920",
-      cen: "536 Centros",
-      cas: "285,000",
+      hab: "—",
+      vot: "—",
+      cen: "—",
+      cas: "—",
       listTitle: "Municipios (Clic para enfocar)",
       listCount: (GEO_MUNICIPIOS_OFICIAL.features || []).length,
       items: (CATALOGO_MONAGAS || []).map(m => {
@@ -847,10 +847,10 @@ export class LaminaApp {
       type: "Resumen Municipal Oficial",
       sub: `Estado Monagas • ${(munObj.parroquias || []).length} Parroquias`,
       code: `${(munObj.parroquias || []).length} PARROQUIAS`,
-      hab: munDem?.habitantes ? munDem.habitantes.toLocaleString("es-VE") : "547,000",
-      vot: munDem?.votantes ? munDem.votantes.toLocaleString("es-VE") : "346,988",
-      cen: munDem?.centros ? `${munDem.centros} Centros` : "175 Centros",
-      cas: munDem?.casas ? munDem.casas.toLocaleString("es-VE") : "153,600",
+      hab: "—",
+      vot: "—",
+      cen: "—",
+      cas: "—",
       listTitle: "Parroquias (Clic para enfocar)",
       listCount: (munObj.parroquias || []).length,
       backBtn: {
@@ -861,12 +861,11 @@ export class LaminaApp {
       items: (munObj.parroquias || []).map(p => {
         const resolvedPId = resolveParishId(p.id);
         const pColor = getParishColor(resolvedPId);
-        const pDem = getParishDemographics(cleanMunId, resolvedPId);
         return {
           id: p.id,
           nombre: p.nombre,
           color: pColor,
-          badge: pDem?.votantes ? `${pDem.votantes.toLocaleString("es-VE")} elect.` : "Ver",
+          badge: "Parroquia",
           onClick: `laminaApp.selectParroquia('${p.id}', '${cleanMunId}')`
         };
       })
@@ -1072,13 +1071,27 @@ export class LaminaApp {
     this.childEntitiesLayer.clearLayers();
     this.centrosLayer.clearLayers();
 
-    // Ajustar cámara a la parroquia con compensación asimétrica y respuesta instantánea
+    // Dibujar el polígono de la parroquia activa con relleno sutil y borde nítido
+    if (feat) {
+      const pLayer = L.geoJSON(feat, {
+        style: {
+          color: pColor,
+          weight: 2.8,
+          opacity: 0.95,
+          fillColor: pColor,
+          fillOpacity: 0.15
+        }
+      });
+      this.childEntitiesLayer.addLayer(pLayer);
+    }
+
+    // Ajustar cámara a la parroquia con compensación asimétrica y respuesta suave
     const bounds = feat ? L.geoJSON(feat).getBounds() : (rings && rings.length > 0 ? (Array.isArray(rings[0][0]) ? L.polygon(rings[0]).getBounds() : L.polygon(rings).getBounds()) : null);
     this.currentParishBounds = bounds;
     this.safeFitBounds(bounds, animate);
 
-    // Cargar y mostrar los Centros Electorales CNE de esta parroquia
-    this.renderCentrosVotacion(resolvedPId);
+    // Centros electorales desactivados a solicitud para no saturar el plano cartográfico
+    this.centrosLayer.clearLayers();
 
     const rawPName = feat?.properties?.nombre || (CATALOGO_MONAGAS.find(m => m.id === cleanMunId)?.parroquias || []).find(p => p.id === cleanPId)?.nombre || cleanPId;
     const cleanPName = formatTitleCase(rawPName);
@@ -1154,7 +1167,6 @@ export class LaminaApp {
     const cleanMunName = rawMunName.replace(/^municipio\s+/i, '').trim();
     const totalParrs = (munObj.parroquias || []).length || 11;
 
-    const pDem = getParishDemographics(cleanMunId, resolvedPId);
     this.updateHeaderUI(`PARROQUIA ${cleanPName.toUpperCase()}`, `MUNICIPIO ${cleanMunName.toUpperCase()} • ESTADO MONAGAS`);
     
     // Preparar lista amigable de sectores/ejes para el panel lateral
@@ -1164,7 +1176,7 @@ export class LaminaApp {
         id: sp.id,
         nombre: sp.nombre,
         color: sp.colorBorde || pColor,
-        badge: `${(sp.sectores || []).length || sp.sectoresCount || 1} sect.`,
+        badge: "Eje",
         onClick: `laminaApp.selectSubParroquia('${sp.id}', '${cleanPId}', '${cleanMunId}')`
       }));
     } else if (poligonos && poligonos.length > 0) {
@@ -1182,11 +1194,11 @@ export class LaminaApp {
       color: pColor,
       type: "Parroquia Oficial",
       sub: `Municipio ${cleanMunName} • Estado Monagas`,
-      code: "OFICIAL CNE",
-      hab: pDem?.habitantes ? pDem.habitantes.toLocaleString("es-VE") : "—",
-      vot: pDem?.votantes ? pDem.votantes.toLocaleString("es-VE") : "—",
-      cen: pDem?.centros ? `${pDem.centros} Centros` : "—",
-      cas: pDem?.casas ? pDem.casas.toLocaleString("es-VE") : "—",
+      code: "PARROQUIA",
+      hab: "—",
+      vot: "—",
+      cen: "—",
+      cas: "—",
       listTitle: subparroquias.length > 0 ? "Ejes Territoriales / Sub-Parroquias" : "Sectores Censados",
       listCount: listItems.length,
       backBtn: {
@@ -1240,8 +1252,7 @@ export class LaminaApp {
       this.safeFitBounds(this.currentParishBounds, animate);
     }
 
-    // Centros de votación oficiales en la parroquia
-    this.renderCentrosVotacion(cleanPId);
+    // Centros de votación desactivados según directriz operativa
 
     // 1. DIBUJAR TODAS LAS SUBPARROQUIAS (LA SELECCIONADA DESTACADA, LAS DEMÁS DE FONDO)
     subparroquias.forEach(sp => {
@@ -1340,10 +1351,10 @@ export class LaminaApp {
       type: "Eje Territorial / Sub-Parroquia",
       sub: `Parroquia ${cleanPName} • ${cleanMunName}`,
       code: "TERRITORIO",
-      hab: eje.habitantes ? eje.habitantes.toLocaleString("es-VE") : "16,162",
-      vot: eje.electores ? eje.electores.toLocaleString("es-VE") : "10,728",
-      cen: eje.centros ? `${eje.centros} Centros` : "5 Centros",
-      cas: eje.casas ? eje.casas.toLocaleString("es-VE") : "5,309",
+      hab: "—",
+      vot: "—",
+      cen: "—",
+      cas: "—",
       listTitle: `Sectores de este Eje (${sectoresToRender.length})`,
       listCount: sectoresToRender.length,
       backBtn: {
@@ -1395,8 +1406,7 @@ export class LaminaApp {
       this.safeFitBounds(this.currentParishBounds, animate);
     }
 
-    // Centros de votación oficiales en la parroquia
-    this.renderCentrosVotacion(cleanPId);
+    // Centros de votación desactivados según directriz operativa
 
     // 1. Dibujar las subparroquias de fondo con trazo sutil
     subparroquias.forEach(sp => {
@@ -1491,10 +1501,10 @@ export class LaminaApp {
       type: "Sector Comunitario",
       sub: `Parroquia ${cleanPName} • ${cleanMunName}`,
       code: "CENSADO",
-      hab: sec.habitantes ? sec.habitantes.toLocaleString("es-VE") : "2,450",
-      vot: sec.electores ? sec.electores.toLocaleString("es-VE") : "1,200",
-      cen: sec.centroVotacion || "1 Centro CNE",
-      cas: sec.casas ? sec.casas.toLocaleString("es-VE") : "640",
+      hab: "—",
+      vot: "—",
+      cen: "—",
+      cas: "—",
       listTitle: "Información de la Comunidad",
       listCount: 1,
       backBtn: {
@@ -1518,42 +1528,11 @@ export class LaminaApp {
     auditLogger.logEvent("SELECCION_SECTOR", { sectorId: secId, parroquiaId: cleanPId, municipioId: cleanMunId, nombre: cleanSecName });
   }
 
-  // Renderizar centros de votación en el mapa con marcadores no obstructivos
+  // Renderizar centros de votación desactivado según directriz operativa
   renderCentrosVotacion(parishId) {
-    this.centrosLayer.clearLayers();
-    const allCentros = (typeof CENTROS_MATURIN !== "undefined" && Array.isArray(CENTROS_MATURIN))
-      ? CENTROS_MATURIN
-      : ((typeof window !== "undefined" && Array.isArray(window.CENTROS_MATURIN)) ? window.CENTROS_MATURIN : []);
-
-    if (!allCentros.length) return;
-
-    const cleanPId = resolveParishId(parishId);
-    const centros = allCentros.filter(c => {
-      const cParish = resolveParishId(c.parroquia);
-      return cParish === cleanPId || c.parroquia === parishId;
-    });
-
-    centros.forEach(c => {
-      if (!c.lat || !c.lng) return;
-
-      const marker = L.circleMarker([c.lat, c.lng], {
-        radius: 5.5,
-        fillColor: "#e11d48",
-        fillOpacity: 0.95,
-        color: "#ffffff",
-        weight: 1.5
-      });
-
-      marker.bindTooltip(`
-        <div style="font-family: inherit; font-size: 11px; padding: 2px;">
-          <span style="color: #e11d48; font-weight: 800; font-size: 9px; text-transform: uppercase;">Centro Electoral CNE</span><br>
-          <strong style="color: #0f172a; font-size: 11.5px; font-weight: 900;">${c.nombre}</strong><br>
-          <span style="color: #475569; font-size: 10px;">${c.electores ? c.electores.toLocaleString('es-VE') + ' electores' : ''} • ${c.mesas || 1} mesas</span>
-        </div>
-      `, { sticky: true, opacity: 0.95 });
-
-      this.centrosLayer.addLayer(marker);
-    });
+    if (this.centrosLayer) {
+      this.centrosLayer.clearLayers();
+    }
   }
 
   /* ========================================================================
@@ -1900,7 +1879,7 @@ export class LaminaApp {
           </div>
           <div class="mt-1 flex items-center justify-between">
             <strong class="text-xs font-black text-slate-900">${cleanMunName.toUpperCase()}</strong>
-            <span class="text-[10px] font-mono text-sky-900 font-bold">${munDem?.votantes ? Number(munDem.votantes).toLocaleString("es-VE") : "346,988"} elect.</span>
+            <span class="text-[10px] font-mono text-sky-900 font-bold">Territorio Activo</span>
           </div>
           <div class="mt-1 pt-1 border-t border-sky-200/60 flex items-center justify-between text-[10.5px]">
             <span class="text-slate-800 font-bold truncate">👤 ${munCmd.responsableGeneral}</span>
@@ -1930,7 +1909,7 @@ export class LaminaApp {
                 <strong class="text-xs font-black text-slate-900 truncate">${formatTitleCase(p.nombre)}</strong>
               </div>
               <span class="text-[9.5px] font-mono text-slate-600 bg-slate-100 px-1.5 py-0.2 rounded font-bold shrink-0">
-                ${pDem?.votantes ? `${Number(pDem.votantes).toLocaleString("es-VE")} elect.` : `${pDem?.centros || 0} c.`}
+                Parroquia
               </span>
             </div>
             <div class="flex items-center justify-between text-[10.5px] text-slate-600 pt-0.5 border-t border-slate-100">
@@ -2073,7 +2052,7 @@ export class LaminaApp {
                   const assigned = getAssignedLeader(sec.id);
                   const isSelected = this.activeSectorId === sec.id;
                   const secColor = sec.colorBorde || sec.colorRelleno || sec.color || "#0284c7";
-                  const secVot = sec.votantes ? `${Number(sec.votantes).toLocaleString("es-VE")} elect.` : (sec.casas ? `${sec.casas} casas` : "");
+                  const secVot = sec.casas ? `${sec.casas} casas` : "";
 
                   return `
                     <div onclick="laminaApp.selectSector('${sec.id}', '${cleanPId}', '${cleanMunId}')"
@@ -2117,7 +2096,7 @@ export class LaminaApp {
                 const assigned = getAssignedLeader(sec.id);
                 const isSelected = this.activeSectorId === sec.id;
                 const secColor = sec.colorBorde || sec.colorRelleno || sec.color || "#0284c7";
-                const secVot = sec.votantes ? `${Number(sec.votantes).toLocaleString("es-VE")} elect.` : (sec.casas ? `${sec.casas} casas` : "");
+                const secVot = sec.casas ? `${sec.casas} casas` : "";
 
                 return `
                   <div onclick="laminaApp.selectSector('${sec.id}', '${cleanPId}', '${cleanMunId}')"
