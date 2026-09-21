@@ -79,7 +79,9 @@
         13 MUNICIPIOS • SALA SITUACIONAL 2026
       </span>
       <div id="lamina-breadcrumbs" class="flex items-center justify-center flex-wrap gap-1.5 text-[11px] sm:text-xs font-mono font-bold text-slate-600 max-w-full">
-        <!-- Inyectado dinámicamente -->
+        <span class="breadcrumb-item active" onclick="laminaApp.selectEstado()" title="Ver todo el Estado Monagas">
+          <span>🇻🇪 Monagas</span>
+        </span>
       </div>
     </div>
 
@@ -132,9 +134,9 @@
     <!-- Encabezado del Panel Lateral -->
     <div class="flex items-center justify-between pb-2 border-b border-slate-200 shrink-0">
       <div class="flex items-center gap-2 min-w-0 flex-1">
-        <span id="side-badge-color" class="w-3.5 h-3.5 rounded-full bg-sky-600 shadow-sm shrink-0"></span>
+        <span id="side-badge-color" class="w-3.5 h-3.5 rounded-full bg-blue-600 shadow-sm shrink-0"></span>
         <h3 id="side-entity-title" class="font-black text-base text-slate-950 uppercase tracking-tight truncate flex-1 min-w-0">
-          MUNICIPIO MATURÍN
+          ESTADO MONAGAS
         </h3>
       </div>
       <div class="flex items-center gap-1 shrink-0 no-print">
@@ -170,14 +172,14 @@
         <div class="flex items-center justify-between gap-2 pb-2 border-b border-slate-100 shrink-0">
           <div class="flex flex-col min-w-0 flex-1">
             <span id="side-entity-type" class="text-xs font-black text-slate-900 uppercase tracking-tight truncate">
-              Resumen Municipal Oficial
+              Resumen Estadal Oficial
             </span>
             <span id="side-entity-sub" class="text-[11px] font-semibold text-slate-500 truncate">
-              Estado Monagas • 11 Parroquias
+              13 Municipios • 44 Parroquias
             </span>
           </div>
           <span id="side-entity-code" class="px-2 py-0.5 rounded-full bg-slate-100 text-slate-700 text-[10px] font-mono font-bold shrink-0 border border-slate-200">
-            11 PARROQUIAS
+            13 MUNICIPIOS
           </span>
         </div>
 
@@ -185,29 +187,29 @@
         <div class="grid grid-cols-2 gap-1.5 text-slate-900 shrink-0">
           <div class="metric-card">
             <span class="metric-label">Habitantes</span>
-            <strong id="stat-val-hab" class="metric-value">547,000</strong>
+            <strong id="stat-val-hab" class="metric-value">1,020,000</strong>
           </div>
           <div class="metric-card bg-sky-50/70 border-sky-200">
             <span class="metric-label text-sky-800">Electores CNE</span>
-            <strong id="stat-val-vot" class="metric-value text-sky-950">346,988</strong>
+            <strong id="stat-val-vot" class="metric-value text-sky-950">678,920</strong>
           </div>
           <div class="metric-card bg-indigo-50/70 border-indigo-200">
             <span class="metric-label text-indigo-800">Centros CNE</span>
-            <strong id="stat-val-cen" class="metric-value text-indigo-950">175 Centros</strong>
+            <strong id="stat-val-cen" class="metric-value text-indigo-950">536 Centros</strong>
           </div>
           <div class="metric-card bg-emerald-50/70 border-emerald-200">
             <span class="metric-label text-emerald-800">Viviendas / Fam.</span>
-            <strong id="stat-val-cas" class="metric-value text-emerald-950">153,600</strong>
+            <strong id="stat-val-cas" class="metric-value text-emerald-950">285,000</strong>
           </div>
         </div>
 
         <!-- Título de Lista Interactiva -->
         <div class="flex items-center justify-between pt-1 border-t border-slate-200 shrink-0">
           <span id="side-list-title" class="text-base font-black uppercase text-slate-700 tracking-wider">
-            Parroquias (Clic para enfocar)
+            Municipios (Clic para enfocar)
           </span>
           <span id="side-list-count" class="text-base font-extrabold text-sky-700 bg-sky-100 px-1.5 py-0.2 rounded-full">
-            11
+            13
           </span>
         </div>
 

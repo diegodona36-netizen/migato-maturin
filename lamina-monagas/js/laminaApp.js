@@ -19,6 +19,7 @@ import {
   MONAGAS_TERRITORIO_COMPLETO
 } from "../../earth-monagas/js/monagasSectoresCatalog.js?v=230";
 import { SUBPARROQUIAS_MONAGAS, SUBPARROQUIAS_GODOS, SECTORES_LAPUENTE } from "../../earth-monagas/js/geoMonagas.js?v=230";
+import { CENTROS_MATURIN } from "../../earth-monagas/js/centrosData.js?v=236";
 import { 
   getComandoInfo, 
   getAssignedLeader, 
@@ -97,11 +98,8 @@ export class LaminaApp {
     this.initMap();
     this.initUIListeners();
     this.initWhiteboard();
-    setTimeout(() => {
-      if (this.map) this.map.invalidateSize();
-      this.updateBaseMapUI();
-      this.parseURLParams();
-    }, 50);
+    this.updateBaseMapUI();
+    this.parseURLParams(true);
   }
 
   initWhiteboard() {
@@ -147,9 +145,10 @@ export class LaminaApp {
     }
     this.currentBaseLayer = savedBasemap;
 
+    // Inicializar centrado geométrico en el Estado Monagas
     this.map = L.map("map-lamina", {
-      center: [9.7469, -63.1812],
-      zoom: 12,
+      center: [9.60, -63.15],
+      zoom: 9,
       preferCanvas: true,
       renderer: canvasRenderer,
       zoomControl: false,
@@ -180,31 +179,97 @@ export class LaminaApp {
     this.centrosLayer = L.layerGroup().addTo(this.map);
 
     window.addEventListener("resize", () => {
-      if (this.map) this.map.invalidateSize();
+      if (this.map) {
+        this.map.invalidateSize();
+        this.reframeCurrentEntity(false);
+      }
     });
   }
 
-  parseURLParams() {
+  /**
+   * Margen Asimétrico para centrar perfectamente el territorio
+   * Deja espacio libre para el panel lateral derecho (384px) y cabecera superior (80px)
+   */
+  getVisibleBoundsPadding() {
+    const sidePanel = document.getElementById("lamina-side-panel");
+    const isMinimized = sidePanel && sidePanel.classList.contains("minimized");
+    const isDesktop = window.innerWidth >= 1024;
+    
+    const rightPad = (isDesktop && !isMinimized) ? 400 : 35;
+    const topPad = 85;
+    const leftPad = 35;
+    const bottomPad = 35;
+
+    return {
+      paddingTopLeft: [leftPad, topPad],
+      paddingBottomRight: [rightPad, bottomPad]
+    };
+  }
+
+  safeFitBounds(bounds, animate = true) {
+    if (!bounds || !this.map) return;
+    try {
+      const pad = this.getVisibleBoundsPadding();
+      if (animate) {
+        this.map.flyToBounds(bounds, {
+          paddingTopLeft: pad.paddingTopLeft,
+          paddingBottomRight: pad.paddingBottomRight,
+          duration: 0.35,
+          easeLinearity: 0.25
+        });
+      } else {
+        this.map.fitBounds(bounds, {
+          paddingTopLeft: pad.paddingTopLeft,
+          paddingBottomRight: pad.paddingBottomRight,
+          animate: false
+        });
+      }
+    } catch (e) {
+      console.warn("[LaminaApp] Error ajustando encuadre de mapa:", e);
+    }
+  }
+
+  reframeCurrentEntity(animate = true) {
+    if (this.level === "estado") {
+      const feat = GEO_ESTADO_OFICIAL.features ? GEO_ESTADO_OFICIAL.features[0] : GEO_ESTADO_OFICIAL;
+      if (feat) this.safeFitBounds(L.geoJSON(feat).getBounds(), animate);
+    } else if (this.level === "municipio" && this.activeMunId) {
+      const cleanMunId = String(this.activeMunId).toLowerCase().replace(/_/g, "-").trim();
+      const feat = (GEO_MUNICIPIOS_OFICIAL.features || []).find(f => {
+        const id = String(f.properties?.id || f.properties?.ADM2_ES || "").toLowerCase().replace(/_/g, "-").trim();
+        return id === cleanMunId || id.includes(cleanMunId) || cleanMunId.includes(id);
+      });
+      if (feat) this.safeFitBounds(L.geoJSON(feat).getBounds(), animate);
+    } else if (this.currentParishBounds) {
+      this.safeFitBounds(this.currentParishBounds, animate);
+    }
+  }
+
+  parseURLParams(isInitial = false) {
     const params = new URLSearchParams(window.location.search);
     const bm = params.get("basemap") || params.get("mapa");
     if (bm && (bm === "plano" || bm === "satelite")) {
       this.setBaseMapType(bm);
     }
 
-    const m = params.get("m") || "maturin";
+    const m = params.get("m");
     const p = params.get("p");
     const sp = params.get("sp");
     const sec = params.get("sec");
 
-    this.activeMunId = m;
+    const animate = !isInitial;
+
     if (sec) {
-      this.selectSector(sec, p, m);
+      this.selectSector(sec, p, m || "maturin", animate);
     } else if (sp) {
-      this.selectSubParroquia(sp, p, m);
+      this.selectSubParroquia(sp, p, m || "maturin", animate);
     } else if (p) {
-      this.selectParroquia(p, m);
+      this.selectParroquia(p, m || "maturin", animate);
+    } else if (m) {
+      this.selectMunicipio(m, animate);
     } else {
-      this.selectMunicipio(m);
+      // Vista principal oficial: Estado Monagas (13 Municipios)
+      this.selectEstado(animate);
     }
   }
 
@@ -225,7 +290,13 @@ export class LaminaApp {
     if (btnMin) {
       btnMin.addEventListener("click", () => {
         const p = document.getElementById("lamina-side-panel");
-        if (p) p.classList.toggle("minimized");
+        if (p) {
+          p.classList.toggle("minimized");
+          setTimeout(() => {
+            if (this.map) this.map.invalidateSize();
+            this.reframeCurrentEntity(true);
+          }, 200);
+        }
       });
     }
 
@@ -611,12 +682,14 @@ export class LaminaApp {
      ======================================================================== */
 
   // 1. NIVEL ESTADO MONAGAS
-  selectEstado() {
+  selectEstado(animate = true) {
     this.level = "estado";
     this.activeMunId = null;
     this.activeParishId = null;
     this.activeSubParishId = null;
     this.activeSectorId = null;
+    this.currentParishBounds = null;
+    this.currentParishRings = null;
 
     const feat = GEO_ESTADO_OFICIAL.features ? GEO_ESTADO_OFICIAL.features[0] : GEO_ESTADO_OFICIAL;
     const rings = this.geoJsonCoordsToLeaflet(feat.geometry);
@@ -625,40 +698,49 @@ export class LaminaApp {
     this.childEntitiesLayer.clearLayers();
     this.centrosLayer.clearLayers();
 
-    // Dibujar los 13 Municipios en el canvas con colores diferenciados
+    // Dibujar los 13 Municipios en el canvas con colores diferenciados y tooltips informativos
     (GEO_MUNICIPIOS_OFICIAL.features || []).forEach(f => {
       const mId = f.properties?.id;
       const munColor = f.properties?.color || (CATALOGO_MONAGAS || []).find(m => m.id === mId)?.color || "#0284c7";
       const mName = f.properties?.nombre || "Municipio";
+      const munObj = (CATALOGO_MONAGAS || []).find(m => m.id === mId);
+      const parishCount = (munObj?.parroquias || []).length || 0;
+
       const layer = L.geoJSON(f, {
         style: {
           color: munColor,
           weight: 2.2,
           opacity: 0.95,
           fillColor: munColor,
-          fillOpacity: 0.22
+          fillOpacity: 0.25
         }
       });
       layer.on({
         mouseover: () => layer.setStyle({ weight: 3.8, fillOpacity: 0.45 }),
-        mouseout: () => layer.setStyle({ weight: 2.2, fillOpacity: 0.22 }),
+        mouseout: () => layer.setStyle({ weight: 2.2, fillOpacity: 0.25 }),
         click: () => this.selectMunicipio(mId)
       });
+
+      layer.bindTooltip(`
+        <div style="font-family: inherit; font-size: 11px; padding: 2px;">
+          <span style="color: #64748b; font-weight: 800; font-size: 9px; text-transform: uppercase;">Municipio Oficial</span><br>
+          <strong style="color: #0f172a; font-size: 12px; font-weight: 900;">MUNICIPIO ${mName.toUpperCase()}</strong><br>
+          <span style="color: ${munColor}; font-size: 10px; font-weight: 700;">${parishCount} Parroquias</span>
+        </div>
+      `, { sticky: true, opacity: 0.95 });
+
       this.childEntitiesLayer.addLayer(layer);
     });
 
-    if (rings && rings.length > 0) {
-      try {
-        const bounds = L.polygon(rings).getBounds();
-        this.map.flyToBounds(bounds, { padding: [40, 40], duration: 1.2 });
-      } catch(e){}
-    }
+    const bounds = feat ? L.geoJSON(feat).getBounds() : (rings.length ? L.polygon(rings).getBounds() : null);
+    this.safeFitBounds(bounds, animate);
 
     this.updateHeaderUI("ESTADO MONAGAS", "13 MUNICIPIOS • SALA SITUACIONAL 2026");
     this.renderSideStats({
       title: "ESTADO MONAGAS",
       color: "#2563eb",
-      type: "Resumen Estadal",
+      type: "Resumen Estadal Oficial",
+      sub: "13 Municipios • 44 Parroquias",
       code: "13 MUNICIPIOS",
       hab: "1,020,000",
       vot: "678,920",
@@ -685,12 +767,14 @@ export class LaminaApp {
   }
 
   // 2. NIVEL MUNICIPIO (MATURÍN, PIAR, CEDEÑO, ETC.)
-  selectMunicipio(munId = "maturin") {
+  selectMunicipio(munId = "maturin", animate = true) {
     this.level = "municipio";
     this.activeMunId = munId;
     this.activeParishId = null;
     this.activeSubParishId = null;
     this.activeSectorId = null;
+    this.currentParishBounds = null;
+    this.currentParishRings = null;
 
     const cleanMunId = String(munId).toLowerCase().replace(/_/g, "-").trim();
     const feat = (GEO_MUNICIPIOS_OFICIAL.features || []).find(f => {
@@ -708,7 +792,7 @@ export class LaminaApp {
     this.childEntitiesLayer.clearLayers();
     this.centrosLayer.clearLayers();
 
-    // Renderizar las 11 Parroquias oficiales con sus colores asignados
+    // Renderizar las Parroquias oficiales de este municipio
     const parishFeats = (GEO_PARROQUIAS_OFICIAL.features || []).filter(f => {
       const fMun = String(f.properties?.municipioId || f.properties?.ADM2_ES || "maturin").toLowerCase().replace(/_/g, "-").trim();
       return fMun === cleanMunId || fMun.includes(cleanMunId) || cleanMunId.includes(fMun);
@@ -726,7 +810,7 @@ export class LaminaApp {
           weight: 2,
           opacity: 0.95,
           fillColor: pColor,
-          fillOpacity: 0.22,
+          fillOpacity: 0.25,
           dashArray: "5, 4"
         }
       });
@@ -736,7 +820,7 @@ export class LaminaApp {
           layer.setStyle({ weight: 3.8, fillOpacity: 0.45 });
         },
         mouseout: () => {
-          layer.setStyle({ weight: 2, fillOpacity: 0.22 });
+          layer.setStyle({ weight: 2, fillOpacity: 0.25 });
         },
         click: () => {
           this.selectParroquia(pId, cleanMunId);
@@ -744,7 +828,6 @@ export class LaminaApp {
       });
       this.childEntitiesLayer.addLayer(layer);
 
-      // Tooltip suave al pasar el cursor (sin saturar la pantalla con etiquetas fijas)
       layer.bindTooltip(`
         <div style="font-family: inherit; font-size: 11px; padding: 2px;">
           <span style="color: #64748b; font-weight: 800; font-size: 9px; text-transform: uppercase;">Parroquia Oficial</span><br>
@@ -753,12 +836,8 @@ export class LaminaApp {
       `, { sticky: true, opacity: 0.95 });
     });
 
-    if (rings && rings.length > 0) {
-      try {
-        const bounds = Array.isArray(rings[0][0]) ? L.polygon(rings[0]).getBounds() : L.polygon(rings).getBounds();
-        this.map.flyToBounds(bounds, { padding: [40, 40], duration: 1.2 });
-      } catch(e){}
-    }
+    const bounds = feat ? L.geoJSON(feat).getBounds() : (rings.length ? (Array.isArray(rings[0][0]) ? L.polygon(rings[0]).getBounds() : L.polygon(rings).getBounds()) : null);
+    this.safeFitBounds(bounds, animate);
 
     const munDem = getMunicipioDemographics(cleanMunId);
     this.updateHeaderUI(`MUNICIPIO ${cleanMunName.toUpperCase()}`, `ESTADO MONAGAS • ${(munObj.parroquias || []).length} PARROQUIAS OFICIALES`);
@@ -774,6 +853,11 @@ export class LaminaApp {
       cas: munDem?.casas ? munDem.casas.toLocaleString("es-VE") : "153,600",
       listTitle: "Parroquias (Clic para enfocar)",
       listCount: (munObj.parroquias || []).length,
+      backBtn: {
+        label: "Ver todo el Estado Monagas",
+        count: "13",
+        onClick: "laminaApp.selectEstado()"
+      },
       items: (munObj.parroquias || []).map(p => {
         const resolvedPId = resolveParishId(p.id);
         const pColor = getParishColor(resolvedPId);
@@ -919,11 +1003,48 @@ export class LaminaApp {
       }
     }
 
+    // 3. Validación y filtrado geográfico estricto contra la frontera oficial de la parroquia
+    const pFeat = (GEO_PARROQUIAS_OFICIAL.features || []).find(f => {
+      const id = String(f.properties?.id || "").toLowerCase().replace(/_/g, "-").trim();
+      return id === cleanPId || id === resolvedPId || resolveParishId(id) === resolvedPId;
+    });
+
+    let pBounds = null;
+    if (pFeat) {
+      try {
+        pBounds = L.geoJSON(pFeat).getBounds();
+      } catch (e) {}
+    }
+
+    const isInsideParish = (coords) => {
+      if (!pBounds || !coords || coords.length < 3) return true;
+      const avgLat = coords.reduce((sum, p) => sum + p[0], 0) / coords.length;
+      const avgLng = coords.reduce((sum, p) => sum + p[1], 0) / coords.length;
+      return pBounds.pad(0.08).contains([avgLat, avgLng]);
+    };
+
+    // Descartar subparroquias ficticias o cuyas coordenadas no caen en esta parroquia
+    subparroquias = subparroquias.filter(sp => {
+      const coords = sp.vertices || sp.poligono;
+      return coords && coords.length >= 3 && isInsideParish(coords);
+    });
+
+    // En sectores, preservar el registro censal para el panel pero invalidar polígono en mapa si cae fuera
+    poligonos = poligonos.map(sec => {
+      const coords = sec.vertices || sec.poligono;
+      const hasValid = coords && coords.length >= 3 && isInsideParish(coords);
+      return {
+        ...sec,
+        hasValidPoly: hasValid,
+        vertices: hasValid ? coords : null
+      };
+    });
+
     return { subparroquias, poligonos };
   }
 
   // 3. NIVEL PARROQUIA (ALTO DE LOS GODOS, LA PICA, SAN SIMÓN, ETC.)
-  selectParroquia(parishId, munId = "maturin") {
+  selectParroquia(parishId, munId = "maturin", animate = true) {
     this.level = "parroquia";
     this.activeMunId = munId;
     this.activeParishId = parishId;
@@ -951,14 +1072,13 @@ export class LaminaApp {
     this.childEntitiesLayer.clearLayers();
     this.centrosLayer.clearLayers();
 
-    // Ajustar cámara a la parroquia como cota máxima de zoom
-    if (rings && rings.length > 0) {
-      try {
-        const bounds = Array.isArray(rings[0][0]) ? L.polygon(rings[0]).getBounds() : L.polygon(rings).getBounds();
-        this.currentParishBounds = bounds;
-        this.map.flyToBounds(bounds, { padding: [40, 40], duration: 1.0 });
-      } catch(e){}
-    }
+    // Ajustar cámara a la parroquia con compensación asimétrica y respuesta instantánea
+    const bounds = feat ? L.geoJSON(feat).getBounds() : (rings && rings.length > 0 ? (Array.isArray(rings[0][0]) ? L.polygon(rings[0]).getBounds() : L.polygon(rings).getBounds()) : null);
+    this.currentParishBounds = bounds;
+    this.safeFitBounds(bounds, animate);
+
+    // Cargar y mostrar los Centros Electorales CNE de esta parroquia
+    this.renderCentrosVotacion(resolvedPId);
 
     const rawPName = feat?.properties?.nombre || (CATALOGO_MONAGAS.find(m => m.id === cleanMunId)?.parroquias || []).find(p => p.id === cleanPId)?.nombre || cleanPId;
     const cleanPName = formatTitleCase(rawPName);
@@ -1000,7 +1120,7 @@ export class LaminaApp {
     } else if (poligonos && poligonos.length > 0) {
       poligonos.forEach(sec => {
         const coords = sec.vertices || sec.poligono;
-        if (coords && coords.length >= 3) {
+        if (sec.hasValidPoly !== false && coords && coords.length >= 3) {
           const sColor = sec.colorBorde || sec.color || "#0284c7";
           const secPoly = L.polygon(coords, {
             color: sColor,
@@ -1083,7 +1203,7 @@ export class LaminaApp {
   }
 
   // 4. NIVEL SUB-PARROQUIA / EJE TERRITORIAL (EL MAPA SE QUEDA EN ZOOM PARROQUIAL)
-  selectSubParroquia(spId, parishId = "alto-de-los-godos", munId = "maturin") {
+  selectSubParroquia(spId, parishId = "alto-de-los-godos", munId = "maturin", animate = true) {
     this.level = "subparroquia";
     this.activeMunId = munId;
     this.activeParishId = parishId;
@@ -1117,8 +1237,11 @@ export class LaminaApp {
       this.applySpotlightMask(this.currentParishRings, pColor, 3.5);
     }
     if (this.currentParishBounds) {
-      this.map.flyToBounds(this.currentParishBounds, { padding: [40, 40], duration: 0.8 });
+      this.safeFitBounds(this.currentParishBounds, animate);
     }
+
+    // Centros de votación oficiales en la parroquia
+    this.renderCentrosVotacion(cleanPId);
 
     // 1. DIBUJAR TODAS LAS SUBPARROQUIAS (LA SELECCIONADA DESTACADA, LAS DEMÁS DE FONDO)
     subparroquias.forEach(sp => {
@@ -1170,7 +1293,7 @@ export class LaminaApp {
     const sectoresToRender = childSectores;
     sectoresToRender.forEach(sec => {
       const sCoords = sec.vertices || sec.poligono;
-      if (sCoords && sCoords.length >= 3) {
+      if (sec.hasValidPoly !== false && sCoords && sCoords.length >= 3) {
         const secPoly = L.polygon(sCoords, {
           color: sec.colorBorde || sec.color || "#0284c7",
           weight: 1.8,
@@ -1244,7 +1367,7 @@ export class LaminaApp {
   }
 
   // 5. NIVEL SECTOR VECINAL (EL MAPA SE QUEDA EN ZOOM PARROQUIAL)
-  selectSector(secId, parishId = "alto-de-los-godos", munId = "maturin") {
+  selectSector(secId, parishId = "alto-de-los-godos", munId = "maturin", animate = true) {
     this.level = "sector";
     this.activeMunId = munId;
     this.activeParishId = parishId;
@@ -1269,8 +1392,11 @@ export class LaminaApp {
       this.applySpotlightMask(this.currentParishRings, pColor, 3.5);
     }
     if (this.currentParishBounds) {
-      this.map.flyToBounds(this.currentParishBounds, { padding: [40, 40], duration: 0.8 });
+      this.safeFitBounds(this.currentParishBounds, animate);
     }
+
+    // Centros de votación oficiales en la parroquia
+    this.renderCentrosVotacion(cleanPId);
 
     // 1. Dibujar las subparroquias de fondo con trazo sutil
     subparroquias.forEach(sp => {
@@ -1299,7 +1425,7 @@ export class LaminaApp {
       if (!isLaPuente && (String(s.id).startsWith("POLY-") || !s.subParroquiaId)) return;
 
       const sCoords = s.vertices || s.poligono;
-      if (sCoords && sCoords.length >= 3) {
+      if (s.hasValidPoly !== false && sCoords && sCoords.length >= 3) {
         const otherSecPoly = L.polygon(sCoords, {
           color: "#94a3b8",
           weight: 1.2,
@@ -1313,9 +1439,9 @@ export class LaminaApp {
       }
     });
 
-    // 3. Destacar el polígono del sector seleccionado con máxima nitidez
+    // 3. Destacar el polígono del sector seleccionado si tiene coordenadas validadas
     const sCoords = sec.vertices || sec.poligono;
-    if (sCoords && sCoords.length >= 3) {
+    if (sec.hasValidPoly !== false && sCoords && sCoords.length >= 3) {
       const secPoly = L.polygon(sCoords, {
         color: sec.colorBorde || sec.color || "#0284c7",
         weight: 3.8,
@@ -1339,7 +1465,7 @@ export class LaminaApp {
       markerPos = [avgLat, avgLng];
     }
 
-    if (markerPos) {
+    if (sec.hasValidPoly !== false && markerPos) {
       const secMarker = L.circleMarker(markerPos, {
         radius: 6,
         fillColor: sec.colorBorde || sec.color || "#0284c7",
@@ -1392,37 +1518,39 @@ export class LaminaApp {
     auditLogger.logEvent("SELECCION_SECTOR", { sectorId: secId, parroquiaId: cleanPId, municipioId: cleanMunId, nombre: cleanSecName });
   }
 
-  // Renderizar centros de votación en el mapa
+  // Renderizar centros de votación en el mapa con marcadores no obstructivos
   renderCentrosVotacion(parishId) {
     this.centrosLayer.clearLayers();
-    if (typeof window.CENTROS_MATURIN === "undefined" || !Array.isArray(window.CENTROS_MATURIN)) {
-      return;
-    }
+    const allCentros = (typeof CENTROS_MATURIN !== "undefined" && Array.isArray(CENTROS_MATURIN))
+      ? CENTROS_MATURIN
+      : ((typeof window !== "undefined" && Array.isArray(window.CENTROS_MATURIN)) ? window.CENTROS_MATURIN : []);
 
-    const centros = window.CENTROS_MATURIN.filter(c => {
+    if (!allCentros.length) return;
+
+    const cleanPId = resolveParishId(parishId);
+    const centros = allCentros.filter(c => {
       const cParish = resolveParishId(c.parroquia);
-      return cParish === parishId || c.parroquia === parishId;
+      return cParish === cleanPId || c.parroquia === parishId;
     });
 
     centros.forEach(c => {
       if (!c.lat || !c.lng) return;
 
       const marker = L.circleMarker([c.lat, c.lng], {
-        radius: 6,
+        radius: 5.5,
         fillColor: "#e11d48",
         fillOpacity: 0.95,
         color: "#ffffff",
         weight: 1.5
       });
 
-      marker.on("click", () => {
-        const info = `
-          <strong>${c.nombre}</strong><br>
-          Electores: ${c.electores?.toLocaleString() || '—'}<br>
-          Mesas: ${c.mesas || 1}
-        `;
-        alert(`🗳️ Centro CNE: ${c.nombre}\nElectores: ${c.electores}\nMesas: ${c.mesas}`);
-      });
+      marker.bindTooltip(`
+        <div style="font-family: inherit; font-size: 11px; padding: 2px;">
+          <span style="color: #e11d48; font-weight: 800; font-size: 9px; text-transform: uppercase;">Centro Electoral CNE</span><br>
+          <strong style="color: #0f172a; font-size: 11.5px; font-weight: 900;">${c.nombre}</strong><br>
+          <span style="color: #475569; font-size: 10px;">${c.electores ? c.electores.toLocaleString('es-VE') + ' electores' : ''} • ${c.mesas || 1} mesas</span>
+        </div>
+      `, { sticky: true, opacity: 0.95 });
 
       this.centrosLayer.addLayer(marker);
     });
