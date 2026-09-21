@@ -268,8 +268,8 @@ export class LaminaApp {
     } else if (m) {
       this.selectMunicipio(m, animate);
     } else {
-      // Vista principal oficial: Estado Monagas (13 Municipios)
-      this.selectEstado(animate);
+      // Abre directamente todo el Municipio Maturín (11 Parroquias oficiales) de una vez
+      this.selectMunicipio("maturin", animate);
     }
   }
 
@@ -284,6 +284,15 @@ export class LaminaApp {
     if (tabStats) tabStats.addEventListener("click", () => this.switchTab("stats"));
     if (tabComando) tabComando.addEventListener("click", () => this.switchTab("comando"));
     if (tabSymbols) tabSymbols.addEventListener("click", () => this.switchTab("symbols"));
+
+    // Clic en la tarjeta central o título del encabezado para abrir todo el municipio directamente
+    const centerHeader = document.querySelector(".lamina-header-center");
+    if (centerHeader) {
+      centerHeader.addEventListener("click", (e) => {
+        if (e.target.closest(".breadcrumb-item")) return;
+        this.selectMunicipio(this.activeMunId || "maturin");
+      });
+    }
 
     // Botón Minimizar / Expandir panel
     const btnMin = document.getElementById("btn-toggle-minimize-panel");
@@ -735,7 +744,7 @@ export class LaminaApp {
     const bounds = feat ? L.geoJSON(feat).getBounds() : (rings.length ? L.polygon(rings).getBounds() : null);
     this.safeFitBounds(bounds, animate);
 
-    this.updateHeaderUI("ESTADO MONAGAS", "13 MUNICIPIOS • SALA SITUACIONAL 2026");
+    this.updateHeaderUI("ESTADO MONAGAS", "13 MUNICIPIOS • CLIC PARA ABRIR MUNICIPIO MATURÍN ↗");
     this.renderSideStats({
       title: "ESTADO MONAGAS",
       color: "#2563eb",
@@ -1552,9 +1561,11 @@ export class LaminaApp {
 
     const items = [];
 
-    // Nivel 1: Estado
+    // Nivel 1: Monagas -> Al dar clic en Monagas, abre directamente todo el Municipio
     items.push(`
-      <span class="breadcrumb-item ${this.level === 'estado' ? 'active' : ''}" onclick="laminaApp.selectEstado()" title="Ver todo el Estado Monagas">
+      <span class="breadcrumb-item ${this.level === 'municipio' && (!this.activeParishId) ? 'active' : ''}" 
+            onclick="laminaApp.selectMunicipio('${this.activeMunId || 'maturin'}')" 
+            title="Abrir todo el Municipio ${this.activeMunId ? formatTitleCase(this.activeMunId) : 'Maturín'} y sus 11 parroquias">
         <span>🇻🇪 Monagas</span>
       </span>
     `);
