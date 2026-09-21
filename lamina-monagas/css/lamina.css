@@ -28,7 +28,7 @@ html, body {
   padding: 0;
   overflow: hidden;
   font-family: var(--font-sans);
-  background-color: #ffffff;
+  background-color: #020617;
   color: #0f172a;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -52,7 +52,7 @@ html, body {
   inset: 0;
   width: 100%;
   height: 100%;
-  background-color: #ffffff;
+  background-color: #020617;
   z-index: 1;
 }
 

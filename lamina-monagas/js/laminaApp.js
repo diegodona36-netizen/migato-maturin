@@ -112,10 +112,10 @@ export class LaminaApp {
     // Canvas acelerado por GPU
     const canvasRenderer = L.canvas({ padding: 0.5 });
 
-    // Satélite Google Híbrido HD (con CORS activo para rasterización limpia a PNG)
+    // Satélite Google Híbrido HD Oficial
     const googleHybrid = L.tileLayer(
       "https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}",
-      { maxZoom: 21, maxNativeZoom: 20, attribution: "", crossOrigin: true }
+      { maxZoom: 21, maxNativeZoom: 20, attribution: "Google Satélite Híbrido" }
     );
 
     this.map = L.map("map-lamina", {
@@ -139,8 +139,8 @@ export class LaminaApp {
       spPane.style.pointerEvents = "none";
     }
 
-    // Renderer Canvas acelerado por GPU para el velo blanco (evita fallos de recorte SVG en html2canvas)
-    this.spotlightRenderer = L.canvas({ pane: "spotlightPane", padding: 0.5 }).addTo(this.map);
+    // Renderer SVG para el velo blanco (soporta recorte perfecto de donut invertido con fill-rule: evenodd)
+    this.spotlightRenderer = L.svg({ pane: "spotlightPane", padding: 0.5 }).addTo(this.map);
     if (this.spotlightRenderer && this.spotlightRenderer._container) {
       this.spotlightRenderer._container.style.pointerEvents = "none";
     }
@@ -1996,117 +1996,87 @@ export class LaminaApp {
       if (document.fonts && document.fonts.ready) {
         await document.fonts.ready;
       }
-      await new Promise(r => setTimeout(r, 120));
+      await new Promise(r => setTimeout(r, 100));
 
-      // Verificar que html2canvas esté disponible
-      if (typeof window.html2canvas !== "function") {
-        console.error("html2canvas no está cargado");
-        alert("El motor de renderizado gráfico no se encuentra disponible. Por favor recarga la página con Ctrl + F5.");
-        return;
-      }
-
-      // Generar nombre descriptivo oficial MIGATO
       const d = new Date().toISOString().slice(0, 10);
       const entity = (this.activeSectorName || this.activeSubParishName || this.activeParishId || this.activeMunId || "Monagas").replace(/[^a-zA-Z0-9_-]/g, "_");
       const filename = `Lamina_MIGATO_${entity}_${d}.${ext}`;
 
-      const clientW = document.documentElement.clientWidth || window.innerWidth;
-      const clientH = document.documentElement.clientHeight || window.innerHeight;
+      let canvas = null;
 
-      // Renderizado 100% Horizontal Panorámico (16:9 estricto del televisor/pantalla)
-      const canvas = await window.html2canvas(document.body, {
-        useCORS: true,
-        allowTaint: false,
-        scale: 2, // Ultra HD 2x panorámico horizontal
-        backgroundColor: "#020617",
-        width: clientW,
-        height: clientH,
-        windowWidth: clientW,
-        windowHeight: clientH,
-        scrollX: 0,
-        scrollY: 0,
-        logging: false,
-        ignoreElements: (el) => {
-          return (
-            el.id === "modal-exportar-lamina" ||
-            el.id === "modal-asignar-comando" ||
-            el.id === "whiteboard-toolbar" ||
-            el.id === "btn-toggle-whiteboard" ||
-            el.classList.contains("leaflet-control-zoom") ||
-            el.classList.contains("no-print")
-          );
-        },
-        onclone: (clonedDoc) => {
-          // 1. Restaurar contenido del botón de captura si cambió por el spinner
-          const clonedBtn = clonedDoc.getElementById("btn-header-capture-png");
-          if (clonedBtn) {
-            clonedBtn.innerHTML = originalContent;
-          }
-
-          const mapContainer = clonedDoc.getElementById("map-lamina");
-
-          // 2. Corregir desalineación y recorte del Velo Blanco (spotlightPane canvas)
-          const liveSpotlight = document.querySelector(".leaflet-spotlightPane canvas");
-          if (liveSpotlight && mapContainer) {
-            const clonedSpotlight = clonedDoc.querySelector(".leaflet-spotlightPane canvas");
-            if (clonedSpotlight) {
-              const rect = liveSpotlight.getBoundingClientRect();
-              clonedSpotlight.style.position = "absolute";
-              clonedSpotlight.style.left = `${Math.round(rect.left)}px`;
-              clonedSpotlight.style.top = `${Math.round(rect.top)}px`;
-              clonedSpotlight.style.width = `${Math.round(rect.width)}px`;
-              clonedSpotlight.style.height = `${Math.round(rect.height)}px`;
-              clonedSpotlight.style.transform = "none";
-              clonedSpotlight.style.zIndex = "450";
-              mapContainer.appendChild(clonedSpotlight);
-            }
-          }
-
-          // 3. Corregir desalineación del Canvas de vectores (overlayPane canvas)
-          const liveOverlay = document.querySelector(".leaflet-overlay-pane canvas");
-          if (liveOverlay && mapContainer) {
-            const clonedOverlay = clonedDoc.querySelector(".leaflet-overlay-pane canvas");
-            if (clonedOverlay) {
-              const rect = liveOverlay.getBoundingClientRect();
-              clonedOverlay.style.position = "absolute";
-              clonedOverlay.style.left = `${Math.round(rect.left)}px`;
-              clonedOverlay.style.top = `${Math.round(rect.top)}px`;
-              clonedOverlay.style.width = `${Math.round(rect.width)}px`;
-              clonedOverlay.style.height = `${Math.round(rect.height)}px`;
-              clonedOverlay.style.transform = "none";
-              clonedOverlay.style.zIndex = "400";
-              mapContainer.appendChild(clonedOverlay);
-            }
-          }
-
-          // 4. Prevenir recorte ("que los campos se coman al propio campo")
-          // Desbloquear overflow y forzar line-height holgado en todo el panel lateral, tarjetas métricas y cabecera
-          const allPanelsAndTexts = clonedDoc.querySelectorAll(
-            "#lamina-side-panel, #lamina-side-panel *, #lamina-header, #lamina-header *, .metric-card, .metric-value, .metric-label, .territory-row, .territory-row *, .truncate"
-          );
-          allPanelsAndTexts.forEach(node => {
-            if (node.classList && node.classList.contains("truncate")) {
-              node.classList.remove("truncate");
-            }
-            node.style.overflow = "visible";
-            node.style.overflowX = "visible";
-            node.style.overflowY = "visible";
-            node.style.textOverflow = "clip";
-            if (node.classList && node.classList.contains("metric-value")) {
-              node.style.lineHeight = "1.45";
-              node.style.paddingBottom = "3px";
-              node.style.display = "block";
-            } else if (node.classList && node.classList.contains("metric-card")) {
-              node.style.padding = "9px 12px 11px 12px";
-              node.style.overflow = "visible";
-            } else if (node.tagName === "STRONG" || node.tagName === "SPAN" || node.tagName === "H1" || node.tagName === "H2" || node.tagName === "H3") {
-              node.style.lineHeight = "1.35";
-            }
+      // Método 1: Screen Capture API con preferCurrentTab (Captura de hardware 100% fiel con satélite HD y pizarra)
+      if (navigator.mediaDevices && typeof navigator.mediaDevices.getDisplayMedia === "function") {
+        try {
+          const stream = await navigator.mediaDevices.getDisplayMedia({
+            video: {
+              displaySurface: "browser",
+              width: { ideal: 3840 },
+              height: { ideal: 2160 }
+            },
+            audio: false,
+            preferCurrentTab: true
           });
-        }
-      });
 
-      // Descarga silenciosa directa del archivo en el formato solicitado (PNG o JPG)
+          const video = document.createElement("video");
+          video.srcObject = stream;
+          video.muted = true;
+          await video.play();
+          await new Promise(r => setTimeout(r, 300));
+
+          canvas = document.createElement("canvas");
+          canvas.width = video.videoWidth || window.innerWidth;
+          canvas.height = video.videoHeight || window.innerHeight;
+          const ctx = canvas.getContext("2d");
+          ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+          stream.getTracks().forEach(t => t.stop());
+        } catch (mediaErr) {
+          if (mediaErr.name === "NotAllowedError") {
+            // El usuario canceló el diálogo de captura
+            return;
+          }
+          console.warn("Screen capture no disponible o bloqueado, activando fallback html2canvas:", mediaErr);
+        }
+      }
+
+      // Método 2 (Fallback): html2canvas si getDisplayMedia no está disponible
+      if (!canvas && typeof window.html2canvas === "function") {
+        const clientW = document.documentElement.clientWidth || window.innerWidth;
+        const clientH = document.documentElement.clientHeight || window.innerHeight;
+
+        canvas = await window.html2canvas(document.body, {
+          useCORS: true,
+          allowTaint: true,
+          scale: 2,
+          backgroundColor: "#020617",
+          width: clientW,
+          height: clientH,
+          logging: false,
+          ignoreElements: (el) => {
+            return (
+              el.id === "modal-exportar-lamina" ||
+              el.id === "modal-asignar-comando" ||
+              el.id === "whiteboard-toolbar" ||
+              el.id === "btn-toggle-whiteboard" ||
+              el.classList.contains("leaflet-control-zoom") ||
+              el.classList.contains("no-print")
+            );
+          },
+          onclone: (clonedDoc) => {
+            const clonedBtn = clonedDoc.getElementById("btn-header-capture-png");
+            if (clonedBtn) {
+              clonedBtn.innerHTML = originalContent;
+            }
+          }
+        });
+      }
+
+      if (!canvas) {
+        alert("No se pudo generar la imagen automáticamente. Puedes utilizar el atajo Win + Shift + S o Impr Pant en tu teclado.");
+        return;
+      }
+
+      // Descarga directa e instantánea del archivo en el formato solicitado (PNG o JPG)
       if (canvas.toBlob) {
         canvas.toBlob((blob) => {
           if (!blob) {
