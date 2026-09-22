@@ -11,14 +11,21 @@ Bienvenido a la Bóveda de Conocimiento y Control Estratégico de MIGATO Monagas
 Este espacio interconecta todos los proyectos, módulos web, infraestructura física, red de telecomunicaciones y decisiones de mando de la campaña de El Gato Briceño.
 
 ### Ejes de Navegación del Grafo (Word Tree):
-- [[Proyecto Sala Situacional]]: Equipamiento, puesta en marcha y dotación técnica.
-- [[Arquitectura Hibrida Nube y Boveda]]: Doctrina de vanguardia en la nube y bóveda física local.
-- [[Catalogo de Modulos Electorales]]: Los 5 módulos del sistema web y aplicaciones GIS.
-- [[Territorio Monagas]]: Padrón electoral, 13 municipios y 44 parroquias.
-
+- [[Identidad Institucional MIGATO y Liderazgo El Gato Briceno]]: Doctrina institucional, línea de mando y conducción política regional.
+- [[Proyecto Sala Situacional]]: Equipamiento, puesta en marcha, servidores y dotación técnica en Maturín.
+- [[Arquitectura Hibrida Nube y Boveda]]: Doctrina de vanguardia Cloud VPS y Bóveda Física Local en RAID 1.
+- [[Blindaje Criptografico Avanzado y Proteccion Fisica 2026]]: Esquema Shamir 2-de-3, Duress Key, RAM-Disk y túnel anti-DPI.
+- [[Estandar Oficial de Informes y Documentos DOCX]]: Norma tipográfica IUTIRLA / MIGATO para informes y propuestas formales.
+- [[Catalogo de Modulos Electorales]]: Suite de sistemas web tácticos, GIS y cartografía interactiva.
+- [[Territorio Monagas]]: Padrón electoral CNE, 13 municipios, 44 parroquias y centros de votación.
+- [[Historial Consolidado de Sesiones de Desarrollo]]: Cronología integral de desarrollo, depuración técnica y bitácora de versiones.
 
 ## Conexiones Relacionadas
+- [[Identidad Institucional MIGATO y Liderazgo El Gato Briceno]]
 - [[Proyecto Sala Situacional]]
 - [[Arquitectura Hibrida Nube y Boveda]]
+- [[Blindaje Criptografico Avanzado y Proteccion Fisica 2026]]
+- [[Estandar Oficial de Informes y Documentos DOCX]]
 - [[Catalogo de Modulos Electorales]]
 - [[Territorio Monagas]]
+- [[Historial Consolidado de Sesiones de Desarrollo]]
