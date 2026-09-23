@@ -105,36 +105,47 @@ export class LaminaApp {
     this.initWhiteboard();
     this.updateBaseMapUI();
 
-    // 1. Renderizado inicial inmediato sin animación de cámara
-    this.parseURLParams(true);
-
-    // 2. Leaflet whenReady: asegura que contenedor, panes y renderers SVG/Canvas estén activos
-    this.map.whenReady(() => {
+    // Inicialización del territorio condicionada a dimensiones válidas del contenedor
+    let initialized = false;
+    const checkAndInit = () => {
+      if (initialized || !this.map) return true;
       this.map.invalidateSize();
-      this.refreshCurrentView(false);
-    });
-
-    // 3. Fallbacks de ciclo de vida con invalidateSize y refresco para garantizar polígonos y velo blanco
-    requestAnimationFrame(() => {
-      if (this.map) {
-        this.map.invalidateSize();
-        this.refreshCurrentView(false);
+      const size = this.map.getSize();
+      if (size && size.x > 100 && size.y > 100) {
+        initialized = true;
+        this.parseURLParams(false);
+        return true;
       }
-    });
+      return false;
+    };
 
-    setTimeout(() => {
-      if (this.map) {
-        this.map.invalidateSize();
-        this.refreshCurrentView(false);
-      }
-    }, 120);
+    // 1. Intentar si el mapa ya tiene dimensiones calculadas
+    if (!checkAndInit()) {
+      // 2. Esperar al ciclo whenReady de Leaflet
+      this.map.whenReady(() => {
+        if (!checkAndInit()) {
+          requestAnimationFrame(() => {
+            if (!checkAndInit()) {
+              setTimeout(checkAndInit, 100);
+            }
+          });
+        }
+      });
+    }
 
+    // Respaldo de seguridad final por si la ventana tarda en resolver tipografía o estilos
     setTimeout(() => {
-      if (this.map) {
-        this.map.invalidateSize();
-        this.refreshCurrentView(false);
+      if (!initialized) {
+        checkAndInit();
       }
     }, 350);
+
+    window.addEventListener("load", () => {
+      if (this.map) {
+        this.map.invalidateSize();
+        if (!initialized) checkAndInit();
+      }
+    });
   }
 
   initWhiteboard() {
@@ -180,10 +191,12 @@ export class LaminaApp {
     }
     this.currentBaseLayer = savedBasemap;
 
-    // Inicializar centrado geométrico en el Estado Monagas
+    // Inicializar centrado geométrico en el Estado Monagas con límites seguros de zoom
     this.map = L.map("map-lamina", {
       center: [9.60, -63.15],
       zoom: 9,
+      minZoom: 7,
+      maxZoom: 21,
       preferCanvas: true,
       renderer: canvasRenderer,
       zoomControl: false,
@@ -248,9 +261,9 @@ export class LaminaApp {
       const pad = this.getVisibleBoundsPadding();
       const mapSize = this.map.getSize();
 
-      // Si el contenedor aún no tiene dimensiones en el DOM, reintentar al siguiente ciclo
-      if (!mapSize || mapSize.x <= 0 || mapSize.y <= 0) {
-        setTimeout(() => this.safeFitBounds(bounds, animate), 60);
+      // Si el contenedor aún no tiene dimensiones mínimas en el DOM, esperar al siguiente ciclo
+      if (!mapSize || mapSize.x < 100 || mapSize.y < 100) {
+        setTimeout(() => this.safeFitBounds(bounds, animate), 100);
         return;
       }
 

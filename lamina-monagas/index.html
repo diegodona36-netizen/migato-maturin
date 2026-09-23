@@ -36,7 +36,7 @@
   <script src="../centros-maturin/js/centrosData.js"></script>
 
   <!-- Estilos de Lámina Ejecutiva 120" -->
-  <link rel="stylesheet" href="css/lamina.css?v=340" />
+  <link rel="stylesheet" href="css/lamina.css?v=350" />
 
   <!-- Anti-Cache Meta Tags -->
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate, max-age=0" />
@@ -72,7 +72,7 @@
 
     <!-- Bloque Central: Título Dinámico de la Entidad y Migas de Pan (Columna Central Amplia) -->
     <div class="lamina-header-card lamina-header-center flex flex-col items-center justify-center text-center px-5 py-2 shadow-2xs">
-      <h2 id="lamina-entity-title" class="font-display text-base sm:text-lg lg:text-xl font-black text-slate-900 uppercase tracking-tight leading-snug truncate max-w-full">
+      <h2 id="lamina-entity-title" onclick="event.stopPropagation(); window.laminaApp && window.laminaApp.reframeCurrentEntity(true)" class="font-display text-base sm:text-lg lg:text-xl font-black text-slate-900 uppercase tracking-tight leading-snug truncate max-w-full cursor-pointer hover:text-blue-700 transition" title="Reenfocar territorio actual">
         ESTADO MONAGAS
       </h2>
       <span id="lamina-entity-subtitle" class="text-xs sm:text-sm font-bold text-slate-500 uppercase tracking-wider mb-1 max-w-full">
@@ -657,7 +657,7 @@
 
   <!-- 5. AUTENTICACIÓN Y CONTROLADOR PRINCIPAL DEL MÓDULO -->
   <script src="../js/auth.js"></script>
-  <script type="module" src="js/laminaApp.js?v=340"></script>
+  <script type="module" src="js/laminaApp.js?v=350"></script>
   <script>
     if (window.lucide && typeof window.lucide.createIcons === 'function') {
       window.lucide.createIcons();
