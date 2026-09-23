@@ -100,9 +100,9 @@ export class LaminaApp {
     // Estudio Rápido de Colores
     this.customMunColors = {};
     this.customParishColors = {};
-    this.customSectorColors = {};
-    this.colorStudio = null;
-    this.loadCustomColors();
+    // Subinterfaz Territorial, Datos y Comandos
+    this.modalSelectedMun = "maturin";
+    this.modalDrilldownParish = null;
 
     this.init();
   }
@@ -2242,6 +2242,559 @@ export class LaminaApp {
           window.lucide.createIcons();
         }
       }
+    }
+  }
+
+  // =========================================================================
+  // SUBINTERFAZ / CONSOLA DE MANDO TERRITORIAL, DATOS Y COMANDOS (120")
+  // =========================================================================
+
+  openTerritoryModal(munId = null) {
+    if (munId) {
+      this.modalSelectedMun = munId;
+    } else if (this.activeMunId) {
+      this.modalSelectedMun = this.activeMunId;
+    } else {
+      this.modalSelectedMun = "maturin";
+    }
+    this.modalDrilldownParish = null;
+
+    const modal = document.getElementById("modal-territorio-interfaz");
+    if (!modal) return;
+
+    modal.classList.remove("hidden");
+    modal.style.setProperty("display", "flex", "important");
+
+    const input = document.getElementById("input-territory-modal-filter");
+    if (input) {
+      input.value = "";
+      input.oninput = (e) => this.renderTerritoryModal(e.target.value);
+      setTimeout(() => input.focus(), 80);
+    }
+
+    this.renderTerritoryModal("");
+  }
+
+  closeTerritoryModal() {
+    const modal = document.getElementById("modal-territorio-interfaz");
+    if (!modal) return;
+    modal.classList.add("hidden");
+    modal.style.setProperty("display", "none", "important");
+  }
+
+  setTerritoryModalMun(munId) {
+    this.modalSelectedMun = munId;
+    this.modalDrilldownParish = null;
+    const input = document.getElementById("input-territory-modal-filter");
+    if (input) input.value = "";
+    this.renderTerritoryModal("");
+  }
+
+  drilldownParishInModal(parishId, munId = null) {
+    this.modalDrilldownParish = {
+      parishId: resolveParishId(parishId),
+      rawParishId: parishId,
+      munId: munId || this.modalSelectedMun || "maturin"
+    };
+    this.renderTerritoryModal("");
+  }
+
+  backFromParishDrilldown() {
+    this.modalDrilldownParish = null;
+    this.renderTerritoryModal("");
+  }
+
+  focusAndClose(level, id1, id2 = null, id3 = null) {
+    this.closeTerritoryModal();
+    if (level === "municipio") {
+      this.selectMunicipio(id1);
+    } else if (level === "parroquia") {
+      this.selectParroquia(id1, id2 || this.modalSelectedMun || "maturin");
+    } else if (level === "subparroquia") {
+      this.selectSubParroquia(id1, id2, id3 || this.modalSelectedMun || "maturin");
+    } else if (level === "sector") {
+      this.selectSector(id1, id2, id3 || this.modalSelectedMun || "maturin");
+    }
+  }
+
+  renderTerritoryModal(filterText = "") {
+    const container = document.getElementById("modal-territory-content");
+    if (!container) return;
+
+    const q = (filterText || "").toLowerCase().trim();
+
+    // MODO 1: BÚSQUEDA DINÁMICA EN TIEMPO REAL
+    if (q.length >= 2) {
+      let matchedParishes = [];
+      let matchedSectors = [];
+      let matchedDirigentes = [];
+
+      // A. Buscar en Municipios y Parroquias
+      (CATALOGO_MONAGAS || []).forEach(m => {
+        (m.parroquias || []).forEach(p => {
+          if (p.nombre.toLowerCase().includes(q) || (m.nombre || "").toLowerCase().includes(q)) {
+            matchedParishes.push({ mun: m, parish: p });
+          }
+        });
+      });
+
+      // B. Buscar en Comandos (Dirigentes por nombre o cargo)
+      Object.entries(COMANDOS_PARROQUIALES || {}).forEach(([pId, cmd]) => {
+        if ((cmd.responsableGeneral || "").toLowerCase().includes(q) || (cmd.nombre || "").toLowerCase().includes(q)) {
+          matchedDirigentes.push({
+            tipo: "Parroquia",
+            nombre: cmd.responsableGeneral,
+            entidad: cmd.nombre,
+            telefono: cmd.telefono,
+            munId: cmd.municipioId || "maturin",
+            parishId: pId
+          });
+        }
+      });
+      Object.entries(COMANDOS_MUNICIPALES || {}).forEach(([mId, cmd]) => {
+        if ((cmd.responsableGeneral || "").toLowerCase().includes(q) || (cmd.nombre || "").toLowerCase().includes(q)) {
+          matchedDirigentes.push({
+            tipo: "Municipio",
+            nombre: cmd.responsableGeneral,
+            entidad: cmd.nombre,
+            telefono: cmd.telefono,
+            munId: mId
+          });
+        }
+      });
+
+      // C. Buscar en Sectores
+      const seenSecs = new Set();
+      (ALL_SECTORES_FLAT || []).forEach(sec => {
+        if ((sec.nombre || "").toLowerCase().includes(q) || (sec.centroVotacion || "").toLowerCase().includes(q)) {
+          if (!seenSecs.has(String(sec.id))) {
+            seenSecs.add(String(sec.id));
+            matchedSectors.push(sec);
+          }
+        }
+      });
+      matchedSectors = matchedSectors.slice(0, 30);
+
+      let searchHtml = `
+        <div class="space-y-4 py-1 overflow-y-auto max-h-[72vh] flex-1 pr-1">
+          <!-- Barra de estado -->
+          <div class="flex items-center justify-between bg-[#140e40] p-3 rounded-xl border border-[#2d1f85] shrink-0">
+            <div class="flex items-center gap-2">
+              <span class="text-base">🔍</span>
+              <span class="text-sm text-slate-300">Resultados para: <strong class="text-sky-300 font-mono">"${filterText}"</strong></span>
+            </div>
+            <button type="button" onclick="const inp = document.getElementById('input-territory-modal-filter'); if(inp) { inp.value = ''; inp.focus(); } window.laminaApp?.renderTerritoryModal('');"
+              class="px-2.5 py-1 rounded-lg bg-[#0e092e] hover:bg-[#23176d] text-slate-300 hover:text-white border border-[#2d1f85] text-xs font-bold transition cursor-pointer">
+              ✖ Limpiar búsqueda
+            </button>
+          </div>
+      `;
+
+      if (matchedDirigentes.length > 0) {
+        searchHtml += `
+          <div>
+            <span class="text-xs font-black uppercase text-amber-400 tracking-wider block mb-2">👤 Dirigentes y Comandos Coincidentes (${matchedDirigentes.length})</span>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              ${matchedDirigentes.map(d => `
+                <div class="p-3 rounded-xl bg-[#140e40] border border-sky-400/40 flex items-center justify-between gap-3">
+                  <div class="min-w-0 flex-1">
+                    <span class="text-[10px] uppercase font-bold text-sky-300 block">${d.tipo} • ${d.entidad}</span>
+                    <strong class="text-sm font-black text-white block truncate">${d.nombre}</strong>
+                    <span class="text-xs font-mono text-emerald-400 font-bold block">📱 ${d.telefono}</span>
+                  </div>
+                  <button type="button" onclick="window.laminaApp?.focusAndClose('${d.tipo === 'Municipio' ? 'municipio' : 'parroquia'}', '${d.tipo === 'Municipio' ? d.munId : d.parishId}', '${d.munId}')"
+                    class="px-2.5 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs transition cursor-pointer shrink-0">
+                    Enfocar ➔
+                  </button>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      }
+
+      if (matchedParishes.length > 0) {
+        searchHtml += `
+          <div>
+            <span class="text-xs font-black uppercase text-sky-400 tracking-wider block mb-2">📍 Parroquias Coincidentes (${matchedParishes.length})</span>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              ${matchedParishes.map(({ mun, parish }) => {
+                const dem = getParishDemographics(parish.id, mun.id) || {};
+                const cmd = COMANDOS_PARROQUIALES[parish.id] || getComandoInfo("parroquia", parish.id, parish.id, mun.id);
+                return `
+                  <div class="p-3 rounded-xl bg-[#140e40] border border-[#2d1f85] flex flex-col justify-between gap-2">
+                    <div class="flex items-start justify-between gap-2">
+                      <div>
+                        <span class="text-[10px] uppercase font-bold text-slate-400 block">${(mun.nombre || mun.id).replace(/^Municipio\s+/i, '')}</span>
+                        <strong class="text-sm font-black text-white block">${parish.nombre}</strong>
+                      </div>
+                      <span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-sky-900/60 text-sky-300 border border-sky-700/50">
+                        ${Number(dem.votantes || 0).toLocaleString("es-VE")} elect.
+                      </span>
+                    </div>
+                    <div class="text-xs text-slate-300 flex items-center justify-between border-t border-[#2d1f85]/60 pt-1.5">
+                      <span class="truncate">👤 ${cmd?.responsableGeneral || 'Comando Parroquial'}</span>
+                      <span class="font-mono text-emerald-400 font-bold shrink-0 ml-1">${cmd?.telefono || ''}</span>
+                    </div>
+                    <div class="flex items-center gap-1.5 pt-1">
+                      <button type="button" onclick="window.laminaApp?.drilldownParishInModal('${parish.id}', '${mun.id}')"
+                        class="flex-1 py-1.5 px-2 bg-[#23176d] hover:bg-[#2d1f85] text-sky-200 text-xs font-bold rounded-lg border border-sky-400/30 transition text-center cursor-pointer">
+                        Ver Sectores
+                      </button>
+                      <button type="button" onclick="window.laminaApp?.focusAndClose('parroquia', '${parish.id}', '${mun.id}')"
+                        class="py-1.5 px-3 bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-black rounded-lg transition cursor-pointer">
+                        Enfocar ➔
+                      </button>
+                    </div>
+                  </div>
+                `;
+              }).join('')}
+            </div>
+          </div>
+        `;
+      }
+
+      if (matchedSectors.length > 0) {
+        searchHtml += `
+          <div>
+            <span class="text-xs font-black uppercase text-purple-400 tracking-wider block mb-2">🏘️ Sectores y Comunidades Coincidentes (${matchedSectors.length})</span>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
+              ${matchedSectors.map(s => {
+                const sDem = s.votantes ? `${Number(s.votantes).toLocaleString("es-VE")} vot.` : (s.casas ? `${s.casas} casas` : '');
+                return `
+                  <div class="p-2.5 rounded-xl bg-[#140e40] border border-[#2d1f85] flex flex-col justify-between gap-1.5">
+                    <div>
+                      <span class="text-[9.5px] uppercase font-bold text-slate-400 block truncate">${s.parroquiaId || ''} • ${s.eje || 'Sector'}</span>
+                      <strong class="text-xs font-black text-white block truncate">${s.nombre}</strong>
+                    </div>
+                    <div class="flex items-center justify-between text-[11px] text-slate-300">
+                      <span class="font-mono text-sky-300">${sDem}</span>
+                      <span class="text-[9px] text-slate-400 truncate max-w-[120px]">${s.centroVotacion || ''}</span>
+                    </div>
+                    <button type="button" onclick="window.laminaApp?.focusAndClose('sector', '${s.id}', '${s.parroquiaId}', '${s.municipioId}')"
+                      class="mt-1 w-full py-1 bg-sky-600 hover:bg-sky-500 text-white font-bold text-[11px] rounded-lg transition text-center cursor-pointer">
+                      Enfocar en Lámina 120" ➔
+                    </button>
+                  </div>
+                `;
+              }).join('')}
+            </div>
+          </div>
+        `;
+      }
+
+      if (matchedDirigentes.length === 0 && matchedParishes.length === 0 && matchedSectors.length === 0) {
+        searchHtml += `
+          <div class="text-center py-10 bg-[#140e40] rounded-2xl border border-[#2d1f85] p-6 space-y-3">
+            <span class="text-3xl">🔍</span>
+            <p class="text-sm font-bold text-slate-200">No se encontraron parroquias, sectores ni dirigentes para "${filterText}".</p>
+            <p class="text-xs text-slate-400 max-w-md mx-auto">Verifica la ortografía o regresa al directorio general de los 13 municipios de Monagas.</p>
+            <button type="button" onclick="const inp = document.getElementById('input-territory-modal-filter'); if(inp) { inp.value = ''; inp.focus(); } window.laminaApp?.renderTerritoryModal('');"
+              class="px-4 py-2 bg-amber-500 hover:bg-amber-400 text-slate-950 rounded-xl text-xs font-black transition cursor-pointer shadow-md">
+              Ver los 13 Municipios
+            </button>
+          </div>
+        `;
+      }
+
+      searchHtml += `</div>`;
+      container.innerHTML = searchHtml;
+      if (window.lucide && typeof window.lucide.createIcons === "function") {
+        try { window.lucide.createIcons(); } catch(e){}
+      }
+      return;
+    }
+
+    // MODO 2: NAVEGADOR ESTRUCTURADO EN 2 COLUMNAS (13 MUNICIPIOS ➔ PARROQUIAS / SECTORES)
+    const activeMunId = this.modalSelectedMun || "maturin";
+    const munObj = (CATALOGO_MONAGAS || []).find(m => m.id === activeMunId) || CATALOGO_MONAGAS[0] || { id: "maturin", nombre: "Maturín", parroquias: [] };
+    const munDem = getMunicipioDemographics(munObj.id) || {};
+    const munComando = COMANDOS_MUNICIPALES[munObj.id] || getComandoInfo("municipio", munObj.id);
+
+    let mainHtml = `
+      <div class="flex flex-col md:flex-row gap-3 sm:gap-4 h-full min-h-0 flex-1 overflow-hidden">
+        
+        <!-- Pestaña Rápida de Municipios en Móvil (< md:) -->
+        <div class="md:hidden flex items-center gap-1.5 overflow-x-auto no-scrollbar py-1 border-b border-[#2d1f85]/60 pb-2 shrink-0">
+          ${(CATALOGO_MONAGAS || []).map(m => {
+            const pCount = Array.isArray(m.parroquias) ? m.parroquias.length : 0;
+            const isAct = m.id === activeMunId;
+            return `
+              <button type="button" onclick="window.laminaApp?.setTerritoryModalMun('${m.id}')"
+                class="px-3 py-1.5 rounded-xl text-xs font-bold transition shrink-0 cursor-pointer flex items-center gap-1.5 ${isAct ? 'bg-amber-500 text-slate-950 font-black shadow-md' : 'bg-[#140e40] text-slate-300 hover:text-white border border-[#2d1f85]'}">
+                <span>🏛️ ${(m.nombre || m.id).replace(/^Municipio\s+/i, '')}</span>
+                <span class="text-[10px] font-mono opacity-80">(${pCount})</span>
+              </button>
+            `;
+          }).join('')}
+        </div>
+
+        <!-- COLUMNA 1: LISTA DE LOS 13 MUNICIPIOS (Desktop md:) -->
+        <div class="hidden md:flex flex-col w-52 lg:w-60 shrink-0 border-r border-[#2d1f85]/70 pr-3 space-y-1.5 overflow-y-auto max-h-[72vh]">
+          <div class="text-xs font-black text-amber-400 uppercase tracking-wider px-1 pb-1 flex items-center justify-between border-b border-[#2d1f85]/50 shrink-0">
+            <span>1. MUNICIPIOS</span>
+            <span class="text-[11px] text-slate-400 font-mono">13 Total</span>
+          </div>
+          <div class="space-y-1 pt-1">
+            ${(CATALOGO_MONAGAS || []).map(m => {
+              const pCount = Array.isArray(m.parroquias) ? m.parroquias.length : 0;
+              const isAct = m.id === activeMunId;
+              return `
+                <button type="button" onclick="window.laminaApp?.setTerritoryModalMun('${m.id}')"
+                  class="w-full text-left p-2 rounded-xl transition flex items-center justify-between gap-2 cursor-pointer group ${isAct ? 'bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 font-black shadow-md shadow-amber-500/20' : 'bg-[#140e40] hover:bg-[#23176d] text-slate-300 hover:text-white border border-[#2d1f85]'}">
+                  <div class="flex items-center gap-1.5 truncate min-w-0">
+                    <span class="text-sm shrink-0">🏛️</span>
+                    <span class="text-xs truncate font-bold">${(m.nombre || m.id).replace(/^Municipio\s+/i, '')}</span>
+                  </div>
+                  <span class="text-[11px] font-mono px-1.5 py-0.2 rounded shrink-0 ${isAct ? 'bg-slate-950/20 text-slate-950 font-black' : 'bg-[#0e092e] text-slate-400 border border-[#2d1f85]'}">
+                    ${pCount}
+                  </span>
+                </button>
+              `;
+            }).join('')}
+          </div>
+        </div>
+
+        <!-- COLUMNA 2: DETALLES, PARROQUIAS Y DESGLOSE DEL MUNICIPIO SELECCIONADO -->
+        <div class="flex-1 overflow-y-auto max-h-[72vh] space-y-3.5 pr-1 min-w-0">
+    `;
+
+    if (!this.modalDrilldownParish) {
+      mainHtml += `
+        <!-- BANNER FICHA 2 EN 1 DEL MUNICIPIO: COMANDO + DATOS -->
+        <div class="bg-[#140e40] border border-[#2d1f85] rounded-2xl p-3.5 space-y-3 shadow-md">
+          <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2.5 pb-2.5 border-b border-[#2d1f85]/70">
+            <div>
+              <span class="text-[10px] font-black uppercase text-amber-400 tracking-widest block">MUNICIPIO OFICIAL</span>
+              <h2 class="text-base sm:text-lg font-black text-white flex items-center gap-2">
+                <span>🏛️ Municipio ${(munObj.nombre || munObj.id).replace(/^Municipio\s+/i, '')}</span>
+                <span class="text-xs font-mono px-2 py-0.5 rounded-full bg-sky-900/60 text-sky-300 border border-sky-700/50">
+                  ${(munObj.parroquias || []).length} Parroquias
+                </span>
+              </h2>
+            </div>
+            <button type="button" onclick="window.laminaApp?.focusAndClose('municipio', '${munObj.id}')"
+              class="px-3 py-1.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs rounded-xl transition flex items-center justify-center gap-1.5 shadow-xs cursor-pointer self-start sm:self-auto">
+              <i data-lucide="crosshair" class="w-3.5 h-3.5"></i>
+              <span>Enfocar Municipio en Lámina 120"</span>
+            </button>
+          </div>
+
+          <!-- Ficha de Comando Municipal -->
+          <div class="p-2.5 rounded-xl bg-[#0e092e] border border-[#2d1f85] flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 text-xs">
+            <div class="flex items-center gap-2 min-w-0">
+              <span class="text-base">👤</span>
+              <div class="truncate">
+                <span class="text-[9.5px] uppercase font-bold text-slate-400 block">Jefe de Comando Municipal</span>
+                <strong class="text-xs font-black text-white block truncate">${munComando?.responsableGeneral || munComando?.general || 'Coordinador Municipal'}</strong>
+              </div>
+            </div>
+            <div class="flex items-center gap-2 text-[11px] font-mono shrink-0">
+              <span class="text-emerald-400 font-bold">📱 ${munComando?.telefono || '+58 412-0000000'}</span>
+              <span class="px-1.5 py-0.5 rounded bg-sky-900/60 text-sky-300 text-[9px] uppercase font-bold">En Guardia</span>
+            </div>
+          </div>
+
+          <!-- Métricas Electorales Municipales (Grid 4) -->
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+            <div class="p-2 rounded-xl bg-[#0e092e] border border-[#2d1f85]">
+              <span class="text-[10px] text-slate-400 uppercase font-bold block">Habitantes</span>
+              <strong class="text-sm font-mono font-black text-white">${Number(munDem.habitantes || 0).toLocaleString("es-VE")}</strong>
+            </div>
+            <div class="p-2 rounded-xl bg-[#0e092e] border border-[#2d1f85]">
+              <span class="text-[10px] text-sky-400 uppercase font-bold block">Electores CNE</span>
+              <strong class="text-sm font-mono font-black text-sky-200">${Number(munDem.votantes || 0).toLocaleString("es-VE")}</strong>
+            </div>
+            <div class="p-2 rounded-xl bg-[#0e092e] border border-[#2d1f85]">
+              <span class="text-[10px] text-indigo-400 uppercase font-bold block">Centros CNE</span>
+              <strong class="text-sm font-mono font-black text-indigo-200">${Number(munDem.centros || 0).toLocaleString("es-VE")}</strong>
+            </div>
+            <div class="p-2 rounded-xl bg-[#0e092e] border border-[#2d1f85]">
+              <span class="text-[10px] text-emerald-400 uppercase font-bold block">Viviendas / Fam.</span>
+              <strong class="text-sm font-mono font-black text-emerald-200">${Number(munDem.casas || 0).toLocaleString("es-VE")}</strong>
+            </div>
+          </div>
+        </div>
+
+        <!-- LISTADO DE PARROQUIAS DEL MUNICIPIO -->
+        <div class="space-y-2">
+          <div class="flex items-center justify-between text-xs font-black text-slate-300 uppercase tracking-wider px-1">
+            <span>2. PARROQUIAS OFICIALES (${(munObj.parroquias || []).length})</span>
+            <span class="text-[10px] text-slate-400 font-normal">Toca para ver sectores o enfocar</span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+            ${(munObj.parroquias || []).map(p => {
+              const pDem = getParishDemographics(p.id, munObj.id) || {};
+              const pComando = COMANDOS_PARROQUIALES[p.id] || getComandoInfo("parroquia", p.id, p.id, munObj.id);
+              const pColor = this.getParishColor(resolveParishId(p.id), munObj.id);
+
+              return `
+                <div class="p-3 rounded-2xl bg-[#140e40] border border-[#2d1f85] hover:border-sky-400/80 transition territory-modal-card flex flex-col justify-between gap-2.5 shadow-sm">
+                  <!-- Header Parroquia -->
+                  <div class="flex items-start justify-between gap-2">
+                    <div class="flex items-center gap-2 min-w-0">
+                      <span class="w-3 h-3 rounded-full shrink-0 shadow-xs" style="background-color: ${pColor};"></span>
+                      <div class="truncate">
+                        <strong class="text-sm font-black text-white block truncate">${p.nombre}</strong>
+                        <span class="text-[10px] text-slate-400 font-bold block">${p.tipo || 'Parroquia'}</span>
+                      </div>
+                    </div>
+                    <span class="text-[10px] font-mono font-extrabold px-1.5 py-0.5 rounded bg-sky-950 text-sky-300 border border-sky-800 shrink-0">
+                      ${Number(pDem.votantes || 0).toLocaleString("es-VE")} elect.
+                    </span>
+                  </div>
+
+                  <!-- Ficha de Comando Gatero -->
+                  <div class="p-2 rounded-xl bg-[#0e092e]/80 border border-[#2d1f85]/80 text-[11px] flex items-center justify-between gap-2">
+                    <div class="truncate">
+                      <span class="text-[9px] uppercase font-bold text-slate-400 block">Comando Parroquial</span>
+                      <span class="font-bold text-slate-200 block truncate">👤 ${pComando?.responsableGeneral || pComando?.general || 'Coordinador Parroquia'}</span>
+                    </div>
+                    <span class="font-mono text-emerald-400 text-[10px] font-bold shrink-0">${pComando?.telefono || ''}</span>
+                  </div>
+
+                  <!-- Botones de Acción -->
+                  <div class="flex items-center gap-1.5 pt-1 border-t border-[#2d1f85]/60">
+                    <button type="button" onclick="window.laminaApp?.drilldownParishInModal('${p.id}', '${munObj.id}')"
+                      class="flex-1 py-1.5 px-2 bg-[#23176d] hover:bg-[#2d1f85] text-sky-200 text-xs font-bold rounded-xl border border-sky-400/30 transition text-center flex items-center justify-center gap-1 cursor-pointer">
+                      <i data-lucide="folder-tree" class="w-3.5 h-3.5"></i>
+                      <span>Ver Sectores</span>
+                    </button>
+                    <button type="button" onclick="window.laminaApp?.focusAndClose('parroquia', '${p.id}', '${munObj.id}')"
+                      class="py-1.5 px-3 bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-black rounded-xl transition flex items-center justify-center gap-1 cursor-pointer shadow-xs">
+                      <span>Enfocar ➔</span>
+                    </button>
+                  </div>
+                </div>
+              `;
+            }).join('')}
+          </div>
+        </div>
+      `;
+    } else {
+      // VISTA DETALLADA / DRILLDOWN DE SUBPARROQUIAS Y SECTORES
+      const pId = this.modalDrilldownParish.parishId;
+      const rawPId = this.modalDrilldownParish.rawParishId;
+      const mId = this.modalDrilldownParish.munId;
+      const pObj = (munObj.parroquias || []).find(p => resolveParishId(p.id) === pId || p.id === rawPId) || { id: pId, nombre: formatTitleCase(pId) };
+      const pDem = getParishDemographics(pId, mId) || {};
+      const pComando = COMANDOS_PARROQUIALES[pId] || getComandoInfo("parroquia", pId, pId, mId);
+      const { subparroquias, poligonos } = this.getParishPolygonsData(mId, pId);
+
+      mainHtml += `
+        <!-- HEADER DRILLDOWN CON BOTÓN DE RETORNO -->
+        <div class="bg-[#140e40] border border-[#2d1f85] rounded-2xl p-3.5 space-y-3 shadow-md">
+          <div class="flex items-center justify-between gap-2 pb-2 border-b border-[#2d1f85]/70">
+            <button type="button" onclick="window.laminaApp?.backFromParishDrilldown()"
+              class="px-2.5 py-1 rounded-xl bg-[#0e092e] hover:bg-[#23176d] text-sky-300 hover:text-white border border-[#2d1f85] text-xs font-bold transition flex items-center gap-1.5 cursor-pointer">
+              <span>⬅ Volver a Parroquias de ${(munObj.nombre || munObj.id).replace(/^Municipio\s+/i, '')}</span>
+            </button>
+            <button type="button" onclick="window.laminaApp?.focusAndClose('parroquia', '${rawPId}', '${mId}')"
+              class="px-3 py-1 bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs rounded-xl transition flex items-center gap-1 cursor-pointer shadow-xs">
+              <i data-lucide="crosshair" class="w-3.5 h-3.5"></i>
+              <span>Enfocar Parroquia</span>
+            </button>
+          </div>
+
+          <div>
+            <span class="text-[10px] font-black uppercase text-amber-400 tracking-widest block">DESGLOSE TERRITORIAL Y COMANDOS DE BASE</span>
+            <h2 class="text-base sm:text-lg font-black text-white">
+              📍 Parroquia ${pObj.nombre}
+            </h2>
+            <div class="flex flex-wrap items-center gap-3 text-xs text-slate-300 mt-1">
+              <span>👤 <strong>Jefe Parroquial:</strong> ${pComando?.responsableGeneral || pComando?.general || 'Coordinador Parroquia'}</span>
+              <span class="font-mono text-emerald-400 font-bold">📱 ${pComando?.telefono || '+58 412-0000000'}</span>
+              <span class="font-mono text-sky-300">🗳️ ${Number(pDem.votantes || 0).toLocaleString("es-VE")} Electores</span>
+              <span class="font-mono text-indigo-300">🏫 ${Number(pDem.centros || 0).toLocaleString("es-VE")} Centros CNE</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- LISTADO DE SUBPARROQUIAS Y SECTORES -->
+        <div class="space-y-3">
+      `;
+
+      if (subparroquias.length > 0) {
+        subparroquias.forEach(sp => {
+          const spSectores = poligonos.filter(sec => sec.subParroquiaId === sp.id || (sec.eje && sec.eje.includes(sp.nombre)));
+          mainHtml += `
+            <div class="bg-[#140e40] border border-[#2d1f85] rounded-2xl p-3 space-y-2">
+              <div class="flex items-center justify-between border-b border-[#2d1f85]/60 pb-1.5">
+                <div class="flex items-center gap-2">
+                  <span class="w-2.5 h-2.5 rounded-full bg-purple-500"></span>
+                  <strong class="text-xs sm:text-sm font-black text-white">${sp.nombre}</strong>
+                </div>
+                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-purple-950 text-purple-300 border border-purple-800">
+                  ${spSectores.length || sp.sectoresCount || 0} sectores
+                </span>
+              </div>
+              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 pt-1">
+                ${(spSectores.length > 0 ? spSectores : poligonos).map(sec => `
+                  <div class="p-2 rounded-xl bg-[#0e092e] border border-[#2d1f85] flex flex-col justify-between gap-1 text-xs">
+                    <div>
+                      <strong class="text-xs font-black text-slate-100 block truncate">${sec.nombre}</strong>
+                      <span class="text-[10px] text-slate-400 block truncate">${sec.centroVotacion || 'Comunidad'}</span>
+                    </div>
+                    <div class="flex items-center justify-between text-[10px] text-slate-300 border-t border-[#2d1f85]/50 pt-1">
+                      <span class="font-mono text-sky-400">${sec.votantes ? `${Number(sec.votantes).toLocaleString("es-VE")} vot.` : (sec.casas ? `${sec.casas} casas` : '—')}</span>
+                      <button type="button" onclick="window.laminaApp?.focusAndClose('sector', '${sec.id}', '${pId}', '${mId}')"
+                        class="px-2 py-0.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-[10px] rounded transition cursor-pointer">
+                        Enfocar ➔
+                      </button>
+                    </div>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+          `;
+        });
+      } else if (poligonos.length > 0) {
+        mainHtml += `
+          <div class="bg-[#140e40] border border-[#2d1f85] rounded-2xl p-3 space-y-2">
+            <span class="text-xs font-black uppercase text-slate-300 block mb-1">Sectores Vecinales (${poligonos.length})</span>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
+              ${poligonos.map(sec => `
+                <div class="p-2 rounded-xl bg-[#0e092e] border border-[#2d1f85] flex flex-col justify-between gap-1 text-xs">
+                  <div>
+                    <strong class="text-xs font-black text-slate-100 block truncate">${sec.nombre}</strong>
+                    <span class="text-[10px] text-slate-400 block truncate">${sec.centroVotacion || 'Sector Comunitario'}</span>
+                  </div>
+                  <div class="flex items-center justify-between text-[10px] text-slate-300 border-t border-[#2d1f85]/50 pt-1">
+                    <span class="font-mono text-sky-400">${sec.votantes ? `${Number(sec.votantes).toLocaleString("es-VE")} vot.` : (sec.casas ? `${sec.casas} casas` : '—')}</span>
+                    <button type="button" onclick="window.laminaApp?.focusAndClose('sector', '${sec.id}', '${pId}', '${mId}')"
+                      class="px-2 py-0.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-[10px] rounded transition cursor-pointer">
+                      Enfocar ➔
+                    </button>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      } else {
+        mainHtml += `
+          <div class="text-center py-8 bg-[#140e40] rounded-2xl border border-[#2d1f85] p-5">
+            <p class="text-xs text-slate-300 font-bold">Esta parroquia cuenta con padrón oficial consolidado.</p>
+            <button type="button" onclick="window.laminaApp?.focusAndClose('parroquia', '${rawPId}', '${mId}')"
+              class="mt-3 px-4 py-2 bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs rounded-xl transition cursor-pointer">
+              Enfocar Parroquia en Satélite ➔
+            </button>
+          </div>
+        `;
+      }
+
+      mainHtml += `</div>`;
+    }
+
+    mainHtml += `
+        </div>
+      </div>
+    `;
+
+    container.innerHTML = mainHtml;
+    if (window.lucide && typeof window.lucide.createIcons === "function") {
+      try { window.lucide.createIcons(); } catch(e){}
     }
   }
 }

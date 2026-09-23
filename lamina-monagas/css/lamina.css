@@ -783,4 +783,30 @@ html, body {
   pointer-events: none !important;
 }
 
+/* ==========================================================================
+   MODAL / SUBINTERFAZ TERRITORIAL, DATOS Y COMANDOS (120")
+   ========================================================================== */
+
+#modal-territorio-interfaz.hidden {
+  display: none !important;
+}
+
+#modal-territorio-interfaz:not(.hidden) {
+  display: flex !important;
+}
+
+#modal-territorio-interfaz * {
+  box-sizing: border-box;
+}
+
+.territory-modal-card {
+  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.territory-modal-card:hover {
+  transform: translateY(-1.5px);
+  border-color: rgba(56, 189, 248, 0.8) !important;
+  box-shadow: 0 8px 24px -6px rgba(14, 165, 233, 0.25);
+}
+
 
