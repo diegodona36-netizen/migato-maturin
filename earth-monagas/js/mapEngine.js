@@ -364,10 +364,10 @@ export class EarthMapEngine {
       interactive: true,
       style: (feature) => ({
         color: feature.properties?.color || "#38bdf8",
-        weight: 2,
-        opacity: 0.9,
+        weight: 2.5,
+        opacity: 0.95,
         fillColor: feature.properties?.color || "#38bdf8",
-        fillOpacity: 0.12
+        fillOpacity: 0.28
       }),
       onEachFeature: (feature, layer) => {
         const munId = feature.properties?.id;
@@ -383,10 +383,10 @@ export class EarthMapEngine {
 
         layer.on({
           mouseover: () => {
-            layer.setStyle({ weight: 3.5, color: "#38bdf8", fillOpacity: 0.35 });
+            layer.setStyle({ weight: 4, fillOpacity: 0.52 });
           },
           mouseout: () => {
-            layer.setStyle({ weight: 2, color: feature.properties?.color || "#38bdf8", fillOpacity: 0.12 });
+            layer.setStyle({ weight: 2.5, color: feature.properties?.color || "#38bdf8", fillOpacity: 0.28 });
           },
           click: (e) => {
             L.DomEvent.stopPropagation(e);

@@ -14,9 +14,12 @@ Plataforma tecnológica compuesta por aplicaciones web especializadas y herramie
 - [[Modulo Centros Electorales y Padron CNE]]: Padrón oficial de 318.601 electores y 175 centros de votación en Maturín, segmentación de voto duro/blando y verificación de actas por código QR.
 - [[Modulo Salud e Infraestructura Hospitalaria]]: Georreferenciación y diagnóstico de los 84 centros asistenciales de Monagas (Hospital Central HUMNT, ambulatorios y CDIs).
 - [[Modulo Servicios Publicos y Drenajes]]: Monitoreo sectorial de agua, red eléctrica, drenajes pluviales y vialidad con buzón confidencial y semáforo de criticidad.
+- [[Modulo Comunicacion Redes y Movilizacion]]: Módulo VII de gestión de contenidos de redes sociales, pipeline de edición CapCut/Telegram, agenda de movilización de masas en 44 parroquias y centro de recordatorios ("Recordarme") con despacho en 1 clic.
 
 ## Conexiones Relacionadas
 - [[Indice Central MIGATO 2026]]
+- [[Informe Arquitectura de Modulos y Parametros 2026]]
+- [[Modulo Comunicacion Redes y Movilizacion]]
 - [[Modulo Lamina Cartografica 120]]
 - [[Modulo Comandos Territoriales]]
 - [[Modulo Earth Monagas 3D]]

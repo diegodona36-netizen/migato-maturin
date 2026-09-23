@@ -768,15 +768,15 @@ export class LaminaApp {
         const layer = L.geoJSON(f, {
           style: {
             color: munColor,
-            weight: 2.2,
-            opacity: 0.95,
+            weight: 2.8,
+            opacity: 0.98,
             fillColor: munColor,
-            fillOpacity: 0.25
+            fillOpacity: 0.38
           }
         });
         layer.on({
-          mouseover: () => layer.setStyle({ weight: 3.8, fillOpacity: 0.45 }),
-          mouseout: () => layer.setStyle({ weight: 2.2, fillOpacity: 0.25 }),
+          mouseover: () => layer.setStyle({ weight: 4.2, fillOpacity: 0.60 }),
+          mouseout: () => layer.setStyle({ weight: 2.8, fillOpacity: 0.38 }),
           click: () => this.selectMunicipio(mId)
         });
 
@@ -796,7 +796,7 @@ export class LaminaApp {
       console.error("[LaminaApp] Error renderizando municipios en selectEstado:", err);
     }
 
-    this.updateHeaderUI("ESTADO MONAGAS", "13 MUNICIPIOS • SALA SITUACIONAL 2026");
+    this.updateHeaderUI("ESTADO MONAGAS", "13 MUNICIPIOS • SALA SITUACIONAL");
     this.renderSideStats({
       title: "ESTADO MONAGAS",
       color: "#2563eb",
@@ -870,20 +870,20 @@ export class LaminaApp {
       const layer = L.geoJSON(f, {
         style: {
           color: pColor,
-          weight: 2,
-          opacity: 0.95,
+          weight: 2.8,
+          opacity: 0.98,
           fillColor: pColor,
-          fillOpacity: 0.25,
-          dashArray: "5, 4"
+          fillOpacity: 0.38,
+          dashArray: "6, 4"
         }
       });
 
       layer.on({
         mouseover: () => {
-          layer.setStyle({ weight: 3.8, fillOpacity: 0.45 });
+          layer.setStyle({ weight: 4.2, fillOpacity: 0.60 });
         },
         mouseout: () => {
-          layer.setStyle({ weight: 2, fillOpacity: 0.25 });
+          layer.setStyle({ weight: 2.8, fillOpacity: 0.38 });
         },
         click: () => {
           this.selectParroquia(pId, cleanMunId);

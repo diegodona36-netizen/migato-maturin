@@ -1,0 +1,1728 @@
+<!DOCTYPE html>
+<html lang="es" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>MIGATO • Módulo VII: Comunicación, Redes Sociales, Movilización y Eventos</title>
+  <meta name="description" content="Plataforma de Gestión de Contenidos, Pipeline CapCut/Telegram, Agenda de Movilización y Centro de Recordatorios • Monagas 2026">
+  <meta name="theme-color" content="#080c1e">
+  <link rel="icon" type="image/png" href="../assets/logo-migato.png">
+
+  <!-- Tailwind CSS (Local con CDN de respaldo) -->
+  <script src="../vendor/tailwindcss.js"></script>
+  <script>
+    if (!window.tailwind) {
+      document.write('<script src="https://cdn.tailwindcss.com"><\/script>');
+    }
+  </script>
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            migato: {
+              dark: "#080c1e",
+              card: "#111633",
+              border: "#202854",
+              gold: "#f59e0b",
+              goldlight: "#fbbf24",
+              cyan: "#06b6d4",
+              blue: "#2563eb",
+              purple: "#8b5cf6",
+              green: "#22c55e"
+            }
+          },
+          fontFamily: {
+            sans: ["'Public Sans'", "system-ui", "-apple-system", "sans-serif"],
+            display: ["'Outfit'", "system-ui", "sans-serif"],
+            mono: ["'JetBrains Mono'", "monospace"]
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Lucide Icons (Local con CDN de respaldo) -->
+  <script src="../vendor/lucide.min.js"></script>
+  <script>
+    if (!window.lucide) {
+      document.write('<script src="https://unpkg.com/lucide@latest"><\/script>');
+    }
+  </script>
+
+  <!-- Google Fonts: Outfit + Public Sans + JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Outfit:wght@500;600;700;800;900&family=Public+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      color-scheme: dark;
+    }
+    body {
+      font-family: "Public Sans", sans-serif;
+      background-color: #080c1e;
+      color: #f1f5f9;
+      margin: 0;
+      padding: 0;
+    }
+    .font-display { font-family: "Outfit", sans-serif; }
+    .font-mono { font-family: "JetBrains Mono", monospace; }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #080c1e; }
+    ::-webkit-scrollbar-thumb { background: #202854; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #354282; }
+
+    /* Tab active styles */
+    .tab-btn.active {
+      background-color: #202854;
+      color: #fbbf24;
+      border-color: #f59e0b;
+    }
+    .tab-pane { display: none; }
+    .tab-pane.active { display: block; }
+
+    /* Pulse animation for live alarms */
+    @keyframes pulse-gold {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+    .animate-pulse-gold {
+      animation: pulse-gold 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-[#080c1e] text-slate-100 antialiased selection:bg-amber-500 selection:text-slate-950">
+
+  <!-- ============================================================== -->
+  <!-- 1. BARRA SUPERIOR INSTITUCIONAL (HEADER)                         -->
+  <!-- ============================================================== -->
+  <header class="sticky top-0 z-40 bg-[#0c1029]/95 backdrop-blur border-b border-[#202854] px-4 py-3 sm:px-6 shadow-xl">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row md:items-center justify-between gap-3">
+      
+      <!-- Bloque Izquierdo: Identidad MIGATO -->
+      <div class="flex items-center gap-3">
+        <a href="../index.html" class="flex items-center gap-3 group focus:outline-none focus:ring-2 focus:ring-amber-500 rounded-xl p-1 transition" title="Volver al Portal Central">
+          <div class="w-11 h-11 rounded-xl bg-[#141a3d] border border-amber-500/40 p-1 flex items-center justify-center shadow-lg shadow-amber-500/10 group-hover:border-amber-400">
+            <img src="../assets/logo-migato.png" alt="MIGATO" class="w-full h-full object-contain">
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-mono font-bold tracking-widest uppercase text-amber-400 bg-amber-950/80 px-2 py-0.5 rounded border border-amber-500/30">Módulo VII</span>
+              <span class="text-xs font-semibold text-slate-400">Monagas 2026</span>
+            </div>
+            <h1 class="text-lg sm:text-xl font-display font-black text-white tracking-tight leading-tight group-hover:text-amber-300 transition">
+              Comunicación, Redes y Movilización
+            </h1>
+          </div>
+        </a>
+      </div>
+
+      <!-- Bloque Central: Navegación de Pestañas Principales -->
+      <nav class="flex items-center gap-1.5 p-1 bg-[#121838] border border-[#202854] rounded-2xl overflow-x-auto" aria-label="Pestañas de Operación">
+        <button id="btnTabRedes" onclick="switchTab('redes')" class="tab-btn active px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold flex items-center gap-2 border border-transparent transition whitespace-nowrap">
+          <i data-lucide="share-2" class="w-4 h-4 text-cyan-400"></i>
+          <span>Redes & Pipeline</span>
+          <span id="badgeContenidos" class="bg-cyan-950/80 text-cyan-300 text-[10px] font-mono px-1.5 py-0.5 rounded-full border border-cyan-500/30">0</span>
+        </button>
+
+        <button id="btnTabEventos" onclick="switchTab('eventos')" class="tab-btn px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold text-slate-300 hover:text-white flex items-center gap-2 border border-transparent transition whitespace-nowrap">
+          <i data-lucide="calendar" class="w-4 h-4 text-amber-400"></i>
+          <span>Movilización & Eventos</span>
+          <span id="badgeEventos" class="bg-amber-950/80 text-amber-300 text-[10px] font-mono px-1.5 py-0.5 rounded-full border border-amber-500/30">0</span>
+        </button>
+
+        <button id="btnTabRecordatorios" onclick="switchTab('recordatorios')" class="tab-btn px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold text-slate-300 hover:text-white flex items-center gap-2 border border-transparent transition whitespace-nowrap">
+          <i data-lucide="bell" class="w-4 h-4 text-emerald-400"></i>
+          <span>Recordarme</span>
+          <span id="badgeAlertas" class="bg-emerald-950/80 text-emerald-300 text-[10px] font-mono px-1.5 py-0.5 rounded-full border border-emerald-500/30">0</span>
+        </button>
+      </nav>
+
+      <!-- Bloque Derecho: Acciones Globales y Estado -->
+      <div class="flex items-center gap-2 justify-end">
+        <!-- Botón Exportar Respaldo -->
+        <button onclick="exportData()" class="p-2 text-slate-300 hover:text-white bg-[#141a3d] hover:bg-[#1e2759] border border-[#202854] rounded-xl text-xs flex items-center gap-1.5 transition" title="Exportar Backup JSON para RAID 1">
+          <i data-lucide="download" class="w-4 h-4 text-slate-300"></i>
+          <span class="hidden sm:inline font-mono">Backup</span>
+        </button>
+
+        <!-- Botón Probar Alarma Sonora -->
+        <button onclick="testToneAlert()" class="p-2 text-amber-300 hover:text-amber-200 bg-amber-950/40 hover:bg-amber-900/60 border border-amber-500/30 rounded-xl text-xs flex items-center gap-1.5 transition" title="Probar Alarma Sonora de Sala">
+          <i data-lucide="volume-2" class="w-4 h-4 text-amber-400"></i>
+          <span class="hidden sm:inline font-mono">Alarma</span>
+        </button>
+
+        <!-- Indicador de Enlace Situacional -->
+        <div class="px-3 py-1.5 bg-emerald-950/60 border border-emerald-500/40 rounded-xl text-[11px] font-mono text-emerald-300 flex items-center gap-1.5 shadow-sm">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span>SALA ACTIVA</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ============================================================== -->
+  <!-- 2. RESUMEN MÉTRICO EJECUTIVO (KPIs BANNER)                       -->
+  <!-- ============================================================== -->
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 pt-6 pb-3">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+      
+      <!-- KPI 1: Total Piezas en Pipeline -->
+      <div class="bg-[#111633] border border-[#202854] rounded-2xl p-4 flex items-center justify-between shadow-lg">
+        <div>
+          <span class="text-xs font-semibold text-slate-400 block uppercase">Piezas en Pipeline</span>
+          <strong id="kpiTotalContenidos" class="text-2xl sm:text-3xl font-display font-extrabold text-white block tabular-nums">0</strong>
+          <span class="text-[11px] text-cyan-400 font-medium">Redes & Telegram</span>
+        </div>
+        <div class="w-12 h-12 rounded-xl bg-cyan-950/70 border border-cyan-500/40 flex items-center justify-center text-cyan-400 shrink-0">
+          <i data-lucide="film" class="w-6 h-6"></i>
+        </div>
+      </div>
+
+      <!-- KPI 2: Eventos Programados -->
+      <div class="bg-[#111633] border border-[#202854] rounded-2xl p-4 flex items-center justify-between shadow-lg">
+        <div>
+          <span class="text-xs font-semibold text-slate-400 block uppercase">Agenda Eventos</span>
+          <strong id="kpiTotalEventos" class="text-2xl sm:text-3xl font-display font-extrabold text-amber-400 block tabular-nums">0</strong>
+          <span class="text-[11px] text-slate-400 font-medium">Caminatas y Asambleas</span>
+        </div>
+        <div class="w-12 h-12 rounded-xl bg-amber-950/70 border border-amber-500/40 flex items-center justify-center text-amber-400 shrink-0">
+          <i data-lucide="map-pin" class="w-6 h-6"></i>
+        </div>
+      </div>
+
+      <!-- KPI 3: Meta de Movilización Acumulada -->
+      <div class="bg-[#111633] border border-[#202854] rounded-2xl p-4 flex items-center justify-between shadow-lg">
+        <div>
+          <span class="text-xs font-semibold text-slate-400 block uppercase">Meta Movilizados</span>
+          <strong id="kpiMetaMovilizados" class="text-2xl sm:text-3xl font-display font-extrabold text-white block tabular-nums">0</strong>
+          <span class="text-[11px] text-emerald-400 font-medium">Capacidad de Calle</span>
+        </div>
+        <div class="w-12 h-12 rounded-xl bg-emerald-950/70 border border-emerald-500/40 flex items-center justify-center text-emerald-400 shrink-0">
+          <i data-lucide="users" class="w-6 h-6"></i>
+        </div>
+      </div>
+
+      <!-- KPI 4: Recordatorios y Alertas Activas -->
+      <div class="bg-[#111633] border border-[#202854] rounded-2xl p-4 flex items-center justify-between shadow-lg">
+        <div>
+          <span class="text-xs font-semibold text-slate-400 block uppercase">Alertas Activas</span>
+          <strong id="kpiTotalAlertas" class="text-2xl sm:text-3xl font-display font-extrabold text-purple-400 block tabular-nums">0</strong>
+          <span class="text-[11px] text-purple-300 font-medium">Recordarme en Tiempo Real</span>
+        </div>
+        <div class="w-12 h-12 rounded-xl bg-purple-950/70 border border-purple-500/40 flex items-center justify-center text-purple-400 shrink-0">
+          <i data-lucide="clock" class="w-6 h-6"></i>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============================================================== -->
+  <!-- 3. CONTENEDOR PRINCIPAL: PESTAÑAS OPERATIVAS                   -->
+  <!-- ============================================================== -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 py-4 pb-20">
+
+    <!-- ============================================================ -->
+    <!-- PESTAÑA 1: REDES SOCIALES & PIPELINE DE CONTENIDOS (CAPCUT)  -->
+    <!-- ============================================================ -->
+    <section id="paneRedes" class="tab-pane active space-y-6">
+
+      <!-- Barra de Filtros y Acción Nueva Pieza -->
+      <div class="bg-[#111633] border border-[#202854] rounded-2xl p-4 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
+        
+        <!-- Canales / Redes Activas -->
+        <div class="flex items-center gap-2 overflow-x-auto pb-1 md:pb-0">
+          <span class="text-xs font-bold uppercase tracking-wider text-slate-400 mr-1">Canal:</span>
+          <button onclick="filterRedesCanal('todos')" class="filter-canal active px-3 py-1.5 rounded-xl text-xs font-semibold bg-[#202854] text-white border border-transparent">Todos</button>
+          <button onclick="filterRedesCanal('telegram')" class="filter-canal px-3 py-1.5 rounded-xl text-xs font-semibold bg-[#141a3d] text-slate-300 hover:text-white border border-[#202854] flex items-center gap-1.5">
+            <i data-lucide="send" class="w-3.5 h-3.5 text-sky-400"></i> Telegram
+          </button>
+          <button onclick="filterRedesCanal('tiktok')" class="filter-canal px-3 py-1.5 rounded-xl text-xs font-semibold bg-[#141a3d] text-slate-300 hover:text-white border border-[#202854] flex items-center gap-1.5">
+            <i data-lucide="video" class="w-3.5 h-3.5 text-pink-400"></i> TikTok
+          </button>
+          <button onclick="filterRedesCanal('instagram')" class="filter-canal px-3 py-1.5 rounded-xl text-xs font-semibold bg-[#141a3d] text-slate-300 hover:text-white border border-[#202854] flex items-center gap-1.5">
+            <i data-lucide="camera" class="w-3.5 h-3.5 text-rose-400"></i> Instagram
+          </button>
+          <button onclick="filterRedesCanal('whatsapp')" class="filter-canal px-3 py-1.5 rounded-xl text-xs font-semibold bg-[#141a3d] text-slate-300 hover:text-white border border-[#202854] flex items-center gap-1.5">
+            <i data-lucide="message-circle" class="w-3.5 h-3.5 text-emerald-400"></i> WhatsApp
+          </button>
+          <button onclick="filterRedesCanal('twitter')" class="filter-canal px-3 py-1.5 rounded-xl text-xs font-semibold bg-[#141a3d] text-slate-300 hover:text-white border border-[#202854] flex items-center gap-1.5">
+            <i data-lucide="twitter" class="w-3.5 h-3.5 text-blue-400"></i> X
+          </button>
+        </div>
+
+        <!-- Botón Registrar Contenido Nuevo -->
+        <div class="flex items-center gap-2">
+          <button onclick="openModalNuevoContenido()" class="w-full md:w-auto px-4 py-2.5 bg-cyan-600 hover:bg-cyan-500 text-slate-950 font-bold text-sm rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-cyan-600/20 active:scale-95 transition">
+            <i data-lucide="plus-circle" class="w-4 h-4"></i>
+            <span>Ingresar Reporte Multimedia</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Matriz de Horarios Pico de Publicación Monagas -->
+      <div class="bg-gradient-to-r from-[#141838] via-[#101533] to-[#141838] border border-amber-500/30 rounded-2xl p-4 sm:p-5 shadow-lg">
+        <div class="flex items-center justify-between mb-3">
+          <div class="flex items-center gap-2">
+            <i data-lucide="zap" class="w-5 h-5 text-amber-400"></i>
+            <h3 class="text-sm sm:text-base font-display font-bold text-white uppercase tracking-wider">
+              Matriz Horaria de Máximo Impacto Electoral (Estado Monagas)
+            </h3>
+          </div>
+          <span class="text-xs font-mono text-slate-400">Horas de Mayor Audiencia</span>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+          <div class="p-3 bg-[#0a0f26]/80 border border-slate-700/60 rounded-xl space-y-1">
+            <div class="flex items-center justify-between text-xs font-mono text-amber-400 font-bold">
+              <span>07:00 AM - 08:30 AM</span>
+              <span class="px-1.5 py-0.5 rounded bg-amber-950 border border-amber-500/40 text-[10px]">MAÑANA</span>
+            </div>
+            <strong class="text-sm font-semibold text-white block">Apertura y Motivación</strong>
+            <p class="text-xs text-slate-300">Mensaje de voz de El Gato Briceño, saludo a parroquias y agenda diaria.</p>
+          </div>
+
+          <div class="p-3 bg-[#0a0f26]/80 border border-slate-700/60 rounded-xl space-y-1">
+            <div class="flex items-center justify-between text-xs font-mono text-cyan-400 font-bold">
+              <span>12:00 PM - 01:30 PM</span>
+              <span class="px-1.5 py-0.5 rounded bg-cyan-950 border border-cyan-500/40 text-[10px]">MEDIODÍA</span>
+            </div>
+            <strong class="text-sm font-semibold text-white block">Denuncias y Propuestas</strong>
+            <p class="text-xs text-slate-300">Reportes de servicios colapsados (agua, luz, caños) y el plan de solución.</p>
+          </div>
+
+          <div class="p-3 bg-[#0a0f26]/80 border border-slate-700/60 rounded-xl space-y-1">
+            <div class="flex items-center justify-between text-xs font-mono text-emerald-400 font-bold">
+              <span>05:30 PM - 07:00 PM</span>
+              <span class="px-1.5 py-0.5 rounded bg-emerald-950 border border-emerald-500/40 text-[10px]">TARDE</span>
+            </div>
+            <strong class="text-sm font-semibold text-white block">Cobertura de Calle en Vivo</strong>
+            <p class="text-xs text-slate-300">Transmisiones, videos de caminatas y fotos de asambleas multitudinarias.</p>
+          </div>
+
+          <div class="p-3 bg-[#0a0f26]/80 border border-slate-700/60 rounded-xl space-y-1">
+            <div class="flex items-center justify-between text-xs font-mono text-purple-400 font-bold">
+              <span>08:30 PM - 10:00 PM</span>
+              <span class="px-1.5 py-0.5 rounded bg-purple-950 border border-purple-500/40 text-[10px]">NOCHE</span>
+            </div>
+            <strong class="text-sm font-semibold text-white block">Reels y TikToks Estelares</strong>
+            <p class="text-xs text-slate-300">Piezas editadas en CapCut, clips dinámicos de alto engagement y balance.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tablero Kanban del Pipeline de Contenidos -->
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4" id="kanbanPipeline">
+        
+        <!-- Columna 1: Crudo Recibido (Telegram / Campo) -->
+        <div class="bg-[#111633] border border-[#202854] rounded-2xl p-4 flex flex-col gap-3 min-h-[450px]">
+          <div class="flex items-center justify-between border-b border-[#202854] pb-2">
+            <div class="flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-slate-400"></span>
+              <h4 class="text-xs font-bold uppercase tracking-wider text-slate-300">1. Crudo Recibido</h4>
+            </div>
+            <span id="countCrudo" class="text-xs font-mono bg-slate-800 text-slate-300 px-2 py-0.5 rounded-full">0</span>
+          </div>
+          <div id="colCrudo" class="space-y-3 flex-1 overflow-y-auto max-h-[580px] pr-1">
+            <!-- Cards generadas por JS -->
+          </div>
+        </div>
+
+        <!-- Columna 2: En Edición CapCut -->
+        <div class="bg-[#111633] border border-[#202854] rounded-2xl p-4 flex flex-col gap-3 min-h-[450px]">
+          <div class="flex items-center justify-between border-b border-[#202854] pb-2">
+            <div class="flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-pulse"></span>
+              <h4 class="text-xs font-bold uppercase tracking-wider text-cyan-300">2. En Edición CapCut</h4>
+            </div>
+            <span id="countCapCut" class="text-xs font-mono bg-cyan-950 text-cyan-300 px-2 py-0.5 rounded-full border border-cyan-500/30">0</span>
+          </div>
+          <div id="colCapCut" class="space-y-3 flex-1 overflow-y-auto max-h-[580px] pr-1">
+            <!-- Cards generadas por JS -->
+          </div>
+        </div>
+
+        <!-- Columna 3: Aprobación Comando MIGATO -->
+        <div class="bg-[#111633] border border-[#202854] rounded-2xl p-4 flex flex-col gap-3 min-h-[450px]">
+          <div class="flex items-center justify-between border-b border-[#202854] pb-2">
+            <div class="flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-amber-400"></span>
+              <h4 class="text-xs font-bold uppercase tracking-wider text-amber-300">3. Revisión Comando</h4>
+            </div>
+            <span id="countRevision" class="text-xs font-mono bg-amber-950 text-amber-300 px-2 py-0.5 rounded-full border border-amber-500/30">0</span>
+          </div>
+          <div id="colRevision" class="space-y-3 flex-1 overflow-y-auto max-h-[580px] pr-1">
+            <!-- Cards generadas por JS -->
+          </div>
+        </div>
+
+        <!-- Columna 4: Programado / Publicado -->
+        <div class="bg-[#111633] border border-[#202854] rounded-2xl p-4 flex flex-col gap-3 min-h-[450px]">
+          <div class="flex items-center justify-between border-b border-[#202854] pb-2">
+            <div class="flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span>
+              <h4 class="text-xs font-bold uppercase tracking-wider text-emerald-300">4. Publicado</h4>
+            </div>
+            <span id="countPublicado" class="text-xs font-mono bg-emerald-950 text-emerald-300 px-2 py-0.5 rounded-full border border-emerald-500/30">0</span>
+          </div>
+          <div id="colPublicado" class="space-y-3 flex-1 overflow-y-auto max-h-[580px] pr-1">
+            <!-- Cards generadas por JS -->
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- PESTAÑA 2: MOVILIZACIÓN & AGENDA DE EVENTOS EN TERRENO       -->
+    <!-- ============================================================ -->
+    <section id="paneEventos" class="tab-pane space-y-6">
+
+      <!-- Barra de Filtros y Acción Nuevo Evento -->
+      <div class="bg-[#111633] border border-[#202854] rounded-2xl p-4 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
+        
+        <!-- Búsqueda y Filtro por Parroquia -->
+        <div class="flex flex-wrap items-center gap-2 flex-1">
+          <div class="relative flex-1 min-w-[220px]">
+            <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3 top-3"></i>
+            <input type="text" id="searchEventoTxt" oninput="renderEventos()" placeholder="Buscar evento, sector o responsable..." class="w-full pl-9 pr-3 py-2 bg-[#0c1029] border border-[#202854] rounded-xl text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none focus:border-amber-500">
+          </div>
+
+          <select id="filterEventoParroquia" onchange="renderEventos()" class="bg-[#0c1029] border border-[#202854] rounded-xl px-3 py-2 text-xs sm:text-sm text-slate-200 focus:outline-none focus:border-amber-500">
+            <option value="todas">Todas las Parroquias</option>
+            <option value="San Simón">San Simón</option>
+            <option value="Alto de Los Godos">Alto de Los Godos</option>
+            <option value="Boquerón">Boquerón</option>
+            <option value="Las Cocuizas">Las Cocuizas</option>
+            <option value="Santa Cruz">Santa Cruz</option>
+            <option value="La Pica">La Pica</option>
+            <option value="Jusepín">Jusepín</option>
+            <option value="El Furrial">El Furrial</option>
+            <option value="San Vicente">San Vicente</option>
+            <option value="El Corozo">El Corozo</option>
+            <option value="Foráneo / Municipios">Otros Municipios de Monagas</option>
+          </select>
+        </div>
+
+        <!-- Botón Programar Nuevo Evento -->
+        <button onclick="openModalNuevoEvento()" class="px-4 py-2.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-sm rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-amber-500/20 active:scale-95 transition">
+          <i data-lucide="calendar-plus" class="w-4 h-4"></i>
+          <span>Programar Nuevo Evento</span>
+        </button>
+      </div>
+
+      <!-- Listado de Eventos (Cards Detalladas) -->
+      <div id="listaEventosGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        <!-- Renderizado dinámico de tarjetas de evento por JS -->
+      </div>
+
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- PESTAÑA 3: CENTRO DE RECORDATORIOS Y ALERTAS ("RECORDARME")  -->
+    <!-- ============================================================ -->
+    <section id="paneRecordatorios" class="tab-pane space-y-6">
+
+      <!-- Cabecera de Alertas y Botón Agregar -->
+      <div class="bg-[#111633] border border-[#202854] rounded-2xl p-4 sm:p-5 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="w-3 h-3 rounded-full bg-emerald-400 animate-pulse"></span>
+            <h2 class="text-lg sm:text-xl font-display font-bold text-white tracking-tight">
+              Centro Situacional de Recordatorios & Despacho Inmediato
+            </h2>
+          </div>
+          <p class="text-xs sm:text-sm text-slate-400 mt-1">
+            Monitoreo de horas críticas para eventos, horas pico de redes y convocatorias con botones de envío en 1 clic.
+          </p>
+        </div>
+
+        <button onclick="openModalNuevoRecordatorio()" class="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/20 active:scale-95 transition">
+          <i data-lucide="bell-plus" class="w-4 h-4"></i>
+          <span>Crear Alerta Personalizada</span>
+        </button>
+      </div>
+
+      <!-- Tablero de Recordatorios -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+        <!-- Columna 1 y 2: Lista de Recordatorios Activos con Temporizadores -->
+        <div class="lg:col-span-2 space-y-4">
+          <div class="flex items-center justify-between">
+            <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-2">
+              <i data-lucide="timer" class="w-4 h-4 text-emerald-400"></i>
+              <span>Temporizadores y Alertas en Curso</span>
+            </h3>
+            <span id="activeTimersCount" class="text-xs font-mono text-emerald-400 font-bold">0 Alertas Activas</span>
+          </div>
+
+          <div id="listaRecordatorios" class="space-y-3">
+            <!-- Recordatorios generados dinámicamente -->
+          </div>
+        </div>
+
+        <!-- Columna 3: Panel de Plantillas y Despacho Rápido a Dirigentes -->
+        <div class="space-y-4">
+          <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-2">
+            <i data-lucide="send" class="w-4 h-4 text-cyan-400"></i>
+            <span>Plantillas de Convocatoria Directa</span>
+          </h3>
+
+          <div class="bg-[#111633] border border-[#202854] rounded-2xl p-4 space-y-4">
+            <div class="space-y-2">
+              <label class="text-xs font-bold text-slate-300 block uppercase">1. Convocatoria a Caminata / Asamblea</label>
+              <p class="text-xs text-slate-400">Mensaje predeterminado para los grupos de WhatsApp y Telegram de parroquias.</p>
+              <button onclick="copyPlantilla('caminata')" class="w-full py-2 px-3 bg-[#161d45] hover:bg-[#1f285c] border border-cyan-500/30 text-cyan-300 text-xs font-semibold rounded-xl flex items-center justify-center gap-1.5 transition">
+                <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+                <span>Copiar Plantilla de Convocatoria</span>
+              </button>
+            </div>
+
+            <hr class="border-[#202854]">
+
+            <div class="space-y-2">
+              <label class="text-xs font-bold text-slate-300 block uppercase">2. Alerta de Pauta en Redes (Hora Pico)</label>
+              <p class="text-xs text-slate-400">Instrucción para activar la brigada digital de MIGATO en TikTok, Instagram y X.</p>
+              <button onclick="copyPlantilla('redes')" class="w-full py-2 px-3 bg-[#161d45] hover:bg-[#1f285c] border border-amber-500/30 text-amber-300 text-xs font-semibold rounded-xl flex items-center justify-center gap-1.5 transition">
+                <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+                <span>Copiar Alerta de Pauta Digital</span>
+              </button>
+            </div>
+
+            <hr class="border-[#202854]">
+
+            <div class="space-y-2">
+              <label class="text-xs font-bold text-slate-300 block uppercase">3. Aviso de Rueda de Prensa / Radio</label>
+              <p class="text-xs text-slate-400">Convocatoria a periodistas y enlaces para declaraciones de El Gato Briceño.</p>
+              <button onclick="copyPlantilla('prensa')" class="w-full py-2 px-3 bg-[#161d45] hover:bg-[#1f285c] border border-purple-500/30 text-purple-300 text-xs font-semibold rounded-xl flex items-center justify-center gap-1.5 transition">
+                <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+                <span>Copiar Aviso de Medios</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- ============================================================== -->
+  <!-- 4. MODALES INTERACTIVOS                                        -->
+  <!-- ============================================================== -->
+
+  <!-- Modal A: Ficha de Edición y Guión para CapCut -->
+  <div id="modalCapCut" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-[#111633] border border-cyan-500/40 rounded-2xl max-w-2xl w-full p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
+      <div class="flex items-center justify-between border-b border-[#202854] pb-3">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-lg bg-cyan-950 border border-cyan-500/40 flex items-center justify-center text-cyan-400">
+            <i data-lucide="scissors" class="w-4 h-4"></i>
+          </div>
+          <h3 class="text-lg font-display font-bold text-white">Ficha de Edición de Video (CapCut Ready)</h3>
+        </div>
+        <button onclick="closeModal('modalCapCut')" class="text-slate-400 hover:text-white p-1">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div class="space-y-3 text-xs sm:text-sm">
+        <div>
+          <span class="text-xs text-slate-400 block uppercase font-mono">Título de la Pieza:</span>
+          <strong id="capcutTitulo" class="text-base font-bold text-white"></strong>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
+          <div class="bg-[#0c1029] p-2.5 rounded-xl border border-[#202854]">
+            <span class="text-[10px] text-slate-400 block uppercase font-mono">Municipio / Parroquia:</span>
+            <span id="capcutTerritorio" class="font-semibold text-slate-200"></span>
+          </div>
+          <div class="bg-[#0c1029] p-2.5 rounded-xl border border-[#202854]">
+            <span class="text-[10px] text-slate-400 block uppercase font-mono">Duración Sugerida:</span>
+            <span id="capcutDuracion" class="font-semibold text-amber-400 font-mono">30 - 45 seg</span>
+          </div>
+          <div class="bg-[#0c1029] p-2.5 rounded-xl border border-[#202854] col-span-2 sm:col-span-1">
+            <span class="text-[10px] text-slate-400 block uppercase font-mono">Música / Audio:</span>
+            <span class="font-semibold text-cyan-300">Tema Épico MIGATO</span>
+          </div>
+        </div>
+
+        <div class="space-y-1">
+          <span class="text-xs font-bold text-amber-400 block uppercase font-mono">Gancho Visual de los Primeros 3 Segundos (Hook):</span>
+          <div id="capcutHook" class="p-3 bg-[#0c1029] border border-amber-500/30 rounded-xl text-slate-200 italic font-medium"></div>
+        </div>
+
+        <div class="space-y-1">
+          <span class="text-xs font-bold text-slate-300 block uppercase font-mono">Texto / Subtítulos en Pantalla:</span>
+          <div id="capcutSubtitulos" class="p-3 bg-[#0c1029] border border-[#202854] rounded-xl text-slate-300 font-mono text-xs whitespace-pre-line"></div>
+        </div>
+
+        <div class="space-y-1">
+          <span class="text-xs font-bold text-slate-300 block uppercase font-mono">Hashtags Oficiales de Campaña:</span>
+          <div id="capcutHashtags" class="p-2 bg-[#0c1029] border border-[#202854] rounded-xl text-cyan-400 font-mono text-xs"></div>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-between gap-3 pt-3 border-t border-[#202854]">
+        <button onclick="copiarGuionCapCut()" class="px-4 py-2.5 bg-cyan-600 hover:bg-cyan-500 text-slate-950 font-bold text-xs sm:text-sm rounded-xl flex items-center gap-2 transition active:scale-95">
+          <i data-lucide="copy" class="w-4 h-4"></i>
+          <span>Copiar Guión para CapCut</span>
+        </button>
+
+        <button onclick="marcarComoEnEdicion()" class="px-4 py-2.5 bg-[#1e2759] hover:bg-[#283575] text-white font-semibold text-xs sm:text-sm rounded-xl transition">
+          Mover a 'En Edición'
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal B: Registrar Nuevo Contenido Multimedia -->
+  <div id="modalNuevoContenido" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-[#111633] border border-[#202854] rounded-2xl max-w-lg w-full p-6 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between border-b border-[#202854] pb-3">
+        <h3 class="text-lg font-display font-bold text-white flex items-center gap-2">
+          <i data-lucide="file-video" class="w-5 h-5 text-cyan-400"></i>
+          <span>Ingreso de Reporte Multimedia</span>
+        </h3>
+        <button onclick="closeModal('modalNuevoContenido')" class="text-slate-400 hover:text-white p-1">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <form id="formNuevoContenido" onsubmit="guardarNuevoContenido(event)" class="space-y-3 text-xs sm:text-sm">
+        <div>
+          <label class="block text-slate-300 font-semibold mb-1">Título / Asunto del Reporte:</label>
+          <input type="text" id="ncTitulo" required placeholder="Ej: Multitudinaria asamblea en Brisas del Orinoco" class="w-full px-3 py-2 bg-[#0c1029] border border-[#202854] rounded-xl text-white focus:outline-none focus:border-cyan-500">
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-slate-300 font-semibold mb-1">Municipio:</label>
+            <select id="ncMunicipio" class="w-full px-3 py-2 bg-[#0c1029] border border-[#202854] rounded-xl text-white focus:outline-none focus:border-cyan-500">
+              <option value="Maturín">Maturín</option>
+              <option value="Bolívar (Caripito)">Bolívar (Caripito)</option>
+              <option value="Ezequiel Zamora">Ezequiel Zamora</option>
+              <option value="Piar (Aragua)">Piar (Aragua)</option>
+              <option value="Caripe">Caripe</option>
+              <option value="Acosta (San Antonio)">Acosta (San Antonio)</option>
+              <option value="Punceres">Punceres</option>
+              <option value="Libertador (Temblador)">Libertador (Temblador)</option>
+              <option value="Sotillo (Barrancas)">Sotillo (Barrancas)</option>
+              <option value="Uracoa">Uracoa</option>
+              <option value="Cedeño (Caicara)">Cedeño (Caicara)</option>
+              <option value="Aguasay">Aguasay</option>
+              <option value="Santa Bárbara">Santa Bárbara</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-slate-300 font-semibold mb-1">Parroquia:</label>
+            <input type="text" id="ncParroquia" required placeholder="Ej: San Simón, Los Godos..." class="w-full px-3 py-2 bg-[#0c1029] border border-[#202854] rounded-xl text-white focus:outline-none focus:border-cyan-500">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-slate-300 font-semibold mb-1">Canal de Destino:</label>
+            <select id="ncCanal" class="w-full px-3 py-2 bg-[#0c1029] border border-[#202854] rounded-xl text-white focus:outline-none focus:border-cyan-500">
+              <option value="telegram">Telegram (Canal Oficial)</option>
+              <option value="tiktok">TikTok</option>
+              <option value="instagram">Instagram (Reels)</option>
+              <option value="whatsapp">WhatsApp (Estados y Grupos)</option>
+              <option value="twitter">X / Twitter</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-slate-300 font-semibold mb-1">Categoría / Tema:</label>
+            <select id="ncCategoria" class="w-full px-3 py-2 bg-[#0c1029] border border-[#202854] rounded-xl text-white focus:outline-none focus:border-cyan-500">
+              <option value="Acto de Masas">Acto de Masas</option>
+              <option value="Caminata / Volanteo">Caminata / Volanteo</option>
+              <option value="Denuncia Comunitaria">Denuncia Comunitaria</option>
+              <option value="Mensaje El Gato">Mensaje El Gato Briceño</option>
+              <option value="Juventud MIGATO">Juventud Universitaria</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-slate-300 font-semibold mb-1">Descripción / Notas de Edición:</label>
+          <textarea id="ncDescripcion" rows="3" placeholder="Detalles de la grabación, testimonios de vecinos, aspectos clave a resaltar..." class="w-full px-3 py-2 bg-[#0c1029] border border-[#202854] rounded-xl text-white focus:outline-none focus:border-cyan-500"></textarea>
+        </div>
+
+        <div class="flex items-center justify-end gap-2 pt-2">
+          <button type="button" onclick="closeModal('modalNuevoContenido')" class="px-4 py-2 bg-slate-800 text-slate-300 rounded-xl">Cancelar</button>
+          <button type="submit" class="px-4 py-2 bg-cyan-600 hover:bg-cyan-500 text-slate-950 font-bold rounded-xl">Guardar Reporte</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal C: Programar Nuevo Evento de Movilización -->
+  <div id="modalNuevoEvento" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-[#111633] border border-amber-500/40 rounded-2xl max-w-xl w-full p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
+      <div class="flex items-center justify-between border-b border-[#202854] pb-3">
+        <h3 class="text-lg font-display font-bold text-white flex items-center gap-2">
+          <i data-lucide="calendar-plus" class="w-5 h-5 text-amber-400"></i>
+          <span>Programar Evento de Movilización</span>
+        </h3>
+        <button onclick="closeModal('modalNuevoEvento')" class="text-slate-400 hover:text-white p-1">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <form id="formNuevoEvento" onsubmit="guardarNuevoEvento(event)" class="space-y-3 text-xs sm:text-sm">
+        <div>
+          <label class="block text-slate-300 font-semibold mb-1">Nombre / Tipo de Evento:</label>
+          <input type="text" id="neTitulo" required placeholder="Ej: Gran Caminata de la Victoria y Encuentro Vecinal" class="w-full px-3 py-2 bg-[#0c1029] border border-[#202854] rounded-xl text-white focus:outline-none focus:border-amber-500">
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-slate-300 font-semibold mb-1">Fecha:</label>
+            <input type="date" id="neFecha" required class="w-full px-3 py-2 bg-[#0c1029] border border-[#202854] rounded-xl text-white focus:outline-none focus:border-amber-500">
+          </div>
+          <div>
+            <label class="block text-slate-300 font-semibold mb-1">Hora:</label>
+            <input type="time" id="neHora" required class="w-full px-3 py-2 bg-[#0c1029] border border-[#202854] rounded-xl text-white focus:outline-none focus:border-amber-500">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-slate-300 font-semibold mb-1">Parroquia:</label>
+            <select id="neParroquia" class="w-full px-3 py-2 bg-[#0c1029] border border-[#202854] rounded-xl text-white focus:outline-none focus:border-amber-500">
+              <option value="Alto de Los Godos">Alto de Los Godos</option>
+              <option value="San Simón">San Simón</option>
+              <option value="Las Cocuizas">Las Cocuizas</option>
+              <option value="Boquerón">Boquerón</option>
+              <option value="Santa Cruz">Santa Cruz</option>
+              <option value="La Pica">La Pica</option>
+              <option value="San Vicente">San Vicente</option>
+              <option value="El Furrial">El Furrial</option>
+              <option value="El Corozo">El Corozo</option>
+              <option value="Jusepín">Jusepín</option>
+              <option value="Municipio Foráneo">Municipio Foráneo</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-slate-300 font-semibold mb-1">Sector / Punto de Concentración:</label>
+            <input type="text" id="neSector" required placeholder="Ej: Plaza El Indio / Cancha techada" class="w-full px-3 py-2 bg-[#0c1029] border border-[#202854] rounded-xl text-white focus:outline-none focus:border-amber-500">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-slate-300 font-semibold mb-1">Meta de Asistencia (Personas):</label>
+            <input type="number" id="neMeta" required placeholder="Ej: 800" class="w-full px-3 py-2 bg-[#0c1029] border border-[#202854] rounded-xl text-white focus:outline-none focus:border-amber-500">
+          </div>
+          <div>
+            <label class="block text-slate-300 font-semibold mb-1">Vocero / Dirigente Principal:</label>
+            <input type="text" id="neVocero" required placeholder="Ej: José Gregorio 'El Gato' Briceño" class="w-full px-3 py-2 bg-[#0c1029] border border-[#202854] rounded-xl text-white focus:outline-none focus:border-amber-500">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-slate-300 font-semibold mb-1">Responsable de Movilización y Logística:</label>
+          <input type="text" id="neResponsable" required placeholder="Ej: Ing. Diego Donado / Coordinador Parroquial" class="w-full px-3 py-2 bg-[#0c1029] border border-[#202854] rounded-xl text-white focus:outline-none focus:border-amber-500">
+        </div>
+
+        <!-- Checklist Operativo -->
+        <div class="space-y-1 pt-1">
+          <span class="text-xs font-bold text-slate-300 block uppercase">Checklist Logístico Requerido:</span>
+          <div class="grid grid-cols-2 gap-2 text-xs text-slate-300">
+            <label class="flex items-center gap-2 p-2 bg-[#0c1029] rounded-lg border border-[#202854]">
+              <input type="checkbox" id="chkSonido" checked class="rounded border-slate-700 text-amber-500">
+              <span>Sonido y Planta Eléctrica</span>
+            </label>
+            <label class="flex items-center gap-2 p-2 bg-[#0c1029] rounded-lg border border-[#202854]">
+              <input type="checkbox" id="chkAgua" checked class="rounded border-slate-700 text-amber-500">
+              <span>Hidratación / Refrigerios</span>
+            </label>
+            <label class="flex items-center gap-2 p-2 bg-[#0c1029] rounded-lg border border-[#202854]">
+              <input type="checkbox" id="chkPropaganda" checked class="rounded border-slate-700 text-amber-500">
+              <span>Banderas / Pancartas</span>
+            </label>
+            <label class="flex items-center gap-2 p-2 bg-[#0c1029] rounded-lg border border-[#202854]">
+              <input type="checkbox" id="chkFoto" checked class="rounded border-slate-700 text-amber-500">
+              <span>Cobertura de Medios / Foto</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="flex items-center justify-end gap-2 pt-3">
+          <button type="button" onclick="closeModal('modalNuevoEvento')" class="px-4 py-2 bg-slate-800 text-slate-300 rounded-xl">Cancelar</button>
+          <button type="submit" class="px-4 py-2 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold rounded-xl">Registrar Evento</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal D: Crear Alerta / Recordatorio Personalizado -->
+  <div id="modalNuevoRecordatorio" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-[#111633] border border-emerald-500/40 rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between border-b border-[#202854] pb-3">
+        <h3 class="text-lg font-display font-bold text-white flex items-center gap-2">
+          <i data-lucide="bell-ring" class="w-5 h-5 text-emerald-400"></i>
+          <span>Crear Recordatorio Situacional</span>
+        </h3>
+        <button onclick="closeModal('modalNuevoRecordatorio')" class="text-slate-400 hover:text-white p-1">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <form id="formNuevoRecordatorio" onsubmit="guardarNuevoRecordatorio(event)" class="space-y-3 text-xs sm:text-sm">
+        <div>
+          <label class="block text-slate-300 font-semibold mb-1">Título del Recordatorio:</label>
+          <input type="text" id="nrTitulo" required placeholder="Ej: Confirmar planta de sonido para La Pica" class="w-full px-3 py-2 bg-[#0c1029] border border-[#202854] rounded-xl text-white focus:outline-none focus:border-emerald-500">
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-slate-300 font-semibold mb-1">Fecha:</label>
+            <input type="date" id="nrFecha" required class="w-full px-3 py-2 bg-[#0c1029] border border-[#202854] rounded-xl text-white focus:outline-none focus:border-emerald-500">
+          </div>
+          <div>
+            <label class="block text-slate-300 font-semibold mb-1">Hora de Alerta:</label>
+            <input type="time" id="nrHora" required class="w-full px-3 py-2 bg-[#0c1029] border border-[#202854] rounded-xl text-white focus:outline-none focus:border-emerald-500">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-slate-300 font-semibold mb-1">Prioridad:</label>
+            <select id="nrPrioridad" class="w-full px-3 py-2 bg-[#0c1029] border border-[#202854] rounded-xl text-white focus:outline-none focus:border-emerald-500">
+              <option value="Alta">Alta (Urgente)</option>
+              <option value="Media" selected>Media (Normal)</option>
+              <option value="Informativa">Informativa</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-slate-300 font-semibold mb-1">Tipo de Tarea:</label>
+            <select id="nrTipo" class="w-full px-3 py-2 bg-[#0c1029] border border-[#202854] rounded-xl text-white focus:outline-none focus:border-emerald-500">
+              <option value="Evento">Evento en Terreno</option>
+              <option value="Redes">Pauta en Redes (Hora Pico)</option>
+              <option value="Logística">Logística / Sonido</option>
+              <option value="Prensa">Convocatoria Prensa</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-slate-300 font-semibold mb-1">Detalle / Instrucción a Enviar:</label>
+          <textarea id="nrDetalle" rows="2" placeholder="Instrucción que se transmitirá al responsable o grupo..." class="w-full px-3 py-2 bg-[#0c1029] border border-[#202854] rounded-xl text-white focus:outline-none focus:border-emerald-500"></textarea>
+        </div>
+
+        <div class="flex items-center justify-end gap-2 pt-2">
+          <button type="button" onclick="closeModal('modalNuevoRecordatorio')" class="px-4 py-2 bg-slate-800 text-slate-300 rounded-xl">Cancelar</button>
+          <button type="submit" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl">Guardar Alerta</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ============================================================== -->
+  <!-- 5. LÓGICA DE CONTROL JAVASCRIPT                                 -->
+  <!-- ============================================================== -->
+  <script>
+    // ESTADO GLOBAL DE DATOS (Módulo VII)
+    const STORAGE_KEY = "MIGATO_MODULO_VII_2026";
+
+    // Datos por defecto (Realistas de Monagas 2026)
+    const DEFAULT_DATA = {
+      contenidos: [
+        {
+          id: "cnt-1",
+          titulo: "Caminata masiva en Los Godos con El Gato Briceño",
+          municipio: "Maturín",
+          parroquia: "Alto de Los Godos",
+          canal: "tiktok",
+          categoria: "Acto de Masas",
+          estado: "capcut", // crudo, capcut, revision, publicado
+          duracion: "30 seg",
+          hook: "¡Maturín no se rinde! Así recibió Los Godos a El Gato Briceño 🐱🔥",
+          subtitulos: "1. Vuelve la esperanza a Monagas\n2. Calles desbordadas de punta a punta\n3. Este 2026 Ganamos Todos con MIGATO",
+          hashtags: "#MIGATO2026 #ElGatoVuelve #Monagas #Maturin #LosGodos",
+          fecha: "2026-09-22",
+          hora: "17:30"
+        },
+        {
+          id: "cnt-2",
+          titulo: "Denuncia de agua turbia y caños colapsados en Las Cocuizas",
+          municipio: "Maturín",
+          parroquia: "Las Cocuizas",
+          canal: "telegram",
+          categoria: "Denuncia Comunitaria",
+          estado: "crudo",
+          duracion: "45 seg",
+          hook: "Vecinos de Las Cocuizas tienen 3 semanas sin una gota de agua potable 🚨",
+          subtitulos: "1. Abandono total de los servicios públicos\n2. El Plan de 100 Días de El Gato ya tiene el proyecto listo\n3. ¡Monagas merece gobernantes de verdad!",
+          hashtags: "#MonagasEnEmergencia #LasCocuizas #ServiciosPublicos #MIGATO",
+          fecha: "2026-09-22",
+          hora: "11:45"
+        },
+        {
+          id: "cnt-3",
+          titulo: "Encuentro universitario en la UDO y Monagas Innova",
+          municipio: "Maturín",
+          parroquia: "San Simón",
+          canal: "instagram",
+          categoria: "Juventud MIGATO",
+          estado: "revision",
+          duracion: "20 seg",
+          hook: "Los jóvenes de Monagas ya eligieron futuro: ¡Aquí nadie se va!",
+          subtitulos: "1. Más de 400 estudiantes organizados\n2. Capacitación en ciberdefensa y tecnología electoral\n3. La juventud con El Gato Briceño",
+          hashtags: "#JuventudMIGATO #Monagas2026 #UDO #Maturin",
+          fecha: "2026-09-21",
+          hora: "19:00"
+        },
+        {
+          id: "cnt-4",
+          titulo: "Mensaje Oficial: Plan de Reactivación Hospital HUMNT",
+          municipio: "Maturín",
+          parroquia: "San Simón",
+          canal: "whatsapp",
+          categoria: "Mensaje El Gato",
+          estado: "publicado",
+          duracion: "60 seg",
+          hook: "Nuestros hospitales volverán a salvar vidas y tener medicinas dignas.",
+          subtitulos: "1. Diagnóstico de los 84 centros de salud de Monagas\n2. Dotación prioritaria en los primeros 100 días\n3. Salud para el pueblo, palabra de El Gato.",
+          hashtags: "#SaludMonagas #HUMNT #ElGatoBriceno #MIGATO",
+          fecha: "2026-09-20",
+          hora: "08:00"
+        }
+      ],
+      eventos: [
+        {
+          id: "evt-1",
+          titulo: "Gran Caminata y Asambleas Vecinales de La Puente",
+          parroquia: "Alto de Los Godos",
+          sector: "Sector 1 de La Puente • Cancha Central",
+          fecha: "2026-09-24",
+          hora: "16:30",
+          metaAsistencia: 1200,
+          asistenciaReal: 0,
+          vocero: "José Gregorio 'El Gato' Briceño",
+          responsable: "Ing. Diego Donado & Enlaces Sectoriales",
+          checklist: {
+            sonido: true,
+            agua: true,
+            propaganda: true,
+            foto: true
+          },
+          estado: "programado" // programado, en_vivo, finalizado
+        },
+        {
+          id: "evt-2",
+          titulo: "Encuentro con Productores y Comerciantes de Punta de Mata",
+          parroquia: "Municipio Foráneo",
+          sector: "Club Árabe • Punta de Mata (Ezequiel Zamora)",
+          fecha: "2026-09-26",
+          hora: "10:00",
+          metaAsistencia: 600,
+          asistenciaReal: 0,
+          vocero: "El Gato Briceño & Comando Regional",
+          responsable: "Coordinación Zamora MIGATO",
+          checklist: {
+            sonido: true,
+            agua: true,
+            propaganda: false,
+            foto: true
+          },
+          estado: "programado"
+        },
+        {
+          id: "evt-3",
+          titulo: "Toma de Esquinas y Volanteo Masivo en Casco Central",
+          parroquia: "San Simón",
+          sector: "Plaza Rómulo Gallegos / Av. Bicentenario",
+          fecha: "2026-09-23",
+          hora: "16:00",
+          metaAsistencia: 350,
+          asistenciaReal: 0,
+          vocero: "Juventud y Voluntariado MIGATO",
+          responsable: "Coordinador Juvenil Maturín",
+          checklist: {
+            sonido: false,
+            agua: true,
+            propaganda: true,
+            foto: true
+          },
+          estado: "programado"
+        }
+      ],
+      recordatorios: [
+        {
+          id: "rec-1",
+          titulo: "Hora Pico Redes: Lanzar Reel de Caminata Los Godos",
+          tipo: "Redes",
+          prioridad: "Alta",
+          fecha: "2026-09-23",
+          hora: "18:00",
+          detalle: "Activar brigada de Telegram para republicar en TikTok, Instagram y WhatsApp el clip de Los Godos.",
+          notificado: false
+        },
+        {
+          id: "rec-2",
+          titulo: "Verificación de Planta Eléctrica y Sonido • La Puente",
+          tipo: "Logística",
+          prioridad: "Alta",
+          fecha: "2026-09-24",
+          hora: "12:00",
+          detalle: "Llamar al enlace técnico de sonido y probar combustible para la asamblea de las 4:30 PM.",
+          notificado: false
+        },
+        {
+          id: "rec-3",
+          titulo: "Rueda de Prensa Radial Matutina con El Gato Briceño",
+          tipo: "Prensa",
+          prioridad: "Alta",
+          fecha: "2026-09-25",
+          hora: "07:30",
+          detalle: "Transmisión en vivo por emisoras aliadas de Maturín y señal abierta por redes sociales.",
+          notificado: false
+        }
+      ]
+    };
+
+    // Inicializar datos
+    let AppData = loadData();
+
+    function loadData() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) return JSON.parse(raw);
+      } catch (e) {
+        console.warn("Error leyendo localStorage", e);
+      }
+      return JSON.parse(JSON.stringify(DEFAULT_DATA));
+    }
+
+    function saveData() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(AppData));
+        updateAllCounters();
+      } catch (e) {
+        console.error("Error guardando datos", e);
+      }
+    }
+
+    // NAVEGACIÓN ENTRE PESTAÑAS
+    function switchTab(tabId) {
+      document.querySelectorAll(".tab-btn").forEach(btn => btn.classList.remove("active"));
+      document.querySelectorAll(".tab-pane").forEach(pane => pane.classList.remove("active"));
+
+      if (tabId === "redes") {
+        document.getElementById("btnTabRedes").classList.add("active");
+        document.getElementById("paneRedes").classList.add("active");
+        renderPipeline();
+      } else if (tabId === "eventos") {
+        document.getElementById("btnTabEventos").classList.add("active");
+        document.getElementById("paneEventos").classList.add("active");
+        renderEventos();
+      } else if (tabId === "recordatorios") {
+        document.getElementById("btnTabRecordatorios").classList.add("active");
+        document.getElementById("paneRecordatorios").classList.add("active");
+        renderRecordatorios();
+      }
+      lucide.createIcons();
+    }
+
+    // ==============================================================
+    // PIPELINE DE REDES SOCIALES Y CONTENIDOS (CAPCUT READY)
+    // ==============================================================
+    let currentFilterCanal = "todos";
+
+    function filterRedesCanal(canal) {
+      currentFilterCanal = canal;
+      document.querySelectorAll(".filter-canal").forEach(b => {
+        b.classList.remove("active", "bg-[#202854]", "text-white");
+        b.classList.add("bg-[#141a3d]", "text-slate-300");
+      });
+      event.currentTarget.classList.add("active", "bg-[#202854]", "text-white");
+      event.currentTarget.classList.remove("bg-[#141a3d]", "text-slate-300");
+      renderPipeline();
+    }
+
+    function renderPipeline() {
+      const colCrudo = document.getElementById("colCrudo");
+      const colCapCut = document.getElementById("colCapCut");
+      const colRevision = document.getElementById("colRevision");
+      const colPublicado = document.getElementById("colPublicado");
+
+      colCrudo.innerHTML = "";
+      colCapCut.innerHTML = "";
+      colRevision.innerHTML = "";
+      colPublicado.innerHTML = "";
+
+      let cCrudo = 0, cCapCut = 0, cRevision = 0, cPublicado = 0;
+
+      const filtrados = AppData.contenidos.filter(c => {
+        if (currentFilterCanal === "todos") return true;
+        return c.canal === currentFilterCanal;
+      });
+
+      filtrados.forEach(c => {
+        const card = createContenidoCard(c);
+        if (c.estado === "crudo") {
+          colCrudo.appendChild(card);
+          cCrudo++;
+        } else if (c.estado === "capcut") {
+          colCapCut.appendChild(card);
+          cCapCut++;
+        } else if (c.estado === "revision") {
+          colRevision.appendChild(card);
+          cRevision++;
+        } else if (c.estado === "publicado") {
+          colPublicado.appendChild(card);
+          cPublicado++;
+        }
+      });
+
+      document.getElementById("countCrudo").textContent = cCrudo;
+      document.getElementById("countCapCut").textContent = cCapCut;
+      document.getElementById("countRevision").textContent = cRevision;
+      document.getElementById("countPublicado").textContent = cPublicado;
+      document.getElementById("badgeContenidos").textContent = filtrados.length;
+      document.getElementById("kpiTotalContenidos").textContent = AppData.contenidos.length;
+
+      lucide.createIcons();
+    }
+
+    function createContenidoCard(c) {
+      const el = document.createElement("div");
+      el.className = "bg-[#0c1029] border border-[#202854] hover:border-slate-500 rounded-xl p-3.5 space-y-2.5 transition shadow-sm";
+
+      let badgeCanalColor = "bg-slate-800 text-slate-300";
+      if (c.canal === "telegram") badgeCanalColor = "bg-sky-950 text-sky-400 border border-sky-500/30";
+      if (c.canal === "tiktok") badgeCanalColor = "bg-pink-950 text-pink-400 border border-pink-500/30";
+      if (c.canal === "instagram") badgeCanalColor = "bg-rose-950 text-rose-400 border border-rose-500/30";
+      if (c.canal === "whatsapp") badgeCanalColor = "bg-emerald-950 text-emerald-400 border border-emerald-500/30";
+      if (c.canal === "twitter") badgeCanalColor = "bg-blue-950 text-blue-400 border border-blue-500/30";
+
+      el.innerHTML = `
+        <div class="flex items-center justify-between gap-1 text-[11px]">
+          <span class="px-2 py-0.5 rounded font-mono font-bold uppercase ${badgeCanalColor}">${c.canal}</span>
+          <span class="text-slate-400 font-mono">${c.hora || ''}</span>
+        </div>
+        <h5 class="text-xs sm:text-sm font-bold text-white leading-snug">${escapeHtml(c.titulo)}</h5>
+        <div class="text-[11px] text-slate-400 flex items-center justify-between">
+          <span>${escapeHtml(c.parroquia)}</span>
+          <span class="text-amber-400 font-semibold">${escapeHtml(c.categoria)}</span>
+        </div>
+        <div class="pt-2 border-t border-[#202854] flex items-center justify-between gap-1.5">
+          <button onclick="verFichaCapCut('${c.id}')" class="px-2.5 py-1.5 bg-[#161d45] hover:bg-cyan-900/60 text-cyan-300 rounded-lg text-xs font-semibold flex items-center gap-1 transition" title="Generar Guión CapCut">
+            <i data-lucide="scissors" class="w-3.5 h-3.5"></i>
+            <span>Ficha CapCut</span>
+          </button>
+          
+          <select onchange="cambiarEstadoContenido('${c.id}', this.value)" class="bg-[#121838] border border-[#202854] text-[11px] text-slate-300 rounded-lg px-2 py-1 focus:outline-none">
+            <option value="crudo" ${c.estado === 'crudo' ? 'selected' : ''}>1. Crudo</option>
+            <option value="capcut" ${c.estado === 'capcut' ? 'selected' : ''}>2. CapCut</option>
+            <option value="revision" ${c.estado === 'revision' ? 'selected' : ''}>3. Revisión</option>
+            <option value="publicado" ${c.estado === 'publicado' ? 'selected' : ''}>4. Publicado</option>
+          </select>
+        </div>
+      `;
+      return el;
+    }
+
+    function cambiarEstadoContenido(id, nuevoEstado) {
+      const c = AppData.contenidos.find(x => x.id === id);
+      if (c) {
+        c.estado = nuevoEstado;
+        saveData();
+        renderPipeline();
+      }
+    }
+
+    let activeCapCutId = null;
+
+    function verFichaCapCut(id) {
+      const c = AppData.contenidos.find(x => x.id === id);
+      if (!c) return;
+      activeCapCutId = id;
+
+      document.getElementById("capcutTitulo").textContent = c.titulo;
+      document.getElementById("capcutTerritorio").textContent = `${c.municipio} • ${c.parroquia}`;
+      document.getElementById("capcutDuracion").textContent = c.duracion || "30 - 45 seg";
+      document.getElementById("capcutHook").textContent = `"${c.hook || '¡Atención Monagas! Esto es lo que está pasando en la calle...'}"`;
+      document.getElementById("capcutSubtitulos").textContent = c.subtitulos || "1. Declaraciones del pueblo\n2. Propuesta MIGATO 2026\n3. Ganamos Todos con El Gato";
+      document.getElementById("capcutHashtags").textContent = c.hashtags || "#MIGATO2026 #ElGatoVuelve #Monagas";
+
+      openModal("modalCapCut");
+      lucide.createIcons();
+    }
+
+    function copiarGuionCapCut() {
+      const c = AppData.contenidos.find(x => x.id === activeCapCutId);
+      if (!c) return;
+
+      const texto = `🎬 GUION Y FICHA DE EDICIÓN CAPCUT • MIGATO 2026
+----------------------------------------------------
+📌 Título: ${c.titulo}
+📍 Ubicación: ${c.municipio} • ${c.parroquia}
+⏱️ Duración estimada: ${c.duracion}
+🎵 Audio sugerido: Épico / Redes sociales MIGATO
+
+🎯 GANCHO (Primeros 3 segundos):
+"${c.hook}"
+
+📝 SUBTÍTULOS Y CORTES DE TEXTO:
+${c.subtitulos}
+
+🏷️ HASHTAGS OFICIALES:
+${c.hashtags}
+----------------------------------------------------
+MIGATO Monagas 2026 • José Gregorio 'El Gato' Briceño`;
+
+      navigator.clipboard.writeText(texto).then(() => {
+        alert("✅ Guión copiado al portapapeles. Pégalo directamente en CapCut o notas de producción.");
+      });
+    }
+
+    function marcarComoEnEdicion() {
+      if (activeCapCutId) {
+        cambiarEstadoContenido(activeCapCutId, "capcut");
+        closeModal("modalCapCut");
+      }
+    }
+
+    function openModalNuevoContenido() {
+      document.getElementById("formNuevoContenido").reset();
+      openModal("modalNuevoContenido");
+    }
+
+    function guardarNuevoContenido(e) {
+      e.preventDefault();
+      const titulo = document.getElementById("ncTitulo").value.trim();
+      const municipio = document.getElementById("ncMunicipio").value;
+      const parroquia = document.getElementById("ncParroquia").value.trim();
+      const canal = document.getElementById("ncCanal").value;
+      const categoria = document.getElementById("ncCategoria").value;
+      const descripcion = document.getElementById("ncDescripcion").value.trim();
+
+      const nuevo = {
+        id: "cnt-" + Date.now(),
+        titulo: titulo,
+        municipio: municipio,
+        parroquia: parroquia,
+        canal: canal,
+        categoria: categoria,
+        estado: "crudo",
+        duracion: "30 seg",
+        hook: `¡Atención ${parroquia}! Así avanza la fuerza de MIGATO 🔥`,
+        subtitulos: `1. ${descripcion || 'Voluntarios de calle en acción'}\n2. Conducción de José Gregorio 'El Gato' Briceño\n3. ¡Monagas 2026 Ganamos Todos!`,
+        hashtags: `#MIGATO2026 #ElGatoVuelve #${parroquia.replace(/\\s+/g, '')} #Monagas`,
+        fecha: new Date().toISOString().split("T")[0],
+        hora: new Date().toTimeString().slice(0, 5)
+      };
+
+      AppData.contenidos.unshift(nuevo);
+      saveData();
+      closeModal("modalNuevoContenido");
+      renderPipeline();
+    }
+
+    // ==============================================================
+    // AGENDA DE MOVILIZACIÓN Y EVENTOS EN TERRENO
+    // ==============================================================
+    function renderEventos() {
+      const grid = document.getElementById("listaEventosGrid");
+      grid.innerHTML = "";
+
+      const busqueda = (document.getElementById("searchEventoTxt").value || "").toLowerCase();
+      const filtroP = document.getElementById("filterEventoParroquia").value;
+
+      let metaAcumulada = 0;
+      let totalFiltrados = 0;
+
+      AppData.eventos.forEach(evt => {
+        metaAcumulada += Number(evt.metaAsistencia || 0);
+
+        const matchTxt = evt.titulo.toLowerCase().includes(busqueda) || 
+                         evt.sector.toLowerCase().includes(busqueda) || 
+                         evt.vocero.toLowerCase().includes(busqueda) ||
+                         evt.parroquia.toLowerCase().includes(busqueda);
+        const matchP = filtroP === "todas" || evt.parroquia === filtroP;
+
+        if (matchTxt && matchP) {
+          totalFiltrados++;
+          const card = document.createElement("div");
+          card.className = "bg-[#111633] border border-[#202854] hover:border-amber-500/50 rounded-2xl p-5 space-y-4 shadow-lg transition flex flex-col justify-between";
+          
+          card.innerHTML = `
+            <div class="space-y-3">
+              <div class="flex items-center justify-between gap-2">
+                <span class="text-xs font-mono font-bold uppercase px-2.5 py-1 rounded-lg bg-amber-950/80 text-amber-300 border border-amber-500/30">
+                  ${evt.parroquia}
+                </span>
+                <span class="text-xs font-mono text-slate-400 flex items-center gap-1">
+                  <i data-lucide="clock" class="w-3.5 h-3.5 text-amber-400"></i>
+                  <span>${evt.fecha} • ${evt.hora}</span>
+                </span>
+              </div>
+
+              <h4 class="text-base sm:text-lg font-display font-bold text-white leading-snug">
+                ${escapeHtml(evt.titulo)}
+              </h4>
+
+              <div class="space-y-1.5 text-xs text-slate-300">
+                <div class="flex items-start gap-2">
+                  <i data-lucide="map-pin" class="w-4 h-4 text-rose-400 shrink-0 mt-0.5"></i>
+                  <span><strong>Punto:</strong> ${escapeHtml(evt.sector)}</span>
+                </div>
+                <div class="flex items-start gap-2">
+                  <i data-lucide="user" class="w-4 h-4 text-cyan-400 shrink-0 mt-0.5"></i>
+                  <span><strong>Vocero:</strong> ${escapeHtml(evt.vocero)}</span>
+                </div>
+                <div class="flex items-start gap-2">
+                  <i data-lucide="shield" class="w-4 h-4 text-emerald-400 shrink-0 mt-0.5"></i>
+                  <span><strong>Logística:</strong> ${escapeHtml(evt.responsable)}</span>
+                </div>
+              </div>
+
+              <!-- Checklist Status -->
+              <div class="pt-2 border-t border-[#202854] grid grid-cols-2 gap-1.5 text-[11px]">
+                <div class="flex items-center gap-1.5 ${evt.checklist.sonido ? 'text-emerald-400' : 'text-slate-500'}">
+                  <i data-lucide="${evt.checklist.sonido ? 'check-circle' : 'circle'}" class="w-3.5 h-3.5"></i>
+                  <span>Sonido / Planta</span>
+                </div>
+                <div class="flex items-center gap-1.5 ${evt.checklist.agua ? 'text-emerald-400' : 'text-slate-500'}">
+                  <i data-lucide="${evt.checklist.agua ? 'check-circle' : 'circle'}" class="w-3.5 h-3.5"></i>
+                  <span>Hidratación</span>
+                </div>
+                <div class="flex items-center gap-1.5 ${evt.checklist.propaganda ? 'text-emerald-400' : 'text-slate-500'}">
+                  <i data-lucide="${evt.checklist.propaganda ? 'check-circle' : 'circle'}" class="w-3.5 h-3.5"></i>
+                  <span>Pancartas / Banderas</span>
+                </div>
+                <div class="flex items-center gap-1.5 ${evt.checklist.foto ? 'text-emerald-400' : 'text-slate-500'}">
+                  <i data-lucide="${evt.checklist.foto ? 'check-circle' : 'circle'}" class="w-3.5 h-3.5"></i>
+                  <span>Prensa / Medios</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Meta & Acciones Rápidas -->
+            <div class="pt-3 border-t border-[#202854] space-y-2">
+              <div class="flex items-center justify-between text-xs">
+                <span class="text-slate-400">Meta Estimada:</span>
+                <strong class="text-white font-mono text-sm">${evt.metaAsistencia.toLocaleString()} personas</strong>
+              </div>
+
+              <div class="grid grid-cols-3 gap-1.5 pt-1">
+                <button onclick="despacharEventoWhatsApp('${evt.id}')" class="py-2 px-2 bg-emerald-950/80 hover:bg-emerald-900 border border-emerald-500/30 text-emerald-300 rounded-xl text-xs font-semibold flex items-center justify-center gap-1 transition" title="Enviar convocatoria por WhatsApp">
+                  <i data-lucide="message-circle" class="w-3.5 h-3.5"></i>
+                  <span>WhatsApp</span>
+                </button>
+
+                <button onclick="descargarCalendarioICS('${evt.id}')" class="py-2 px-2 bg-[#141a3d] hover:bg-[#1f285c] border border-amber-500/30 text-amber-300 rounded-xl text-xs font-semibold flex items-center justify-center gap-1 transition" title="Descargar archivo de calendario .ics">
+                  <i data-lucide="calendar" class="w-3.5 h-3.5"></i>
+                  <span>iCal (.ics)</span>
+                </button>
+
+                <button onclick="crearAlertaDesdeEvento('${evt.id}')" class="py-2 px-2 bg-purple-950/80 hover:bg-purple-900 border border-purple-500/30 text-purple-300 rounded-xl text-xs font-semibold flex items-center justify-center gap-1 transition" title="Agregar Alerta Recordarme">
+                  <i data-lucide="bell" class="w-3.5 h-3.5"></i>
+                  <span>Alerta</span>
+                </button>
+              </div>
+            </div>
+          `;
+          grid.appendChild(card);
+        }
+      });
+
+      document.getElementById("badgeEventos").textContent = totalFiltrados;
+      document.getElementById("kpiTotalEventos").textContent = AppData.eventos.length;
+      document.getElementById("kpiMetaMovilizados").textContent = metaAcumulada.toLocaleString();
+
+      lucide.createIcons();
+    }
+
+    function openModalNuevoEvento() {
+      document.getElementById("formNuevoEvento").reset();
+      const today = new Date().toISOString().split("T")[0];
+      document.getElementById("neFecha").value = today;
+      openModal("modalNuevoEvento");
+    }
+
+    function guardarNuevoEvento(e) {
+      e.preventDefault();
+      const nuevo = {
+        id: "evt-" + Date.now(),
+        titulo: document.getElementById("neTitulo").value.trim(),
+        fecha: document.getElementById("neFecha").value,
+        hora: document.getElementById("neHora").value,
+        parroquia: document.getElementById("neParroquia").value,
+        sector: document.getElementById("neSector").value.trim(),
+        metaAsistencia: Number(document.getElementById("neMeta").value || 500),
+        asistenciaReal: 0,
+        vocero: document.getElementById("neVocero").value.trim(),
+        responsable: document.getElementById("neResponsable").value.trim(),
+        checklist: {
+          sonido: document.getElementById("chkSonido").checked,
+          agua: document.getElementById("chkAgua").checked,
+          propaganda: document.getElementById("chkPropaganda").checked,
+          foto: document.getElementById("chkFoto").checked
+        },
+        estado: "programado"
+      };
+
+      AppData.eventos.unshift(nuevo);
+
+      // Crear recordatorio automático 3 horas antes del evento
+      const recAuto = {
+        id: "rec-" + Date.now(),
+        titulo: `Convocatoria: ${nuevo.titulo}`,
+        tipo: "Evento",
+        prioridad: "Alta",
+        fecha: nuevo.fecha,
+        hora: restarHoras(nuevo.hora, 3),
+        detalle: `Faltan 3 horas para la actividad en ${nuevo.parroquia} (${nuevo.sector}). Activar movilización de testigos y vecinos.`,
+        notificado: false
+      };
+      AppData.recordatorios.unshift(recAuto);
+
+      saveData();
+      closeModal("modalNuevoEvento");
+      renderEventos();
+      alert("✅ Evento programado con éxito y alerta añadida a la Sala.");
+    }
+
+    function restarHoras(horaStr, horasARestar) {
+      const [h, m] = horaStr.split(":").map(Number);
+      let nuevaH = h - horasARestar;
+      if (nuevaH < 0) nuevaH += 24;
+      return `${String(nuevaH).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
+    }
+
+    // ==============================================================
+    // CENTRO DE RECORDATORIOS Y DESPACHO ("RECORDARME")
+    // ==============================================================
+    function renderRecordatorios() {
+      const cont = document.getElementById("listaRecordatorios");
+      cont.innerHTML = "";
+
+      let activas = 0;
+      const now = new Date();
+
+      AppData.recordatorios.forEach(rec => {
+        activas++;
+        const card = document.createElement("div");
+        card.className = "bg-[#111633] border border-[#202854] hover:border-emerald-500/40 rounded-2xl p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 transition shadow-md";
+
+        let badgePrioridad = "bg-slate-800 text-slate-300";
+        if (rec.prioridad === "Alta") badgePrioridad = "bg-rose-950 text-rose-400 border border-rose-500/30";
+        if (rec.prioridad === "Media") badgePrioridad = "bg-amber-950 text-amber-400 border border-amber-500/30";
+
+        // Cálculo de cuenta regresiva
+        const targetDate = new Date(`${rec.fecha}T${rec.hora}:00`);
+        const diffMs = targetDate - now;
+        let countdownText = "";
+        let isPast = false;
+
+        if (diffMs > 0) {
+          const diffHrs = Math.floor(diffMs / (1000 * 60 * 60));
+          const diffMins = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+          countdownText = `En ${diffHrs}h ${diffMins}m`;
+        } else {
+          isPast = true;
+          countdownText = "¡Hora Cumplida!";
+        }
+
+        card.innerHTML = `
+          <div class="space-y-1.5 flex-1">
+            <div class="flex items-center gap-2">
+              <span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase ${badgePrioridad}">${rec.prioridad}</span>
+              <span class="text-xs font-mono text-emerald-400 font-semibold bg-emerald-950/60 px-2 py-0.5 rounded border border-emerald-500/20">${rec.tipo}</span>
+              <span class="text-xs font-mono text-slate-400">${rec.fecha} a las ${rec.hora}</span>
+            </div>
+            <h4 class="text-sm sm:text-base font-bold text-white leading-tight">${escapeHtml(rec.titulo)}</h4>
+            <p class="text-xs text-slate-300 leading-relaxed">${escapeHtml(rec.detalle)}</p>
+          </div>
+
+          <div class="flex sm:flex-col items-center sm:items-end justify-between w-full sm:w-auto gap-2 shrink-0">
+            <div class="text-right">
+              <span class="text-[11px] font-mono font-bold ${isPast ? 'text-amber-400 animate-pulse' : 'text-cyan-400'} block">
+                ${countdownText}
+              </span>
+            </div>
+
+            <div class="flex items-center gap-1.5">
+              <button onclick="despacharRecordatorioWhatsApp('${rec.id}')" class="px-2.5 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-bold rounded-xl text-xs flex items-center gap-1 transition" title="Despachar a WhatsApp">
+                <i data-lucide="send" class="w-3.5 h-3.5"></i>
+                <span class="hidden sm:inline">Despachar</span>
+              </button>
+
+              <button onclick="eliminarRecordatorio('${rec.id}')" class="p-1.5 text-slate-400 hover:text-rose-400 bg-slate-900 rounded-xl" title="Eliminar">
+                <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+              </button>
+            </div>
+          </div>
+        `;
+        cont.appendChild(card);
+      });
+
+      document.getElementById("activeTimersCount").textContent = `${activas} Alertas Activas`;
+      document.getElementById("badgeAlertas").textContent = activas;
+      document.getElementById("kpiTotalAlertas").textContent = activas;
+
+      lucide.createIcons();
+    }
+
+    function openModalNuevoRecordatorio() {
+      document.getElementById("formNuevoRecordatorio").reset();
+      const today = new Date().toISOString().split("T")[0];
+      document.getElementById("nrFecha").value = today;
+      openModal("modalNuevoRecordatorio");
+    }
+
+    function guardarNuevoRecordatorio(e) {
+      e.preventDefault();
+      const nuevo = {
+        id: "rec-" + Date.now(),
+        titulo: document.getElementById("nrTitulo").value.trim(),
+        fecha: document.getElementById("nrFecha").value,
+        hora: document.getElementById("nrHora").value,
+        prioridad: document.getElementById("nrPrioridad").value,
+        tipo: document.getElementById("nrTipo").value,
+        detalle: document.getElementById("nrDetalle").value.trim(),
+        notificado: false
+      };
+
+      AppData.recordatorios.unshift(nuevo);
+      saveData();
+      closeModal("modalNuevoRecordatorio");
+      renderRecordatorios();
+    }
+
+    function eliminarRecordatorio(id) {
+      if (confirm("¿Deseas descartar este recordatorio?")) {
+        AppData.recordatorios = AppData.recordatorios.filter(r => r.id !== id);
+        saveData();
+        renderRecordatorios();
+      }
+    }
+
+    function crearAlertaDesdeEvento(evtId) {
+      const evt = AppData.eventos.find(x => x.id === evtId);
+      if (!evt) return;
+
+      const nuevoRec = {
+        id: "rec-" + Date.now(),
+        titulo: `Recordatorio Inmediato: ${evt.titulo}`,
+        tipo: "Evento",
+        prioridad: "Alta",
+        fecha: evt.fecha,
+        hora: evt.hora,
+        detalle: `Concentración en ${evt.sector}, parroquia ${evt.parroquia}. Responsable: ${evt.responsable}. Meta: ${evt.metaAsistencia} personas.`,
+        notificado: false
+      };
+
+      AppData.recordatorios.unshift(nuevoRec);
+      saveData();
+      switchTab("recordatorios");
+      alert("✅ Alerta creada e incorporada a la consola de recordatorios.");
+    }
+
+    // ==============================================================
+    // DESPACHO A WHATSAPP Y GENERADOR DE CALENDARIO (.ICS)
+    // ==============================================================
+    function despacharEventoWhatsApp(evtId) {
+      const evt = AppData.eventos.find(x => x.id === evtId);
+      if (!evt) return;
+
+      const texto = `🚨 *CONVOCATORIA OFICIAL • MIGATO MONAGAS 2026* 🚨
+🏛️ *Comando Estratégico José Gregorio 'El Gato' Briceño*
+
+📢 *Actividad:* ${evt.titulo}
+📍 *Lugar / Punto de Encuentro:* ${evt.sector}
+🗺️ *Parroquia:* ${evt.parroquia} (Estado Monagas)
+📅 *Fecha:* ${evt.fecha}
+⏰ *Hora:* ${evt.hora}
+👤 *Vocero:* ${evt.vocero}
+👥 *Meta de Convocatoria:* ${evt.metaAsistencia} patriotas
+
+📌 *Línea de Mando:* Por favor a todos los enlaces de mesa, testigos y comités de base confirmar asistencia y movilización en su sector.
+
+*¡MIGATO: Ganamos Todos!* 🐱✌️`;
+
+      const url = `https://api.whatsapp.com/send?text=${encodeURIComponent(texto)}`;
+      window.open(url, "_blank");
+    }
+
+    function despacharRecordatorioWhatsApp(recId) {
+      const rec = AppData.recordatorios.find(x => x.id === recId);
+      if (!rec) return;
+
+      const texto = `🔔 *RECORDATORIO DE SALA SITUACIONAL • MIGATO 2026*
+⚠️ *Prioridad:* ${rec.prioridad.toUpperCase()} | *Área:* ${rec.tipo}
+
+📌 *Asunto:* ${rec.titulo}
+⏰ *Hora Programada:* ${rec.fecha} a las ${rec.hora}
+📝 *Instrucción:* ${rec.detalle}
+
+Comando de Campaña El Gato Briceño • Maturín, Monagas.`;
+
+      const url = `https://api.whatsapp.com/send?text=${encodeURIComponent(texto)}`;
+      window.open(url, "_blank");
+    }
+
+    // Generador nativo RFC 5545 de archivos iCalendar (.ics)
+    function descargarCalendarioICS(evtId) {
+      const evt = AppData.eventos.find(x => x.id === evtId);
+      if (!evt) return;
+
+      const dtStart = evt.fecha.replace(/-/g, '') + 'T' + evt.hora.replace(/:/g, '') + '00';
+      // Asumir duración de 2 horas
+      const [h, m] = evt.hora.split(':').map(Number);
+      const endH = String((h + 2) % 24).padStart(2, '0');
+      const dtEnd = evt.fecha.replace(/-/g, '') + 'T' + endH + String(m).padStart(2, '0') + '00';
+
+      const icsData = [
+        "BEGIN:VCALENDAR",
+        "VERSION:2.0",
+        "PRODID:-//MIGATO Monagas 2026//Eventos y Campaña//ES",
+        "CALSCALE:GREGORIAN",
+        "METHOD:PUBLISH",
+        "BEGIN:VEVENT",
+        `UID:${evt.id}@migatomonagas2026.org`,
+        `DTSTAMP:${new Date().toISOString().replace(/[-:]/g, '').split('.')[0]}Z`,
+        `DTSTART:${dtStart}`,
+        `DTEND:${dtEnd}`,
+        `SUMMARY:${evt.titulo} • MIGATO`,
+        `DESCRIPTION:${evt.vocero} en ${evt.sector}, Parroquia ${evt.parroquia}. Meta: ${evt.metaAsistencia} personas. Responsable: ${evt.responsable}.`,
+        `LOCATION:${evt.sector}, ${evt.parroquia}, Monagas, Venezuela`,
+        "STATUS:CONFIRMED",
+        "BEGIN:VALARM",
+        "TRIGGER:-PT2H",
+        "ACTION:DISPLAY",
+        "DESCRIPTION:Recordatorio de Evento MIGATO",
+        "END:VALARM",
+        "END:VEVENT",
+        "END:VCALENDAR"
+      ].join("\r\n");
+
+      const blob = new Blob([icsData], { type: "text/calendar;charset=utf-8" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = `Evento_MIGATO_${evt.parroquia.replace(/\\s+/g, '_')}.ics`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    // PLANTILLAS RÁPIDAS
+    function copyPlantilla(tipo) {
+      let t = "";
+      if (tipo === "caminata") {
+        t = `🚩 *CONVOCATORIA: GRAN CAMINATA Y ASAMBLEA POPULAR*
+Lugar: [Colocar Sector]
+Parroquia: [Colocar Parroquia]
+Hora: 4:30 PM
+Líder: José Gregorio 'El Gato' Briceño
+
+¡Lleva tu bandera, tu gorra y tu fuerza! Monagas vuelve a ganar con MIGATO. Comparte este mensaje con todos tus vecinos.`;
+      } else if (tipo === "redes") {
+        t = `🔥 *ALERTA DE PAUTA DIGITAL • ACTIVAR TIKTOK E INSTAGRAM*
+Equipo de Redes y Juventud MIGATO:
+Hora de subida: [Colocar Hora Pico]
+Hashtags: #MIGATO2026 #ElGatoVuelve #MonagasGana
+Instrucción: Dar like, repostear en historias y comentar masivamente en los primeros 15 minutos para posicionar el contenido. ¡A ganar el algoritmo!`;
+      } else if (tipo === "prensa") {
+        t = `🎙️ *AVISO DE MEDIOS Y RUEDA DE PRENSA*
+El candidato y líder de MIGATO, José Gregorio 'El Gato' Briceño, ofrecerá un balance territorial y presentará el Plan de Obras para Monagas.
+Lugar: Sede del Comando de Campaña MIGATO, Maturín.
+Hora: 10:00 AM.
+Convocatoria a todos los medios regionales y corresponsales nacionales.`;
+      }
+
+      navigator.clipboard.writeText(t).then(() => {
+        alert("✅ Plantilla copiada al portapapeles. Lista para despachar.");
+      });
+    }
+
+    // ALARMA SONORA DE SALA CON WEB AUDIO API (100% Offline)
+    function testToneAlert() {
+      try {
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+
+        osc.type = "sine";
+        osc.frequency.setValueAtTime(880, audioCtx.currentTime); // A5
+        osc.frequency.setValueAtTime(1174.66, audioCtx.currentTime + 0.15); // D6
+        osc.frequency.setValueAtTime(880, audioCtx.currentTime + 0.30); // A5
+
+        gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.6);
+
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.6);
+      } catch (e) {
+        console.warn("Audio no disponible", e);
+      }
+    }
+
+    // EXPORTACIÓN JSON PARA BÓVEDA LOCAL RAID 1
+    function exportData() {
+      const jsonStr = JSON.stringify(AppData, null, 2);
+      const blob = new Blob([jsonStr], { type: "application/json" });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = `MIGATO_Modulo_VII_Backup_${new Date().toISOString().slice(0, 10)}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }
+
+    // UTILIDADES DE MODALES
+    function openModal(id) {
+      const m = document.getElementById(id);
+      if (m) m.classList.remove("hidden");
+    }
+
+    function closeModal(id) {
+      const m = document.getElementById(id);
+      if (m) m.classList.add("hidden");
+    }
+
+    function updateAllCounters() {
+      document.getElementById("kpiTotalContenidos").textContent = AppData.contenidos.length;
+      document.getElementById("kpiTotalEventos").textContent = AppData.eventos.length;
+      document.getElementById("kpiTotalAlertas").textContent = AppData.recordatorios.length;
+    }
+
+    function escapeHtml(text) {
+      if (!text) return "";
+      return String(text)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    // INICIALIZACIÓN
+    document.addEventListener("DOMContentLoaded", () => {
+      renderPipeline();
+      renderEventos();
+      renderRecordatorios();
+      updateAllCounters();
+
+      // Loop de actualización de temporizadores cada minuto
+      setInterval(() => {
+        renderRecordatorios();
+      }, 60000);
+    });
+  </script>
+</body>
+</html>

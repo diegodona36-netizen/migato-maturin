@@ -3,7 +3,7 @@
  * Permite que la aplicación funcione en zonas remotas de Maturín sin internet.
  */
 
-const CACHE_NAME = 'maturin-monitoreo-v22';
+const CACHE_NAME = 'maturin-monitoreo-v250';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -51,8 +51,13 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
-  // Ignorar completamente Google Earth Monagas y todas las APIs para garantizar que siempre cargue en vivo sin caché obsoleto
-  if (event.request.url.includes('/earth-monagas') || event.request.url.includes('/api/')) {
+  // Ignorar completamente Google Earth Monagas, Lámina, Comunicación y APIs para garantizar que siempre cargue en vivo sin caché obsoleto
+  if (
+    event.request.url.includes('/earth-monagas') || 
+    event.request.url.includes('/lamina-monagas') || 
+    event.request.url.includes('/comunicacion-movilizacion') || 
+    event.request.url.includes('/api/')
+  ) {
     return;
   }
 
