@@ -5,9 +5,9 @@
  * ==========================================================================
  */
 
-import { GEO_ESTADO_OFICIAL, GEO_MUNICIPIOS_OFICIAL, GEO_PARROQUIAS_OFICIAL } from "../../earth-monagas/js/geoOficialMonagas.js?v=230";
-import { CATALOGO_MONAGAS, PARISH_ALIAS_MAP, resolveParishId } from "../../earth-monagas/js/catalogoMonagas.js?v=230";
-import { getParishDemographics, getMunicipioDemographics, getParishColor as getBaseParishColor, PARISH_COLORS } from "../../earth-monagas/js/monagasDemographics.js?v=230";
+import { GEO_ESTADO_OFICIAL, GEO_MUNICIPIOS_OFICIAL, GEO_PARROQUIAS_OFICIAL } from "../../earth-monagas/js/geoOficialMonagas.js?v=240";
+import { CATALOGO_MONAGAS, PARISH_ALIAS_MAP, resolveParishId } from "../../earth-monagas/js/catalogoMonagas.js?v=240";
+import { getParishDemographics, getMunicipioDemographics, getParishColor as getBaseParishColor, PARISH_COLORS } from "../../earth-monagas/js/monagasDemographics.js?v=240";
 import { 
   getMunicipios, 
   getParroquiasByMun, 
@@ -17,9 +17,9 @@ import {
   findSectorById, 
   ALL_SECTORES_FLAT,
   MONAGAS_TERRITORIO_COMPLETO
-} from "../../earth-monagas/js/monagasSectoresCatalog.js?v=230";
-import { SUBPARROQUIAS_MONAGAS, SUBPARROQUIAS_GODOS, SECTORES_LAPUENTE } from "../../earth-monagas/js/geoMonagas.js?v=230";
-import { CENTROS_MATURIN } from "../../earth-monagas/js/centrosData.js?v=236";
+} from "../../earth-monagas/js/monagasSectoresCatalog.js?v=240";
+import { SUBPARROQUIAS_MONAGAS, SUBPARROQUIAS_GODOS, SECTORES_LAPUENTE } from "../../earth-monagas/js/geoMonagas.js?v=240";
+import { CENTROS_MATURIN } from "../../earth-monagas/js/centrosData.js?v=240";
 import { 
   getComandoInfo, 
   getAssignedLeader, 
@@ -28,10 +28,10 @@ import {
   COMANDOS_MUNICIPALES,
   COMANDOS_PARROQUIALES,
   COMANDOS_SECTORIALES
-} from "./comandoData.js?v=252";
+} from "./comandoData.js?v=260";
 import { auditLogger } from "./auditLogger.js";
 import { Whiteboard } from "./whiteboard.js?v=310";
-import { LaminaColorStudio, HIGH_CONTRAST_MUN_PALETTE } from "./laminaColorStudio.js?v=375";
+import { LaminaColorStudio, HIGH_CONTRAST_MUN_PALETTE } from "./laminaColorStudio.js?v=380";
 
 const BOUNDS_ESTADO_MONAGAS = [
   [8.38245, -64.06290],
@@ -180,12 +180,21 @@ export class LaminaApp {
 
   loadCustomColors() {
     try {
-      const savedMun = localStorage.getItem("migato_custom_mun_colors");
-      if (savedMun) {
-        this.customMunColors = JSON.parse(savedMun);
-      } else {
-        // Iniciar con la paleta de Alto Contraste Óptimo (evita duplicidad de rojos/azules vecinos)
+      const PALETTE_VERSION = "migato_palette_v3_oficial";
+      const currentVersion = localStorage.getItem("migato_palette_version");
+      
+      // Si la versión no coincide o no existe, forzamos la paleta oficial definitiva de alto contraste
+      if (currentVersion !== PALETTE_VERSION) {
         this.customMunColors = Object.assign({}, HIGH_CONTRAST_MUN_PALETTE);
+        localStorage.setItem("migato_custom_mun_colors", JSON.stringify(this.customMunColors));
+        localStorage.setItem("migato_palette_version", PALETTE_VERSION);
+      } else {
+        const savedMun = localStorage.getItem("migato_custom_mun_colors");
+        if (savedMun) {
+          this.customMunColors = JSON.parse(savedMun);
+        } else {
+          this.customMunColors = Object.assign({}, HIGH_CONTRAST_MUN_PALETTE);
+        }
       }
       const savedParish = localStorage.getItem("migato_custom_parish_colors");
       if (savedParish) {
@@ -208,7 +217,7 @@ export class LaminaApp {
       return HIGH_CONTRAST_MUN_PALETTE[mId];
     }
     const f = (GEO_MUNICIPIOS_OFICIAL.features || []).find(feat => feat.properties?.id === mId);
-    return f?.properties?.color || (CATALOGO_MONAGAS || []).find(m => m.id === mId)?.color || "#0284c7";
+    return f?.properties?.color || (CATALOGO_MONAGAS || []).find(m => m.id === mId)?.color || "#1e40af";
   }
 
   getParishColor(pId, munId) {
@@ -649,20 +658,20 @@ export class LaminaApp {
     if (inputPId) inputPId.value = targetPId;
 
     const displayName = entityName || targetId;
-    if (titleEl) titleEl.textContent = `Asignar Responsable: ${displayName}`;
-    if (subEl) subEl.textContent = `Estructura Territorial MIGATO • ID: ${targetId}`;
+    if (titleEl) titleEl.textContent = `Asignar Comando Gatero: ${displayName}`;
+    if (subEl) subEl.textContent = `Red de Comandos Gateros MIGATO 2026 • ID: ${targetId}`;
 
     // Cargar datos previos si existen
-    const defaultCargo = this.level === "estado" ? "Coordinador Municipal" : "Responsable Parroquial";
+    const defaultCargo = (this.level === "estado" || targetId.startsWith("mun-")) ? "Jefe Gatero Municipal" : ((this.level === "municipio" || targetId.startsWith("parr-") || targetId.startsWith("par-")) ? "Gatero Parroquial" : "Jefe Gatero Estatal");
     const prevAssigned = getAssignedLeader(targetId);
     if (prevAssigned) {
       if (inputNombre) inputNombre.value = prevAssigned.nombre || "";
       if (inputTelf) inputTelf.value = prevAssigned.telefono || "";
-      if (inputCargo) inputCargo.value = prevAssigned.cargo || defaultCargo;
+      if (inputCargo) inputCargo.value = prevAssigned.cargo || prevAssigned.rol || defaultCargo;
       if (inputProf) inputProf.value = prevAssigned.profesion || prevAssigned.cedula || "";
     } else {
       const info = getComandoInfo(this.level, targetId, targetPId, this.activeMunId);
-      if (inputNombre) inputNombre.value = (info && info.general && !info.general.includes("Coordinador") && !info.general.includes("Responsable")) ? info.general : "";
+      if (inputNombre) inputNombre.value = (info && info.general && !info.general.includes("Vacante") && !info.general.includes("Sin Asignar")) ? info.general : "";
       if (inputTelf) inputTelf.value = (info && info.telefono && !info.telefono.includes("0000")) ? info.telefono : "";
       if (inputCargo) inputCargo.value = defaultCargo;
       if (inputProf) inputProf.value = "";
@@ -2026,6 +2035,7 @@ export class LaminaApp {
   }
 
   // Renderizar la Estructura de Comando y Responsables Dinámica
+  // Renderizar la Estructura de Comandos Gateros y Responsables Dinámica
   renderComandoSection() {
     const activeEntityId = this.activeSectorId || this.activeSubParishId || this.activeParishId || this.activeMunId || "estado";
     const info = getComandoInfo(this.level, activeEntityId, this.activeParishId, this.activeMunId);
@@ -2042,32 +2052,43 @@ export class LaminaApp {
     const listEl = document.getElementById("comando-interactive-list");
 
     if (levelEl) levelEl.textContent = info.nivel;
-    if (cargoEl) cargoEl.textContent = info.nivel.includes("Parroquial") ? "Responsable Parroquial" : (info.nivel.includes("Municipal") ? "Coordinador Municipal" : "Responsable Principal");
-    if (nombreEl) nombreEl.textContent = info.general;
-    if (divisionEl) divisionEl.textContent = info.division;
-    if (telfEl) telfEl.innerHTML = `<span>📱</span><span>${info.telefono}</span>`;
-
-    // Renderizar roles clave
-    if (rolesContainer) {
-      if (info.roles && info.roles.length > 0) {
-        rolesContainer.innerHTML = info.roles.map(r => `
-          <div class="comando-role-row">
-            <div class="flex items-center gap-1.5 min-w-0">
-              <span class="w-1.5 h-1.5 rounded-full bg-sky-500 shrink-0"></span>
-              <span class="role-title truncate">${r.cargo}:</span>
-              <span class="role-person truncate font-semibold text-slate-800">${r.responsable}</span>
-            </div>
-          </div>
-        `).join("");
+    if (cargoEl) cargoEl.textContent = info.cargo || (this.level === "estado" ? "Jefe Gatero Estatal" : (this.level === "municipio" ? "Jefe Gatero Municipal" : "Gatero Parroquial"));
+    
+    if (nombreEl) {
+      nombreEl.textContent = info.general;
+      if (info.general.includes("Vacante") || info.general.includes("Sin Asignar")) {
+        nombreEl.className = "text-sm font-semibold text-slate-400 italic block truncate";
       } else {
-        rolesContainer.innerHTML = "";
+        nombreEl.className = "text-sm font-black text-slate-950 block truncate";
+      }
+    }
+    
+    if (divisionEl) divisionEl.textContent = info.division;
+    
+    if (telfEl) {
+      if (info.telefono && info.telefono !== "+58 412-0000000" && !info.telefono.includes("0000")) {
+        const cleanTelf = info.telefono.replace(/[^\d+]/g, '');
+        telfEl.innerHTML = `
+          <a href="https://wa.me/${cleanTelf.replace('+', '')}" target="_blank" rel="noopener noreferrer"
+             class="text-emerald-700 hover:text-emerald-900 font-extrabold flex items-center gap-1 hover:underline cursor-pointer" title="Contactar por WhatsApp">
+            <span>📲</span><span>${info.telefono}</span>
+          </a>
+        `;
+      } else {
+        telfEl.innerHTML = `<span>📱</span><span class="text-slate-500 font-medium">${info.telefono || "Sin teléfono registrado"}</span>`;
       }
     }
 
-    // Subdirectorios según nivel
+    // ELIMINAR roles burocráticos ficticios: erradicar "Operaciones y Logística", "Ciencia y Tecnología", etc.
+    if (rolesContainer) {
+      rolesContainer.innerHTML = "";
+      rolesContainer.style.display = "none";
+    }
+
+    // Subdirectorios según nivel (Comandos Gateros)
     if (subTitleEl) {
-      if (this.level === "estado") subTitleEl.textContent = "Comandos Municipales (13)";
-      else if (this.level === "municipio") subTitleEl.textContent = "Comandos Parroquiales";
+      if (this.level === "estado") subTitleEl.textContent = "Comandos Gateros Municipales (13)";
+      else if (this.level === "municipio") subTitleEl.textContent = "Comandos Gateros Parroquiales";
       else if (this.level === "parroquia") subTitleEl.textContent = "Centros CNE y Sectores";
       else subTitleEl.textContent = "Centros y Sectores del Eje";
     }
@@ -2079,25 +2100,38 @@ export class LaminaApp {
     if (listEl) {
       let html = "";
       if (info.subdirectorios && info.subdirectorios.length > 0) {
-        html = info.subdirectorios.map(sub => `
-          <div class="territory-row hover:border-sky-400 flex items-center justify-between gap-1">
+        html = info.subdirectorios.map(sub => {
+          const isAssigned = sub.isAssigned && !sub.responsable.includes("Vacante");
+          const phoneLink = (sub.telefono && !sub.telefono.includes("0000")) ? `
+            <a href="https://wa.me/${sub.telefono.replace(/[^\d]/g, '')}" target="_blank" rel="noopener noreferrer"
+               onclick="event.stopPropagation()"
+               class="text-[10px] text-emerald-700 hover:text-emerald-900 font-bold ml-1.5 inline-flex items-center gap-0.5 hover:underline cursor-pointer" title="Contactar por WhatsApp">
+              📲 ${sub.telefono}
+            </a>
+          ` : '';
+
+          return `
+          <div class="territory-row hover:border-sky-400 flex items-center justify-between gap-1 p-2 rounded-xl bg-white border border-slate-200 mb-1.5 shadow-2xs transition">
             <div onclick="${sub.onClick}" 
                  class="flex flex-col min-w-0 flex-1 cursor-pointer" 
                  title="Ver ${sub.nombre} • Clic para enfocar">
               <div class="flex items-center gap-1.5">
-                <span class="w-2 h-2 rounded-full bg-sky-500 shrink-0"></span>
+                <span class="w-2 h-2 rounded-full ${isAssigned ? 'bg-emerald-500' : 'bg-amber-400'} shrink-0"></span>
                 <span class="font-bold text-xs text-slate-900 truncate">${sub.nombre}</span>
               </div>
-              <span class="text-[10.5px] text-slate-500 truncate ml-3.5">
-                👤 ${sub.responsable}
-              </span>
+              <div class="flex items-center text-[10.5px] truncate ml-3.5 mt-0.5">
+                <span class="${isAssigned ? 'font-semibold text-slate-800' : 'text-slate-400 italic'} truncate">
+                  👤 ${sub.responsable}
+                </span>
+                ${phoneLink}
+              </div>
             </div>
             <div class="flex items-center gap-1 shrink-0 ml-1">
               ${(this.level === 'estado' || this.level === 'municipio') ? `
               <button type="button" 
                       onclick="event.stopPropagation(); laminaApp.openAsignarModal('${sub.id}', '${sub.nombre.replace(/'/g, "\\'")}', '${this.activeParishId || 'alto-de-los-godos'}')"
-                      class="px-1.5 py-0.5 rounded bg-sky-100 hover:bg-sky-200 text-sky-900 text-[10px] font-black border border-sky-300 shadow-2xs transition active:scale-95 cursor-pointer"
-                      title="Asignar o editar responsable">
+                      class="px-2 py-1 rounded bg-sky-100 hover:bg-sky-200 text-sky-900 text-[10px] font-black border border-sky-300 shadow-2xs transition active:scale-95 cursor-pointer"
+                      title="Asignar o editar Comando Gatero">
                 ✏️ Asignar
               </button>` : ''}
               <span class="text-[10px] font-extrabold text-sky-800 bg-sky-50 px-1.5 py-0.5 rounded border border-sky-200">
@@ -2105,7 +2139,8 @@ export class LaminaApp {
               </span>
             </div>
           </div>
-        `).join("");
+        `;
+        }).join("");
       } else if (info.centrosAsignados && info.centrosAsignados.length > 0) {
         html += `
           <div class="p-2 rounded-xl bg-slate-50 border border-slate-200 mb-2 space-y-1">

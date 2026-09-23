@@ -34,19 +34,19 @@ export const HIGH_CONTRAST_MUN_PALETTE = {
 };
 
 export const ORIGINAL_MUN_PALETTE = {
-  "maturin": "#1d4ed8",
-  "caripe": "#e11d48",
-  "cedeno": "#9333ea",
-  "ezequiel-zamora": "#f97316",
-  "libertador": "#06b6d4",
-  "acosta": "#0284c7",
-  "aguasay": "#dc2626",
-  "bolivar": "#eab308",
-  "piar": "#059669",
-  "punceres": "#7c3aed",
-  "santa-barbara": "#10b981",
+  "maturin": "#1e40af",
+  "caripe": "#047857",
+  "cedeno": "#7c3aed",
+  "ezequiel-zamora": "#ea580c",
+  "libertador": "#4338ca",
+  "acosta": "#0891b2",
+  "aguasay": "#eab308",
+  "bolivar": "#dc2626",
+  "piar": "#d97706",
+  "punceres": "#db2777",
+  "santa-barbara": "#65a30d",
   "sotillo": "#c026d3",
-  "uracoa": "#84cc16"
+  "uracoa": "#0d9488"
 };
 
 export const QUICK_SWATCHES = [

@@ -10,7 +10,7 @@ export const CATALOGO_MONAGAS = [
     id: "maturin",
     nombre: "Municipio Maturín",
     capital: "Maturín",
-    color: "#1d4ed8",
+    color: "#1e40af",
     icon: "building-2",
     parroquias: [
       {
@@ -168,7 +168,7 @@ export const CATALOGO_MONAGAS = [
     id: "piar",
     nombre: "Municipio Piar",
     capital: "Aragua de Maturín",
-    color: "#059669",
+    color: "#d97706",
     icon: "trees",
     parroquias: [
       {
@@ -249,7 +249,7 @@ export const CATALOGO_MONAGAS = [
     id: "caripe",
     nombre: "Municipio Caripe",
     capital: "Caripe",
-    color: "#e11d48",
+    color: "#047857",
     icon: "compass",
     parroquias: [
       {
@@ -320,7 +320,7 @@ export const CATALOGO_MONAGAS = [
     id: "cedeno",
     nombre: "Municipio Cedeño",
     capital: "Caicara",
-    color: "#9333ea",
+    color: "#7c3aed",
     icon: "mountain",
     parroquias: [
       {
@@ -371,7 +371,7 @@ export const CATALOGO_MONAGAS = [
     id: "libertador",
     nombre: "Municipio Libertador",
     capital: "Temblador",
-    color: "#06b6d4",
+    color: "#4338ca",
     icon: "sun",
     parroquias: [
       {
@@ -422,7 +422,7 @@ export const CATALOGO_MONAGAS = [
     id: "ezequiel-zamora",
     nombre: "Municipio Ezequiel Zamora",
     capital: "Punta de Mata",
-    color: "#f97316",
+    color: "#ea580c",
     icon: "flame",
     parroquias: [
       {
@@ -453,7 +453,7 @@ export const CATALOGO_MONAGAS = [
     id: "acosta",
     nombre: "Municipio Acosta",
     capital: "San Antonio",
-    color: "#0284c7",
+    color: "#0891b2",
     icon: "map",
     parroquias: [
       {
@@ -484,7 +484,7 @@ export const CATALOGO_MONAGAS = [
     id: "punceres",
     nombre: "Municipio Punceres",
     capital: "Quiriquire",
-    color: "#7c3aed",
+    color: "#db2777",
     icon: "fuel",
     parroquias: [
       {
@@ -515,7 +515,7 @@ export const CATALOGO_MONAGAS = [
     id: "santa-barbara",
     nombre: "Municipio Santa Bárbara",
     capital: "Santa Bárbara",
-    color: "#10b981",
+    color: "#65a30d",
     icon: "crosshair",
     parroquias: [
       {
@@ -567,7 +567,7 @@ export const CATALOGO_MONAGAS = [
     id: "bolivar",
     nombre: "Municipio Bolívar",
     capital: "Caripito",
-    color: "#eab308",
+    color: "#dc2626",
     icon: "ship",
     parroquias: [
       {
@@ -588,7 +588,7 @@ export const CATALOGO_MONAGAS = [
     id: "aguasay",
     nombre: "Municipio Aguasay",
     capital: "Aguasay",
-    color: "#dc2626",
+    color: "#eab308",
     icon: "droplet",
     parroquias: [
       {
@@ -609,7 +609,7 @@ export const CATALOGO_MONAGAS = [
     id: "uracoa",
     nombre: "Municipio Uracoa",
     capital: "Uracoa",
-    color: "#84cc16",
+    color: "#0d9488",
     icon: "anchor",
     parroquias: [
       {

@@ -1,199 +1,173 @@
 /**
- * Directorio y Estructura de Comandos Territoriales MIGATO • Monagas 2026
+ * Directorio y Estructura de Comandos Gateros MIGATO • Monagas 2026
  * 
- * Jerarquía Operativa Multinivel:
- * 1. Comando Regional (Estado Monagas)
- * 2. Comandos Municipales (13 Municipios)
- * 3. Comandos Parroquiales (11 Parroquias de Maturín / 44 del Estado)
- * 4. Comandos Sectoriales / Ejes Territoriales (Polígonos de Subparroquias y Sectores)
+ * Jerarquía Operativa Multinivel Oficial:
+ * 1. Comando Gatero Regional (Estado Monagas • Sala Central de Mando)
+ * 2. Comandos Gateros Municipales (13 Municipios)
+ * 3. Comandos Gateros Parroquiales (44 Parroquias Oficiales)
+ * 
+ * Sincronización bidireccional directa con /comandos/ (STORAGE_KEY_GATEROS: migato_comandos_gateros_v2)
  */
+
+import { CATALOGO_MONAGAS } from "../../earth-monagas/js/catalogoMonagas.js?v=230";
+
+export const STORAGE_KEY_GATEROS = "migato_comandos_gateros_v2";
+export const STORAGE_KEY_ASIGNADOS = "migato_comandos_asignados";
+export const STORAGE_KEY_POOL = "migato_pool_dirigentes_v1";
 
 export const COMANDO_ESTADAL = {
   entidad: "Estado Monagas",
-  nivel: "Dirección General Regional",
-  responsableGeneral: "Ing. Diego Donado",
-  cargo: "Coordinador General de Sala Situacional",
-  division: "División de Ciencia y Tecnología",
+  nivel: "Comando Gatero Regional",
+  responsableGeneral: "Sala Situacional Central de Mando",
+  cargo: "Jefe Gatero Estatal",
+  division: "Red Central de Transmisión Gatera",
   telefono: "+58 412-0000000",
-  rolesClave: [
-    { cargo: "Coordinador Regional", responsable: "Comando Regional MIGATO", icono: "shield" },
-    { cargo: "Ciencia y Tecnología", responsable: "Ing. Diego Donado", icono: "cpu" },
-    { cargo: "Comisión Electoral CNE", responsable: "Auditoría Electoral Regional", icono: "check-circle" },
-    { cargo: "Operaciones y Logística", responsable: "Despacho Central de Mando", icono: "radio" }
-  ]
+  rolesClave: []
 };
 
 export const COMANDOS_MUNICIPALES = {
   "maturin": {
     id: "maturin",
     nombre: "Municipio Maturín",
-    responsableGeneral: "Coordinación Municipal Maturín",
-    telefono: "+58 414-7654321",
-    rolesClave: [
-      { cargo: "Coordinador Municipal", responsable: "Comando Municipal Maturín", icono: "user-check" },
-      { cargo: "Coordinador Electoral CNE", responsable: "Auditoría Electoral Maturín", icono: "vote" },
-      { cargo: "Enlace de Logística", responsable: "Operaciones y Movilización", icono: "truck" },
-      { cargo: "Enlace Parroquial", responsable: "Supervisión 11 Parroquias", icono: "network" }
-    ],
+    cargo: "Jefe Gatero Municipal",
+    responsableGeneral: "⚪ Vacante / Sin Asignar",
+    telefono: "",
     parroquiasCount: 11,
     centrosCount: 175,
-    electores: 346988
+    electores: 346988,
+    rolesClave: []
   },
   "caripe": {
     id: "caripe",
     nombre: "Municipio Caripe",
-    responsableGeneral: "Coordinador Municipal Caripe",
-    telefono: "+58 412-3456789",
-    rolesClave: [
-      { cargo: "Coordinador Municipal", responsable: "Comando Caripe", icono: "user-check" },
-      { cargo: "Enlace Electoral CNE", responsable: "Coordinación Electoral Caripe", icono: "vote" }
-    ],
+    cargo: "Jefe Gatero Municipal",
+    responsableGeneral: "⚪ Vacante / Sin Asignar",
+    telefono: "",
     parroquiasCount: 6,
     centrosCount: 38,
-    electores: 27000
+    electores: 27000,
+    rolesClave: []
   },
   "ezequiel-zamora": {
     id: "ezequiel-zamora",
     nombre: "Municipio Ezequiel Zamora",
-    responsableGeneral: "Coordinador Municipal Punta de Mata",
-    telefono: "+58 414-9876543",
-    rolesClave: [
-      { cargo: "Coordinador Municipal", responsable: "Comando Punta de Mata", icono: "user-check" },
-      { cargo: "Enlace Electoral CNE", responsable: "Coordinación Electoral Zamora", icono: "vote" }
-    ],
+    cargo: "Jefe Gatero Municipal",
+    responsableGeneral: "⚪ Vacante / Sin Asignar",
+    telefono: "",
     parroquiasCount: 2,
     centrosCount: 42,
-    electores: 48000
+    electores: 48000,
+    rolesClave: []
   },
   "bolivar": {
     id: "bolivar",
     nombre: "Municipio Bolívar",
-    responsableGeneral: "Coordinador Municipal Caripito",
-    telefono: "+58 416-1234567",
-    rolesClave: [
-      { cargo: "Coordinador Municipal", responsable: "Comando Caripito", icono: "user-check" },
-      { cargo: "Enlace Electoral CNE", responsable: "Coordinación Electoral Caripito", icono: "vote" }
-    ],
+    cargo: "Jefe Gatero Municipal",
+    responsableGeneral: "⚪ Vacante / Sin Asignar",
+    telefono: "",
     parroquiasCount: 1,
     centrosCount: 35,
-    electores: 34000
+    electores: 34000,
+    rolesClave: []
   },
   "piar": {
     id: "piar",
     nombre: "Municipio Piar",
-    responsableGeneral: "Coordinador Municipal Aragua de Maturín",
-    telefono: "+58 424-5551212",
-    rolesClave: [
-      { cargo: "Coordinador Municipal", responsable: "Comando Piar", icono: "user-check" },
-      { cargo: "Enlace Electoral CNE", responsable: "Coordinación Electoral Piar", icono: "vote" }
-    ],
+    cargo: "Jefe Gatero Municipal",
+    responsableGeneral: "⚪ Vacante / Sin Asignar",
+    telefono: "",
     parroquiasCount: 7,
     centrosCount: 44,
-    electores: 39000
+    electores: 39000,
+    rolesClave: []
   },
   "cedeno": {
     id: "cedeno",
     nombre: "Municipio Cedeño",
-    responsableGeneral: "Coordinador Municipal Caicara",
-    telefono: "+58 412-8889900",
-    rolesClave: [
-      { cargo: "Coordinador Municipal", responsable: "Comando Caicara", icono: "user-check" },
-      { cargo: "Enlace Electoral CNE", responsable: "Coordinación Electoral Cedeño", icono: "vote" }
-    ],
+    cargo: "Jefe Gatero Municipal",
+    responsableGeneral: "⚪ Vacante / Sin Asignar",
+    telefono: "",
     parroquiasCount: 4,
     centrosCount: 32,
-    electores: 29000
+    electores: 29000,
+    rolesClave: []
   },
   "punceres": {
     id: "punceres",
     nombre: "Municipio Punceres",
-    responsableGeneral: "Coordinador Municipal Quiriquire",
-    telefono: "+58 414-3334455",
-    rolesClave: [
-      { cargo: "Coordinador Municipal", responsable: "Comando Quiriquire", icono: "user-check" },
-      { cargo: "Enlace Electoral CNE", responsable: "Coordinación Electoral Punceres", icono: "vote" }
-    ],
+    cargo: "Jefe Gatero Municipal",
+    responsableGeneral: "⚪ Vacante / Sin Asignar",
+    telefono: "",
     parroquiasCount: 2,
     centrosCount: 22,
-    electores: 23000
+    electores: 23000,
+    rolesClave: []
   },
   "acosta": {
     id: "acosta",
     nombre: "Municipio Acosta",
-    responsableGeneral: "Coordinador Municipal San Antonio",
-    telefono: "+58 416-7778899",
-    rolesClave: [
-      { cargo: "Coordinador Municipal", responsable: "Comando San Antonio de Capayacuar", icono: "user-check" },
-      { cargo: "Enlace Electoral CNE", responsable: "Coordinación Electoral Acosta", icono: "vote" }
-    ],
+    cargo: "Jefe Gatero Municipal",
+    responsableGeneral: "⚪ Vacante / Sin Asignar",
+    telefono: "",
     parroquiasCount: 2,
     centrosCount: 25,
-    electores: 18500
+    electores: 18500,
+    rolesClave: []
   },
   "aguasay": {
     id: "aguasay",
     nombre: "Municipio Aguasay",
-    responsableGeneral: "Coordinador Municipal Aguasay",
-    telefono: "+58 424-6667788",
-    rolesClave: [
-      { cargo: "Coordinador Municipal", responsable: "Comando Aguasay", icono: "user-check" },
-      { cargo: "Enlace Electoral CNE", responsable: "Coordinación Electoral Aguasay", icono: "vote" }
-    ],
+    cargo: "Jefe Gatero Municipal",
+    responsableGeneral: "⚪ Vacante / Sin Asignar",
+    telefono: "",
     parroquiasCount: 1,
     centrosCount: 14,
-    electores: 12500
+    electores: 12500,
+    rolesClave: []
   },
   "santa-barbara": {
     id: "santa-barbara",
     nombre: "Municipio Santa Bárbara",
-    responsableGeneral: "Coordinador Municipal Santa Bárbara",
-    telefono: "+58 412-2223344",
-    rolesClave: [
-      { cargo: "Coordinador Municipal", responsable: "Comando Santa Bárbara", icono: "user-check" },
-      { cargo: "Enlace Electoral CNE", responsable: "Coordinación Electoral Santa Bárbara", icono: "vote" }
-    ],
+    cargo: "Jefe Gatero Municipal",
+    responsableGeneral: "⚪ Vacante / Sin Asignar",
+    telefono: "",
     parroquiasCount: 1,
     centrosCount: 12,
-    electores: 9800
+    electores: 9800,
+    rolesClave: []
   },
   "uracoa": {
     id: "uracoa",
     nombre: "Municipio Uracoa",
-    responsableGeneral: "Coordinador Municipal Uracoa",
-    telefono: "+58 414-1119988",
-    rolesClave: [
-      { cargo: "Coordinador Municipal", responsable: "Comando Uracoa", icono: "user-check" },
-      { cargo: "Enlace Electoral CNE", responsable: "Coordinación Electoral Uracoa", icono: "vote" }
-    ],
+    cargo: "Jefe Gatero Municipal",
+    responsableGeneral: "⚪ Vacante / Sin Asignar",
+    telefono: "",
     parroquiasCount: 1,
     centrosCount: 11,
-    electores: 8700
+    electores: 8700,
+    rolesClave: []
   },
   "libertador": {
     id: "libertador",
     nombre: "Municipio Libertador",
-    responsableGeneral: "Coordinador Municipal Temblador",
-    telefono: "+58 416-4445566",
-    rolesClave: [
-      { cargo: "Coordinador Municipal", responsable: "Comando Temblador", icono: "user-check" },
-      { cargo: "Enlace Electoral CNE", responsable: "Coordinación Electoral Temblador", icono: "vote" }
-    ],
+    cargo: "Jefe Gatero Municipal",
+    responsableGeneral: "⚪ Vacante / Sin Asignar",
+    telefono: "",
     parroquiasCount: 4,
     centrosCount: 30,
-    electores: 36000
+    electores: 36000,
+    rolesClave: []
   },
   "sotillo": {
     id: "sotillo",
     nombre: "Municipio Sotillo",
-    responsableGeneral: "Coordinador Municipal Barrancas",
-    telefono: "+58 424-9990011",
-    rolesClave: [
-      { cargo: "Coordinador Municipal", responsable: "Comando Barrancas del Orinoco", icono: "user-check" },
-      { cargo: "Enlace Electoral CNE", responsable: "Coordinación Electoral Sotillo", icono: "vote" }
-    ],
+    cargo: "Jefe Gatero Municipal",
+    responsableGeneral: "⚪ Vacante / Sin Asignar",
+    telefono: "",
     parroquiasCount: 2,
     centrosCount: 26,
-    electores: 25500
+    electores: 25500,
+    rolesClave: []
   }
 };
 
@@ -202,185 +176,157 @@ export const COMANDOS_PARROQUIALES = {
     parroquiaId: "alto-de-los-godos",
     municipioId: "maturin",
     nombre: "Alto de Los Godos",
-    responsablePrincipal: "Responsable Parroquia Los Godos",
-    telefono: "+58 412-1234567",
-    rolesClave: [
-      { cargo: "Responsable Parroquial", responsable: "Responsable Parroquia Los Godos", icono: "user-check" },
-      { cargo: "Responsable de Organización", responsable: "Organización Parroquial Godos", icono: "users" },
-      { cargo: "Enlace Territorial de Ejes", responsable: "Coordinación de 3 Ejes Territoriales", icono: "map-pin" },
-      { cargo: "Control de Centros Electorales", responsable: "Mesa Técnica Electoral", icono: "check-circle-2" }
-    ],
+    cargo: "Gatero Parroquial",
+    responsablePrincipal: "⚪ Vacante / Sin Asignar",
+    telefono: "",
     centrosCount: 40,
-    electores: 80630
+    electores: 80630,
+    rolesClave: []
   },
   "san-simon": {
     parroquiaId: "san-simon",
     municipioId: "maturin",
     nombre: "San Simón (Casco Central)",
-    responsablePrincipal: "Coordinador Parroquial San Simón",
-    telefono: "+58 414-7654321",
-    rolesClave: [
-      { cargo: "Responsable Parroquial", responsable: "Comando San Simón Centro", icono: "user-check" },
-      { cargo: "Responsable de Organización", responsable: "Organización Electoral", icono: "users" },
-      { cargo: "Enlace Territorial", responsable: "Supervisión Sectores Centrales", icono: "map-pin" }
-    ],
+    cargo: "Gatero Parroquial",
+    responsablePrincipal: "⚪ Vacante / Sin Asignar",
+    telefono: "",
     centrosCount: 45,
-    electores: 92400
+    electores: 92400,
+    rolesClave: []
   },
   "boqueron": {
     parroquiaId: "boqueron",
     municipioId: "maturin",
     nombre: "Boquerón",
-    responsablePrincipal: "Coordinador Parroquial Boquerón",
-    telefono: "+58 424-9876543",
-    rolesClave: [
-      { cargo: "Responsable Parroquial", responsable: "Comando Boquerón / Tipuro", icono: "user-check" },
-      { cargo: "Responsable de Organización", responsable: "Organización Eje Norte", icono: "users" }
-    ],
+    cargo: "Gatero Parroquial",
+    responsablePrincipal: "⚪ Vacante / Sin Asignar",
+    telefono: "",
     centrosCount: 28,
-    electores: 61200
+    electores: 61200,
+    rolesClave: []
   },
   "las-cocuizas": {
     parroquiaId: "las-cocuizas",
     municipioId: "maturin",
     nombre: "Las Cocuizas",
-    responsablePrincipal: "Coordinador Parroquial Las Cocuizas",
-    telefono: "+58 416-5551234",
-    rolesClave: [
-      { cargo: "Responsable Parroquial", responsable: "Comando Las Cocuizas", icono: "user-check" },
-      { cargo: "Responsable de Organización", responsable: "Organización Las Cocuizas", icono: "users" }
-    ],
+    cargo: "Gatero Parroquial",
+    responsablePrincipal: "⚪ Vacante / Sin Asignar",
+    telefono: "",
     centrosCount: 32,
-    electores: 68500
+    electores: 68500,
+    rolesClave: []
   },
   "santa-cruz": {
     parroquiaId: "santa-cruz",
     municipioId: "maturin",
     nombre: "Santa Cruz",
-    responsablePrincipal: "Coordinador Parroquial Santa Cruz",
-    telefono: "+58 414-3332211",
-    rolesClave: [
-      { cargo: "Responsable Parroquial", responsable: "Comando Santa Cruz", icono: "user-check" },
-      { cargo: "Responsable de Organización", responsable: "Organización Zona Industrial", icono: "users" }
-    ],
+    cargo: "Gatero Parroquial",
+    responsablePrincipal: "⚪ Vacante / Sin Asignar",
+    telefono: "",
     centrosCount: 16,
-    electores: 34100
+    electores: 34100,
+    rolesClave: []
   },
   "la-pica": {
     parroquiaId: "la-pica",
     municipioId: "maturin",
     nombre: "La Pica",
-    responsablePrincipal: "Coordinador Parroquial La Pica",
-    telefono: "+58 412-4443322",
-    rolesClave: [
-      { cargo: "Responsable Parroquial", responsable: "Comando La Pica", icono: "user-check" },
-      { cargo: "Responsable de Organización", responsable: "Organización Rural La Pica", icono: "users" }
-    ],
+    cargo: "Gatero Parroquial",
+    responsablePrincipal: "⚪ Vacante / Sin Asignar",
+    telefono: "",
     centrosCount: 14,
-    electores: 21800
+    electores: 21800,
+    rolesClave: []
   },
   "el-corozo": {
     parroquiaId: "el-corozo",
     municipioId: "maturin",
     nombre: "El Corozo",
-    responsablePrincipal: "Coordinador Parroquial El Corozo",
-    telefono: "+58 414-5556677",
-    rolesClave: [
-      { cargo: "Responsable Parroquial", responsable: "Comando El Corozo", icono: "user-check" },
-      { cargo: "Responsable de Organización", responsable: "Organización El Corozo", icono: "users" }
-    ],
+    cargo: "Gatero Parroquial",
+    responsablePrincipal: "⚪ Vacante / Sin Asignar",
+    telefono: "",
     centrosCount: 8,
-    electores: 11400
+    electores: 11400,
+    rolesClave: []
   },
   "el-furrial": {
     parroquiaId: "el-furrial",
     municipioId: "maturin",
     nombre: "El Furrial",
-    responsablePrincipal: "Coordinador Parroquial El Furrial",
-    telefono: "+58 424-7778899",
-    rolesClave: [
-      { cargo: "Responsable Parroquial", responsable: "Comando El Furrial", icono: "user-check" },
-      { cargo: "Responsable de Organización", responsable: "Organización Furrial", icono: "users" }
-    ],
+    cargo: "Gatero Parroquial",
+    responsablePrincipal: "⚪ Vacante / Sin Asignar",
+    telefono: "",
     centrosCount: 10,
-    electores: 15300
+    electores: 15300,
+    rolesClave: []
   },
   "jusepin": {
     parroquiaId: "jusepin",
     municipioId: "maturin",
     nombre: "Jusepín",
-    responsablePrincipal: "Coordinador Parroquial Jusepín",
-    telefono: "+58 416-8881122",
-    rolesClave: [
-      { cargo: "Responsable Parroquial", responsable: "Comando Jusepín", icono: "user-check" },
-      { cargo: "Responsable de Organización", responsable: "Organización Jusepín", icono: "users" }
-    ],
+    cargo: "Gatero Parroquial",
+    responsablePrincipal: "⚪ Vacante / Sin Asignar",
+    telefono: "",
     centrosCount: 7,
-    electores: 10200
+    electores: 10200,
+    rolesClave: []
   },
-    "san-simon-rural": {
-    parroquiaId: "san-simon-rural",
+  "san-simon-sur": {
+    parroquiaId: "san-simon-sur",
     municipioId: "maturin",
-    nombre: "San Simón Rural",
-    responsablePrincipal: "Coordinador Parroquial San Simón Rural",
-    telefono: "+58 412-1112233",
-    rolesClave: [
-      { cargo: "Responsable Parroquial", responsable: "Comando San Simón Rural", icono: "user-check" },
-      { cargo: "Responsable de Organización", responsable: "Organización Rural", icono: "users" }
-    ],
+    nombre: "San Simón Sur",
+    cargo: "Gatero Parroquial",
+    responsablePrincipal: "⚪ Vacante / Sin Asignar",
+    telefono: "",
     centrosCount: 8,
-    electores: 9800
+    electores: 9800,
+    rolesClave: []
   },
   "san-vicente": {
     parroquiaId: "san-vicente",
     municipioId: "maturin",
     nombre: "San Vicente",
-    responsablePrincipal: "Coordinador Parroquial San Vicente",
-    telefono: "+58 412-9993344",
-    rolesClave: [
-      { cargo: "Responsable Parroquial", responsable: "Comando San Vicente", icono: "user-check" },
-      { cargo: "Responsable de Organización", responsable: "Organización San Vicente", icono: "users" }
-    ],
+    cargo: "Gatero Parroquial",
+    responsablePrincipal: "⚪ Vacante / Sin Asignar",
+    telefono: "",
     centrosCount: 9,
-    electores: 12800
+    electores: 12800,
+    rolesClave: []
   }
 };
 
 export const COMANDOS_SECTORIALES = {
-  // Eje 6 La Puente
   "SUBPAR-1788965549962": {
     ejeId: "SUBPAR-1788965549962",
     parroquiaId: "alto-de-los-godos",
     nombre: "Eje 6 • Circuito Territorial La Puente",
-    responsableSectorial: "Responsable Sectorial La Puente",
-    cargo: "Jefe de Comando de Eje",
-    telefono: "+58 412-8887711",
+    responsableSectorial: "⚪ Vacante / Sin Asignar",
+    cargo: "Gatero Sectorial",
+    telefono: "",
     centrosAsignados: ["E.B. Paula Bastardo", "C.E.I. La Puente"],
     mesasSupervisadas: 7,
     electoresAprox: 6850,
     sectores: ["La Puente Casco Central", "Rómulo Betancourt", "Viento Colao", "Urb. Las Vírgenes", "El Mangozal"]
   },
-  // Eje 1 Los Godos Casco Viejo / Fundemos
   "SUBPAR-1788965549963": {
     ejeId: "SUBPAR-1788965549963",
     parroquiaId: "alto-de-los-godos",
     nombre: "Eje 1 • Los Godos Casco Viejo / Fundemos",
-    responsableSectorial: "Responsable Sectorial Los Godos",
-    cargo: "Jefe de Comando de Eje",
-    telefono: "+58 414-2223311",
+    responsableSectorial: "⚪ Vacante / Sin Asignar",
+    cargo: "Gatero Sectorial",
+    telefono: "",
     centrosAsignados: ["Liceo Los Godos", "E.B. Fundemos"],
     mesasSupervisadas: 9,
     electoresAprox: 9400,
     sectores: ["Los Godos 1 y 2", "Fundemos", "La Murallita", "Complejo Aramaconi"]
   },
-  // Eje 4 Morichal / Los Guaros
   "SUBPAR-1788965549964": {
     ejeId: "SUBPAR-1788965549964",
     parroquiaId: "alto-de-los-godos",
     nombre: "Eje 4 • Morichal / Los Guaros",
-    responsableSectorial: "Responsable Sectorial Morichal",
-    cargo: "Jefe de Comando de Eje",
-    telefono: "+58 424-6665544",
+    responsableSectorial: "⚪ Vacante / Sin Asignar",
+    cargo: "Gatero Sectorial",
+    telefono: "",
     centrosAsignados: ["E.B. Morichal", "Colegio Los Guaros"],
     mesasSupervisadas: 6,
     electoresAprox: 5900,
@@ -388,22 +334,55 @@ export const COMANDOS_SECTORIALES = {
   }
 };
 
-export const STORAGE_KEY_ASIGNADOS = "migato_comandos_asignados";
-export const STORAGE_KEY_POOL = "migato_pool_dirigentes_v1";
+/**
+ * Obtiene el dirigente asignado a un territorio consultando ambas claves de almacenamiento
+ */
+export function getAssignedLeader(id) {
+  if (!id) return null;
+  const cleanId = String(id).toLowerCase().replace(/_/g, "-").trim();
+
+  // 1. Probar en migato_comandos_gateros_v2 (formato oficial de /comandos/)
+  try {
+    const rawG = localStorage.getItem(STORAGE_KEY_GATEROS);
+    if (rawG) {
+      const mapG = JSON.parse(rawG);
+      if (cleanId === "estado" || cleanId === "regional" || cleanId === "central") {
+        if (mapG["central"] && mapG["central"].nombre) return mapG["central"];
+      }
+      if (mapG[cleanId] && mapG[cleanId].nombre) return mapG[cleanId];
+      if (mapG[`mun-${cleanId}`] && mapG[`mun-${cleanId}`].nombre) return mapG[`mun-${cleanId}`];
+      if (mapG[`parr-${cleanId}`] && mapG[`parr-${cleanId}`].nombre) return mapG[`parr-${cleanId}`];
+      if (mapG[`par-${cleanId}`] && mapG[`par-${cleanId}`].nombre) return mapG[`par-${cleanId}`];
+    }
+  } catch (e) {}
+
+  // 2. Probar en migato_comandos_asignados
+  try {
+    const rawA = localStorage.getItem(STORAGE_KEY_ASIGNADOS);
+    if (rawA) {
+      const mapA = JSON.parse(rawA);
+      if (cleanId === "estado" || cleanId === "regional" || cleanId === "central") {
+        if (mapA["central"] && mapA["central"].nombre) return mapA["central"];
+      }
+      if (mapA[cleanId] && mapA[cleanId].nombre) return mapA[cleanId];
+      if (mapA[`mun-${cleanId}`] && mapA[`mun-${cleanId}`].nombre) return mapA[`mun-${cleanId}`];
+      if (mapA[`parr-${cleanId}`] && mapA[`parr-${cleanId}`].nombre) return mapA[`parr-${cleanId}`];
+    }
+  } catch (e) {}
+
+  return null;
+}
 
 export function getAssignedComandos() {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY_ASIGNADOS);
-    return raw ? JSON.parse(raw) : {};
+    const rawA = localStorage.getItem(STORAGE_KEY_ASIGNADOS);
+    const mapA = rawA ? JSON.parse(rawA) : {};
+    const rawG = localStorage.getItem(STORAGE_KEY_GATEROS);
+    const mapG = rawG ? JSON.parse(rawG) : {};
+    return Object.assign({}, mapA, mapG);
   } catch(e) {
-    console.warn("Error leyendo comandos asignados:", e);
     return {};
   }
-}
-
-export function getAssignedLeader(ejeOrSectorId) {
-  const map = getAssignedComandos();
-  return map[ejeOrSectorId] || null;
 }
 
 export function getLeaderPool() {
@@ -411,7 +390,6 @@ export function getLeaderPool() {
     const raw = localStorage.getItem(STORAGE_KEY_POOL);
     return raw ? JSON.parse(raw) : [];
   } catch(e) {
-    console.warn("Error leyendo pool de dirigentes:", e);
     return [];
   }
 }
@@ -437,7 +415,7 @@ export function upsertDirigenteInPool(dirigente) {
         nombre: cleanNombre,
         cedula: cleanCedula || pool[index].cedula || "",
         telefono: dirigente.telefono || pool[index].telefono || "",
-        cargo: dirigente.cargo || pool[index].cargo || "Responsable Parroquial",
+        cargo: dirigente.cargo || pool[index].cargo || "Comando Gatero",
         profesion: dirigente.profesion || pool[index].profesion || "",
         ultimaActualizacion: new Date().toISOString()
       };
@@ -447,7 +425,7 @@ export function upsertDirigenteInPool(dirigente) {
         nombre: cleanNombre,
         cedula: cleanCedula,
         telefono: dirigente.telefono || "",
-        cargo: dirigente.cargo || "Responsable Parroquial",
+        cargo: dirigente.cargo || "Comando Gatero",
         profesion: dirigente.profesion || "",
         fechaRegistro: new Date().toISOString()
       });
@@ -459,163 +437,209 @@ export function upsertDirigenteInPool(dirigente) {
 }
 
 export function saveAssignedComando(id, payload) {
+  if (!id || !payload) return null;
+  const cleanId = String(id).toLowerCase().replace(/_/g, "-").trim();
+
+  const record = {
+    id: cleanId,
+    nombre: (payload.nombre || "").trim(),
+    cedula: (payload.cedula || "").trim().toUpperCase(),
+    telefono: (payload.telefono || "").trim(),
+    cargo: payload.cargo || payload.rol || "Comando Gatero",
+    rol: payload.cargo || payload.rol || "Comando Gatero",
+    profesion: (payload.profesion || "").trim(),
+    dispositivo: (payload.dispositivo || "").trim(),
+    notas: (payload.notas || "").trim(),
+    parroquiaId: payload.parroquiaId || "",
+    municipioId: payload.municipioId || "",
+    fechaAsignacion: new Date().toISOString()
+  };
+
+  // 1. Guardar en STORAGE_KEY_GATEROS ("migato_comandos_gateros_v2")
   try {
-    const map = getAssignedComandos();
-    map[id] = {
-      id,
-      nombre: payload.nombre || "Responsable Asignado",
-      telefono: payload.telefono || "",
-      cargo: payload.cargo || "Responsable Parroquial",
-      cedula: payload.cedula || "",
-      profesion: payload.profesion || "",
-      parroquiaId: payload.parroquiaId || "",
-      fechaAsignacion: new Date().toISOString()
-    };
-    localStorage.setItem(STORAGE_KEY_ASIGNADOS, JSON.stringify(map));
+    const rawG = localStorage.getItem(STORAGE_KEY_GATEROS);
+    const mapG = rawG ? JSON.parse(rawG) : {};
+    mapG[cleanId] = record;
+    if (cleanId === "central" || cleanId === "estado") mapG["central"] = record;
+    if (!cleanId.startsWith("mun-") && (payload.cargo?.includes("Municipal") || payload.nivel === "municipal")) {
+      mapG[`mun-${cleanId}`] = record;
+    }
+    if (!cleanId.startsWith("parr-") && (payload.cargo?.includes("Parroquial") || payload.nivel === "sectorial")) {
+      mapG[`parr-${cleanId}`] = record;
+    }
+    localStorage.setItem(STORAGE_KEY_GATEROS, JSON.stringify(mapG));
+  } catch (e) {}
 
-    // Autoguardar en pool de dirigentes
-    upsertDirigenteInPool({
-      nombre: map[id].nombre,
-      telefono: map[id].telefono,
-      cargo: map[id].cargo,
-      cedula: map[id].cedula,
-      profesion: map[id].profesion
-    });
+  // 2. Guardar en STORAGE_KEY_ASIGNADOS
+  try {
+    const rawA = localStorage.getItem(STORAGE_KEY_ASIGNADOS);
+    const mapA = rawA ? JSON.parse(rawA) : {};
+    mapA[cleanId] = record;
+    if (cleanId === "central" || cleanId === "estado") mapA["central"] = record;
+    localStorage.setItem(STORAGE_KEY_ASIGNADOS, JSON.stringify(mapA));
+  } catch (e) {}
 
-    return map[id];
-  } catch(e) {
-    console.warn("Error guardando comando asignado:", e);
-    return null;
+  // 3. Autoguardar en pool de dirigentes
+  if (record.nombre) {
+    upsertDirigenteInPool(record);
   }
+
+  return record;
 }
 
 /**
- * Obtiene la información de comando correspondiente al nivel y entidad activa
+ * Obtiene la información oficial de Comandos Gateros correspondiente al nivel y entidad activa
  */
 export function getComandoInfo(level, entityId, parishId = null, munId = null) {
+  // NIVEL 1: ESTADO MONAGAS (SALA CENTRAL DE MANDO GATERO)
   if (level === "estado") {
-    return {
-      nivel: "Comando Regional",
-      entidad: "Estado Monagas",
-      general: COMANDO_ESTADAL.responsableGeneral,
-      division: COMANDO_ESTADAL.division,
-      telefono: COMANDO_ESTADAL.telefono,
-      roles: COMANDO_ESTADAL.rolesClave,
-      subdirectorios: Object.values(COMANDOS_MUNICIPALES).map(m => ({
+    const centralLeader = getAssignedLeader("central") || getAssignedLeader("estado");
+    const generalNombre = centralLeader?.nombre || COMANDO_ESTADAL.responsableGeneral;
+    const generalTelf = centralLeader?.telefono || COMANDO_ESTADAL.telefono;
+
+    const subdirectorios = Object.values(COMANDOS_MUNICIPALES).map(m => {
+      const assigned = getAssignedLeader(m.id);
+      return {
         id: m.id,
         nombre: m.nombre,
-        responsable: m.responsableGeneral,
-        tipo: "Municipio",
+        cargo: "Jefe Gatero Municipal",
+        responsable: assigned?.nombre || "⚪ Vacante / Sin Asignar",
+        telefono: assigned?.telefono || "",
+        isAssigned: Boolean(assigned?.nombre && !assigned.nombre.includes("Vacante")),
+        tipo: "Comando Gatero Municipal",
         parroquias: m.parroquiasCount,
+        centros: m.centrosCount,
         onClick: `laminaApp.selectMunicipio('${m.id}')`
-      }))
+      };
+    });
+
+    return {
+      nivel: "Comando Gatero Regional",
+      entidad: "Estado Monagas",
+      cargo: "Jefe Gatero Estatal",
+      general: generalNombre,
+      division: "Red Central de Transmisión Gatera",
+      telefono: generalTelf,
+      roles: [], // Cero roles burocráticos ficticios
+      subdirectorios
     };
   }
 
+  // NIVEL 2: COMANDO MUNICIPAL GATERO
   if (level === "municipio") {
     const cleanMunId = String(entityId || munId || "maturin").toLowerCase().replace(/_/g, "-").trim();
+    const munObj = (CATALOGO_MONAGAS || []).find(m => m.id === cleanMunId);
     const munComando = COMANDOS_MUNICIPALES[cleanMunId] || {
       id: cleanMunId,
-      nombre: `Municipio ${cleanMunId}`,
-      responsableGeneral: `Coordinador Municipal ${cleanMunId}`,
-      telefono: "+58 412-0000000",
-      rolesClave: [
-        { cargo: "Coordinador Municipal", responsable: `Comando Municipal ${cleanMunId}`, icono: "user-check" },
-        { cargo: "Enlace Electoral CNE", responsable: "Auditoría Municipal", icono: "vote" }
-      ],
-      parroquiasCount: 1,
+      nombre: munObj?.nombre || `Municipio ${cleanMunId}`,
+      cargo: "Jefe Gatero Municipal",
+      parroquiasCount: (munObj?.parroquias || []).length || 1,
       centrosCount: 15
     };
 
-    // Subdirectorio de parroquias para este municipio
-    const parroquiasList = Object.values(COMANDOS_PARROQUIALES).filter(p => p.municipioId === cleanMunId || cleanMunId === "maturin");
+    const munLeader = getAssignedLeader(cleanMunId);
+    const generalNombre = munLeader?.nombre || "⚪ Vacante / Sin Asignar";
+    const generalTelf = munLeader?.telefono || "";
+
+    // Parroquias bajo este municipio desde CATALOGO_MONAGAS
+    const parroquiasRaw = munObj?.parroquias || [];
+    const subdirectorios = parroquiasRaw.map(p => {
+      const cleanPId = p.id.toLowerCase().replace(/_/g, "-").trim();
+      const pLeader = getAssignedLeader(cleanPId);
+      return {
+        id: cleanPId,
+        nombre: p.nombre,
+        cargo: "Gatero Parroquial",
+        responsable: pLeader?.nombre || "⚪ Vacante / Sin Asignar",
+        telefono: pLeader?.telefono || "",
+        isAssigned: Boolean(pLeader?.nombre && !pLeader.nombre.includes("Vacante")),
+        tipo: "Comando Gatero Parroquial",
+        centros: (p.sectores || []).length || 5,
+        onClick: `laminaApp.selectParroquia('${cleanPId}', '${cleanMunId}')`
+      };
+    });
 
     return {
-      nivel: "Comando Municipal",
+      nivel: "Comando Gatero Municipal",
       entidad: munComando.nombre,
-      general: munComando.responsableGeneral,
-      division: "Coordinación Política y Electoral Municipal",
-      telefono: munComando.telefono,
-      roles: munComando.rolesClave,
-      subdirectorios: parroquiasList.map(p => ({
-        id: p.parroquiaId,
-        nombre: p.nombre,
-        responsable: p.responsablePrincipal,
-        tipo: "Parroquia",
-        centros: p.centrosCount,
-        onClick: `laminaApp.selectParroquia('${p.parroquiaId}', '${cleanMunId}')`
-      }))
+      cargo: "Jefe Gatero Municipal",
+      general: generalNombre,
+      division: `Comando Gatero Municipal • ${munComando.nombre}`,
+      telefono: generalTelf || "Sin teléfono registrado",
+      roles: [],
+      subdirectorios
     };
   }
 
+  // NIVEL 3: COMANDO PARROQUIAL GATERO
   if (level === "parroquia") {
     const cleanPId = String(entityId || parishId || "alto-de-los-godos").toLowerCase().replace(/_/g, "-").trim();
     const cleanMunId = String(munId || "maturin").toLowerCase().replace(/_/g, "-").trim();
-    const parishComando = COMANDOS_PARROQUIALES[cleanPId] || {
-      parroquiaId: cleanPId,
-      municipioId: cleanMunId,
-      nombre: `Parroquia ${cleanPId}`,
-      responsablePrincipal: `Responsable Parroquial ${cleanPId}`,
-      telefono: "+58 412-0000000",
-      rolesClave: [
-        { cargo: "Responsable Parroquial", responsable: `Comando ${cleanPId}`, icono: "user-check" },
-        { cargo: "Responsable de Organización", responsable: "Auditoría CNE", icono: "vote" }
-      ],
-      centrosCount: 10
-    };
+    
+    let parishName = `Parroquia ${cleanPId}`;
+    let munName = `Municipio ${cleanMunId}`;
+    const munObj = (CATALOGO_MONAGAS || []).find(m => m.id === cleanMunId);
+    if (munObj) {
+      munName = munObj.nombre;
+      const pObj = (munObj.parroquias || []).find(p => p.id === cleanPId);
+      if (pObj) parishName = pObj.nombre;
+    }
 
-    // Subdirectorio de Circuitos y Sectores territoriales bajo esta parroquia
+    const parishLeader = getAssignedLeader(cleanPId);
+    const generalNombre = parishLeader?.nombre || "⚪ Vacante / Sin Asignar";
+    const generalTelf = parishLeader?.telefono || "";
+
     const ejesList = Object.values(COMANDOS_SECTORIALES).filter(e => e.parroquiaId === cleanPId);
 
     return {
-      nivel: "Comando Parroquial",
-      entidad: parishComando.nombre,
-      general: parishComando.responsablePrincipal,
-      division: "Comando Operativo Parroquial",
-      telefono: parishComando.telefono,
-      roles: parishComando.rolesClave,
-      centros: parishComando.centrosCount,
+      nivel: "Comando Gatero Parroquial",
+      entidad: parishName,
+      cargo: "Gatero Parroquial",
+      general: generalNombre,
+      division: `Comando Gatero Parroquial • ${munName}`,
+      telefono: generalTelf || "Sin teléfono registrado",
+      roles: [],
+      centros: (COMANDOS_PARROQUIALES[cleanPId]?.centrosCount) || 12,
       subdirectorios: ejesList.map(e => ({
         id: e.ejeId,
         nombre: e.nombre,
-        responsable: `Comando Parroquial ${parishComando.nombre}`,
-        telefono: parishComando.telefono,
-        tipo: "Circuito Territorial CNE",
+        cargo: "Gatero Sectorial",
+        responsable: getAssignedLeader(e.ejeId)?.nombre || "⚪ Vacante / Sin Asignar",
+        telefono: getAssignedLeader(e.ejeId)?.telefono || "",
+        tipo: "Circuito Electoral CNE",
         centros: (e.centrosAsignados || []).length,
-        isAssigned: false,
+        isAssigned: Boolean(getAssignedLeader(e.ejeId)?.nombre),
         onClick: `laminaApp.selectSubParroquia('${e.ejeId}', '${cleanPId}', '${cleanMunId}')`
       }))
     };
   }
 
+  // NIVEL 4: SUBPARROQUIA / CIRCUITO O SECTOR
   if (level === "subparroquia" || level === "sector") {
     const cleanEjeId = String(entityId).trim();
     const cleanPId = String(parishId || "alto-de-los-godos").toLowerCase().replace(/_/g, "-").trim();
     const cleanMunId = String(munId || "maturin").toLowerCase().replace(/_/g, "-").trim();
 
-    const ejeComando = COMANDOS_SECTORIALES[cleanEjeId] || Object.values(COMANDOS_SECTORIALES).find(e => e.nombre.toLowerCase().includes(cleanEjeId.toLowerCase())) || {
+    const ejeComando = COMANDOS_SECTORIALES[cleanEjeId] || {
       ejeId: cleanEjeId,
-      nombre: `Circuito Territorial • ${cleanEjeId}`,
+      nombre: `Circuito Electoral • ${cleanEjeId}`,
       centrosAsignados: ["Centro Principal CNE"],
       sectores: ["Sectores Asociados"]
     };
 
-    const parishComando = COMANDOS_PARROQUIALES[cleanPId] || {
-      nombre: `Parroquia ${cleanPId}`,
-      responsablePrincipal: "Coordinador Parroquial",
-      telefono: "+58 412-0000000"
-    };
+    const sectorLeader = getAssignedLeader(cleanEjeId) || getAssignedLeader(cleanPId);
 
     return {
-      nivel: "Territorio Electoral • Jurisdicción Parroquial",
+      nivel: "Circuito Electoral • Jurisdicción Parroquial",
       ejeId: cleanEjeId,
       parroquiaId: cleanPId,
       entidad: ejeComando.nombre,
-      general: parishComando.responsablePrincipal,
-      division: `Supervisión Parroquia ${parishComando.nombre || cleanPId}`,
-      telefono: parishComando.telefono,
-      detalle: "Estructura Parroquial MIGATO",
-      isAssigned: false,
+      cargo: "Gatero Sectorial",
+      general: sectorLeader?.nombre || "⚪ Vacante / Sin Asignar",
+      division: `Supervisión Gatera Parroquial • ${cleanPId}`,
+      telefono: sectorLeader?.telefono || "Sin teléfono registrado",
+      detalle: "Red de Comandos Gateros MIGATO 2026",
+      isAssigned: Boolean(sectorLeader?.nombre),
       centrosAsignados: ejeComando.centrosAsignados || [],
       mesas: ejeComando.mesasSupervisadas || 4,
       electores: ejeComando.electoresAprox || 5000,
