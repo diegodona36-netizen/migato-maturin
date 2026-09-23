@@ -242,11 +242,27 @@ export const MONAGAS_DEMO_DATA = {
               ]
             }
           ]
+        },
+        {
+          id: "san-simon-sur",
+          nombre: "San Simón Sur",
+          tipo: "Rural y Sabana Sur",
+          subparroquias: [
+            {
+              id: "sub-sur-centro",
+              nombre: "Eje 1 • Santa Inés y Amana del Tamarindo",
+              codigo: "EJE-SUR-01",
+              sectores: [
+                { id: "POL-SUR-001", nombre: "Santa Inés y La Orquídea", casas: 430, familias: 520, habitantes: 1630, votantes: 1090, centroVotacion: "E.B. Santa Inés", cobertura: 98 },
+                { id: "POL-SUR-002", nombre: "Amana del Tamarindo", casas: 380, familias: 460, habitantes: 1440, votantes: 960, centroVotacion: "U.E. Amana", cobertura: 97 }
+              ]
+            }
+          ]
         }
       ]
     },
 
-    // 2. BOLÍVAR (Caripito)
+    // 2. BOLÍVAR (Caripito - 1 Parroquia Oficial)
     {
       id: "bolivar",
       nombre: "Bolívar",
@@ -256,7 +272,7 @@ export const MONAGAS_DEMO_DATA = {
         {
           id: "caripito",
           nombre: "Caripito",
-          tipo: "Urbana Central",
+          tipo: "Única",
           subparroquias: [
             {
               id: "sub-bol-car-01",
@@ -276,33 +292,19 @@ export const MONAGAS_DEMO_DATA = {
                 { id: "POL-BOL-004", nombre: "Caripito Abajo", casas: 590, familias: 710, habitantes: 2240, votantes: 1500, centroVotacion: "E.B. Caripito Abajo", cobertura: 98 },
                 { id: "POL-BOL-005", nombre: "Kilómetro 4 y Las Parcelas", casas: 430, familias: 520, habitantes: 1630, votantes: 1090, centroVotacion: "U.E. Km 4", cobertura: 97 }
               ]
-            }
-          ]
-        },
-        {
-          id: "san-antonio-bolivar",
-          nombre: "San Antonio de Caripito",
-          tipo: "Rural",
-          subparroquias: [
+            },
             {
               id: "sub-bol-san-01",
-              nombre: "Eje 1 • San Antonio y Caño de Cruz",
+              nombre: "Eje 3 • San Antonio y Caño de Cruz",
               codigo: "EJE-BOL-03",
               sectores: [
                 { id: "POL-BOL-006", nombre: "San Antonio Casco", casas: 380, familias: 460, habitantes: 1440, votantes: 960, centroVotacion: "E.B. San Antonio", cobertura: 98 },
                 { id: "POL-BOL-007", nombre: "Caño de Cruz Agrícola", casas: 290, familias: 350, habitantes: 1100, votantes: 740, centroVotacion: "U.E. Caño de Cruz", cobertura: 95 }
               ]
-            }
-          ]
-        },
-        {
-          id: "la-candelaria-bolivar",
-          nombre: "La Candelaria",
-          tipo: "Rural",
-          subparroquias: [
+            },
             {
               id: "sub-bol-can-01",
-              nombre: "Eje 1 • La Candelaria y Quebrada Seca",
+              nombre: "Eje 4 • La Candelaria y Quebrada Seca",
               codigo: "EJE-BOL-04",
               sectores: [
                 { id: "POL-BOL-008", nombre: "Candelaria Pueblo", casas: 340, familias: 410, habitantes: 1290, votantes: 860, centroVotacion: "E.B. La Candelaria", cobertura: 96 }

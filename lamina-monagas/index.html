@@ -62,10 +62,10 @@
           MOVIMIENTO INDEPENDIENTE GANAMOS TODOS
         </span>
         <h1 class="text-xs sm:text-sm lg:text-base font-black text-slate-900 uppercase tracking-tight leading-tight mb-0.5 whitespace-nowrap">
-          MIGATO • SALA SITUACIONAL
+          MÓDULO 4 • LÁMINA CARTOGRÁFICA 120"
         </h1>
         <span class="text-[9px] sm:text-[10px] font-extrabold text-sky-800 uppercase tracking-wider block leading-tight whitespace-nowrap">
-          DIVISIÓN DE CIENCIA Y TECNOLOGÍA
+          SALA SITUACIONAL • CARTOGRAFÍA TERRITORIAL
         </span>
       </div>
     </div>
@@ -96,14 +96,8 @@
 
       <!-- Botón Trazador Táctico Georreferenciado (Lápiz + Polígono y Subrayado Territorial) -->
       <button type="button" id="btn-toggle-whiteboard" onclick="window.laminaApp && window.laminaApp.whiteboard && window.laminaApp.whiteboard.toggle()" class="px-2 py-1.5 sm:px-2.5 sm:py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-slate-900 border border-slate-300 font-bold text-xs flex items-center gap-1.5 transition active:scale-95 cursor-pointer shrink-0 shadow-2xs" title="Trazador y Pizarra Táctica Georreferenciada: Lápiz Libre, Polígono y Subrayado de Límites">
-        <i data-lucide="pencil" class="w-4 h-4 text-amber-500"></i>
+        <i data-lucide="pencil" class="w-4 h-4 text-sky-600"></i>
         <span class="text-slate-400 font-mono text-[11px] select-none tracking-widest font-black leading-none">···</span>
-      </button>
-
-
-      <button type="button" onclick="laminaApp.openExportModal()" class="px-2.5 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs flex items-center gap-1.5 shadow-sm transition active:scale-95 cursor-pointer shrink-0" title="Exportar o Capturar Lámina en Imagen HD / PDF">
-        <i data-lucide="camera" class="w-4 h-4 text-emerald-400"></i>
-        <span class="hidden sm:inline">Capturar</span>
       </button>
 
       <button id="btn-fullscreen" type="button" class="p-1.5 sm:p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 transition cursor-pointer shrink-0" title="Modo Pantalla Completa (120 pulgadas)">
@@ -560,105 +554,9 @@
     </div>
   </div>
 
-  <!-- MODAL DE EXPORTACIÓN Y CAPTURA HD DE LÁMINA -->
-  <div id="modal-exportar-lamina" class="fixed inset-0 z-[2000] bg-slate-950/70 backdrop-blur-sm hidden items-center justify-center p-4">
-    <div class="bg-white rounded-2xl shadow-2xl border-2 border-slate-800 w-full max-w-lg overflow-hidden transform transition-all">
-      <!-- Encabezado Modal -->
-      <div class="bg-gradient-to-r from-[#140e40] to-[#23176d] text-white p-4 flex items-center justify-between">
-        <div class="flex items-center gap-2.5">
-          <div class="w-9 h-9 rounded-xl bg-emerald-500/20 border border-emerald-400/40 text-emerald-400 flex items-center justify-center">
-            <i data-lucide="camera" class="w-5 h-5"></i>
-          </div>
-          <div>
-            <h3 class="font-black text-sm uppercase tracking-tight text-white">
-              Exportar Lámina Ejecutiva 120"
-            </h3>
-            <span class="text-[11px] font-mono text-sky-300 block">
-              Captura Digital en Alta Resolución (PNG / HD)
-            </span>
-          </div>
-        </div>
-        <button type="button" onclick="laminaApp.closeExportModal()" class="text-slate-300 hover:text-white p-1.5 rounded-lg hover:bg-white/10 text-lg font-bold cursor-pointer">
-          ✕
-        </button>
-      </div>
-
-      <!-- Contenido de Opciones -->
-      <div class="p-5 space-y-3.5">
-        
-        <!-- Opción 1: Captura HD Automática -->
-        <div class="p-3.5 rounded-xl bg-slate-50 border-2 border-emerald-500/30 hover:border-emerald-500 transition">
-          <div class="flex items-start justify-between gap-3">
-            <div class="flex-1">
-              <div class="flex items-center gap-2 mb-1">
-                <span class="px-2 py-0.5 rounded text-[10px] font-black uppercase bg-emerald-100 text-emerald-800">Recomendado</span>
-                <h4 class="font-black text-sm text-slate-900">1. Capturar Pantalla HD (Descargar PNG)</h4>
-              </div>
-              <p class="text-xs text-slate-600 leading-relaxed">
-                Toma una instantánea exacta de la lámina a pantalla completa en formato horizontal 16:9 con satélite, tarjetas y gráficos intactos.
-              </p>
-            </div>
-            <button type="button" id="btn-do-capture-png" onclick="laminaApp.capturarPantallaHD()" class="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs uppercase flex items-center gap-1.5 shadow-sm transition active:scale-95 shrink-0 cursor-pointer">
-              <i data-lucide="download" class="w-4 h-4"></i>
-              <span>Capturar PNG</span>
-            </button>
-          </div>
-        </div>
-
-        <!-- Opción 2: Atajo Rápido del Sistema (Sin Software) -->
-        <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200">
-          <div class="flex items-center gap-2 mb-1">
-            <span class="px-2 py-0.5 rounded text-[10px] font-black uppercase bg-sky-100 text-sky-800">Directo en tu Teclado</span>
-            <h4 class="font-black text-sm text-slate-900">2. Atajos de Captura Inmediata</h4>
-          </div>
-          <p class="text-xs text-slate-600 mb-2.5">
-            Puedes hacer una captura manual instantánea y pegarla en WhatsApp, Word o PowerPoint:
-          </p>
-          <div class="grid grid-cols-2 gap-2 text-xs font-mono">
-            <div class="p-2 rounded-lg bg-white border border-slate-200 flex items-center justify-between">
-              <span class="text-slate-500 font-bold">Windows:</span>
-              <kbd class="px-1.5 py-0.5 rounded bg-slate-100 border border-slate-300 font-black text-slate-800">Win + Shift + S</kbd>
-            </div>
-            <div class="p-2 rounded-lg bg-white border border-slate-200 flex items-center justify-between">
-              <span class="text-slate-500 font-bold">Pantalla Completa:</span>
-              <kbd class="px-1.5 py-0.5 rounded bg-slate-100 border border-slate-300 font-black text-slate-800">Impr Pant</kbd>
-            </div>
-          </div>
-          <p class="text-[11px] text-slate-500 mt-2 italic">
-            * Tip Pro en Chrome/Edge: Presiona <strong>F12</strong> luego <strong>Ctrl+Shift+P</strong> y escribe <em>"Capture full size screenshot"</em>.
-          </p>
-        </div>
-
-        <!-- Opción 3: Impresión / PDF Panorámico Horizontal -->
-        <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200 hover:border-slate-400 transition">
-          <div class="flex items-start justify-between gap-3">
-            <div class="flex-1">
-              <h4 class="font-black text-sm text-slate-900 mb-1">3. Imprimir / Guardar en PDF (Horizontal)</h4>
-              <p class="text-xs text-slate-600 leading-relaxed">
-                Abre el diálogo de impresión con diseño panorámico corregido. Asegúrate de verificar <strong>Orientación: Horizontal (Landscape)</strong> en tu navegador.
-              </p>
-            </div>
-            <button type="button" onclick="window.print()" class="px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs uppercase flex items-center gap-1.5 shadow-sm transition active:scale-95 shrink-0 cursor-pointer">
-              <i data-lucide="printer" class="w-4 h-4 text-sky-400"></i>
-              <span>Abrir PDF</span>
-            </button>
-          </div>
-        </div>
-
-      </div>
-
-      <!-- Pie del Modal -->
-      <div class="p-3 bg-slate-100 border-t border-slate-200 flex justify-end">
-        <button type="button" onclick="laminaApp.closeExportModal()" class="px-4 py-2 rounded-xl border border-slate-300 text-slate-700 font-bold text-xs uppercase hover:bg-slate-200 transition cursor-pointer">
-          Cerrar
-        </button>
-      </div>
-    </div>
-  </div>
-
   <!-- 5. AUTENTICACIÓN Y CONTROLADOR PRINCIPAL DEL MÓDULO -->
   <script src="../js/auth.js"></script>
-  <script type="module" src="js/laminaApp.js?v=380"></script>
+  <script type="module" src="js/laminaApp.js?v=385"></script>
   <script>
     if (window.lucide && typeof window.lucide.createIcons === 'function') {
       window.lucide.createIcons();

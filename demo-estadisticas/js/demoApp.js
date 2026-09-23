@@ -251,14 +251,14 @@ export class DemoStatsApp {
     const subtitle = document.getElementById("demo-territory-subtitle");
     if (subtitle) {
       if (this.selectedMunId === "todos") {
-        subtitle.textContent = `Estado Monagas Completo • 13 Municipios • ${agg.uniqueParroquias} Parroquias • ${agg.totalSectores} Sectores Digitalizados`;
+        subtitle.textContent = `SALA SITUACIONAL • ESTADO MONAGAS • 13 MUNICIPIOS • ${agg.uniqueParroquias} PARROQUIAS`;
       } else {
         const m = MONAGAS_DEMO_DATA.municipios.find(x => x.id === this.selectedMunId);
         const p = m ? m.parroquias.find(x => x.id === this.selectedParishId) : null;
         if (p) {
-          subtitle.textContent = `Municipio ${m.nombre} • Parroquia ${p.nombre} • ${agg.totalSectores} Sectores Censados`;
+          subtitle.textContent = `SALA SITUACIONAL • ${m.nombre.toUpperCase()} • PARROQUIA ${p.nombre.toUpperCase()}`;
         } else {
-          subtitle.textContent = `Municipio ${m ? m.nombre : ''} • ${agg.uniqueParroquias} Parroquias • ${agg.totalSectores} Sectores Censados`;
+          subtitle.textContent = `SALA SITUACIONAL • MUNICIPIO ${m ? m.nombre.toUpperCase() : ''} • ${agg.uniqueParroquias} PARROQUIAS`;
         }
       }
     }

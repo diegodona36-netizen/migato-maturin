@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MIGATO • Tablero de Estadísticas y Censo Territorial (Demo Aislada)</title>
+  <title>MIGATO • Módulo 2: Estadística y Censo Sectorial • Monagas 2026</title>
   
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -92,7 +92,7 @@
           <i data-lucide="home" class="w-4 h-4"></i>
         </a>
 
-        <div class="w-12 h-12 rounded-xl bg-[#23176d] p-1 border-2 border-amber-400/40 flex items-center justify-center shadow-md shrink-0">
+        <div class="w-12 h-12 rounded-xl bg-[#23176d] p-1 border border-white/20 flex items-center justify-center shadow-md shrink-0">
           <img src="../assets/logo-migato.png" alt="MIGATO" class="w-full h-full object-contain">
         </div>
         <div class="truncate space-y-0.5">
@@ -101,14 +101,14 @@
           </span>
           <div class="flex items-center gap-2">
             <h1 class="text-sm sm:text-base font-black text-white uppercase tracking-tight truncate">
-              MÓDULO 2 • <span class="text-amber-400">ESTADÍSTICA Y CENSO SECTORIAL</span>
+              MÓDULO 2 • ESTADÍSTICA Y CENSO SECTORIAL
             </h1>
-            <span class="px-2 py-0.5 rounded-md bg-amber-950 text-amber-300 border border-amber-500/40 text-xs font-mono font-bold hidden md:inline-block">
+            <span class="px-2 py-0.5 rounded-md bg-[#18114a] text-slate-300 border border-white/20 text-xs font-mono font-bold hidden md:inline-block">
               Monagas 2026
             </span>
           </div>
-          <p id="demo-territory-subtitle" class="text-xs text-amber-300 font-bold uppercase tracking-wider truncate">
-            SALA SITUACIONAL • COMPARATIVAS Y BALANCE ELECTORAL
+          <p id="demo-territory-subtitle" class="text-xs text-sky-200 font-bold uppercase tracking-wider truncate">
+            SALA SITUACIONAL • COMPARATIVAS Y BALANCE DEMOGRÁFICO
           </p>
         </div>
       </div>
@@ -116,14 +116,14 @@
       <!-- Lado Derecho: Acciones y Exportaciones -->
       <div class="flex items-center gap-2 shrink-0">
         <!-- Botón Caracterización Voto (10 Campos) -->
-        <a href="../caracterizacion-voto/?v=102" class="px-3 py-1.5 rounded-xl bg-[#18114a] hover:bg-[#23176d] border border-amber-500/40 text-amber-300 hover:text-white font-bold text-base transition flex items-center gap-1.5 active:scale-95" title="Ir a Caracterización del Voto (10 Campos)">
+        <a href="../caracterizacion-voto/?v=102" class="px-3 py-1.5 rounded-xl bg-[#18114a] hover:bg-[#23176d] border border-sky-500/40 text-sky-200 hover:text-white font-bold text-base transition flex items-center gap-1.5 active:scale-95" title="Ir a Caracterización del Voto (10 Campos)">
           <span class="text-base">📋</span>
           <span class="hidden sm:inline">Caracterización Voto</span>
         </a>
 
         <!-- Botón Informe Sala Situacional -->
-        <button id="btn-demo-situational-report" type="button" class="px-3 py-1.5 rounded-xl bg-[#18114a] hover:bg-[#23176d] border border-amber-500/40 text-amber-300 hover:text-white font-bold text-sm transition flex items-center gap-1.5 active:scale-95 cursor-pointer" title="Ver Resumen de Sala Situacional">
-          <i data-lucide="file-text" class="w-3.5 h-3.5 text-amber-400"></i>
+        <button id="btn-demo-situational-report" type="button" class="px-3 py-1.5 rounded-xl bg-[#18114a] hover:bg-[#23176d] border border-sky-500/40 text-sky-200 hover:text-white font-bold text-sm transition flex items-center gap-1.5 active:scale-95 cursor-pointer" title="Ver Resumen de Sala Situacional">
+          <i data-lucide="file-text" class="w-3.5 h-3.5 text-sky-400"></i>
           <span class="hidden lg:inline">Informe Ejecutivo</span>
         </button>
 
@@ -134,7 +134,7 @@
         </button>
 
         <!-- Botón Exportar CSV / Excel -->
-        <button id="btn-demo-export-csv" type="button" class="px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-[#0e092e] font-black text-sm transition flex items-center gap-1.5 shadow-lg shadow-amber-500/20 active:scale-95 cursor-pointer" title="Descargar Censo Completo en CSV / Excel">
+        <button id="btn-demo-export-csv" type="button" class="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-black text-sm transition flex items-center gap-1.5 shadow-lg shadow-emerald-600/20 active:scale-95 cursor-pointer" title="Descargar Censo Completo en CSV / Excel">
           <i data-lucide="download" class="w-3.5 h-3.5"></i>
           <span class="hidden sm:inline">Excel (CSV)</span>
         </button>

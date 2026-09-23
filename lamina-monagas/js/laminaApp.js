@@ -111,7 +111,6 @@ export class LaminaApp {
     this.initMap();
     this.initUIListeners();
     this.initWhiteboard();
-    this.initColorStudio();
     this.updateBaseMapUI();
 
     // Inicialización del territorio condicionada a dimensiones válidas del contenedor
