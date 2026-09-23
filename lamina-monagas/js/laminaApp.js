@@ -30,7 +30,7 @@ import {
   COMANDOS_SECTORIALES
 } from "./comandoData.js?v=252";
 import { auditLogger } from "./auditLogger.js";
-import { Whiteboard } from "./whiteboard.js?v=300";
+import { Whiteboard } from "./whiteboard.js?v=310";
 
 const BOUNDS_ESTADO_MONAGAS = [
   [8.38245, -64.06290],
@@ -741,6 +741,9 @@ export class LaminaApp {
 
   // 1. NIVEL ESTADO MONAGAS
   selectEstado(animate = true) {
+    if (this.whiteboard && this.whiteboard.isActive && this.whiteboard.currentTool !== "pan") {
+      return;
+    }
     this.level = "estado";
     this.activeMunId = null;
     this.activeParishId = null;
@@ -831,6 +834,9 @@ export class LaminaApp {
 
   // 2. NIVEL MUNICIPIO (MATURÍN, PIAR, CEDEÑO, ETC.)
   selectMunicipio(munId = "maturin", animate = true) {
+    if (this.whiteboard && this.whiteboard.isActive && this.whiteboard.currentTool !== "pan") {
+      return;
+    }
     this.level = "municipio";
     this.activeMunId = munId;
     this.activeParishId = null;
@@ -1107,6 +1113,9 @@ export class LaminaApp {
 
   // 3. NIVEL PARROQUIA (ALTO DE LOS GODOS, LA PICA, SAN SIMÓN, ETC.)
   selectParroquia(parishId, munId = "maturin", animate = true) {
+    if (this.whiteboard && this.whiteboard.isActive && this.whiteboard.currentTool !== "pan") {
+      return;
+    }
     this.level = "parroquia";
     this.activeMunId = munId;
     this.activeParishId = parishId;
@@ -1279,6 +1288,9 @@ export class LaminaApp {
 
   // 4. NIVEL SUB-PARROQUIA / EJE TERRITORIAL (EL MAPA SE QUEDA EN ZOOM PARROQUIAL)
   selectSubParroquia(spId, parishId = "alto-de-los-godos", munId = "maturin", animate = true) {
+    if (this.whiteboard && this.whiteboard.isActive && this.whiteboard.currentTool !== "pan") {
+      return;
+    }
     this.level = "subparroquia";
     this.activeMunId = munId;
     this.activeParishId = parishId;
@@ -1442,6 +1454,9 @@ export class LaminaApp {
 
   // 5. NIVEL SECTOR VECINAL (EL MAPA SE QUEDA EN ZOOM PARROQUIAL)
   selectSector(secId, parishId = "alto-de-los-godos", munId = "maturin", animate = true) {
+    if (this.whiteboard && this.whiteboard.isActive && this.whiteboard.currentTool !== "pan") {
+      return;
+    }
     this.level = "sector";
     this.activeMunId = munId;
     this.activeParishId = parishId;
