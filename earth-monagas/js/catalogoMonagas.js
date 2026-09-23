@@ -510,7 +510,7 @@ export const CATALOGO_MONAGAS = [
     ]
   },
 
-  // 9. SANTA BÁRBARA (2 Parroquias)
+  // 9. SANTA BÁRBARA (1 Parroquia Oficial)
   {
     id: "santa-barbara",
     nombre: "Municipio Santa Bárbara",
@@ -525,18 +525,8 @@ export const CATALOGO_MONAGAS = [
         tipo: "Capital",
         centro: [9.5850, -63.6150],
         zoom: 13,
-        sectores: ["Santa Bárbara Centro", "Tapirito"],
+        sectores: ["Santa Bárbara Centro", "Tapirito", "Morón"],
         limite: [[9.6150, -63.6450], [9.6200, -63.5850], [9.5550, -63.5850], [9.5500, -63.6450], [9.6150, -63.6450]]
-      },
-      {
-        id: "moron",
-        nombre: "Morón",
-        codigo: "SBA-MOR",
-        tipo: "Rural",
-        centro: [9.5250, -63.5850],
-        zoom: 13,
-        sectores: ["Morón Centro"],
-        limite: [[9.5550, -63.6150], [9.5600, -63.5550], [9.4950, -63.5550], [9.4900, -63.6150], [9.5550, -63.6150]]
       }
     ]
   },
@@ -665,6 +655,7 @@ export const PARISH_ALIAS_MAP = {
   "capital-acosta": "san-antonio",
   "capital-punceres": "quiriquire",
   "santa-barbara": "santa-barbara-centro",
+  "moron": "santa-barbara",
   "capital-sotillo": "barrancas",
   "los-barrancos-de-fajardo": "los-barrancos",
   "bolivar": "caripito",

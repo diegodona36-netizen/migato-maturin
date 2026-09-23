@@ -501,22 +501,32 @@ export const MONAGAS_DEMOGRAPHICS = {
   "santa-barbara-centro": {
     "nombre": "Santa Bárbara",
     "munId": "santa-barbara",
-    "casas": 2100,
-    "familias": 2500,
-    "habitantes": 8200,
-    "votantes": 5300,
-    "centros": 5,
-    "mesas": 7
+    "casas": 3800,
+    "familias": 4500,
+    "habitantes": 13000,
+    "votantes": 9500,
+    "centros": 8,
+    "mesas": 12
+  },
+  "santa-barbara": {
+    "nombre": "Santa Bárbara",
+    "munId": "santa-barbara",
+    "casas": 3800,
+    "familias": 4500,
+    "habitantes": 13000,
+    "votantes": 9500,
+    "centros": 8,
+    "mesas": 12
   },
   "moron": {
-    "nombre": "Morón",
+    "nombre": "Morón (Sector)",
     "munId": "santa-barbara",
-    "casas": 2100,
-    "familias": 2500,
-    "habitantes": 8200,
-    "votantes": 5300,
-    "centros": 5,
-    "mesas": 7
+    "casas": 1200,
+    "familias": 1400,
+    "habitantes": 4100,
+    "votantes": 2900,
+    "centros": 2,
+    "mesas": 3
   },
   "barrancas": {
     "nombre": "Barrancas del Orinoco",
