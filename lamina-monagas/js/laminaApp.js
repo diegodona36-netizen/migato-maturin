@@ -621,7 +621,7 @@ export class LaminaApp {
         btnToggle.className = "px-2.5 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-300 font-bold text-xs flex items-center gap-1.5 transition active:scale-95 cursor-pointer shrink-0 shadow-2xs";
         if (iconEl) {
           iconEl.setAttribute("data-lucide", "map");
-          iconEl.className = "w-4 h-4 text-indigo-600";
+          iconEl.setAttribute("class", "w-4 h-4 text-indigo-600");
         }
       } else {
         txtEl.textContent = "Satélite";
@@ -629,7 +629,7 @@ export class LaminaApp {
         btnToggle.className = "px-2.5 py-1.5 rounded-xl bg-sky-50 hover:bg-sky-100 text-sky-900 border border-sky-300 font-bold text-xs flex items-center gap-1.5 transition active:scale-95 cursor-pointer shrink-0 shadow-2xs";
         if (iconEl) {
           iconEl.setAttribute("data-lucide", "satellite");
-          iconEl.className = "w-4 h-4 text-sky-600";
+          iconEl.setAttribute("class", "w-4 h-4 text-sky-600");
         }
       }
     }
@@ -1599,7 +1599,6 @@ export class LaminaApp {
     });
 
     // 3. Destacar el polígono del sector seleccionado si tiene coordenadas validadas
-    const sCoords = sec.vertices || sec.poligono;
     if (sec.hasValidPoly !== false && sCoords && sCoords.length >= 3) {
       const secPoly = L.polygon(sCoords, {
         color: sec.colorBorde || sec.color || "#0284c7",
