@@ -700,7 +700,55 @@ html, body {
 }
 
 #whiteboard-toolbar {
+  background-color: #0b1120 !important;
+  background: #0b1120 !important;
+  border: 2px solid #334155 !important;
+  color: #ffffff !important;
+  box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.85), 0 0 25px rgba(0, 0, 0, 0.6) !important;
   animation: slideUpToolbar 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+#whiteboard-toolbar #wb-tool-status {
+  background-color: #030712 !important;
+  color: #38bdf8 !important;
+  border: 1px solid #1e293b !important;
+  border-radius: 8px !important;
+  font-weight: 800 !important;
+  padding: 4px 14px !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+#whiteboard-toolbar button {
+  color: #f8fafc !important;
+}
+
+#whiteboard-toolbar button.bg-amber-500 {
+  background-color: #f59e0b !important;
+  color: #020617 !important;
+  font-weight: 900 !important;
+  border: 1px solid #d97706 !important;
+}
+
+#whiteboard-toolbar button:not(.bg-amber-500):not(.wb-color-btn):not(#wb-btn-finish-poly) {
+  background-color: #1e293b !important;
+  color: #f1f5f9 !important;
+  border: 1px solid #475569 !important;
+  font-weight: 700 !important;
+}
+
+#whiteboard-toolbar button:not(.bg-amber-500):not(.wb-color-btn):not(#wb-btn-finish-poly):hover {
+  background-color: #334155 !important;
+  color: #ffffff !important;
+  border-color: #64748b !important;
+}
+
+#whiteboard-toolbar button i,
+#whiteboard-toolbar button svg {
+  stroke: currentColor !important;
+}
+
+#whiteboard-toolbar .border-slate-700\/80 {
+  border-color: #334155 !important;
 }
 
 @keyframes slideUpToolbar {
@@ -717,4 +765,22 @@ html, body {
 .wb-color-btn {
   transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
+
+/* ==========================================================================
+   VELO BLANCO (MÁSCARA CARTOGRÁFICA INVERTIDA - PANE SPOTLIGHT)
+   ========================================================================== */
+
+.leaflet-pane.leaflet-spotlightPane-pane {
+  z-index: 450 !important;
+  pointer-events: none !important;
+}
+
+.leaflet-pane.leaflet-spotlightPane-pane svg {
+  pointer-events: none !important;
+}
+
+.leaflet-pane.leaflet-spotlightPane-pane svg path {
+  pointer-events: none !important;
+}
+
 

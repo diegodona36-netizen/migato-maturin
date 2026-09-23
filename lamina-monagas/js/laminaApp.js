@@ -70,8 +70,8 @@ function formatTitleCase(str) {
 export class LaminaApp {
   constructor() {
     this.map = null;
-    this.level = "municipio"; // "estado" | "municipio" | "parroquia" | "subparroquia" | "sector"
-    this.activeMunId = "maturin";
+    this.level = "estado"; // "estado" | "municipio" | "parroquia" | "subparroquia" | "sector"
+    this.activeMunId = null;
     this.activeParishId = null;
     this.activeSubParishId = null;
     this.activeSectorId = null;
@@ -105,39 +105,18 @@ export class LaminaApp {
     this.initWhiteboard();
     this.updateBaseMapUI();
 
-    // Iniciar renderizado cuando Leaflet esté completamente listo en el DOM
-    this.map.whenReady(() => {
-      this.map.invalidateSize();
-      this.parseURLParams(true);
-    });
+    // Renderizado inmediato y síncrono del Estado y Velo Blanco
+    this.parseURLParams(false);
 
-    // Fallbacks reactivos para garantizar encuadre y polígonos aún con latencia en layout de navegador
+    // Ajuste único de tamaño al siguiente cuadro de renderizado
     requestAnimationFrame(() => {
       if (this.map) {
         this.map.invalidateSize();
-        if (this.level === "municipio" && (!this.childEntitiesLayer || this.childEntitiesLayer.getLayers().length === 0)) {
-          this.selectMunicipio("maturin", false);
+        if (this.level === "estado" && (!this.childEntitiesLayer || this.childEntitiesLayer.getLayers().length === 0)) {
+          this.selectEstado(false);
         }
       }
     });
-
-    setTimeout(() => {
-      if (this.map) {
-        this.map.invalidateSize();
-        if (this.level === "municipio" && (!this.childEntitiesLayer || this.childEntitiesLayer.getLayers().length === 0)) {
-          this.selectMunicipio("maturin", false);
-        }
-      }
-    }, 150);
-
-    setTimeout(() => {
-      if (this.map) {
-        this.map.invalidateSize();
-        if (this.level === "municipio" && (!this.childEntitiesLayer || this.childEntitiesLayer.getLayers().length === 0)) {
-          this.selectMunicipio("maturin", false);
-        }
-      }
-    }, 350);
   }
 
   initWhiteboard() {
@@ -326,8 +305,8 @@ export class LaminaApp {
     } else if (m) {
       this.selectMunicipio(m, animate);
     } else {
-      // Abre directamente el Municipio Maturín oficial (11 Parroquias) de una vez
-      this.selectMunicipio("maturin", animate);
+      // Abre directamente el Estado Monagas oficial (13 Municipios) con el Velo Blanco
+      this.selectEstado(animate);
     }
   }
 
@@ -700,8 +679,21 @@ export class LaminaApp {
 
     if (!normalizedRings || normalizedRings.length === 0) return;
 
-    // 1. Velo blanco desactivado para garantizar visualización satelital 100% limpia y nítida
-    // (evita cualquier pantalla blanca o recorte no deseado)
+    // 1. Velo Blanco Matemático Invertido (Donut Mask con fillRule: 'evenodd')
+    // Cubre todo el exterior con blanco (#ffffff) para aislar el territorio y evitar fatiga mental
+    const maskCoords = [WORLD_BOX, ...normalizedRings];
+    const maskPoly = L.polygon(maskCoords, {
+      pane: "spotlightPane",
+      fillColor: "#ffffff",
+      fillOpacity: 1.0,
+      color: "#ffffff",
+      weight: 1.5,
+      opacity: 1.0,
+      fillRule: "evenodd",
+      interactive: false,
+      renderer: this.spotlightRenderer
+    });
+    this.maskLayer.addLayer(maskPoly);
 
     // 2. Línea delimitadora nítida en el perímetro del territorio abierto
     normalizedRings.forEach(ring => {
