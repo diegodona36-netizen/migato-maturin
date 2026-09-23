@@ -36,7 +36,7 @@
   <script src="../centros-maturin/js/centrosData.js"></script>
 
   <!-- Estilos de Lámina Ejecutiva 120" -->
-  <link rel="stylesheet" href="css/lamina.css?v=330" />
+  <link rel="stylesheet" href="css/lamina.css?v=340" />
 
   <!-- Anti-Cache Meta Tags -->
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate, max-age=0" />
@@ -71,9 +71,7 @@
     </div>
 
     <!-- Bloque Central: Título Dinámico de la Entidad y Migas de Pan (Columna Central Amplia) -->
-    <div class="lamina-header-card lamina-header-center flex flex-col items-center justify-center text-center px-5 py-2 cursor-pointer hover:bg-slate-50/95 transition shadow-2xs"
-         onclick="window.laminaApp && window.laminaApp.selectEstado()"
-         title="Clic para enfocar todo el Estado Monagas (13 Municipios)">
+    <div class="lamina-header-card lamina-header-center flex flex-col items-center justify-center text-center px-5 py-2 shadow-2xs">
       <h2 id="lamina-entity-title" class="font-display text-base sm:text-lg lg:text-xl font-black text-slate-900 uppercase tracking-tight leading-snug truncate max-w-full">
         ESTADO MONAGAS
       </h2>
@@ -659,7 +657,7 @@
 
   <!-- 5. AUTENTICACIÓN Y CONTROLADOR PRINCIPAL DEL MÓDULO -->
   <script src="../js/auth.js"></script>
-  <script type="module" src="js/laminaApp.js?v=330"></script>
+  <script type="module" src="js/laminaApp.js?v=340"></script>
   <script>
     if (window.lucide && typeof window.lucide.createIcons === 'function') {
       window.lucide.createIcons();

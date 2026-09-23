@@ -105,18 +105,36 @@ export class LaminaApp {
     this.initWhiteboard();
     this.updateBaseMapUI();
 
-    // Renderizado inmediato y síncrono del Estado y Velo Blanco
-    this.parseURLParams(false);
+    // 1. Renderizado inicial inmediato sin animación de cámara
+    this.parseURLParams(true);
 
-    // Ajuste único de tamaño al siguiente cuadro de renderizado
+    // 2. Leaflet whenReady: asegura que contenedor, panes y renderers SVG/Canvas estén activos
+    this.map.whenReady(() => {
+      this.map.invalidateSize();
+      this.refreshCurrentView(false);
+    });
+
+    // 3. Fallbacks de ciclo de vida con invalidateSize y refresco para garantizar polígonos y velo blanco
     requestAnimationFrame(() => {
       if (this.map) {
         this.map.invalidateSize();
-        if (this.level === "estado" && (!this.childEntitiesLayer || this.childEntitiesLayer.getLayers().length === 0)) {
-          this.selectEstado(false);
-        }
+        this.refreshCurrentView(false);
       }
     });
+
+    setTimeout(() => {
+      if (this.map) {
+        this.map.invalidateSize();
+        this.refreshCurrentView(false);
+      }
+    }, 120);
+
+    setTimeout(() => {
+      if (this.map) {
+        this.map.invalidateSize();
+        this.refreshCurrentView(false);
+      }
+    }, 350);
   }
 
   initWhiteboard() {
@@ -417,15 +435,17 @@ export class LaminaApp {
     });
   }
 
-  refreshCurrentView() {
+  refreshCurrentView(animate = false) {
     if (this.level === "sector" && this.activeSectorId) {
-      this.selectSector(this.activeSectorId, this.activeParishId, this.activeMunId);
+      this.selectSector(this.activeSectorId, this.activeParishId, this.activeMunId, animate);
     } else if (this.level === "subparroquia" && this.activeSubParishId) {
-      this.selectSubParroquia(this.activeSubParishId, this.activeParishId, this.activeMunId);
+      this.selectSubParroquia(this.activeSubParishId, this.activeParishId, this.activeMunId, animate);
     } else if (this.level === "parroquia" && this.activeParishId) {
-      this.selectParroquia(this.activeParishId, this.activeMunId);
+      this.selectParroquia(this.activeParishId, this.activeMunId, animate);
     } else if (this.level === "municipio" && this.activeMunId) {
-      this.selectMunicipio(this.activeMunId);
+      this.selectMunicipio(this.activeMunId, animate);
+    } else {
+      this.selectEstado(animate);
     }
   }
 
@@ -1313,7 +1333,7 @@ export class LaminaApp {
     const eje = subparroquias.find(e => String(e.id) === String(spId) || String(e.nombre).toLowerCase().includes(String(spId).toLowerCase())) || { id: spId, nombre: spId };
     this.activeSubParishName = eje.nombre;
 
-    // REGLA CRÍTICA: Mantener el zoom y el Velo Blanco fijos en la PARROQUIA
+    // Mantener el Velo Blanco delimitando la PARROQUIA
     if (!this.currentParishRings || this.currentParishRings.length === 0) {
       const feat = (GEO_PARROQUIAS_OFICIAL.features || []).find(f => {
         const id = String(f.properties?.id || "").toLowerCase().replace(/_/g, "-").trim();
@@ -1326,8 +1346,19 @@ export class LaminaApp {
     if (this.currentParishRings && this.currentParishRings.length > 0) {
       this.applySpotlightMask(this.currentParishRings, pColor, 3.5);
     }
-    if (this.currentParishBounds) {
-      this.safeFitBounds(this.currentParishBounds, animate);
+
+    // Cámara adaptativa: no resetear el zoom bruscamente si el usuario está explorando en detalle
+    const ejeCoords = eje.vertices || eje.poligono;
+    if (this.map) {
+      if (this.map.getZoom() < 13) {
+        if (ejeCoords && ejeCoords.length >= 3) {
+          this.safeFitBounds(L.latLngBounds(ejeCoords), animate);
+        } else if (this.currentParishBounds) {
+          this.safeFitBounds(this.currentParishBounds, animate);
+        }
+      } else if (eje.centro) {
+        this.map.panTo(eje.centro, { animate: animate });
+      }
     }
 
     // Centros de votación desactivados según directriz operativa
@@ -1487,12 +1518,28 @@ export class LaminaApp {
     }
     this.activeSectorName = sec.nombre;
 
-    // REGLA CRÍTICA: Mantener el zoom y el Velo Blanco fijos en la PARROQUIA
+    // 1. Mantener el Velo Blanco delimitando la PARROQUIA
     if (this.currentParishRings && this.currentParishRings.length > 0) {
       this.applySpotlightMask(this.currentParishRings, pColor, 3.5);
     }
-    if (this.currentParishBounds) {
-      this.safeFitBounds(this.currentParishBounds, animate);
+
+    // 2. Comportamiento inteligente de cámara: NUNCA devolver el zoom si el usuario está explorando en detalle
+    const sCoords = sec.vertices || sec.poligono;
+    if (this.map) {
+      if (sec.hasValidPoly !== false && sCoords && sCoords.length >= 3) {
+        const secBounds = L.latLngBounds(sCoords);
+        if (this.map.getZoom() < 14) {
+          this.safeFitBounds(secBounds, animate);
+        } else {
+          this.map.panTo(secBounds.getCenter(), { animate: animate });
+        }
+      } else if (sec.centro) {
+        if (this.map.getZoom() < 14) {
+          this.map.setView(sec.centro, 15, { animate: animate });
+        } else {
+          this.map.panTo(sec.centro, { animate: animate });
+        }
+      }
     }
 
     // Centros de votación desactivados según directriz operativa
@@ -1650,7 +1697,7 @@ export class LaminaApp {
 
     // Nivel 1: Estado Monagas
     items.push(`
-      <span class="breadcrumb-item ${this.level === 'estado' ? 'active' : ''}" onclick="laminaApp.selectEstado()" title="Ver todo el Estado Monagas">
+      <span class="breadcrumb-item ${this.level === 'estado' ? 'active' : ''}" onclick="event.stopPropagation(); laminaApp.selectEstado()" title="Ver todo el Estado Monagas">
         <span>🇻🇪 Monagas</span>
       </span>
     `);
@@ -1660,7 +1707,7 @@ export class LaminaApp {
       const munObj = CATALOGO_MONAGAS.find(m => m.id === this.activeMunId) || { nombre: "Maturín" };
       const munClean = (munObj.nombre || "Maturín").replace(/^municipio\s+/i, '').trim();
       items.push(`
-        <span class="breadcrumb-item ${this.level === 'municipio' ? 'active' : ''}" onclick="laminaApp.selectMunicipio('${this.activeMunId}')" title="Ver Municipio ${munClean}">
+        <span class="breadcrumb-item ${this.level === 'municipio' ? 'active' : ''}" onclick="event.stopPropagation(); laminaApp.selectMunicipio('${this.activeMunId}')" title="Ver Municipio ${munClean}">
           <span>${munClean}</span>
         </span>
       `);
@@ -1671,7 +1718,7 @@ export class LaminaApp {
       const pObj = (CATALOGO_MONAGAS.find(m => m.id === this.activeMunId)?.parroquias || []).find(p => p.id === this.activeParishId) || { nombre: this.activeParishId };
       const parishClean = (pObj.nombre || this.activeParishId).replace(/^parroquia\s+/i, '').trim();
       items.push(`
-        <span class="breadcrumb-item ${this.level === 'parroquia' ? 'active' : ''}" onclick="laminaApp.selectParroquia('${this.activeParishId}', '${this.activeMunId}')" title="Ver Parroquia ${parishClean}">
+        <span class="breadcrumb-item ${this.level === 'parroquia' ? 'active' : ''}" onclick="event.stopPropagation(); laminaApp.selectParroquia('${this.activeParishId}', '${this.activeMunId}')" title="Ver Parroquia ${parishClean}">
           <span>${parishClean}</span>
         </span>
       `);
@@ -1682,7 +1729,7 @@ export class LaminaApp {
       let spTitle = this.activeSubParishName ? formatTitleCase(this.activeSubParishName) : "Eje";
       spTitle = spTitle.replace(/^sub\s*parroquia\s*/i, 'Eje ').replace(/^eje\s*eje\s*/i, 'Eje ').trim();
       items.push(`
-        <span class="breadcrumb-item ${this.level === 'subparroquia' ? 'active' : ''}" onclick="laminaApp.selectSubParroquia('${this.activeSubParishId}', '${this.activeParishId}', '${this.activeMunId}')" title="Ver ${spTitle}">
+        <span class="breadcrumb-item ${this.level === 'subparroquia' ? 'active' : ''}" onclick="event.stopPropagation(); laminaApp.selectSubParroquia('${this.activeSubParishId}', '${this.activeParishId}', '${this.activeMunId}')" title="Ver ${spTitle}">
           <span>${spTitle}</span>
         </span>
       `);
