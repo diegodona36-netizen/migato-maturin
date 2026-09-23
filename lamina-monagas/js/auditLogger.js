@@ -85,9 +85,9 @@ export class AuditLogger {
     if (badge) {
       badge.innerHTML = `
         <span class="w-2 h-2 rounded-full bg-emerald-500 shrink-0 animate-pulse"></span>
-        <span>Sala Situacional • MIGATO 2026</span>
+        <span>Sala Situacional • MIGATO</span>
       `;
-      badge.title = `Operación Activa • Sala Situacional MIGATO 2026`;
+      badge.title = `Operación Activa • Sala Situacional MIGATO`;
     }
   }
 }

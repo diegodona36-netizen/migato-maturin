@@ -1,5 +1,5 @@
 /* ==========================================================================
-   LÁMINA CARTOGRÁFICA EJECUTIVA 120" — ESTADO MONAGAS • SALA SITUACIONAL 2026
+   LÁMINA CARTOGRÁFICA EJECUTIVA 120" — ESTADO MONAGAS • SALA SITUACIONAL
    Estilos Optimizados para Gran Formato, Proyección 4K y Exportación Oficial
    ========================================================================== */
 
@@ -677,7 +677,7 @@ html, body {
 
   /* Pie de página institucional oficial */
   body::after {
-    content: "MOVIMIENTO INDEPENDIENTE GANAMOS TODOS • MIGATO 2026 • SALA SITUACIONAL • ESTADO MONAGAS";
+    content: "MOVIMIENTO INDEPENDIENTE GANAMOS TODOS • MIGATO • SALA SITUACIONAL • ESTADO MONAGAS";
     display: block;
     margin-top: 10px;
     padding-top: 6px;

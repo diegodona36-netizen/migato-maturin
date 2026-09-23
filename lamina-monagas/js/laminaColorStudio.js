@@ -1,5 +1,5 @@
 /**
- * MIGATO 2026 - Estudio Rápido de Colores de Polígonos
+ * MIGATO - Estudio Rápido de Colores de Polígonos
  * Módulo de Calibración Cromática para Lámina Monagas (13 Municipios y 44 Parroquias)
  * 
  * Permite al usuario/comandante ajustar colores en tiempo real sin recargar,
@@ -18,35 +18,35 @@ function formatTitleCase(str) {
 }
 
 export const HIGH_CONTRAST_MUN_PALETTE = {
-  "maturin": "#1e40af",         // Azul Royal Intenso
-  "caripe": "#047857",          // Verde Esmeralda Montaña (¡Evita conflicto con rojos!)
+  "maturin": "#1d4ed8",         // Azul Royal Intenso
+  "caripe": "#dc2626",          // Verde Esmeralda Montaña (¡Evita conflicto con rojos!)
   "acosta": "#0891b2",          // Cian Turquesa Capayacuar
   "cedeno": "#7c3aed",          // Violeta Imperial Caicara
-  "piar": "#d97706",            // Ámbar Dorado Aragua
-  "punceres": "#db2777",        // Rosa Fucsia Quiriquire
-  "bolivar": "#dc2626",         // Rojo Carmesí Caripito (Único rojo en el norte)
+  "piar": "#f59e0b",            // Ámbar Dorado Aragua
+  "punceres": "#8b5cf6",        // Rosa Fucsia Quiriquire
+  "bolivar": "#0284c7",         // Rojo Carmesí Caripito (Único rojo en el norte)
   "ezequiel-zamora": "#ea580c", // Naranja Vivo Punta de Mata
-  "santa-barbara": "#65a30d",   // Verde Lima Tapir
+  "santa-barbara": "#ec4899",   // Verde Lima Tapir
   "aguasay": "#eab308",         // Amarillo Maíz Curagua
-  "libertador": "#4338ca",      // Índigo Profundo Temblador
-  "uracoa": "#0d9488",          // Teal Petróleo Uracoa
+  "libertador": "#059669",      // Índigo Profundo Temblador
+  "uracoa": "#14b8a6",          // Teal Petróleo Uracoa
   "sotillo": "#c026d3"          // Fucsia Orinoco Barrancas
 };
 
 export const ORIGINAL_MUN_PALETTE = {
-  "maturin": "#1e40af",
-  "caripe": "#047857",
+  "maturin": "#1d4ed8",
+  "caripe": "#dc2626",
   "cedeno": "#7c3aed",
   "ezequiel-zamora": "#ea580c",
-  "libertador": "#4338ca",
+  "libertador": "#059669",
   "acosta": "#0891b2",
   "aguasay": "#eab308",
-  "bolivar": "#dc2626",
-  "piar": "#d97706",
-  "punceres": "#db2777",
-  "santa-barbara": "#65a30d",
+  "bolivar": "#0284c7",
+  "piar": "#f59e0b",
+  "punceres": "#8b5cf6",
+  "santa-barbara": "#ec4899",
   "sotillo": "#c026d3",
-  "uracoa": "#0d9488"
+  "uracoa": "#14b8a6"
 };
 
 export const QUICK_SWATCHES = [
@@ -124,7 +124,7 @@ export class LaminaColorStudio {
                   Estudio Rápido de Colores
                 </h3>
                 <span class="px-1.5 py-0.5 rounded-full bg-amber-400 text-slate-950 text-[10px] font-black uppercase tracking-wider">
-                  MIGATO 2026
+                  MIGATO
                 </span>
               </div>
               <span class="text-[11px] text-sky-200/90 font-medium block leading-tight">

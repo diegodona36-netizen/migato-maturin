@@ -1,5 +1,5 @@
 /**
- * Directorio y Estructura de Comandos Gateros MIGATO • Monagas 2026
+ * Directorio y Estructura de Comandos Gateros MIGATO • Monagas
  * 
  * Jerarquía Operativa Multinivel Oficial:
  * 1. Comando Gatero Regional (Estado Monagas • Sala Central de Mando)
@@ -638,7 +638,7 @@ export function getComandoInfo(level, entityId, parishId = null, munId = null) {
       general: sectorLeader?.nombre || "⚪ Vacante / Sin Asignar",
       division: `Supervisión Gatera Parroquial • ${cleanPId}`,
       telefono: sectorLeader?.telefono || "Sin teléfono registrado",
-      detalle: "Red de Comandos Gateros MIGATO 2026",
+      detalle: "Red de Comandos Gateros MIGATO",
       isAssigned: Boolean(sectorLeader?.nombre),
       centrosAsignados: ejeComando.centrosAsignados || [],
       mesas: ejeComando.mesasSupervisadas || 4,

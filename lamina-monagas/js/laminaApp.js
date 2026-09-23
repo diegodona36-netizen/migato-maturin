@@ -1,6 +1,6 @@
 /**
  * ==========================================================================
- * LÁMINA CARTOGRÁFICA EJECUTIVA 120" — SALA SITUACIONAL ESTADO MONAGAS 2026
+ * LÁMINA CARTOGRÁFICA EJECUTIVA 120" — SALA SITUACIONAL ESTADO MONAGAS
  * Controlador Cartográfico Acelerado por GPU para Proyección y Exportación
  * ==========================================================================
  */
@@ -180,7 +180,7 @@ export class LaminaApp {
 
   loadCustomColors() {
     try {
-      const PALETTE_VERSION = "migato_palette_v3_oficial";
+      const PALETTE_VERSION = "migato_palette_v4_definitiva";
       const currentVersion = localStorage.getItem("migato_palette_version");
       
       // Si la versión no coincide o no existe, forzamos la paleta oficial definitiva de alto contraste
@@ -659,7 +659,7 @@ export class LaminaApp {
 
     const displayName = entityName || targetId;
     if (titleEl) titleEl.textContent = `Asignar Comando Gatero: ${displayName}`;
-    if (subEl) subEl.textContent = `Red de Comandos Gateros MIGATO 2026 • ID: ${targetId}`;
+    if (subEl) subEl.textContent = `Red de Comandos Gateros MIGATO • ID: ${targetId}`;
 
     // Cargar datos previos si existen
     const defaultCargo = (this.level === "estado" || targetId.startsWith("mun-")) ? "Jefe Gatero Municipal" : ((this.level === "municipio" || targetId.startsWith("parr-") || targetId.startsWith("par-")) ? "Gatero Parroquial" : "Jefe Gatero Estatal");
@@ -960,19 +960,19 @@ export class LaminaApp {
 
         const layer = L.geoJSON(f, {
           style: {
-            color: munColor,
-            weight: 2.8,
-            opacity: 0.98,
+            color: "#ffffff",
+            weight: 2.2,
+            opacity: 1.0,
             fillColor: munColor,
-            fillOpacity: 0.38
+            fillOpacity: 0.72
           }
         });
         layer.entityId = mId;
         layer.entityType = "municipio";
 
         layer.on({
-          mouseover: () => layer.setStyle({ weight: 4.2, fillOpacity: 0.60 }),
-          mouseout: () => layer.setStyle({ weight: 2.8, fillOpacity: 0.38 }),
+          mouseover: () => layer.setStyle({ weight: 3.5, color: "#ffffff", fillOpacity: 0.92 }),
+          mouseout: () => layer.setStyle({ weight: 2.2, color: "#ffffff", fillOpacity: 0.72 }),
           click: () => this.selectMunicipio(mId)
         });
 
@@ -1068,12 +1068,11 @@ export class LaminaApp {
 
       const layer = L.geoJSON(f, {
         style: {
-          color: pColor,
-          weight: 2.8,
-          opacity: 0.98,
+          color: "#ffffff",
+          weight: 2.2,
+          opacity: 1.0,
           fillColor: pColor,
-          fillOpacity: 0.38,
-          dashArray: "6, 4"
+          fillOpacity: 0.70
         }
       });
       layer.entityId = resolvedPId;
@@ -1081,10 +1080,10 @@ export class LaminaApp {
 
       layer.on({
         mouseover: () => {
-          layer.setStyle({ weight: 4.2, fillOpacity: 0.60 });
+          layer.setStyle({ weight: 3.5, color: "#ffffff", fillOpacity: 0.92 });
         },
         mouseout: () => {
-          layer.setStyle({ weight: 2.8, fillOpacity: 0.38 });
+          layer.setStyle({ weight: 2.2, color: "#ffffff", fillOpacity: 0.70 });
         },
         click: () => {
           this.selectParroquia(pId, cleanMunId);

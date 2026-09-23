@@ -1,6 +1,6 @@
 /**
  * Whiteboard.js — Trazado Georreferenciado y Pizarra Táctica sobre Leaflet
- * Movimiento Independiente Ganamos Todos (MIGATO) • Monagas 2026
+ * Movimiento Independiente Ganamos Todos (MIGATO) • Monagas
  * 
  * Permite realizar trazos a mano alzada (Lápiz) y polígonos delimitadores (Subrayado)
  * directamente como capas vectoriales nativas de Leaflet (L.polyline y L.polygon).
