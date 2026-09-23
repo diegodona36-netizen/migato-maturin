@@ -180,29 +180,37 @@ export class LaminaApp {
 
   loadCustomColors() {
     try {
-      const PALETTE_VERSION = "migato_palette_v4_definitiva";
-      const currentVersion = localStorage.getItem("migato_palette_version");
-      
-      // Si la versión no coincide o no existe, forzamos la paleta oficial definitiva de alto contraste
-      if (currentVersion !== PALETTE_VERSION) {
-        this.customMunColors = Object.assign({}, HIGH_CONTRAST_MUN_PALETTE);
-        localStorage.setItem("migato_custom_mun_colors", JSON.stringify(this.customMunColors));
-        localStorage.setItem("migato_palette_version", PALETTE_VERSION);
-      } else {
-        const savedMun = localStorage.getItem("migato_custom_mun_colors");
-        if (savedMun) {
-          this.customMunColors = JSON.parse(savedMun);
-        } else {
-          this.customMunColors = Object.assign({}, HIGH_CONTRAST_MUN_PALETTE);
-        }
+      this.customMunColors = Object.assign({}, HIGH_CONTRAST_MUN_PALETTE);
+      const savedMun = localStorage.getItem("migato_custom_mun_colors");
+      if (savedMun) {
+        try {
+          const parsed = JSON.parse(savedMun);
+          if (parsed && typeof parsed === "object") {
+            Object.assign(this.customMunColors, parsed);
+          }
+        } catch (e) {}
       }
+
+      this.customParishColors = {};
       const savedParish = localStorage.getItem("migato_custom_parish_colors");
       if (savedParish) {
-        this.customParishColors = JSON.parse(savedParish);
+        try {
+          const parsed = JSON.parse(savedParish);
+          if (parsed && typeof parsed === "object") {
+            this.customParishColors = parsed;
+          }
+        } catch (e) {}
       }
+
+      this.customSectorColors = {};
       const savedSector = localStorage.getItem("migato_custom_sector_colors");
       if (savedSector) {
-        this.customSectorColors = JSON.parse(savedSector);
+        try {
+          const parsed = JSON.parse(savedSector);
+          if (parsed && typeof parsed === "object") {
+            this.customSectorColors = parsed;
+          }
+        } catch (e) {}
       }
     } catch (e) {
       console.warn("[LaminaApp] Error cargando paleta de colores personalizada:", e);
@@ -210,34 +218,50 @@ export class LaminaApp {
   }
 
   getMunicipalityColor(mId) {
-    if (this.customMunColors && this.customMunColors[mId]) {
-      return this.customMunColors[mId];
+    if (!mId) return "#1d4ed8";
+    const cleanId = String(mId).toLowerCase().replace(/^mun-/, '').trim();
+    if (this.customMunColors) {
+      if (this.customMunColors[cleanId]) return this.customMunColors[cleanId];
+      if (this.customMunColors[mId]) return this.customMunColors[mId];
     }
-    if (HIGH_CONTRAST_MUN_PALETTE && HIGH_CONTRAST_MUN_PALETTE[mId]) {
-      return HIGH_CONTRAST_MUN_PALETTE[mId];
+    if (HIGH_CONTRAST_MUN_PALETTE) {
+      if (HIGH_CONTRAST_MUN_PALETTE[cleanId]) return HIGH_CONTRAST_MUN_PALETTE[cleanId];
+      if (HIGH_CONTRAST_MUN_PALETTE[mId]) return HIGH_CONTRAST_MUN_PALETTE[mId];
     }
-    const f = (GEO_MUNICIPIOS_OFICIAL.features || []).find(feat => feat.properties?.id === mId);
-    return f?.properties?.color || (CATALOGO_MONAGAS || []).find(m => m.id === mId)?.color || "#1e40af";
+    const f = (GEO_MUNICIPIOS_OFICIAL.features || []).find(feat => feat.properties?.id === cleanId || feat.properties?.id === mId);
+    return f?.properties?.color || (CATALOGO_MONAGAS || []).find(m => m.id === cleanId)?.color || "#1d4ed8";
   }
 
   getParishColor(pId, munId) {
+    if (!pId) return "#2563eb";
     const cleanId = resolveParishId(pId);
-    if (this.customParishColors && this.customParishColors[cleanId]) {
-      return this.customParishColors[cleanId];
+    if (this.customParishColors) {
+      if (this.customParishColors[cleanId]) return this.customParishColors[cleanId];
+      if (this.customParishColors[pId]) return this.customParishColors[pId];
     }
     return getBaseParishColor(cleanId);
   }
 
   getSectorColor(secId, defaultColor = "#0284c7") {
-    if (this.customSectorColors && this.customSectorColors[secId]) {
-      return this.customSectorColors[secId];
+    if (!secId) return defaultColor;
+    if (this.customSectorColors) {
+      if (this.customSectorColors[secId]) return this.customSectorColors[secId];
+      const lower = String(secId).toLowerCase();
+      for (const [k, v] of Object.entries(this.customSectorColors)) {
+        if (String(k).toLowerCase() === lower) return v;
+      }
     }
     return defaultColor;
   }
 
   updateLiveEntityColor(type, id, hexColor) {
+    if (!id || !hexColor) return;
+    hexColor = hexColor.toLowerCase();
+
     if (type === "municipio") {
+      const cleanId = String(id).toLowerCase().replace(/^mun-/, '').trim();
       if (!this.customMunColors) this.customMunColors = {};
+      this.customMunColors[cleanId] = hexColor;
       this.customMunColors[id] = hexColor;
       try {
         localStorage.setItem("migato_custom_mun_colors", JSON.stringify(this.customMunColors));
@@ -246,9 +270,9 @@ export class LaminaApp {
       // 1. Actualizar polígonos del mapa en vivo
       if (this.childEntitiesLayer) {
         this.childEntitiesLayer.eachLayer(layer => {
-          if (layer.entityId === id) {
+          if (layer.entityId === cleanId || layer.entityId === id) {
             layer.setStyle({
-              color: hexColor,
+              color: "#ffffff",
               fillColor: hexColor
             });
           }
@@ -256,12 +280,12 @@ export class LaminaApp {
       }
 
       // 2. Actualizar contorno del spotlight si estamos dentro de este municipio
-      if (this.level === "municipio" && this.activeMunId === id && this.spotlightLayer) {
+      if (this.level === "municipio" && (this.activeMunId === cleanId || this.activeMunId === id) && this.spotlightLayer) {
         this.spotlightLayer.setStyle({ color: hexColor });
       }
 
       // 3. Actualizar badges en la lista lateral
-      document.querySelectorAll(`[data-entity-id="${id}"] .entity-badge-color`).forEach(el => {
+      document.querySelectorAll(`[data-entity-id="${cleanId}"] .entity-badge-color, [data-entity-id="${id}"] .entity-badge-color`).forEach(el => {
         el.style.backgroundColor = hexColor;
       });
 
@@ -269,6 +293,7 @@ export class LaminaApp {
       const cleanId = resolveParishId(id);
       if (!this.customParishColors) this.customParishColors = {};
       this.customParishColors[cleanId] = hexColor;
+      this.customParishColors[id] = hexColor;
       try {
         localStorage.setItem("migato_custom_parish_colors", JSON.stringify(this.customParishColors));
       } catch (e) {}
@@ -277,7 +302,7 @@ export class LaminaApp {
         this.childEntitiesLayer.eachLayer(layer => {
           if (layer.entityId === cleanId || layer.entityId === id) {
             layer.setStyle({
-              color: hexColor,
+              color: "#ffffff",
               fillColor: hexColor
             });
           }
@@ -288,7 +313,7 @@ export class LaminaApp {
         el.style.backgroundColor = hexColor;
       });
 
-    } else if (type === "sector") {
+    } else if (type === "sector" || type === "subsector") {
       if (!this.customSectorColors) this.customSectorColors = {};
       this.customSectorColors[id] = hexColor;
       try {
@@ -299,7 +324,7 @@ export class LaminaApp {
         this.childEntitiesLayer.eachLayer(layer => {
           const lId = String(layer.entityId || layer.sectorId || "").toLowerCase();
           const targetId = String(id).toLowerCase();
-          if (lId && lId === targetId) {
+          if (lId && (lId === targetId || lId.includes(targetId) || targetId.includes(lId))) {
             layer.setStyle({
               color: hexColor,
               fillColor: hexColor
@@ -1381,15 +1406,18 @@ export class LaminaApp {
       subparroquias.forEach(sp => {
         const coords = sp.vertices || sp.poligono;
         if (coords && coords.length >= 3) {
-          const spColor = sp.colorBorde || sp.color || "#8b5cf6";
+          const spColor = this.getSectorColor(sp.id, sp.colorBorde || sp.color || "#8b5cf6");
           const spPoly = L.polygon(coords, {
             color: spColor,
             weight: 2.2,
             opacity: 0.95,
-            fillColor: sp.colorRelleno || spColor,
-            fillOpacity: 0.22,
+            fillColor: this.getSectorColor(sp.id, sp.colorRelleno || spColor),
+            fillOpacity: 0.35,
             dashArray: "4, 4"
           });
+          spPoly.entityId = sp.id;
+          spPoly.sectorId = sp.id;
+          spPoly.entityType = "subparroquia";
 
           spPoly.bindTooltip(`
             <div style="font-family: inherit; font-size: 11px; padding: 2px;">

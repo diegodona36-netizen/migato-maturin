@@ -83,10 +83,10 @@ export class LaminaColorStudio {
 
   checkButtonVisibility() {
     try {
-      const isHidden = localStorage.getItem("migato_color_studio_hidden") === "1";
+      localStorage.removeItem("migato_color_studio_hidden");
       const btn = document.getElementById("btn-toggle-color-studio");
-      if (btn && isHidden) {
-        btn.classList.add("hidden");
+      if (btn) {
+        btn.classList.remove("hidden");
       }
     } catch (e) {}
   }
@@ -183,14 +183,11 @@ export class LaminaColorStudio {
               <i data-lucide="copy" class="w-3.5 h-3.5 text-amber-400"></i>
               <span>Copiar Configuración para Diego</span>
             </button>
-            <button type="button" id="btn-hide-color-tool" class="px-2.5 py-2 rounded-xl border border-slate-300 hover:bg-slate-100 text-slate-700 font-bold text-xs flex items-center justify-center gap-1 cursor-pointer transition" title="Oculta el botón 'Colores' de la barra para que no estorbe en presentaciones (reactivable con Shift+C)">
-              <i data-lucide="eye-off" class="w-3.5 h-3.5 text-slate-500"></i>
-              <span class="hidden md:inline">Ocultar Botón</span>
-            </button>
           </div>
           <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
-            <button type="button" id="btn-done-color-studio" class="w-full sm:w-auto px-4 py-2 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-black text-xs uppercase shadow-sm transition active:scale-95 cursor-pointer">
-              Listo / Guardar
+            <button type="button" id="btn-done-color-studio" class="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs uppercase shadow-md transition active:scale-95 cursor-pointer flex items-center justify-center gap-2">
+              <i data-lucide="check" class="w-4 h-4 text-emerald-100"></i>
+              <span>Guardar Colores y Cerrar</span>
             </button>
           </div>
         </div>
@@ -211,7 +208,7 @@ export class LaminaColorStudio {
 
     // Handlers
     document.getElementById("btn-close-color-studio")?.addEventListener("click", () => this.close());
-    document.getElementById("btn-done-color-studio")?.addEventListener("click", () => this.close());
+    document.getElementById("btn-done-color-studio")?.addEventListener("click", () => this.saveAndClose());
     
     document.getElementById("tab-color-mun")?.addEventListener("click", () => {
       this.activeTab = "municipios";
@@ -885,6 +882,35 @@ export class LaminaColorStudio {
     }
 
     this.renderBody();
+  }
+
+  saveAndClose() {
+    try {
+      if (this.app.customMunColors) {
+        localStorage.setItem("migato_custom_mun_colors", JSON.stringify(this.app.customMunColors));
+      }
+      if (this.app.customParishColors) {
+        localStorage.setItem("migato_custom_parish_colors", JSON.stringify(this.app.customParishColors));
+      }
+      if (this.app.customSectorColors) {
+        localStorage.setItem("migato_custom_sector_colors", JSON.stringify(this.app.customSectorColors));
+      }
+
+      // Reaplicar al mapa para actualizar cualquier polígono o contorno activo
+      if (this.app.level === "estado") {
+        this.app.selectEstado(false);
+      } else if (this.app.level === "municipio") {
+        this.app.selectMunicipio(this.app.activeMunId, false);
+      } else if (this.app.level === "parroquia") {
+        this.app.selectParroquia(this.app.activeParishId, this.app.activeMunId, false);
+      } else if (this.app.level === "sector") {
+        this.app.selectSector(this.app.activeSectorId, this.app.activeParishId, this.app.activeMunId, false);
+      }
+      this.showToast("✓ ¡Colores guardados permanentemente!", true);
+    } catch (e) {
+      console.warn("[LaminaColorStudio] Error guardando colores:", e);
+    }
+    this.close();
   }
 
   copyConfig() {

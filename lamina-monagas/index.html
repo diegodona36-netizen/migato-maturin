@@ -100,6 +100,12 @@
         <span id="txt-basemap-type">Plano</span>
       </button>
 
+      <!-- Botón Estudio de Colores de Polígonos (Municipios, Parroquias, Sectores) -->
+      <button type="button" id="btn-toggle-color-studio" onclick="window.laminaApp && window.laminaApp.openColorStudio()" class="px-2.5 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-300 font-bold text-xs flex items-center gap-1.5 transition active:scale-95 cursor-pointer shrink-0 shadow-2xs" title="Personalizar Colores de Polígonos (Municipios, Parroquias y Sectores)">
+        <i data-lucide="palette" class="w-4 h-4 text-amber-500"></i>
+        <span>Colores</span>
+      </button>
+
       <!-- Botón Trazador Táctico Georreferenciado (Lápiz + Polígono y Subrayado Territorial) -->
       <button type="button" id="btn-toggle-whiteboard" onclick="window.laminaApp && window.laminaApp.whiteboard && window.laminaApp.whiteboard.toggle()" class="px-2 py-1.5 sm:px-2.5 sm:py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-slate-900 border border-slate-300 font-bold text-xs flex items-center gap-1.5 transition active:scale-95 cursor-pointer shrink-0 shadow-2xs" title="Trazador y Pizarra Táctica Georreferenciada: Lápiz Libre, Polígono y Subrayado de Límites">
         <i data-lucide="pencil" class="w-4 h-4 text-sky-600"></i>
@@ -372,9 +378,26 @@
 
       </div>
 
-      <!-- VISTA 3: LEYENDA (En blanco, reservado para nuevos parámetros) -->
-      <div id="side-symbols-section" style="display: none;" class="flex flex-col flex-1 min-h-0 p-4">
-        <!-- Espacio en blanco reservado para reestructuración de parámetros -->
+      <!-- VISTA 3: LEYENDA Y PERSONALIZACIÓN DE COLORES -->
+      <div id="side-symbols-section" style="display: none;" class="flex flex-col flex-1 min-h-0 p-3 space-y-3 overflow-y-auto">
+        <div class="p-3.5 bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-200 rounded-2xl space-y-2.5 shadow-2xs">
+          <div class="flex items-center gap-2">
+            <div class="w-8 h-8 rounded-xl bg-amber-400 text-slate-950 flex items-center justify-center font-black shadow-xs shrink-0">
+              <i data-lucide="palette" class="w-4 h-4 text-slate-950"></i>
+            </div>
+            <div>
+              <strong class="text-xs font-black uppercase text-amber-950 block leading-tight">Personalizar Colores</strong>
+              <span class="text-[10px] text-amber-800/90 font-medium block">Municipios, Parroquias y Sectores</span>
+            </div>
+          </div>
+          <p class="text-xs text-slate-700 leading-snug">
+            Abre el estudio para asignar los colores exactos a cada polígono según tu preferencia. Todos los cambios se guardan permanentemente en tu navegador.
+          </p>
+          <button type="button" onclick="window.laminaApp && window.laminaApp.openColorStudio()" class="w-full py-2 px-3 rounded-xl bg-[#140e40] hover:bg-[#23176d] text-white font-black text-xs uppercase flex items-center justify-center gap-2 shadow-xs transition active:scale-95 cursor-pointer">
+            <i data-lucide="palette" class="w-4 h-4 text-amber-400"></i>
+            <span>Abrir Estudio de Colores</span>
+          </button>
+        </div>
       </div>
 
     </div>
@@ -587,7 +610,7 @@
 
   <!-- 5. AUTENTICACIÓN Y CONTROLADOR PRINCIPAL DEL MÓDULO -->
   <script src="../js/auth.js"></script>
-  <script type="module" src="js/laminaApp.js?v=396"></script>
+  <script type="module" src="js/laminaApp.js?v=397"></script>
   <script>
     if (window.lucide && typeof window.lucide.createIcons === 'function') {
       window.lucide.createIcons();
