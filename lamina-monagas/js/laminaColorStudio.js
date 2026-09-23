@@ -10,6 +10,12 @@
 import { CATALOGO_MONAGAS, resolveParishId } from "../../earth-monagas/js/catalogoMonagas.js?v=236";
 import { GEO_MUNICIPIOS_OFICIAL } from "../../earth-monagas/js/geoOficialMonagas.js?v=236";
 import { getParishColor as getOfficialParishColor, PARISH_COLORS } from "../../earth-monagas/js/monagasDemographics.js?v=236";
+import { getSectoresByParish } from "../../earth-monagas/js/monagasSectoresCatalog.js?v=236";
+
+function formatTitleCase(str) {
+  if (!str) return "";
+  return str.toLowerCase().split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+}
 
 export const HIGH_CONTRAST_MUN_PALETTE = {
   "maturin": "#1e40af",         // Azul Royal Intenso
@@ -61,8 +67,10 @@ export const QUICK_SWATCHES = [
 export class LaminaColorStudio {
   constructor(app) {
     this.app = app;
-    this.activeTab = "municipios"; // "municipios" | "parroquias"
+    this.activeTab = "municipios"; // "municipios" | "parroquias" | "sectores"
     this.selectedParishMun = "maturin";
+    this.selectedSectorMun = "maturin";
+    this.selectedSectorParish = "alto-de-los-godos";
     this.isOpen = false;
     this.init();
   }
@@ -132,7 +140,7 @@ export class LaminaColorStudio {
         <!-- BARRA SUPERIOR DE PREAJUSTES Y NAVEGACIÓN -->
         <div class="p-3 bg-slate-100 border-b border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-2 shrink-0">
           
-          <!-- Pestañas de Nivel (Municipios vs Parroquias) -->
+          <!-- Pestañas de Nivel (Municipios vs Parroquias vs Sectores) -->
           <div class="flex items-center gap-1 bg-white p-1 rounded-xl border border-slate-300 w-full sm:w-auto shadow-xs">
             <button type="button" id="tab-color-mun" class="flex-1 sm:flex-initial px-3 py-1.5 rounded-lg text-xs font-black transition cursor-pointer flex items-center justify-center gap-1.5 bg-[#1d1554] text-white shadow-xs">
               <i data-lucide="map" class="w-3.5 h-3.5 text-amber-400"></i>
@@ -141,6 +149,10 @@ export class LaminaColorStudio {
             <button type="button" id="tab-color-par" class="flex-1 sm:flex-initial px-3 py-1.5 rounded-lg text-xs font-black transition cursor-pointer flex items-center justify-center gap-1.5 text-slate-600 hover:text-slate-950">
               <i data-lucide="layers" class="w-3.5 h-3.5 text-sky-600"></i>
               <span>Parroquias</span>
+            </button>
+            <button type="button" id="tab-color-sec" class="flex-1 sm:flex-initial px-3 py-1.5 rounded-lg text-xs font-black transition cursor-pointer flex items-center justify-center gap-1.5 text-slate-600 hover:text-slate-950">
+              <i data-lucide="map-pin" class="w-3.5 h-3.5 text-amber-500"></i>
+              <span>Sectores</span>
             </button>
           </div>
 
@@ -213,6 +225,12 @@ export class LaminaColorStudio {
       this.renderBody();
     });
 
+    document.getElementById("tab-color-sec")?.addEventListener("click", () => {
+      this.activeTab = "sectores";
+      this.updateTabsUI();
+      this.renderBody();
+    });
+
     document.getElementById("btn-preset-contrast")?.addEventListener("click", () => {
       this.applyPreset("high-contrast");
     });
@@ -260,9 +278,23 @@ export class LaminaColorStudio {
 
     if (preferredTab) {
       this.activeTab = preferredTab;
+    } else if (this.app.level === "sector") {
+      this.activeTab = "sectores";
+      this.selectedSectorMun = this.app.activeMunId || "maturin";
+      this.selectedSectorParish = this.app.activeParishId || "alto-de-los-godos";
+    } else if (this.app.level === "subparroquia") {
+      this.activeTab = "sectores";
+      this.selectedSectorMun = this.app.activeMunId || "maturin";
+      this.selectedSectorParish = this.app.activeParishId || "alto-de-los-godos";
+    } else if (this.app.level === "parroquia" && this.app.activeMunId) {
+      this.activeTab = "parroquias";
+      this.selectedParishMun = this.app.activeMunId;
+      this.selectedSectorMun = this.app.activeMunId;
+      this.selectedSectorParish = this.app.activeParishId || "alto-de-los-godos";
     } else if (this.app.level === "municipio" && this.app.activeMunId) {
       this.activeTab = "parroquias";
       this.selectedParishMun = this.app.activeMunId;
+      this.selectedSectorMun = this.app.activeMunId;
     } else {
       this.activeTab = "municipios";
     }
@@ -298,14 +330,16 @@ export class LaminaColorStudio {
   updateTabsUI() {
     const tabMun = document.getElementById("tab-color-mun");
     const tabPar = document.getElementById("tab-color-par");
+    const tabSec = document.getElementById("tab-color-sec");
     if (!tabMun || !tabPar) return;
 
-    if (this.activeTab === "municipios") {
-      tabMun.className = "flex-1 sm:flex-initial px-3 py-1.5 rounded-lg text-xs font-black transition cursor-pointer flex items-center justify-center gap-1.5 bg-[#1d1554] text-white shadow-xs";
-      tabPar.className = "flex-1 sm:flex-initial px-3 py-1.5 rounded-lg text-xs font-black transition cursor-pointer flex items-center justify-center gap-1.5 text-slate-600 hover:text-slate-950";
-    } else {
-      tabMun.className = "flex-1 sm:flex-initial px-3 py-1.5 rounded-lg text-xs font-black transition cursor-pointer flex items-center justify-center gap-1.5 text-slate-600 hover:text-slate-950";
-      tabPar.className = "flex-1 sm:flex-initial px-3 py-1.5 rounded-lg text-xs font-black transition cursor-pointer flex items-center justify-center gap-1.5 bg-[#1d1554] text-white shadow-xs";
+    const activeClass = "flex-1 sm:flex-initial px-3 py-1.5 rounded-lg text-xs font-black transition cursor-pointer flex items-center justify-center gap-1.5 bg-[#1d1554] text-white shadow-xs";
+    const inactiveClass = "flex-1 sm:flex-initial px-3 py-1.5 rounded-lg text-xs font-black transition cursor-pointer flex items-center justify-center gap-1.5 text-slate-600 hover:text-slate-950";
+
+    tabMun.className = this.activeTab === "municipios" ? activeClass : inactiveClass;
+    tabPar.className = this.activeTab === "parroquias" ? activeClass : inactiveClass;
+    if (tabSec) {
+      tabSec.className = this.activeTab === "sectores" ? activeClass : inactiveClass;
     }
   }
 
@@ -315,8 +349,10 @@ export class LaminaColorStudio {
 
     if (this.activeTab === "municipios") {
       this.renderMunicipiosView(body);
-    } else {
+    } else if (this.activeTab === "parroquias") {
       this.renderParroquiasView(body);
+    } else if (this.activeTab === "sectores") {
+      this.renderSectoresView(body);
     }
 
     if (window.lucide && typeof window.lucide.createIcons === 'function') {
@@ -543,6 +579,228 @@ export class LaminaColorStudio {
     });
   }
 
+  renderSectoresView(container) {
+    const munList = (CATALOGO_MONAGAS || []).map(m => ({
+      id: m.id,
+      nombre: m.nombre.replace(/^municipio\s+/i, '').trim(),
+      parroquias: m.parroquias || []
+    }));
+
+    const activeMun = munList.find(m => m.id === this.selectedSectorMun) || munList[0];
+    const parishList = activeMun.parroquias || [];
+    
+    // Asegurar que selectedSectorParish pertenezca al municipio seleccionado
+    let activeParish = parishList.find(p => resolveParishId(p.id) === resolveParishId(this.selectedSectorParish)) || parishList[0];
+    if (!activeParish && parishList.length > 0) {
+      activeParish = parishList[0];
+    }
+    const resolvedPId = activeParish ? resolveParishId(activeParish.id) : "alto-de-los-godos";
+    this.selectedSectorParish = resolvedPId;
+
+    // Obtener sectores: polígonos validados primero, o catálogo general
+    let sectorList = [];
+    try {
+      const { poligonos } = this.app.getParishPolygonsData(activeMun.id, resolvedPId);
+      if (poligonos && poligonos.length > 0) {
+        sectorList = poligonos.map(s => ({
+          id: s.id,
+          nombre: formatTitleCase(s.nombre || s.id),
+          color: this.app.getSectorColor(s.id, s.colorBorde || s.color || "#0284c7"),
+          hasPoly: true
+        }));
+      }
+    } catch (e) {
+      console.warn("[LaminaColorStudio] Error leyendo polígonos de sectores:", e);
+    }
+
+    if (sectorList.length === 0) {
+      try {
+        const catalogSecs = getSectoresByParish(resolvedPId) || [];
+        sectorList = catalogSecs.map(s => ({
+          id: s.id,
+          nombre: formatTitleCase(s.nombre || s.id),
+          color: this.app.getSectorColor(s.id, "#0284c7"),
+          hasPoly: false
+        }));
+      } catch (e) {
+        console.warn("[LaminaColorStudio] Error leyendo catálogo de sectores:", e);
+      }
+    }
+
+    let html = `
+      <!-- SELECTORES FILTRO: MUNICIPIO Y PARROQUIA -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 p-3 rounded-xl bg-white border border-slate-200 shadow-2xs">
+        <div class="flex flex-col gap-1">
+          <label class="text-[11px] font-black uppercase text-slate-500 flex items-center gap-1.5">
+            <i data-lucide="map" class="w-3.5 h-3.5 text-amber-500"></i>
+            <span>Municipio:</span>
+          </label>
+          <select id="select-sector-mun" class="w-full px-2.5 py-1.5 rounded-lg border border-slate-300 font-bold text-xs bg-slate-50 text-slate-900 focus:bg-white focus:outline-none focus:border-sky-500 cursor-pointer">
+            ${munList.map(m => `
+              <option value="${m.id}" ${m.id === activeMun.id ? 'selected' : ''}>
+                ${m.nombre} (${m.parroquias.length} parroquias)
+              </option>
+            `).join("")}
+          </select>
+        </div>
+
+        <div class="flex flex-col gap-1">
+          <label class="text-[11px] font-black uppercase text-slate-500 flex items-center gap-1.5">
+            <i data-lucide="layers" class="w-3.5 h-3.5 text-sky-600"></i>
+            <span>Parroquia:</span>
+          </label>
+          <select id="select-sector-par" class="w-full px-2.5 py-1.5 rounded-lg border border-slate-300 font-bold text-xs bg-slate-50 text-slate-900 focus:bg-white focus:outline-none focus:border-sky-500 cursor-pointer">
+            ${parishList.map(p => {
+              const rId = resolveParishId(p.id);
+              const pCleanName = (p.nombre || p.id).replace(/^parroquia\s+/i, '').trim();
+              return `
+                <option value="${rId}" ${rId === resolvedPId ? 'selected' : ''}>
+                  ${pCleanName}
+                </option>
+              `;
+            }).join("")}
+          </select>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-between text-xs font-bold text-slate-500 pt-1">
+        <span>Sectores Comunitarios de ${activeParish ? (activeParish.nombre || activeParish.id).replace(/^parroquia\s+/i, '').trim() : ''}:</span>
+        <span class="font-mono font-black text-slate-700">${sectorList.length} Sectores</span>
+      </div>
+    `;
+
+    if (sectorList.length === 0) {
+      html += `
+        <div class="p-6 text-center rounded-2xl bg-white border border-dashed border-slate-300 text-slate-500 space-y-2">
+          <i data-lucide="map-pin-off" class="w-8 h-8 mx-auto text-slate-400"></i>
+          <p class="font-bold text-xs">No hay sectores registrados o digitalizados para esta parroquia.</p>
+          <p class="text-[11px] text-slate-400">Selecciona otra parroquia (por ejemplo Alto de Los Godos en Maturín).</p>
+        </div>
+      `;
+    } else {
+      html += `<div class="grid grid-cols-1 md:grid-cols-2 gap-2.5">`;
+
+      sectorList.forEach(item => {
+        html += `
+          <div class="p-2.5 rounded-xl bg-white border border-slate-200 hover:border-slate-400 transition shadow-2xs flex flex-col gap-2" id="color-row-sec-${item.id}">
+            <div class="flex items-center justify-between gap-2">
+              <div class="flex items-center gap-2 min-w-0 flex-1">
+                <label class="relative w-8 h-8 rounded-lg overflow-hidden border-2 border-slate-300 shadow-xs cursor-pointer shrink-0 block" title="Haz clic para abrir el selector de color">
+                  <input type="color" value="${item.color}" data-sec-id="${item.id}" class="color-picker-input-sec absolute inset-0 w-[150%] h-[150%] -translate-x-2 -translate-y-2 cursor-pointer border-0 p-0">
+                </label>
+                <div class="min-w-0 flex-1">
+                  <strong class="font-black text-xs uppercase text-slate-900 block truncate leading-tight">
+                    ${item.nombre}
+                  </strong>
+                  <div class="flex items-center gap-1.5 mt-0.5">
+                    <span class="text-[9px] font-mono text-slate-400 truncate">
+                      ID: ${item.id}
+                    </span>
+                    ${item.hasPoly ? `
+                      <span class="px-1.5 py-0.2 rounded bg-sky-100 text-sky-700 text-[8.5px] font-black uppercase">
+                        Polígono
+                      </span>
+                    ` : `
+                      <span class="px-1.5 py-0.2 rounded bg-slate-100 text-slate-600 text-[8.5px] font-bold uppercase">
+                        Catálogo
+                      </span>
+                    `}
+                  </div>
+                </div>
+              </div>
+
+              <div class="flex items-center gap-1 shrink-0">
+                <input type="text" value="${item.color.toUpperCase()}" maxlength="7" data-sec-id="${item.id}"
+                       class="color-hex-input-sec w-18 px-1.5 py-1 text-center font-mono font-black text-xs rounded-lg border border-slate-300 bg-slate-50 text-slate-900 focus:bg-white focus:outline-none focus:border-sky-500 uppercase">
+                <button type="button" 
+                        data-focus-sec="${item.id}"
+                        class="btn-focus-sec p-1 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-sky-600 transition cursor-pointer" 
+                        title="Enfocar este sector en el mapa">
+                  <i data-lucide="crosshair" class="w-4 h-4"></i>
+                </button>
+              </div>
+            </div>
+
+            <!-- Muestra de 8 chips rápidos -->
+            <div class="flex items-center gap-1.5 flex-wrap pt-1 border-t border-slate-100">
+              <span class="text-[9px] uppercase font-bold text-slate-400 tracking-wider">Rápido:</span>
+              ${QUICK_SWATCHES.slice(0, 8).map(sw => `
+                <button type="button" 
+                        data-swatch-sec="${item.id}" 
+                        data-swatch-hex="${sw.hex}" 
+                        style="background-color: ${sw.hex};" 
+                        class="swatch-btn-sec w-4 h-4 rounded-full border border-black/15 shadow-2xs hover:scale-125 transition cursor-pointer shrink-0" 
+                        title="${sw.name} (${sw.hex})">
+                </button>
+              `).join("")}
+            </div>
+          </div>
+        `;
+      });
+
+      html += `</div>`;
+    }
+
+    container.innerHTML = html;
+
+    // Listeners para cambio de selectores
+    const selectMunEl = document.getElementById("select-sector-mun");
+    selectMunEl?.addEventListener("change", (e) => {
+      this.selectedSectorMun = e.target.value;
+      const mObj = (CATALOGO_MONAGAS || []).find(m => m.id === this.selectedSectorMun);
+      if (mObj && mObj.parroquias && mObj.parroquias.length > 0) {
+        this.selectedSectorParish = resolveParishId(mObj.parroquias[0].id);
+      }
+      this.renderBody();
+    });
+
+    const selectParEl = document.getElementById("select-sector-par");
+    selectParEl?.addEventListener("change", (e) => {
+      this.selectedSectorParish = e.target.value;
+      this.renderBody();
+    });
+
+    // Conectar eventos de color
+    container.querySelectorAll(".color-picker-input-sec").forEach(inp => {
+      inp.addEventListener("input", (e) => {
+        const secId = e.target.dataset.secId;
+        const color = e.target.value;
+        this.applySectorColor(secId, color);
+      });
+    });
+
+    container.querySelectorAll(".color-hex-input-sec").forEach(inp => {
+      inp.addEventListener("change", (e) => {
+        const secId = e.target.dataset.secId;
+        let val = e.target.value.trim();
+        if (!val.startsWith("#")) val = "#" + val;
+        if (/^#[0-9A-Fa-f]{6}$/.test(val)) {
+          this.applySectorColor(secId, val);
+        } else {
+          e.target.value = this.app.getSectorColor(secId).toUpperCase();
+        }
+      });
+    });
+
+    container.querySelectorAll(".swatch-btn-sec").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const secId = btn.dataset.swatchSec;
+        const hex = btn.dataset.swatchHex;
+        this.applySectorColor(secId, hex);
+      });
+    });
+
+    container.querySelectorAll(".btn-focus-sec").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const secId = btn.dataset.focusSec;
+        if (window.laminaApp) {
+          window.laminaApp.selectSector(secId, resolvedPId, activeMun.id);
+          this.showToast("Sector enfocado en el mapa");
+        }
+      });
+    });
+  }
+
   applyMunicipalityColor(mId, color) {
     if (!mId || !color) return;
     color = color.toLowerCase();
@@ -577,6 +835,23 @@ export class LaminaColorStudio {
     }
   }
 
+  applySectorColor(secId, color) {
+    if (!secId || !color) return;
+    color = color.toLowerCase();
+
+    // 1. Notificar a laminaApp para actualizar el mapa en vivo y memoria
+    this.app.updateLiveEntityColor("sector", secId, color);
+
+    // 2. Sincronizar inputs en el modal
+    const row = document.getElementById(`color-row-sec-${secId}`);
+    if (row) {
+      const picker = row.querySelector(".color-picker-input-sec");
+      const hexInput = row.querySelector(".color-hex-input-sec");
+      if (picker && picker.value.toLowerCase() !== color) picker.value = color;
+      if (hexInput && hexInput.value.toUpperCase() !== color.toUpperCase()) hexInput.value = color.toUpperCase();
+    }
+  }
+
   applyPreset(presetName) {
     if (presetName === "high-contrast") {
       Object.entries(HIGH_CONTRAST_MUN_PALETTE).forEach(([mId, hex]) => {
@@ -592,13 +867,19 @@ export class LaminaColorStudio {
       try {
         localStorage.removeItem("migato_custom_mun_colors");
         localStorage.removeItem("migato_custom_parish_colors");
+        localStorage.removeItem("migato_custom_sector_colors");
       } catch (e) {}
       this.app.customMunColors = {};
       this.app.customParishColors = {};
+      this.app.customSectorColors = {};
       if (this.app.level === "estado") {
         this.app.selectEstado(false);
-      } else {
+      } else if (this.app.level === "municipio") {
         this.app.selectMunicipio(this.app.activeMunId, false);
+      } else if (this.app.level === "parroquia") {
+        this.app.selectParroquia(this.app.activeParishId, this.app.activeMunId, false);
+      } else if (this.app.level === "sector") {
+        this.app.selectSector(this.app.activeSectorId, this.app.activeParishId, this.app.activeMunId, false);
       }
       this.showToast("Valores de fábrica restablecidos");
     }
@@ -609,7 +890,8 @@ export class LaminaColorStudio {
   copyConfig() {
     const config = {
       municipios: this.app.customMunColors || {},
-      parroquias: this.app.customParishColors || {}
+      parroquias: this.app.customParishColors || {},
+      sectores: this.app.customSectorColors || {}
     };
 
     const text = JSON.stringify(config, null, 2);

@@ -7,7 +7,7 @@
 
 import { GEO_ESTADO_OFICIAL, GEO_MUNICIPIOS_OFICIAL, GEO_PARROQUIAS_OFICIAL } from "../../earth-monagas/js/geoOficialMonagas.js?v=230";
 import { CATALOGO_MONAGAS, PARISH_ALIAS_MAP, resolveParishId } from "../../earth-monagas/js/catalogoMonagas.js?v=230";
-import { getParishDemographics, getMunicipioDemographics, getParishColor, PARISH_COLORS } from "../../earth-monagas/js/monagasDemographics.js?v=230";
+import { getParishDemographics, getMunicipioDemographics, getParishColor as getBaseParishColor, PARISH_COLORS } from "../../earth-monagas/js/monagasDemographics.js?v=230";
 import { 
   getMunicipios, 
   getParroquiasByMun, 
@@ -31,7 +31,7 @@ import {
 } from "./comandoData.js?v=252";
 import { auditLogger } from "./auditLogger.js";
 import { Whiteboard } from "./whiteboard.js?v=310";
-import { LaminaColorStudio, HIGH_CONTRAST_MUN_PALETTE } from "./laminaColorStudio.js?v=370";
+import { LaminaColorStudio, HIGH_CONTRAST_MUN_PALETTE } from "./laminaColorStudio.js?v=375";
 
 const BOUNDS_ESTADO_MONAGAS = [
   [8.38245, -64.06290],
@@ -100,6 +100,7 @@ export class LaminaApp {
     // Estudio Rápido de Colores
     this.customMunColors = {};
     this.customParishColors = {};
+    this.customSectorColors = {};
     this.colorStudio = null;
     this.loadCustomColors();
 
@@ -191,6 +192,10 @@ export class LaminaApp {
       if (savedParish) {
         this.customParishColors = JSON.parse(savedParish);
       }
+      const savedSector = localStorage.getItem("migato_custom_sector_colors");
+      if (savedSector) {
+        this.customSectorColors = JSON.parse(savedSector);
+      }
     } catch (e) {
       console.warn("[LaminaApp] Error cargando paleta de colores personalizada:", e);
     }
@@ -212,7 +217,14 @@ export class LaminaApp {
     if (this.customParishColors && this.customParishColors[cleanId]) {
       return this.customParishColors[cleanId];
     }
-    return getOfficialParishColor(cleanId);
+    return getBaseParishColor(cleanId);
+  }
+
+  getSectorColor(secId, defaultColor = "#0284c7") {
+    if (this.customSectorColors && this.customSectorColors[secId]) {
+      return this.customSectorColors[secId];
+    }
+    return defaultColor;
   }
 
   updateLiveEntityColor(type, id, hexColor) {
@@ -265,6 +277,30 @@ export class LaminaApp {
       }
 
       document.querySelectorAll(`[data-entity-id="${cleanId}"] .entity-badge-color, [data-entity-id="${id}"] .entity-badge-color`).forEach(el => {
+        el.style.backgroundColor = hexColor;
+      });
+
+    } else if (type === "sector") {
+      if (!this.customSectorColors) this.customSectorColors = {};
+      this.customSectorColors[id] = hexColor;
+      try {
+        localStorage.setItem("migato_custom_sector_colors", JSON.stringify(this.customSectorColors));
+      } catch (e) {}
+
+      if (this.childEntitiesLayer) {
+        this.childEntitiesLayer.eachLayer(layer => {
+          const lId = String(layer.entityId || layer.sectorId || "").toLowerCase();
+          const targetId = String(id).toLowerCase();
+          if (lId && lId === targetId) {
+            layer.setStyle({
+              color: hexColor,
+              fillColor: hexColor
+            });
+          }
+        });
+      }
+
+      document.querySelectorAll(`[data-entity-id="${id}"] .entity-badge-color, [data-sector-id="${id}"] .entity-badge-color`).forEach(el => {
         el.style.backgroundColor = hexColor;
       });
     }
@@ -456,7 +492,8 @@ export class LaminaApp {
     }
 
     if (params.get("colores") === "1" || params.get("color_studio") === "1") {
-      setTimeout(() => this.openColorStudio(), 400);
+      const tabParam = params.get("tab");
+      setTimeout(() => this.openColorStudio(tabParam), 400);
     }
   }
 
@@ -1095,7 +1132,9 @@ export class LaminaApp {
     this.renderComandoSection();
     this.renderSymbolsSection();
     this.updateBreadcrumbs();
-    auditLogger.logEvent("SELECCION_MUNICIPIO", { municipioId: cleanMunId, nombre: munObj.nombre });
+    try {
+      auditLogger.logEvent("SELECCION_MUNICIPIO", { municipioId: cleanMunId, nombre: munObj.nombre });
+    } catch (e) {}
   }
 
   /**
@@ -1361,15 +1400,18 @@ export class LaminaApp {
       poligonos.forEach(sec => {
         const coords = sec.vertices || sec.poligono;
         if (sec.hasValidPoly !== false && coords && coords.length >= 3) {
-          const sColor = sec.colorBorde || sec.color || "#0284c7";
+          const sColor = this.getSectorColor(sec.id, sec.colorBorde || sec.color || "#0284c7");
           const secPoly = L.polygon(coords, {
             color: sColor,
             weight: 1.8,
             opacity: 0.9,
-            fillColor: sec.colorRelleno || sColor,
+            fillColor: this.getSectorColor(sec.id, sec.colorRelleno || sColor),
             fillOpacity: 0.2,
             dashArray: "3, 3"
           });
+          secPoly.entityId = sec.id;
+          secPoly.sectorId = sec.id;
+          secPoly.entityType = "sector";
 
           secPoly.bindTooltip(`
             <div style="font-family: inherit; font-size: 11px; padding: 2px;">
@@ -1444,7 +1486,9 @@ export class LaminaApp {
     this.renderComandoSection();
     this.renderSymbolsSection();
     this.updateBreadcrumbs();
-    auditLogger.logEvent("SELECCION_PARROQUIA", { parroquiaId: cleanPId, municipioId: cleanMunId, nombre: cleanPName });
+    try {
+      auditLogger.logEvent("SELECCION_PARROQUIA", { parroquiaId: cleanPId, municipioId: cleanMunId, nombre: cleanPName });
+    } catch (e) {}
   }
 
   // 4. NIVEL SUB-PARROQUIA / EJE TERRITORIAL (EL MAPA SE QUEDA EN ZOOM PARROQUIAL)
@@ -1552,13 +1596,17 @@ export class LaminaApp {
     sectoresToRender.forEach(sec => {
       const sCoords = sec.vertices || sec.poligono;
       if (sec.hasValidPoly !== false && sCoords && sCoords.length >= 3) {
+        const sColor = this.getSectorColor(sec.id, sec.colorBorde || sec.color || "#0284c7");
         const secPoly = L.polygon(sCoords, {
-          color: sec.colorBorde || sec.color || "#0284c7",
+          color: sColor,
           weight: 1.8,
           opacity: 0.95,
-          fillColor: sec.colorRelleno || sec.color || "#38bdf8",
+          fillColor: this.getSectorColor(sec.id, sec.colorRelleno || sec.color || "#38bdf8"),
           fillOpacity: 0.28
         });
+        secPoly.entityId = sec.id;
+        secPoly.sectorId = sec.id;
+        secPoly.entityType = "sector";
         secPoly.bindTooltip(`
           <div style="font-family: inherit; font-size: 11px; padding: 2px;">
             <span style="color: #0284c7; font-weight: 800; font-size: 9.5px; text-transform: uppercase;">Sector Vecinal</span><br>
@@ -1628,8 +1676,9 @@ export class LaminaApp {
 
     this.renderComandoSection();
     this.renderSymbolsSection();
-    this.updateBreadcrumbs();
-    auditLogger.logEvent("SELECCION_SUBPARROQUIA_EJE", { ejeId: spId, parroquiaId: cleanPId, municipioId: cleanMunId, nombre: eje.nombre });
+    try {
+      auditLogger.logEvent("SELECCION_SUBPARROQUIA_EJE", { ejeId: spId, parroquiaId: cleanPId, municipioId: cleanMunId, nombre: eje.nombre });
+    } catch (e) {}
   }
 
   // 5. NIVEL SECTOR VECINAL (EL MAPA SE QUEDA EN ZOOM PARROQUIAL)
@@ -1717,6 +1766,9 @@ export class LaminaApp {
           fillColor: "#e2e8f0",
           fillOpacity: 0.15
         });
+        otherSecPoly.entityId = s.id;
+        otherSecPoly.sectorId = s.id;
+        otherSecPoly.entityType = "sector";
         otherSecPoly.bindTooltip(`<strong>${formatTitleCase(s.nombre)}</strong>`, { sticky: true, opacity: 0.85 });
         otherSecPoly.on("click", () => this.selectSector(s.id, cleanPId, cleanMunId));
         this.childEntitiesLayer.addLayer(otherSecPoly);
@@ -1725,13 +1777,17 @@ export class LaminaApp {
 
     // 3. Destacar el polígono del sector seleccionado si tiene coordenadas validadas
     if (sec.hasValidPoly !== false && sCoords && sCoords.length >= 3) {
+      const sColor = this.getSectorColor(sec.id, sec.colorBorde || sec.color || "#0284c7");
       const secPoly = L.polygon(sCoords, {
-        color: sec.colorBorde || sec.color || "#0284c7",
+        color: sColor,
         weight: 3.8,
         opacity: 1,
-        fillColor: sec.colorRelleno || sec.color || "#38bdf8",
+        fillColor: this.getSectorColor(sec.id, sec.colorRelleno || sec.color || "#38bdf8"),
         fillOpacity: 0.55
       });
+      secPoly.entityId = sec.id;
+      secPoly.sectorId = sec.id;
+      secPoly.entityType = "sector";
       secPoly.bindTooltip(`
         <div style="font-family: inherit; font-size: 11px; padding: 2px;">
           <span style="color: #0284c7; font-weight: 900; font-size: 9.5px; text-transform: uppercase;">Sector Seleccionado</span><br>
@@ -1805,7 +1861,9 @@ export class LaminaApp {
     this.renderComandoSection();
     this.renderSymbolsSection();
     this.updateBreadcrumbs();
-    auditLogger.logEvent("SELECCION_SECTOR", { sectorId: secId, parroquiaId: cleanPId, municipioId: cleanMunId, nombre: cleanSecName });
+    try {
+      auditLogger.logEvent("SELECCION_SECTOR", { sectorId: secId, parroquiaId: cleanPId, municipioId: cleanMunId, nombre: cleanSecName });
+    } catch (e) {}
   }
 
   // Renderizar centros de votación desactivado según directriz operativa
