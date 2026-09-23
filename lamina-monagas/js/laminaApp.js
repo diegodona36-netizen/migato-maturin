@@ -31,6 +31,7 @@ import {
 } from "./comandoData.js?v=252";
 import { auditLogger } from "./auditLogger.js";
 import { Whiteboard } from "./whiteboard.js?v=310";
+import { LaminaColorStudio, HIGH_CONTRAST_MUN_PALETTE } from "./laminaColorStudio.js?v=370";
 
 const BOUNDS_ESTADO_MONAGAS = [
   [8.38245, -64.06290],
@@ -96,6 +97,12 @@ export class LaminaApp {
     this.showCentros = true;
     this.whiteboard = null;
 
+    // Estudio Rápido de Colores
+    this.customMunColors = {};
+    this.customParishColors = {};
+    this.colorStudio = null;
+    this.loadCustomColors();
+
     this.init();
   }
 
@@ -103,6 +110,7 @@ export class LaminaApp {
     this.initMap();
     this.initUIListeners();
     this.initWhiteboard();
+    this.initColorStudio();
     this.updateBaseMapUI();
 
     // Inicialización del territorio condicionada a dimensiones válidas del contenedor
@@ -158,6 +166,113 @@ export class LaminaApp {
       });
     } catch (err) {
       console.warn("No se pudo inicializar la pizarra táctica:", err);
+    }
+  }
+
+  initColorStudio() {
+    try {
+      this.colorStudio = new LaminaColorStudio(this);
+      window.colorStudio = this.colorStudio;
+    } catch (err) {
+      console.warn("No se pudo inicializar el Estudio de Colores:", err);
+    }
+  }
+
+  loadCustomColors() {
+    try {
+      const savedMun = localStorage.getItem("migato_custom_mun_colors");
+      if (savedMun) {
+        this.customMunColors = JSON.parse(savedMun);
+      } else {
+        // Iniciar con la paleta de Alto Contraste Óptimo (evita duplicidad de rojos/azules vecinos)
+        this.customMunColors = Object.assign({}, HIGH_CONTRAST_MUN_PALETTE);
+      }
+      const savedParish = localStorage.getItem("migato_custom_parish_colors");
+      if (savedParish) {
+        this.customParishColors = JSON.parse(savedParish);
+      }
+    } catch (e) {
+      console.warn("[LaminaApp] Error cargando paleta de colores personalizada:", e);
+    }
+  }
+
+  getMunicipalityColor(mId) {
+    if (this.customMunColors && this.customMunColors[mId]) {
+      return this.customMunColors[mId];
+    }
+    if (HIGH_CONTRAST_MUN_PALETTE && HIGH_CONTRAST_MUN_PALETTE[mId]) {
+      return HIGH_CONTRAST_MUN_PALETTE[mId];
+    }
+    const f = (GEO_MUNICIPIOS_OFICIAL.features || []).find(feat => feat.properties?.id === mId);
+    return f?.properties?.color || (CATALOGO_MONAGAS || []).find(m => m.id === mId)?.color || "#0284c7";
+  }
+
+  getParishColor(pId, munId) {
+    const cleanId = resolveParishId(pId);
+    if (this.customParishColors && this.customParishColors[cleanId]) {
+      return this.customParishColors[cleanId];
+    }
+    return getOfficialParishColor(cleanId);
+  }
+
+  updateLiveEntityColor(type, id, hexColor) {
+    if (type === "municipio") {
+      if (!this.customMunColors) this.customMunColors = {};
+      this.customMunColors[id] = hexColor;
+      try {
+        localStorage.setItem("migato_custom_mun_colors", JSON.stringify(this.customMunColors));
+      } catch (e) {}
+
+      // 1. Actualizar polígonos del mapa en vivo
+      if (this.childEntitiesLayer) {
+        this.childEntitiesLayer.eachLayer(layer => {
+          if (layer.entityId === id) {
+            layer.setStyle({
+              color: hexColor,
+              fillColor: hexColor
+            });
+          }
+        });
+      }
+
+      // 2. Actualizar contorno del spotlight si estamos dentro de este municipio
+      if (this.level === "municipio" && this.activeMunId === id && this.spotlightLayer) {
+        this.spotlightLayer.setStyle({ color: hexColor });
+      }
+
+      // 3. Actualizar badges en la lista lateral
+      document.querySelectorAll(`[data-entity-id="${id}"] .entity-badge-color`).forEach(el => {
+        el.style.backgroundColor = hexColor;
+      });
+
+    } else if (type === "parroquia") {
+      const cleanId = resolveParishId(id);
+      if (!this.customParishColors) this.customParishColors = {};
+      this.customParishColors[cleanId] = hexColor;
+      try {
+        localStorage.setItem("migato_custom_parish_colors", JSON.stringify(this.customParishColors));
+      } catch (e) {}
+
+      if (this.childEntitiesLayer) {
+        this.childEntitiesLayer.eachLayer(layer => {
+          if (layer.entityId === cleanId || layer.entityId === id) {
+            layer.setStyle({
+              color: hexColor,
+              fillColor: hexColor
+            });
+          }
+        });
+      }
+
+      document.querySelectorAll(`[data-entity-id="${cleanId}"] .entity-badge-color, [data-entity-id="${id}"] .entity-badge-color`).forEach(el => {
+        el.style.backgroundColor = hexColor;
+      });
+    }
+  }
+
+  openColorStudio(tab = null) {
+    if (this.colorStudio) {
+      this.colorStudio.open(tab);
     }
   }
 
@@ -338,6 +453,10 @@ export class LaminaApp {
     } else {
       // Abre directamente el Estado Monagas oficial (13 Municipios) con el Velo Blanco
       this.selectEstado(animate);
+    }
+
+    if (params.get("colores") === "1" || params.get("color_studio") === "1") {
+      setTimeout(() => this.openColorStudio(), 400);
     }
   }
 
@@ -788,7 +907,7 @@ export class LaminaApp {
       // Dibujar los 13 Municipios en el canvas con colores diferenciados y tooltips informativos
       (GEO_MUNICIPIOS_OFICIAL.features || []).forEach(f => {
         const mId = f.properties?.id;
-        const munColor = f.properties?.color || (CATALOGO_MONAGAS || []).find(m => m.id === mId)?.color || "#0284c7";
+        const munColor = this.getMunicipalityColor(mId);
         const mName = f.properties?.nombre || "Municipio";
         const munObj = (CATALOGO_MONAGAS || []).find(m => m.id === mId);
         const parishCount = (munObj?.parroquias || []).length || 0;
@@ -802,6 +921,9 @@ export class LaminaApp {
             fillOpacity: 0.38
           }
         });
+        layer.entityId = mId;
+        layer.entityType = "municipio";
+
         layer.on({
           mouseover: () => layer.setStyle({ weight: 4.2, fillOpacity: 0.60 }),
           mouseout: () => layer.setStyle({ weight: 2.8, fillOpacity: 0.38 }),
@@ -838,8 +960,7 @@ export class LaminaApp {
       listTitle: "Municipios (Clic para enfocar)",
       listCount: (GEO_MUNICIPIOS_OFICIAL.features || []).length,
       items: (CATALOGO_MONAGAS || []).map(m => {
-        const feat = (GEO_MUNICIPIOS_OFICIAL.features || []).find(f => f.properties?.id === m.id);
-        const color = feat?.properties?.color || m.color || "#0284c7";
+        const color = this.getMunicipalityColor(m.id);
         return {
           id: m.id,
           nombre: m.nombre,
@@ -879,7 +1000,7 @@ export class LaminaApp {
     const munObj = CATALOGO_MONAGAS.find(m => m.id === cleanMunId) || { id: "maturin", nombre: "Maturín", color: "#2563eb", parroquias: [] };
     const rawMunName = munObj.nombre || "Maturín";
     const cleanMunName = rawMunName.replace(/^municipio\s+/i, '').trim();
-    const munColor = munObj.color || (cleanMunId === "maturin" ? "#2563eb" : "#059669");
+    const munColor = this.getMunicipalityColor(cleanMunId);
 
     const rings = feat ? this.geoJsonCoordsToLeaflet(feat.geometry) : [];
     this.applySpotlightMask(rings, munColor, 3.5);
@@ -895,7 +1016,7 @@ export class LaminaApp {
     parishFeats.forEach(f => {
       const pId = f.properties?.id;
       const resolvedPId = resolveParishId(pId);
-      const pColor = getParishColor(resolvedPId);
+      const pColor = this.getParishColor(resolvedPId, cleanMunId);
       const pName = f.properties?.nombre || "Parroquia";
 
       const layer = L.geoJSON(f, {
@@ -908,6 +1029,8 @@ export class LaminaApp {
           dashArray: "6, 4"
         }
       });
+      layer.entityId = resolvedPId;
+      layer.entityType = "parroquia";
 
       layer.on({
         mouseover: () => {
@@ -959,9 +1082,9 @@ export class LaminaApp {
       },
       items: (munObj.parroquias || []).map(p => {
         const resolvedPId = resolveParishId(p.id);
-        const pColor = getParishColor(resolvedPId);
+        const pColor = this.getParishColor(resolvedPId, cleanMunId);
         return {
-          id: p.id,
+          id: resolvedPId,
           nombre: p.nombre,
           color: pColor,
           badge: "Parroquia",
@@ -1157,7 +1280,7 @@ export class LaminaApp {
     const cleanMunId = String(munId).toLowerCase().replace(/_/g, "-").trim();
     const cleanPId = String(parishId).toLowerCase().replace(/_/g, "-").trim();
     const resolvedPId = resolveParishId(cleanPId);
-    const pColor = getParishColor(resolvedPId);
+    const pColor = this.getParishColor(resolvedPId, cleanMunId);
 
     // Localizar geometría de la parroquia
     const feat = (GEO_PARROQUIAS_OFICIAL.features || []).find(f => {
@@ -1184,6 +1307,8 @@ export class LaminaApp {
           fillOpacity: 0.15
         }
       });
+      pLayer.entityId = resolvedPId;
+      pLayer.entityType = "parroquia";
       this.childEntitiesLayer.addLayer(pLayer);
     }
 
@@ -1335,7 +1460,7 @@ export class LaminaApp {
 
     const cleanMunId = String(munId || "maturin").toLowerCase().replace(/_/g, "-").trim();
     const cleanPId = resolveParishId(parishId);
-    const pColor = getParishColor(cleanPId);
+    const pColor = this.getParishColor(cleanPId, cleanMunId);
 
     this.childEntitiesLayer.clearLayers();
     this.centrosLayer.clearLayers();
@@ -1519,7 +1644,7 @@ export class LaminaApp {
 
     const cleanMunId = String(munId || "maturin").toLowerCase().replace(/_/g, "-").trim();
     const cleanPId = resolveParishId(parishId);
-    const pColor = getParishColor(cleanPId);
+    const pColor = this.getParishColor(cleanPId, cleanMunId);
 
     this.childEntitiesLayer.clearLayers();
     this.centrosLayer.clearLayers();
@@ -1812,9 +1937,10 @@ export class LaminaApp {
         html += data.items.map(item => `
           <div onclick="${item.onClick}" 
                class="territory-row" 
+               data-entity-id="${item.id}"
                title="${item.nombre} • Clic para enfocar">
             <div class="flex items-center gap-2 truncate">
-              <span class="w-2.5 h-2.5 rounded-full shrink-0 shadow-xs" style="background-color: ${item.color || '#0284c7'};"></span>
+              <span class="entity-badge-color w-2.5 h-2.5 rounded-full shrink-0 shadow-xs" style="background-color: ${item.color || '#0284c7'};"></span>
               <span class="font-bold text-sm text-slate-900 truncate">${item.nombre}</span>
             </div>
             <span class="text-sm font-extrabold text-slate-700 shrink-0 ml-1">
