@@ -110,11 +110,11 @@ html, body {
   flex-shrink: 0;
 }
 
-/* Tarjeta central dinámica: Centrada matemáticamente sin ningún solapamiento posible */
+/* Tarjeta central dinámica: Centrada matemáticamente con amplitud y sin solapamiento */
 .lamina-header-center {
-  flex: 1;
-  min-width: 0;
-  max-width: 480px;
+  flex: 1 1 auto;
+  min-width: 260px;
+  max-width: 580px;
   margin: 0 auto;
   text-align: center;
   position: static !important;

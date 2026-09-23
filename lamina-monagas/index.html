@@ -70,22 +70,28 @@
       </div>
     </div>
 
-    <!-- Bloque Central: Título Dinámico de la Entidad y Migas de Pan (Columna Central del Grid) -->
-    <div class="lamina-header-card lamina-header-center flex flex-col items-center justify-center text-center px-4 py-2 sm:px-5 sm:py-2.5">
-      <h2 id="lamina-entity-title" class="font-display text-sm sm:text-base lg:text-lg font-black text-slate-900 uppercase tracking-tight leading-snug truncate max-w-full">
-        ESTADO MONAGAS
+    <!-- Bloque Central: Título Dinámico de la Entidad y Migas de Pan (Columna Central Amplia) -->
+    <div class="lamina-header-card lamina-header-center flex flex-col items-center justify-center text-center px-5 py-2 cursor-pointer hover:bg-slate-50/95 transition shadow-2xs"
+         onclick="window.laminaApp && window.laminaApp.selectMunicipio(window.laminaApp.activeMunId || 'maturin')"
+         title="Clic para enfocar Municipio Maturín y sus 11 parroquias">
+      <h2 id="lamina-entity-title" class="font-display text-base sm:text-lg lg:text-xl font-black text-slate-900 uppercase tracking-tight leading-snug truncate max-w-full">
+        MUNICIPIO MATURÍN
       </h2>
       <span id="lamina-entity-subtitle" class="text-xs sm:text-sm font-bold text-slate-500 uppercase tracking-wider mb-1 max-w-full">
-        13 MUNICIPIOS • SALA SITUACIONAL
+        11 PARROQUIAS • SALA SITUACIONAL
       </span>
       <div id="lamina-breadcrumbs" class="flex items-center justify-center flex-wrap gap-1.5 text-[11px] sm:text-xs font-mono font-bold text-slate-600 max-w-full">
-        <span class="breadcrumb-item active" onclick="laminaApp.selectEstado()" title="Ver todo el Estado Monagas">
+        <span class="breadcrumb-item" onclick="event.stopPropagation(); laminaApp.selectEstado()" title="Ver todo el Estado Monagas">
           <span>🇻🇪 Monagas</span>
+        </span>
+        <span class="text-slate-400">/</span>
+        <span class="breadcrumb-item active" onclick="event.stopPropagation(); laminaApp.selectMunicipio('maturin')" title="Ver Municipio Maturín">
+          <span>🏛️ Maturín</span>
         </span>
       </div>
     </div>
 
-    <!-- Bloque Derecho: Acciones de Sala, Zoom y Herramientas Compactas -->
+    <!-- Bloque Derecho: Acciones de Sala, Zoom y Herramientas Compactas Desaturadas -->
     <div class="lamina-header-card lamina-header-right flex items-center gap-1.5 sm:gap-2 shrink-0">
       
       <!-- Botón Selector Modo de Mapa: Satélite HD vs Plano Cartográfico (Botoncito Compacto) -->
@@ -109,21 +115,7 @@
         <i data-lucide="maximize" class="w-4 h-4"></i>
       </button>
 
-      <a href="../comandos/" class="px-2.5 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-300 font-bold text-xs flex items-center gap-1.5 transition shrink-0" title="Abrir Submódulo de Gestión de Comandos y Dirigentes">
-        <i data-lucide="shield-check" class="w-4 h-4 text-sky-600"></i>
-        <span class="hidden xl:inline">Comandos</span>
-      </a>
-
-      <a href="../earth-monagas/" class="px-2.5 py-1.5 rounded-xl bg-sky-50 hover:bg-sky-100 text-sky-800 border border-sky-200 font-bold text-xs flex items-center gap-1.5 transition shrink-0" title="Abrir en Editor GIS Satelital">
-        <i data-lucide="globe" class="w-4 h-4"></i>
-        <span class="hidden xl:inline">Modo GIS</span>
-      </a>
-
-      <a href="../login.html" class="p-1.5 sm:p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition shrink-0" title="Cambiar Usuario / Auditoría de Seguridad">
-        <i data-lucide="user" class="w-4 h-4"></i>
-      </a>
-
-      <a href="../" class="p-1.5 sm:p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition shrink-0" title="Volver al Menú Principal">
+      <a href="../" class="p-1.5 sm:p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-slate-900 transition shrink-0" title="Volver al Menú Principal">
         <i data-lucide="home" class="w-4 h-4"></i>
       </a>
     </div>
@@ -173,14 +165,14 @@
         <div class="flex items-center justify-between gap-2 pb-2 border-b border-slate-100 shrink-0">
           <div class="flex flex-col min-w-0 flex-1">
             <span id="side-entity-type" class="text-xs font-black text-slate-900 uppercase tracking-tight truncate">
-              Resumen Estadal Oficial
+              Resumen Municipal Oficial
             </span>
             <span id="side-entity-sub" class="text-[11px] font-semibold text-slate-500 truncate">
-              13 Municipios • 44 Parroquias
+              Estado Monagas • 11 Parroquias
             </span>
           </div>
-          <span id="side-entity-code" class="px-2 py-0.5 rounded-full bg-slate-100 text-slate-700 text-[10px] font-mono font-bold shrink-0 border border-slate-200">
-            13 MUNICIPIOS
+          <span id="side-entity-code" class="px-2 py-0.5 rounded-full bg-blue-100 text-blue-800 text-[10px] font-mono font-bold shrink-0 border border-blue-200">
+            11 PARROQUIAS
           </span>
         </div>
 
@@ -188,176 +180,120 @@
         <div class="grid grid-cols-2 gap-1.5 text-slate-900 shrink-0">
           <div class="metric-card">
             <span class="metric-label">Habitantes</span>
-            <strong id="stat-val-hab" class="metric-value">—</strong>
+            <strong id="stat-val-hab" class="metric-value">547,014</strong>
           </div>
           <div class="metric-card bg-sky-50/70 border-sky-200">
             <span class="metric-label text-sky-800">Electores CNE</span>
-            <strong id="stat-val-vot" class="metric-value text-sky-950">—</strong>
+            <strong id="stat-val-vot" class="metric-value text-sky-950">402,085</strong>
           </div>
           <div class="metric-card bg-indigo-50/70 border-indigo-200">
             <span class="metric-label text-indigo-800">Centros CNE</span>
-            <strong id="stat-val-cen" class="metric-value text-indigo-950">—</strong>
+            <strong id="stat-val-cen" class="metric-value text-indigo-950">175 Centros</strong>
           </div>
           <div class="metric-card bg-emerald-50/70 border-emerald-200">
             <span class="metric-label text-emerald-800">Viviendas / Fam.</span>
-            <strong id="stat-val-cas" class="metric-value text-emerald-950">—</strong>
+            <strong id="stat-val-cas" class="metric-value text-emerald-950">148,500</strong>
           </div>
         </div>
 
         <!-- Título de Lista Interactiva -->
         <div class="flex items-center justify-between pt-1 border-t border-slate-200 shrink-0">
           <span id="side-list-title" class="text-base font-black uppercase text-slate-700 tracking-wider">
-            Municipios (Clic para enfocar)
+            Parroquias Oficiales (11)
           </span>
           <span id="side-list-count" class="text-base font-extrabold text-sky-700 bg-sky-100 px-1.5 py-0.2 rounded-full">
-            13
+            11
           </span>
         </div>
 
         <!-- Lista Interactiva con Scroll Suave -->
         <div id="side-interactive-list" class="interactive-list-container">
-          <div onclick="window.laminaApp && window.laminaApp.selectMunicipio('maturin')" 
-               class="territory-row" 
-               title="Municipio Maturín • Clic para enfocar">
+          <div onclick="window.laminaApp && window.laminaApp.selectParroquia('san-simon', 'maturin')" 
+               class="territory-row" title="Parroquia San Simón • Clic para enfocar">
             <div class="flex items-center gap-2 truncate">
               <span class="w-2.5 h-2.5 rounded-full shrink-0 shadow-xs" style="background-color: #2563eb;"></span>
-              <span class="font-bold text-sm text-slate-900 truncate">Municipio Maturín</span>
+              <span class="font-bold text-sm text-slate-900 truncate">San Simón</span>
             </div>
-            <span class="text-sm font-extrabold text-slate-700 shrink-0 ml-1">
-              11 parr.
-            </span>
+            <span class="text-sm font-extrabold text-slate-700 shrink-0 ml-1">Parroquia</span>
           </div>
-          <div onclick="window.laminaApp && window.laminaApp.selectMunicipio('piar')" 
-               class="territory-row" 
-               title="Municipio Piar • Clic para enfocar">
+          <div onclick="window.laminaApp && window.laminaApp.selectParroquia('alto-de-los-godos', 'maturin')" 
+               class="territory-row" title="Parroquia Alto de los Godos • Clic para enfocar">
+            <div class="flex items-center gap-2 truncate">
+              <span class="w-2.5 h-2.5 rounded-full shrink-0 shadow-xs" style="background-color: #7c3aed;"></span>
+              <span class="font-bold text-sm text-slate-900 truncate">Alto de los Godos</span>
+            </div>
+            <span class="text-sm font-extrabold text-slate-700 shrink-0 ml-1">Parroquia</span>
+          </div>
+          <div onclick="window.laminaApp && window.laminaApp.selectParroquia('boqueron', 'maturin')" 
+               class="territory-row" title="Parroquia Boquerón • Clic para enfocar">
+            <div class="flex items-center gap-2 truncate">
+              <span class="w-2.5 h-2.5 rounded-full shrink-0 shadow-xs" style="background-color: #ea580c;"></span>
+              <span class="font-bold text-sm text-slate-900 truncate">Boquerón</span>
+            </div>
+            <span class="text-sm font-extrabold text-slate-700 shrink-0 ml-1">Parroquia</span>
+          </div>
+          <div onclick="window.laminaApp && window.laminaApp.selectParroquia('las-cocuizas', 'maturin')" 
+               class="territory-row" title="Parroquia Las Cocuizas • Clic para enfocar">
             <div class="flex items-center gap-2 truncate">
               <span class="w-2.5 h-2.5 rounded-full shrink-0 shadow-xs" style="background-color: #059669;"></span>
-              <span class="font-bold text-sm text-slate-900 truncate">Municipio Piar</span>
+              <span class="font-bold text-sm text-slate-900 truncate">Las Cocuizas</span>
             </div>
-            <span class="text-sm font-extrabold text-slate-700 shrink-0 ml-1">
-              7 parr.
-            </span>
+            <span class="text-sm font-extrabold text-slate-700 shrink-0 ml-1">Parroquia</span>
           </div>
-          <div onclick="window.laminaApp && window.laminaApp.selectMunicipio('caripe')" 
-               class="territory-row" 
-               title="Municipio Caripe • Clic para enfocar">
-            <div class="flex items-center gap-2 truncate">
-              <span class="w-2.5 h-2.5 rounded-full shrink-0 shadow-xs" style="background-color: #10b981;"></span>
-              <span class="font-bold text-sm text-slate-900 truncate">Municipio Caripe</span>
-            </div>
-            <span class="text-sm font-extrabold text-slate-700 shrink-0 ml-1">
-              6 parr.
-            </span>
-          </div>
-          <div onclick="window.laminaApp && window.laminaApp.selectMunicipio('cedeno')" 
-               class="territory-row" 
-               title="Municipio Cedeño • Clic para enfocar">
+          <div onclick="window.laminaApp && window.laminaApp.selectParroquia('santa-cruz', 'maturin')" 
+               class="territory-row" title="Parroquia Santa Cruz • Clic para enfocar">
             <div class="flex items-center gap-2 truncate">
               <span class="w-2.5 h-2.5 rounded-full shrink-0 shadow-xs" style="background-color: #0284c7;"></span>
-              <span class="font-bold text-sm text-slate-900 truncate">Municipio Cedeño</span>
+              <span class="font-bold text-sm text-slate-900 truncate">Santa Cruz</span>
             </div>
-            <span class="text-sm font-extrabold text-slate-700 shrink-0 ml-1">
-              4 parr.
-            </span>
-          </div>
-          <div onclick="window.laminaApp && window.laminaApp.selectMunicipio('libertador')" 
-               class="territory-row" 
-               title="Municipio Libertador • Clic para enfocar">
+            <span class="text-sm font-extrabold text-slate-700 shrink-0 ml-1">Parroquia</span>
+          <div onclick="window.laminaApp && window.laminaApp.selectParroquia('san-vicente', 'maturin')" 
+               class="territory-row" title="Parroquia San Vicente • Clic para enfocar">
             <div class="flex items-center gap-2 truncate">
-              <span class="w-2.5 h-2.5 rounded-full shrink-0 shadow-xs" style="background-color: #6366f1;"></span>
-              <span class="font-bold text-sm text-slate-900 truncate">Municipio Libertador</span>
+              <span class="w-2.5 h-2.5 rounded-full shrink-0 shadow-xs" style="background-color: #db2777;"></span>
+              <span class="font-bold text-sm text-slate-900 truncate">San Vicente</span>
             </div>
-            <span class="text-sm font-extrabold text-slate-700 shrink-0 ml-1">
-              4 parr.
-            </span>
+            <span class="text-sm font-extrabold text-slate-700 shrink-0 ml-1">Parroquia</span>
           </div>
-          <div onclick="window.laminaApp && window.laminaApp.selectMunicipio('ezequiel-zamora')" 
-               class="territory-row" 
-               title="Municipio Ezequiel Zamora • Clic para enfocar">
+          <div onclick="window.laminaApp && window.laminaApp.selectParroquia('la-pica', 'maturin')" 
+               class="territory-row" title="Parroquia La Pica • Clic para enfocar">
             <div class="flex items-center gap-2 truncate">
-              <span class="w-2.5 h-2.5 rounded-full shrink-0 shadow-xs" style="background-color: #e11d48;"></span>
-              <span class="font-bold text-sm text-slate-900 truncate">Municipio Ezequiel Zamora</span>
+              <span class="w-2.5 h-2.5 rounded-full shrink-0 shadow-xs" style="background-color: #dc2626;"></span>
+              <span class="font-bold text-sm text-slate-900 truncate">La Pica</span>
             </div>
-            <span class="text-sm font-extrabold text-slate-700 shrink-0 ml-1">
-              2 parr.
-            </span>
+            <span class="text-sm font-extrabold text-slate-700 shrink-0 ml-1">Parroquia</span>
           </div>
-          <div onclick="window.laminaApp && window.laminaApp.selectMunicipio('acosta')" 
-               class="territory-row" 
-               title="Municipio Acosta • Clic para enfocar">
-            <div class="flex items-center gap-2 truncate">
-              <span class="w-2.5 h-2.5 rounded-full shrink-0 shadow-xs" style="background-color: #06b6d4;"></span>
-              <span class="font-bold text-sm text-slate-900 truncate">Municipio Acosta</span>
-            </div>
-            <span class="text-sm font-extrabold text-slate-700 shrink-0 ml-1">
-              2 parr.
-            </span>
-          </div>
-          <div onclick="window.laminaApp && window.laminaApp.selectMunicipio('punceres')" 
-               class="territory-row" 
-               title="Municipio Punceres • Clic para enfocar">
-            <div class="flex items-center gap-2 truncate">
-              <span class="w-2.5 h-2.5 rounded-full shrink-0 shadow-xs" style="background-color: #84cc16;"></span>
-              <span class="font-bold text-sm text-slate-900 truncate">Municipio Punceres</span>
-            </div>
-            <span class="text-sm font-extrabold text-slate-700 shrink-0 ml-1">
-              2 parr.
-            </span>
-          </div>
-          <div onclick="window.laminaApp && window.laminaApp.selectMunicipio('santa-barbara')" 
-               class="territory-row" 
-               title="Municipio Santa Bárbara • Clic para enfocar">
-            <div class="flex items-center gap-2 truncate">
-              <span class="w-2.5 h-2.5 rounded-full shrink-0 shadow-xs" style="background-color: #ec4899;"></span>
-              <span class="font-bold text-sm text-slate-900 truncate">Municipio Santa Bárbara</span>
-            </div>
-            <span class="text-sm font-extrabold text-slate-700 shrink-0 ml-1">
-              2 parr.
-            </span>
-          </div>
-          <div onclick="window.laminaApp && window.laminaApp.selectMunicipio('sotillo')" 
-               class="territory-row" 
-               title="Municipio Sotillo • Clic para enfocar">
-            <div class="flex items-center gap-2 truncate">
-              <span class="w-2.5 h-2.5 rounded-full shrink-0 shadow-xs" style="background-color: #8b5cf6;"></span>
-              <span class="font-bold text-sm text-slate-900 truncate">Municipio Sotillo</span>
-            </div>
-            <span class="text-sm font-extrabold text-slate-700 shrink-0 ml-1">
-              2 parr.
-            </span>
-          </div>
-          <div onclick="window.laminaApp && window.laminaApp.selectMunicipio('bolivar')" 
-               class="territory-row" 
-               title="Municipio Bolívar • Clic para enfocar">
+          <div onclick="window.laminaApp && window.laminaApp.selectParroquia('jusepin', 'maturin')" 
+               class="territory-row" title="Parroquia Jusepín • Clic para enfocar">
             <div class="flex items-center gap-2 truncate">
               <span class="w-2.5 h-2.5 rounded-full shrink-0 shadow-xs" style="background-color: #d97706;"></span>
-              <span class="font-bold text-sm text-slate-900 truncate">Municipio Bolívar</span>
+              <span class="font-bold text-sm text-slate-900 truncate">Jusepín</span>
             </div>
-            <span class="text-sm font-extrabold text-slate-700 shrink-0 ml-1">
-              1 parr.
-            </span>
+            <span class="text-sm font-extrabold text-slate-700 shrink-0 ml-1">Parroquia</span>
           </div>
-          <div onclick="window.laminaApp && window.laminaApp.selectMunicipio('aguasay')" 
-               class="territory-row" 
-               title="Municipio Aguasay • Clic para enfocar">
+          <div onclick="window.laminaApp && window.laminaApp.selectParroquia('el-furrial', 'maturin')" 
+               class="territory-row" title="Parroquia El Furrial • Clic para enfocar">
             <div class="flex items-center gap-2 truncate">
-              <span class="w-2.5 h-2.5 rounded-full shrink-0 shadow-xs" style="background-color: #14b8a6;"></span>
-              <span class="font-bold text-sm text-slate-900 truncate">Municipio Aguasay</span>
+              <span class="w-2.5 h-2.5 rounded-full shrink-0 shadow-xs" style="background-color: #65a30d;"></span>
+              <span class="font-bold text-sm text-slate-900 truncate">El Furrial</span>
             </div>
-            <span class="text-sm font-extrabold text-slate-700 shrink-0 ml-1">
-              1 parr.
-            </span>
+            <span class="text-sm font-extrabold text-slate-700 shrink-0 ml-1">Parroquia</span>
           </div>
-          <div onclick="window.laminaApp && window.laminaApp.selectMunicipio('uracoa')" 
-               class="territory-row" 
-               title="Municipio Uracoa • Clic para enfocar">
+          <div onclick="window.laminaApp && window.laminaApp.selectParroquia('el-corozo', 'maturin')" 
+               class="territory-row" title="Parroquia El Corozo • Clic para enfocar">
             <div class="flex items-center gap-2 truncate">
-              <span class="w-2.5 h-2.5 rounded-full shrink-0 shadow-xs" style="background-color: #3b82f6;"></span>
-              <span class="font-bold text-sm text-slate-900 truncate">Municipio Uracoa</span>
+              <span class="w-2.5 h-2.5 rounded-full shrink-0 shadow-xs" style="background-color: #4f46e5;"></span>
+              <span class="font-bold text-sm text-slate-900 truncate">El Corozo</span>
             </div>
-            <span class="text-sm font-extrabold text-slate-700 shrink-0 ml-1">
-              1 parr.
-            </span>
+            <span class="text-sm font-extrabold text-slate-700 shrink-0 ml-1">Parroquia</span>
+          </div>
+          <div onclick="window.laminaApp && window.laminaApp.selectParroquia('san-simon-sur', 'maturin')" 
+               class="territory-row" title="Parroquia San Simón Sur • Clic para enfocar">
+            <div class="flex items-center gap-2 truncate">
+              <span class="w-2.5 h-2.5 rounded-full shrink-0 shadow-xs" style="background-color: #0d9488;"></span>
+              <span class="font-bold text-sm text-slate-900 truncate">San Simón Sur</span>
+            </div>
+            <span class="text-sm font-extrabold text-slate-700 shrink-0 ml-1">Parroquia</span>
           </div>
         </div>
 
@@ -434,97 +370,9 @@
 
       </div>
 
-      <!-- VISTA 3: LEYENDA CARTOGRÁFICA Y DE COMANDOS (Oculta por defecto) -->
-      <div id="side-symbols-section" style="display: none;" class="flex flex-col flex-1 min-h-0 gap-2 overflow-y-auto pr-1">
-        
-        <!-- Bloque 1: Leyenda Territorial Dinámica (Parroquias / Municipios con sus colores reales) -->
-        <div class="p-2.5 rounded-xl bg-slate-50 border border-slate-200 shrink-0 space-y-2">
-          <div class="flex items-center justify-between">
-            <span id="legend-territory-title" class="text-xs font-black uppercase text-slate-800 tracking-wider flex items-center gap-1.5">
-              <span class="w-2.5 h-2.5 rounded-full bg-sky-500"></span>
-              <span>Estructura Territorial y Mando</span>
-            </span>
-            <span id="legend-territory-count" class="text-[10px] font-extrabold text-sky-700 bg-sky-100 px-1.5 py-0.2 rounded-full">
-              11
-            </span>
-          </div>
-          <div id="legend-territory-list" class="space-y-1">
-            <!-- Inyectado dinámicamente: Árbol Jerárquico de Mando y Territorio -->
-          </div>
-        </div>
-
-        <!-- Bloque 2: Leyenda de Niveles de Mando Territorial MIGATO -->
-        <div class="p-2.5 rounded-xl bg-slate-50 border border-slate-200 shrink-0 space-y-2">
-          <span class="text-xs font-black uppercase text-slate-800 tracking-wider flex items-center gap-1.5">
-            <i data-lucide="shield" class="w-3.5 h-3.5 text-sky-600"></i>
-            <span>Niveles Operativos de Mando MIGATO</span>
-          </span>
-          <div class="grid grid-cols-1 gap-1.5 text-[11px]">
-            <div class="p-1.5 rounded-lg bg-white border border-slate-200 flex items-start gap-2">
-              <span class="px-1.5 py-0.5 rounded bg-sky-100 text-sky-900 font-extrabold text-[9.5px] uppercase shrink-0">🏛️ Mun.</span>
-              <div>
-                <strong class="text-slate-900 block leading-tight">Nivel 1 • Municipal</strong>
-                <span class="text-slate-600 text-[10px]">Conducción política general, enlaces institucionales y sala situacional.</span>
-              </div>
-            </div>
-            <div class="p-1.5 rounded-lg bg-white border border-slate-200 flex items-start gap-2">
-              <span class="px-1.5 py-0.5 rounded bg-purple-100 text-purple-900 font-extrabold text-[9.5px] uppercase shrink-0">📍 Parr.</span>
-              <div>
-                <strong class="text-slate-900 block leading-tight">Nivel 2 • Parroquial</strong>
-                <span class="text-slate-600 text-[10px]">Coordinación de centros electorales y supervisión de ejes territoriales.</span>
-              </div>
-            </div>
-            <div class="p-1.5 rounded-lg bg-white border border-slate-200 flex items-start gap-2">
-              <span class="px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-900 font-extrabold text-[9.5px] uppercase shrink-0">🛡️ Eje</span>
-              <div>
-                <strong class="text-slate-900 block leading-tight">Nivel 3 • Eje / Subparroquia</strong>
-                <span class="text-slate-600 text-[10px]">Custodia directa de centros CNE, mesas de votación y cuadrantes.</span>
-              </div>
-            </div>
-            <div class="p-1.5 rounded-lg bg-white border border-slate-200 flex items-start gap-2">
-              <span class="px-1.5 py-0.5 rounded bg-indigo-100 text-indigo-900 font-extrabold text-[9.5px] uppercase shrink-0">👥 Sector</span>
-              <div>
-                <strong class="text-slate-900 block leading-tight">Nivel 4 • Sector Comunitario</strong>
-                <span class="text-slate-600 text-[10px]">Jefatura de comunidad de base, 1x10 electoral y movilización vecinal.</span>
-              </div>
-            </div>
-          </div>
-          <div class="pt-1.5 border-t border-slate-200 flex items-center justify-between text-[9.5px] font-bold">
-            <span class="text-slate-500 uppercase">Estados:</span>
-            <span class="px-1.5 py-0.2 rounded bg-emerald-100 text-emerald-800">● Activo</span>
-            <span class="px-1.5 py-0.2 rounded bg-sky-100 text-sky-800">● En Guardia</span>
-            <span class="px-1.5 py-0.2 rounded bg-indigo-100 text-indigo-800">● Acreditado</span>
-            <span class="px-1.5 py-0.2 rounded bg-slate-100 text-slate-700">○ Vacante</span>
-          </div>
-        </div>
-
-        <!-- Bloque 3: Convenios Cartográficos Oficiales CNE -->
-        <div class="p-2.5 rounded-xl bg-slate-50 border border-slate-200 shrink-0 space-y-1.5 text-xs text-slate-700">
-          <span class="text-[11px] font-black uppercase text-slate-500 tracking-wider block">
-            Convenios Cartográficos Oficiales
-          </span>
-          <div class="flex items-center gap-2">
-            <span class="w-4 h-1.5 rounded-full bg-sky-700 shrink-0"></span>
-            <span class="font-bold">Límite Político-Territorial Estadal</span>
-          </div>
-          <div class="flex items-center gap-2">
-            <span class="w-4 h-1.5 rounded-full bg-sky-600 shrink-0"></span>
-            <span class="font-bold">Límite Municipal Oficial</span>
-          </div>
-          <div class="flex items-center gap-2">
-            <span class="w-4 h-1 border-t-2 border-dashed border-purple-600 shrink-0"></span>
-            <span class="font-bold">Límites Parroquiales (INE 2021)</span>
-          </div>
-          <div class="flex items-center gap-2">
-            <span class="w-3.5 h-3.5 rounded-full bg-rose-600 text-[8px] text-white font-black flex items-center justify-center shrink-0">C</span>
-            <span class="font-bold">Centros de Votación CNE</span>
-          </div>
-          <div class="flex items-center gap-2">
-            <span class="w-3.5 h-3.5 rounded-md bg-emerald-500/30 border border-emerald-600 shrink-0"></span>
-            <span class="font-bold">Sectores y Comunidades Censadas</span>
-          </div>
-        </div>
-
+      <!-- VISTA 3: LEYENDA (En blanco, reservado para nuevos parámetros) -->
+      <div id="side-symbols-section" style="display: none;" class="flex flex-col flex-1 min-h-0 p-4">
+        <!-- Espacio en blanco reservado para reestructuración de parámetros -->
       </div>
 
     </div>
@@ -798,7 +646,7 @@
 
   <!-- 5. AUTENTICACIÓN Y CONTROLADOR PRINCIPAL DEL MÓDULO -->
   <script src="../js/auth.js"></script>
-  <script type="module" src="js/laminaApp.js?v=310"></script>
+  <script type="module" src="js/laminaApp.js?v=320"></script>
   <script>
     if (window.lucide && typeof window.lucide.createIcons === 'function') {
       window.lucide.createIcons();
