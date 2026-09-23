@@ -1,10 +1,10 @@
 ---
-title: "Modulo Comandos Dateros MIGATO 2026"
+title: "Modulo Comando Gatero MIGATO 2026"
 created: "2026-09-21 20:10:00"
-updated: "2026-09-23 18:25:00"
-tags: [modulos, comandos, dateros, transmision-electoral, estructura, migato-2026]
+updated: "2026-09-23 18:30:00"
+tags: [modulos, comandos, gateros, transmision-electoral, estructura, migato-2026]
 ---
-# Módulo de Red y Carga Rápida de Comandos Dateros MIGATO 2026
+# Módulo de Red y Carga Rápida de Comandos Gateros MIGATO 2026
 
 **Organización:** [[Identidad Institucional MIGATO y Liderazgo El Gato Briceno|MIGATO • Monagas 2026]]  
 **Líder Regional:** José Gregorio "El Gato" Briceño  
@@ -15,20 +15,20 @@ tags: [modulos, comandos, dateros, transmision-electoral, estructura, migato-202
 ---
 
 ## 1. Propósito Estratégico
-Plataforma táctica de asignación, despliegue y control operativo de la **Red de Transmisión Electoral MIGATO 2026**. Permite la carga rápida y gestión de los **58 Comandos Dateros Oficiales** de todo el Estado Monagas sin intermediarios ni microsectores vecinales.
+Plataforma táctica de asignación, despliegue y control operativo de la **Red Territorial y de Transmisión del Comando Gatero MIGATO 2026**. Permite la carga rápida y gestión de los **58 Comandos Gateros Oficiales** de todo el Estado Monagas sin intermediarios ni microsectores vecinales.
 
 ---
 
-## 2. Estructura Fija de la Red Datera (58 Posiciones)
+## 2. Estructura Fija de la Red de Comandos Gateros (58 Posiciones)
 1. **1 Central Estatal:**
-   - **Rol:** `Jefe Datero Estatal`
+   - **Rol:** `Jefe Gatero Estatal`
    - **Jurisdicción:** Sala Central de Mando Monagas (Maturín).
    - **Código:** `MON-CEN`
 2. **13 Municipales:**
-   - **Rol:** `Jefe Datero Municipal` (1 por cada municipio del Estado Monagas).
+   - **Rol:** `Jefe Gatero Municipal` (1 por cada municipio del Estado Monagas).
    - **Códigos:** `MUN-MAT`, `MUN-CAR`, `MUN-PIA`, etc.
 3. **44 Sectoriales (Parroquiales):**
-   - **Rol:** `Datero Sectorial` (1 por cada una de las 44 parroquias oficiales de Monagas).
+   - **Rol:** `Gatero Parroquial` (1 por cada una de las 44 parroquias oficiales de Monagas).
    - **Códigos:** `PARR-SAN-SIMON`, `PARR-LOS-GODOS`, `PARR-ARAGUA`, etc.
 
 *Total estricto de la Red:* **58 Posiciones Operativas**.
@@ -40,7 +40,7 @@ Plataforma táctica de asignación, despliegue y control operativo de la **Red d
 - **KPIs en Tiempo Real:** Contadores dinámicos de cobertura para Central (0/1), Municipales (0/13), Sectoriales (0/44) y Total Cobertura (0/58 con barra de progreso porcentual).
 - **Filtros Avanzados:** Filtro por nivel (Pills), selector de los 13 Municipios, filtro de vacancia (Todos/Asignados/Vacantes) y buscador en tiempo real.
 - **Exportación Directa:** Planilla en formato CSV para Microsoft Excel y respaldo JSON estructurado.
-- **Sincronización en Espejo:** Sincronizado automáticamente con `migato_comandos_asignados` y `migato_comandos_dateros_v2` en `localStorage` para consumo directo en la [[Modulo Lamina Cartografica 120|Lámina 120"]] y el [[Modulo Satelital 3D Monagas|Satélite 3D]].
+- **Sincronización en Espejo:** Sincronizado automáticamente con `migato_comandos_asignados` y `migato_comandos_gateros_v2` en `localStorage` para consumo directo en la [[Modulo Lamina Cartografica 120|Lámina 120"]] y el [[Modulo Satelital 3D Monagas|Satélite 3D]].
 
 ---
 

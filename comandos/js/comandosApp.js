@@ -1,10 +1,10 @@
 /**
- * Aplicación de Gestión y Carga Rápida de Comandos Dateros MIGATO 2026
+ * Aplicación de Gestión y Carga Rápida de Comando Gatero MIGATO 2026
  * 
  * Estructura de 58 Posiciones:
  * - 1 Central Estatal (Sala Central Monagas)
  * - 13 Jefes Municipales (13 Municipios)
- * - 44 Dateros Sectoriales (44 Parroquias)
+ * - 44 Gateros Parroquiales (44 Parroquias)
  */
 
 import {
@@ -230,7 +230,7 @@ class ComandosDaterosApp {
         <tr>
           <td colspan="6" class="p-8 text-center text-slate-400 text-xs">
             <span class="text-2xl block mb-2">🔍</span>
-            No se encontraron comandos dateros con los filtros actuales.
+            No se encontraron comandos gateros con los filtros actuales.
           </td>
         </tr>
       `;
@@ -326,7 +326,7 @@ class ComandosDaterosApp {
             <div class="flex items-center justify-end gap-1.5">
               <button type="button" onclick="window.comandosDaterosApp?.openModal('${d.id}')"
                       class="p-1.5 rounded-lg bg-amber-500/20 hover:bg-amber-500 text-amber-300 hover:text-slate-950 border border-amber-500/40 text-xs font-bold transition cursor-pointer"
-                      title="${d.asignado ? 'Editar Asignación' : 'Asignar Datero'}">
+                      title="${d.asignado ? 'Editar Asignación' : 'Asignar Responsable Gatero'}">
                 <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
               </button>
 
@@ -461,13 +461,13 @@ class ComandosDaterosApp {
     if (level === "central") {
       if (munContainer) munContainer.classList.add("hidden");
       if (parrContainer) parrContainer.classList.add("hidden");
-      if (labelRol) labelRol.textContent = "Jefe Datero Estatal (Central)";
+      if (labelRol) labelRol.textContent = "Jefe Gatero Estatal (Central)";
       if (labelCod) labelCod.textContent = "MON-CEN";
       this.modalActivePositionId = "central";
     } else if (level === "municipal") {
       if (munContainer) munContainer.classList.remove("hidden");
       if (parrContainer) parrContainer.classList.add("hidden");
-      if (labelRol) labelRol.textContent = "Jefe Datero Municipal";
+      if (labelRol) labelRol.textContent = "Jefe Gatero Municipal";
 
       if (posObj && posObj.municipioId) {
         if (selectMun) selectMun.value = posObj.municipioId;
@@ -476,7 +476,7 @@ class ComandosDaterosApp {
     } else { // sectorial
       if (munContainer) munContainer.classList.remove("hidden");
       if (parrContainer) parrContainer.classList.remove("hidden");
-      if (labelRol) labelRol.textContent = "Datero Sectorial (Parroquial)";
+      if (labelRol) labelRol.textContent = "Gatero Parroquial";
 
       const munVal = (posObj && posObj.municipioId) ? posObj.municipioId : (selectMun ? selectMun.value || "maturin" : "maturin");
       if (selectMun) selectMun.value = munVal;
@@ -537,7 +537,7 @@ class ComandosDaterosApp {
     const notas = document.getElementById("modal-input-notas")?.value?.trim();
 
     if (!nombre) {
-      alert("Por favor ingrese el nombre del datero.");
+      alert("Por favor ingrese el nombre del responsable gatero.");
       return;
     }
 
@@ -561,7 +561,7 @@ class ComandosDaterosApp {
       this.closeModal();
       this.renderKPIs();
       this.renderTable();
-      this.showToast(`Comando Datero asignado correctamente a ${targetId}.`, "success");
+      this.showToast(`Comando Gatero asignado correctamente a ${targetId}.`, "success");
     } else {
       alert("Error al guardar la asignación. Verifique los datos.");
     }
@@ -571,7 +571,7 @@ class ComandosDaterosApp {
     const pos = CATALOGO_POSICIONES_DATEROS.find(p => p.id === positionId);
     const nombrePos = pos ? pos.territorio : positionId;
 
-    if (confirm(`¿Desea desasignar al datero de "${nombrePos}" y dejar la posición vacante?`)) {
+    if (confirm(`¿Desea desasignar al responsable gatero de "${nombrePos}" y dejar la posición vacante?`)) {
       removeComandoDatero(positionId);
       this.renderKPIs();
       this.renderTable();
@@ -596,7 +596,7 @@ class ComandosDaterosApp {
 
   setupStorageSync() {
     window.addEventListener("storage", (e) => {
-      if (e.key === "migato_comandos_dateros_v2" || e.key === "migato_comandos_asignados") {
+      if (e.key === "migato_comandos_gateros_v2" || e.key === "migato_comandos_dateros_v2" || e.key === "migato_comandos_asignados") {
         this.renderKPIs();
         this.renderTable();
       }
@@ -605,11 +605,15 @@ class ComandosDaterosApp {
 }
 
 // Inicialización Global Segura
+function initApp() {
+  const app = new ComandosDaterosApp();
+  window.comandosGaterosApp = app;
+  window.comandosDaterosApp = app;
+}
+
 if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", () => {
-    window.comandosDaterosApp = new ComandosDaterosApp();
-  });
+  document.addEventListener("DOMContentLoaded", initApp);
 } else {
-  window.comandosDaterosApp = new ComandosDaterosApp();
+  initApp();
 }
 

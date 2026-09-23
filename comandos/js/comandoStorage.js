@@ -1,19 +1,20 @@
 /**
- * Gestor de Almacenamiento Centralizado • Comandos Dateros MIGATO 2026
+ * Gestor de Almacenamiento Centralizado • Comandos Gateros MIGATO 2026
  * 
- * Estructura Oficial de la Red Datera de Transmisión:
+ * Estructura Oficial de la Red de Comandos Gateros de Transmisión:
  * - 1 Central Estatal (Sala Situacional Central Monagas)
  * - 13 Comandos Municipales (13 Municipios)
- * - 44 Dateros Sectoriales / Parroquiales (44 Parroquias Oficiales)
+ * - 44 Gateros Parroquiales / Parroquiales (44 Parroquias Oficiales)
  * 
- * Total: 58 Comandos Dateros
+ * Total: 58 Comandos Gateros
  */
 
-export const STORAGE_KEY_DATEROS = "migato_comandos_dateros_v2";
+export const STORAGE_KEY_GATEROS = "migato_comandos_gateros_v2";
+export const STORAGE_KEY_DATEROS = "migato_comandos_gateros_v2";
 export const STORAGE_KEY_ASIGNADOS = "migato_comandos_asignados";
 
 /**
- * Catálogo Oficial de las 58 Posiciones de la Red Datera
+ * Catálogo Oficial de las 58 Posiciones de la Red de Comandos Gateros
  */
 export const CATALOGO_POSICIONES_DATEROS = [
   // 1. CENTRAL ESTATAL (1)
@@ -25,7 +26,7 @@ export const CATALOGO_POSICIONES_DATEROS = [
     municipioNombre: "Estado Monagas",
     parroquiaId: null,
     parroquiaNombre: "Comando Central Regional",
-    rol: "Jefe Datero Estatal",
+    rol: "Jefe Gatero Estatal",
     codigo: "MON-CEN",
     color: "#f59e0b"
   },
@@ -39,7 +40,7 @@ export const CATALOGO_POSICIONES_DATEROS = [
     municipioNombre: "Municipio Maturín",
     parroquiaId: null,
     parroquiaNombre: "Coordinación Municipal",
-    rol: "Jefe Datero Municipal",
+    rol: "Jefe Gatero Municipal",
     codigo: "MUN-MAT",
     color: "#2563eb"
   },
@@ -51,7 +52,7 @@ export const CATALOGO_POSICIONES_DATEROS = [
     municipioNombre: "Municipio Caripe",
     parroquiaId: null,
     parroquiaNombre: "Coordinación Municipal",
-    rol: "Jefe Datero Municipal",
+    rol: "Jefe Gatero Municipal",
     codigo: "MUN-CAR",
     color: "#10b981"
   },
@@ -63,7 +64,7 @@ export const CATALOGO_POSICIONES_DATEROS = [
     municipioNombre: "Municipio Ezequiel Zamora",
     parroquiaId: null,
     parroquiaNombre: "Coordinación Municipal",
-    rol: "Jefe Datero Municipal",
+    rol: "Jefe Gatero Municipal",
     codigo: "MUN-ZAM",
     color: "#f97316"
   },
@@ -75,7 +76,7 @@ export const CATALOGO_POSICIONES_DATEROS = [
     municipioNombre: "Municipio Bolívar",
     parroquiaId: null,
     parroquiaNombre: "Coordinación Municipal",
-    rol: "Jefe Datero Municipal",
+    rol: "Jefe Gatero Municipal",
     codigo: "MUN-BOL",
     color: "#ec4899"
   },
@@ -87,7 +88,7 @@ export const CATALOGO_POSICIONES_DATEROS = [
     municipioNombre: "Municipio Piar",
     parroquiaId: null,
     parroquiaNombre: "Coordinación Municipal",
-    rol: "Jefe Datero Municipal",
+    rol: "Jefe Gatero Municipal",
     codigo: "MUN-PIA",
     color: "#8b5cf6"
   },
@@ -99,7 +100,7 @@ export const CATALOGO_POSICIONES_DATEROS = [
     municipioNombre: "Municipio Cedeño",
     parroquiaId: null,
     parroquiaNombre: "Coordinación Municipal",
-    rol: "Jefe Datero Municipal",
+    rol: "Jefe Gatero Municipal",
     codigo: "MUN-CED",
     color: "#06b6d4"
   },
@@ -111,7 +112,7 @@ export const CATALOGO_POSICIONES_DATEROS = [
     municipioNombre: "Municipio Punceres",
     parroquiaId: null,
     parroquiaNombre: "Coordinación Municipal",
-    rol: "Jefe Datero Municipal",
+    rol: "Jefe Gatero Municipal",
     codigo: "MUN-PUN",
     color: "#14b8a6"
   },
@@ -123,7 +124,7 @@ export const CATALOGO_POSICIONES_DATEROS = [
     municipioNombre: "Municipio Acosta",
     parroquiaId: null,
     parroquiaNombre: "Coordinación Municipal",
-    rol: "Jefe Datero Municipal",
+    rol: "Jefe Gatero Municipal",
     codigo: "MUN-ACO",
     color: "#84cc16"
   },
@@ -135,7 +136,7 @@ export const CATALOGO_POSICIONES_DATEROS = [
     municipioNombre: "Municipio Aguasay",
     parroquiaId: null,
     parroquiaNombre: "Coordinación Municipal",
-    rol: "Jefe Datero Municipal",
+    rol: "Jefe Gatero Municipal",
     codigo: "MUN-AGU",
     color: "#eab308"
   },
@@ -147,7 +148,7 @@ export const CATALOGO_POSICIONES_DATEROS = [
     municipioNombre: "Municipio Santa Bárbara",
     parroquiaId: null,
     parroquiaNombre: "Coordinación Municipal",
-    rol: "Jefe Datero Municipal",
+    rol: "Jefe Gatero Municipal",
     codigo: "MUN-SBA",
     color: "#6366f1"
   },
@@ -159,7 +160,7 @@ export const CATALOGO_POSICIONES_DATEROS = [
     municipioNombre: "Municipio Uracoa",
     parroquiaId: null,
     parroquiaNombre: "Coordinación Municipal",
-    rol: "Jefe Datero Municipal",
+    rol: "Jefe Gatero Municipal",
     codigo: "MUN-URA",
     color: "#a855f7"
   },
@@ -171,7 +172,7 @@ export const CATALOGO_POSICIONES_DATEROS = [
     municipioNombre: "Municipio Libertador",
     parroquiaId: null,
     parroquiaNombre: "Coordinación Municipal",
-    rol: "Jefe Datero Municipal",
+    rol: "Jefe Gatero Municipal",
     codigo: "MUN-LIB",
     color: "#d946ef"
   },
@@ -183,7 +184,7 @@ export const CATALOGO_POSICIONES_DATEROS = [
     municipioNombre: "Municipio Sotillo",
     parroquiaId: null,
     parroquiaNombre: "Coordinación Municipal",
-    rol: "Jefe Datero Municipal",
+    rol: "Jefe Gatero Municipal",
     codigo: "MUN-SOT",
     color: "#f43f5e"
   },
@@ -198,7 +199,7 @@ export const CATALOGO_POSICIONES_DATEROS = [
     municipioNombre: "Maturín",
     parroquiaId: "san-simon",
     parroquiaNombre: "San Simón (Casco Central)",
-    rol: "Datero Sectorial",
+    rol: "Gatero Parroquial",
     codigo: "MAT-SIM"
   },
   {
@@ -209,7 +210,7 @@ export const CATALOGO_POSICIONES_DATEROS = [
     municipioNombre: "Maturín",
     parroquiaId: "alto-de-los-godos",
     parroquiaNombre: "Alto de Los Godos",
-    rol: "Datero Sectorial",
+    rol: "Gatero Parroquial",
     codigo: "MAT-GOD"
   },
   {
@@ -220,7 +221,7 @@ export const CATALOGO_POSICIONES_DATEROS = [
     municipioNombre: "Maturín",
     parroquiaId: "boqueron",
     parroquiaNombre: "Boquerón",
-    rol: "Datero Sectorial",
+    rol: "Gatero Parroquial",
     codigo: "MAT-BOQ"
   },
   {
@@ -231,7 +232,7 @@ export const CATALOGO_POSICIONES_DATEROS = [
     municipioNombre: "Maturín",
     parroquiaId: "las-cocuizas",
     parroquiaNombre: "Las Cocuizas",
-    rol: "Datero Sectorial",
+    rol: "Gatero Parroquial",
     codigo: "MAT-COC"
   },
   {
@@ -242,7 +243,7 @@ export const CATALOGO_POSICIONES_DATEROS = [
     municipioNombre: "Maturín",
     parroquiaId: "santa-cruz",
     parroquiaNombre: "Santa Cruz (La Cruz)",
-    rol: "Datero Sectorial",
+    rol: "Gatero Parroquial",
     codigo: "MAT-STC"
   },
   {
@@ -253,7 +254,7 @@ export const CATALOGO_POSICIONES_DATEROS = [
     municipioNombre: "Maturín",
     parroquiaId: "san-vicente",
     parroquiaNombre: "San Vicente",
-    rol: "Datero Sectorial",
+    rol: "Gatero Parroquial",
     codigo: "MAT-VIC"
   },
   {
@@ -264,7 +265,7 @@ export const CATALOGO_POSICIONES_DATEROS = [
     municipioNombre: "Maturín",
     parroquiaId: "la-pica",
     parroquiaNombre: "La Pica",
-    rol: "Datero Sectorial",
+    rol: "Gatero Parroquial",
     codigo: "MAT-PIC"
   },
   {
@@ -275,7 +276,7 @@ export const CATALOGO_POSICIONES_DATEROS = [
     municipioNombre: "Maturín",
     parroquiaId: "jusepin",
     parroquiaNombre: "Jusepín",
-    rol: "Datero Sectorial",
+    rol: "Gatero Parroquial",
     codigo: "MAT-JUS"
   },
   {
@@ -286,7 +287,7 @@ export const CATALOGO_POSICIONES_DATEROS = [
     municipioNombre: "Maturín",
     parroquiaId: "el-furrial",
     parroquiaNombre: "El Furrial",
-    rol: "Datero Sectorial",
+    rol: "Gatero Parroquial",
     codigo: "MAT-FUR"
   },
   {
@@ -297,7 +298,7 @@ export const CATALOGO_POSICIONES_DATEROS = [
     municipioNombre: "Maturín",
     parroquiaId: "el-corozo",
     parroquiaNombre: "El Corozo",
-    rol: "Datero Sectorial",
+    rol: "Gatero Parroquial",
     codigo: "MAT-COR"
   },
   {
@@ -308,7 +309,7 @@ export const CATALOGO_POSICIONES_DATEROS = [
     municipioNombre: "Maturín",
     parroquiaId: "san-simon-sur",
     parroquiaNombre: "San Simón Sur / Rural",
-    rol: "Datero Sectorial",
+    rol: "Gatero Parroquial",
     codigo: "MAT-SUR"
   },
 
@@ -321,7 +322,7 @@ export const CATALOGO_POSICIONES_DATEROS = [
     municipioNombre: "Piar",
     parroquiaId: "aragua",
     parroquiaNombre: "Aragua de Maturín",
-    rol: "Datero Sectorial",
+    rol: "Gatero Parroquial",
     codigo: "PIA-ARA"
   },
   {
@@ -332,7 +333,7 @@ export const CATALOGO_POSICIONES_DATEROS = [
     municipioNombre: "Piar",
     parroquiaId: "aparicio",
     parroquiaNombre: "Aparicio",
-    rol: "Datero Sectorial",
+    rol: "Gatero Parroquial",
     codigo: "PIA-APA"
   },
   {
@@ -343,7 +344,7 @@ export const CATALOGO_POSICIONES_DATEROS = [
     municipioNombre: "Piar",
     parroquiaId: "chaguaramal",
     parroquiaNombre: "Chaguaramal",
-    rol: "Datero Sectorial",
+    rol: "Gatero Parroquial",
     codigo: "PIA-CHG"
   },
   {
@@ -354,7 +355,7 @@ export const CATALOGO_POSICIONES_DATEROS = [
     municipioNombre: "Piar",
     parroquiaId: "el-pinto",
     parroquiaNombre: "El Pinto",
-    rol: "Datero Sectorial",
+    rol: "Gatero Parroquial",
     codigo: "PIA-PIN"
   },
   {
@@ -365,7 +366,7 @@ export const CATALOGO_POSICIONES_DATEROS = [
     municipioNombre: "Piar",
     parroquiaId: "guanaguana",
     parroquiaNombre: "Guanaguana",
-    rol: "Datero Sectorial",
+    rol: "Gatero Parroquial",
     codigo: "PIA-GUA"
   },
   {
@@ -376,7 +377,7 @@ export const CATALOGO_POSICIONES_DATEROS = [
     municipioNombre: "Piar",
     parroquiaId: "la-toscana",
     parroquiaNombre: "La Toscana",
-    rol: "Datero Sectorial",
+    rol: "Gatero Parroquial",
     codigo: "PIA-TOS"
   },
   {
@@ -387,7 +388,7 @@ export const CATALOGO_POSICIONES_DATEROS = [
     municipioNombre: "Piar",
     parroquiaId: "taguaya",
     parroquiaNombre: "Taguaya",
-    rol: "Datero Sectorial",
+    rol: "Gatero Parroquial",
     codigo: "PIA-TAG"
   },
 
@@ -400,7 +401,7 @@ export const CATALOGO_POSICIONES_DATEROS = [
     municipioNombre: "Caripe",
     parroquiaId: "caripe-centro",
     parroquiaNombre: "Caripe Centro",
-    rol: "Datero Sectorial",
+    rol: "Gatero Parroquial",
     codigo: "CAR-CEN"
   },
   {
@@ -411,7 +412,7 @@ export const CATALOGO_POSICIONES_DATEROS = [
     municipioNombre: "Caripe",
     parroquiaId: "el-guacharo",
     parroquiaNombre: "El Guácharo",
-    rol: "Datero Sectorial",
+    rol: "Gatero Parroquial",
     codigo: "CAR-GUA"
   },
   {
@@ -422,7 +423,7 @@ export const CATALOGO_POSICIONES_DATEROS = [
     municipioNombre: "Caripe",
     parroquiaId: "la-guanota",
     parroquiaNombre: "La Guanota",
-    rol: "Datero Sectorial",
+    rol: "Gatero Parroquial",
     codigo: "CAR-GNT"
   },
   {
@@ -433,7 +434,7 @@ export const CATALOGO_POSICIONES_DATEROS = [
     municipioNombre: "Caripe",
     parroquiaId: "sabana-de-piedra",
     parroquiaNombre: "Sabana de Piedra",
-    rol: "Datero Sectorial",
+    rol: "Gatero Parroquial",
     codigo: "CAR-SAB"
   },
   {
@@ -444,7 +445,7 @@ export const CATALOGO_POSICIONES_DATEROS = [
     municipioNombre: "Caripe",
     parroquiaId: "san-agustin",
     parroquiaNombre: "San Agustín",
-    rol: "Datero Sectorial",
+    rol: "Gatero Parroquial",
     codigo: "CAR-SAG"
   },
   {
@@ -455,7 +456,7 @@ export const CATALOGO_POSICIONES_DATEROS = [
     municipioNombre: "Caripe",
     parroquiaId: "teresen",
     parroquiaNombre: "Teresén",
-    rol: "Datero Sectorial",
+    rol: "Gatero Parroquial",
     codigo: "CAR-TER"
   },
 
@@ -468,7 +469,7 @@ export const CATALOGO_POSICIONES_DATEROS = [
     municipioNombre: "Cedeño",
     parroquiaId: "caicara",
     parroquiaNombre: "Caicara",
-    rol: "Datero Sectorial",
+    rol: "Gatero Parroquial",
     codigo: "CED-CAI"
   },
   {
@@ -479,7 +480,7 @@ export const CATALOGO_POSICIONES_DATEROS = [
     municipioNombre: "Cedeño",
     parroquiaId: "areo",
     parroquiaNombre: "Areo",
-    rol: "Datero Sectorial",
+    rol: "Gatero Parroquial",
     codigo: "CED-ARE"
   },
   {
@@ -490,7 +491,7 @@ export const CATALOGO_POSICIONES_DATEROS = [
     municipioNombre: "Cedeño",
     parroquiaId: "san-felix",
     parroquiaNombre: "San Félix de Cantalicio",
-    rol: "Datero Sectorial",
+    rol: "Gatero Parroquial",
     codigo: "CED-SFX"
   },
   {
@@ -501,7 +502,7 @@ export const CATALOGO_POSICIONES_DATEROS = [
     municipioNombre: "Cedeño",
     parroquiaId: "viento-fresco",
     parroquiaNombre: "Viento Fresco",
-    rol: "Datero Sectorial",
+    rol: "Gatero Parroquial",
     codigo: "CED-VFR"
   },
 
@@ -514,7 +515,7 @@ export const CATALOGO_POSICIONES_DATEROS = [
     municipioNombre: "Libertador",
     parroquiaId: "temblador",
     parroquiaNombre: "Temblador",
-    rol: "Datero Sectorial",
+    rol: "Gatero Parroquial",
     codigo: "LIB-TEM"
   },
   {
@@ -525,7 +526,7 @@ export const CATALOGO_POSICIONES_DATEROS = [
     municipioNombre: "Libertador",
     parroquiaId: "chaguaramas",
     parroquiaNombre: "Chaguaramas",
-    rol: "Datero Sectorial",
+    rol: "Gatero Parroquial",
     codigo: "LIB-CHG"
   },
   {
@@ -536,7 +537,7 @@ export const CATALOGO_POSICIONES_DATEROS = [
     municipioNombre: "Libertador",
     parroquiaId: "las-alhuacas",
     parroquiaNombre: "Las Alhuacas",
-    rol: "Datero Sectorial",
+    rol: "Gatero Parroquial",
     codigo: "LIB-ALH"
   },
   {
@@ -547,7 +548,7 @@ export const CATALOGO_POSICIONES_DATEROS = [
     municipioNombre: "Libertador",
     parroquiaId: "tabasca",
     parroquiaNombre: "Tabasca",
-    rol: "Datero Sectorial",
+    rol: "Gatero Parroquial",
     codigo: "LIB-TAB"
   },
 
@@ -560,7 +561,7 @@ export const CATALOGO_POSICIONES_DATEROS = [
     municipioNombre: "Ezequiel Zamora",
     parroquiaId: "punta-de-mata",
     parroquiaNombre: "Punta de Mata",
-    rol: "Datero Sectorial",
+    rol: "Gatero Parroquial",
     codigo: "ZAM-PUN"
   },
   {
@@ -571,7 +572,7 @@ export const CATALOGO_POSICIONES_DATEROS = [
     municipioNombre: "Ezequiel Zamora",
     parroquiaId: "el-tejero",
     parroquiaNombre: "El Tejero",
-    rol: "Datero Sectorial",
+    rol: "Gatero Parroquial",
     codigo: "ZAM-TEJ"
   },
 
@@ -584,7 +585,7 @@ export const CATALOGO_POSICIONES_DATEROS = [
     municipioNombre: "Acosta",
     parroquiaId: "san-antonio",
     parroquiaNombre: "San Antonio",
-    rol: "Datero Sectorial",
+    rol: "Gatero Parroquial",
     codigo: "ACO-ANT"
   },
   {
@@ -595,7 +596,7 @@ export const CATALOGO_POSICIONES_DATEROS = [
     municipioNombre: "Acosta",
     parroquiaId: "san-francisco",
     parroquiaNombre: "San Francisco",
-    rol: "Datero Sectorial",
+    rol: "Gatero Parroquial",
     codigo: "ACO-SFC"
   },
 
@@ -608,7 +609,7 @@ export const CATALOGO_POSICIONES_DATEROS = [
     municipioNombre: "Punceres",
     parroquiaId: "quiriquire",
     parroquiaNombre: "Quiriquire",
-    rol: "Datero Sectorial",
+    rol: "Gatero Parroquial",
     codigo: "PUN-QUI"
   },
   {
@@ -619,7 +620,7 @@ export const CATALOGO_POSICIONES_DATEROS = [
     municipioNombre: "Punceres",
     parroquiaId: "cachipo",
     parroquiaNombre: "Cachipo",
-    rol: "Datero Sectorial",
+    rol: "Gatero Parroquial",
     codigo: "PUN-CAC"
   },
 
@@ -632,7 +633,7 @@ export const CATALOGO_POSICIONES_DATEROS = [
     municipioNombre: "Santa Bárbara",
     parroquiaId: "santa-barbara-centro",
     parroquiaNombre: "Santa Bárbara",
-    rol: "Datero Sectorial",
+    rol: "Gatero Parroquial",
     codigo: "SBA-CEN"
   },
 
@@ -645,7 +646,7 @@ export const CATALOGO_POSICIONES_DATEROS = [
     municipioNombre: "Sotillo",
     parroquiaId: "barrancas",
     parroquiaNombre: "Barrancas del Orinoco",
-    rol: "Datero Sectorial",
+    rol: "Gatero Parroquial",
     codigo: "SOT-BAR"
   },
   {
@@ -656,7 +657,7 @@ export const CATALOGO_POSICIONES_DATEROS = [
     municipioNombre: "Sotillo",
     parroquiaId: "los-barrancos",
     parroquiaNombre: "Los Barrancos de Fajardo",
-    rol: "Datero Sectorial",
+    rol: "Gatero Parroquial",
     codigo: "SOT-FAJ"
   },
 
@@ -669,7 +670,7 @@ export const CATALOGO_POSICIONES_DATEROS = [
     municipioNombre: "Bolívar",
     parroquiaId: "caripito",
     parroquiaNombre: "Caripito",
-    rol: "Datero Sectorial",
+    rol: "Gatero Parroquial",
     codigo: "BOL-CAR"
   },
 
@@ -682,7 +683,7 @@ export const CATALOGO_POSICIONES_DATEROS = [
     municipioNombre: "Aguasay",
     parroquiaId: "aguasay-centro",
     parroquiaNombre: "Aguasay",
-    rol: "Datero Sectorial",
+    rol: "Gatero Parroquial",
     codigo: "AGU-CEN"
   },
 
@@ -695,7 +696,7 @@ export const CATALOGO_POSICIONES_DATEROS = [
     municipioNombre: "Uracoa",
     parroquiaId: "uracoa-centro",
     parroquiaNombre: "Uracoa",
-    rol: "Datero Sectorial",
+    rol: "Gatero Parroquial",
     codigo: "URA-CEN"
   }
 ];
@@ -719,36 +720,36 @@ export function getStoredDaterosMap() {
         nombre: "Ing. Diego Donado",
         cedula: "V-19.882.314",
         telefono: "+58 412-0000000",
-        rol: "Jefe Datero Estatal",
+        rol: "Jefe Gatero Estatal",
         dispositivo: "Servidor / Terminal Sala Situacional",
-        notas: "Coordinador General de Sala de Datos y Transmisión",
+        notas: "Coordinador General Sala Situacional y Mando Gatero",
         fechaAsignacion: new Date().toISOString()
       },
       "mun-maturin": {
-        nombre: "Coordinación Datera Maturín",
+        nombre: "Coordinación Gatera Maturín",
         cedula: "V-18.452.120",
         telefono: "+58 414-7654321",
-        rol: "Jefe Datero Municipal",
+        rol: "Jefe Gatero Municipal",
         dispositivo: "Digitel 4G / Android",
-        notas: "Centro de Cómputo Municipal",
+        notas: "Comando Municipal Gatero Maturín",
         fechaAsignacion: new Date().toISOString()
       },
       "parr-alto-de-los-godos": {
         nombre: "José Manuel Pérez",
         cedula: "V-19.882.314",
         telefono: "+58 414-7654321",
-        rol: "Datero Sectorial",
+        rol: "Gatero Parroquial",
         dispositivo: "Movistar LTE / Smartphone",
-        notas: "Transmisión Parroquia Los Godos",
+        notas: "Comando Parroquial Gatero Los Godos",
         fechaAsignacion: new Date().toISOString()
       },
       "parr-san-simon": {
         nombre: "Carlos Eduardo Mendoza",
         cedula: "V-16.321.908",
         telefono: "+58 424-9182736",
-        rol: "Datero Sectorial",
+        rol: "Gatero Parroquial",
         dispositivo: "Digitel LTE / Smartphone",
-        notas: "Transmisión Casco Central San Simón",
+        notas: "Comando Parroquial Gatero San Simón",
         fechaAsignacion: new Date().toISOString()
       }
     };
@@ -879,7 +880,7 @@ export function removeComandoDatero(positionId) {
 }
 
 /**
- * Estadísticas de cobertura de la red datera
+ * Estadísticas de cobertura de la red de comandos gateros
  */
 export function getComandosDaterosStats() {
   const dateros = getAllComandosDateros();
@@ -919,7 +920,7 @@ export function getComandosDaterosStats() {
  */
 export function exportDaterosCSV() {
   const dateros = getAllComandosDateros();
-  const headers = ["Nivel", "Territorio / Jurisdiccion", "Municipio", "Parroquia", "Rol Datero", "Estado", "Datero Asignado", "Cedula", "Telefono", "Dispositivo", "Notas", "Fecha Asignacion"];
+  const headers = ["Nivel", "Territorio / Jurisdiccion", "Municipio", "Parroquia", "Rol Gatero", "Estado", "Responsable Gatero", "Cedula", "Telefono", "Dispositivo", "Notas", "Fecha Asignacion"];
   
   const rows = dateros.map(d => [
     `"${d.nivel.toUpperCase()}"`,
@@ -941,7 +942,7 @@ export function exportDaterosCSV() {
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
   a.href = url;
-  a.download = `MIGATO_Comandos_Dateros_${new Date().toISOString().slice(0, 10)}.csv`;
+  a.download = `MIGATO_Comandos_Gateros_${new Date().toISOString().slice(0, 10)}.csv`;
   a.click();
   URL.revokeObjectURL(url);
 }
@@ -955,7 +956,7 @@ export function exportDaterosJSON() {
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
   a.href = url;
-  a.download = `MIGATO_Backup_Comandos_Dateros_${new Date().toISOString().slice(0, 10)}.json`;
+  a.download = `MIGATO_Backup_Comandos_Gateros_${new Date().toISOString().slice(0, 10)}.json`;
   a.click();
   URL.revokeObjectURL(url);
 }
@@ -976,3 +977,13 @@ export function importDaterosJSON(jsonText) {
     return false;
   }
 }
+
+// Alias oficiales para la nomenclatura Gatero
+export const CATALOGO_POSICIONES_GATEROS = CATALOGO_POSICIONES_DATEROS;
+export const getAllComandosGateros = getAllComandosDateros;
+export const saveComandoGatero = saveComandoDatero;
+export const removeComandoGatero = removeComandoDatero;
+export const getComandosGaterosStats = getComandosDaterosStats;
+export const exportGaterosCSV = exportDaterosCSV;
+export const exportGaterosJSON = exportDaterosJSON;
+export const importGaterosJSON = importDaterosJSON;

@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>MIGATO • Comandos Dateros 2026 • Sala Situacional</title>
-  <meta name="description" content="Estructura operativa de transmisión electoral: 1 Central Estatal, 13 Jefes Municipales y 44 Dateros Sectoriales del Estado Monagas.">
+  <title>MIGATO • Comando Gatero 2026 • Sala Situacional</title>
+  <meta name="description" content="Estructura operativa territorial: 1 Central Estatal, 13 Jefes Municipales y 44 Gateros Parroquiales del Estado Monagas.">
   <meta name="theme-color" content="#0b0724">
   <link rel="icon" type="image/png" href="../assets/logo-migato.png">
 
@@ -48,16 +48,21 @@
           </span>
         </div>
         <h1 class="text-lg sm:text-2xl font-display font-black text-white tracking-tight mt-0.5">
-          Comandos Dateros MIGATO
+          Comando Gatero MIGATO
         </h1>
         <p class="text-xs text-blue-200/80 hidden sm:block">
-          Red Operativa de Transmisión Electoral: <strong>1 Central Estatal</strong>, <strong>13 Jefes Municipales</strong> y <strong>44 Dateros Sectoriales</strong>.
+          Red Operativa Territorial: <strong>1 Central Estatal</strong>, <strong>13 Jefes Municipales</strong> y <strong>44 Gateros Parroquiales</strong>.
         </p>
       </div>
     </div>
 
     <!-- Navegación a Módulos Hermanos -->
     <div class="flex items-center gap-2 flex-wrap self-end md:self-auto">
+      <a href="../despacho/?v=260" class="py-2 px-3 rounded-xl bg-emerald-950 hover:bg-emerald-900 border border-emerald-500/40 text-emerald-300 font-bold text-xs flex items-center gap-1.5 transition active:scale-95" title="Ir al Despacho Situacional">
+        <i data-lucide="inbox" class="w-4 h-4 text-emerald-400"></i>
+        <span>Despacho</span>
+      </a>
+
       <a href="../lamina-monagas/?v=391" class="py-2 px-3 rounded-xl bg-[#1c145c] hover:bg-[#281c85] border border-amber-400/40 text-amber-300 font-bold text-xs flex items-center gap-1.5 transition active:scale-95" title="Ir a la Lámina Ejecutiva 120 pulgadas">
         <i data-lucide="tv" class="w-4 h-4 text-amber-400"></i>
         <span>Lámina 120"</span>
@@ -74,7 +79,7 @@
     </div>
   </header>
 
-  <!-- 2. RESUMEN KPI DE COBERTURA DE LA RED DATERA (4 TARJETAS) -->
+  <!-- 2. RESUMEN KPI DE COBERTURA DE LA RED DE COMANDOS GATEROS (4 TARJETAS) -->
   <section class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
     <!-- Card 1: Central -->
     <div class="glass-panel p-4 rounded-2xl border border-amber-500/30 flex flex-col justify-between">
@@ -89,7 +94,7 @@
       </div>
       <div class="mt-2">
         <strong id="kpi-central-val" class="text-xl sm:text-2xl font-black font-mono text-white block">0 / 1</strong>
-        <span class="text-[11px] text-slate-300 block truncate">Jefe Datero Regional</span>
+        <span class="text-[11px] text-slate-300 block truncate">Jefe Gatero Regional</span>
       </div>
     </div>
 
@@ -106,7 +111,7 @@
       </div>
       <div class="mt-2">
         <strong id="kpi-mun-val" class="text-xl sm:text-2xl font-black font-mono text-sky-200 block">0 / 13</strong>
-        <span class="text-[11px] text-slate-300 block truncate">Jefes Dateros Municipales</span>
+        <span class="text-[11px] text-slate-300 block truncate">Jefes Gateros Municipales</span>
       </div>
     </div>
 
@@ -123,7 +128,7 @@
       </div>
       <div class="mt-2">
         <strong id="kpi-sec-val" class="text-xl sm:text-2xl font-black font-mono text-purple-200 block">0 / 44</strong>
-        <span class="text-[11px] text-slate-300 block truncate">Dateros de Parroquia</span>
+        <span class="text-[11px] text-slate-300 block truncate">Gateros de Parroquia</span>
       </div>
     </div>
 
@@ -132,7 +137,7 @@
       <div class="flex items-center justify-between">
         <span class="text-[11px] font-black uppercase tracking-wider text-emerald-400 flex items-center gap-1.5">
           <span>⚡</span>
-          <span>Red Datera Monagas</span>
+          <span>Red de Comandos Gateros</span>
         </span>
         <span id="kpi-total-pct" class="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
           0%
@@ -172,7 +177,7 @@
       <div class="flex items-center gap-2 flex-wrap">
         <button type="button" id="btn-open-nuevo-datero" class="py-2.5 px-4 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs uppercase flex items-center gap-1.5 shadow-lg shadow-amber-500/20 active:scale-95 transition cursor-pointer">
           <i data-lucide="user-plus" class="w-4 h-4"></i>
-          <span>+ Carga Rápida de Datero</span>
+          <span>+ Carga Rápida de Comando Gatero</span>
         </button>
 
         <button type="button" id="btn-export-csv" class="py-2 px-3 rounded-xl bg-emerald-950 hover:bg-emerald-900 border border-emerald-500/40 text-emerald-300 font-bold text-xs flex items-center gap-1.5 transition active:scale-95 cursor-pointer" title="Descargar planilla para Excel">
@@ -191,7 +196,7 @@
     <div class="grid grid-cols-1 sm:grid-cols-12 gap-3 pt-2 border-t border-[#2d1f85]/60">
       <!-- Buscador por Texto -->
       <div class="sm:col-span-6 relative">
-        <input type="text" id="input-search-datero" placeholder="Buscar por datero, cédula, teléfono, municipio o parroquia..."
+        <input type="text" id="input-search-datero" placeholder="Buscar por gatero, cédula, teléfono, municipio o parroquia..."
                class="w-full bg-[#0d0929] border border-[#2d1f85] rounded-xl pl-9 pr-3 py-2.5 text-xs text-white placeholder-slate-400 focus:outline-none focus:border-amber-500 transition">
         <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3 top-3"></i>
       </div>
@@ -227,13 +232,13 @@
     </div>
   </section>
 
-  <!-- 4. TABLA PRINCIPAL DE COMANDOS DATEROS (58 POSICIONES) -->
+  <!-- 4. TABLA PRINCIPAL DE COMANDOS GATEROS (58 POSICIONES) -->
   <section class="glass-panel rounded-2xl p-4 sm:p-5 space-y-3 shadow-2xl">
     <div class="flex items-center justify-between pb-2 border-b border-[#2d1f85]">
       <div class="flex items-center gap-2">
         <i data-lucide="radio" class="w-4 h-4 text-amber-400"></i>
         <h2 class="font-display font-black text-sm uppercase tracking-wider text-white">
-          Red de Comandos Dateros Oficiales
+          Red de Comandos Gateros Oficiales
         </h2>
       </div>
       <span id="filtered-count-badge" class="text-xs font-mono font-bold px-2.5 py-0.5 rounded-full bg-slate-800 text-slate-300 border border-slate-700">
@@ -248,8 +253,8 @@
           <tr class="bg-[#0e092e] text-[11px] font-black uppercase tracking-wider text-slate-400 border-b border-[#2d1f85]">
             <th class="p-3.5">Territorio / Jurisdicción</th>
             <th class="p-3.5 text-center">Nivel</th>
-            <th class="p-3.5">Rol Datero</th>
-            <th class="p-3.5">Datero Asignado</th>
+            <th class="p-3.5">Rol Gatero</th>
+            <th class="p-3.5">Responsable Gatero</th>
             <th class="p-3.5">Contacto WhatsApp</th>
             <th class="p-3.5 text-right">Acciones</th>
           </tr>
@@ -261,7 +266,7 @@
     </div>
   </section>
 
-  <!-- 5. MODAL DE CARGA RÁPIDA / ASIGNACIÓN DE COMANDO DATERO -->
+  <!-- 5. MODAL DE CARGA RÁPIDA / ASIGNACIÓN DE COMANDO GATERO -->
   <div id="modal-datero" class="fixed inset-0 z-[9990] bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4">
     <div class="glass-panel w-full max-w-lg rounded-2xl border border-amber-500/40 p-5 sm:p-6 space-y-4 shadow-2xl">
       <!-- Encabezado Modal -->
@@ -272,10 +277,10 @@
           </div>
           <div>
             <h3 id="modal-datero-title" class="font-black text-sm uppercase text-white">
-              Carga Rápida de Comando Datero
+              Carga Rápida de Comando Gatero
             </h3>
             <p class="text-[11px] text-slate-400" id="modal-datero-subtitle">
-              Asignación directa para la Red de Transmisión MIGATO 2026.
+              Asignación directa para la Red Territorial MIGATO 2026.
             </p>
           </div>
         </div>
@@ -325,21 +330,21 @@
           </div>
         </div>
 
-        <!-- Rol Datero Oficial (Informativo / Fijo) -->
+        <!-- Rol Gatero Oficial (Informativo / Fijo) -->
         <div>
           <label class="text-[11px] font-black uppercase text-slate-300 tracking-wider block mb-1">
-            Rol Datero Asignado
+            Rol Gatero Asignado
           </label>
           <div class="p-2.5 rounded-xl bg-[#0d0929] border border-[#2d1f85] flex items-center justify-between">
-            <span id="modal-label-rol" class="font-bold text-amber-300 text-xs">Jefe Datero Municipal</span>
+            <span id="modal-label-rol" class="font-bold text-amber-300 text-xs">Jefe Gatero Municipal</span>
             <span class="text-[10px] text-slate-400 font-mono" id="modal-label-codigo">MUN-MAT</span>
           </div>
         </div>
 
-        <!-- Datos del Datero -->
+        <!-- Datos del Responsable Gatero -->
         <div>
           <label class="text-[11px] font-black uppercase text-slate-300 tracking-wider block mb-1">
-            Nombre y Apellido del Datero *
+            Nombre y Apellido del Responsable Gatero *
           </label>
           <input type="text" id="modal-input-nombre" required placeholder="Ej: Ing. Carlos Salazar"
                  class="w-full bg-[#0d0929] border border-[#2d1f85] rounded-xl px-3 py-2 text-xs font-bold text-white focus:outline-none focus:border-amber-500 transition">
@@ -376,7 +381,7 @@
             <label class="text-[11px] font-black uppercase text-slate-300 tracking-wider block mb-1">
               Observaciones / Enlace
             </label>
-            <input type="text" id="modal-input-notas" placeholder="Ej: Transmisión directa CNE"
+            <input type="text" id="modal-input-notas" placeholder="Ej: Transmisión directa Sala Situacional"
                    class="w-full bg-[#0d0929] border border-[#2d1f85] rounded-xl px-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-amber-500 transition">
           </div>
         </div>
@@ -388,7 +393,7 @@
           </button>
           <button type="submit" class="py-2.5 px-5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs uppercase flex items-center gap-1.5 shadow-lg shadow-amber-500/20 active:scale-95 transition cursor-pointer">
             <i data-lucide="check-circle-2" class="w-4 h-4"></i>
-            <span>Guardar Comando Datero</span>
+            <span>Guardar Comando Gatero</span>
           </button>
         </div>
       </form>
