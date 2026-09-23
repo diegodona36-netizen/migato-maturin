@@ -186,8 +186,8 @@
             <strong id="stat-val-cen" class="metric-value text-indigo-950">536 Centros</strong>
           </div>
           <div class="metric-card bg-emerald-50/70 border-emerald-200">
-            <span class="metric-label text-emerald-800">Viviendas / Fam.</span>
-            <strong id="stat-val-cas" class="metric-value text-emerald-950">285.000</strong>
+            <span id="stat-lbl-cas" class="metric-label text-emerald-800">Parroquias CNE</span>
+            <strong id="stat-val-cas" class="metric-value text-emerald-950">44 Parroquias</strong>
           </div>
         </div>
 
@@ -349,9 +349,6 @@
                 <span>📱</span>
                 <span>+58 412-0000000</span>
               </span>
-              <span class="px-1.5 py-0.2 rounded bg-sky-100 text-sky-900 font-bold text-[9px] uppercase">
-                En Guardia
-              </span>
             </div>
 
             <!-- Botón de Asignación / Edición Directa -->
@@ -433,7 +430,7 @@
     </div>
   </div>
 
-  <!-- MODAL DE ASIGNACIÓN DIRECTA DE COMANDO SECTORIAL -->
+  <!-- MODAL DE ASIGNACIÓN DIRECTA DE RESPONSABLE TERRITORIAL -->
   <div id="modal-asignar-comando" class="fixed inset-0 z-[2000] bg-slate-950/70 backdrop-blur-sm hidden items-center justify-center p-4">
     <div class="bg-white rounded-2xl shadow-2xl border-2 border-slate-800 w-full max-w-md overflow-hidden transform transition-all">
       <!-- Encabezado Modal -->
@@ -444,10 +441,10 @@
           </div>
           <div>
             <h3 class="font-black text-sm uppercase tracking-tight text-white" id="modal-asignar-title">
-              Asignar Comando Sectorial
+              Asignar Responsable Territorial
             </h3>
             <span class="text-[11px] font-mono text-sky-300/90 block" id="modal-asignar-subtitle">
-              Eje Territorial
+              Estructura Municipal y Parroquial MIGATO
             </span>
           </div>
         </div>
@@ -456,7 +453,7 @@
         </button>
       </div>
 
-      <!-- Formulario de 4 Campos -->
+      <!-- Formulario -->
       <form id="form-asignar-comando" class="p-5 space-y-3.5">
         <datalist id="datalist-pool-dirigentes"></datalist>
         <input type="hidden" id="input-asignar-id" value="">
@@ -484,11 +481,11 @@
               Cargo / Rol
             </label>
             <select id="input-asignar-cargo" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-2.5 py-2 text-xs font-bold text-slate-900 focus:outline-none focus:border-sky-500 focus:bg-white transition">
-              <option value="Jefe de Comando Sectorial">Jefe de Comando Sectorial</option>
-              <option value="Coordinador de Eje">Coordinador de Eje</option>
-              <option value="Responsable de Sector">Responsable de Sector</option>
+              <option value="Coordinador Municipal">Coordinador Municipal</option>
+              <option value="Responsable Parroquial">Responsable Parroquial</option>
               <option value="Responsable de Organización">Responsable de Organización</option>
-              <option value="Responsable de Movilización">Responsable de Movilización</option>
+              <option value="Responsable Electoral CNE">Responsable Electoral CNE</option>
+              <option value="Responsable de Logística">Responsable de Logística</option>
             </select>
           </div>
 
@@ -604,7 +601,7 @@
 
   <!-- 5. AUTENTICACIÓN Y CONTROLADOR PRINCIPAL DEL MÓDULO -->
   <script src="../js/auth.js"></script>
-  <script type="module" src="js/laminaApp.js?v=390"></script>
+  <script type="module" src="js/laminaApp.js?v=391"></script>
   <script>
     if (window.lucide && typeof window.lucide.createIcons === 'function') {
       window.lucide.createIcons();

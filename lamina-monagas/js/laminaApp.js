@@ -543,7 +543,7 @@ export class LaminaApp {
       }
     });
 
-    // Modal de Asignación Directa de Comando Sectorial
+    // Modal de Asignación Directa de Responsable Territorial
     const btnOpenAsignar = document.getElementById("btn-open-asignar-modal");
     if (btnOpenAsignar) {
       btnOpenAsignar.addEventListener("click", () => {
@@ -650,20 +650,21 @@ export class LaminaApp {
 
     const displayName = entityName || targetId;
     if (titleEl) titleEl.textContent = `Asignar Responsable: ${displayName}`;
-    if (subEl) subEl.textContent = `Polígono / Entidad ID: ${targetId}`;
+    if (subEl) subEl.textContent = `Estructura Territorial MIGATO • ID: ${targetId}`;
 
     // Cargar datos previos si existen
+    const defaultCargo = this.level === "estado" ? "Coordinador Municipal" : "Responsable Parroquial";
     const prevAssigned = getAssignedLeader(targetId);
     if (prevAssigned) {
       if (inputNombre) inputNombre.value = prevAssigned.nombre || "";
       if (inputTelf) inputTelf.value = prevAssigned.telefono || "";
-      if (inputCargo) inputCargo.value = prevAssigned.cargo || "Jefe de Comando Sectorial";
+      if (inputCargo) inputCargo.value = prevAssigned.cargo || defaultCargo;
       if (inputProf) inputProf.value = prevAssigned.profesion || prevAssigned.cedula || "";
     } else {
       const info = getComandoInfo(this.level, targetId, targetPId, this.activeMunId);
       if (inputNombre) inputNombre.value = (info && info.general && !info.general.includes("Coordinador") && !info.general.includes("Responsable")) ? info.general : "";
       if (inputTelf) inputTelf.value = (info && info.telefono && !info.telefono.includes("0000")) ? info.telefono : "";
-      if (inputCargo) inputCargo.value = "Jefe de Comando Sectorial";
+      if (inputCargo) inputCargo.value = defaultCargo;
       if (inputProf) inputProf.value = "";
     }
 
@@ -701,7 +702,7 @@ export class LaminaApp {
     };
 
     saveAssignedComando(id, payload);
-    auditLogger.logEvent("ASIGNACION_COMANDO_SECTORIAL", { id, payload });
+    auditLogger.logEvent("ASIGNACION_COMANDO_TERRITORIAL", { id, payload });
 
     this.closeAsignarModal();
 
@@ -992,7 +993,8 @@ export class LaminaApp {
       hab: "1.020.000",
       vot: "678.920",
       cen: "536",
-      cas: "285.000",
+      cas: "44 Parroquias",
+      casLabel: "Parroquias CNE",
       listTitle: "Municipios (Clic para enfocar)",
       listCount: (GEO_MUNICIPIOS_OFICIAL.features || []).length,
       items: (CATALOGO_MONAGAS || []).map(m => {
@@ -1096,19 +1098,21 @@ export class LaminaApp {
     const habFormatted = munDem.habitantes ? Number(munDem.habitantes).toLocaleString("es-VE") : (cleanMunId === "maturin" ? "547.014" : "—");
     const votFormatted = munDem.votantes ? Number(munDem.votantes).toLocaleString("es-VE") : (cleanMunId === "maturin" ? "402.085" : "—");
     const cenFormatted = munDem.centros ? Number(munDem.centros).toLocaleString("es-VE") : (cleanMunId === "maturin" ? "175" : "—");
-    const casFormatted = munDem.casas ? Number(munDem.casas).toLocaleString("es-VE") : (cleanMunId === "maturin" ? "148.500" : "—");
+    const parishCount = (munObj.parroquias || []).length;
+    const casFormatted = `${parishCount} Parroquias`;
 
-    this.updateHeaderUI(`MUNICIPIO ${cleanMunName.toUpperCase()}`, `ESTADO MONAGAS • ${(munObj.parroquias || []).length} PARROQUIAS OFICIALES`);
+    this.updateHeaderUI(`MUNICIPIO ${cleanMunName.toUpperCase()}`, `ESTADO MONAGAS • ${parishCount} PARROQUIAS OFICIALES`);
     this.renderSideStats({
       title: `MUNICIPIO ${cleanMunName.toUpperCase()}`,
       color: munColor,
       type: "Resumen Municipal Oficial",
-      sub: `Estado Monagas • ${(munObj.parroquias || []).length} Parroquias`,
-      code: `${(munObj.parroquias || []).length} PARROQUIAS`,
+      sub: `Estado Monagas • ${parishCount} Parroquias`,
+      code: `${parishCount} PARROQUIAS`,
       hab: habFormatted,
       vot: votFormatted,
       cen: cenFormatted,
       cas: casFormatted,
+      casLabel: "Parroquias CNE",
       listTitle: "Parroquias (Clic para enfocar)",
       listCount: (munObj.parroquias || []).length,
       backBtn: {
@@ -1461,7 +1465,7 @@ export class LaminaApp {
     const pHab = pDem.habitantes ? Number(pDem.habitantes).toLocaleString("es-VE") : "52.340";
     const pVot = pDem.votantes ? Number(pDem.votantes).toLocaleString("es-VE") : "38.450";
     const pCen = pDem.centros ? Number(pDem.centros).toLocaleString("es-VE") : "18";
-    const pCas = pDem.casas ? Number(pDem.casas).toLocaleString("es-VE") : "14.200";
+    const pSecFormatted = `${listItems.length} Sectores`;
 
     this.renderSideStats({
       title: cleanPName.toUpperCase(),
@@ -1472,8 +1476,9 @@ export class LaminaApp {
       hab: pHab,
       vot: pVot,
       cen: pCen,
-      cas: pCas,
-      listTitle: subparroquias.length > 0 ? "Ejes Territoriales / Sub-Parroquias" : "Sectores Censados",
+      cas: pSecFormatted,
+      casLabel: "Sectores Oficiales",
+      listTitle: subparroquias.length > 0 ? "Circuitos y Sectores" : "Sectores y Comunidades",
       listCount: listItems.length,
       backBtn: {
         label: `Ver todas las ${totalParrs} parroquias`,
@@ -1645,18 +1650,19 @@ export class LaminaApp {
     const ejeHabVal = eje.habitantes || Math.round((pDem.habitantes || 50000) / totalEjes);
     const ejeVotVal = eje.votantes || Math.round((pDem.votantes || 35000) / totalEjes);
     const ejeCenVal = eje.centros || Math.max(1, Math.round((pDem.centros || 15) / totalEjes));
-    const ejeCasVal = eje.casas || Math.round((pDem.casas || 12000) / totalEjes);
+    const ejeSecFormatted = `${sectoresToRender.length} Sectores`;
 
     this.renderSideStats({
       title: formatTitleCase(eje.nombre).toUpperCase(),
       color: eje.colorBorde || "#a855f7",
-      type: "Eje Territorial / Sub-Parroquia",
+      type: "Circuito Territorial",
       sub: `Parroquia ${cleanPName} • ${cleanMunName}`,
       code: "TERRITORIO",
       hab: Number(ejeHabVal).toLocaleString("es-VE"),
       vot: Number(ejeVotVal).toLocaleString("es-VE"),
       cen: Number(ejeCenVal).toLocaleString("es-VE"),
-      cas: Number(ejeCasVal).toLocaleString("es-VE"),
+      cas: ejeSecFormatted,
+      casLabel: "Sectores del Eje",
       listTitle: `Sectores de este Eje (${sectoresToRender.length})`,
       listCount: sectoresToRender.length,
       backBtn: {
@@ -1828,18 +1834,18 @@ export class LaminaApp {
     const secHabVal = sec.habitantes || Math.round((pDem.habitantes || 50000) / 16);
     const secVotVal = sec.votantes || Math.round((pDem.votantes || 35000) / 16);
     const secCenVal = sec.centros || 1;
-    const secCasVal = sec.casas || Math.round((pDem.casas || 12000) / 16);
 
     this.renderSideStats({
       title: `SECTOR ${cleanSecName.toUpperCase()}`,
       color: sec.colorBorde || sec.color || pColor,
       type: "Sector Comunitario",
       sub: `Parroquia ${cleanPName} • ${cleanMunName}`,
-      code: "CENSADO",
+      code: "TERRITORIO",
       hab: Number(secHabVal).toLocaleString("es-VE"),
       vot: Number(secVotVal).toLocaleString("es-VE"),
       cen: Number(secCenVal).toLocaleString("es-VE"),
-      cas: Number(secCasVal).toLocaleString("es-VE"),
+      cas: sec.centroVotacion ? "Asignado" : "Parroquia",
+      casLabel: "Centro Electoral",
       listTitle: "Información de la Comunidad",
       listCount: 1,
       backBtn: {
@@ -1953,6 +1959,7 @@ export class LaminaApp {
     const votEl = document.getElementById("stat-val-vot");
     const cenEl = document.getElementById("stat-val-cen");
     const casEl = document.getElementById("stat-val-cas");
+    const casLabelEl = document.getElementById("stat-lbl-cas");
     const listTitleEl = document.getElementById("side-list-title");
     const listCountEl = document.getElementById("side-list-count");
     const listEl = document.getElementById("side-interactive-list");
@@ -1970,6 +1977,7 @@ export class LaminaApp {
     if (votEl) votEl.textContent = data.vot;
     if (cenEl) cenEl.textContent = data.cen;
     if (casEl) casEl.textContent = data.cas;
+    if (casLabelEl) casLabelEl.textContent = data.casLabel || "Parroquias CNE";
 
     if (listTitleEl) listTitleEl.textContent = data.listTitle;
     if (listCountEl) listCountEl.textContent = String(data.listCount || 0);
@@ -2034,7 +2042,7 @@ export class LaminaApp {
     const listEl = document.getElementById("comando-interactive-list");
 
     if (levelEl) levelEl.textContent = info.nivel;
-    if (cargoEl) cargoEl.textContent = info.nivel.includes("Sectorial") ? "Comando Sectorial" : "Responsable Principal";
+    if (cargoEl) cargoEl.textContent = info.nivel.includes("Parroquial") ? "Responsable Parroquial" : (info.nivel.includes("Municipal") ? "Coordinador Municipal" : "Responsable Principal");
     if (nombreEl) nombreEl.textContent = info.general;
     if (divisionEl) divisionEl.textContent = info.division;
     if (telfEl) telfEl.innerHTML = `<span>📱</span><span>${info.telefono}</span>`;
@@ -2049,9 +2057,6 @@ export class LaminaApp {
               <span class="role-title truncate">${r.cargo}:</span>
               <span class="role-person truncate font-semibold text-slate-800">${r.responsable}</span>
             </div>
-            <span class="text-[9.5px] px-1.5 py-0.2 rounded font-bold uppercase ${r.estado === 'Activo' || r.estado === 'En Operación' ? 'bg-emerald-100 text-emerald-800' : 'bg-sky-100 text-sky-800'}">
-              ${r.estado}
-            </span>
           </div>
         `).join("");
       } else {
@@ -2063,7 +2068,7 @@ export class LaminaApp {
     if (subTitleEl) {
       if (this.level === "estado") subTitleEl.textContent = "Comandos Municipales (13)";
       else if (this.level === "municipio") subTitleEl.textContent = "Comandos Parroquiales";
-      else if (this.level === "parroquia") subTitleEl.textContent = "Comandos Sectoriales / Ejes";
+      else if (this.level === "parroquia") subTitleEl.textContent = "Centros CNE y Sectores";
       else subTitleEl.textContent = "Centros y Sectores del Eje";
     }
 
@@ -2078,7 +2083,7 @@ export class LaminaApp {
           <div class="territory-row hover:border-sky-400 flex items-center justify-between gap-1">
             <div onclick="${sub.onClick}" 
                  class="flex flex-col min-w-0 flex-1 cursor-pointer" 
-                 title="Ver comando de ${sub.nombre} • Clic para enfocar">
+                 title="Ver ${sub.nombre} • Clic para enfocar">
               <div class="flex items-center gap-1.5">
                 <span class="w-2 h-2 rounded-full bg-sky-500 shrink-0"></span>
                 <span class="font-bold text-xs text-slate-900 truncate">${sub.nombre}</span>
@@ -2088,12 +2093,13 @@ export class LaminaApp {
               </span>
             </div>
             <div class="flex items-center gap-1 shrink-0 ml-1">
+              ${(this.level === 'estado' || this.level === 'municipio') ? `
               <button type="button" 
                       onclick="event.stopPropagation(); laminaApp.openAsignarModal('${sub.id}', '${sub.nombre.replace(/'/g, "\\'")}', '${this.activeParishId || 'alto-de-los-godos'}')"
                       class="px-1.5 py-0.5 rounded bg-sky-100 hover:bg-sky-200 text-sky-900 text-[10px] font-black border border-sky-300 shadow-2xs transition active:scale-95 cursor-pointer"
                       title="Asignar o editar responsable">
                 ✏️ Asignar
-              </button>
+              </button>` : ''}
               <span class="text-[10px] font-extrabold text-sky-800 bg-sky-50 px-1.5 py-0.5 rounded border border-sky-200">
                 ${sub.parroquias ? `${sub.parroquias} parr.` : sub.centros ? `${sub.centros} centros` : 'Ver'}
               </span>
@@ -2460,7 +2466,7 @@ export class LaminaApp {
             <span class="text-xs font-black uppercase text-purple-400 tracking-wider block mb-2">🏘️ Sectores y Comunidades Coincidentes (${matchedSectors.length})</span>
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
               ${matchedSectors.map(s => {
-                const sDem = s.votantes ? `${Number(s.votantes).toLocaleString("es-VE")} vot.` : (s.casas ? `${s.casas} casas` : '');
+                const sDem = s.votantes ? `${Number(s.votantes).toLocaleString("es-VE")} vot.` : '';
                 return `
                   <div class="p-2.5 rounded-xl bg-[#140e40] border border-[#2d1f85] flex flex-col justify-between gap-1.5">
                     <div>
@@ -2591,7 +2597,6 @@ export class LaminaApp {
             </div>
             <div class="flex items-center gap-2 text-[11px] font-mono shrink-0">
               <span class="text-emerald-400 font-bold">📱 ${munComando?.telefono || '+58 412-0000000'}</span>
-              <span class="px-1.5 py-0.5 rounded bg-sky-900/60 text-sky-300 text-[9px] uppercase font-bold">En Guardia</span>
             </div>
           </div>
 
@@ -2610,8 +2615,8 @@ export class LaminaApp {
               <strong class="text-sm font-mono font-black text-indigo-200">${Number(munDem.centros || 0).toLocaleString("es-VE")}</strong>
             </div>
             <div class="p-2 rounded-xl bg-[#0e092e] border border-[#2d1f85]">
-              <span class="text-[10px] text-emerald-400 uppercase font-bold block">Viviendas / Fam.</span>
-              <strong class="text-sm font-mono font-black text-emerald-200">${Number(munDem.casas || 0).toLocaleString("es-VE")}</strong>
+              <span class="text-[10px] text-emerald-400 uppercase font-bold block">Parroquias CNE</span>
+              <strong class="text-sm font-mono font-black text-emerald-200">${(munObj.parroquias || []).length} Parroquias</strong>
             </div>
           </div>
         </div>
@@ -2698,7 +2703,7 @@ export class LaminaApp {
           </div>
 
           <div>
-            <span class="text-[10px] font-black uppercase text-amber-400 tracking-widest block">DESGLOSE TERRITORIAL Y COMANDOS DE BASE</span>
+            <span class="text-[10px] font-black uppercase text-amber-400 tracking-widest block">DESGLOSE TERRITORIAL Y CENTROS CNE</span>
             <h2 class="text-base sm:text-lg font-black text-white">
               📍 Parroquia ${pObj.nombre}
             </h2>
@@ -2737,7 +2742,7 @@ export class LaminaApp {
                       <span class="text-[10px] text-slate-400 block truncate">${sec.centroVotacion || 'Comunidad'}</span>
                     </div>
                     <div class="flex items-center justify-between text-[10px] text-slate-300 border-t border-[#2d1f85]/50 pt-1">
-                      <span class="font-mono text-sky-400">${sec.votantes ? `${Number(sec.votantes).toLocaleString("es-VE")} vot.` : (sec.casas ? `${sec.casas} casas` : '—')}</span>
+                      <span class="font-mono text-sky-400">${sec.votantes ? `${Number(sec.votantes).toLocaleString("es-VE")} vot.` : 'Padrón CNE'}</span>
                       <button type="button" onclick="window.laminaApp?.focusAndClose('sector', '${sec.id}', '${pId}', '${mId}')"
                         class="px-2 py-0.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-[10px] rounded transition cursor-pointer">
                         Enfocar ➔
@@ -2761,7 +2766,7 @@ export class LaminaApp {
                     <span class="text-[10px] text-slate-400 block truncate">${sec.centroVotacion || 'Sector Comunitario'}</span>
                   </div>
                   <div class="flex items-center justify-between text-[10px] text-slate-300 border-t border-[#2d1f85]/50 pt-1">
-                    <span class="font-mono text-sky-400">${sec.votantes ? `${Number(sec.votantes).toLocaleString("es-VE")} vot.` : (sec.casas ? `${sec.casas} casas` : '—')}</span>
+                    <span class="font-mono text-sky-400">${sec.votantes ? `${Number(sec.votantes).toLocaleString("es-VE")} vot.` : 'Padrón CNE'}</span>
                     <button type="button" onclick="window.laminaApp?.focusAndClose('sector', '${sec.id}', '${pId}', '${mId}')"
                       class="px-2 py-0.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-[10px] rounded transition cursor-pointer">
                       Enfocar ➔

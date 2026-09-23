@@ -16,10 +16,10 @@ export const COMANDO_ESTADAL = {
   division: "División de Ciencia y Tecnología",
   telefono: "+58 412-0000000",
   rolesClave: [
-    { cargo: "Coordinador Regional", responsable: "Comando Regional MIGATO", estado: "Activo", icono: "shield" },
-    { cargo: "Ciencia y Tecnología", responsable: "Ing. Diego Donado", estado: "En Operación", icono: "cpu" },
-    { cargo: "Comisión Electoral CNE", responsable: "Auditoría Electoral Regional", estado: "Acreditado", icono: "check-circle" },
-    { cargo: "Operaciones y Logística", responsable: "Despacho Central de Mando", estado: "En Guardia", icono: "radio" }
+    { cargo: "Coordinador Regional", responsable: "Comando Regional MIGATO", icono: "shield" },
+    { cargo: "Ciencia y Tecnología", responsable: "Ing. Diego Donado", icono: "cpu" },
+    { cargo: "Comisión Electoral CNE", responsable: "Auditoría Electoral Regional", icono: "check-circle" },
+    { cargo: "Operaciones y Logística", responsable: "Despacho Central de Mando", icono: "radio" }
   ]
 };
 
@@ -30,10 +30,10 @@ export const COMANDOS_MUNICIPALES = {
     responsableGeneral: "Coordinación Municipal Maturín",
     telefono: "+58 414-7654321",
     rolesClave: [
-      { cargo: "Coordinador Municipal", responsable: "Comando Municipal Maturín", estado: "Activo", icono: "user-check" },
-      { cargo: "Coordinador Electoral CNE", responsable: "Auditoría Electoral Maturín", estado: "Acreditado", icono: "vote" },
-      { cargo: "Enlace de Logística", responsable: "Operaciones y Movilización", estado: "Listo", icono: "truck" },
-      { cargo: "Enlace Parroquial", responsable: "Supervisión 11 Parroquias", estado: "En Línea", icono: "network" }
+      { cargo: "Coordinador Municipal", responsable: "Comando Municipal Maturín", icono: "user-check" },
+      { cargo: "Coordinador Electoral CNE", responsable: "Auditoría Electoral Maturín", icono: "vote" },
+      { cargo: "Enlace de Logística", responsable: "Operaciones y Movilización", icono: "truck" },
+      { cargo: "Enlace Parroquial", responsable: "Supervisión 11 Parroquias", icono: "network" }
     ],
     parroquiasCount: 11,
     centrosCount: 175,
@@ -45,8 +45,8 @@ export const COMANDOS_MUNICIPALES = {
     responsableGeneral: "Coordinador Municipal Caripe",
     telefono: "+58 412-3456789",
     rolesClave: [
-      { cargo: "Coordinador Municipal", responsable: "Comando Caripe", estado: "Activo", icono: "user-check" },
-      { cargo: "Enlace Electoral CNE", responsable: "Coordinación Electoral Caripe", estado: "Acreditado", icono: "vote" }
+      { cargo: "Coordinador Municipal", responsable: "Comando Caripe", icono: "user-check" },
+      { cargo: "Enlace Electoral CNE", responsable: "Coordinación Electoral Caripe", icono: "vote" }
     ],
     parroquiasCount: 6,
     centrosCount: 38,
@@ -58,8 +58,8 @@ export const COMANDOS_MUNICIPALES = {
     responsableGeneral: "Coordinador Municipal Punta de Mata",
     telefono: "+58 414-9876543",
     rolesClave: [
-      { cargo: "Coordinador Municipal", responsable: "Comando Punta de Mata", estado: "Activo", icono: "user-check" },
-      { cargo: "Enlace Electoral CNE", responsable: "Coordinación Electoral Zamora", estado: "Acreditado", icono: "vote" }
+      { cargo: "Coordinador Municipal", responsable: "Comando Punta de Mata", icono: "user-check" },
+      { cargo: "Enlace Electoral CNE", responsable: "Coordinación Electoral Zamora", icono: "vote" }
     ],
     parroquiasCount: 2,
     centrosCount: 42,
@@ -71,8 +71,8 @@ export const COMANDOS_MUNICIPALES = {
     responsableGeneral: "Coordinador Municipal Caripito",
     telefono: "+58 416-1234567",
     rolesClave: [
-      { cargo: "Coordinador Municipal", responsable: "Comando Caripito", estado: "Activo", icono: "user-check" },
-      { cargo: "Enlace Electoral CNE", responsable: "Coordinación Electoral Caripito", estado: "Acreditado", icono: "vote" }
+      { cargo: "Coordinador Municipal", responsable: "Comando Caripito", icono: "user-check" },
+      { cargo: "Enlace Electoral CNE", responsable: "Coordinación Electoral Caripito", icono: "vote" }
     ],
     parroquiasCount: 1,
     centrosCount: 35,
@@ -84,8 +84,8 @@ export const COMANDOS_MUNICIPALES = {
     responsableGeneral: "Coordinador Municipal Aragua de Maturín",
     telefono: "+58 424-5551212",
     rolesClave: [
-      { cargo: "Coordinador Municipal", responsable: "Comando Piar", estado: "Activo", icono: "user-check" },
-      { cargo: "Enlace Electoral CNE", responsable: "Coordinación Electoral Piar", estado: "Acreditado", icono: "vote" }
+      { cargo: "Coordinador Municipal", responsable: "Comando Piar", icono: "user-check" },
+      { cargo: "Enlace Electoral CNE", responsable: "Coordinación Electoral Piar", icono: "vote" }
     ],
     parroquiasCount: 7,
     centrosCount: 44,
@@ -97,8 +97,8 @@ export const COMANDOS_MUNICIPALES = {
     responsableGeneral: "Coordinador Municipal Caicara",
     telefono: "+58 412-8889900",
     rolesClave: [
-      { cargo: "Coordinador Municipal", responsable: "Comando Caicara", estado: "Activo", icono: "user-check" },
-      { cargo: "Enlace Electoral CNE", responsable: "Coordinación Electoral Cedeño", estado: "Acreditado", icono: "vote" }
+      { cargo: "Coordinador Municipal", responsable: "Comando Caicara", icono: "user-check" },
+      { cargo: "Enlace Electoral CNE", responsable: "Coordinación Electoral Cedeño", icono: "vote" }
     ],
     parroquiasCount: 4,
     centrosCount: 32,
@@ -110,8 +110,8 @@ export const COMANDOS_MUNICIPALES = {
     responsableGeneral: "Coordinador Municipal Quiriquire",
     telefono: "+58 414-3334455",
     rolesClave: [
-      { cargo: "Coordinador Municipal", responsable: "Comando Quiriquire", estado: "Activo", icono: "user-check" },
-      { cargo: "Enlace Electoral CNE", responsable: "Coordinación Electoral Punceres", estado: "Acreditado", icono: "vote" }
+      { cargo: "Coordinador Municipal", responsable: "Comando Quiriquire", icono: "user-check" },
+      { cargo: "Enlace Electoral CNE", responsable: "Coordinación Electoral Punceres", icono: "vote" }
     ],
     parroquiasCount: 2,
     centrosCount: 22,
@@ -123,8 +123,8 @@ export const COMANDOS_MUNICIPALES = {
     responsableGeneral: "Coordinador Municipal San Antonio",
     telefono: "+58 416-7778899",
     rolesClave: [
-      { cargo: "Coordinador Municipal", responsable: "Comando San Antonio de Capayacuar", estado: "Activo", icono: "user-check" },
-      { cargo: "Enlace Electoral CNE", responsable: "Coordinación Electoral Acosta", estado: "Acreditado", icono: "vote" }
+      { cargo: "Coordinador Municipal", responsable: "Comando San Antonio de Capayacuar", icono: "user-check" },
+      { cargo: "Enlace Electoral CNE", responsable: "Coordinación Electoral Acosta", icono: "vote" }
     ],
     parroquiasCount: 2,
     centrosCount: 25,
@@ -136,8 +136,8 @@ export const COMANDOS_MUNICIPALES = {
     responsableGeneral: "Coordinador Municipal Aguasay",
     telefono: "+58 424-6667788",
     rolesClave: [
-      { cargo: "Coordinador Municipal", responsable: "Comando Aguasay", estado: "Activo", icono: "user-check" },
-      { cargo: "Enlace Electoral CNE", responsable: "Coordinación Electoral Aguasay", estado: "Acreditado", icono: "vote" }
+      { cargo: "Coordinador Municipal", responsable: "Comando Aguasay", icono: "user-check" },
+      { cargo: "Enlace Electoral CNE", responsable: "Coordinación Electoral Aguasay", icono: "vote" }
     ],
     parroquiasCount: 1,
     centrosCount: 14,
@@ -149,8 +149,8 @@ export const COMANDOS_MUNICIPALES = {
     responsableGeneral: "Coordinador Municipal Santa Bárbara",
     telefono: "+58 412-2223344",
     rolesClave: [
-      { cargo: "Coordinador Municipal", responsable: "Comando Santa Bárbara", estado: "Activo", icono: "user-check" },
-      { cargo: "Enlace Electoral CNE", responsable: "Coordinación Electoral Santa Bárbara", estado: "Acreditado", icono: "vote" }
+      { cargo: "Coordinador Municipal", responsable: "Comando Santa Bárbara", icono: "user-check" },
+      { cargo: "Enlace Electoral CNE", responsable: "Coordinación Electoral Santa Bárbara", icono: "vote" }
     ],
     parroquiasCount: 1,
     centrosCount: 12,
@@ -162,8 +162,8 @@ export const COMANDOS_MUNICIPALES = {
     responsableGeneral: "Coordinador Municipal Uracoa",
     telefono: "+58 414-1119988",
     rolesClave: [
-      { cargo: "Coordinador Municipal", responsable: "Comando Uracoa", estado: "Activo", icono: "user-check" },
-      { cargo: "Enlace Electoral CNE", responsable: "Coordinación Electoral Uracoa", estado: "Acreditado", icono: "vote" }
+      { cargo: "Coordinador Municipal", responsable: "Comando Uracoa", icono: "user-check" },
+      { cargo: "Enlace Electoral CNE", responsable: "Coordinación Electoral Uracoa", icono: "vote" }
     ],
     parroquiasCount: 1,
     centrosCount: 11,
@@ -175,8 +175,8 @@ export const COMANDOS_MUNICIPALES = {
     responsableGeneral: "Coordinador Municipal Temblador",
     telefono: "+58 416-4445566",
     rolesClave: [
-      { cargo: "Coordinador Municipal", responsable: "Comando Temblador", estado: "Activo", icono: "user-check" },
-      { cargo: "Enlace Electoral CNE", responsable: "Coordinación Electoral Temblador", estado: "Acreditado", icono: "vote" }
+      { cargo: "Coordinador Municipal", responsable: "Comando Temblador", icono: "user-check" },
+      { cargo: "Enlace Electoral CNE", responsable: "Coordinación Electoral Temblador", icono: "vote" }
     ],
     parroquiasCount: 4,
     centrosCount: 30,
@@ -188,8 +188,8 @@ export const COMANDOS_MUNICIPALES = {
     responsableGeneral: "Coordinador Municipal Barrancas",
     telefono: "+58 424-9990011",
     rolesClave: [
-      { cargo: "Coordinador Municipal", responsable: "Comando Barrancas del Orinoco", estado: "Activo", icono: "user-check" },
-      { cargo: "Enlace Electoral CNE", responsable: "Coordinación Electoral Sotillo", estado: "Acreditado", icono: "vote" }
+      { cargo: "Coordinador Municipal", responsable: "Comando Barrancas del Orinoco", icono: "user-check" },
+      { cargo: "Enlace Electoral CNE", responsable: "Coordinación Electoral Sotillo", icono: "vote" }
     ],
     parroquiasCount: 2,
     centrosCount: 26,
@@ -205,10 +205,10 @@ export const COMANDOS_PARROQUIALES = {
     responsablePrincipal: "Responsable Parroquia Los Godos",
     telefono: "+58 412-1234567",
     rolesClave: [
-      { cargo: "Responsable Parroquial", responsable: "Responsable Parroquia Los Godos", estado: "Activo", icono: "user-check" },
-      { cargo: "Responsable de Organización", responsable: "Organización Parroquial Godos", estado: "Acreditado", icono: "users" },
-      { cargo: "Enlace Territorial de Ejes", responsable: "Coordinación de 3 Ejes Territoriales", estado: "En Campo", icono: "map-pin" },
-      { cargo: "Control de Centros Electorales", responsable: "Mesa Técnica Electoral", estado: "Verificado", icono: "check-circle-2" }
+      { cargo: "Responsable Parroquial", responsable: "Responsable Parroquia Los Godos", icono: "user-check" },
+      { cargo: "Responsable de Organización", responsable: "Organización Parroquial Godos", icono: "users" },
+      { cargo: "Enlace Territorial de Ejes", responsable: "Coordinación de 3 Ejes Territoriales", icono: "map-pin" },
+      { cargo: "Control de Centros Electorales", responsable: "Mesa Técnica Electoral", icono: "check-circle-2" }
     ],
     centrosCount: 40,
     electores: 80630
@@ -220,9 +220,9 @@ export const COMANDOS_PARROQUIALES = {
     responsablePrincipal: "Coordinador Parroquial San Simón",
     telefono: "+58 414-7654321",
     rolesClave: [
-      { cargo: "Responsable Parroquial", responsable: "Comando San Simón Centro", estado: "Activo", icono: "user-check" },
-      { cargo: "Responsable de Organización", responsable: "Organización Electoral", estado: "Acreditado", icono: "users" },
-      { cargo: "Enlace Territorial", responsable: "Supervisión Sectores Centrales", estado: "En Campo", icono: "map-pin" }
+      { cargo: "Responsable Parroquial", responsable: "Comando San Simón Centro", icono: "user-check" },
+      { cargo: "Responsable de Organización", responsable: "Organización Electoral", icono: "users" },
+      { cargo: "Enlace Territorial", responsable: "Supervisión Sectores Centrales", icono: "map-pin" }
     ],
     centrosCount: 45,
     electores: 92400
@@ -234,8 +234,8 @@ export const COMANDOS_PARROQUIALES = {
     responsablePrincipal: "Coordinador Parroquial Boquerón",
     telefono: "+58 424-9876543",
     rolesClave: [
-      { cargo: "Responsable Parroquial", responsable: "Comando Boquerón / Tipuro", estado: "Activo", icono: "user-check" },
-      { cargo: "Responsable de Organización", responsable: "Organización Eje Norte", estado: "Acreditado", icono: "users" }
+      { cargo: "Responsable Parroquial", responsable: "Comando Boquerón / Tipuro", icono: "user-check" },
+      { cargo: "Responsable de Organización", responsable: "Organización Eje Norte", icono: "users" }
     ],
     centrosCount: 28,
     electores: 61200
@@ -247,8 +247,8 @@ export const COMANDOS_PARROQUIALES = {
     responsablePrincipal: "Coordinador Parroquial Las Cocuizas",
     telefono: "+58 416-5551234",
     rolesClave: [
-      { cargo: "Responsable Parroquial", responsable: "Comando Las Cocuizas", estado: "Activo", icono: "user-check" },
-      { cargo: "Responsable de Organización", responsable: "Organización Las Cocuizas", estado: "Acreditado", icono: "users" }
+      { cargo: "Responsable Parroquial", responsable: "Comando Las Cocuizas", icono: "user-check" },
+      { cargo: "Responsable de Organización", responsable: "Organización Las Cocuizas", icono: "users" }
     ],
     centrosCount: 32,
     electores: 68500
@@ -260,8 +260,8 @@ export const COMANDOS_PARROQUIALES = {
     responsablePrincipal: "Coordinador Parroquial Santa Cruz",
     telefono: "+58 414-3332211",
     rolesClave: [
-      { cargo: "Responsable Parroquial", responsable: "Comando Santa Cruz", estado: "Activo", icono: "user-check" },
-      { cargo: "Responsable de Organización", responsable: "Organización Zona Industrial", estado: "Acreditado", icono: "users" }
+      { cargo: "Responsable Parroquial", responsable: "Comando Santa Cruz", icono: "user-check" },
+      { cargo: "Responsable de Organización", responsable: "Organización Zona Industrial", icono: "users" }
     ],
     centrosCount: 16,
     electores: 34100
@@ -273,8 +273,8 @@ export const COMANDOS_PARROQUIALES = {
     responsablePrincipal: "Coordinador Parroquial La Pica",
     telefono: "+58 412-4443322",
     rolesClave: [
-      { cargo: "Responsable Parroquial", responsable: "Comando La Pica", estado: "Activo", icono: "user-check" },
-      { cargo: "Responsable de Organización", responsable: "Organización Rural La Pica", estado: "Acreditado", icono: "users" }
+      { cargo: "Responsable Parroquial", responsable: "Comando La Pica", icono: "user-check" },
+      { cargo: "Responsable de Organización", responsable: "Organización Rural La Pica", icono: "users" }
     ],
     centrosCount: 14,
     electores: 21800
@@ -286,8 +286,8 @@ export const COMANDOS_PARROQUIALES = {
     responsablePrincipal: "Coordinador Parroquial El Corozo",
     telefono: "+58 414-5556677",
     rolesClave: [
-      { cargo: "Responsable Parroquial", responsable: "Comando El Corozo", estado: "Activo", icono: "user-check" },
-      { cargo: "Responsable de Organización", responsable: "Organización El Corozo", estado: "Acreditado", icono: "users" }
+      { cargo: "Responsable Parroquial", responsable: "Comando El Corozo", icono: "user-check" },
+      { cargo: "Responsable de Organización", responsable: "Organización El Corozo", icono: "users" }
     ],
     centrosCount: 8,
     electores: 11400
@@ -299,8 +299,8 @@ export const COMANDOS_PARROQUIALES = {
     responsablePrincipal: "Coordinador Parroquial El Furrial",
     telefono: "+58 424-7778899",
     rolesClave: [
-      { cargo: "Responsable Parroquial", responsable: "Comando El Furrial", estado: "Activo", icono: "user-check" },
-      { cargo: "Responsable de Organización", responsable: "Organización Furrial", estado: "Acreditado", icono: "users" }
+      { cargo: "Responsable Parroquial", responsable: "Comando El Furrial", icono: "user-check" },
+      { cargo: "Responsable de Organización", responsable: "Organización Furrial", icono: "users" }
     ],
     centrosCount: 10,
     electores: 15300
@@ -312,11 +312,24 @@ export const COMANDOS_PARROQUIALES = {
     responsablePrincipal: "Coordinador Parroquial Jusepín",
     telefono: "+58 416-8881122",
     rolesClave: [
-      { cargo: "Responsable Parroquial", responsable: "Comando Jusepín", estado: "Activo", icono: "user-check" },
-      { cargo: "Responsable de Organización", responsable: "Organización Jusepín", estado: "Acreditado", icono: "users" }
+      { cargo: "Responsable Parroquial", responsable: "Comando Jusepín", icono: "user-check" },
+      { cargo: "Responsable de Organización", responsable: "Organización Jusepín", icono: "users" }
     ],
     centrosCount: 7,
     electores: 10200
+  },
+    "san-simon-rural": {
+    parroquiaId: "san-simon-rural",
+    municipioId: "maturin",
+    nombre: "San Simón Rural",
+    responsablePrincipal: "Coordinador Parroquial San Simón Rural",
+    telefono: "+58 412-1112233",
+    rolesClave: [
+      { cargo: "Responsable Parroquial", responsable: "Comando San Simón Rural", icono: "user-check" },
+      { cargo: "Responsable de Organización", responsable: "Organización Rural", icono: "users" }
+    ],
+    centrosCount: 8,
+    electores: 9800
   },
   "san-vicente": {
     parroquiaId: "san-vicente",
@@ -325,8 +338,8 @@ export const COMANDOS_PARROQUIALES = {
     responsablePrincipal: "Coordinador Parroquial San Vicente",
     telefono: "+58 412-9993344",
     rolesClave: [
-      { cargo: "Responsable Parroquial", responsable: "Comando San Vicente", estado: "Activo", icono: "user-check" },
-      { cargo: "Responsable de Organización", responsable: "Organización San Vicente", estado: "Acreditado", icono: "users" }
+      { cargo: "Responsable Parroquial", responsable: "Comando San Vicente", icono: "user-check" },
+      { cargo: "Responsable de Organización", responsable: "Organización San Vicente", icono: "users" }
     ],
     centrosCount: 9,
     electores: 12800
@@ -424,7 +437,7 @@ export function upsertDirigenteInPool(dirigente) {
         nombre: cleanNombre,
         cedula: cleanCedula || pool[index].cedula || "",
         telefono: dirigente.telefono || pool[index].telefono || "",
-        cargo: dirigente.cargo || pool[index].cargo || "Jefe de Comando Sectorial",
+        cargo: dirigente.cargo || pool[index].cargo || "Responsable Parroquial",
         profesion: dirigente.profesion || pool[index].profesion || "",
         ultimaActualizacion: new Date().toISOString()
       };
@@ -434,7 +447,7 @@ export function upsertDirigenteInPool(dirigente) {
         nombre: cleanNombre,
         cedula: cleanCedula,
         telefono: dirigente.telefono || "",
-        cargo: dirigente.cargo || "Jefe de Comando Sectorial",
+        cargo: dirigente.cargo || "Responsable Parroquial",
         profesion: dirigente.profesion || "",
         fechaRegistro: new Date().toISOString()
       });
@@ -452,7 +465,7 @@ export function saveAssignedComando(id, payload) {
       id,
       nombre: payload.nombre || "Responsable Asignado",
       telefono: payload.telefono || "",
-      cargo: payload.cargo || "Jefe de Comando Sectorial",
+      cargo: payload.cargo || "Responsable Parroquial",
       cedula: payload.cedula || "",
       profesion: payload.profesion || "",
       parroquiaId: payload.parroquiaId || "",
@@ -507,8 +520,8 @@ export function getComandoInfo(level, entityId, parishId = null, munId = null) {
       responsableGeneral: `Coordinador Municipal ${cleanMunId}`,
       telefono: "+58 412-0000000",
       rolesClave: [
-        { cargo: "Coordinador Municipal", responsable: `Comando Municipal ${cleanMunId}`, estado: "Activo", icono: "user-check" },
-        { cargo: "Enlace Electoral CNE", responsable: "Auditoría Municipal", estado: "Acreditado", icono: "vote" }
+        { cargo: "Coordinador Municipal", responsable: `Comando Municipal ${cleanMunId}`, icono: "user-check" },
+        { cargo: "Enlace Electoral CNE", responsable: "Auditoría Municipal", icono: "vote" }
       ],
       parroquiasCount: 1,
       centrosCount: 15
@@ -545,13 +558,13 @@ export function getComandoInfo(level, entityId, parishId = null, munId = null) {
       responsablePrincipal: `Responsable Parroquial ${cleanPId}`,
       telefono: "+58 412-0000000",
       rolesClave: [
-        { cargo: "Responsable Parroquial", responsable: `Comando ${cleanPId}`, estado: "Activo", icono: "user-check" },
-        { cargo: "Responsable de Organización", responsable: "Auditoría CNE", estado: "Acreditado", icono: "vote" }
+        { cargo: "Responsable Parroquial", responsable: `Comando ${cleanPId}`, icono: "user-check" },
+        { cargo: "Responsable de Organización", responsable: "Auditoría CNE", icono: "vote" }
       ],
       centrosCount: 10
     };
 
-    // Subdirectorio de Comandos Sectoriales / Ejes de esta parroquia
+    // Subdirectorio de Circuitos y Sectores territoriales bajo esta parroquia
     const ejesList = Object.values(COMANDOS_SECTORIALES).filter(e => e.parroquiaId === cleanPId);
 
     return {
@@ -562,20 +575,16 @@ export function getComandoInfo(level, entityId, parishId = null, munId = null) {
       telefono: parishComando.telefono,
       roles: parishComando.rolesClave,
       centros: parishComando.centrosCount,
-      subdirectorios: ejesList.map(e => {
-        const assigned = getAssignedLeader(e.ejeId);
-        return {
-          id: e.ejeId,
-          nombre: e.nombre,
-          responsable: assigned ? assigned.nombre : e.responsableSectorial,
-          telefono: assigned ? assigned.telefono : e.telefono,
-          cargo: assigned ? assigned.cargo : e.cargo,
-          tipo: "Comando Sectorial",
-          centros: (e.centrosAsignados || []).length,
-          isAssigned: !!assigned,
-          onClick: `laminaApp.selectSubParroquia('${e.ejeId}', '${cleanPId}', '${cleanMunId}')`
-        };
-      })
+      subdirectorios: ejesList.map(e => ({
+        id: e.ejeId,
+        nombre: e.nombre,
+        responsable: `Comando Parroquial ${parishComando.nombre}`,
+        telefono: parishComando.telefono,
+        tipo: "Circuito Territorial CNE",
+        centros: (e.centrosAsignados || []).length,
+        isAssigned: false,
+        onClick: `laminaApp.selectSubParroquia('${e.ejeId}', '${cleanPId}', '${cleanMunId}')`
+      }))
     };
   }
 
@@ -586,39 +595,32 @@ export function getComandoInfo(level, entityId, parishId = null, munId = null) {
 
     const ejeComando = COMANDOS_SECTORIALES[cleanEjeId] || Object.values(COMANDOS_SECTORIALES).find(e => e.nombre.toLowerCase().includes(cleanEjeId.toLowerCase())) || {
       ejeId: cleanEjeId,
-      nombre: `Comando Sectorial • ${cleanEjeId}`,
-      responsableSectorial: `Responsable de Eje / Sector`,
-      cargo: "Jefe de Comando Sectorial",
-      telefono: "+58 412-0000000",
-      centrosAsignados: ["Centro Principal del Polígono"],
-      sectores: ["Sectores Asociados al Circuito"]
+      nombre: `Circuito Territorial • ${cleanEjeId}`,
+      centrosAsignados: ["Centro Principal CNE"],
+      sectores: ["Sectores Asociados"]
     };
 
-    const assigned = getAssignedLeader(cleanEjeId);
-    const respNombre = assigned ? assigned.nombre : ejeComando.responsableSectorial;
-    const respTel = assigned ? assigned.telefono : ejeComando.telefono;
-    const respCargo = assigned ? assigned.cargo : (ejeComando.cargo || "Jefe de Comando Sectorial");
-    const respDetalle = assigned ? (assigned.profesion || assigned.cedula || "Acreditado") : (ejeComando.cargo || "Responsable de Polígono");
+    const parishComando = COMANDOS_PARROQUIALES[cleanPId] || {
+      nombre: `Parroquia ${cleanPId}`,
+      responsablePrincipal: "Coordinador Parroquial",
+      telefono: "+58 412-0000000"
+    };
 
     return {
-      nivel: "Comando Sectorial / Eje Territorial",
+      nivel: "Territorio Electoral • Jurisdicción Parroquial",
       ejeId: cleanEjeId,
       parroquiaId: cleanPId,
       entidad: ejeComando.nombre,
-      general: respNombre,
-      division: respCargo,
-      telefono: respTel,
-      detalle: respDetalle,
-      isAssigned: !!assigned,
+      general: parishComando.responsablePrincipal,
+      division: `Supervisión Parroquia ${parishComando.nombre || cleanPId}`,
+      telefono: parishComando.telefono,
+      detalle: "Estructura Parroquial MIGATO",
+      isAssigned: false,
       centrosAsignados: ejeComando.centrosAsignados || [],
       mesas: ejeComando.mesasSupervisadas || 4,
       electores: ejeComando.electoresAprox || 5000,
       sectores: ejeComando.sectores || [],
-      roles: [
-        { cargo: "Responsable del Eje", responsable: respNombre, estado: "En Campo", icono: "shield" },
-        { cargo: "Responsable de Organización", responsable: "Estructura y Organización", estado: "Acreditado", icono: "users" },
-        { cargo: "Movilización y Logística", responsable: "Brigada Sectorial", estado: "Activo", icono: "users" }
-      ],
+      roles: [],
       subdirectorios: []
     };
   }
