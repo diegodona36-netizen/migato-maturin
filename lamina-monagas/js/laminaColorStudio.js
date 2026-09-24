@@ -171,6 +171,31 @@ export class LaminaColorStudio {
           </div>
         </div>
 
+        <!-- BARRA DE CONTROL DE OPACIDAD Y TRANSPARENCIA DE POLÍGONOS -->
+        <div class="px-3.5 py-2 bg-amber-50/70 border-b border-amber-200/80 flex flex-wrap items-center justify-between gap-3 text-xs shrink-0">
+          <div class="flex items-center gap-2">
+            <span class="font-black text-slate-800 flex items-center gap-1.5 uppercase text-[11px] tracking-wide">
+              <i data-lucide="sliders" class="w-3.5 h-3.5 text-amber-600"></i>
+              Opacidad de Polígonos:
+            </span>
+            <input type="range" id="slider-polygon-opacity" min="0.10" max="0.80" step="0.02" value="0.26"
+                   class="w-32 sm:w-44 h-2 bg-slate-300 rounded-lg appearance-none cursor-pointer accent-amber-500">
+            <span id="label-polygon-opacity" class="font-mono font-black text-amber-700 bg-amber-100 px-2 py-0.5 rounded-md text-[11px] border border-amber-300">
+              26% (Suave)
+            </span>
+          </div>
+
+          <div class="flex items-center gap-1.5">
+            <button type="button" id="btn-preset-suave" class="px-2.5 py-1 rounded-lg bg-sky-600 hover:bg-sky-700 text-white font-bold text-[11px] shadow-xs transition active:scale-95 cursor-pointer flex items-center gap-1" title="Aplica opacidad suave del 26% para leer calles y nombres perfectamente">
+              <i data-lucide="eye" class="w-3.5 h-3.5 text-sky-200"></i>
+              <span>Tonos Suaves (26%)</span>
+            </button>
+            <button type="button" id="btn-preset-medio" class="px-2 py-1 rounded-lg bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold text-[11px] transition cursor-pointer" title="Opacidad media (40%)">
+              Medio (40%)
+            </button>
+          </div>
+        </div>
+
         <!-- CUERPO CON SCROLL -->
         <div id="color-studio-body" class="p-3 sm:p-4 overflow-y-auto flex-1 space-y-3 bg-slate-50 min-h-0 text-slate-900">
           <!-- Inyectado dinámicamente -->
@@ -240,6 +265,46 @@ export class LaminaColorStudio {
       this.applyPreset("reset");
     });
 
+    // Control de slider de opacidad
+    const sliderOpacity = document.getElementById("slider-polygon-opacity");
+    const labelOpacity = document.getElementById("label-polygon-opacity");
+
+    const updateSliderLabel = (val) => {
+      const pct = Math.round(val * 100);
+      let desc = "Suave";
+      if (pct > 50) desc = "Fuerte";
+      else if (pct > 32) desc = "Medio";
+      if (labelOpacity) {
+        labelOpacity.textContent = `${pct}% (${desc})`;
+      }
+    };
+
+    sliderOpacity?.addEventListener("input", (e) => {
+      const val = parseFloat(e.target.value);
+      updateSliderLabel(val);
+      if (this.app && typeof this.app.updatePolygonOpacity === "function") {
+        this.app.updatePolygonOpacity(val);
+      }
+    });
+
+    document.getElementById("btn-preset-suave")?.addEventListener("click", () => {
+      if (sliderOpacity) sliderOpacity.value = 0.26;
+      updateSliderLabel(0.26);
+      if (this.app && typeof this.app.updatePolygonOpacity === "function") {
+        this.app.updatePolygonOpacity(0.26);
+      }
+      this.showToast("Opacidad suave (26%) aplicada");
+    });
+
+    document.getElementById("btn-preset-medio")?.addEventListener("click", () => {
+      if (sliderOpacity) sliderOpacity.value = 0.40;
+      updateSliderLabel(0.40);
+      if (this.app && typeof this.app.updatePolygonOpacity === "function") {
+        this.app.updatePolygonOpacity(0.40);
+      }
+      this.showToast("Opacidad media (40%) aplicada");
+    });
+
     document.getElementById("btn-copy-color-config")?.addEventListener("click", () => {
       this.copyConfig();
     });
@@ -299,6 +364,19 @@ export class LaminaColorStudio {
     modal.classList.remove("hidden");
     modal.classList.add("flex");
     this.isOpen = true;
+
+    // Sincronizar slider de opacidad con el valor real del mapa
+    const sliderOpacity = document.getElementById("slider-polygon-opacity");
+    const labelOpacity = document.getElementById("label-polygon-opacity");
+    if (sliderOpacity) {
+      const curOp = this.app.polygonOpacity || 0.26;
+      sliderOpacity.value = curOp;
+      const pct = Math.round(curOp * 100);
+      let desc = pct > 50 ? "Fuerte" : (pct > 32 ? "Medio" : "Suave");
+      if (labelOpacity) {
+        labelOpacity.textContent = `${pct}% (${desc})`;
+      }
+    }
 
     this.updateTabsUI();
     this.renderBody();
@@ -369,11 +447,18 @@ export class LaminaColorStudio {
     });
 
     let html = `
+      <!-- BARRA DE BÚSQUEDA Y FILTRO -->
+      <div class="relative w-full pb-1">
+        <input type="text" id="filter-input-mun" placeholder="Buscar municipio por nombre..."
+               class="w-full pl-9 pr-3 py-2 rounded-xl border border-slate-300 text-xs font-bold text-slate-800 placeholder-slate-400 focus:outline-none focus:border-sky-500 bg-white transition shadow-2xs">
+        <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3 top-2.5 pointer-events-none"></i>
+      </div>
+
       <div class="flex items-center justify-between text-xs font-bold text-slate-500 pb-1">
         <span>Toca el cuadro de color o escribe el código HEX. Los polígonos del mapa cambian de inmediato.</span>
         <span class="font-mono font-black text-slate-700">${items.length} Municipios</span>
       </div>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-2.5">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-2.5" id="grid-mun-list">
     `;
 
     items.forEach(item => {
@@ -424,6 +509,18 @@ export class LaminaColorStudio {
     html += `</div>`;
     container.innerHTML = html;
 
+    // Filtro de búsqueda en tiempo real
+    const filterInputMun = container.querySelector("#filter-input-mun");
+    filterInputMun?.addEventListener("input", (e) => {
+      const q = e.target.value.toLowerCase().trim();
+      items.forEach(item => {
+        const row = document.getElementById(`color-row-mun-${item.id}`);
+        if (!row) return;
+        const matches = !q || item.nombre.toLowerCase().includes(q) || item.id.toLowerCase().includes(q);
+        row.style.display = matches ? "" : "none";
+      });
+    });
+
     // Conectar eventos de cambio
     container.querySelectorAll(".color-picker-input-mun").forEach(inp => {
       inp.addEventListener("input", (e) => {
@@ -465,18 +562,23 @@ export class LaminaColorStudio {
     const activeMun = munList.find(m => m.id === this.selectedParishMun) || munList[0];
 
     let html = `
-      <div class="flex flex-col sm:flex-row items-center justify-between gap-2 p-2.5 rounded-xl bg-white border border-slate-200">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 p-2.5 rounded-xl bg-white border border-slate-200 shadow-2xs">
         <div class="flex items-center gap-2">
-          <i data-lucide="filter" class="w-4 h-4 text-sky-600"></i>
-          <span class="text-xs font-black uppercase text-slate-700">Municipio Activo:</span>
+          <i data-lucide="filter" class="w-4 h-4 text-sky-600 shrink-0"></i>
+          <span class="text-xs font-black uppercase text-slate-700 whitespace-nowrap">Municipio:</span>
+          <select id="select-parish-mun" class="w-full px-3 py-1.5 rounded-lg border border-slate-300 font-bold text-xs bg-slate-50 text-slate-900 focus:bg-white focus:outline-none focus:border-sky-500 cursor-pointer truncate">
+            ${munList.map(m => `
+              <option value="${m.id}" ${m.id === activeMun.id ? 'selected' : ''}>
+                ${m.nombre} (${m.parroquias.length} parroquias)
+              </option>
+            `).join("")}
+          </select>
         </div>
-        <select id="select-parish-mun" class="px-3 py-1.5 rounded-lg border border-slate-300 font-bold text-xs bg-slate-50 text-slate-900 focus:bg-white focus:outline-none focus:border-sky-500 cursor-pointer">
-          ${munList.map(m => `
-            <option value="${m.id}" ${m.id === activeMun.id ? 'selected' : ''}>
-              ${m.nombre} (${m.parroquias.length} parroquias)
-            </option>
-          `).join("")}
-        </select>
+        <div class="relative w-full">
+          <input type="text" id="filter-input-par" placeholder="Buscar parroquia..."
+                 class="w-full pl-9 pr-3 py-1.5 rounded-lg border border-slate-300 text-xs font-bold text-slate-800 placeholder-slate-400 focus:outline-none focus:border-sky-500 bg-slate-50 focus:bg-white transition">
+          <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3 top-2 pointer-events-none"></i>
+        </div>
       </div>
 
       <div class="flex items-center justify-between text-xs font-bold text-slate-500 pt-1">
@@ -534,6 +636,20 @@ export class LaminaColorStudio {
 
     html += `</div>`;
     container.innerHTML = html;
+
+    // Filtro en tiempo real para parroquias
+    const filterInputPar = container.querySelector("#filter-input-par");
+    filterInputPar?.addEventListener("input", (e) => {
+      const q = e.target.value.toLowerCase().trim();
+      activeMun.parroquias.forEach(p => {
+        const resolvedPId = resolveParishId(p.id);
+        const cleanPName = (p.nombre || p.id).replace(/^parroquia\s+/i, '').trim();
+        const row = document.getElementById(`color-row-par-${resolvedPId}`);
+        if (!row) return;
+        const matches = !q || cleanPName.toLowerCase().includes(q) || resolvedPId.toLowerCase().includes(q);
+        row.style.display = matches ? "" : "none";
+      });
+    });
 
     // Cambio de municipio en el dropdown
     const selectEl = document.getElementById("select-parish-mun");
@@ -625,8 +741,8 @@ export class LaminaColorStudio {
     }
 
     let html = `
-      <!-- SELECTORES FILTRO: MUNICIPIO Y PARROQUIA -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 p-3 rounded-xl bg-white border border-slate-200 shadow-2xs">
+      <!-- SELECTORES FILTRO: MUNICIPIO, PARROQUIA Y BÚSQUEDA DE SECTOR -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 p-3 rounded-xl bg-white border border-slate-200 shadow-2xs">
         <div class="flex flex-col gap-1">
           <label class="text-[11px] font-black uppercase text-slate-500 flex items-center gap-1.5">
             <i data-lucide="map" class="w-3.5 h-3.5 text-amber-500"></i>
@@ -657,6 +773,18 @@ export class LaminaColorStudio {
               `;
             }).join("")}
           </select>
+        </div>
+
+        <div class="flex flex-col gap-1">
+          <label class="text-[11px] font-black uppercase text-slate-500 flex items-center gap-1.5">
+            <i data-lucide="search" class="w-3.5 h-3.5 text-sky-600"></i>
+            <span>Buscar Sector:</span>
+          </label>
+          <div class="relative w-full">
+            <input type="text" id="filter-input-sec" placeholder="Filtrar por nombre o ID..."
+                   class="w-full pl-8 pr-2.5 py-1.5 rounded-lg border border-slate-300 font-bold text-xs bg-slate-50 text-slate-900 focus:bg-white focus:outline-none focus:border-sky-500">
+            <i data-lucide="search" class="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-2 pointer-events-none"></i>
+          </div>
         </div>
       </div>
 
@@ -739,6 +867,18 @@ export class LaminaColorStudio {
     }
 
     container.innerHTML = html;
+
+    // Filtro en tiempo real para sectores
+    const filterInputSec = container.querySelector("#filter-input-sec");
+    filterInputSec?.addEventListener("input", (e) => {
+      const q = e.target.value.toLowerCase().trim();
+      sectorList.forEach(item => {
+        const row = document.getElementById(`color-row-sec-${item.id}`);
+        if (!row) return;
+        const matches = !q || item.nombre.toLowerCase().includes(q) || item.id.toLowerCase().includes(q);
+        row.style.display = matches ? "" : "none";
+      });
+    });
 
     // Listeners para cambio de selectores
     const selectMunEl = document.getElementById("select-sector-mun");
@@ -894,6 +1034,9 @@ export class LaminaColorStudio {
       }
       if (this.app.customSectorColors) {
         localStorage.setItem("migato_custom_sector_colors", JSON.stringify(this.app.customSectorColors));
+      }
+      if (this.app.polygonOpacity !== undefined) {
+        localStorage.setItem("migato_polygon_opacity", String(this.app.polygonOpacity));
       }
 
       // Reaplicar al mapa para actualizar cualquier polígono o contorno activo

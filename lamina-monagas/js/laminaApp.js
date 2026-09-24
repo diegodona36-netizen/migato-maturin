@@ -31,7 +31,7 @@ import {
 } from "./comandoData.js?v=260";
 import { auditLogger } from "./auditLogger.js";
 import { Whiteboard } from "./whiteboard.js?v=310";
-import { LaminaColorStudio, HIGH_CONTRAST_MUN_PALETTE } from "./laminaColorStudio.js?v=380";
+import { LaminaColorStudio, HIGH_CONTRAST_MUN_PALETTE } from "./laminaColorStudio.js?v=400";
 
 const BOUNDS_ESTADO_MONAGAS = [
   [8.38245, -64.06290],
@@ -103,6 +103,8 @@ export class LaminaApp {
     // Subinterfaz Territorial, Datos y Comandos
     this.modalSelectedMun = "maturin";
     this.modalDrilldownParish = null;
+    this.polygonOpacity = 0.26;
+    window.laminaApp = this;
 
     this.init();
   }
@@ -111,6 +113,7 @@ export class LaminaApp {
     this.initMap();
     this.initUIListeners();
     this.initWhiteboard();
+    this.initColorStudio();
     this.updateBaseMapUI();
 
     // Inicialización del territorio condicionada a dimensiones válidas del contenedor
@@ -212,8 +215,35 @@ export class LaminaApp {
           }
         } catch (e) {}
       }
+
+      const savedOpacity = localStorage.getItem("migato_polygon_opacity");
+      if (savedOpacity !== null && !isNaN(parseFloat(savedOpacity))) {
+        this.polygonOpacity = parseFloat(savedOpacity);
+      } else {
+        this.polygonOpacity = 0.26;
+      }
     } catch (e) {
       console.warn("[LaminaApp] Error cargando paleta de colores personalizada:", e);
+    }
+  }
+
+  updatePolygonOpacity(val) {
+    this.polygonOpacity = parseFloat(val);
+    try {
+      localStorage.setItem("migato_polygon_opacity", String(this.polygonOpacity));
+    } catch (e) {}
+
+    // Actualizar en vivo todas las capas poligonales activas
+    if (this.childEntitiesLayer) {
+      this.childEntitiesLayer.eachLayer(layer => {
+        if (layer && typeof layer.setStyle === "function") {
+          if (layer.entityType === "municipio" || layer.entityType === "parroquia") {
+            layer.setStyle({ fillOpacity: this.polygonOpacity });
+          } else if (layer.entityType === "subparroquia" || layer.entityType === "sector") {
+            layer.setStyle({ fillOpacity: Math.min(0.40, this.polygonOpacity + 0.05) });
+          }
+        }
+      });
     }
   }
 
@@ -340,6 +370,9 @@ export class LaminaApp {
   }
 
   openColorStudio(tab = null) {
+    if (!this.colorStudio) {
+      this.initColorStudio();
+    }
     if (this.colorStudio) {
       this.colorStudio.open(tab);
     }
@@ -983,21 +1016,22 @@ export class LaminaApp {
         const munObj = (CATALOGO_MONAGAS || []).find(m => m.id === mId);
         const parishCount = (munObj?.parroquias || []).length || 0;
 
+        const op = this.polygonOpacity || 0.26;
         const layer = L.geoJSON(f, {
           style: {
             color: "#ffffff",
-            weight: 2.2,
-            opacity: 1.0,
+            weight: 2,
+            opacity: 0.95,
             fillColor: munColor,
-            fillOpacity: 0.72
+            fillOpacity: op
           }
         });
         layer.entityId = mId;
         layer.entityType = "municipio";
 
         layer.on({
-          mouseover: () => layer.setStyle({ weight: 3.5, color: "#ffffff", fillOpacity: 0.92 }),
-          mouseout: () => layer.setStyle({ weight: 2.2, color: "#ffffff", fillOpacity: 0.72 }),
+          mouseover: () => layer.setStyle({ weight: 3, color: "#ffffff", fillOpacity: Math.min(0.55, op + 0.18) }),
+          mouseout: () => layer.setStyle({ weight: 2, color: "#ffffff", fillOpacity: this.polygonOpacity || 0.26 }),
           click: () => this.selectMunicipio(mId)
         });
 
@@ -1091,13 +1125,14 @@ export class LaminaApp {
       const pColor = this.getParishColor(resolvedPId, cleanMunId);
       const pName = f.properties?.nombre || "Parroquia";
 
+      const op = this.polygonOpacity || 0.26;
       const layer = L.geoJSON(f, {
         style: {
           color: "#ffffff",
-          weight: 2.2,
-          opacity: 1.0,
+          weight: 2,
+          opacity: 0.95,
           fillColor: pColor,
-          fillOpacity: 0.70
+          fillOpacity: op
         }
       });
       layer.entityId = resolvedPId;
@@ -1105,10 +1140,10 @@ export class LaminaApp {
 
       layer.on({
         mouseover: () => {
-          layer.setStyle({ weight: 3.5, color: "#ffffff", fillOpacity: 0.92 });
+          layer.setStyle({ weight: 3, color: "#ffffff", fillOpacity: Math.min(0.55, op + 0.18) });
         },
         mouseout: () => {
-          layer.setStyle({ weight: 2.2, color: "#ffffff", fillOpacity: 0.70 });
+          layer.setStyle({ weight: 2, color: "#ffffff", fillOpacity: this.polygonOpacity || 0.26 });
         },
         click: () => {
           this.selectParroquia(pId, cleanMunId);
