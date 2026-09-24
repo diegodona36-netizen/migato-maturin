@@ -1,0 +1,34 @@
+{
+  "descripcion": "Respaldo Permanente de Configuración Cromática y Opacidad - Sala Situacional MIGATO Monagas 2026",
+  "actualizado": "2026-09-24",
+  "opacidad_poligonos": 0.26,
+  "municipios": {
+    "maturin": "#1d4ed8",
+    "caripe": "#dc2626",
+    "acosta": "#0891b2",
+    "cedeno": "#7c3aed",
+    "piar": "#f59e0b",
+    "punceres": "#8b5cf6",
+    "bolivar": "#0284c7",
+    "ezequiel-zamora": "#ea580c",
+    "santa-barbara": "#ec4899",
+    "aguasay": "#eab308",
+    "libertador": "#059669",
+    "uracoa": "#14b8a6",
+    "sotillo": "#c026d3"
+  },
+  "parroquias_clave": {
+    "san-simon": "#2563eb",
+    "alto-de-los-godos": "#7c3aed",
+    "boqueron": "#ea580c",
+    "las-cocuizas": "#059669",
+    "santa-cruz": "#0284c7",
+    "san-vicente": "#db2777",
+    "la-pica": "#dc2626",
+    "jusepin": "#d97706",
+    "el-furrial": "#65a30d",
+    "el-corozo": "#4f46e5",
+    "san-simon-sur": "#0d9488"
+  },
+  "instrucciones": "Para recargar esta paleta en el navegador en cualquier momento, el sistema la usa como configuración base por defecto. Además se puede presionar Shift + C en la lámina para abrir el estudio en modo privado."
+}

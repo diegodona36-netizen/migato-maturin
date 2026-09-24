@@ -1,6 +1,6 @@
 {
   "type": "FeatureCollection",
-  "name": "GEO_PARROQUIAS_OFICIAL",
+  "name": "Capa_3_Parroquias_Monagas",
   "features": [
     {
       "type": "Feature",
@@ -237,7 +237,15 @@
         "nombre": "Teresen",
         "municipioNombre": "Caripe",
         "municipioId": "caripe",
-        "color": "#d97706"
+        "color": "#d97706",
+        "tipo": "parroquia",
+        "stroke": "#dc2626",
+        "stroke-width": 2.5,
+        "stroke-opacity": 0.85,
+        "fill": "#dc2626",
+        "fill-opacity": 0.26,
+        "title": "Parroquia Teresen (Caripe)",
+        "description": "<b>Parroquia Oficial:</b> Teresen<br><b>Municipio:</b> Caripe<br><b>Código PCODE:</b> VE160406"
       }
     },
     {
@@ -1471,7 +1479,15 @@
         "nombre": "Capital Cedeño",
         "municipioNombre": "Cedeño",
         "municipioId": "cedeno",
-        "color": "#8b5cf6"
+        "color": "#8b5cf6",
+        "tipo": "parroquia",
+        "stroke": "#7c3aed",
+        "stroke-width": 2.5,
+        "stroke-opacity": 0.85,
+        "fill": "#7c3aed",
+        "fill-opacity": 0.26,
+        "title": "Parroquia Capital Cedeño (Cedeño)",
+        "description": "<b>Parroquia Oficial:</b> Capital Cedeño<br><b>Municipio:</b> Cedeño<br><b>Código PCODE:</b> VE160501"
       }
     },
     {
@@ -3289,7 +3305,15 @@
         "nombre": "Areo",
         "municipioNombre": "Cedeño",
         "municipioId": "cedeno",
-        "color": "#059669"
+        "color": "#059669",
+        "tipo": "parroquia",
+        "stroke": "#7c3aed",
+        "stroke-width": 2.5,
+        "stroke-opacity": 0.85,
+        "fill": "#7c3aed",
+        "fill-opacity": 0.26,
+        "title": "Parroquia Areo (Cedeño)",
+        "description": "<b>Parroquia Oficial:</b> Areo<br><b>Municipio:</b> Cedeño<br><b>Código PCODE:</b> VE160502"
       }
     },
     {
@@ -4563,7 +4587,15 @@
         "nombre": "San Félix",
         "municipioNombre": "Cedeño",
         "municipioId": "cedeno",
-        "color": "#2563eb"
+        "color": "#2563eb",
+        "tipo": "parroquia",
+        "stroke": "#7c3aed",
+        "stroke-width": 2.5,
+        "stroke-opacity": 0.85,
+        "fill": "#7c3aed",
+        "fill-opacity": 0.26,
+        "title": "Parroquia San Félix (Cedeño)",
+        "description": "<b>Parroquia Oficial:</b> San Félix<br><b>Municipio:</b> Cedeño<br><b>Código PCODE:</b> VE160503"
       }
     },
     {
@@ -5181,7 +5213,15 @@
         "nombre": "Viento Fresco",
         "municipioNombre": "Cedeño",
         "municipioId": "cedeno",
-        "color": "#ea580c"
+        "color": "#ea580c",
+        "tipo": "parroquia",
+        "stroke": "#7c3aed",
+        "stroke-width": 2.5,
+        "stroke-opacity": 0.85,
+        "fill": "#7c3aed",
+        "fill-opacity": 0.26,
+        "title": "Parroquia Viento Fresco (Cedeño)",
+        "description": "<b>Parroquia Oficial:</b> Viento Fresco<br><b>Municipio:</b> Cedeño<br><b>Código PCODE:</b> VE160504"
       }
     },
     {
@@ -5939,7 +5979,15 @@
         "nombre": "Capital Ezequiel Zamora",
         "municipioNombre": "Ezequiel Zamora",
         "municipioId": "ezequiel-zamora",
-        "color": "#db2777"
+        "color": "#db2777",
+        "tipo": "parroquia",
+        "stroke": "#ea580c",
+        "stroke-width": 2.5,
+        "stroke-opacity": 0.85,
+        "fill": "#ea580c",
+        "fill-opacity": 0.26,
+        "title": "Parroquia Capital Ezequiel Zamora (Ezequiel Zamora)",
+        "description": "<b>Parroquia Oficial:</b> Capital Ezequiel Zamora<br><b>Municipio:</b> Ezequiel Zamora<br><b>Código PCODE:</b> VE160601"
       }
     },
     {
@@ -6677,7 +6725,15 @@
         "nombre": "El Tejero",
         "municipioNombre": "Ezequiel Zamora",
         "municipioId": "ezequiel-zamora",
-        "color": "#0891b2"
+        "color": "#0891b2",
+        "tipo": "parroquia",
+        "stroke": "#ea580c",
+        "stroke-width": 2.5,
+        "stroke-opacity": 0.85,
+        "fill": "#ea580c",
+        "fill-opacity": 0.26,
+        "title": "Parroquia El Tejero (Ezequiel Zamora)",
+        "description": "<b>Parroquia Oficial:</b> El Tejero<br><b>Municipio:</b> Ezequiel Zamora<br><b>Código PCODE:</b> VE160602"
       }
     },
     {
@@ -10315,7 +10371,15 @@
         "nombre": "Capital Libertador",
         "municipioNombre": "Libertador",
         "municipioId": "libertador",
-        "color": "#ea580c"
+        "color": "#ea580c",
+        "tipo": "parroquia",
+        "stroke": "#059669",
+        "stroke-width": 2.5,
+        "stroke-opacity": 0.85,
+        "fill": "#059669",
+        "fill-opacity": 0.26,
+        "title": "Parroquia Capital Libertador (Libertador)",
+        "description": "<b>Parroquia Oficial:</b> Capital Libertador<br><b>Municipio:</b> Libertador<br><b>Código PCODE:</b> VE160701"
       }
     },
     {
@@ -11845,7 +11909,15 @@
         "nombre": "Chaguaramas",
         "municipioNombre": "Libertador",
         "municipioId": "libertador",
-        "color": "#2563eb"
+        "color": "#2563eb",
+        "tipo": "parroquia",
+        "stroke": "#059669",
+        "stroke-width": 2.5,
+        "stroke-opacity": 0.85,
+        "fill": "#059669",
+        "fill-opacity": 0.26,
+        "title": "Parroquia Chaguaramas (Libertador)",
+        "description": "<b>Parroquia Oficial:</b> Chaguaramas<br><b>Municipio:</b> Libertador<br><b>Código PCODE:</b> VE160702"
       }
     },
     {
@@ -13251,7 +13323,15 @@
         "nombre": "Las Alhuacas",
         "municipioNombre": "Libertador",
         "municipioId": "libertador",
-        "color": "#059669"
+        "color": "#059669",
+        "tipo": "parroquia",
+        "stroke": "#059669",
+        "stroke-width": 2.5,
+        "stroke-opacity": 0.85,
+        "fill": "#059669",
+        "fill-opacity": 0.26,
+        "title": "Parroquia Las Alhuacas (Libertador)",
+        "description": "<b>Parroquia Oficial:</b> Las Alhuacas<br><b>Municipio:</b> Libertador<br><b>Código PCODE:</b> VE160703"
       }
     },
     {
@@ -14401,7 +14481,15 @@
         "nombre": "Tabasca",
         "municipioNombre": "Libertador",
         "municipioId": "libertador",
-        "color": "#7c3aed"
+        "color": "#7c3aed",
+        "tipo": "parroquia",
+        "stroke": "#059669",
+        "stroke-width": 2.5,
+        "stroke-opacity": 0.85,
+        "fill": "#059669",
+        "fill-opacity": 0.26,
+        "title": "Parroquia Tabasca (Libertador)",
+        "description": "<b>Parroquia Oficial:</b> Tabasca<br><b>Municipio:</b> Libertador<br><b>Código PCODE:</b> VE160704"
       }
     },
     {
@@ -22767,7 +22855,15 @@
         "nombre": "San Simón Sur",
         "municipioNombre": "Maturín",
         "municipioId": "maturin",
-        "color": "#0d9488"
+        "color": "#0d9488",
+        "tipo": "parroquia",
+        "stroke": "#0d9488",
+        "stroke-width": 2.5,
+        "stroke-opacity": 0.85,
+        "fill": "#0d9488",
+        "fill-opacity": 0.26,
+        "title": "Parroquia San Simón Sur (Maturín)",
+        "description": "<b>Parroquia Oficial:</b> San Simón Sur<br><b>Municipio:</b> Maturín<br><b>Código PCODE:</b> VE160801"
       }
     },
     {
@@ -23653,7 +23749,15 @@
         "nombre": "Alto de los Godos",
         "municipioNombre": "Maturín",
         "municipioId": "maturin",
-        "color": "#7c3aed"
+        "color": "#7c3aed",
+        "tipo": "parroquia",
+        "stroke": "#7c3aed",
+        "stroke-width": 2.5,
+        "stroke-opacity": 0.85,
+        "fill": "#7c3aed",
+        "fill-opacity": 0.26,
+        "title": "Parroquia Alto de los Godos (Maturín)",
+        "description": "<b>Parroquia Oficial:</b> Alto de los Godos<br><b>Municipio:</b> Maturín<br><b>Código PCODE:</b> VE160802"
       }
     },
     {
@@ -40735,7 +40839,15 @@
         "nombre": "Boquerón",
         "municipioNombre": "Maturín",
         "municipioId": "maturin",
-        "color": "#ea580c"
+        "color": "#ea580c",
+        "tipo": "parroquia",
+        "stroke": "#ea580c",
+        "stroke-width": 2.5,
+        "stroke-opacity": 0.85,
+        "fill": "#ea580c",
+        "fill-opacity": 0.26,
+        "title": "Parroquia Boquerón (Maturín)",
+        "description": "<b>Parroquia Oficial:</b> Boquerón<br><b>Municipio:</b> Maturín<br><b>Código PCODE:</b> VE160803"
       }
     },
     {
@@ -48529,7 +48641,15 @@
         "nombre": "Las Cocuizas",
         "municipioNombre": "Maturín",
         "municipioId": "maturin",
-        "color": "#059669"
+        "color": "#059669",
+        "tipo": "parroquia",
+        "stroke": "#059669",
+        "stroke-width": 2.5,
+        "stroke-opacity": 0.85,
+        "fill": "#059669",
+        "fill-opacity": 0.26,
+        "title": "Parroquia Las Cocuizas (Maturín)",
+        "description": "<b>Parroquia Oficial:</b> Las Cocuizas<br><b>Municipio:</b> Maturín<br><b>Código PCODE:</b> VE160804"
       }
     },
     {
@@ -53755,7 +53875,15 @@
         "nombre": "San Simón",
         "municipioNombre": "Maturín",
         "municipioId": "maturin",
-        "color": "#2563eb"
+        "color": "#2563eb",
+        "tipo": "parroquia",
+        "stroke": "#2563eb",
+        "stroke-width": 2.5,
+        "stroke-opacity": 0.85,
+        "fill": "#2563eb",
+        "fill-opacity": 0.26,
+        "title": "Parroquia San Simón (Maturín)",
+        "description": "<b>Parroquia Oficial:</b> San Simón<br><b>Municipio:</b> Maturín<br><b>Código PCODE:</b> VE160805"
       }
     },
     {
@@ -55665,7 +55793,15 @@
         "nombre": "Santa Cruz",
         "municipioNombre": "Maturín",
         "municipioId": "maturin",
-        "color": "#0284c7"
+        "color": "#0284c7",
+        "tipo": "parroquia",
+        "stroke": "#0284c7",
+        "stroke-width": 2.5,
+        "stroke-opacity": 0.85,
+        "fill": "#0284c7",
+        "fill-opacity": 0.26,
+        "title": "Parroquia Santa Cruz (Maturín)",
+        "description": "<b>Parroquia Oficial:</b> Santa Cruz<br><b>Municipio:</b> Maturín<br><b>Código PCODE:</b> VE160806"
       }
     },
     {
@@ -56399,7 +56535,15 @@
         "nombre": "Capital Acosta",
         "municipioNombre": "Acosta",
         "municipioId": "acosta",
-        "color": "#0891b2"
+        "color": "#0891b2",
+        "tipo": "parroquia",
+        "stroke": "#0891b2",
+        "stroke-width": 2.5,
+        "stroke-opacity": 0.85,
+        "fill": "#0891b2",
+        "fill-opacity": 0.26,
+        "title": "Parroquia Capital Acosta (Acosta)",
+        "description": "<b>Parroquia Oficial:</b> Capital Acosta<br><b>Municipio:</b> Acosta<br><b>Código PCODE:</b> VE160101"
       }
     },
     {
@@ -56869,7 +57013,15 @@
         "nombre": "San Francisco",
         "municipioNombre": "Acosta",
         "municipioId": "acosta",
-        "color": "#16a34a"
+        "color": "#16a34a",
+        "tipo": "parroquia",
+        "stroke": "#0891b2",
+        "stroke-width": 2.5,
+        "stroke-opacity": 0.85,
+        "fill": "#0891b2",
+        "fill-opacity": 0.26,
+        "title": "Parroquia San Francisco (Acosta)",
+        "description": "<b>Parroquia Oficial:</b> San Francisco<br><b>Municipio:</b> Acosta<br><b>Código PCODE:</b> VE160102"
       }
     },
     {
@@ -59863,7 +60015,15 @@
         "nombre": "Aguasay",
         "municipioNombre": "Aguasay",
         "municipioId": "aguasay",
-        "color": "#e11d48"
+        "color": "#e11d48",
+        "tipo": "parroquia",
+        "stroke": "#eab308",
+        "stroke-width": 2.5,
+        "stroke-opacity": 0.85,
+        "fill": "#eab308",
+        "fill-opacity": 0.26,
+        "title": "Parroquia Aguasay (Aguasay)",
+        "description": "<b>Parroquia Oficial:</b> Aguasay<br><b>Municipio:</b> Aguasay<br><b>Código PCODE:</b> VE160201"
       }
     },
     {
@@ -61561,7 +61721,15 @@
         "nombre": "Bolívar",
         "municipioNombre": "Bolívar",
         "municipioId": "bolivar",
-        "color": "#dc2626"
+        "color": "#dc2626",
+        "tipo": "parroquia",
+        "stroke": "#0284c7",
+        "stroke-width": 2.5,
+        "stroke-opacity": 0.85,
+        "fill": "#0284c7",
+        "fill-opacity": 0.26,
+        "title": "Parroquia Bolívar (Bolívar)",
+        "description": "<b>Parroquia Oficial:</b> Bolívar<br><b>Municipio:</b> Bolívar<br><b>Código PCODE:</b> VE160301"
       }
     },
     {
@@ -61663,7 +61831,15 @@
         "nombre": "Capital Caripe",
         "municipioNombre": "Caripe",
         "municipioId": "caripe",
-        "color": "#16a34a"
+        "color": "#16a34a",
+        "tipo": "parroquia",
+        "stroke": "#dc2626",
+        "stroke-width": 2.5,
+        "stroke-opacity": 0.85,
+        "fill": "#dc2626",
+        "fill-opacity": 0.26,
+        "title": "Parroquia Capital Caripe (Caripe)",
+        "description": "<b>Parroquia Oficial:</b> Capital Caripe<br><b>Municipio:</b> Caripe<br><b>Código PCODE:</b> VE160401"
       }
     },
     {
@@ -62069,7 +62245,15 @@
         "nombre": "El Guácharo",
         "municipioNombre": "Caripe",
         "municipioId": "caripe",
-        "color": "#8b5cf6"
+        "color": "#8b5cf6",
+        "tipo": "parroquia",
+        "stroke": "#dc2626",
+        "stroke-width": 2.5,
+        "stroke-opacity": 0.85,
+        "fill": "#dc2626",
+        "fill-opacity": 0.26,
+        "title": "Parroquia El Guácharo (Caripe)",
+        "description": "<b>Parroquia Oficial:</b> El Guácharo<br><b>Municipio:</b> Caripe<br><b>Código PCODE:</b> VE160402"
       }
     },
     {
@@ -62555,7 +62739,15 @@
         "nombre": "La Guanota",
         "municipioNombre": "Caripe",
         "municipioId": "caripe",
-        "color": "#0284c7"
+        "color": "#0284c7",
+        "tipo": "parroquia",
+        "stroke": "#dc2626",
+        "stroke-width": 2.5,
+        "stroke-opacity": 0.85,
+        "fill": "#dc2626",
+        "fill-opacity": 0.26,
+        "title": "Parroquia La Guanota (Caripe)",
+        "description": "<b>Parroquia Oficial:</b> La Guanota<br><b>Municipio:</b> Caripe<br><b>Código PCODE:</b> VE160403"
       }
     },
     {
@@ -63217,7 +63409,15 @@
         "nombre": "Sabana de Piedra",
         "municipioNombre": "Caripe",
         "municipioId": "caripe",
-        "color": "#ea580c"
+        "color": "#ea580c",
+        "tipo": "parroquia",
+        "stroke": "#dc2626",
+        "stroke-width": 2.5,
+        "stroke-opacity": 0.85,
+        "fill": "#dc2626",
+        "fill-opacity": 0.26,
+        "title": "Parroquia Sabana de Piedra (Caripe)",
+        "description": "<b>Parroquia Oficial:</b> Sabana de Piedra<br><b>Municipio:</b> Caripe<br><b>Código PCODE:</b> VE160404"
       }
     },
     {
@@ -63411,7 +63611,15 @@
         "nombre": "San Agustín",
         "municipioNombre": "Caripe",
         "municipioId": "caripe",
-        "color": "#db2777"
+        "color": "#db2777",
+        "tipo": "parroquia",
+        "stroke": "#dc2626",
+        "stroke-width": 2.5,
+        "stroke-opacity": 0.85,
+        "fill": "#dc2626",
+        "fill-opacity": 0.26,
+        "title": "Parroquia San Agustín (Caripe)",
+        "description": "<b>Parroquia Oficial:</b> San Agustín<br><b>Municipio:</b> Caripe<br><b>Código PCODE:</b> VE160405"
       }
     },
     {
@@ -64049,7 +64257,15 @@
         "nombre": "El Corozo",
         "municipioNombre": "Maturín",
         "municipioId": "maturin",
-        "color": "#4f46e5"
+        "color": "#4f46e5",
+        "tipo": "parroquia",
+        "stroke": "#4f46e5",
+        "stroke-width": 2.5,
+        "stroke-opacity": 0.85,
+        "fill": "#4f46e5",
+        "fill-opacity": 0.26,
+        "title": "Parroquia El Corozo (Maturín)",
+        "description": "<b>Parroquia Oficial:</b> El Corozo<br><b>Municipio:</b> Maturín<br><b>Código PCODE:</b> VE160807"
       }
     },
     {
@@ -65171,7 +65387,15 @@
         "nombre": "El Furrial",
         "municipioNombre": "Maturín",
         "municipioId": "maturin",
-        "color": "#65a30d"
+        "color": "#65a30d",
+        "tipo": "parroquia",
+        "stroke": "#65a30d",
+        "stroke-width": 2.5,
+        "stroke-opacity": 0.85,
+        "fill": "#65a30d",
+        "fill-opacity": 0.26,
+        "title": "Parroquia El Furrial (Maturín)",
+        "description": "<b>Parroquia Oficial:</b> El Furrial<br><b>Municipio:</b> Maturín<br><b>Código PCODE:</b> VE160808"
       }
     },
     {
@@ -66077,7 +66301,15 @@
         "nombre": "Jusepín",
         "municipioNombre": "Maturín",
         "municipioId": "maturin",
-        "color": "#d97706"
+        "color": "#d97706",
+        "tipo": "parroquia",
+        "stroke": "#d97706",
+        "stroke-width": 2.5,
+        "stroke-opacity": 0.85,
+        "fill": "#d97706",
+        "fill-opacity": 0.26,
+        "title": "Parroquia Jusepín (Maturín)",
+        "description": "<b>Parroquia Oficial:</b> Jusepín<br><b>Municipio:</b> Maturín<br><b>Código PCODE:</b> VE160809"
       }
     },
     {
@@ -69899,7 +70131,15 @@
         "nombre": "La Pica",
         "municipioNombre": "Maturín",
         "municipioId": "maturin",
-        "color": "#dc2626"
+        "color": "#dc2626",
+        "tipo": "parroquia",
+        "stroke": "#dc2626",
+        "stroke-width": 2.5,
+        "stroke-opacity": 0.85,
+        "fill": "#dc2626",
+        "fill-opacity": 0.26,
+        "title": "Parroquia La Pica (Maturín)",
+        "description": "<b>Parroquia Oficial:</b> La Pica<br><b>Municipio:</b> Maturín<br><b>Código PCODE:</b> VE160810"
       }
     },
     {
@@ -71837,7 +72077,15 @@
         "nombre": "San Vicente",
         "municipioNombre": "Maturín",
         "municipioId": "maturin",
-        "color": "#db2777"
+        "color": "#db2777",
+        "tipo": "parroquia",
+        "stroke": "#db2777",
+        "stroke-width": 2.5,
+        "stroke-opacity": 0.85,
+        "fill": "#db2777",
+        "fill-opacity": 0.26,
+        "title": "Parroquia San Vicente (Maturín)",
+        "description": "<b>Parroquia Oficial:</b> San Vicente<br><b>Municipio:</b> Maturín<br><b>Código PCODE:</b> VE160811"
       }
     },
     {
@@ -73031,7 +73279,15 @@
         "nombre": "Capital Piar",
         "municipioNombre": "Piar",
         "municipioId": "piar",
-        "color": "#059669"
+        "color": "#059669",
+        "tipo": "parroquia",
+        "stroke": "#f59e0b",
+        "stroke-width": 2.5,
+        "stroke-opacity": 0.85,
+        "fill": "#f59e0b",
+        "fill-opacity": 0.26,
+        "title": "Parroquia Capital Piar (Piar)",
+        "description": "<b>Parroquia Oficial:</b> Capital Piar<br><b>Municipio:</b> Piar<br><b>Código PCODE:</b> VE160901"
       }
     },
     {
@@ -73621,7 +73877,15 @@
         "nombre": "Aparicio",
         "municipioNombre": "Piar",
         "municipioId": "piar",
-        "color": "#2563eb"
+        "color": "#2563eb",
+        "tipo": "parroquia",
+        "stroke": "#f59e0b",
+        "stroke-width": 2.5,
+        "stroke-opacity": 0.85,
+        "fill": "#f59e0b",
+        "fill-opacity": 0.26,
+        "title": "Parroquia Aparicio (Piar)",
+        "description": "<b>Parroquia Oficial:</b> Aparicio<br><b>Municipio:</b> Piar<br><b>Código PCODE:</b> VE160902"
       }
     },
     {
@@ -75019,7 +75283,15 @@
         "nombre": "Chaguaramal",
         "municipioNombre": "Piar",
         "municipioId": "piar",
-        "color": "#d97706"
+        "color": "#d97706",
+        "tipo": "parroquia",
+        "stroke": "#f59e0b",
+        "stroke-width": 2.5,
+        "stroke-opacity": 0.85,
+        "fill": "#f59e0b",
+        "fill-opacity": 0.26,
+        "title": "Parroquia Chaguaramal (Piar)",
+        "description": "<b>Parroquia Oficial:</b> Chaguaramal<br><b>Municipio:</b> Piar<br><b>Código PCODE:</b> VE160903"
       }
     },
     {
@@ -76085,7 +76357,15 @@
         "nombre": "El Pinto",
         "municipioNombre": "Piar",
         "municipioId": "piar",
-        "color": "#dc2626"
+        "color": "#dc2626",
+        "tipo": "parroquia",
+        "stroke": "#f59e0b",
+        "stroke-width": 2.5,
+        "stroke-opacity": 0.85,
+        "fill": "#f59e0b",
+        "fill-opacity": 0.26,
+        "title": "Parroquia El Pinto (Piar)",
+        "description": "<b>Parroquia Oficial:</b> El Pinto<br><b>Municipio:</b> Piar<br><b>Código PCODE:</b> VE160904"
       }
     },
     {
@@ -76575,7 +76855,15 @@
         "nombre": "Guanaguana",
         "municipioNombre": "Piar",
         "municipioId": "piar",
-        "color": "#7c3aed"
+        "color": "#7c3aed",
+        "tipo": "parroquia",
+        "stroke": "#f59e0b",
+        "stroke-width": 2.5,
+        "stroke-opacity": 0.85,
+        "fill": "#f59e0b",
+        "fill-opacity": 0.26,
+        "title": "Parroquia Guanaguana (Piar)",
+        "description": "<b>Parroquia Oficial:</b> Guanaguana<br><b>Municipio:</b> Piar<br><b>Código PCODE:</b> VE160905"
       }
     },
     {
@@ -78021,7 +78309,15 @@
         "nombre": "La Toscana",
         "municipioNombre": "Piar",
         "municipioId": "piar",
-        "color": "#0284c7"
+        "color": "#0284c7",
+        "tipo": "parroquia",
+        "stroke": "#f59e0b",
+        "stroke-width": 2.5,
+        "stroke-opacity": 0.85,
+        "fill": "#f59e0b",
+        "fill-opacity": 0.26,
+        "title": "Parroquia La Toscana (Piar)",
+        "description": "<b>Parroquia Oficial:</b> La Toscana<br><b>Municipio:</b> Piar<br><b>Código PCODE:</b> VE160906"
       }
     },
     {
@@ -79439,7 +79735,15 @@
         "nombre": "Taguaya",
         "municipioNombre": "Piar",
         "municipioId": "piar",
-        "color": "#ea580c"
+        "color": "#ea580c",
+        "tipo": "parroquia",
+        "stroke": "#f59e0b",
+        "stroke-width": 2.5,
+        "stroke-opacity": 0.85,
+        "fill": "#f59e0b",
+        "fill-opacity": 0.26,
+        "title": "Parroquia Taguaya (Piar)",
+        "description": "<b>Parroquia Oficial:</b> Taguaya<br><b>Municipio:</b> Piar<br><b>Código PCODE:</b> VE160907"
       }
     },
     {
@@ -81649,7 +81953,15 @@
         "nombre": "Capital Punceres",
         "municipioNombre": "Punceres",
         "municipioId": "punceres",
-        "color": "#0d9488"
+        "color": "#0d9488",
+        "tipo": "parroquia",
+        "stroke": "#8b5cf6",
+        "stroke-width": 2.5,
+        "stroke-opacity": 0.85,
+        "fill": "#8b5cf6",
+        "fill-opacity": 0.26,
+        "title": "Parroquia Capital Punceres (Punceres)",
+        "description": "<b>Parroquia Oficial:</b> Capital Punceres<br><b>Municipio:</b> Punceres<br><b>Código PCODE:</b> VE161001"
       }
     },
     {
@@ -83351,7 +83663,15 @@
         "nombre": "Cachipo",
         "municipioNombre": "Punceres",
         "municipioId": "punceres",
-        "color": "#ea580c"
+        "color": "#ea580c",
+        "tipo": "parroquia",
+        "stroke": "#8b5cf6",
+        "stroke-width": 2.5,
+        "stroke-opacity": 0.85,
+        "fill": "#8b5cf6",
+        "fill-opacity": 0.26,
+        "title": "Parroquia Cachipo (Punceres)",
+        "description": "<b>Parroquia Oficial:</b> Cachipo<br><b>Municipio:</b> Punceres<br><b>Código PCODE:</b> VE161002"
       }
     },
     {
@@ -84397,7 +84717,15 @@
         "nombre": "Santa Barbará",
         "municipioNombre": "Santa Barbara",
         "municipioId": "santa-barbara",
-        "color": "#6366f1"
+        "color": "#6366f1",
+        "tipo": "parroquia",
+        "stroke": "#ec4899",
+        "stroke-width": 2.5,
+        "stroke-opacity": 0.85,
+        "fill": "#ec4899",
+        "fill-opacity": 0.26,
+        "title": "Parroquia Santa Barbará (Santa Barbara)",
+        "description": "<b>Parroquia Oficial:</b> Santa Barbará<br><b>Municipio:</b> Santa Barbara<br><b>Código PCODE:</b> VE161101"
       }
     },
     {
@@ -84699,7 +85027,15 @@
         "nombre": "Capital Sotillo",
         "municipioNombre": "Sotillo",
         "municipioId": "sotillo",
-        "color": "#c026d3"
+        "color": "#c026d3",
+        "tipo": "parroquia",
+        "stroke": "#c026d3",
+        "stroke-width": 2.5,
+        "stroke-opacity": 0.85,
+        "fill": "#c026d3",
+        "fill-opacity": 0.26,
+        "title": "Parroquia Capital Sotillo (Sotillo)",
+        "description": "<b>Parroquia Oficial:</b> Capital Sotillo<br><b>Municipio:</b> Sotillo<br><b>Código PCODE:</b> VE161201"
       }
     },
     {
@@ -85541,7 +85877,15 @@
         "nombre": "Los Barrancos de Fajardo",
         "municipioNombre": "Sotillo",
         "municipioId": "sotillo",
-        "color": "#2563eb"
+        "color": "#2563eb",
+        "tipo": "parroquia",
+        "stroke": "#c026d3",
+        "stroke-width": 2.5,
+        "stroke-opacity": 0.85,
+        "fill": "#c026d3",
+        "fill-opacity": 0.26,
+        "title": "Parroquia Los Barrancos de Fajardo (Sotillo)",
+        "description": "<b>Parroquia Oficial:</b> Los Barrancos de Fajardo<br><b>Municipio:</b> Sotillo<br><b>Código PCODE:</b> VE161202"
       }
     },
     {
@@ -87839,7 +88183,15 @@
         "nombre": "Uracoa",
         "municipioNombre": "Uracoa",
         "municipioId": "uracoa",
-        "color": "#65a30d"
+        "color": "#65a30d",
+        "tipo": "parroquia",
+        "stroke": "#14b8a6",
+        "stroke-width": 2.5,
+        "stroke-opacity": 0.85,
+        "fill": "#14b8a6",
+        "fill-opacity": 0.26,
+        "title": "Parroquia Uracoa (Uracoa)",
+        "description": "<b>Parroquia Oficial:</b> Uracoa<br><b>Municipio:</b> Uracoa<br><b>Código PCODE:</b> VE161301"
       }
     }
   ]
