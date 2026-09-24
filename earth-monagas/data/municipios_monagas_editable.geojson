@@ -12,7 +12,7 @@
         "capital": "Caripe",
         "poblacion": 38000,
         "electores": 27000,
-        "color": "#e11d48"
+        "color": "#dc2626"
       },
       "geometry": {
         "type": "Polygon",
@@ -953,7 +953,7 @@
         "capital": "Caicara de Maturín",
         "poblacion": 40000,
         "electores": 26000,
-        "color": "#9333ea"
+        "color": "#7c3aed"
       },
       "geometry": {
         "type": "Polygon",
@@ -3234,7 +3234,7 @@
         "capital": "Punta de Mata",
         "poblacion": 72000,
         "electores": 48000,
-        "color": "#f97316"
+        "color": "#ea580c"
       },
       "geometry": {
         "type": "Polygon",
@@ -4207,7 +4207,7 @@
         "capital": "Temblador",
         "poblacion": 55000,
         "electores": 36000,
-        "color": "#06b6d4"
+        "color": "#059669"
       },
       "geometry": {
         "type": "Polygon",
@@ -17645,7 +17645,7 @@
         "capital": "San Antonio de Capayacuar",
         "poblacion": 21000,
         "electores": 15000,
-        "color": "#0284c7"
+        "color": "#0891b2"
       },
       "geometry": {
         "type": "Polygon",
@@ -18598,7 +18598,7 @@
         "capital": "Aguasay",
         "poblacion": 16000,
         "electores": 11000,
-        "color": "#dc2626"
+        "color": "#eab308"
       },
       "geometry": {
         "type": "Polygon",
@@ -21579,7 +21579,7 @@
         "capital": "Caripito",
         "poblacion": 45000,
         "electores": 32000,
-        "color": "#eab308"
+        "color": "#0284c7"
       },
       "geometry": {
         "type": "Polygon",
@@ -23264,7 +23264,7 @@
         "capital": "Aragua de Maturín",
         "poblacion": 54000,
         "electores": 35000,
-        "color": "#059669"
+        "color": "#f59e0b"
       },
       "geometry": {
         "type": "Polygon",
@@ -25673,7 +25673,7 @@
         "capital": "Quiriquire",
         "poblacion": 32000,
         "electores": 21000,
-        "color": "#7c3aed"
+        "color": "#8b5cf6"
       },
       "geometry": {
         "type": "Polygon",
@@ -28230,7 +28230,7 @@
         "capital": "Santa Bárbara",
         "poblacion": 13000,
         "electores": 9500,
-        "color": "#10b981"
+        "color": "#ec4899"
       },
       "geometry": {
         "type": "Polygon",
@@ -30316,7 +30316,7 @@
         "capital": "Uracoa",
         "poblacion": 11000,
         "electores": 7800,
-        "color": "#84cc16"
+        "color": "#14b8a6"
       },
       "geometry": {
         "type": "Polygon",

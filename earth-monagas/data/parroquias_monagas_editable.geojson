@@ -1,6 +1,5 @@
 {
   "type": "FeatureCollection",
-  "name": "GEO_PARROQUIAS_OFICIAL",
   "features": [
     {
       "type": "Feature",
@@ -59863,7 +59862,7 @@
         "nombre": "Aguasay",
         "municipioNombre": "Aguasay",
         "municipioId": "aguasay",
-        "color": "#e11d48"
+        "color": "#eab308"
       }
     },
     {
@@ -61561,7 +61560,7 @@
         "nombre": "Bolívar",
         "municipioNombre": "Bolívar",
         "municipioId": "bolivar",
-        "color": "#dc2626"
+        "color": "#0284c7"
       }
     },
     {
@@ -84397,7 +84396,7 @@
         "nombre": "Santa Barbará",
         "municipioNombre": "Santa Barbara",
         "municipioId": "santa-barbara",
-        "color": "#6366f1"
+        "color": "#ec4899"
       }
     },
     {
@@ -87839,7 +87838,7 @@
         "nombre": "Uracoa",
         "municipioNombre": "Uracoa",
         "municipioId": "uracoa",
-        "color": "#65a30d"
+        "color": "#14b8a6"
       }
     }
   ]

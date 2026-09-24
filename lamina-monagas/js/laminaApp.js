@@ -100,10 +100,12 @@ export class LaminaApp {
     // Estudio Rápido de Colores
     this.customMunColors = {};
     this.customParishColors = {};
+    this.customSectorColors = {};
     // Subinterfaz Territorial, Datos y Comandos
     this.modalSelectedMun = "maturin";
     this.modalDrilldownParish = null;
     this.polygonOpacity = 0.26;
+    this.loadCustomColors();
     window.laminaApp = this;
 
     this.init();
@@ -1427,8 +1429,8 @@ export class LaminaApp {
     this.currentParishBounds = bounds;
     this.safeFitBounds(bounds, animate);
 
-    // Centros electorales desactivados a solicitud para no saturar el plano cartográfico
-    this.centrosLayer.clearLayers();
+    // Cargar y mostrar los Centros Electorales KML georreferenciados de esta parroquia
+    this.renderCentrosVotacion(resolvedPId);
 
     const rawPName = feat?.properties?.nombre || (CATALOGO_MONAGAS.find(m => m.id === cleanMunId)?.parroquias || []).find(p => p.id === cleanPId)?.nombre || cleanPId;
     const cleanPName = formatTitleCase(rawPName);
@@ -1618,7 +1620,8 @@ export class LaminaApp {
       }
     }
 
-    // Centros de votación desactivados según directriz operativa
+    // Centros de votación oficiales georreferenciados en la parroquia
+    this.renderCentrosVotacion(cleanPId);
 
     // 1. DIBUJAR TODAS LAS SUBPARROQUIAS (LA SELECCIONADA DESTACADA, LAS DEMÁS DE FONDO)
     subparroquias.forEach(sp => {
@@ -1773,6 +1776,7 @@ export class LaminaApp {
 
     this.childEntitiesLayer.clearLayers();
     this.centrosLayer.clearLayers();
+    this.renderCentrosVotacion(cleanPId);
 
     const { subparroquias, poligonos } = this.getParishPolygonsData(cleanMunId, cleanPId);
     let sec = poligonos.find(s => String(s.id) === String(secId) || String(s.nombre).toLowerCase() === String(secId).toLowerCase()) || findSectorById(secId);
@@ -1942,11 +1946,45 @@ export class LaminaApp {
     } catch (e) {}
   }
 
-  // Renderizar centros de votación desactivado según directriz operativa
+  // Renderizar centros de votación oficiales georreferenciados con pines CNE de alta visibilidad
   renderCentrosVotacion(parishId) {
-    if (this.centrosLayer) {
-      this.centrosLayer.clearLayers();
-    }
+    if (!this.centrosLayer) return;
+    this.centrosLayer.clearLayers();
+    if (!this.showCentros) return;
+
+    const allCentros = (typeof CENTROS_MATURIN !== "undefined" && Array.isArray(CENTROS_MATURIN))
+      ? CENTROS_MATURIN
+      : ((typeof window !== "undefined" && Array.isArray(window.CENTROS_MATURIN)) ? window.CENTROS_MATURIN : []);
+
+    if (!allCentros.length) return;
+
+    const cleanPId = resolveParishId(parishId);
+    const centros = allCentros.filter(c => {
+      const cParish = resolveParishId(c.parroquia);
+      return cParish === cleanPId || c.parroquia === parishId || !cleanPId;
+    });
+
+    centros.forEach(c => {
+      if (!c.lat || !c.lng) return;
+
+      const marker = L.circleMarker([c.lat, c.lng], {
+        radius: 6,
+        fillColor: "#ea580c",
+        fillOpacity: 0.95,
+        color: "#ffffff",
+        weight: 2
+      });
+
+      marker.bindTooltip(`
+        <div style="font-family: inherit; font-size: 11px; padding: 2px;">
+          <span style="color: #ea580c; font-weight: 800; font-size: 9px; text-transform: uppercase;">Centro Electoral CNE</span><br>
+          <strong style="color: #0f172a; font-size: 11.5px; font-weight: 900;">${c.nombre}</strong><br>
+          <span style="color: #475569; font-size: 10px;">${c.electores ? c.electores.toLocaleString('es-VE') + ' electores' : ''} • ${c.mesas || 1} mesas</span>
+        </div>
+      `, { sticky: true, opacity: 0.95 });
+
+      this.centrosLayer.addLayer(marker);
+    });
   }
 
   /* ========================================================================

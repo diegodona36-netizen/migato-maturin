@@ -100,6 +100,12 @@
         <span id="txt-basemap-type">Plano</span>
       </button>
 
+      <!-- Botón Estudio de Colores de Polígonos (Municipios, Parroquias, Sectores) -->
+      <button type="button" id="btn-toggle-color-studio" onclick="window.laminaApp ? window.laminaApp.openColorStudio() : (window.colorStudio && window.colorStudio.open())" class="px-2.5 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-300 font-bold text-xs flex items-center gap-1.5 transition active:scale-95 cursor-pointer shrink-0 shadow-2xs" title="Personalizar Colores de Polígonos (Municipios, Parroquias y Sectores)">
+        <i data-lucide="palette" class="w-4 h-4 text-amber-500"></i>
+        <span>Colores</span>
+      </button>
+
       <!-- Botón Trazador Táctico Georreferenciado (Lápiz + Polígono y Subrayado Territorial) -->
       <button type="button" id="btn-toggle-whiteboard" onclick="window.laminaApp && window.laminaApp.whiteboard && window.laminaApp.whiteboard.toggle()" class="px-2 py-1.5 sm:px-2.5 sm:py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-slate-900 border border-slate-300 font-bold text-xs flex items-center gap-1.5 transition active:scale-95 cursor-pointer shrink-0 shadow-2xs" title="Trazador y Pizarra Táctica Georreferenciada: Lápiz Libre, Polígono y Subrayado de Límites">
         <i data-lucide="pencil" class="w-4 h-4 text-sky-600"></i>
@@ -604,7 +610,7 @@
 
   <!-- 5. AUTENTICACIÓN Y CONTROLADOR PRINCIPAL DEL MÓDULO -->
   <script src="../js/auth.js"></script>
-  <script type="module" src="js/laminaApp.js?v=420"></script>
+  <script type="module" src="js/laminaApp.js?v=425"></script>
   <script>
     if (window.lucide && typeof window.lucide.createIcons === 'function') {
       window.lucide.createIcons();
