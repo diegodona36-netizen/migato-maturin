@@ -112,6 +112,13 @@ export class LaminaApp {
   }
 
   init() {
+    // Garantizar remoción absoluta de cualquier botón residual o en caché de colores
+    const oldBtn = document.getElementById("btn-toggle-color-studio");
+    if (oldBtn) oldBtn.remove();
+    document.querySelectorAll("header button").forEach(b => {
+      if (b.textContent && b.textContent.includes("Colores")) b.remove();
+    });
+
     this.initMap();
     this.initUIListeners();
     this.initWhiteboard();

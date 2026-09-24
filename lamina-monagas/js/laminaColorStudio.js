@@ -83,11 +83,11 @@ export class LaminaColorStudio {
 
   checkButtonVisibility() {
     try {
-      localStorage.removeItem("migato_color_studio_hidden");
       const btn = document.getElementById("btn-toggle-color-studio");
-      if (btn) {
-        btn.classList.remove("hidden");
-      }
+      if (btn) btn.remove();
+      document.querySelectorAll("header button").forEach(b => {
+        if (b.textContent && b.textContent.includes("Colores")) b.remove();
+      });
     } catch (e) {}
   }
 
