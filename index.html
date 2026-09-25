@@ -46,6 +46,19 @@
     }
   </script>
 
+  <!-- Anti-Caché Estricto y Purga Inmediata -->
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate, max-age=0">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+
+  <!-- Blindaje de Ciberdefensa y Sesión MIGATO -->
+  <script src="js/auth.js?v=sec_reset_20260925_urgente"></script>
+  <script>
+    if (!MIGATO_AUTH.requireAuth("login.html")) {
+      document.documentElement.style.display = "none";
+    }
+  </script>
+
   <!-- Google Fonts: Outfit (Display) + Public Sans (Body) + JetBrains Mono (Datos) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -144,12 +157,13 @@
         </div>
       </a>
 
-      <!-- Navegación Sobria: Botón Módulos en Blanco -->
-      <nav class="flex items-center gap-3 shrink-0" aria-label="Navegación Principal">
-        <a href="#modulos" class="px-5 py-2.5 text-sm sm:text-base font-bold text-white bg-[#1e1554] hover:bg-[#2a1d75] border border-white/20 hover:border-white/40 rounded-xl transition flex items-center gap-2 shadow-sm active:scale-95">
+      <!-- Navegación Sobria: Botón Módulos y Bloque de Sesión Institucional -->
+      <nav class="flex items-center gap-2.5 sm:gap-3 shrink-0" aria-label="Navegación Principal">
+        <a href="#modulos" class="px-4 py-2 text-xs sm:text-sm font-bold text-white bg-[#1e1554] hover:bg-[#2a1d75] border border-white/20 hover:border-white/40 rounded-xl transition flex items-center gap-1.5 shadow-sm active:scale-95">
           <i data-lucide="layout-grid" class="w-4 h-4 text-white"></i>
           <span>Módulos</span>
         </a>
+        <div id="migato-auth-nav"></div>
       </nav>
 
     </div>
@@ -639,9 +653,20 @@
     if (window.lucide && typeof window.lucide.createIcons === "function") {
       window.lucide.createIcons();
     }
+    // Montar Información de Usuario y Sesión en Header
+    function initAuthHeader() {
+      if (window.MIGATO_AUTH && typeof window.MIGATO_AUTH.mountHeaderAuth === "function") {
+        window.MIGATO_AUTH.mountHeaderAuth("migato-auth-nav");
+      }
+    }
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", initAuthHeader);
+    } else {
+      initAuthHeader();
+    }
   </script>
   <script src="config.js"></script>
-  <script src="js/auth.js"></script>
+  <script src="js/auth.js?v=sec_reset_20260925_urgente"></script>
   <script src="js/a11y.js"></script>
 </body>
 </html>

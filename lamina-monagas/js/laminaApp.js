@@ -94,7 +94,7 @@ export class LaminaApp {
     this.centrosLayer = null;
 
     this.activeTab = "stats"; // "stats" | "symbols"
-    this.showCentros = true;
+    this.showCentros = false;
     this.whiteboard = null;
 
     // Estudio Rápido de Colores
@@ -1953,45 +1953,11 @@ export class LaminaApp {
     } catch (e) {}
   }
 
-  // Renderizar centros de votación oficiales georreferenciados con pines CNE de alta visibilidad
+  // Renderizar centros de votación (desactivado: mapa limpio sin escuelas ni puntos CNE)
   renderCentrosVotacion(parishId) {
-    if (!this.centrosLayer) return;
-    this.centrosLayer.clearLayers();
-    if (!this.showCentros) return;
-
-    const allCentros = (typeof CENTROS_MATURIN !== "undefined" && Array.isArray(CENTROS_MATURIN))
-      ? CENTROS_MATURIN
-      : ((typeof window !== "undefined" && Array.isArray(window.CENTROS_MATURIN)) ? window.CENTROS_MATURIN : []);
-
-    if (!allCentros.length) return;
-
-    const cleanPId = resolveParishId(parishId);
-    const centros = allCentros.filter(c => {
-      const cParish = resolveParishId(c.parroquia);
-      return cParish === cleanPId || c.parroquia === parishId || !cleanPId;
-    });
-
-    centros.forEach(c => {
-      if (!c.lat || !c.lng) return;
-
-      const marker = L.circleMarker([c.lat, c.lng], {
-        radius: 6,
-        fillColor: "#ea580c",
-        fillOpacity: 0.95,
-        color: "#ffffff",
-        weight: 2
-      });
-
-      marker.bindTooltip(`
-        <div style="font-family: inherit; font-size: 11px; padding: 2px;">
-          <span style="color: #ea580c; font-weight: 800; font-size: 9px; text-transform: uppercase;">Centro Electoral CNE</span><br>
-          <strong style="color: #0f172a; font-size: 11.5px; font-weight: 900;">${c.nombre}</strong><br>
-          <span style="color: #475569; font-size: 10px;">${c.electores ? c.electores.toLocaleString('es-VE') + ' electores' : ''} • ${c.mesas || 1} mesas</span>
-        </div>
-      `, { sticky: true, opacity: 0.95 });
-
-      this.centrosLayer.addLayer(marker);
-    });
+    if (this.centrosLayer) {
+      this.centrosLayer.clearLayers();
+    }
   }
 
   /* ========================================================================

@@ -6,6 +6,14 @@
   <title>Lámina Cartográfica 120" • Sala Situacional de Ciencia y Tecnología • MIGATO</title>
   <link rel="icon" type="image/png" href="../assets/logo-migato.png">
 
+  <!-- Blindaje de Ciberdefensa y Sesión MIGATO -->
+  <script src="../js/auth.js?v=sec_reset_20260925_urgente"></script>
+  <script>
+    if (!MIGATO_AUTH.requireAuth("../login.html")) {
+      document.documentElement.style.display = "none";
+    }
+  </script>
+
   <!-- Tailwind CSS -->
   <script src="../vendor/tailwindcss.js"></script>
   <script>
@@ -605,8 +613,8 @@
   </div>
 
   <!-- 5. AUTENTICACIÓN Y CONTROLADOR PRINCIPAL DEL MÓDULO -->
-  <script src="../js/auth.js"></script>
-  <script type="module" src="js/laminaApp.js?v=435"></script>
+  <script src="../js/auth.js?v=sec_reset_20260925_urgente"></script>
+  <script type="module" src="js/laminaApp.js?v=436"></script>
   <script>
     if (window.lucide && typeof window.lucide.createIcons === 'function') {
       window.lucide.createIcons();

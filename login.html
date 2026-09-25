@@ -1,10 +1,17 @@
 <!DOCTYPE html>
-<html lang="es" class="h-full">
+<html lang="es" class="dark h-full">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SICAT • Acceso Institucional al Sistema de Control y Auditoría Territorial</title>
-  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>MIGATO • Control de Acceso y Ciberdefensa Electoral</title>
+  <meta name="description" content="Portal Oficial de Autenticación y Control de Acceso - Comando de Campaña MIGATO Monagas 2026.">
+  <link rel="icon" type="image/png" href="assets/logo-migato.png">
+
+  <!-- Anti-Caché y Purga Obligatoria -->
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate, max-age=0">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+
   <!-- Tailwind CSS -->
   <script src="vendor/tailwindcss.js"></script>
   <script>
@@ -12,242 +19,223 @@
       document.write('<script src="https://cdn.tailwindcss.com"><\/script>');
     }
   </script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            migato: {
+              brand: "#23176d",
+              light: "#35249c",
+              glow: "#4532b8",
+              surface: "#0e1122"
+            }
+          },
+          fontFamily: {
+            sans: ["'Public Sans'", "system-ui", "-apple-system", "sans-serif"],
+            display: ["'Outfit'", "system-ui", "sans-serif"],
+            mono: ["'JetBrains Mono'", "monospace"]
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Lucide Icons -->
+  <script src="vendor/lucide.min.js"></script>
+  <script>
+    if (!window.lucide) {
+      document.write('<script src="https://unpkg.com/lucide@latest"><\/script>');
+    }
+  </script>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800;900&family=Public+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
   <style>
-    * {
-      border-radius: 0px !important;
-      box-shadow: none !important;
-    }
     body {
-      font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
-      background-color: #dbe0e6;
-      color: #1a202c;
-    }
-    .font-mono {
-      font-family: 'Consolas', 'Courier New', monospace;
-    }
-    .gov-input {
-      width: 100%;
-      background-color: #ffffff;
-      border: 1px solid #94a3b8;
-      padding: 6px 10px;
-      font-size: 13px;
-      color: #0f172a;
-      outline: none;
-    }
-    .gov-input:focus {
-      border-color: #1e3a5f;
-      outline: 1px solid #1e3a5f;
-    }
-    .gov-btn {
-      background-color: #1e3a5f;
-      border: 1px solid #0f2b48;
-      color: #ffffff;
-      font-weight: 700;
-      font-size: 12px;
-      padding: 8px 14px;
-      cursor: pointer;
-      text-transform: uppercase;
-      letter-spacing: 0.03em;
-    }
-    .gov-btn:hover {
-      background-color: #152943;
+      background-color: #070a14;
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(35, 23, 109, 0.35) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(14, 17, 34, 0.7) 0px, transparent 50%);
     }
   </style>
 </head>
-<body class="min-h-screen flex flex-col justify-between antialiased">
-<!-- Cintillo Institucional Superior -->
-  <div class="bg-[#0c2340] text-slate-200 text-base font-bold px-4 py-1.5 flex flex-wrap items-center justify-between border-b border-[#1e3a5f]">
-    <div class="flex items-center gap-2">
-      <span class="text-amber-300">REPÚBLICA BOLIVARIANA DE VENEZUELA</span>
-      <span class="text-slate-500">|</span>
-      <span>ESTADO MONAGAS</span>
-      <span class="text-slate-500">|</span>
-      <span class="text-slate-300">COMANDO REGIONAL DE CONTROL ELECTORAL</span>
-    </div>
-    <div class="font-mono text-sm text-slate-300">
-      PORTAL OFICIAL DE AUTENTICACIÓN • SICAT-v2.6
-    </div>
-  </div>
+<body class="min-h-screen flex flex-col justify-between text-slate-100 antialiased selection:bg-[#23176d] selection:text-white">
 
-  <!-- Contenedor Principal de Login -->
-  <main class="flex-1 flex items-center justify-center p-3 sm:p-6">
-    <div class="w-full max-w-lg bg-white border-2 border-[#1e3a5f]">
+  <!-- Cintillo Institucional Superior -->
+  <header class="border-b border-white/10 bg-[#100b33]/90 backdrop-blur-md px-4 py-2.5">
+    <div class="max-w-6xl mx-auto flex flex-wrap items-center justify-between gap-3 text-xs">
+      <div class="flex items-center gap-2">
+        <span class="w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse"></span>
+        <span class="font-extrabold uppercase tracking-wider text-amber-300">REPÚBLICA DE VENEZUELA</span>
+        <span class="text-white/30">•</span>
+        <span class="font-bold text-white uppercase">ESTADO MONAGAS</span>
+        <span class="text-white/30">•</span>
+        <span class="text-slate-300 font-semibold uppercase">COMANDO REGIONAL MIGATO</span>
+      </div>
+      <div class="font-mono text-[11px] text-slate-300 flex items-center gap-2">
+        <span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-bold">PORTAL SEGURO</span>
+        <span>CIBERDEFENSA v2.6</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Contenedor Principal de Autenticación -->
+  <main class="flex-1 flex items-center justify-center p-4 sm:p-6 lg:p-8">
+    <div class="w-full max-w-md bg-[#0f0b29]/90 border border-white/15 rounded-3xl p-6 sm:p-8 shadow-2xl shadow-black/80 backdrop-blur-xl relative overflow-hidden">
       
-      <!-- Encabezado de la Caja de Acceso -->
-      <div class="bg-[#1e3a5f] text-white p-4 border-b border-[#0f2b48] text-center">
-        <div class="w-12 h-12 bg-white p-1 border border-slate-300 mx-auto mb-2 flex items-center justify-center">
+      <!-- Efecto de Luz Superior -->
+      <div class="absolute -top-24 -left-24 w-48 h-48 bg-[#4532b8]/30 rounded-full blur-3xl pointer-events-none"></div>
+      <div class="absolute -bottom-24 -right-24 w-48 h-48 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+      <!-- Encabezado de la Tarjeta -->
+      <div class="text-center space-y-2 relative z-10 mb-6">
+        <div class="w-20 h-20 mx-auto rounded-2xl bg-[#1b124e] border border-white/20 p-2 shadow-lg flex items-center justify-center">
           <img src="assets/logo-migato.png" alt="MIGATO" class="w-full h-full object-contain">
         </div>
-        <p class="text-base text-amber-300 font-bold uppercase tracking-wider font-mono">
-          MOVIMIENTO INDEPENDIENTE GANAMOS TODOS • ESTADO MONAGAS
-        </p>
-        <h1 class="text-base font-black uppercase tracking-tight mt-0.5">
-          SALA DE CONTROL Y AUDITORÍA TERRITORIAL (SICAT)
-        </h1>
-        <p class="text-base text-slate-200 mt-0.5 font-mono">
-          Ingreso a la Sala de Mando, Padrón y Validación Forense de Actas
-        </p>
+        <div>
+          <span class="text-[11px] font-black tracking-widest text-amber-400 uppercase font-mono block">
+            MOVIMIENTO INDEPENDIENTE GANAMOS TODOS
+          </span>
+          <h1 class="text-xl sm:text-2xl font-black text-white uppercase tracking-tight">
+            ACCESO A CENTRAL DE MANDO
+          </h1>
+          <p class="text-xs text-slate-300 font-medium mt-1">
+            Plataforma Estratégica, Cartografía Satelital y Auditoría Territorial
+          </p>
+        </div>
       </div>
 
-      <div class="p-5 space-y-4">
-        <!-- Advertencia Institucional de Uso Interno -->
-        <div class="bg-[#f8fafc] border border-amber-300 p-2.5 text-base text-amber-900 font-mono">
-          <strong>AVISO OFICIAL:</strong> Este terminal es para uso exclusivo de funcionarios y coordinadores debidamente acreditados. Toda consulta queda foliada y auditada en el servidor central.
+      <!-- Banner de Alerta / Error -->
+      <div id="login-error" class="hidden mb-4 p-3 rounded-xl bg-rose-500/20 border border-rose-500/40 text-rose-200 text-xs font-semibold flex items-center gap-2.5 animate-shake">
+        <i data-lucide="alert-triangle" class="w-4 h-4 text-rose-400 shrink-0"></i>
+        <span id="login-error-msg">Credenciales no reconocidas en el sistema.</span>
+      </div>
+
+      <!-- Formulario de Acceso -->
+      <form id="login-form" class="space-y-4 relative z-10">
+        <div>
+          <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5" for="username">
+            Usuario o Cédula Institucional:
+          </label>
+          <div class="relative">
+            <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+              <i data-lucide="user" class="w-4 h-4"></i>
+            </span>
+            <input type="text" id="username" name="username" value="" required autofocus
+              placeholder="Ingrese su usuario o cédula"
+              class="w-full pl-10 pr-4 py-2.5 rounded-xl bg-[#17103f] border border-white/20 text-white placeholder-slate-500 text-sm font-medium focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400 transition">
+          </div>
         </div>
 
-        <!-- Formulario de Acceso -->
-        <form id="login-form" class="space-y-3">
-          <div>
-            <label class="block text-sm font-bold text-slate-700 uppercase mb-1">Cédula de Identidad o Usuario:</label>
-            <input type="text" id="username" value="V-18450123" required class="gov-input font-mono">
+        <div>
+          <div class="flex items-center justify-between mb-1.5">
+            <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider" for="password">
+              Contraseña de Seguridad:
+            </label>
           </div>
-
-          <div>
-            <label class="block text-sm font-bold text-slate-700 uppercase mb-1">Contraseña de Seguridad:</label>
-            <div class="relative">
-              <input type="password" id="password" value="migato2026" required class="gov-input font-mono pr-8">
-              <button type="button" onclick="togglePasswordVisibility()" class="absolute inset-y-0 right-0 px-2.5 flex items-center text-slate-600 hover:text-slate-900 text-sm">
-                <i id="eye-icon" class="fa-solid fa-eye"></i>
-              </button>
-            </div>
-          </div>
-
-          <div class="pt-1">
-            <button type="submit" class="w-full gov-btn flex items-center justify-center gap-2">
-              <i class="fa-solid fa-lock"></i>
-              <span>INGRESAR AL SISTEMA</span>
+          <div class="relative">
+            <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+              <i data-lucide="lock" class="w-4 h-4"></i>
+            </span>
+            <input type="password" id="password" name="password" value="" required
+              placeholder="••••••••••••"
+              class="w-full pl-10 pr-11 py-2.5 rounded-xl bg-[#17103f] border border-white/20 text-white placeholder-slate-500 text-sm font-medium focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400 transition">
+            <button type="button" onclick="togglePasswordVisibility()" class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-white transition cursor-pointer">
+              <i id="eye-icon" data-lucide="eye" class="w-4 h-4"></i>
             </button>
           </div>
-        </form>
-
-        <!-- Tabla Formal de Perfiles de Demostración -->
-        <div class="pt-3 border-t border-slate-300">
-          <p class="text-base font-bold text-slate-800 uppercase mb-2 font-mono">
-            Directorio de Acceso por Nivel de Mando:
-          </p>
-          
-          <div class="border border-slate-300 overflow-x-auto">
-            <table class="w-full text-left font-mono text-base border-collapse">
-              <thead>
-                <tr class="bg-[#2c3e50] text-white text-base uppercase font-bold">
-                  <th class="p-1.5 border-r border-slate-600">NIVEL</th>
-                  <th class="p-1.5 border-r border-slate-600">JURISDICCIÓN</th>
-                  <th class="p-1.5 border-r border-slate-600">MÓDULO 4</th>
-                  <th class="p-1.5 text-center">ACCIÓN</th>
-                </tr>
-              </thead>
-              <tbody class="divide-y divide-slate-200">
-                <tr class="bg-amber-50/50 hover:bg-amber-100/50">
-                  <td class="p-1.5 font-bold text-slate-900 border-r border-slate-300">REGIONAL</td>
-                  <td class="p-1.5 text-slate-700 border-r border-slate-300">13 Municipios / 44 Parr.</td>
-                  <td class="p-1.5 text-emerald-800 font-bold border-r border-slate-300">HABILITADO</td>
-                  <td class="p-1 text-center">
-                    <button onclick="loginAs('gobernador', 'Comando de Dirección Regional')" class="bg-slate-700 hover:bg-slate-900 text-white px-2 py-0.5 font-bold text-sm">
-                      ENTRAR
-                    </button>
-                  </td>
-                </tr>
-                <tr class="bg-white hover:bg-slate-50">
-                  <td class="p-1.5 font-bold text-slate-900 border-r border-slate-300">MUNICIPAL</td>
-                  <td class="p-1.5 text-slate-700 border-r border-slate-300">Maturín (Local)</td>
-                  <td class="p-1.5 text-red-800 font-bold border-r border-slate-300">BLOQUEADO</td>
-                  <td class="p-1 text-center">
-                    <button onclick="loginAs('municipal', 'Comando Municipal Maturín')" class="bg-slate-700 hover:bg-slate-900 text-white px-2 py-0.5 font-bold text-sm">
-                      ENTRAR
-                    </button>
-                  </td>
-                </tr>
-                <tr class="bg-white hover:bg-slate-50">
-                  <td class="p-1.5 font-bold text-slate-900 border-r border-slate-300">PARROQUIAL</td>
-                  <td class="p-1.5 text-slate-700 border-r border-slate-300">Alto de Los Godos</td>
-                  <td class="p-1.5 text-red-800 font-bold border-r border-slate-300">BLOQUEADO</td>
-                  <td class="p-1 text-center">
-                    <button onclick="loginAs('parroquial', 'Enlace Parroquial Los Godos')" class="bg-slate-700 hover:bg-slate-900 text-white px-2 py-0.5 font-bold text-sm">
-                      ENTRAR
-                    </button>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
         </div>
 
-        <div class="pt-2 text-center">
-          <a href="index.html" class="text-base text-blue-900 font-bold hover:underline font-mono">
-            ← Volver a la Sala de Mando Central
-          </a>
-        </div>
+        <button type="submit" id="btn-submit"
+          class="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-sm uppercase tracking-wider transition shadow-lg shadow-amber-500/20 active:scale-98 flex items-center justify-center gap-2 cursor-pointer mt-4">
+          <i data-lucide="shield-check" class="w-4 h-4"></i>
+          <span>INGRESAR A CENTRAL DE MANDO</span>
+        </button>
+      </form>
 
+      <!-- Pie de Seguridad Interno -->
+      <div class="mt-6 pt-4 border-t border-white/10 text-center text-xs text-slate-400 font-mono">
+        <span>🔒 Sesión encriptada • Acceso restringido al Comando MIGATO</span>
       </div>
 
     </div>
   </main>
 
-  <!-- Pie de Página Institucional -->
-  <footer class="bg-[#cbd5e1] border-t border-[#94a3b8] py-1.5 px-4 text-centertext-sm text-slate-700 font-mono">
-    DIRECCIÓN DE TECNOLOGÍA Y AUDITORÍA ELECTORAL • COMANDO MONAGAS 2026 • ACCESO AUDITADO
+  <!-- Pie Institucional -->
+  <footer class="border-t border-white/10 bg-[#070a14] py-3 px-4 text-center text-xs text-slate-400 font-mono">
+    <span>DIRECCIÓN DE TECNOLOGÍA Y CIBERDEFENSA • MOVIMIENTO INDEPENDIENTE GANAMOS TODOS (MIGATO)</span>
   </footer>
 
-  <script src="config.js"></script>
-  <script src="js/auth.js"></script>
+  <script src="js/auth.js?v=sec_reset_20260925_urgente"></script>
   <script>
+    // Inicializar Lucide Icons
+    if (window.lucide && typeof window.lucide.createIcons === 'function') {
+      window.lucide.createIcons();
+    }
+
+    // Obtener parámetro de redirección si existe
+    function getRedirectTarget() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const redirect = urlParams.get('redirect');
+      return redirect ? decodeURIComponent(redirect) : 'index.html';
+    }
+
+    // Si ya está autenticado con la sesión vigente, redirigir automáticamente
+    if (MIGATO_AUTH.isAuthenticated()) {
+      window.location.replace(getRedirectTarget());
+    }
+
     function togglePasswordVisibility() {
       const pwd = document.getElementById('password');
       const icon = document.getElementById('eye-icon');
       if (pwd.type === 'password') {
         pwd.type = 'text';
-        icon.classList.remove('fa-eye');
-        icon.classList.add('fa-eye-slash');
+        icon.setAttribute('data-lucide', 'eye-off');
       } else {
         pwd.type = 'password';
-        icon.classList.remove('fa-eye-slash');
-        icon.classList.add('fa-eye');
+        icon.setAttribute('data-lucide', 'eye');
+      }
+      if (window.lucide && typeof window.lucide.createIcons === 'function') {
+        window.lucide.createIcons();
       }
     }
 
-    function loginAs(role, name) {
-      MIGATO_AUTH.setSession(role, name);
-      window.location.href = "despacho/index.html";
+    function showError(msg) {
+      const el = document.getElementById('login-error');
+      const msgEl = document.getElementById('login-error-msg');
+      if (el && msgEl) {
+        msgEl.textContent = msg;
+        el.classList.remove('hidden');
+      }
     }
 
-    document.getElementById('login-form').addEventListener('submit', async function(e) {
-      e.preventDefault();
-      const username = document.getElementById('username').value.trim();
-      const password = document.getElementById('password').value.trim();
-      const submitBtn = e.target.querySelector('button[type="submit"]');
+    function hideError() {
+      const el = document.getElementById('login-error');
+      if (el) el.classList.add('hidden');
+    }
 
-      submitBtn.disabled = true;
-      submitBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> AUTENTICANDO EN SERVIDOR...';
-
-      try {
-        const resp = await fetch('/api/auth/login', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ username, password })
-        });
-
-        if (resp.ok) {
-          const data = await resp.json();
-          MIGATO_AUTH.setSession(data.user.rol, data.user.nombre);
-          window.location.href = "despacho/index.html";
-          return;
-        }
-      } catch (err) {
-        console.warn("Fallo en API remota, autenticando localmente:", err);
-      }
-
-      // Validación local por credencial si el servidor no responde
-      if (username.startsWith("V-15") || username.toLowerCase().includes("mun") || password === "mun2026") {
-        loginAs('municipal', 'Comando Municipal Maturín');
-      } else if (username.startsWith("V-20") || username.toLowerCase().includes("par") || password === "par2026") {
-        loginAs('parroquial', 'Enlace Parroquial Los Godos');
+    function executeLogin(username, password) {
+      hideError();
+      const res = MIGATO_AUTH.authenticate(username, password);
+      if (res.success) {
+        const target = getRedirectTarget();
+        window.location.replace(target);
       } else {
-        loginAs('gobernador', 'Comando de Dirección Regional');
+        showError(res.message || "Credenciales no válidas.");
       }
+    }
+
+    document.getElementById('login-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const user = document.getElementById('username').value.trim();
+      const pass = document.getElementById('password').value.trim();
+      executeLogin(user, pass);
     });
   </script>
-  <script src="js/a11y.js"></script>
 </body>
 </html>

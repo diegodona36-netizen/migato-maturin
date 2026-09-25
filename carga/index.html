@@ -34,6 +34,14 @@
     }
   </script>
 
+  <!-- Blindaje de Ciberdefensa y Sesión MIGATO -->
+  <script src="../js/auth.js?v=sec_reset_20260925_urgente"></script>
+  <script>
+    if (!MIGATO_AUTH.requireAuth("../login.html")) {
+      document.documentElement.style.display = "none";
+    }
+  </script>
+
   <!-- Lucide Icons (Local + CDN) -->
   <script src="../vendor/lucide.min.js"></script>
   <script>

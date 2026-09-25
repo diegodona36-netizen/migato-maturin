@@ -5,6 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Trazador y Diagnóstico Vial • La Puente</title>
 
+  <!-- Blindaje de Ciberdefensa y Sesión MIGATO -->
+  <script src="../js/auth.js?v=sec_reset_20260925_urgente"></script>
+  <script>
+    if (!MIGATO_AUTH.requireAuth("../login.html")) {
+      document.documentElement.style.display = "none";
+    }
+  </script>
+
   <!-- Tailwind CSS (Local de Alta Disponibilidad + CDN de Respaldo) -->
   <script src="../vendor/tailwindcss.js"></script>
   <script>
