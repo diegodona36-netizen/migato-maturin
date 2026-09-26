@@ -1,7 +1,6 @@
 /**
  * MIGATO - Módulo de Autenticación, Blindaje de Sesión y Control de Acceso (RBAC)
  * Proyecto Oficial: Monagas 2026 • Al servicio de José Gregorio "El Gato" Briceño
- * Responsable Técnico: Ing. Diego Donado
  */
 
 const MIGATO_AUTH = (function() {
