@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Servidor Local de Inteligencia de Reuniones MIGATO Monagas 2026
-Recibe minutas/actas desde la interfaz web (AudioIntel) y las guarda directamente
+Servidor Local y Aislado de Inteligencia de Reuniones MIGATO Monagas 2026
+Sirve la interfaz web privada de AudioIntel y procesa el guardado directo
 en la Bóveda Obsidian (vault/06-Actas-y-Reuniones/) en Markdown y DOCX nativo IUTIRLA.
 """
 
@@ -10,8 +10,9 @@ import os
 import sys
 import json
 import tempfile
+import webbrowser
 from pathlib import Path
-from http.server import HTTPServer, BaseHTTPRequestHandler
+from http.server import HTTPServer, SimpleHTTPRequestHandler
 from urllib.parse import urlparse
 
 # Agregar scripts/ al PATH para importar los módulos de compilación
@@ -25,7 +26,10 @@ from build_acta_word import build_acta_docx
 
 PORT = 8090
 
-class MigatoReunionesHandler(BaseHTTPRequestHandler):
+class MigatoReunionesHandler(SimpleHTTPRequestHandler):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, directory=str(PROJECT_ROOT), **kwargs)
+
     def _set_cors_headers(self):
         self.send_header("Access-Control-Allow-Origin", "*")
         self.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
@@ -38,7 +42,7 @@ class MigatoReunionesHandler(BaseHTTPRequestHandler):
 
     def do_GET(self):
         parsed = urlparse(self.path)
-        if parsed.path in ["/api/status", "/health", "/"]:
+        if parsed.path in ["/api/status", "/health"]:
             self.send_response(200)
             self.send_header("Content-Type", "application/json; charset=utf-8")
             self._set_cors_headers()
@@ -51,9 +55,13 @@ class MigatoReunionesHandler(BaseHTTPRequestHandler):
                 "vault_exists": VAULT_ACTAS_DIR.exists()
             }
             self.wfile.write(json.dumps(resp, ensure_ascii=False, indent=2).encode("utf-8"))
-        else:
-            self.send_response(404)
+        elif parsed.path == "/":
+            self.send_response(302)
+            self.send_header("Location", "/reuniones/")
             self.end_headers()
+        else:
+            # Sirve los archivos estáticos de forma nativa
+            super().do_GET()
 
     def do_POST(self):
         parsed = urlparse(self.path)
@@ -125,19 +133,23 @@ class MigatoReunionesHandler(BaseHTTPRequestHandler):
 def run_server():
     server_address = ("127.0.0.1", PORT)
     httpd = HTTPServer(server_address, MigatoReunionesHandler)
-    print(f"================================================================")
-    print(f"🏛️ SERVIDOR LOCAL MIGATO AUDIOINTEL & ACTAS DE REUNIÓN ACTIVO")
-    print(f"📍 Escuchando en: http://127.0.0.1:{PORT}")
+    url = f"http://127.0.0.1:{PORT}/reuniones/"
+    print("=" * 64)
+    print("🏛️ SERVIDOR PERSONAL AISLADO • MIGATO AUDIOINTEL & ACTAS")
+    print(f"📍 URL de Acceso Local: {url}")
     print(f"📂 Bóveda Obsidian: {VAULT_ACTAS_DIR}")
-    print(f"⚡ Endpoints disponibles:")
-    print(f"   • GET  /api/status      -> Estado del servidor")
-    print(f"   • POST /api/save-acta   -> Guarda MD y DOCX en Bóveda Obsidian")
-    print(f"   • POST /api/build-docx  -> Compila y descarga DOCX IUTIRLA")
-    print(f"================================================================")
+    print("⚡ Presiona Ctrl + C para detener el servidor")
+    print("=" * 64)
+    
+    try:
+        webbrowser.open(url)
+    except Exception:
+        pass
+
     try:
         httpd.serve_forever()
     except KeyboardInterrupt:
-        print("\nDeteniendo servidor local MIGATO AudioIntel...")
+        print("\nServidor detenido con éxito.")
         httpd.server_close()
 
 if __name__ == "__main__":
