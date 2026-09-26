@@ -1962,6 +1962,63 @@ Convocatoria a todos los medios regionales y corresponsales nacionales.`;
       if (kpiPub) kpiPub.textContent = `${pub.length} Activas`;
     }
 
+    const DEFAULT_PENDIENTES_INICIALES = [
+      {
+        id: "pend-001",
+        tipo: "reel",
+        plataforma: "tiktok",
+        titulo: "Asamblea de Jóvenes en Cancha Techada de Boquerón con El Gato",
+        autor: "@carlos_boqueron (Carlos Mendoza)",
+        municipio: "Maturín",
+        parroquia: "Boquerón",
+        fecha: "2026-09-26",
+        hora: "02:15 PM",
+        url: "https://www.tiktok.com/@migato_oficial/video/7380000000000000000",
+        embedUrl: "https://www.tiktok.com/embed/v2/7380000000000000000",
+        portada: "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=600&q=80",
+        descripcion: "Grabación en vivo con el equipo juvenil y líderes vecinales respaldando a El Gato Briceño. Solicitan difusión en el muro oficial.",
+        estado: "pendiente",
+        destacado: false,
+        etiquetas: ["Boquerón", "Juventud"]
+      },
+      {
+        id: "pend-002",
+        tipo: "reel",
+        plataforma: "instagram",
+        titulo: "Denuncia Vecinal: Colapso de tubería de agua potable en Calle 4 de La Puente",
+        autor: "@mariita_maturin (María Elena Salazar)",
+        municipio: "Maturín",
+        parroquia: "Alto de Los Godos",
+        fecha: "2026-09-26",
+        hora: "11:40 AM",
+        url: "https://www.instagram.com/reel/C8_example_migato/",
+        embedUrl: "https://www.instagram.com/reel/C8_example_migato/embed/",
+        portada: "https://images.unsplash.com/photo-1541888946425-d0fbb186c5f7?auto=format&fit=crop&w=600&q=80",
+        descripcion: "Testimonio en video mostrando cómo las familias cargan agua en carretillas. Exigen el plan de reactivación de pozos de MIGATO.",
+        estado: "pendiente",
+        destacado: false,
+        etiquetas: ["La Puente", "DenunciaAgua"]
+      },
+      {
+        id: "pend-003",
+        tipo: "reel",
+        plataforma: "youtube",
+        titulo: "Short de Productores: Respaldo al Plan de Vialidad Agrícola en Punta de Mata",
+        autor: "@comando_zamora (Frente Campesino)",
+        municipio: "Ezequiel Zamora",
+        parroquia: "Punta de Mata",
+        fecha: "2026-09-26",
+        hora: "09:10 AM",
+        url: "https://www.youtube.com/shorts/dQw4w9WgXcQ",
+        embedUrl: "https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ",
+        portada: "https://images.unsplash.com/photo-1515162816999-a0c47dc192f7?auto=format&fit=crop&w=600&q=80",
+        descripcion: "Video de productores agrícolas de Punta de Mata apoyando el plan de rescate del campo y seguridad vial de El Gato Briceño.",
+        estado: "pendiente",
+        destacado: false,
+        etiquetas: ["PuntaDeMata", "Campo"]
+      }
+    ];
+
     async function sincronizarMuroInicial() {
       let pub = obtenerPublicadosMuro();
       if (!pub || pub.length === 0) {
@@ -1975,6 +2032,12 @@ Convocatoria a todos los medios regionales y corresponsales nacionales.`;
           console.warn('Error precargando muro_contenidos:', e);
         }
       }
+
+      let pend = obtenerPendientesMuro();
+      if (!pend || pend.length === 0) {
+        guardarPendientesMuro(DEFAULT_PENDIENTES_INICIALES);
+      }
+
       actualizarBadgesMuro();
     }
 
