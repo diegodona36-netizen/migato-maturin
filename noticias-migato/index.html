@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="es" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>MIGATO • Muro de Noticias, Reels y Comunicados Oficiales | Monagas 2026</title>
+  <meta name="description" content="Canal oficial de noticias, reels de redes sociales y comunicados de José Gregorio El Gato Briceño y el partido MIGATO Monagas.">
+  <meta name="theme-color" content="#080c1e">
+  <link rel="icon" type="image/png" href="../assets/logo-migato.png">
+
+  <!-- Open Graph para vistas previas en WhatsApp y Redes Sociales -->
+  <meta property="og:title" content="MIGATO • Muro de Noticias y Reels con El Gato Briceño">
+  <meta property="og:description" content="Comunicados oficiales, videos de calle y denuncias comunitarias en los 13 municipios del Estado Monagas.">
+  <meta property="og:image" content="../assets/logo-migato.png">
+  <meta property="og:type" content="website">
+
+  <!-- Tailwind CSS (Local de alta disponibilidad + Respaldo CDN) -->
+  <script src="../vendor/tailwindcss.js"></script>
+  <script>
+    if (!window.tailwind) {
+      document.write('<script src="https://cdn.tailwindcss.com"><\/script>');
+    }
+  </script>
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            migato: {
+              dark: "#080c1e",
+              card: "#111633",
+              border: "#202854",
+              gold: "#f59e0b",
+              goldlight: "#fbbf24",
+              cyan: "#06b6d4"
+            }
+          },
+          fontFamily: {
+            sans: ["'Public Sans'", "system-ui", "-apple-system", "sans-serif"],
+            display: ["'Outfit'", "system-ui", "sans-serif"],
+            mono: ["'JetBrains Mono'", "monospace"]
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Lucide Icons -->
+  <script src="../vendor/lucide.min.js"></script>
+  <script>
+    if (!window.lucide) {
+      document.write('<script src="https://unpkg.com/lucide@latest"><\/script>');
+    }
+  </script>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Outfit:wght@600;700;800;900&family=Public+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      font-family: "Public Sans", sans-serif;
+      background-color: #080c1e;
+      color: #f1f5f9;
+    }
+    .font-display { font-family: "Outfit", sans-serif; }
+    .font-mono { font-family: "JetBrains Mono", monospace; }
+
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #080c1e; }
+    ::-webkit-scrollbar-thumb { background: #202854; border-radius: 4px; }
+  </style>
+</head>
+<body class="min-h-screen bg-[#080c1e] text-slate-100 flex flex-col antialiased selection:bg-amber-500 selection:text-slate-950">
+
+  <!-- ============================================================== -->
+  <!-- 1. CABECERA INSTITUCIONAL MOBILE-FIRST                         -->
+  <!-- ============================================================== -->
+  <header class="sticky top-0 z-40 bg-[#0c1029]/95 backdrop-blur-md border-b border-[#202854] px-4 py-3 shadow-xl">
+    <div class="max-w-7xl mx-auto flex items-center justify-between gap-3">
+      
+      <!-- Identidad y Logo -->
+      <a href="../" class="flex items-center gap-3 group" title="Ir al Portal Central MIGATO">
+        <div class="w-11 h-11 rounded-2xl bg-[#141a3d] border border-white/20 p-1 flex items-center justify-center shadow-lg shrink-0 group-hover:border-amber-400 transition">
+          <img src="../assets/logo-migato.png" alt="MIGATO" class="w-full h-full object-contain">
+        </div>
+        <div>
+          <span class="text-[10px] font-bold uppercase tracking-wider text-amber-400 block leading-tight">
+            MOVIMIENTO INDEPENDIENTE GANAMOS TODOS
+          </span>
+          <h1 class="font-display font-black text-sm sm:text-base text-white uppercase tracking-tight flex items-center gap-1.5">
+            <span>NOTICIAS & REELS</span>
+            <span class="text-[10px] bg-amber-500/20 text-amber-300 border border-amber-500/30 px-1.5 py-0.2 rounded-md font-mono hidden sm:inline-block">
+              Monagas 2026
+            </span>
+          </h1>
+          <p class="text-[10px] text-slate-300 font-medium truncate">
+            SALA CIUDADANA • EL GATO BRICEÑO GOBERNADOR
+          </p>
+        </div>
+      </a>
+
+      <!-- Botones de Acción Rápida -->
+      <div class="flex items-center gap-2">
+        
+        <!-- Botón Aportar Video (Abre Modal) -->
+        <button onclick="window.abrirModalAporte()" 
+                class="px-3 sm:px-4 py-2 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-xs sm:text-sm rounded-xl shadow-md transition flex items-center gap-1.5 active:scale-95" 
+                title="Postular un video o reporte de tu comunidad">
+          <i data-lucide="plus-circle" class="w-4 h-4"></i>
+          <span>Aportar Video</span>
+        </button>
+
+        <!-- Botón Copiar Link WhatsApp -->
+        <button onclick="window.copiarEnlaceWhatsApp()" 
+                class="p-2 sm:px-3 sm:py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs sm:text-sm rounded-xl shadow-md transition flex items-center gap-1.5 active:scale-95" 
+                title="Copiar mensaje con enlace listo para pegar en WhatsApp">
+          <i data-lucide="share-2" class="w-4 h-4"></i>
+          <span class="hidden sm:inline">WhatsApp</span>
+        </button>
+
+      </div>
+
+    </div>
+  </header>
+
+  <!-- ============================================================== -->
+  <!-- 2. HERO BANNER PARA WHATSAPP                                   -->
+  <!-- ============================================================== -->
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 pt-5 pb-2 w-full">
+    <div class="bg-gradient-to-r from-[#141b44] via-[#101538] to-[#161c47] border border-amber-500/30 rounded-3xl p-5 sm:p-6 shadow-xl relative overflow-hidden">
+      <div class="absolute -right-10 -bottom-10 w-44 h-44 bg-amber-500/5 rounded-full blur-3xl pointer-events-none"></div>
+
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 relative z-10">
+        <div class="space-y-1.5">
+          <div class="flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping"></span>
+            <span class="text-xs font-mono font-bold uppercase tracking-wider text-emerald-300">
+              Canal Oficial • Enlace Fijado de WhatsApp
+            </span>
+          </div>
+          <h2 class="text-xl sm:text-2xl font-display font-black text-white tracking-tight">
+            Muro Informativo y Redes Sociales de MIGATO
+          </h2>
+          <p class="text-xs sm:text-sm text-slate-300 max-w-3xl leading-relaxed">
+            Explora las últimas declaraciones de <strong>José Gregorio "El Gato" Briceño</strong>, los reels virales de Instagram, TikTok y YouTube de nuestros activistas, y los comunicados del comando electoral en los 13 municipios de Monagas.
+          </p>
+        </div>
+
+        <div class="flex items-center gap-2 shrink-0">
+          <button onclick="window.copiarEnlaceWhatsApp()" class="w-full sm:w-auto px-4 py-2.5 bg-emerald-950/80 hover:bg-emerald-900 border border-emerald-500/40 text-emerald-300 font-bold text-xs sm:text-sm rounded-xl transition flex items-center justify-center gap-2 shadow-sm">
+            <i data-lucide="copy" class="w-4 h-4"></i>
+            <span>Copiar Enlace para Fijar</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================== -->
+  <!-- 3. BARRA DE FILTROS Y BÚSQUEDA                                 -->
+  <!-- ============================================================== -->
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 py-4 w-full">
+    <div class="bg-[#111633] border border-[#202854] rounded-2xl p-3 sm:p-4 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 shadow-md">
+      
+      <!-- Filtros por Tipo de Contenido -->
+      <div class="flex items-center gap-1.5 overflow-x-auto pb-1 md:pb-0 scrollbar-none">
+        <button class="filter-tipo-btn active px-3.5 py-1.5 rounded-xl text-xs font-black bg-amber-500 text-slate-950 transition whitespace-nowrap" data-tipo="todos">
+          Todos
+        </button>
+        <button class="filter-tipo-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-[#141b44] text-slate-300 hover:text-white transition whitespace-nowrap flex items-center gap-1" data-tipo="reel">
+          <i data-lucide="video" class="w-3.5 h-3.5 text-pink-400"></i>
+          <span>Reels & Videos</span>
+        </button>
+        <button class="filter-tipo-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-[#141b44] text-slate-300 hover:text-white transition whitespace-nowrap flex items-center gap-1" data-tipo="comunicado">
+          <i data-lucide="shield-check" class="w-3.5 h-3.5 text-amber-400"></i>
+          <span>Comunicados Oficiales</span>
+        </button>
+        <button class="filter-tipo-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-[#141b44] text-slate-300 hover:text-white transition whitespace-nowrap flex items-center gap-1" data-tipo="denuncia">
+          <i data-lucide="alert-triangle" class="w-3.5 h-3.5 text-rose-400"></i>
+          <span>Denuncias de Calle</span>
+        </button>
+      </div>
+
+      <!-- Buscador y Selector de Municipio -->
+      <div class="flex items-center gap-2">
+        
+        <!-- Selector Municipio -->
+        <select id="select-filtro-municipio" class="bg-[#141b44] border border-[#202854] rounded-xl px-2.5 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-amber-400 font-medium">
+          <option value="todos">Todos los Municipios (13)</option>
+          <option value="maturín">Maturín</option>
+          <option value="caripe">Caripe</option>
+          <option value="cedeño">Cedeño</option>
+          <option value="ezequiel zamora">Ezequiel Zamora</option>
+          <option value="piar">Piar</option>
+          <option value="punceres">Punceres</option>
+          <option value="bolívar">Bolívar</option>
+          <option value="acosta">Acosta</option>
+          <option value="aguasay">Aguasay</option>
+          <option value="santa bárbara">Santa Bárbara</option>
+          <option value="libertador">Libertador</option>
+          <option value="uracoa">Uracoa</option>
+          <option value="sotillo">Sotillo</option>
+        </select>
+
+        <!-- Buscador -->
+        <div class="relative w-full sm:w-48">
+          <i data-lucide="search" class="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-2.5 pointer-events-none"></i>
+          <input type="text" id="input-busqueda-muro" placeholder="Buscar..." class="w-full bg-[#141b44] border border-[#202854] rounded-xl pl-8 pr-3 py-1.5 text-xs text-white placeholder-slate-400 focus:outline-none focus:border-amber-400 transition">
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- Contador de Publicaciones -->
+    <div class="flex items-center justify-between px-2 pt-2 text-xs text-slate-400 font-mono">
+      <span id="contador-visibles">Cargando publicaciones...</span>
+      <span class="text-[11px] text-amber-400">⚡ Carga ultraligera para teléfonos móviles</span>
+    </div>
+  </section>
+
+  <!-- ============================================================== -->
+  <!-- 4. FEED PRINCIPAL DE CONTENIDOS (GRID RESPONSIVO)              -->
+  <!-- ============================================================== -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 pb-12 flex-1 w-full">
+    <div id="feed-muro" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+      <!-- Se inyecta dinámicamente desde muro.js -->
+    </div>
+  </main>
+
+  <!-- ============================================================== -->
+  <!-- 5. MODAL PARTICIPATIVO: APORTAR VIDEO O NOTICIA                -->
+  <!-- ============================================================== -->
+  <div id="modalAporte" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-[#111633] border border-[#202854] rounded-3xl max-w-lg w-full p-5 sm:p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
+      
+      <div class="flex items-center justify-between border-b border-[#202854] pb-3">
+        <div class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-xl bg-amber-500/20 text-amber-400 border border-amber-500/30 flex items-center justify-center">
+            <i data-lucide="video" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h3 class="text-base font-display font-bold text-white leading-tight">Aportar Video o Noticia</h3>
+            <p class="text-xs text-slate-400">Envío para la Sala de Comunicación MIGATO</p>
+          </div>
+        </div>
+        <button onclick="window.cerrarModalAporte()" class="text-slate-400 hover:text-white p-1 rounded-lg">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <form id="form-aporte-comunitario" onsubmit="window.guardarAporteComunitario(event)" class="space-y-3.5">
+        
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1">
+            Enlace del Reel o Video (Instagram, TikTok, YouTube o X) *
+          </label>
+          <input type="url" id="input-aporte-url" required placeholder="https://www.instagram.com/reel/... o TikTok" class="w-full bg-[#18204a] border border-[#202854] rounded-xl px-3 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-amber-400 font-mono">
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1">
+              Plataforma *
+            </label>
+            <select id="input-aporte-plataforma" required class="w-full bg-[#18204a] border border-[#202854] rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-amber-400">
+              <option value="instagram">Instagram Reel</option>
+              <option value="tiktok">TikTok Video</option>
+              <option value="youtube">YouTube Short / Video</option>
+              <option value="twitter">X (Twitter)</option>
+              <option value="oficial">Comunicado / Noticia Local</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1">
+              Tu Nombre o Colectivo *
+            </label>
+            <input type="text" id="input-aporte-autor" required placeholder="Ej: Comando Boquerón" class="w-full bg-[#18204a] border border-[#202854] rounded-xl px-3 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-amber-400">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1">
+              Municipio *
+            </label>
+            <select id="input-aporte-municipio" required class="w-full bg-[#18204a] border border-[#202854] rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-amber-400">
+              <option value="Maturín">Maturín</option>
+              <option value="Caripe">Caripe</option>
+              <option value="Cedeño">Cedeño</option>
+              <option value="Ezequiel Zamora">Ezequiel Zamora</option>
+              <option value="Piar">Piar</option>
+              <option value="Punceres">Punceres</option>
+              <option value="Bolívar">Bolívar</option>
+              <option value="Acosta">Acosta</option>
+              <option value="Aguasay">Aguasay</option>
+              <option value="Santa Bárbara">Santa Bárbara</option>
+              <option value="Libertador">Libertador</option>
+              <option value="Uracoa">Uracoa</option>
+              <option value="Sotillo">Sotillo</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1">
+              Parroquia o Sector
+            </label>
+            <input type="text" id="input-aporte-parroquia" placeholder="Ej: Alto de Los Godos" class="w-full bg-[#18204a] border border-[#202854] rounded-xl px-3 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-amber-400">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1">
+            Título o Tema del Video *
+          </label>
+          <input type="text" id="input-aporte-titulo" required placeholder="Ej: Vecinos de Boquerón exigen reactivación de pozo" class="w-full bg-[#18204a] border border-[#202854] rounded-xl px-3 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-amber-400">
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1">
+            Resumen o Contexto de la Noticia *
+          </label>
+          <textarea id="input-aporte-descripcion" rows="3" required placeholder="Describe brevemente lo que se muestra en el video..." class="w-full bg-[#18204a] border border-[#202854] rounded-xl px-3 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-amber-400"></textarea>
+        </div>
+
+        <div class="pt-2 flex items-center justify-end gap-2 border-t border-[#202854]">
+          <button type="button" onclick="window.cerrarModalAporte()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-bold transition">
+            Cancelar
+          </button>
+          <button type="submit" class="px-5 py-2 bg-amber-500 hover:bg-amber-400 text-slate-950 font-black rounded-xl text-xs shadow-md transition flex items-center gap-1.5 active:scale-95">
+            <i data-lucide="send" class="w-3.5 h-3.5"></i>
+            <span>Enviar a Revisión</span>
+          </button>
+        </div>
+
+      </form>
+
+    </div>
+  </div>
+
+  <!-- ============================================================== -->
+  <!-- 6. PIE DE PÁGINA INSTITUCIONAL                                 -->
+  <!-- ============================================================== -->
+  <footer class="bg-[#070a1a] border-t border-[#202854] py-6 px-4 text-center space-y-2 mt-auto">
+    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-400">
+      <div class="flex items-center gap-2">
+        <img src="../assets/logo-migato.png" alt="MIGATO" class="w-5 h-5 object-contain">
+        <span class="font-bold text-slate-200">MIGATO • Monagas 2026</span>
+        <span>• Conducción de José Gregorio "El Gato" Briceño</span>
+      </div>
+      <div>
+        <a href="../login.html" class="hover:text-amber-400 font-mono transition">Acceso de Sala Táctica ↗</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/muro.js?v=260"></script>
+</body>
+</html>
