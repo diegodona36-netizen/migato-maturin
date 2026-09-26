@@ -16,7 +16,7 @@ const MIGATO_AUTH = (function() {
     },
     admin: {
       id: "admin",
-      title: "Dirección de Tecnologías y Ciberdefensa",
+      title: "Administrador Central",
       level: "Administrador General",
       badgeColor: "bg-purple-500/20 text-purple-300 border-purple-500/40",
       dotColor: "bg-purple-400",
@@ -58,17 +58,11 @@ const MIGATO_AUTH = (function() {
 
   // Cuentas Institucionales Acreditadas del Comando MIGATO
   const CREDENCIALES_OFICIALES = {
-    "diego": {
-      role: "admin",
-      name: "Ing. Diego Donado",
-      title: "Resp. Ciencia, Tecnología y Ciberdefensa",
-      password: ["Mgt2026#94", "9482026105", "migato2026", "diego2026", "gatero2026"]
-    },
     "admin": {
       role: "admin",
-      name: "Ing. Diego Donado",
-      title: "Administrador de Ciberdefensa",
-      password: ["Mgt2026#94", "9482026105", "M1g4t0#2026", "migato2026", "admin2026"]
+      name: "Administrador",
+      title: "Administrador General",
+      password: ["Mgt2026#94", "9482026105", "migato2026", "admin2026"]
     },
     "elgato": {
       role: "gobernador",
@@ -232,9 +226,9 @@ const MIGATO_AUTH = (function() {
       } else if (u.includes("sala")) {
         role = "sala";
         name = "Operador Sala Situacional";
-      } else if (u.includes("diego") || u.includes("admin")) {
+      } else if (u.includes("admin")) {
         role = "admin";
-        name = "Ing. Diego Donado";
+        name = "Administrador";
       }
       const session = setSession(role, name, username);
       return { success: true, session };

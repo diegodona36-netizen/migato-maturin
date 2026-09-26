@@ -116,7 +116,7 @@ function buildInitialUsers() {
       email: "jefe@migatomonagas.org",
       password: "Mgt2026#94",
       passwordHash: "32619ea1521f324dcd0dc097836193e54c4b34e862b37ef28298e8dfb4a596c5",
-      nombre: "Jefatura de Despacho Central (Jefe)",
+      nombre: "Administrador",
       rol: "admin", // Acceso total a los 13 municipios y 44 parroquias
       nivel: "jefe",
       municipioId: null,
