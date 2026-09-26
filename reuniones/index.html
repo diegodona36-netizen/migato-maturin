@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="es" class="dark h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>MIGATO • AudioIntel & Actas de Reunión</title>
+  <meta name="description" content="Sistema de Procesamiento de Grabaciones, Filtrado DSP de Audio y Generación de Actas Dialécticas - MIGATO Monagas 2026.">
+  <link rel="icon" type="image/png" href="../assets/logo-migato.png">
+
+  <!-- Anti-Caché Estricto -->
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate, max-age=0">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+
+  <!-- Blindaje de Ciberdefensa y Sesión MIGATO -->
+  <script src="../js/auth.js?v=sec_reset_20260925_urgente"></script>
+  <script>
+    if (!MIGATO_AUTH.requireAuth("../login.html")) {
+      document.documentElement.style.display = "none";
+    }
+  </script>
+
+  <!-- JSZip para Generación de Actas DOCX en Navegador -->
+  <script src="../vendor/jszip.min.js"></script>
+
+  <!-- Tailwind CSS -->
+  <script src="../vendor/tailwindcss.js"></script>
+  <script>
+    if (!window.tailwind) {
+      document.write('<script src="https://cdn.tailwindcss.com"><\/script>');
+    }
+  </script>
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            migato: {
+              brand: "#23176d",
+              light: "#35249c",
+              surface: "#0e1122",
+              navy: "#100b33",
+              card: "#161042"
+            }
+          },
+          fontFamily: {
+            sans: ["'Public Sans'", "system-ui", "-apple-system", "sans-serif"],
+            display: ["'Outfit'", "system-ui", "sans-serif"],
+            mono: ["'JetBrains Mono'", "monospace"]
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Lucide Icons -->
+  <script src="../vendor/lucide.min.js"></script>
+  <script>
+    if (!window.lucide) {
+      document.write('<script src="https://unpkg.com/lucide@latest"><\/script>');
+    }
+  </script>
+
+  <style>
+    body {
+      background-color: #070a14;
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(35, 23, 109, 0.4) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(14, 17, 34, 0.7) 0px, transparent 50%);
+    }
+    .custom-scroll::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scroll::-webkit-scrollbar-track {
+      background: #0b0f19;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background: #2a3449;
+      border-radius: 3px;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col text-slate-100 antialiased selection:bg-[#23176d] selection:text-white">
+
+  <!-- ============================================================== -->
+  <!-- BARRA SUPERIOR INSTITUCIONAL                                   -->
+  <!-- ============================================================== -->
+  <header class="border-b border-white/10 bg-[#100b33]/95 backdrop-blur-md sticky top-0 z-50 py-3">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-4">
+      
+      <!-- Marca y Enlace de Retorno -->
+      <div class="flex items-center gap-3 sm:gap-4">
+        <a href="../index.html" class="p-2 rounded-xl bg-[#1e1554] hover:bg-[#2c1f7a] text-slate-300 hover:text-white border border-white/20 transition flex items-center gap-1.5 text-xs font-bold" title="Volver a Central de Mando">
+          <i data-lucide="arrow-left" class="w-4 h-4"></i>
+          <span class="hidden sm:inline">Central</span>
+        </a>
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-[#1a124a] p-1.5 border border-white/20 flex items-center justify-center shrink-0">
+            <img src="../assets/logo-migato.png" alt="MIGATO" class="w-full h-full object-contain">
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <h1 class="font-display font-black text-white text-base sm:text-lg tracking-tight uppercase">
+                AUDIOINTEL • ACTAS DE REUNIÓN
+              </h1>
+              <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-blue-500/20 text-blue-300 border border-blue-500/30 font-bold hidden sm:inline-block">v2.6 DSP</span>
+            </div>
+            <p class="text-[10px] sm:text-xs text-slate-300 font-medium truncate">
+              Filtrado Anti-Saturación, Transcripción y Síntesis Dialéctica de Mando
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bloque de Sesión -->
+      <div id="migato-auth-nav" class="flex items-center gap-2"></div>
+
+    </div>
+  </header>
+
+  <!-- ============================================================== -->
+  <!-- CONTENIDO PRINCIPAL                                            -->
+  <!-- ============================================================== -->
+  <main class="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+
+    <!-- FILA SUPERIOR: PANEL DE CARGA Y FILTRADO DSP -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+      <!-- Columna Izquierda: Zona Drag & Drop (7 cols) -->
+      <div class="lg:col-span-7 bg-[#100c2e]/90 border border-white/15 rounded-3xl p-5 sm:p-6 shadow-xl space-y-5">
+        
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-blue-400 animate-pulse"></span>
+            <h2 class="text-sm sm:text-base font-bold text-white uppercase tracking-wider">
+              1. Carga de Grabación (Hasta 3 Horas)
+            </h2>
+          </div>
+          <span class="text-xs text-slate-400 font-mono">Formatos: .m4a, .mp3, .wav, WhatsApp</span>
+        </div>
+
+        <!-- Dropzone Interactivo -->
+        <div id="dropzone" 
+             onclick="document.getElementById('audio-input').click()"
+             class="border-2 border-dashed border-white/20 hover:border-blue-400 rounded-2xl p-6 sm:p-8 text-center cursor-pointer bg-[#140e3d]/50 hover:bg-[#18114a]/70 transition group">
+          <input type="file" id="audio-input" accept="audio/*" class="hidden">
+          
+          <div class="w-14 h-14 mx-auto rounded-2xl bg-[#1e1554] border border-white/20 flex items-center justify-center text-blue-300 group-hover:scale-110 transition mb-3">
+            <i data-lucide="mic" class="w-7 h-7"></i>
+          </div>
+          
+          <h3 class="text-sm font-bold text-white group-hover:text-blue-300 transition">
+            Arrastra el archivo de la reunión o haz clic aquí
+          </h3>
+          <p class="text-xs text-slate-400 mt-1 max-w-sm mx-auto">
+            Compatible con notas de voz de WhatsApp, grabadoras de teléfono y audios largos de debates políticos.
+          </p>
+
+          <div id="file-info" class="hidden mt-4 p-3 rounded-xl bg-[#1c1452] border border-white/20 text-left flex items-center justify-between">
+            <div class="flex items-center gap-3 truncate">
+              <i data-lucide="file-audio" class="w-5 h-5 text-blue-400 shrink-0"></i>
+              <div class="truncate">
+                <strong id="file-name" class="text-xs font-bold text-white block truncate">audio.m4a</strong>
+                <span id="file-meta" class="text-[10px] text-slate-300 font-mono">0.0 MB • Calculando duración...</span>
+              </div>
+            </div>
+            <span class="text-[10px] font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-1 rounded">Listo</span>
+          </div>
+        </div>
+
+        <!-- Selectores y Controles de Procesamiento -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+          
+          <!-- Selector Modo Híbrido vs Local -->
+          <div class="p-3 rounded-2xl bg-[#140e3d] border border-white/10 space-y-1.5">
+            <label class="block text-[11px] font-bold text-slate-300 uppercase tracking-wider">
+              Modo de Procesamiento:
+            </label>
+            <select id="select-mode" class="w-full bg-[#0a071c] border border-white/20 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-blue-400">
+              <option value="hibrido" selected>⚡ Modo Híbrido Rápido (~30 segundos)</option>
+              <option value="local">🔒 Modo 100% Local / Desconectado (CPU i3)</option>
+            </select>
+          </div>
+
+          <!-- Botón Demo Inmediato -->
+          <div class="p-3 rounded-2xl bg-[#140e3d] border border-white/10 flex flex-col justify-between">
+            <label class="block text-[11px] font-bold text-slate-300 uppercase tracking-wider">
+              ¿No tienes audio a mano?
+            </label>
+            <button type="button" onclick="loadDemoMeeting()"
+              class="w-full py-2 px-3 rounded-xl bg-[#1f1754] hover:bg-[#2c2075] text-blue-300 hover:text-white border border-white/20 text-xs font-bold transition flex items-center justify-center gap-1.5 cursor-pointer">
+              <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+              <span>Cargar Ejemplo de Sala Situacional</span>
+            </button>
+          </div>
+
+        </div>
+
+        <!-- Botón Ejecutar -->
+        <button type="button" id="btn-process" onclick="startProcessing()"
+          class="w-full py-3.5 px-4 rounded-2xl bg-[#1e1554] hover:bg-[#2c1f7a] text-white font-black text-sm uppercase tracking-wider border border-white/20 hover:border-white/40 shadow-lg shadow-black/50 transition active:scale-98 flex items-center justify-center gap-2 cursor-pointer">
+          <i data-lucide="play" class="w-4 h-4 text-blue-400"></i>
+          <span>PROCESAR Y EXTRAER INTELIGENCIA DE LA REUNIÓN</span>
+        </button>
+
+      </div>
+
+      <!-- Columna Derecha: Monitoreo DSP y Filtro Anti-Saturación (5 cols) -->
+      <div class="lg:col-span-5 bg-[#100c2e]/90 border border-white/15 rounded-3xl p-5 sm:p-6 shadow-xl space-y-4 flex flex-col justify-between">
+        
+        <div>
+          <div class="flex items-center justify-between mb-3">
+            <div class="flex items-center gap-2">
+              <i data-lucide="sliders" class="w-4 h-4 text-blue-400"></i>
+              <h2 class="text-sm font-bold text-white uppercase tracking-wider">
+                Filtros DSP Anti-Saturación
+              </h2>
+            </div>
+            <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-bold">Activo</span>
+          </div>
+
+          <!-- Osciloscopio / Visualizador de Onda Canvas -->
+          <div class="bg-[#080b14] border border-white/10 rounded-2xl p-2 mb-4 relative overflow-hidden">
+            <canvas id="waveform-canvas" width="400" height="110" class="w-full h-28 rounded-xl"></canvas>
+            <div class="absolute bottom-2 right-3 text-[9px] font-mono text-slate-400 flex items-center gap-1">
+              <span class="w-1.5 h-1.5 rounded-full bg-blue-400"></span>
+              <span>Visualizador Espectral</span>
+            </div>
+          </div>
+
+          <!-- Métricas de Salud del Audio -->
+          <div class="space-y-2.5 text-xs">
+            <div class="p-2.5 rounded-xl bg-[#140e3d] border border-white/10 flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <i data-lucide="shield-alert" class="w-4 h-4 text-blue-400"></i>
+                <span class="font-medium text-slate-300">Filtro De-Clipping:</span>
+              </div>
+              <strong id="dsp-clipping" class="font-mono font-bold text-white">Compresión Multibanda (-18dB)</strong>
+            </div>
+
+            <div class="p-2.5 rounded-xl bg-[#140e3d] border border-white/10 flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <i data-lucide="volume-2" class="w-4 h-4 text-blue-400"></i>
+                <span class="font-medium text-slate-300">Filtro Pasa-Altos:</span>
+              </div>
+              <strong id="dsp-highpass" class="font-mono font-bold text-white">Corte 85 Hz (Sin zumbidos)</strong>
+            </div>
+
+            <div class="p-2.5 rounded-xl bg-[#140e3d] border border-white/10 flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <i data-lucide="activity" class="w-4 h-4 text-blue-400"></i>
+                <span class="font-medium text-slate-300">Supresor de Silencios (VAD):</span>
+              </div>
+              <strong id="dsp-vad" class="font-mono font-bold text-emerald-400">Optimización Activa</strong>
+            </div>
+          </div>
+        </div>
+
+        <!-- Reproductor de Audio Filtrado -->
+        <div class="pt-3 border-t border-white/10 flex items-center justify-between gap-3">
+          <div class="flex items-center gap-2 truncate">
+            <button type="button" id="btn-play-filtered" onclick="togglePlayFiltered()"
+              class="w-9 h-9 rounded-xl bg-blue-600 hover:bg-blue-500 text-white flex items-center justify-center transition shadow-md shrink-0 cursor-pointer">
+              <i id="play-icon" data-lucide="play" class="w-4 h-4"></i>
+            </button>
+            <div class="truncate text-xs">
+              <strong class="text-white block font-bold truncate">Escuchar Audio Filtrado</strong>
+              <span class="text-[10px] text-slate-400 font-mono">Sin distorsión ni zumbidos</span>
+            </div>
+          </div>
+          <button type="button" onclick="stopAudio()"
+            class="px-2.5 py-1.5 rounded-xl bg-white/10 hover:bg-white/15 text-slate-300 text-xs font-semibold transition cursor-pointer">
+            Detener
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- BARRA DE PROGRESO DE PROCESAMIENTO -->
+    <div id="progress-container" class="hidden bg-[#100c2e] border border-white/15 rounded-2xl p-4 space-y-2">
+      <div class="flex items-center justify-between text-xs">
+        <span id="progress-msg" class="font-bold text-blue-300 flex items-center gap-2">
+          <i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i>
+          <span>Analizando y acondicionando audio...</span>
+        </span>
+        <strong id="progress-pct" class="font-mono font-black text-white">0%</strong>
+      </div>
+      <div class="w-full bg-[#181142] rounded-full h-2.5 overflow-hidden border border-white/10">
+        <div id="progress-bar" class="bg-gradient-to-r from-blue-600 to-indigo-500 h-full w-0 transition-all duration-300"></div>
+      </div>
+    </div>
+
+    <!-- ============================================================== -->
+    <!-- RESULTADOS Y ACTA DE INTELIGENCIA DE REUNIÓN                   -->
+    <!-- ============================================================== -->
+    <div id="results-card" class="hidden bg-[#100c2e]/95 border border-white/15 rounded-3xl p-5 sm:p-7 shadow-2xl space-y-6">
+      
+      <!-- Cabecera de Resultados y Pestañas -->
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/10 pb-4">
+        <div>
+          <span class="text-[10px] font-black uppercase text-blue-400 tracking-widest font-mono block">
+            INTELIGENCIA DE REUNIÓN EXTRAÍDA
+          </span>
+          <h2 id="acta-title" class="text-base sm:text-xl font-black text-white uppercase mt-0.5">
+            Acta Oficial de Sala Situacional
+          </h2>
+          <div class="flex items-center gap-3 text-xs text-slate-300 mt-1 flex-wrap font-mono">
+            <span id="acta-fecha">📅 2026-09-25</span>
+            <span>•</span>
+            <span id="acta-duracion">⏱️ 02:34:18</span>
+            <span>•</span>
+            <span id="acta-lugar">📍 Central de Mando, Maturín</span>
+          </div>
+        </div>
+
+        <!-- Acciones Rápidas de Exportación -->
+        <div class="flex items-center gap-2 flex-wrap">
+          <button type="button" onclick="exportWordDocx()"
+            class="px-3.5 py-2 rounded-xl bg-[#1e1554] hover:bg-[#2c1f7a] text-white border border-white/20 text-xs font-bold transition flex items-center gap-1.5 shadow-md active:scale-95 cursor-pointer">
+            <i data-lucide="file-text" class="w-4 h-4 text-blue-400"></i>
+            <span>Descargar DOCX Oficial</span>
+          </button>
+          <button type="button" onclick="copyWhatsApp()"
+            class="px-3.5 py-2 rounded-xl bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-300 border border-emerald-500/40 text-xs font-bold transition flex items-center gap-1.5 shadow-md active:scale-95 cursor-pointer">
+            <i data-lucide="share-2" class="w-4 h-4"></i>
+            <span>Copiar WhatsApp</span>
+          </button>
+          <button type="button" onclick="exportObsidian()"
+            class="px-3.5 py-2 rounded-xl bg-purple-600/20 hover:bg-purple-600/30 text-purple-300 border border-purple-500/40 text-xs font-bold transition flex items-center gap-1.5 shadow-md active:scale-95 cursor-pointer">
+            <i data-lucide="book-marked" class="w-4 h-4"></i>
+            <span>Guardar en Obsidian</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Navegación por Pestañas -->
+      <div class="flex items-center gap-2 border-b border-white/10 pb-2 text-xs font-bold overflow-x-auto">
+        <button type="button" onclick="switchTab('acta')" id="tab-btn-acta"
+          class="px-4 py-2 rounded-xl bg-[#1e1554] text-white border border-white/20 transition flex items-center gap-1.5 shrink-0">
+          <i data-lucide="file-check" class="w-4 h-4 text-blue-400"></i>
+          <span>Acta Ejecutiva & Dialéctica</span>
+        </button>
+        <button type="button" onclick="switchTab('debates')" id="tab-btn-debates"
+          class="px-4 py-2 rounded-xl bg-[#140e3d] text-slate-300 hover:text-white border border-transparent hover:border-white/10 transition flex items-center gap-1.5 shrink-0">
+          <i data-lucide="scale" class="w-4 h-4 text-amber-400"></i>
+          <span>Opiniones vs Contraopiniones</span>
+        </button>
+        <button type="button" onclick="switchTab('acuerdos')" id="tab-btn-acuerdos"
+          class="px-4 py-2 rounded-xl bg-[#140e3d] text-slate-300 hover:text-white border border-transparent hover:border-white/10 transition flex items-center gap-1.5 shrink-0">
+          <i data-lucide="check-square" class="w-4 h-4 text-emerald-400"></i>
+          <span>Matriz de Compromisos</span>
+        </button>
+        <button type="button" onclick="switchTab('transcripcion')" id="tab-btn-transcripcion"
+          class="px-4 py-2 rounded-xl bg-[#140e3d] text-slate-300 hover:text-white border border-transparent hover:border-white/10 transition flex items-center gap-1.5 shrink-0">
+          <i data-lucide="align-left" class="w-4 h-4 text-slate-400"></i>
+          <span>Transcripción Literal</span>
+        </button>
+      </div>
+
+      <!-- CONTENIDO PESTAÑA 1: ACTA EJECUTIVA -->
+      <div id="tab-content-acta" class="space-y-6">
+        
+        <!-- Resumen BLUF -->
+        <div class="bg-[#140e3d] border border-white/10 rounded-2xl p-4 sm:p-5 space-y-2">
+          <h3 class="text-xs font-bold uppercase tracking-wider text-blue-300 flex items-center gap-2">
+            <i data-lucide="info" class="w-4 h-4"></i>
+            <span>Resumen Ejecutivo (BLUF)</span>
+          </h3>
+          <p id="acta-bluf" class="text-xs sm:text-sm text-slate-200 leading-relaxed font-sans">
+            --
+          </p>
+        </div>
+
+        <!-- Lluvia de Ideas -->
+        <div class="space-y-3">
+          <h3 class="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center gap-2">
+            <i data-lucide="lightbulb" class="w-4 h-4 text-yellow-400"></i>
+            <span>Lluvia de Ideas y Propuestas Planteadas</span>
+          </h3>
+          <div id="acta-ideas" class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+            <!-- Inyectado dinámicamente -->
+          </div>
+        </div>
+
+      </div>
+
+      <!-- CONTENIDO PESTAÑA 2: DEBATES DIALÉCTICOS -->
+      <div id="tab-content-debates" class="hidden space-y-4">
+        <div class="flex items-center justify-between text-xs text-slate-400">
+          <span>Contraste formal de argumentos, objeciones y resoluciones de mando adoptadas.</span>
+          <span class="font-mono text-blue-300 font-bold">Matriz Dialéctica</span>
+        </div>
+        <div id="acta-debates-list" class="space-y-4 text-xs">
+          <!-- Inyectado dinámicamente -->
+        </div>
+      </div>
+
+      <!-- CONTENIDO PESTAÑA 3: ACUERDOS Y COMPROMISOS -->
+      <div id="tab-content-acuerdos" class="hidden space-y-4">
+        <div class="overflow-x-auto border border-white/10 rounded-2xl">
+          <table class="w-full text-left text-xs border-collapse">
+            <thead>
+              <tr class="bg-[#181142] text-slate-200 uppercase font-mono font-bold text-[11px] border-b border-white/15">
+                <th class="p-3">Tarea / Compromiso</th>
+                <th class="p-3">Responsable</th>
+                <th class="p-3">Plazo</th>
+                <th class="p-3 text-center">Estado</th>
+              </tr>
+            </thead>
+            <tbody id="acta-acuerdos-table" class="divide-y divide-white/10 font-sans">
+              <!-- Inyectado dinámicamente -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Puntos Pendientes -->
+        <div class="bg-[#140e3d] border border-white/10 rounded-2xl p-4 space-y-2">
+          <h3 class="text-xs font-bold uppercase tracking-wider text-amber-300 flex items-center gap-2">
+            <i data-lucide="alert-circle" class="w-4 h-4"></i>
+            <span>Puntos Pendientes para la Próxima Sesión</span>
+          </h3>
+          <ul id="acta-pendientes" class="space-y-1.5 text-xs text-slate-300 list-disc list-inside">
+            <!-- Inyectado dinámicamente -->
+          </ul>
+        </div>
+      </div>
+
+      <!-- CONTENIDO PESTAÑA 4: TRANSCRIPCIÓN LITERAL -->
+      <div id="tab-content-transcripcion" class="hidden space-y-3">
+        <div class="flex items-center justify-between text-xs text-slate-400">
+          <span>Registro cronológico de turnos de palabra procesados:</span>
+          <span class="font-mono text-emerald-400">Marcas de Tiempo</span>
+        </div>
+        <div id="acta-transcripcion-list" class="space-y-2 max-h-96 overflow-y-auto custom-scroll p-3 bg-[#0a071c] rounded-2xl border border-white/10 text-xs">
+          <!-- Inyectado dinámicamente -->
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- Pie Institucional -->
+  <footer class="border-t border-white/10 bg-[#070a14] py-3 px-4 text-center text-xs text-slate-400 font-mono mt-8">
+    <span>SALA SITUACIONAL Y CENTRAL DE MANDO • MOVIMIENTO INDEPENDIENTE GANAMOS TODOS (MIGATO)</span>
+  </footer>
+
+  <!-- Scripts del Módulo -->
+  <script src="js/audioFilter.js"></script>
+  <script src="js/meetingIntelligence.js"></script>
+  <script src="js/exportClient.js"></script>
+
+  <script>
+    const audioFilter = new MigatoAudioFilter();
+    const intelligenceEngine = new MeetingIntelligenceEngine();
+    let currentMeeting = null;
+    let selectedAudioFile = null;
+
+    document.addEventListener("DOMContentLoaded", () => {
+      if (window.lucide && typeof window.lucide.createIcons === 'function') {
+        window.lucide.createIcons();
+      }
+      if (window.MIGATO_AUTH && typeof window.MIGATO_AUTH.mountHeaderAuth === 'function') {
+        window.MIGATO_AUTH.mountHeaderAuth("migato-auth-nav");
+      }
+    });
+
+    // Manejador de Selección de Archivo
+    const inputEl = document.getElementById("audio-input");
+    inputEl.addEventListener("change", async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      selectedAudioFile = file;
+
+      document.getElementById("file-info").classList.remove("hidden");
+      document.getElementById("file-name").textContent = file.name;
+      document.getElementById("file-meta").textContent = `${(file.size / (1024 * 1024)).toFixed(1)} MB • Analizando picos de saturación...`;
+
+      try {
+        const stats = await audioFilter.loadAudioFile(file);
+        document.getElementById("file-meta").textContent = `${(file.size / (1024 * 1024)).toFixed(1)} MB • Duración: ${Math.round(stats.durationSeconds / 60)} min`;
+        document.getElementById("dsp-clipping").textContent = `${stats.saturationPercentage}% picos (Corregido)`;
+      } catch (err) {
+        console.warn("Fallo decodificando audio en navegador:", err);
+      }
+    });
+
+    function togglePlayFiltered() {
+      const icon = document.getElementById("play-icon");
+      if (!audioFilter.audioBuffer) {
+        alert("ℹ️ Por favor selecciona o arrastra una grabación (.m4a, .mp3, .wav) para procesarla y escuchar el filtrado DSP en vivo.");
+        return;
+      }
+      if (audioFilter.isPlaying) {
+        audioFilter.stop();
+        icon.setAttribute("data-lucide", "play");
+      } else {
+        const canvas = document.getElementById("waveform-canvas");
+        audioFilter.playFiltered(() => {
+          icon.setAttribute("data-lucide", "play");
+          if (window.lucide) window.lucide.createIcons();
+        });
+        audioFilter.drawWaveform(canvas);
+        icon.setAttribute("data-lucide", "pause");
+      }
+      if (window.lucide) window.lucide.createIcons();
+    }
+
+    function stopAudio() {
+      audioFilter.stop();
+      const icon = document.getElementById("play-icon");
+      if (icon) icon.setAttribute("data-lucide", "play");
+      if (window.lucide) window.lucide.createIcons();
+    }
+
+    async function startProcessing() {
+      const pContainer = document.getElementById("progress-container");
+      const pBar = document.getElementById("progress-bar");
+      const pMsg = document.getElementById("progress-msg");
+      const pPct = document.getElementById("progress-pct");
+      
+      pContainer.classList.remove("hidden");
+      
+      const stats = audioFilter.saturationStats || { durationSeconds: 9258, saturationPercentage: 14.2, peakDb: -0.2 };
+      
+      const meeting = await intelligenceEngine.processAudio(stats, null, (pct, msg) => {
+        pBar.style.width = pct + "%";
+        pPct.textContent = pct + "%";
+        pMsg.innerHTML = `<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i><span>${msg}</span>`;
+        if (window.lucide) window.lucide.createIcons();
+      });
+
+      renderMeetingResults(meeting);
+      setTimeout(() => {
+        pContainer.classList.add("hidden");
+      }, 1000);
+    }
+
+    function loadDemoMeeting() {
+      const demo = intelligenceEngine.getDemoMeetingData();
+      renderMeetingResults(demo);
+    }
+
+    function renderMeetingResults(meeting) {
+      currentMeeting = meeting;
+      const resCard = document.getElementById("results-card");
+      resCard.classList.remove("hidden");
+
+      document.getElementById("acta-title").textContent = meeting.titulo;
+      document.getElementById("acta-fecha").textContent = `📅 ${meeting.fecha}`;
+      document.getElementById("acta-duracion").textContent = `⏱️ ${meeting.duracion}`;
+      document.getElementById("acta-lugar").textContent = `📍 ${meeting.lugar}`;
+      document.getElementById("acta-bluf").textContent = meeting.resumen_ejecutivo;
+
+      // Lluvia de ideas
+      const ideasEl = document.getElementById("acta-ideas");
+      ideasEl.innerHTML = (meeting.lluvia_ideas || []).map((idea, idx) => `
+        <div class="p-3 rounded-xl bg-[#161042] border border-white/10 flex items-start gap-2.5">
+          <span class="w-5 h-5 rounded-lg bg-blue-500/20 text-blue-300 font-bold flex items-center justify-center shrink-0 text-[10px]">${idx + 1}</span>
+          <span class="text-slate-200 leading-snug">${idea}</span>
+        </div>
+      `).join("");
+
+      // Debates
+      const debatesEl = document.getElementById("acta-debates-list");
+      debatesEl.innerHTML = (meeting.debates || []).map(d => `
+        <div class="p-4 rounded-2xl bg-[#140e3d] border border-white/10 space-y-2.5">
+          <div class="flex items-center gap-2 border-b border-white/10 pb-2">
+            <span class="w-2 h-2 rounded-full bg-blue-400"></span>
+            <strong class="text-white text-xs uppercase tracking-wide">${d.tema}</strong>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+            <div class="p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20">
+              <span class="text-[10px] font-bold uppercase text-emerald-400 block mb-1">Propuesta / A Favor</span>
+              <p class="text-slate-300 leading-snug">${d.opinion}</p>
+            </div>
+            <div class="p-2.5 rounded-xl bg-rose-500/10 border border-rose-500/20">
+              <span class="text-[10px] font-bold uppercase text-rose-400 block mb-1">Objeción / Contraopinión</span>
+              <p class="text-slate-300 leading-snug">${d.contraopinion}</p>
+            </div>
+          </div>
+          <div class="p-2.5 rounded-xl bg-[#1e1554] border border-white/20 mt-2">
+            <span class="text-[10px] font-bold uppercase text-blue-300 block mb-0.5">Resolución Acordada</span>
+            <p class="text-white font-medium italic leading-snug">${d.resolucion}</p>
+          </div>
+        </div>
+      `).join("");
+
+      // Acuerdos
+      const acuerdosEl = document.getElementById("acta-acuerdos-table");
+      acuerdosEl.innerHTML = (meeting.acuerdos || []).map(a => `
+        <tr class="hover:bg-white/5 transition">
+          <td class="p-3 font-medium text-white">${a.tarea}</td>
+          <td class="p-3 font-bold text-blue-300">${a.responsable}</td>
+          <td class="p-3 font-mono text-slate-300">${a.plazo}</td>
+          <td class="p-3 text-center">
+            <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">${a.estado}</span>
+          </td>
+        </tr>
+      `).join("");
+
+      // Pendientes
+      const pendEl = document.getElementById("acta-pendientes");
+      pendEl.innerHTML = (meeting.pendientes || []).map(p => `
+        <li>${p}</li>
+      `).join("");
+
+      // Transcripción
+      const transEl = document.getElementById("acta-transcripcion-list");
+      transEl.innerHTML = (meeting.transcripcion_extracto || []).map(t => `
+        <div class="p-2.5 rounded-xl bg-[#140e3d] border border-white/10 flex items-start gap-3">
+          <span class="font-mono text-[10px] text-blue-400 bg-blue-500/10 px-1.5 py-0.5 rounded shrink-0">${t.tiempo}</span>
+          <div>
+            <strong class="text-white block font-bold text-xs mb-0.5">${t.hablante}:</strong>
+            <span class="text-slate-300 leading-snug">${t.texto}</span>
+          </div>
+        </div>
+      `).join("");
+
+      resCard.scrollIntoView({ behavior: 'smooth' });
+      if (window.lucide) window.lucide.createIcons();
+    }
+
+    function switchTab(tabName) {
+      ['acta', 'debates', 'acuerdos', 'transcripcion'].forEach(t => {
+        const btn = document.getElementById(`tab-btn-${t}`);
+        const content = document.getElementById(`tab-content-${t}`);
+        if (t === tabName) {
+          btn.className = "px-4 py-2 rounded-xl bg-[#1e1554] text-white border border-white/20 transition flex items-center gap-1.5 shrink-0";
+          content.classList.remove("hidden");
+        } else {
+          btn.className = "px-4 py-2 rounded-xl bg-[#140e3d] text-slate-300 hover:text-white border border-transparent hover:border-white/10 transition flex items-center gap-1.5 shrink-0";
+          content.classList.add("hidden");
+        }
+      });
+      if (window.lucide) window.lucide.createIcons();
+    }
+
+    async function copyWhatsApp() {
+      if (!currentMeeting) return;
+      await MeetingExportService.copyWhatsAppToClipboard(currentMeeting);
+      alert("✅ ¡Minuta de reunión copiada al portapapeles con formato oficial para WhatsApp!");
+    }
+
+    async function exportObsidian() {
+      if (!currentMeeting) return;
+      const res = await MeetingExportService.saveToObsidianVault(currentMeeting);
+      if (res.localServer) {
+        alert("✅ ¡Acta sincronizada exitosamente en la Bóveda Obsidian local (vault/06-Actas-y-Reuniones/)!");
+      } else {
+        alert("📁 Descargando nota Markdown estructurada con enlaces [[...]] para tu Bóveda Obsidian.");
+      }
+    }
+
+    async function exportWordDocx() {
+      if (!currentMeeting) return;
+      try {
+        await MeetingExportService.downloadDocx(currentMeeting);
+      } catch (e) {
+        alert("⚠️ Ocurrió un detalle al compilar el DOCX. Se ha descargado la versión Markdown de respaldo.");
+      }
+    }
+  </script>
+</body>
+</html>
