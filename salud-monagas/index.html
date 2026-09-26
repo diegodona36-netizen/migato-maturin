@@ -38,7 +38,7 @@
   </script>
 
   <!-- Custom Stylesheet & Print Rules -->
-  <link rel="stylesheet" href="css/styles.css?v=172">
+  <link rel="stylesheet" href="css/styles.css?v=173">
 
   <!-- Pre-render theme preference without layout flash -->
   <script>
@@ -77,7 +77,7 @@
             </span>
           </div>
           <p class="text-[10px] sm:text-xs text-slate-300 font-medium uppercase tracking-wider truncate">
-            SALA SITUACIONAL • RED HOSPITALARIA Y SALUD MONAGAS
+            SALA SITUACIONAL • CENTRO DE DIAGNÓSTICO INTEGRAL • MONAGAS 2026
           </p>
         </div>
       </a>
@@ -116,74 +116,111 @@
   </header>
 
   <!-- ============================================================== -->
-  <!-- 2. BARRA DE CIFRAS Y KPIS DE SALUD INSTITUCIONAL               -->
+  <!-- BARRA MAESTRA DE SECTORES DE INFRAESTRUCTURA                   -->
   <!-- ============================================================== -->
-  <section class="bg-white border-b border-slate-200 px-4 py-2.5 shadow-xs">
-    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3 text-base">
+  <section class="bg-[#0c1938] border-b border-blue-900/80 px-4 py-2 sticky top-[60px] z-[990] shadow-md">
+    <div class="max-w-7xl mx-auto flex items-center justify-between gap-3 flex-wrap">
       
-      <!-- Contadores de Riesgo -->
-      <div class="flex items-center gap-3 sm:gap-4 overflow-x-auto py-1 scrollbar-none">
-        
-        <div class="flex items-center gap-1.5">
-          <span class="text-slate-500 font-semibold">Centros Diagnosticados:</span>
-          <strong id="kpi-total-centros" class="font-mono text-base font-black text-slate-900">0</strong>
-        </div>
+      <div class="flex items-center gap-2 overflow-x-auto py-0.5 scrollbar-none w-full sm:w-auto">
+        <button id="btn-sector-salud" type="button" onclick="window.cambiarSectorInfra('salud')" 
+                class="sector-btn active px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-black transition flex items-center gap-2 bg-blue-600 text-white shadow-md border border-blue-400">
+          <i data-lucide="cross" class="w-4 h-4 text-white"></i>
+          <span>Red Asistencial y Salud</span>
+        </button>
 
-        <div class="w-px h-4 bg-slate-300"></div>
+        <button id="btn-sector-vialidad" type="button" onclick="window.cambiarSectorInfra('vialidad')" 
+                class="sector-btn px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-bold text-slate-300 hover:text-white hover:bg-slate-800 bg-slate-900/80 border border-slate-700 transition flex items-center gap-2">
+          <i data-lucide="route" class="w-4 h-4 text-amber-400"></i>
+          <span>Vialidad y Carreteras</span>
+        </button>
 
-        <div class="flex items-center gap-1.5 bg-red-50 text-red-700 border border-red-200 px-2.5 py-1 rounded-full">
-          <span class="w-2 h-2 rounded-full bg-red-500 animate-ping"></span>
-          <span class="font-bold">Críticos (Rojo):</span>
-          <strong id="kpi-criticos" class="font-mono text-base font-black text-red-800">0</strong>
-        </div>
-
-        <div class="flex items-center gap-1.5 bg-amber-50 text-amber-800 border border-amber-200 px-2.5 py-1 rounded-full">
-          <span class="w-2 h-2 rounded-full bg-amber-500"></span>
-          <span class="font-bold">Alerta (Amarillo):</span>
-          <strong id="kpi-alertas" class="font-mono text-base font-black text-amber-900">0</strong>
-        </div>
-
-        <div class="flex items-center gap-1.5 bg-emerald-50 text-emerald-800 border border-emerald-200 px-2.5 py-1 rounded-full">
-          <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-          <span class="font-bold">Operativos (Verde):</span>
-          <strong id="kpi-estables" class="font-mono text-base font-black text-emerald-900">0</strong>
-        </div>
-
+        <button id="btn-sector-servicios" type="button" onclick="window.cambiarSectorInfra('servicios')" 
+                class="sector-btn px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-bold text-slate-300 hover:text-white hover:bg-slate-800 bg-slate-900/80 border border-slate-700 transition flex items-center gap-2">
+          <i data-lucide="wrench" class="w-4 h-4 text-emerald-400"></i>
+          <span>Servicios Urbanos y Proyectos</span>
+        </button>
       </div>
 
-      <!-- Distribución por Red MPPS -->
-      <div class="hidden lg:flex items-center gap-3 text-slate-700 font-mono text-base bg-slate-100 px-3 py-1 rounded-full border border-slate-200">
-        <span>🏥 Hospitales: <strong id="kpi-hospitales" class="text-slate-900">0</strong></span>
-        <span>🩺 CDIs: <strong id="kpi-cdi" class="text-slate-900">0</strong></span>
-        <span>💊 Ambulatorios: <strong id="kpi-ambulatorios" class="text-slate-900">0</strong></span>
+      <div class="hidden xl:flex items-center gap-2 text-xs text-slate-400 font-mono">
+        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+        <span class="uppercase tracking-wider font-semibold text-slate-300">Auditoría Territorial Monagas 2026</span>
       </div>
 
     </div>
   </section>
 
-  <!-- ============================================================== -->
-  <!-- 3. PESTAÑAS DE NAVEGACIÓN PRINCIPAL                            -->
-  <!-- ============================================================== -->
-  <nav class="bg-slate-100/90 border-b border-slate-200 px-4">
-    <div class="max-w-7xl mx-auto flex gap-2 overflow-x-auto py-2 scrollbar-none">
-      
-      <button class="tab-btn active px-4 py-2 rounded-xl text-sm font-bold transition flex items-center gap-2 bg-blue-700 text-white shadow-sm border border-blue-800" data-target="tab-registro">
-        <i data-lucide="clipboard-list" class="w-4 h-4"></i>
-        <span>Ficha de Levantamiento (Formulario)</span>
-      </button>
+  <!-- CONTENEDOR ESPECÍFICO DE CONTROLES DEL SECTOR SALUD -->
+  <div id="salud-header-controls">
+    <!-- ============================================================== -->
+    <!-- 2. BARRA DE CIFRAS Y KPIS DE SALUD INSTITUCIONAL               -->
+    <!-- ============================================================== -->
+    <section class="bg-white border-b border-slate-200 px-4 py-2.5 shadow-xs">
+      <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3 text-base">
+        
+        <!-- Contadores de Riesgo -->
+        <div class="flex items-center gap-3 sm:gap-4 overflow-x-auto py-1 scrollbar-none">
+          
+          <div class="flex items-center gap-1.5">
+            <span class="text-slate-500 font-semibold">Centros Diagnosticados:</span>
+            <strong id="kpi-total-centros" class="font-mono text-base font-black text-slate-900">0</strong>
+          </div>
 
-      <button class="tab-btn px-4 py-2 rounded-xl text-sm font-bold text-slate-700 hover:text-blue-700 hover:bg-white bg-transparent border border-transparent hover:border-slate-300 transition flex items-center gap-2" data-target="tab-mapa">
-        <i data-lucide="map" class="w-4 h-4 text-blue-600"></i>
-        <span>Mapa Táctico de Hospitales (13 Municipios)</span>
-      </button>
+          <div class="w-px h-4 bg-slate-300"></div>
 
-      <button class="tab-btn px-4 py-2 rounded-xl text-sm font-bold text-slate-700 hover:text-blue-700 hover:bg-white bg-transparent border border-transparent hover:border-slate-300 transition flex items-center gap-2" data-target="tab-directorio">
-        <i data-lucide="folder-kanban" class="w-4 h-4 text-amber-600"></i>
-        <span>Directorio de Fichas y Centros</span>
-      </button>
+          <div class="flex items-center gap-1.5 bg-red-50 text-red-700 border border-red-200 px-2.5 py-1 rounded-full">
+            <span class="w-2 h-2 rounded-full bg-red-500 animate-ping"></span>
+            <span class="font-bold">Críticos (Rojo):</span>
+            <strong id="kpi-criticos" class="font-mono text-base font-black text-red-800">0</strong>
+          </div>
 
-    </div>
-  </nav>
+          <div class="flex items-center gap-1.5 bg-amber-50 text-amber-800 border border-amber-200 px-2.5 py-1 rounded-full">
+            <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+            <span class="font-bold">Alerta (Amarillo):</span>
+            <strong id="kpi-alertas" class="font-mono text-base font-black text-amber-900">0</strong>
+          </div>
+
+          <div class="flex items-center gap-1.5 bg-emerald-50 text-emerald-800 border border-emerald-200 px-2.5 py-1 rounded-full">
+            <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+            <span class="font-bold">Operativos (Verde):</span>
+            <strong id="kpi-estables" class="font-mono text-base font-black text-emerald-900">0</strong>
+          </div>
+
+        </div>
+
+        <!-- Distribución por Red MPPS -->
+        <div class="hidden lg:flex items-center gap-3 text-slate-700 font-mono text-base bg-slate-100 px-3 py-1 rounded-full border border-slate-200">
+          <span>🏥 Hospitales: <strong id="kpi-hospitales" class="text-slate-900">0</strong></span>
+          <span>🩺 CDIs: <strong id="kpi-cdi" class="text-slate-900">0</strong></span>
+          <span>💊 Ambulatorios: <strong id="kpi-ambulatorios" class="text-slate-900">0</strong></span>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ============================================================== -->
+    <!-- 3. PESTAÑAS DE NAVEGACIÓN PRINCIPAL                            -->
+    <!-- ============================================================== -->
+    <nav class="bg-slate-100/90 border-b border-slate-200 px-4">
+      <div class="max-w-7xl mx-auto flex gap-2 overflow-x-auto py-2 scrollbar-none">
+        
+        <button class="tab-btn active px-4 py-2 rounded-xl text-sm font-bold transition flex items-center gap-2 bg-blue-700 text-white shadow-sm border border-blue-800" data-target="tab-registro">
+          <i data-lucide="clipboard-list" class="w-4 h-4"></i>
+          <span>Ficha de Levantamiento (Formulario)</span>
+        </button>
+
+        <button class="tab-btn px-4 py-2 rounded-xl text-sm font-bold text-slate-700 hover:text-blue-700 hover:bg-white bg-transparent border border-transparent hover:border-slate-300 transition flex items-center gap-2" data-target="tab-mapa">
+          <i data-lucide="map" class="w-4 h-4 text-blue-600"></i>
+          <span>Mapa Táctico de Hospitales (13 Municipios)</span>
+        </button>
+
+        <button class="tab-btn px-4 py-2 rounded-xl text-sm font-bold text-slate-700 hover:text-blue-700 hover:bg-white bg-transparent border border-transparent hover:border-slate-300 transition flex items-center gap-2" data-target="tab-directorio">
+          <i data-lucide="folder-kanban" class="w-4 h-4 text-amber-600"></i>
+          <span>Directorio de Fichas y Centros</span>
+        </button>
+
+      </div>
+    </nav>
+  </div>
 
   <!-- ============================================================== -->
   <!-- 4. CONTENIDO PRINCIPAL                                         -->
@@ -1113,6 +1150,260 @@
 
     </div>
 
+    <!-- ============================================================== -->
+    <!-- SECTOR 2: VIALIDAD Y CARRETERAS (TRAZADOR Y DIAGNÓSTICO)        -->
+    <!-- ============================================================== -->
+    <div id="panel-sector-vialidad" class="hidden space-y-6">
+      
+      <!-- BANNER INSTITUCIONAL VIALIDAD -->
+      <div class="bg-white border-l-4 border-l-amber-500 border border-slate-200 rounded-2xl p-4 sm:p-5 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-sm">
+        <div class="space-y-1">
+          <div class="flex items-center gap-2 flex-wrap">
+            <span class="px-2.5 py-0.5 text-xs font-black uppercase tracking-wider bg-amber-100 text-amber-900 border border-amber-300 rounded-full">
+              Red Vial y Troncales
+            </span>
+            <span class="inline-flex items-center gap-1 text-xs font-semibold text-slate-600 bg-slate-100 px-2.5 py-0.5 rounded-full border border-slate-200">
+              <span>🛣️</span>
+              <span>Monagas 2026 • Evaluación de Pavimento</span>
+            </span>
+          </div>
+          <h2 class="text-lg sm:text-xl font-black text-slate-900 tracking-tight">
+            Trazador Vial y Diagnóstico de Calzadas Tramo a Tramo
+          </h2>
+          <p class="text-sm text-slate-600 leading-relaxed max-w-4xl">
+            Inspección cartográfica de calles urbanas, vías colectoras y ejes troncales. Permite evaluar carpetas asfálticas, baches críticos y fallas de borde con semáforo de colores e instrumentación GPS en campo.
+          </p>
+        </div>
+
+        <div class="flex items-center gap-2 shrink-0">
+          <a href="../vialidad-lapuente/" target="_blank" class="px-4 py-2 bg-amber-500 hover:bg-amber-400 text-slate-950 font-black rounded-xl shadow-md transition flex items-center gap-2 text-sm active:scale-95" title="Abrir en pestaña independiente para trabajo en pantalla completa">
+            <i data-lucide="external-link" class="w-4 h-4"></i>
+            <span>Pantalla Completa ↗</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- KPIS RÁPIDOS DE VIALIDAD -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <div class="bg-white border border-slate-200 rounded-2xl p-3.5 shadow-xs">
+          <span class="text-xs font-bold text-slate-500 uppercase block">Metodología de Campo</span>
+          <span class="text-base font-black text-slate-900">Tramo a Tramo (100m)</span>
+        </div>
+        <div class="bg-red-50 border border-red-200 rounded-2xl p-3.5 shadow-xs">
+          <span class="text-xs font-bold text-red-700 uppercase block">Prioridad 1 • Crítico</span>
+          <span class="text-base font-black text-red-800">Huecos y Hundimiento</span>
+        </div>
+        <div class="bg-amber-50 border border-amber-200 rounded-2xl p-3.5 shadow-xs">
+          <span class="text-xs font-bold text-amber-800 uppercase block">Prioridad 2 • Regular</span>
+          <span class="text-base font-black text-amber-900">Desgaste y Bacheo</span>
+        </div>
+        <div class="bg-emerald-50 border border-emerald-200 rounded-2xl p-3.5 shadow-xs">
+          <span class="text-xs font-bold text-emerald-800 uppercase block">Prioridad 3 • Óptimo</span>
+          <span class="text-base font-black text-emerald-900">Rodamiento Estable</span>
+        </div>
+      </div>
+
+      <!-- CONTENEDOR EMBEBIDO DEL TRAZADOR VIAL (CARGA LAZY BAJO DEMANDA) -->
+      <div class="bg-slate-900 rounded-2xl border border-slate-300 shadow-xl overflow-hidden relative">
+        <div class="p-3 bg-slate-950 border-b border-slate-800 flex items-center justify-between text-xs text-slate-400">
+          <div class="flex items-center gap-2">
+            <span class="w-3 h-3 rounded-full bg-red-500 inline-block"></span>
+            <span class="w-3 h-3 rounded-full bg-amber-500 inline-block"></span>
+            <span class="w-3 h-3 rounded-full bg-emerald-500 inline-block"></span>
+            <span class="font-mono text-slate-300 ml-2 font-bold">Consola Táctica • Trazador de Vialidad y Carreteras</span>
+          </div>
+          <div class="flex items-center gap-3">
+            <button type="button" onclick="const f = document.getElementById('iframe-trazador-vial'); if(f && f.contentWindow) f.contentWindow.location.reload();" class="text-amber-400 hover:text-amber-300 font-bold flex items-center gap-1">
+              <i data-lucide="rotate-cw" class="w-3.5 h-3.5"></i>
+              <span>Recargar Mapa</span>
+            </button>
+          </div>
+        </div>
+        <iframe id="iframe-trazador-vial" data-src="../vialidad-lapuente/" class="w-full h-[700px] border-0" loading="lazy" title="Trazador Vial MIGATO"></iframe>
+      </div>
+
+    </div>
+
+    <!-- ============================================================== -->
+    <!-- SECTOR 3: SERVICIOS URBANOS Y PROYECTOS (AUDITORÍAS)            -->
+    <!-- ============================================================== -->
+    <div id="panel-sector-servicios" class="hidden space-y-6">
+      
+      <!-- BANNER INSTITUCIONAL SERVICIOS -->
+      <div class="bg-white border-l-4 border-l-emerald-600 border border-slate-200 rounded-2xl p-4 sm:p-5 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-sm">
+        <div class="space-y-1">
+          <div class="flex items-center gap-2 flex-wrap">
+            <span class="px-2.5 py-0.5 text-xs font-black uppercase tracking-wider bg-emerald-100 text-emerald-900 border border-emerald-300 rounded-full">
+              Auditoría y Servicios Esenciales
+            </span>
+            <span class="inline-flex items-center gap-1 text-xs font-semibold text-slate-600 bg-slate-100 px-2.5 py-0.5 rounded-full border border-slate-200">
+              <span>🏗️</span>
+              <span>Monagas 2026 • Plan de Rescate de Servicios</span>
+            </span>
+          </div>
+          <h2 class="text-lg sm:text-xl font-black text-slate-900 tracking-tight">
+            Banco de Proyectos y Diagnósticos de Servicios Públicos
+          </h2>
+          <p class="text-sm text-slate-600 leading-relaxed max-w-4xl">
+            Monitoreo técnico de redes matrices de agua potable, estaciones de bombeo, transformadores eléctricos y canalización de drenajes pluviales en los 13 municipios del Estado Monagas.
+          </p>
+        </div>
+      </div>
+
+      <!-- GRID DE AUDITORÍAS DE SERVICIOS -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        
+        <!-- CARD 1: AGUA POTABLE -->
+        <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs space-y-4 flex flex-col justify-between">
+          <div class="space-y-3">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2.5">
+                <div class="w-10 h-10 rounded-xl bg-sky-100 text-sky-600 flex items-center justify-center font-bold">
+                  <i data-lucide="droplet" class="w-5 h-5"></i>
+                </div>
+                <div>
+                  <h3 class="font-black text-slate-900 text-base">Red de Agua Potable y Pozos</h3>
+                  <span class="text-xs text-slate-500 font-mono">Aguas de Monagas • Aducciones Principales</span>
+                </div>
+              </div>
+              <span class="px-2 py-0.5 text-xs font-bold rounded-full bg-amber-100 text-amber-900 border border-amber-300">
+                Auditoría en Curso
+              </span>
+            </div>
+            <p class="text-sm text-slate-600 leading-relaxed">
+              Diagnóstico de paralización de pozos profundos, fallas electromecánicas en tableros y roturas en la red matriz Amana-Maturín. 68% de las comunidades evaluadas reportan suministro intermitente o ausente.
+            </p>
+            <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 space-y-1 text-xs">
+              <div class="flex justify-between font-semibold text-slate-700">
+                <span>Planta Potabilizadora Bajo Guarapiche:</span>
+                <span class="text-amber-600 font-black">Operatividad 45%</span>
+              </div>
+              <div class="flex justify-between font-semibold text-slate-700">
+                <span>Pozos Subterráneos Inactivos:</span>
+                <span class="text-red-600 font-black">62 pozos censados</span>
+              </div>
+            </div>
+          </div>
+          <div class="pt-2 border-t border-slate-100">
+            <span class="text-xs text-slate-400 font-medium italic">Ficha técnica de levantamiento en consolidación regional.</span>
+          </div>
+        </div>
+
+        <!-- CARD 2: ENERGÍA ELÉCTRICA -->
+        <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs space-y-4 flex flex-col justify-between">
+          <div class="space-y-3">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2.5">
+                <div class="w-10 h-10 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center font-bold">
+                  <i data-lucide="zap" class="w-5 h-5"></i>
+                </div>
+                <div>
+                  <h3 class="font-black text-slate-900 text-base">Sistema Eléctrico y Subestaciones</h3>
+                  <span class="text-xs text-slate-500 font-mono">Transformadores y Circuitos Troncales</span>
+                </div>
+              </div>
+              <span class="px-2 py-0.5 text-xs font-bold rounded-full bg-red-100 text-red-900 border border-red-300">
+                Riesgo Crítico
+              </span>
+            </div>
+            <p class="text-sm text-slate-600 leading-relaxed">
+              Levantamiento de sobrecargas térmicas en subestaciones (Independencia, Maturín, La Paz). Déficit crítico de transformadores residenciales quemados sin reposición oficial en zonas foráneas y Maturín.
+            </p>
+            <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 space-y-1 text-xs">
+              <div class="flex justify-between font-semibold text-slate-700">
+                <span>Transformadores Dañados Censados:</span>
+                <span class="text-red-600 font-black">42 unidades</span>
+              </div>
+              <div class="flex justify-between font-semibold text-slate-700">
+                <span>Oscilaciones de Tensión Diarias:</span>
+                <span class="text-amber-600 font-black">3 - 6 eventos/día</span>
+              </div>
+            </div>
+          </div>
+          <div class="pt-2 border-t border-slate-100">
+            <span class="text-xs text-slate-400 font-medium italic">Matriz de reemplazo e ingeniería de subestaciones en proceso.</span>
+          </div>
+        </div>
+
+        <!-- CARD 3: DRENAJES Y COLECTORES -->
+        <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs space-y-4 flex flex-col justify-between">
+          <div class="space-y-3">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2.5">
+                <div class="w-10 h-10 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center font-bold">
+                  <i data-lucide="waves" class="w-5 h-5"></i>
+                </div>
+                <div>
+                  <h3 class="font-black text-slate-900 text-base">Drenajes y Caños Urbanos</h3>
+                  <span class="text-xs text-slate-500 font-mono">Prevención de Inundaciones Maturín</span>
+                </div>
+              </div>
+              <span class="px-2 py-0.5 text-xs font-bold rounded-full bg-blue-100 text-blue-900 border border-blue-300">
+                Monitoreo Hidrológico
+              </span>
+            </div>
+            <p class="text-sm text-slate-600 leading-relaxed">
+              Identificación de puntos críticos de desbordamiento en caños primarios (Orinoco, Universidad, La Manga, Las Avenidas). Tareas prioritarias de dragado mecánico y desobstrucción de colectores pluviales.
+            </p>
+            <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 space-y-1 text-xs">
+              <div class="flex justify-between font-semibold text-slate-700">
+                <span>Caños con Sedimentación > 80%:</span>
+                <span class="text-red-600 font-black">18 tramos</span>
+              </div>
+              <div class="flex justify-between font-semibold text-slate-700">
+                <span>Sectores con Riesgo de Anegación:</span>
+                <span class="text-amber-600 font-black">27 comunidades</span>
+              </div>
+            </div>
+          </div>
+          <div class="pt-2 border-t border-slate-100 flex items-center justify-between">
+            <span class="text-xs text-slate-400 font-medium">Modelado especializado:</span>
+            <a href="../drenajes-maturin/?v=260" target="_blank" class="text-xs font-bold text-blue-600 hover:underline flex items-center gap-1">
+              <span>Consultar Estudio de Cuencas Hidrológicas ↗</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- CARD 4: ALUMBRADO PÚBLICO -->
+        <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs space-y-4 flex flex-col justify-between">
+          <div class="space-y-3">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2.5">
+                <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center font-bold">
+                  <i data-lucide="sun" class="w-5 h-5"></i>
+                </div>
+                <div>
+                  <h3 class="font-black text-slate-900 text-base">Alumbrado Público y Seguridad Vial</h3>
+                  <span class="text-xs text-slate-500 font-mono">Troncales 10 y 13 • Corredores Urbanos</span>
+                </div>
+              </div>
+              <span class="px-2 py-0.5 text-xs font-bold rounded-full bg-emerald-100 text-emerald-900 border border-emerald-300">
+                Planificación 2026
+              </span>
+            </div>
+            <p class="text-sm text-slate-600 leading-relaxed">
+              Plan maestro de iluminación eficiente LED y fotovoltaica para distribuidores viales, avenidas principales y nodos de acceso intermunicipal, restituyendo visibilidad y seguridad nocturna a la población.
+            </p>
+            <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 space-y-1 text-xs">
+              <div class="flex justify-between font-semibold text-slate-700">
+                <span>Avenidas Principales en Oscuridad:</span>
+                <span class="text-amber-600 font-black">65% de cobertura deficiente</span>
+              </div>
+              <div class="flex justify-between font-semibold text-slate-700">
+                <span>Distribuidores Críticos sin Luminarias:</span>
+                <span class="text-red-600 font-black">12 distribuidores</span>
+              </div>
+            </div>
+          </div>
+          <div class="pt-2 border-t border-slate-100">
+            <span class="text-xs text-slate-400 font-medium italic">Especificación de luminarias LED de bajo consumo en catálogo.</span>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
   </main>
 
   <!-- ============================================================== -->
@@ -1251,7 +1542,7 @@
   <script src="js/geoMonagasLimits.js?v=172"></script>
   <!-- Scripts de Datos y Lógica (Carga universal estándar) -->
   <script src="js/saludData.js?v=172"></script>
-  <script src="js/saludApp.js?v=172"></script>
+  <script src="js/saludApp.js?v=173"></script>
 
   <script src="../js/a11y.js"></script>
 </body>

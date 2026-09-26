@@ -2899,6 +2899,66 @@ function cambiarPestana(targetId) {
   }
 }
 
+function cambiarSectorInfra(sector) {
+  const btnSalud = document.getElementById('btn-sector-salud');
+  const btnVial = document.getElementById('btn-sector-vialidad');
+  const btnServ = document.getElementById('btn-sector-servicios');
+  const saludHeader = document.getElementById('salud-header-controls');
+  const panelVial = document.getElementById('panel-sector-vialidad');
+  const panelServ = document.getElementById('panel-sector-servicios');
+  const saludPanels = document.querySelectorAll('.tab-panel');
+
+  const sectorButtons = [
+    { el: btnSalud, key: 'salud', activeClasses: ['bg-blue-600', 'text-white', 'shadow-md', 'border-blue-400', 'active', 'font-black'] },
+    { el: btnVial, key: 'vialidad', activeClasses: ['bg-amber-600', 'text-white', 'shadow-md', 'border-amber-400', 'active', 'font-black'] },
+    { el: btnServ, key: 'servicios', activeClasses: ['bg-emerald-600', 'text-white', 'shadow-md', 'border-emerald-400', 'active', 'font-black'] }
+  ];
+
+  sectorButtons.forEach(item => {
+    if (!item.el) return;
+    if (item.key === sector) {
+      item.el.classList.remove('text-slate-300', 'hover:text-white', 'hover:bg-slate-800', 'bg-slate-900/80', 'border-slate-700', 'font-bold');
+      item.el.classList.add(...item.activeClasses);
+    } else {
+      item.el.classList.remove('bg-blue-600', 'bg-amber-600', 'bg-emerald-600', 'text-white', 'shadow-md', 'border-blue-400', 'border-amber-400', 'border-emerald-400', 'active', 'font-black');
+      item.el.classList.add('text-slate-300', 'hover:text-white', 'hover:bg-slate-800', 'bg-slate-900/80', 'border-slate-700', 'font-bold');
+    }
+  });
+
+  if (sector === 'salud') {
+    if (saludHeader) saludHeader.classList.remove('hidden');
+    if (panelVial) panelVial.classList.add('hidden');
+    if (panelServ) panelServ.classList.add('hidden');
+
+    const activeSaludTab = document.querySelector('.tab-btn.active');
+    const targetTabId = activeSaludTab ? activeSaludTab.dataset.target : 'tab-registro';
+    cambiarPestana(targetTabId);
+
+  } else if (sector === 'vialidad') {
+    if (saludHeader) saludHeader.classList.add('hidden');
+    saludPanels.forEach(p => p.classList.add('hidden'));
+    if (panelServ) panelServ.classList.add('hidden');
+    if (panelVial) panelVial.classList.remove('hidden');
+
+    // Carga perezosa (lazy load) del trazador vial al interactuar
+    const iframeVial = document.getElementById('iframe-trazador-vial');
+    if (iframeVial && !iframeVial.getAttribute('src')) {
+      const sourceUrl = iframeVial.getAttribute('data-src') || '../vialidad-lapuente/';
+      iframeVial.setAttribute('src', sourceUrl);
+    }
+
+  } else if (sector === 'servicios') {
+    if (saludHeader) saludHeader.classList.add('hidden');
+    saludPanels.forEach(p => p.classList.add('hidden'));
+    if (panelVial) panelVial.classList.add('hidden');
+    if (panelServ) panelServ.classList.remove('hidden');
+  }
+
+  if (window.lucide && typeof window.lucide.createIcons === 'function') {
+    window.lucide.createIcons();
+  }
+}
+
 // ==============================================================
 // 10. EXPOSICIÓN GLOBAL Y CONTROLADORES
 // ==============================================================
@@ -3444,6 +3504,7 @@ window.cerrarTarjetaPinFlotante = cerrarTarjetaPinFlotante;
 window.guardarPuntoDesdeTarjetaFlotante = guardarPuntoDesdeTarjetaFlotante;
 window.copiarCoordsDesdeTarjetaFlotante = copiarCoordsDesdeTarjetaFlotante;
 window.cambiarPestana = cambiarPestana;
+window.cambiarSectorInfra = cambiarSectorInfra;
 window.iniciarAplicacion = iniciarAplicacion;
 window.toggleModoOscuroSuave = toggleModoOscuroSuave;
 window.toggleModoLetraGrande = toggleModoLetraGrande;
