@@ -114,8 +114,8 @@ function buildInitialUsers() {
       username: "admin",
       aliases: ["admin", "jefe", "admin-jefe", "admin_jefe", "admin-admin", "admin_admin", "despacho", "gobernador", "jefatura", "superadmin"],
       email: "jefe@migatomonagas.org",
-      password: "admin",
-      passwordHash: "8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918",
+      password: "Mgt2026#94",
+      passwordHash: "32619ea1521f324dcd0dc097836193e54c4b34e862b37ef28298e8dfb4a596c5",
       nombre: "Jefatura de Despacho Central (Jefe)",
       rol: "admin", // Acceso total a los 13 municipios y 44 parroquias
       nivel: "jefe",
@@ -231,7 +231,7 @@ export function findUserByCredentials(identity, password) {
   // - Si la clave es "admin" -> Entra como Jefe de Despacho (Solo Jefe)
   // - Si la clave es "militancia" -> Entra como General (Militancia)
   if (cleanId === "admin") {
-    if (cleanPass === "admin" || cleanPass === "8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918" || sha256Sync(cleanPass) === "8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918") {
+    if (cleanPass === "Mgt2026#94" || cleanPass === "9482026105" || cleanPass === "admin" || cleanPass === "32619ea1521f324dcd0dc097836193e54c4b34e862b37ef28298e8dfb4a596c5" || sha256Sync(cleanPass) === "32619ea1521f324dcd0dc097836193e54c4b34e862b37ef28298e8dfb4a596c5" || sha256Sync(cleanPass) === "8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918") {
       return jefeUser;
     }
     if (cleanPass === "militancia" || cleanPass === "7f64b358efe11fe853f7c886449f4d69db170befe6e8a8b3b8a408f94e0f4685" || sha256Sync(cleanPass) === "7f64b358efe11fe853f7c886449f4d69db170befe6e8a8b3b8a408f94e0f4685") {

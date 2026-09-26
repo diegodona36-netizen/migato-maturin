@@ -9,3 +9,7 @@ mcp/token.json
 mcp/credentials.json
 mcp/service_account.json
 .kilo/
+salida_reuniones/
+scratch/
+.libreoffice_tmp/
+*.deb

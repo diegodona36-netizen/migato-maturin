@@ -62,13 +62,13 @@ const MIGATO_AUTH = (function() {
       role: "admin",
       name: "Ing. Diego Donado",
       title: "Resp. Ciencia, Tecnología y Ciberdefensa",
-      password: ["migato2026", "diego2026", "gatero2026"]
+      password: ["Mgt2026#94", "9482026105", "migato2026", "diego2026", "gatero2026"]
     },
     "admin": {
       role: "admin",
       name: "Ing. Diego Donado",
       title: "Administrador de Ciberdefensa",
-      password: ["migato2026", "admin2026"]
+      password: ["Mgt2026#94", "9482026105", "M1g4t0#2026", "migato2026", "admin2026"]
     },
     "elgato": {
       role: "gobernador",
