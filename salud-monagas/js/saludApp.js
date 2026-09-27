@@ -126,6 +126,7 @@ const guardarCentrosEnStorage = guardarEnStorage;
 function calcularNivelRiesgo(datos) {
   const soporte = datos.soporteVital || {};
   const fallas = datos.fallas || {};
+  const excepciones = soporte.excepciones || {};
   
   const planta = soporte.plantaElectrica || '';
   const agua = soporte.suministroAgua || '';
@@ -136,21 +137,40 @@ function calcularNivelRiesgo(datos) {
     if (Array.isArray(arr)) totalFallas += arr.length;
   });
 
-  // Criterios de ROJO (Riesgo Crítico / Inmediato)
+  const chipsAgua = Array.isArray(excepciones.agua) ? excepciones.agua : [];
+  const chipsPlanta = Array.isArray(excepciones.planta) ? excepciones.planta : [];
+  const chipsClima = Array.isArray(excepciones.clima) ? excepciones.clima : [];
+
+  // Criterios de ROJO (Riesgo Crítico / Falla Limitante)
   if (
     planta === 'Inoperativa' ||
+    chipsPlanta.includes('quirofano_uci') ||
     agua === 'Inexistente' ||
+    chipsAgua.includes('quirofanos') ||
+    chipsAgua.includes('pisos_altos') ||
     clima === 'Cero Clima' ||
+    chipsClima.includes('quirofanos_cerrados') ||
+    chipsClima.includes('uci') ||
     (datos.tipoRed === 'hospitalaria' && datos.quirofanosOperativos === 0 && datos.quirofanosTotal > 0) ||
     totalFallas >= 8
   ) {
     return 'rojo';
   }
 
-  // Criterios de AMARILLO (Alerta / Operación Parcial)
+  // Criterios de AMARILLO (Alerta / Operación Parcial o Excepciones de Alcance)
   if (
+    planta === 'Sin Gasoil' ||
+    chipsPlanta.includes('cuarta_parte') ||
+    chipsPlanta.includes('mitad') ||
+    chipsPlanta.includes('emergencia') ||
+    chipsPlanta.includes('hospitalizacion') ||
+    agua === 'Falla Pisos Altos' ||
     agua === 'Cisterna' ||
+    chipsAgua.includes('banos') ||
+    chipsAgua.includes('esterilizacion') ||
+    chipsAgua.includes('cocina') ||
     clima === 'Parcial' ||
+    chipsClima.length > 0 ||
     soporte.gasesMedicinales === 'Bombonas' ||
     (datos.tipoRed === 'comunal' && planta === 'No tiene') ||
     totalFallas >= 3
@@ -161,6 +181,63 @@ function calcularNivelRiesgo(datos) {
   // Si no presenta vulnerabilidades graves, es VERDE (Operatividad Estable)
   return 'verde';
 }
+
+window.toggleChipExcepcion = function(btn) {
+  if (!btn) return;
+  btn.classList.toggle('active');
+  if (btn.classList.contains('active')) {
+    btn.className = 'chip-excepcion active px-2 py-0.5 rounded-lg text-xs font-black border transition select-none bg-amber-500 text-white border-amber-600 shadow-xs ring-1 ring-amber-400';
+  } else {
+    btn.className = 'chip-excepcion px-2 py-0.5 rounded-lg text-xs font-bold border transition select-none bg-white text-slate-700 border-slate-300 hover:bg-amber-50';
+  }
+  evaluarSemaforoEnVivo();
+};
+
+window.actualizarVisibilidadChips = function() {
+  const plantaVal = document.querySelector('input[name="soporte_planta"]:checked')?.value || '';
+  const aguaVal = document.querySelector('input[name="soporte_agua"]:checked')?.value || '';
+  const gasesVal = document.querySelector('input[name="soporte_gases"]:checked')?.value || '';
+  const climaVal = document.querySelector('input[name="soporte_clima"]:checked')?.value || '';
+
+  const cPlanta = document.getElementById('chips-excepcion-planta');
+  const cAgua = document.getElementById('chips-excepcion-agua');
+  const cGases = document.getElementById('chips-excepcion-gases');
+  const cClima = document.getElementById('chips-excepcion-clima');
+
+  if (cPlanta) {
+    if (plantaVal === 'Sin Gasoil' || plantaVal === 'Inoperativa') {
+      cPlanta.classList.remove('hidden');
+    } else {
+      cPlanta.classList.add('hidden');
+    }
+  }
+
+  if (cAgua) {
+    if (aguaVal === 'Falla Pisos Altos' || aguaVal === 'Cisterna' || aguaVal === 'Inexistente') {
+      cAgua.classList.remove('hidden');
+    } else {
+      cAgua.classList.add('hidden');
+    }
+  }
+
+  if (cGases) {
+    if (gasesVal === 'Bombonas' || gasesVal === 'Inexistente') {
+      cGases.classList.remove('hidden');
+    } else {
+      cGases.classList.add('hidden');
+    }
+  }
+
+  if (cClima) {
+    if (climaVal === 'Parcial' || climaVal === 'Cero Clima') {
+      cClima.classList.remove('hidden');
+    } else {
+      cClima.classList.add('hidden');
+    }
+  }
+
+  evaluarSemaforoEnVivo();
+};
 
 // ==============================================================
 // 2. INICIALIZACIÓN DE MAPAS LEAFLET
@@ -1445,11 +1522,19 @@ function recopilarDatosFormulario() {
     });
   });
 
+  const excepciones = {
+    planta: Array.from(document.querySelectorAll('.chip-excepcion[data-tipo="planta"].active')).map(b => b.dataset.valor),
+    agua: Array.from(document.querySelectorAll('.chip-excepcion[data-tipo="agua"].active')).map(b => b.dataset.valor),
+    gases: Array.from(document.querySelectorAll('.chip-excepcion[data-tipo="gases"].active')).map(b => b.dataset.valor),
+    clima: Array.from(document.querySelectorAll('.chip-excepcion[data-tipo="clima"].active')).map(b => b.dataset.valor)
+  };
+
   const soporteVital = {
     plantaElectrica: document.querySelector('input[name="soporte_planta"]:checked')?.value || 'No tiene',
     suministroAgua: document.querySelector('input[name="soporte_agua"]:checked')?.value || 'Inexistente',
     gasesMedicinales: document.querySelector('input[name="soporte_gases"]:checked')?.value || 'Inexistente',
-    climatizacion: document.querySelector('input[name="soporte_clima"]:checked')?.value || 'Cero Clima'
+    climatizacion: document.querySelector('input[name="soporte_clima"]:checked')?.value || 'Cero Clima',
+    excepciones: excepciones
   };
 
   const idExistente = document.getElementById('form-centro-id')?.value;
@@ -1552,6 +1637,15 @@ function limpiarFormulario() {
   const precInput = document.getElementById('form-precision');
   if (precInput) precInput.value = 'exacta';
   actualizarBadgePrecisionFormulario('exacta');
+
+  // Restablecer micro-chips de excepciones
+  document.querySelectorAll('.chip-excepcion').forEach(btn => {
+    btn.classList.remove('active');
+    btn.className = 'chip-excepcion px-2 py-0.5 rounded-lg text-xs font-bold border transition select-none bg-white text-slate-700 border-slate-300 hover:bg-amber-50';
+  });
+  if (typeof window.actualizarVisibilidadChips === 'function') {
+    window.actualizarVisibilidadChips();
+  }
 
   state.modoEdicion = false;
   evaluarSemaforoEnVivo();
@@ -2086,6 +2180,30 @@ function editarCentro(id) {
     if (g) g.checked = true;
     const c = document.querySelector(`input[name="soporte_clima"][value="${centro.soporteVital.climatizacion}"]`);
     if (c) c.checked = true;
+
+    // Restaurar micro-chips de excepciones
+    document.querySelectorAll('.chip-excepcion').forEach(btn => {
+      btn.classList.remove('active');
+      btn.className = 'chip-excepcion px-2 py-0.5 rounded-lg text-xs font-bold border transition select-none bg-white text-slate-700 border-slate-300 hover:bg-amber-50';
+    });
+
+    if (centro.soporteVital.excepciones) {
+      const exc = centro.soporteVital.excepciones;
+      ['planta', 'agua', 'gases', 'clima'].forEach(tipo => {
+        const valores = exc[tipo] || [];
+        valores.forEach(val => {
+          const btn = document.querySelector(`.chip-excepcion[data-tipo="${tipo}"][data-valor="${val}"]`);
+          if (btn) {
+            btn.classList.add('active');
+            btn.className = 'chip-excepcion active px-2 py-0.5 rounded-lg text-xs font-black border transition select-none bg-amber-500 text-white border-amber-600 shadow-xs ring-1 ring-amber-400';
+          }
+        });
+      });
+    }
+
+    if (typeof window.actualizarVisibilidadChips === 'function') {
+      window.actualizarVisibilidadChips();
+    }
   }
 
   if (centro.fallas) {
@@ -3445,6 +3563,10 @@ function iniciarAplicacion() {
     }
 
     configurarEventListeners();
+
+    if (typeof window.actualizarVisibilidadChips === 'function') {
+      window.actualizarVisibilidadChips();
+    }
 
     if (window.lucide && typeof window.lucide.createIcons === 'function') {
       window.lucide.createIcons();

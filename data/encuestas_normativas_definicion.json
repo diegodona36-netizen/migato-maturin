@@ -1,0 +1,942 @@
+{
+  "version": "1.0.0",
+  "territorio": "Estado Monagas, Venezuela",
+  "doctrina": "MIGATO 2026 - Conducción José Gregorio 'El Gato' Briceño",
+  "discrecion": "Levantamiento anónimo sin recolección de Cédula ni Nombre del informante",
+  "canal_multimedia": {
+    "plataforma": "Telegram",
+    "enlace_buzon": "https://t.me/MIGATOBuzonMonagas",
+    "descripcion": "Buzón seguro y anónimo para adjuntar fotografías y videos de evidencias en alta resolución"
+  },
+  "fichas": [
+    {
+      "id": "salud_hospitalaria",
+      "sector": "Salud e Infraestructura Asistencial",
+      "marco_legal": "Gaceta Oficial N° 36.579 - Clasificación de Establecimientos de Atención Médica",
+      "icono": "🏥",
+      "descripcion": "Evaluación del soporte vital y operatividad de hospitales tipo I al IV, CDI, ambulatorios y centros de atención médica.",
+      "criterio_semaforo": "Principio de la Falla Limitante: Si un servicio vital no llega a quirófanos, salas de parto o pisos superiores, el centro califica en ROJO.",
+      "secciones": [
+        {
+          "titulo": "1. Identificación Territorial",
+          "campos": [
+            {
+              "id": "municipio",
+              "tipo": "select",
+              "etiqueta": "Municipio",
+              "requerido": true,
+              "opciones": [
+                "Acosta", "Aguasay", "Bolívar", "Caripe", "Cedeño",
+                "Ezequiel Zamora", "Libertador", "Maturín", "Piar",
+                "Punceres", "Santa Bárbara", "Sotillo", "Uracoa"
+              ]
+            },
+            {
+              "id": "nombre_centro",
+              "tipo": "select_dinamico",
+              "etiqueta": "Nombre Oficial del Centro de Salud",
+              "requerido": true,
+              "descripcion": "Seleccionar del catálogo de centros del municipio o especificar nombre"
+            }
+          ]
+        },
+        {
+          "titulo": "2. Soporte Crítico y Vital",
+          "campos": [
+            {
+              "id": "suministro_agua",
+              "tipo": "radio",
+              "etiqueta": "Suministro de Agua Potable y Presión Hidroneumática",
+              "requerido": true,
+              "opciones": [
+                {
+                  "valor": "continuo_presion",
+                  "texto": "🟢 Continuo 24/7 con presión en todos los niveles (Llega a quirófanos, partos y pisos altos)",
+                  "peso_semaforo": "VERDE"
+                },
+                {
+                  "valor": "parcial_falla_pisos_altos",
+                  "texto": "🔴 Parcial / Falla de presión en pisos altos (Hay agua en planta baja/patio, pero NO sube a quirófanos ni hospitalización)",
+                  "peso_semaforo": "ROJO"
+                },
+                {
+                  "valor": "cisterna_racionado",
+                  "texto": "🟡 Racionado / Solo por camiones cisterna esporádicos (Sin red de tubería)",
+                  "peso_semaforo": "AMBAR"
+                },
+                {
+                  "valor": "inexistente",
+                  "texto": "🔴 Inexistente / Centro totalmente seco",
+                  "peso_semaforo": "ROJO"
+                }
+              ]
+            },
+            {
+              "id": "planta_electrica",
+              "tipo": "radio",
+              "etiqueta": "Planta Eléctrica de Emergencia y Autonomía de Combustible",
+              "requerido": true,
+              "opciones": [
+                {
+                  "valor": "operativa_con_gasoil",
+                  "texto": "🟢 Operativa con reserva de gasoil >24h y transferencia automática (Cubre quirófano y UCI)",
+                  "peso_semaforo": "VERDE"
+                },
+                {
+                  "valor": "operativa_sin_gasoil",
+                  "texto": "🔴 Operativa mecánicamente, pero SIN combustible (Inútil ante un apagón)",
+                  "peso_semaforo": "ROJO"
+                },
+                {
+                  "valor": "parcial_solo_pasillos",
+                  "texto": "🟡 Parcial (Solo bombillos de emergencia y pasillos; no sostiene quirófanos ni incubadoras)",
+                  "peso_semaforo": "AMBAR"
+                },
+                {
+                  "valor": "danada",
+                  "texto": "🔴 Averiada / Fuera de servicio",
+                  "peso_semaforo": "ROJO"
+                },
+                {
+                  "valor": "no_posee",
+                  "texto": "🔴 El centro no posee planta eléctrica de emergencia",
+                  "peso_semaforo": "ROJO"
+                }
+              ]
+            },
+            {
+              "id": "climatizacion_quirofano",
+              "tipo": "radio",
+              "etiqueta": "Climatización (Aire Acondicionado) en Quirófanos y Salas de Parto",
+              "requerido": true,
+              "opciones": [
+                {
+                  "valor": "operativo_normativo",
+                  "texto": "🟢 Operativo a temperatura reglamentaria (18°C - 21°C)",
+                  "peso_semaforo": "VERDE"
+                },
+                {
+                  "valor": "danado_quirofano",
+                  "texto": "🔴 Dañado en quirófano/parto (Intervenciones suspendidas o alto riesgo de infecciones)",
+                  "peso_semaforo": "ROJO"
+                },
+                {
+                  "valor": "sin_climatizacion",
+                  "texto": "🔴 Sin aire acondicionado en ninguna área del centro asistencial",
+                  "peso_semaforo": "ROJO"
+                }
+              ]
+            },
+            {
+              "id": "gases_medicinales",
+              "tipo": "radio",
+              "etiqueta": "Red de Oxígeno y Gases Medicinales",
+              "requerido": true,
+              "opciones": [
+                {
+                  "valor": "red_central_operativa",
+                  "texto": "🟢 Red centralizada por tubería operativa y con presión continua",
+                  "peso_semaforo": "VERDE"
+                },
+                {
+                  "valor": "bombonas_parcial",
+                  "texto": "🟡 Solo bombonas individuales móviles (Frecuente escasez o faltan manómetros/flujómetros)",
+                  "peso_semaforo": "AMBAR"
+                },
+                {
+                  "valor": "inexistente",
+                  "texto": "🔴 Inexistente (El paciente o familiar debe gestionar y pagar su propia bombona)",
+                  "peso_semaforo": "ROJO"
+                }
+              ]
+            },
+            {
+              "id": "transporte_vertical",
+              "tipo": "radio",
+              "etiqueta": "Ascensores y Montacamillas (Para hospitales y centros con más de un nivel)",
+              "requerido": true,
+              "opciones": [
+                {
+                  "valor": "no_aplica",
+                  "texto": "⚪ No aplica (Centro asistencial de solo planta baja)",
+                  "peso_semaforo": "VERDE"
+                },
+                {
+                  "valor": "operativos",
+                  "texto": "🟢 Ascensores camilleros operativos y en servicio continuo",
+                  "peso_semaforo": "VERDE"
+                },
+                {
+                  "valor": "danados",
+                  "texto": "🔴 Dañados / Inoperativos (Pacientes deben subirse en brazos o sábanas por escaleras)",
+                  "peso_semaforo": "ROJO"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "titulo": "3. Fuente y Respaldo",
+          "campos": [
+            {
+              "id": "rol_informante",
+              "tipo": "select",
+              "etiqueta": "Rol de la Fuente (100% Confidencial)",
+              "requerido": true,
+              "opciones": [
+                "Personal médico / enfermería activo",
+                "Personal administrativo / obrero del centro",
+                "Paciente o familiar de paciente",
+                "Vecino del sector comunitario",
+                "Enlace técnico de Comando Gatero"
+              ]
+            },
+            {
+              "id": "observaciones",
+              "tipo": "textarea",
+              "etiqueta": "Denuncia u Observaciones Específicas (Opcional)",
+              "requerido": false,
+              "placeholder": "Detalles sobre medicamentos agotados, filtraciones, quirófanos clausurados..."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "educacion_planteles",
+      "sector": "Educación y Planteles Escolares",
+      "marco_legal": "Normas Técnicas FEDE (Fundación de Edificaciones y Dotaciones Educativas) y MPPE",
+      "icono": "🏫",
+      "descripcion": "Diagnóstico de escuelas básicas, liceos, escuelas técnicas y universidades públicas en Monagas.",
+      "criterio_semaforo": "Si no hay agua en baños o el cableado eléctrico fue desvalijado impidiendo clases regulares, califica en ROJO.",
+      "secciones": [
+        {
+          "titulo": "1. Identificación del Plantel",
+          "campos": [
+            {
+              "id": "municipio",
+              "tipo": "select",
+              "etiqueta": "Municipio",
+              "requerido": true,
+              "opciones": [
+                "Acosta", "Aguasay", "Bolívar", "Caripe", "Cedeño",
+                "Ezequiel Zamora", "Libertador", "Maturín", "Piar",
+                "Punceres", "Santa Bárbara", "Sotillo", "Uracoa"
+              ]
+            },
+            {
+              "id": "parroquia",
+              "tipo": "text",
+              "etiqueta": "Parroquia o Sector",
+              "requerido": true
+            },
+            {
+              "id": "nombre_plantel",
+              "tipo": "text",
+              "etiqueta": "Nombre del Plantel Escolar / Liceo",
+              "requerido": true,
+              "placeholder": "Ej. Escuela Primaria República del Uruguay / Liceo Los Godos"
+            },
+            {
+              "id": "nivel_educativo",
+              "tipo": "select",
+              "etiqueta": "Nivel Educativo",
+              "requerido": true,
+              "opciones": [
+                "Educación Inicial / Simoncito",
+                "Escuela Básica / Primaria (1° a 6° grado)",
+                "Liceo / Educación Media General",
+                "Escuela Técnica Agropecuaria / Industrial",
+                "Sede Universitaria Pública (UPEL, UDO, UBV)"
+              ]
+            }
+          ]
+        },
+        {
+          "titulo": "2. Condiciones Físicas y Servicios Críticos (Normas FEDE)",
+          "campos": [
+            {
+              "id": "agua_sanitarios",
+              "tipo": "radio",
+              "etiqueta": "Agua Potable y Baterías de Baños Sanitarios",
+              "requerido": true,
+              "opciones": [
+                {
+                  "valor": "operativos_continuo",
+                  "texto": "🟢 Agua continua por red con sanitarios 100% operativos",
+                  "peso_semaforo": "VERDE"
+                },
+                {
+                  "valor": "racionado_baldes",
+                  "texto": "🟡 Agua intermitente (Cargan agua con tobos para bajar sanitarios)",
+                  "peso_semaforo": "AMBAR"
+                },
+                {
+                  "valor": "clausurados_sin_agua",
+                  "texto": "🔴 Baños clausurados por falta de agua / Estudiantes deben aguantar necesidades",
+                  "peso_semaforo": "ROJO"
+                },
+                {
+                  "valor": "letrina_septico",
+                  "texto": "🔴 Letrina o pozo séptico colapsado / Foco de insalubridad",
+                  "peso_semaforo": "ROJO"
+                }
+              ]
+            },
+            {
+              "id": "comedor_pae",
+              "tipo": "radio",
+              "etiqueta": "Comedor Escolar y Programa de Alimentación (PAE)",
+              "requerido": true,
+              "opciones": [
+                {
+                  "valor": "operativo_completo",
+                  "texto": "🟢 Comedor activo con gas doméstico, agua potable y comida balanceada",
+                  "peso_semaforo": "VERDE"
+                },
+                {
+                  "valor": "parcial_sin_gas_lena",
+                  "texto": "🟡 Comedor opera a medias (Cocinan con leña por falta de gas o raciones mínimas de solo arroz/granos)",
+                  "peso_semaforo": "AMBAR"
+                },
+                {
+                  "valor": "inoperativo_sin_comida",
+                  "texto": "🔴 Comedor totalmente clausurado / Sin dotación de alimentos",
+                  "peso_semaforo": "ROJO"
+                }
+              ]
+            },
+            {
+              "id": "electricidad_iluminacion",
+              "tipo": "radio",
+              "etiqueta": "Red Eléctrica e Iluminación en Aulas",
+              "requerido": true,
+              "opciones": [
+                {
+                  "valor": "electrificado_operativo",
+                  "texto": "🟢 Aulas con iluminación, tomas de corriente y ventiladores operativos",
+                  "peso_semaforo": "VERDE"
+                },
+                {
+                  "valor": "parcial_aulas_oscuras",
+                  "texto": "🟡 Parcial (Aulas a oscuras o sin ventilación; calor sofocante)",
+                  "peso_semaforo": "AMBAR"
+                },
+                {
+                  "valor": "desvalijado_sin_luz",
+                  "texto": "🔴 Cableado desvalijado / El plantel está 100% a oscuras",
+                  "peso_semaforo": "ROJO"
+                }
+              ]
+            },
+            {
+              "id": "techos_filtraciones",
+              "tipo": "radio",
+              "etiqueta": "Estado de Techos e Impermeabilización",
+              "requerido": true,
+              "opciones": [
+                {
+                  "valor": "buen_estado",
+                  "texto": "🟢 Techos impermeabilizados sin filtraciones",
+                  "peso_semaforo": "VERDE"
+                },
+                {
+                  "valor": "goteras_temporales",
+                  "texto": "🟡 Goteras moderadas en algunas aulas en temporada de lluvias",
+                  "peso_semaforo": "AMBAR"
+                },
+                {
+                  "valor": "filtraciones_graves",
+                  "texto": "🔴 Filtraciones severas / Caída de losas / Láminas de acerolit levantadas",
+                  "peso_semaforo": "ROJO"
+                },
+                {
+                  "valor": "asbesto_deteriorado",
+                  "texto": "🔴 Techo de asbesto fracturado (Riesgo carcinógeno de salud pública)",
+                  "peso_semaforo": "ROJO"
+                }
+              ]
+            },
+            {
+              "id": "mobiliario_pupitres",
+              "tipo": "radio",
+              "etiqueta": "Disponibilidad de Pupitres y Mesas-Sillas",
+              "requerido": true,
+              "opciones": [
+                {
+                  "valor": "completo",
+                  "texto": "🟢 Suficientes pupitres para toda la matrícula escolar",
+                  "peso_semaforo": "VERDE"
+                },
+                {
+                  "valor": "deficit_moderado",
+                  "texto": "🟡 Déficit moderado (Estudiantes deben compartir asientos)",
+                  "peso_semaforo": "AMBAR"
+                },
+                {
+                  "valor": "deficit_critico",
+                  "texto": "🔴 Déficit crítico (Estudiantes sentados en el piso, toletes o bloques)",
+                  "peso_semaforo": "ROJO"
+                }
+              ]
+            },
+            {
+              "id": "cercado_perimetral",
+              "tipo": "radio",
+              "etiqueta": "Seguridad Perimetral y Cercado",
+              "requerido": true,
+              "opciones": [
+                {
+                  "valor": "seguro_cerrado",
+                  "texto": "🟢 Cerca perimetral completa con portones y candados",
+                  "peso_semaforo": "VERDE"
+                },
+                {
+                  "valor": "vulnerable_danado",
+                  "texto": "🟡 Cerca rota o muros con boquetes (Vulnerable a incursiones)",
+                  "peso_semaforo": "AMBAR"
+                },
+                {
+                  "valor": "sin_cerca",
+                  "texto": "🔴 Sin cerca perimetral (Espacio totalmente expuesto a delincuencia y ganado)",
+                  "peso_semaforo": "ROJO"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "titulo": "3. Fuente Confidencial",
+          "campos": [
+            {
+              "id": "rol_informante",
+              "tipo": "select",
+              "etiqueta": "Relación con la Institución",
+              "requerido": true,
+              "opciones": [
+                "Docente / Maestro activo",
+                "Personal obrero / administrativo",
+                "Padre, madre o representante de alumno",
+                "Estudiante del plantel",
+                "Líder comunitario del sector"
+              ]
+            },
+            {
+              "id": "observaciones",
+              "tipo": "textarea",
+              "etiqueta": "Observaciones Adicionales",
+              "requerido": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "bomberos_proteccion_civil",
+      "sector": "Cuerpos de Bomberos y Protección Civil",
+      "marco_legal": "Ley de los Cuerpos de Bomberos y Bomberas y Administración de Emergencias (Gaceta Oficial N° 40.817) y COVENIN",
+      "icono": "🚒",
+      "descripcion": "Auditoría de estaciones bomberiles y sedes de Protección Civil en los 13 municipios del estado Monagas.",
+      "criterio_semaforo": "Si no hay camión autobomba operativo para apagar incendios o ambulancia con combustible, la estación está en ROJO.",
+      "secciones": [
+        {
+          "titulo": "1. Identificación de la Estación",
+          "campos": [
+            {
+              "id": "municipio",
+              "tipo": "select",
+              "etiqueta": "Municipio",
+              "requerido": true,
+              "opciones": [
+                "Acosta", "Aguasay", "Bolívar", "Caripe", "Cedeño",
+                "Ezequiel Zamora", "Libertador", "Maturín", "Piar",
+                "Punceres", "Santa Bárbara", "Sotillo", "Uracoa"
+              ]
+            },
+            {
+              "id": "nombre_estacion",
+              "tipo": "text",
+              "etiqueta": "Nombre de la Estación / Subestación",
+              "requerido": true,
+              "placeholder": "Ej. Cuartel Central de Bomberos Maturín / PC Caripe"
+            },
+            {
+              "id": "cuerpo",
+              "tipo": "select",
+              "etiqueta": "Institución",
+              "requerido": true,
+              "opciones": [
+                "Cuerpo de Bomberos del Estado Monagas",
+                "Cuerpo de Bomberos Universitarios (UDO / UPEL)",
+                "Cuerpo de Bomberos Aeronáuticos (Aeropuerto Maturín)",
+                "Protección Civil y Administración de Desastres (Estatal)",
+                "Protección Civil Municipal"
+              ]
+            }
+          ]
+        },
+        {
+          "titulo": "2. Operatividad Operacional y Equipamiento Crítico",
+          "campos": [
+            {
+              "id": "flota_supresion_incendios",
+              "tipo": "radio",
+              "etiqueta": "Unidades de Supresión de Incendios (Autobombas / Cisternas)",
+              "requerido": true,
+              "opciones": [
+                {
+                  "valor": "autobomba_operativa_tanque_lleno",
+                  "texto": "🟢 Autobomba operativa con bomba de agua funcional y combustible disponible",
+                  "peso_semaforo": "VERDE"
+                },
+                {
+                  "valor": "solo_cisterna_sin_presion",
+                  "texto": "🟡 Solo cisterna de acarreo de agua (Sin bomba de alta presión contra incendios)",
+                  "peso_semaforo": "AMBAR"
+                },
+                {
+                  "valor": "camion_parado_cauchos_mecanica",
+                  "texto": "🔴 Autobomba fuera de servicio por falta de cauchos, baterías o repuestos de motor",
+                  "peso_semaforo": "ROJO"
+                },
+                {
+                  "valor": "cero_unidades_extincion",
+                  "texto": "🔴 Cero camiones de combate de incendios (Solo personal a pie o vehículo particular)",
+                  "peso_semaforo": "ROJO"
+                }
+              ]
+            },
+            {
+              "id": "ambulancias_rescate",
+              "tipo": "radio",
+              "etiqueta": "Ambulancias y Unidades de Soporte Asistencial",
+              "requerido": true,
+              "opciones": [
+                {
+                  "valor": "ambulancia_operativa",
+                  "texto": "🟢 Ambulancia operativa con dotación de soporte vital y combustible",
+                  "peso_semaforo": "VERDE"
+                },
+                {
+                  "valor": "ambulancia_sin_combustible",
+                  "texto": "🟡 Ambulancia operativa mecánicamente pero sin asignación de gasolina/gasoil",
+                  "peso_semaforo": "AMBAR"
+                },
+                {
+                  "valor": "fuera_de_servicio",
+                  "texto": "🔴 Ambulancias inoperativas / En cuatro bloques",
+                  "peso_semaforo": "ROJO"
+                },
+                {
+                  "valor": "no_posee",
+                  "texto": "🔴 La estación no dispone de ambulancia para atención de lesionados",
+                  "peso_semaforo": "ROJO"
+                }
+              ]
+            },
+            {
+              "id": "equipos_proteccion_personal",
+              "tipo": "radio",
+              "etiqueta": "Equipos de Protección Personal (EPP: Chaquetones, Botas, Cascos)",
+              "requerido": true,
+              "opciones": [
+                {
+                  "valor": "dotacion_completa_normada",
+                  "texto": "🟢 Dotación de chaquetón, casco y botas ignífugas para toda la guardia",
+                  "peso_semaforo": "VERDE"
+                },
+                {
+                  "valor": "epp_incompleto_deteriorado",
+                  "texto": "🟡 EPP desgastado, roto o insuficiente (Bomberos deben turnarse los trajes)",
+                  "peso_semaforo": "AMBAR"
+                },
+                {
+                  "valor": "cero_epp",
+                  "texto": "🔴 Sin trajes de combate de incendios (Bomberos combaten con ropa civil o uniformes de tela)",
+                  "peso_semaforo": "ROJO"
+                }
+              ]
+            },
+            {
+              "id": "equipos_respiracion_era",
+              "tipo": "radio",
+              "etiqueta": "Equipos de Respiración Autónoma (ERA / SCBA) y Recarga de Aire",
+              "requerido": true,
+              "opciones": [
+                {
+                  "valor": "era_operativos_con_compresor",
+                  "texto": "🟢 Cilindros ERA presurizados con compresor de aire respirable operativo",
+                  "peso_semaforo": "VERDE"
+                },
+                {
+                  "valor": "cilindros_sin_recarga",
+                  "texto": "🟡 Cilindros existentes pero sin compresor de recarga funcional en el estado",
+                  "peso_semaforo": "AMBAR"
+                },
+                {
+                  "valor": "sin_era",
+                  "texto": "🔴 Cero equipos de respiración autónoma (Imposible ingresar a estructuras colapsadas con humo)",
+                  "peso_semaforo": "ROJO"
+                }
+              ]
+            },
+            {
+              "id": "herramientas_extricacion",
+              "tipo": "radio",
+              "etiqueta": "Herramientas Hidráulicas de Rescate Vehicular (Quijadas de la Vida)",
+              "requerido": true,
+              "opciones": [
+                {
+                  "valor": "quijadas_operativas",
+                  "texto": "🟢 Equipo hidráulico de corte y separación operativo con motor funcional",
+                  "peso_semaforo": "VERDE"
+                },
+                {
+                  "valor": "quijadas_danadas",
+                  "texto": "🔴 Quijadas de la vida dañadas por falta de mangueras hidráulicas o mantenimiento",
+                  "peso_semaforo": "ROJO"
+                },
+                {
+                  "valor": "no_poseen_manuales",
+                  "texto": "🔴 No poseen herramientas de extricación (Usan seguetas o palancas rudimentarias)",
+                  "peso_semaforo": "ROJO"
+                }
+              ]
+            },
+            {
+              "id": "telecomunicaciones_despacho",
+              "tipo": "radio",
+              "etiqueta": "Comunicaciones Radiales y Despacho de Emergencias",
+              "requerido": true,
+              "opciones": [
+                {
+                  "valor": "repetidora_vhf_activa",
+                  "texto": "🟢 Frecuencia de radio base y portátiles enlazados con central 24/7",
+                  "peso_semaforo": "VERDE"
+                },
+                {
+                  "valor": "solo_telefonia_movil",
+                  "texto": "🟡 Sin radio enlace; operan exclusivamente mediante celulares de los bomberos (falla si cae la red)",
+                  "peso_semaforo": "AMBAR"
+                },
+                {
+                  "valor": "incomunicados",
+                  "texto": "🔴 Estación totalmente incomunicada sin línea fija ni radios",
+                  "peso_semaforo": "ROJO"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "titulo": "3. Fuente Confidencial",
+          "campos": [
+            {
+              "id": "rol_informante",
+              "tipo": "select",
+              "etiqueta": "Fuente del Reporte",
+              "requerido": true,
+              "opciones": [
+                "Bombero / Efectivo de rescate activo",
+                "Funcionario de Protección Civil",
+                "Familiar de personal de guardia",
+                "Enlace técnico comunitario"
+              ]
+            },
+            {
+              "id": "observaciones",
+              "tipo": "textarea",
+              "etiqueta": "Observaciones Específicas",
+              "requerido": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "seguridad_policial",
+      "sector": "Módulos Policiales y Seguridad Ciudadana",
+      "marco_legal": "Ley del Estatuto de la Función Policial (Gaceta Oficial N° 39.390) y Manuales Baquía",
+      "icono": "🛡️",
+      "descripcion": "Diagnóstico de estaciones policiales, módulos de cuadrantes de paz y puestos de vigilancia en Monagas.",
+      "criterio_semaforo": "Si el módulo no tiene patrullaje móvil o las instalaciones están en ruinas, califica en ROJO.",
+      "secciones": [
+        {
+          "titulo": "1. Identificación del Módulo",
+          "campos": [
+            {
+              "id": "municipio",
+              "tipo": "select",
+              "etiqueta": "Municipio",
+              "requerido": true,
+              "opciones": [
+                "Acosta", "Aguasay", "Bolívar", "Caripe", "Cedeño",
+                "Ezequiel Zamora", "Libertador", "Maturín", "Piar",
+                "Punceres", "Santa Bárbara", "Sotillo", "Uracoa"
+              ]
+            },
+            {
+              "id": "nombre_modulo",
+              "tipo": "text",
+              "etiqueta": "Nombre o Número del Módulo / Cuadrante",
+              "requerido": true,
+              "placeholder": "Ej. Módulo Policial La Puente / Comisaría Central PoliMonagas"
+            },
+            {
+              "id": "cuerpo_policial",
+              "tipo": "select",
+              "etiqueta": "Cuerpo de Seguridad",
+              "requerido": true,
+              "opciones": [
+                "Policía del Estado Monagas (PoliMonagas)",
+                "Policía Municipal de Maturín (PoliMaturín)",
+                "Policía Municipal de Piar / Zamora",
+                "Cuerpo de Policía Nacional Bolivariana (PNB)",
+                "Puesto de Guardia Nacional (GNB)"
+              ]
+            }
+          ]
+        },
+        {
+          "titulo": "2. Capacidad Operativa y Logística",
+          "campos": [
+            {
+              "id": "parque_automotor_patrullaje",
+              "tipo": "radio",
+              "etiqueta": "Parque Automotor para Patrullaje Preventivo",
+              "requerido": true,
+              "opciones": [
+                {
+                  "valor": "patrullas_y_motos_operativas",
+                  "texto": "🟢 Patrullas 4x4 y motocicletas en servicio con cuota de combustible",
+                  "peso_semaforo": "VERDE"
+                },
+                {
+                  "valor": "solo_motocicletas",
+                  "texto": "🟡 Solo 1 o 2 motocicletas operativas (Sin unidades para traslado de detenidos)",
+                  "peso_semaforo": "AMBAR"
+                },
+                {
+                  "valor": "a_pie_sin_vehiculos",
+                  "texto": "🔴 Cero vehículos operativos (Patrullaje a pie exclusivo o estacionarios)",
+                  "peso_semaforo": "ROJO"
+                }
+              ]
+            },
+            {
+              "id": "calabozos_retencion",
+              "tipo": "radio",
+              "etiqueta": "Calabozos de Retención Preventiva",
+              "requerido": true,
+              "opciones": [
+                {
+                  "valor": "adecuado_sin_hacinamiento",
+                  "texto": "🟢 Capacidad adecuada con agua, luz y ventilación",
+                  "peso_semaforo": "VERDE"
+                },
+                {
+                  "valor": "hacinamiento_severo",
+                  "texto": "🔴 Hacinamiento crítico (>200% de la capacidad de diseño)",
+                  "peso_semaforo": "ROJO"
+                },
+                {
+                  "valor": "sin_calabozos",
+                  "texto": "⚪ No dispone de celdas (Deben remitir inmediatamente a comando central)",
+                  "peso_semaforo": "VERDE"
+                }
+              ]
+            },
+            {
+              "id": "infraestructura_fisica_modulo",
+              "tipo": "radio",
+              "etiqueta": "Estado Físico del Módulo / Puesto de Vigilancia",
+              "requerido": true,
+              "opciones": [
+                {
+                  "valor": "operativo_completo",
+                  "texto": "🟢 Instalaciones en buen estado con servicios básicos activos",
+                  "peso_semaforo": "VERDE"
+                },
+                {
+                  "valor": "deterioro_parcial",
+                  "texto": "🟡 Sin agua de tubería, baños precarios o techos con goteras",
+                  "peso_semaforo": "AMBAR"
+                },
+                {
+                  "valor": "abandonado_en_ruinas",
+                  "texto": "🔴 Módulo en ruinas, desvalijado o clausurado",
+                  "peso_semaforo": "ROJO"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "titulo": "3. Fuente Confidencial",
+          "campos": [
+            {
+              "id": "rol_informante",
+              "tipo": "select",
+              "etiqueta": "Relación",
+              "requerido": true,
+              "opciones": [
+                "Funcionario policial aliado (Confidencial)",
+                "Comerciante / Vecino del cuadrante",
+                "Enlace de seguridad comunitaria"
+              ]
+            },
+            {
+              "id": "observaciones",
+              "tipo": "textarea",
+              "etiqueta": "Observaciones Específicas",
+              "requerido": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "acueductos_pozos_agua",
+      "sector": "Agua Potable, Pozos Profundos y Estaciones de Bombeo",
+      "marco_legal": "Normas Sanitarias de Calidad del Agua Potable (Gaceta Oficial N° 36.395)",
+      "icono": "💧",
+      "descripcion": "Monitoreo del sistema hídrico: Planta Bajo Guarapiche, red de distribución y pozos profundos de Aguas de Monagas.",
+      "criterio_semaforo": "Si el pozo o la bomba está quemada dejando a la comunidad sin agua por red, califica en ROJO.",
+      "secciones": [
+        {
+          "titulo": "1. Identificación del Sistema Hídrico",
+          "campos": [
+            {
+              "id": "municipio",
+              "tipo": "select",
+              "etiqueta": "Municipio",
+              "requerido": true,
+              "opciones": [
+                "Acosta", "Aguasay", "Bolívar", "Caripe", "Cedeño",
+                "Ezequiel Zamora", "Libertador", "Maturín", "Piar",
+                "Punceres", "Santa Bárbara", "Sotillo", "Uracoa"
+              ]
+            },
+            {
+              "id": "parroquia_sector",
+              "tipo": "text",
+              "etiqueta": "Parroquia y Sector Afectado",
+              "requerido": true,
+              "placeholder": "Ej. Alto de Los Godos - Sector La Puente / Boquerón"
+            },
+            {
+              "id": "tipo_fuente",
+              "tipo": "select",
+              "etiqueta": "Tipo de Infraestructura",
+              "requerido": true,
+              "opciones": [
+                "Pozo Profundo Perforado (Bomba Sumergible)",
+                "Planta Potabilizadora (Planta Bajo Guarapiche / Caripito)",
+                "Toma de Río / Dique Toma",
+                "Estación de Rebombeo / Tanque Elevado",
+                "Red de Distribución / Tubería Matriz"
+              ]
+            }
+          ]
+        },
+        {
+          "titulo": "2. Estado Operativo del Sistema",
+          "campos": [
+            {
+              "id": "operatividad_bomba_motor",
+              "tipo": "radio",
+              "etiqueta": "Estado Electromecánico de la Bomba / Motor",
+              "requerido": true,
+              "opciones": [
+                {
+                  "valor": "bomba_100_operativa",
+                  "texto": "🟢 Bomba y tablero eléctrico 100% operativos con caudal normal",
+                  "peso_semaforo": "VERDE"
+                },
+                {
+                  "valor": "fallas_electricas_baja_presion",
+                  "texto": "🟡 Operativa pero con fluctuaciones eléctricas o bajo caudal (Bomba perdiendo vida útil)",
+                  "peso_semaforo": "AMBAR"
+                },
+                {
+                  "valor": "bomba_quemada_fuera_servicio",
+                  "texto": "🔴 Bomba sumergible quemada / Tablero de control dañado o desvalijado",
+                  "peso_semaforo": "ROJO"
+                }
+              ]
+            },
+            {
+              "id": "potabilizacion_cloracion",
+              "tipo": "radio",
+              "etiqueta": "Tratamiento Químico y Cloración (Calidad del Agua)",
+              "requerido": true,
+              "opciones": [
+                {
+                  "valor": "cloracion_activa",
+                  "texto": "🟢 Dosificación continua de cloro y agua cristalina apta para consumo",
+                  "peso_semaforo": "VERDE"
+                },
+                {
+                  "valor": "agua_cruda_sin_cloro",
+                  "texto": "🟡 Agua cruda directa sin cloración (Riesgo bacteriológico)",
+                  "peso_semaforo": "AMBAR"
+                },
+                {
+                  "valor": "turbidez_sedimento_fuerte",
+                  "texto": "🔴 Agua con olor fétido, sedimentos o color amarillento/marrón",
+                  "peso_semaforo": "ROJO"
+                }
+              ]
+            },
+            {
+              "id": "continuidad_suministro",
+              "tipo": "radio",
+              "etiqueta": "Continuidad del Servicio en los Hogares",
+              "requerido": true,
+              "opciones": [
+                {
+                  "valor": "suministro_diario_24h",
+                  "texto": "🟢 Agua directa por tubería las 24 horas del día",
+                  "peso_semaforo": "VERDE"
+                },
+                {
+                  "valor": "suministro_por_horarios",
+                  "texto": "🟡 Racionamiento por horarios (Llega pocas horas o días interdiarios)",
+                  "peso_semaforo": "AMBAR"
+                },
+                {
+                  "valor": "sin_agua_mas_de_15_dias",
+                  "texto": "🔴 Comunidad sin agua por tubería por más de 15 días continuos",
+                  "peso_semaforo": "ROJO"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "titulo": "3. Fuente Confidencial",
+          "campos": [
+            {
+              "id": "rol_informante",
+              "tipo": "select",
+              "etiqueta": "Identificación de la Fuente",
+              "requerido": true,
+              "opciones": [
+                "Vecino afectado del sector",
+                "Miembro del Comité de Agua del sector",
+                "Trabajador o técnico de Aguas de Monagas (Aliado)",
+                "Enlace de Comando Gatero"
+              ]
+            },
+            {
+              "id": "observaciones",
+              "tipo": "textarea",
+              "etiqueta": "Detalles del Pozo o Falla",
+              "requerido": false
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
