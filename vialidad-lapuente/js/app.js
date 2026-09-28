@@ -226,7 +226,7 @@ class TrazadorVialApp {
       const pct = totalLen > 0 ? ((sub.longitudM || 0) / totalLen) * 100 : 100;
       const pkIni = RoadMapViewer.formatPK(sub.pkInicioM || 0);
       const pkFin = RoadMapViewer.formatPK(sub.pkFinM || (sub.pkInicioM + sub.longitudM));
-      const hasBridge = sub.puenteCritico && sub.puenteCritico !== 'ninguno';
+      const hasBridge = (sub.obraArte && sub.obraArte.tiene === 'si') || (sub.puenteCritico && sub.puenteCritico !== 'ninguno');
 
       return `
         <div 
@@ -313,29 +313,39 @@ class TrazadorVialApp {
               const pkIni = RoadMapViewer.formatPK(s.pkInicioM || 0);
               const pkFin = RoadMapViewer.formatPK(s.pkFinM || (s.pkInicioM + s.longitudM));
               const canalBadge = s.canalesAfectados === "canal_lento_pesado" 
-                ? `<span class="text-[9px] px-1 py-0.2 rounded bg-amber-950 text-amber-300 border border-amber-600">Canal Lento Pesado</span>`
+                ? `<span class="text-[9px] px-1.5 py-0.5 rounded bg-amber-950 text-amber-300 border border-amber-600 font-bold">Canal Lento</span>`
                 : '';
 
+              const tieneObra = (s.obraArte && s.obraArte.tiene === 'si') || (s.puenteCritico && s.puenteCritico !== 'ninguno');
+              const nombreEstructura = s.obraArte?.nombre ? s.obraArte.nombre.split('(')[0].trim() : 'OBRA';
+              const obraBadge = tieneObra 
+                ? `<span class="text-[9px] px-1.5 py-0.5 rounded bg-red-950 text-red-300 border border-red-600 font-bold truncate max-w-[110px]" title="Estructura crítica">⚠️ ${nombreEstructura}</span>`
+                : '';
+
+              // Limpiar posibles nombres históricos que incluían el PK redundante en el título
+              let cleanNombre = s.nombre || 'Subtramo';
+              cleanNombre = cleanNombre.replace(/:\s*\(PK\s*[\d\+]+\s*a\s*PK\s*[\d\+]+\)/gi, '');
+
               return `
-                <div class="p-2 rounded-xl bg-[#0e092e]/80 hover:bg-[#201569] border border-[#2d1f85]/80 cursor-pointer flex items-center justify-between gap-2 group transition" onclick="window.trazadorApp.focusSubtramo('${corr.id}', '${s.id}')">
-                  <div class="flex items-center gap-2 overflow-hidden">
-                    <span class="w-2.5 h-2.5 rounded-full shrink-0 ${colorPill[s.color] || 'bg-slate-500'}"></span>
+                <div class="p-2.5 rounded-xl bg-[#0e092e]/90 hover:bg-[#201569] border border-[#2d1f85]/80 cursor-pointer flex items-center justify-between gap-2 group transition" onclick="window.trazadorApp.focusSubtramo('${corr.id}', '${s.id}')">
+                  <div class="flex items-center gap-2.5 overflow-hidden">
+                    <span class="w-3 h-3 rounded-full shrink-0 ${colorPill[s.color] || 'bg-slate-500'}"></span>
                     <div class="overflow-hidden">
-                      <div class="text-[11px] font-bold text-slate-200 truncate group-hover:text-white">${s.nombre}</div>
-                      <div class="flex flex-wrap items-center gap-1 text-[10px] text-slate-400 font-mono">
-                        <span class="text-amber-400 font-semibold">${pkIni}➔${pkFin}</span>
+                      <div class="text-xs font-bold text-slate-100 truncate group-hover:text-white">${cleanNombre}</div>
+                      <div class="flex flex-wrap items-center gap-1.5 text-[11px] text-slate-300 font-mono mt-0.5">
+                        <span class="text-amber-400 font-bold">${pkIni} ➔ ${pkFin}</span>
                         <span>•</span>
-                        <span>${s.longitudM}m</span>
+                        <span>${s.longitudM} m</span>
                         ${canalBadge}
-                        ${s.puenteCritico && s.puenteCritico !== 'ninguno' ? `<span class="text-[9px] px-1 py-0.2 rounded bg-red-950 text-red-300 border border-red-600 font-bold">⚠️ PUENTE</span>` : ''}
+                        ${obraBadge}
                       </div>
                     </div>
                   </div>
 
                   <div class="flex items-center gap-1 shrink-0">
-                    ${s.foto ? `<span class="text-xs" title="Tiene foto">📷</span>` : ''}
+                    ${s.foto ? `<span class="text-xs" title="Tiene foto de evidencia">📷</span>` : ''}
                     <button type="button" onclick="event.stopPropagation(); window.trazadorApp.deleteSubtramo('${corr.id}', '${s.id}')" class="p-1 text-slate-500 hover:text-red-400 rounded opacity-60 group-hover:opacity-100 transition" title="Borrar subtramo">
-                      <i data-lucide="trash" class="w-3 h-3"></i>
+                      <i data-lucide="trash" class="w-3.5 h-3.5"></i>
                     </button>
                   </div>
                 </div>
@@ -537,12 +547,9 @@ class TrazadorVialApp {
     const modal = document.getElementById("modal-asignar-tramo");
     document.getElementById("modal-tramo-longitud").textContent = `${longitudM} metros`;
     document.getElementById("modal-tramo-pk").textContent = pkStr;
-    
-    const cardStep1 = document.getElementById("card-step1-pk");
-    if (cardStep1) cardStep1.textContent = pkStr;
 
     document.getElementById("input-corredor-nombre").value = defaultCorredorNombre;
-    document.getElementById("input-tramo-nombre").value = `Subtramo ${nextSubNum}: (${pkStr})`;
+    document.getElementById("input-tramo-nombre").value = `Subtramo ${nextSubNum}`;
     document.getElementById("input-tramo-detalle").value = "";
 
     const selectJerarquia = document.getElementById("select-tramo-jerarquia");
@@ -551,8 +558,17 @@ class TrazadorVialApp {
     const selectCanales = document.getElementById("select-tramo-canales");
     if (selectCanales) selectCanales.value = "ambos";
 
-    const selectPuente = document.getElementById("select-puente-critico");
-    if (selectPuente) selectPuente.value = "ninguno";
+    // Reiniciar bloque de Puentes / Obras de Arte
+    const radioPuenteNo = document.getElementById("radio-puente-no");
+    if (radioPuenteNo) radioPuenteNo.checked = true;
+    const boxPuente = document.getElementById("box-campos-puente-detalle");
+    if (boxPuente) boxPuente.classList.add("hidden");
+    const inputPuenteNom = document.getElementById("input-puente-nombre");
+    if (inputPuenteNom) inputPuenteNom.value = "";
+    const selectPuenteTipo = document.getElementById("select-puente-tipo");
+    if (selectPuenteTipo) selectPuenteTipo.value = "puente_mayor";
+    const selectPuenteFalla = document.getElementById("select-puente-falla");
+    if (selectPuenteFalla) selectPuenteFalla.value = "socavacion_pilas";
 
     const selectDrenaje = document.getElementById("select-tramo-drenaje");
     if (selectDrenaje) selectDrenaje.value = "intactos";
@@ -600,12 +616,12 @@ class TrazadorVialApp {
     const modal = document.getElementById("modal-asignar-tramo");
     document.getElementById("modal-tramo-longitud").textContent = `${subtramo.longitudM} metros`;
     document.getElementById("modal-tramo-pk").textContent = pkStr;
-    
-    const cardStep1 = document.getElementById("card-step1-pk");
-    if (cardStep1) cardStep1.textContent = pkStr;
 
     document.getElementById("input-corredor-nombre").value = corredor.nombre;
-    document.getElementById("input-tramo-nombre").value = subtramo.nombre;
+    // Limpiar posible PK redundante en el nombre editado
+    let cleanSubName = subtramo.nombre || `Subtramo`;
+    cleanSubName = cleanSubName.replace(/:\s*\(PK\s*[\d\+]+\s*a\s*PK\s*[\d\+]+\)/gi, '');
+    document.getElementById("input-tramo-nombre").value = cleanSubName;
     document.getElementById("input-tramo-detalle").value = subtramo.detalle || "";
 
     const selectJerarquia = document.getElementById("select-tramo-jerarquia");
@@ -614,8 +630,30 @@ class TrazadorVialApp {
     const selectCanales = document.getElementById("select-tramo-canales");
     if (selectCanales) selectCanales.value = subtramo.canalesAfectados || "ambos";
 
-    const selectPuente = document.getElementById("select-puente-critico");
-    if (selectPuente) selectPuente.value = subtramo.puenteCritico || "ninguno";
+    // Cargar estado de Obras de Arte / Puentes
+    const radioPuenteSi = document.getElementById("radio-puente-si");
+    const radioPuenteNo = document.getElementById("radio-puente-no");
+    const boxPuente = document.getElementById("box-campos-puente-detalle");
+    const inputPuenteNom = document.getElementById("input-puente-nombre");
+    const selectPuenteTipo = document.getElementById("select-puente-tipo");
+    const selectPuenteFalla = document.getElementById("select-puente-falla");
+
+    if (subtramo.obraArte && subtramo.obraArte.tiene === "si") {
+      if (radioPuenteSi) radioPuenteSi.checked = true;
+      if (boxPuente) boxPuente.classList.remove("hidden");
+      if (selectPuenteTipo) selectPuenteTipo.value = subtramo.obraArte.tipo || "puente_mayor";
+      if (inputPuenteNom) inputPuenteNom.value = subtramo.obraArte.nombre || "";
+      if (selectPuenteFalla) selectPuenteFalla.value = subtramo.obraArte.falla || "socavacion_pilas";
+    } else if (subtramo.puenteCritico && subtramo.puenteCritico !== "ninguno") {
+      if (radioPuenteSi) radioPuenteSi.checked = true;
+      if (boxPuente) boxPuente.classList.remove("hidden");
+      if (inputPuenteNom) inputPuenteNom.value = subtramo.puenteCritico;
+      if (selectPuenteFalla) selectPuenteFalla.value = "socavacion_pilas";
+    } else {
+      if (radioPuenteNo) radioPuenteNo.checked = true;
+      if (boxPuente) boxPuente.classList.add("hidden");
+      if (inputPuenteNom) inputPuenteNom.value = "";
+    }
 
     const selectDrenaje = document.getElementById("select-tramo-drenaje");
     if (selectDrenaje) selectDrenaje.value = subtramo.drenaje || "intactos";
@@ -687,12 +725,15 @@ class TrazadorVialApp {
   }
 
   evaluarAsistenciaCritica() {
-    const puente = document.getElementById("select-puente-critico")?.value || "ninguno";
+    const tienePuente = document.getElementById("radio-puente-si")?.checked;
+    const fallaPuente = document.getElementById("select-puente-falla")?.value || "socavacion_pilas";
+    const puenteCritico = tienePuente && fallaPuente !== "estable";
+
     const drenaje = document.getElementById("select-tramo-drenaje")?.value || "intactos";
     const bombeo = document.getElementById("select-bombeo-agricola")?.value || "adecuado_2pct";
     const patologias = Array.from(document.querySelectorAll("input[name='patologia_vial']:checked")).map(cb => cb.value);
 
-    const esCritico = puente !== "ninguno" || 
+    const esCritico = puenteCritico || 
                       patologias.includes("perdida_carpeta") || 
                       patologias.includes("falla_borde") ||
                       patologias.includes("piel_cocodrilo") || 
@@ -711,7 +752,7 @@ class TrazadorVialApp {
     }
 
     if (esCritico && (this.selectedColor === "verde" || this.selectedColor === "amarillo")) {
-      if (puente !== "ninguno" || patologias.includes("perdida_carpeta") || patologias.includes("falla_borde")) {
+      if (puenteCritico || patologias.includes("perdida_carpeta") || patologias.includes("falla_borde")) {
         this.selectColorButton("rojo");
       } else {
         this.selectColorButton("naranja");
@@ -892,7 +933,24 @@ class TrazadorVialApp {
     const subtramoNombre = document.getElementById("input-tramo-nombre").value.trim() || "Sub-Tramo";
     const jerarquia = document.getElementById("select-tramo-jerarquia")?.value || "Troncal / Autopista (T-10, T-13)";
     const canales = document.getElementById("select-tramo-canales")?.value || "ambos";
-    const puenteCritico = document.getElementById("select-puente-critico")?.value || "ninguno";
+    
+    // Extracción de datos del sistema flexible de puentes y obras de arte
+    const tienePuente = document.getElementById("radio-puente-si")?.checked ? "si" : "no";
+    const tipoPuente = document.getElementById("select-puente-tipo")?.value || "puente_mayor";
+    const nombrePuente = document.getElementById("input-puente-nombre")?.value.trim() || "";
+    const fallaPuente = document.getElementById("select-puente-falla")?.value || "socavacion_pilas";
+
+    const obraArte = {
+      tiene: tienePuente,
+      tipo: tipoPuente,
+      nombre: nombrePuente,
+      falla: fallaPuente
+    };
+
+    const puenteCritico = tienePuente === "si" 
+      ? `${tipoPuente}: ${nombrePuente || 'Estructura'} (${fallaPuente})` 
+      : "ninguno";
+
     const drenaje = document.getElementById("select-tramo-drenaje")?.value || "intactos";
     const bombeo = document.getElementById("select-bombeo-agricola")?.value || "adecuado_2pct";
     const superficie = document.getElementById("select-superficie-agricola")?.value || "arena_sabana";
@@ -914,6 +972,7 @@ class TrazadorVialApp {
           targetSubtramo.nombre = subtramoNombre;
           targetSubtramo.color = this.selectedColor;
           targetSubtramo.canalesAfectados = canales;
+          targetSubtramo.obraArte = obraArte;
           targetSubtramo.puenteCritico = puenteCritico;
           targetSubtramo.drenaje = drenaje;
           targetSubtramo.bombeoTecnico = bombeo;
@@ -954,6 +1013,7 @@ class TrazadorVialApp {
         pkFinM: pkIni + this.tempLongitudM,
         puntos: this.tempPoints,
         canalesAfectados: canales,
+        obraArte: obraArte,
         puenteCritico: puenteCritico,
         drenaje: drenaje,
         bombeoTecnico: bombeo,
@@ -1015,8 +1075,23 @@ class TrazadorVialApp {
       cb.addEventListener("change", () => this.evaluarAsistenciaCritica());
     });
 
-    const selectPuente = document.getElementById("select-puente-critico");
-    if (selectPuente) selectPuente.addEventListener("change", () => this.evaluarAsistenciaCritica());
+    // Toggle de Puente / Obra de Arte abierta
+    document.querySelectorAll("input[name='radio-tiene-puente']").forEach(r => {
+      r.addEventListener("change", (e) => {
+        const boxPuente = document.getElementById("box-campos-puente-detalle");
+        if (boxPuente) {
+          if (e.target.value === "si") {
+            boxPuente.classList.remove("hidden");
+          } else {
+            boxPuente.classList.add("hidden");
+          }
+        }
+        this.evaluarAsistenciaCritica();
+      });
+    });
+
+    const selectPuenteFalla = document.getElementById("select-puente-falla");
+    if (selectPuenteFalla) selectPuenteFalla.addEventListener("change", () => this.evaluarAsistenciaCritica());
 
     const selectDrenaje = document.getElementById("select-tramo-drenaje");
     if (selectDrenaje) selectDrenaje.addEventListener("change", () => this.evaluarAsistenciaCritica());
@@ -1253,7 +1328,9 @@ class TrazadorVialApp {
           <p><strong>Progresiva:</strong> ${pkIni} a ${pkFin} (${sub.longitudM} m)</p>
           <p><strong>Condición:</strong> ${sub.color.toUpperCase()}</p>
           <p><strong>Canal Afectado:</strong> ${sub.canalesAfectados || "Calzada Completa"}</p>
-          ${sub.puenteCritico && sub.puenteCritico !== 'ninguno' ? `<p style="color:red;"><strong>⚠️ ALERTA PUENTE:</strong> ${sub.puenteCritico.replace(/_/g, ' ').toUpperCase()}</p>` : ''}
+          ${(sub.obraArte && sub.obraArte.tiene === 'si') 
+            ? `<p style="color:red;"><strong>⚠️ OBRA DE ARTE / PUENTE:</strong> [${(sub.obraArte.tipo || '').toUpperCase()}] ${sub.obraArte.nombre || ''} — Falla: ${sub.obraArte.falla || ''}</p>` 
+            : (sub.puenteCritico && sub.puenteCritico !== 'ninguno' ? `<p style="color:red;"><strong>⚠️ ALERTA PUENTE:</strong> ${sub.puenteCritico.replace(/_/g, ' ').toUpperCase()}</p>` : '')}
           ${sub.patologias && sub.patologias.length > 0 ? `<p><strong>Patologías:</strong> ${sub.patologias.join(', ')}</p>` : ''}
           ${sub.bombeoTecnico ? `<p><strong>Bombeo:</strong> ${sub.bombeoTecnico}</p>` : ''}
           <p><strong>Detalle:</strong> ${sub.detalle || "Sin observaciones adicionales"}</p>

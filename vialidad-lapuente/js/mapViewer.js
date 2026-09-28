@@ -386,10 +386,10 @@ export class RoadMapViewer {
 
             ${corredor.jerarquia ? `<div class="text-[10px] text-slate-400 font-medium">${corredor.jerarquia}</div>` : ''}
 
-            ${sub.puenteCritico && sub.puenteCritico !== 'ninguno' ? `
-              <div class="p-1 rounded bg-red-950/90 border border-red-600 text-red-300 font-bold text-[11px] flex items-center gap-1">
+            ${((sub.obraArte && sub.obraArte.tiene === 'si') || (sub.puenteCritico && sub.puenteCritico !== 'ninguno')) ? `
+              <div class="p-1.5 rounded-lg bg-red-950/90 border border-red-600 text-red-200 font-bold text-xs flex items-center gap-1.5">
                 <span>⚠️</span>
-                <span>${sub.puenteCritico.replace(/_/g, ' ').toUpperCase()}</span>
+                <span>${(sub.obraArte?.nombre || sub.puenteCritico || 'Obra Crítica').replace(/_/g, ' ').toUpperCase()}</span>
               </div>
             ` : ''}
 
@@ -437,18 +437,20 @@ export class RoadMapViewer {
         });
         pkMarker.on("click", handleClick);
 
-        // Alerta Destacada si hay Puente Crítico en el subtramo
+        // Alerta Destacada si hay Puente Crítico u Obra de Arte en el subtramo
         let bridgeLayer = null;
-        if (sub.puenteCritico && sub.puenteCritico !== 'ninguno') {
+        const hasObra = (sub.obraArte && sub.obraArte.tiene === 'si') || (sub.puenteCritico && sub.puenteCritico !== 'ninguno');
+        if (hasObra) {
           const midPoint = sub.puntos[Math.floor(sub.puntos.length / 2)];
+          const obraTitle = sub.obraArte?.nombre || sub.puenteCritico || 'Estructura Crítica';
           bridgeLayer = L.circleMarker(midPoint, {
-            radius: 8,
+            radius: 8.5,
             fillColor: "#ef4444",
             color: "#ffffff",
             weight: 2,
             fillOpacity: 0.95,
             renderer: this.canvasRenderer
-          }).bindTooltip(`<strong>⚠️ ALERTA: ${sub.puenteCritico.replace(/_/g, ' ').toUpperCase()}</strong>`, {
+          }).bindTooltip(`<strong>⚠️ ALERTA: ${obraTitle.replace(/_/g, ' ').toUpperCase()}</strong>`, {
             permanent: false,
             direction: "top"
           });
