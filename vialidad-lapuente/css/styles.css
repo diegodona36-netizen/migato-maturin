@@ -64,3 +64,87 @@ body {
   background: #2d1f85;
   border-radius: 9999px;
 }
+
+/* ========================================================================= */
+/* DIAGRAMA DE CINTA PROGRESIVA (STRIP MAP)                                   */
+/* ========================================================================= */
+.strip-map-container {
+  background: #0e092e;
+  border: 1px solid #2d1f85;
+  border-radius: 12px;
+  padding: 8px;
+  position: relative;
+  overflow: hidden;
+}
+
+.strip-bar-track {
+  display: flex;
+  height: 24px;
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+  background: #140e40;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.5);
+}
+
+.strip-bar-segment {
+  height: 100%;
+  transition: all 0.2s ease;
+  position: relative;
+  cursor: pointer;
+}
+
+.strip-bar-segment:hover {
+  filter: brightness(1.25);
+  transform: scaleY(1.1);
+  z-index: 10;
+}
+
+.strip-bar-segment.active-segment {
+  outline: 2px solid #ffffff;
+  z-index: 20;
+}
+
+.strip-bar-ticks {
+  display: flex;
+  justify-content: space-between;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10px;
+  color: #94a3b8;
+  margin-top: 4px;
+}
+
+/* Animaciones suaves para bloques condicionales */
+.fade-in-section {
+  animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Pulsación de Alerta Crítica para Puentes y Obras de Arte */
+.alerta-puente-pulse {
+  animation: pulsePuente 1.8s infinite;
+}
+
+@keyframes pulsePuente {
+  0% {
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(239, 68, 68, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+  }
+}
+

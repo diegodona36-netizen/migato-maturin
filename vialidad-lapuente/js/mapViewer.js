@@ -226,11 +226,73 @@ export class RoadMapViewer {
   }
 
   /**
-   * Renderizado Ultra Limpio en Canvas:
-   * 1 sola línea por tramo con bordes redondeados y sombra elegante.
-   * Cero parpadeo, cero encogimiento, transición 100% nativa.
+   * Formateador estándar de Progresivas de Ingeniería Vial (PK X+XXX)
    */
-  renderSavedTramos(tramos) {
+  static formatPK(meters) {
+    const m = Math.round(meters || 0);
+    const km = Math.floor(m / 1000);
+    const rem = m % 1000;
+    return `PK ${km}+${rem.toString().padStart(3, "0")}`;
+  }
+
+  /**
+   * Divide un conjunto de puntos geodésicos en una distancia acumulada exacta en metros
+   */
+  splitPointsAtDistance(points, targetDistanceMeters) {
+    if (!points || points.length < 2) return null;
+    const totalLen = this.calculateLengthMeters(points);
+    if (targetDistanceMeters <= 0 || targetDistanceMeters >= totalLen) {
+      // Si la distancia está fuera de rango, dividir por la mitad
+      targetDistanceMeters = totalLen / 2;
+    }
+
+    let accumulated = 0;
+    const pointsA = [points[0]];
+    const pointsB = [];
+
+    for (let i = 0; i < points.length - 1; i++) {
+      const p1 = L.latLng(points[i][0], points[i][1]);
+      const p2 = L.latLng(points[i + 1][0], points[i + 1][1]);
+      const segLen = p1.distanceTo(p2);
+
+      if (accumulated + segLen < targetDistanceMeters) {
+        accumulated += segLen;
+        pointsA.push(points[i + 1]);
+      } else {
+        // El punto de corte está en este segmento entre i e i+1
+        const remaining = targetDistanceMeters - accumulated;
+        const ratio = segLen > 0 ? remaining / segLen : 0.5;
+        const splitLat = points[i][0] + (points[i + 1][0] - points[i][0]) * ratio;
+        const splitLng = points[i][1] + (points[i + 1][1] - points[i][1]) * ratio;
+        const splitCoord = [splitLat, splitLng];
+
+        pointsA.push(splitCoord);
+        pointsB.push(splitCoord);
+
+        for (let j = i + 1; j < points.length; j++) {
+          pointsB.push(points[j]);
+        }
+        break;
+      }
+    }
+
+    if (pointsB.length === 0) {
+      pointsB.push(points[points.length - 1]);
+    }
+
+    return {
+      pointsA,
+      pointsB,
+      lenA: this.calculateLengthMeters(pointsA),
+      lenB: this.calculateLengthMeters(pointsB)
+    };
+  }
+
+  /**
+   * Renderizado Ultra Limpio en Canvas de Corredores y Sub-Tramos Multi-Estado
+   * Permite que una autopista o avenida posea tramos contiguos con distintos colores y patologías
+   */
+  renderSavedTramos(corredores) {
     this.tramosLayerGroup.clearLayers();
 
     const colorMap = {
@@ -240,59 +302,165 @@ export class RoadMapViewer {
       rojo: "#ef4444"
     };
 
-    tramos.forEach(t => {
-      const color = colorMap[t.color] || "#64748b";
+    if (!Array.isArray(corredores)) return;
 
-      // 1. Contorno oscuro suave para contraste sobre cualquier fondo
-      const casing = L.polyline(t.puntos, {
-        color: "#090d16",
-        weight: 9,
-        opacity: 0.75,
-        lineCap: "round",
-        lineJoin: "round",
-        renderer: this.canvasRenderer
-      });
+    corredores.forEach(corredor => {
+      // Manejar formato legacy (tramo individual simple) o nuevo formato de Corredor con Subtramos
+      const subtramos = (corredor.subtramos && corredor.subtramos.length > 0)
+        ? corredor.subtramos
+        : [{
+            id: corredor.id,
+            nombre: corredor.nombre,
+            color: corredor.color || "amarillo",
+            longitudM: corredor.longitudM || 0,
+            pkInicioM: 0,
+            pkFinM: corredor.longitudM || 0,
+            puntos: corredor.puntos,
+            canalesAfectados: corredor.canalesAfectados || "ambos",
+            jerarquia: corredor.jerarquia,
+            puenteCritico: corredor.puenteCritico || "ninguno",
+            patologias: corredor.patologias || [],
+            bombeoTecnico: corredor.bombeoTecnico || "adecuado_2pct",
+            tipoSuperficie: corredor.tipoSuperficie || "asfalto_3_capas",
+            drenajeUrbano: corredor.drenajeUrbano || "bocas_sapo_operativas",
+            cloacasSubterraneas: corredor.cloacasSubterraneas || "estables",
+            demarcacionVial: corredor.demarcacionVial || "optima",
+            detalle: corredor.detalle || "",
+            foto: corredor.foto || null
+          }];
 
-      // 2. Línea principal sólida de alta visibilidad
-      const line = L.polyline(t.puntos, {
-        color: color,
-        weight: 6,
-        opacity: 1,
-        lineCap: "round",
-        lineJoin: "round",
-        renderer: this.canvasRenderer
-      });
+      subtramos.forEach((sub, sIdx) => {
+        if (!sub.puntos || sub.puntos.length < 2) return;
 
-      const tooltipContent = `
-        <div class="p-1.5 text-xs space-y-1">
-          <strong class="text-white block font-bold text-sm">${t.nombre}</strong>
-          <div class="flex items-center gap-1.5 font-mono text-slate-300">
-            <span>${t.longitudM} metros</span>
-            <span>•</span>
-            <span class="font-bold uppercase" style="color: ${color}">● ${t.color}</span>
+        const color = colorMap[sub.color] || "#64748b";
+        const pkIni = RoadMapViewer.formatPK(sub.pkInicioM || 0);
+        const pkFin = RoadMapViewer.formatPK(sub.pkFinM || (sub.pkInicioM + sub.longitudM));
+
+        // 1. Contorno oscuro suave para contraste sobre satélite o mapa
+        const casing = L.polyline(sub.puntos, {
+          color: "#070a14",
+          weight: 9,
+          opacity: 0.85,
+          lineCap: "round",
+          lineJoin: "round",
+          renderer: this.canvasRenderer
+        });
+
+        // 2. Línea de calzada con color de estado técnico
+        const line = L.polyline(sub.puntos, {
+          color: color,
+          weight: 6,
+          opacity: 1,
+          lineCap: "round",
+          lineJoin: "round",
+          dashArray: sub.canalesAfectados === "canal_lento_pesado" ? "12, 6" : null,
+          renderer: this.canvasRenderer
+        });
+
+        // Tooltip enriquecido de ingeniería vial
+        const canalLabel = {
+          ambos: "Ambos Canales",
+          canal_lento_pesado: "⚠️ Canal Lento (Carga Pesada)",
+          canal_rapido: "Canal Rápido",
+          hombrillo: "Hombrillo / Berma",
+          isla_central: "Isla Central / Separador"
+        }[sub.canalesAfectados] || "Calzada Completa";
+
+        const tooltipContent = `
+          <div class="p-2 text-xs space-y-1.5 min-w-[210px]">
+            <div class="border-b border-[#2d1f85] pb-1">
+              <span class="text-[10px] text-amber-400 font-bold uppercase tracking-wider block">${corredor.nombre || "Corredor Vial"}</span>
+              <strong class="text-white block font-black text-sm">${sub.nombre}</strong>
+            </div>
+            
+            <div class="flex items-center justify-between font-mono text-[11px] text-slate-300">
+              <span class="bg-[#100b33] px-1.5 py-0.5 rounded border border-[#2d1f85] text-amber-300 font-bold">${pkIni} ➔ ${pkFin}</span>
+              <span class="font-black uppercase" style="color: ${color}">● ${sub.color.toUpperCase()}</span>
+            </div>
+
+            <div class="text-[11px] text-slate-300">
+              <span class="text-slate-400">Longitud:</span> <strong>${sub.longitudM} m</strong>
+              <span class="mx-1">•</span>
+              <span class="text-amber-200">${canalLabel}</span>
+            </div>
+
+            ${corredor.jerarquia ? `<div class="text-[10px] text-slate-400 font-medium">${corredor.jerarquia}</div>` : ''}
+
+            ${sub.puenteCritico && sub.puenteCritico !== 'ninguno' ? `
+              <div class="p-1 rounded bg-red-950/90 border border-red-600 text-red-300 font-bold text-[11px] flex items-center gap-1">
+                <span>⚠️</span>
+                <span>${sub.puenteCritico.replace(/_/g, ' ').toUpperCase()}</span>
+              </div>
+            ` : ''}
+
+            ${sub.patologias && sub.patologias.length > 0 ? `
+              <div class="text-[10px] text-amber-400 font-mono">
+                🔧 ${sub.patologias.length} patología(s) de ingeniería
+              </div>
+            ` : ''}
+
+            ${sub.bombeoTecnico && sub.bombeoTecnico !== 'adecuado_2pct' ? `
+              <div class="text-[10px] text-rose-300 font-medium">
+                💧 Bombeo: ${sub.bombeoTecnico === 'deficiente_plano' ? 'Deficiente (Plano / Sin caída)' : 'Invertido (Laguna)'}
+              </div>
+            ` : ''}
+
+            ${sub.detalle ? `<p class="text-slate-300 italic text-[11px] border-t border-[#2d1f85]/60 pt-1">${sub.detalle}</p>` : ''}
+            ${sub.foto ? `<p class="text-amber-300 font-bold text-[10px]">📷 Evidencia fotográfica georreferenciada</p>` : ''}
           </div>
-          ${t.jerarquia ? `<span class="inline-block text-[11px] font-bold text-amber-300 bg-[#140e40] px-1.5 py-0.5 rounded border border-[#2d1f85]">${t.jerarquia}</span>` : ''}
-          ${t.puenteCritico && t.puenteCritico !== 'ninguno' ? `<p class="text-[11px] text-red-400 font-bold bg-red-950/80 px-1.5 py-0.5 rounded border border-red-700">⚠️ ${t.puenteCritico.replace('_', ' ').toUpperCase()}</p>` : ''}
-          ${t.patologias && t.patologias.length > 0 ? `<p class="text-[10px] text-amber-400 font-mono">🔧 ${t.patologias.length} patologías detectadas</p>` : ''}
-          ${t.detalle ? `<p class="text-slate-400 italic">${t.detalle}</p>` : ''}
-          ${t.foto ? `<p class="text-amber-300 font-bold">📷 Foto de evidencia adjunta</p>` : ''}
-        </div>
-      `;
+        `;
 
-      line.bindTooltip(tooltipContent, { sticky: true, className: "tramo-tooltip" });
+        line.bindTooltip(tooltipContent, { sticky: true, className: "tramo-tooltip" });
 
-      const handleClick = (e) => {
-        L.DomEvent.stopPropagation(e);
-        if (this.onSelectTramoCallback) {
-          this.onSelectTramoCallback(t);
+        const handleClick = (e) => {
+          L.DomEvent.stopPropagation(e);
+          if (this.onSelectTramoCallback) {
+            this.onSelectTramoCallback(corredor, sub);
+          }
+        };
+
+        casing.on("click", handleClick);
+        line.on("click", handleClick);
+
+        // Hito Visual de Progresiva (PK) en el inicio del subtramo
+        const startPoint = sub.puntos[0];
+        const pkMarker = L.circleMarker(startPoint, {
+          radius: 4.5,
+          fillColor: color,
+          color: "#ffffff",
+          weight: 1.5,
+          fillOpacity: 1,
+          renderer: this.canvasRenderer
+        }).bindTooltip(`<span class="font-mono text-[10px] font-bold">${pkIni}</span>`, {
+          permanent: false,
+          direction: "top"
+        });
+        pkMarker.on("click", handleClick);
+
+        // Alerta Destacada si hay Puente Crítico en el subtramo
+        let bridgeLayer = null;
+        if (sub.puenteCritico && sub.puenteCritico !== 'ninguno') {
+          const midPoint = sub.puntos[Math.floor(sub.puntos.length / 2)];
+          bridgeLayer = L.circleMarker(midPoint, {
+            radius: 8,
+            fillColor: "#ef4444",
+            color: "#ffffff",
+            weight: 2,
+            fillOpacity: 0.95,
+            renderer: this.canvasRenderer
+          }).bindTooltip(`<strong>⚠️ ALERTA: ${sub.puenteCritico.replace(/_/g, ' ').toUpperCase()}</strong>`, {
+            permanent: false,
+            direction: "top"
+          });
+          bridgeLayer.on("click", handleClick);
         }
-      };
 
-      casing.on("click", handleClick);
-      line.on("click", handleClick);
+        const layers = [casing, line, pkMarker];
+        if (bridgeLayer) layers.push(bridgeLayer);
 
-      const group = L.featureGroup([casing, line]);
-      this.tramosLayerGroup.addLayer(group);
+        const group = L.featureGroup(layers);
+        this.tramosLayerGroup.addLayer(group);
+      });
     });
   }
 
@@ -318,3 +486,4 @@ export class RoadMapViewer {
     this.map.setView([lat, lng], 17, { animate: true });
   }
 }
+
