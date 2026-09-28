@@ -1,13 +1,18 @@
 /**
  * Controlador Principal — Sistema de Inspección Vial Avanzado con Autopistas Multi-Estado
+ * Formulario Progresivo Paso a Paso (Tipo Google Forms / Odoo Wizard)
+ * 
  * Incorpora:
+ * - Wizard Guiado de 5 Pasos:
+ *   1. Vía y Progresiva (PK)
+ *   2. Jerarquía Técnica (10 niveles oficiales) y Calzadas/Canales
+ *   3. Condición General del Pavimento (🟢, 🟡, 🟠, 🔴 con avance táctil rápido)
+ *   4. Patologías Específicas Dinámicas (filtradas según el Paso 2)
+ *   5. Puentes Críticos, Brocales, Evidencia Fotográfica y Cierre
  * - Modelado de Corredores Viales y Sub-Tramos Progresivos (PK 0+000)
- * - Múltiples condiciones físicas por vía (heterogeneidad de pavimentos y canales)
- * - Diferenciación de calzadas (Canal Lento de carga pesada, Canal Rápido, Hombrillos)
- * - Formulario condicional dinámico por jerarquía (10 categorías oficiales)
  * - Diagrama de Cinta Progresiva (Strip Map) interactivo
  * - Herramienta de corte y sub-tramificación geométrica
- * - Doctrina de ingeniería vial MIGATO Monagas 2026
+ * - Doctrina de ciberdefensa y levantamiento territorial MIGATO Monagas 2026
  */
 
 import { RoadMapViewer } from "./mapViewer.js";
@@ -26,6 +31,9 @@ class TrazadorVialApp {
     this.tempLongitudM = 0;
     this.tempFoto = null;
     this.selectedColor = "verde";
+
+    // Estado del Wizard Stepper
+    this.currentWizardStep = 1;
 
     // Punteros de edición activa
     this.activeCorredorId = null;
@@ -214,7 +222,7 @@ class TrazadorVialApp {
       rojo: "bg-red-500 hover:bg-red-400"
     };
 
-    track.innerHTML = corredor.subtramos.map((sub, sIdx) => {
+    track.innerHTML = corredor.subtramos.map((sub) => {
       const pct = totalLen > 0 ? ((sub.longitudM || 0) / totalLen) * 100 : 100;
       const pkIni = RoadMapViewer.formatPK(sub.pkInicioM || 0);
       const pkFin = RoadMapViewer.formatPK(sub.pkFinM || (sub.pkInicioM + sub.longitudM));
@@ -301,7 +309,7 @@ class TrazadorVialApp {
 
           <!-- Lista de Sub-Tramos de este Corredor -->
           <div class="space-y-1.5 pt-1 border-t border-[#2d1f85]/50">
-            ${subtramos.map((s, idx) => {
+            ${subtramos.map((s) => {
               const pkIni = RoadMapViewer.formatPK(s.pkInicioM || 0);
               const pkFin = RoadMapViewer.formatPK(s.pkFinM || (s.pkInicioM + s.longitudM));
               const canalBadge = s.canalesAfectados === "canal_lento_pesado" 
@@ -388,7 +396,112 @@ class TrazadorVialApp {
   }
 
   /**
-   * Finalización del trazo sobre el mapa y apertura del modal
+   * Controlador de Pasos del Wizard (Navegación Progresiva)
+   */
+  goToWizardStep(targetStep) {
+    if (targetStep < 1 || targetStep > 5) return;
+
+    // Validación antes de avanzar
+    if (targetStep > this.currentWizardStep) {
+      if (this.currentWizardStep === 1) {
+        const corredorNombre = document.getElementById("input-corredor-nombre").value.trim();
+        const tramoNombre = document.getElementById("input-tramo-nombre").value.trim();
+        if (!corredorNombre) {
+          alert("Por favor indica el nombre de la vía o corredor principal.");
+          document.getElementById("input-corredor-nombre").focus();
+          return;
+        }
+        if (!tramoNombre) {
+          alert("Por favor indica el nombre o identificador de este sub-tramo.");
+          document.getElementById("input-tramo-nombre").focus();
+          return;
+        }
+      }
+    }
+
+    this.currentWizardStep = targetStep;
+
+    // Mostrar el panel activo y ocultar los demás
+    for (let s = 1; s <= 5; s++) {
+      const panel = document.getElementById(`wizard-step-${s}`);
+      if (panel) {
+        if (s === targetStep) {
+          panel.classList.add("active");
+        } else {
+          panel.classList.remove("active");
+        }
+      }
+    }
+
+    // Actualizar barra de progreso
+    const pct = targetStep * 20;
+    const progressFill = document.getElementById("wizard-progress-fill");
+    const progressPct = document.getElementById("wizard-step-pct");
+    if (progressFill) progressFill.style.width = `${pct}%`;
+    if (progressPct) progressPct.textContent = `${pct}%`;
+
+    // Actualizar texto del encabezado del paso
+    const stepTitles = {
+      1: "Paso 1 de 5: Vía y Progresiva (PK)",
+      2: "Paso 2 de 5: Jerarquía Técnica y Canales",
+      3: "Paso 3 de 5: Condición General del Pavimento",
+      4: "Paso 4 de 5: Patologías Específicas Dinámicas",
+      5: "Paso 5 de 5: Puentes Críticos, Fotos y Cierre"
+    };
+    const titleEl = document.getElementById("wizard-step-title");
+    if (titleEl) titleEl.textContent = stepTitles[targetStep] || "";
+
+    // Actualizar estado de las burbujas numéricas
+    document.querySelectorAll(".wizard-step-bubble").forEach(b => {
+      const bStep = parseInt(b.dataset.step, 10);
+      b.classList.remove("active", "completed");
+      if (bStep === targetStep) {
+        b.classList.add("active");
+      } else if (bStep < targetStep) {
+        b.classList.add("completed");
+      }
+    });
+
+    // Controlar visibilidad de botones de navegación inferior
+    const btnPrev = document.getElementById("btn-wizard-prev");
+    const btnNext = document.getElementById("btn-wizard-next");
+    const boxSave = document.getElementById("box-wizard-save-buttons");
+
+    if (btnPrev) {
+      if (targetStep === 1) {
+        btnPrev.classList.add("hidden");
+      } else {
+        btnPrev.classList.remove("hidden");
+      }
+    }
+
+    if (targetStep === 5) {
+      if (btnNext) btnNext.classList.add("hidden");
+      if (boxSave) {
+        boxSave.classList.remove("hidden");
+        boxSave.classList.add("flex");
+      }
+    } else {
+      if (btnNext) btnNext.classList.remove("hidden");
+      if (boxSave) {
+        boxSave.classList.add("hidden");
+        boxSave.classList.remove("flex");
+      }
+    }
+
+    // Adaptar dinámicamente patologías al entrar al Paso 4
+    if (targetStep === 4) {
+      const jerarquia = document.getElementById("select-tramo-jerarquia")?.value || "";
+      this.updateConditionalFields(jerarquia);
+    }
+
+    // Scroll suave al inicio del modal
+    const modalBox = document.querySelector("#modal-asignar-tramo > div");
+    if (modalBox) modalBox.scrollTop = 0;
+  }
+
+  /**
+   * Finalización del trazo sobre el mapa y apertura del modal guiado
    */
   onFinishDrawing(points, longitudM) {
     this.tempPoints = points;
@@ -424,6 +537,10 @@ class TrazadorVialApp {
     const modal = document.getElementById("modal-asignar-tramo");
     document.getElementById("modal-tramo-longitud").textContent = `${longitudM} metros`;
     document.getElementById("modal-tramo-pk").textContent = pkStr;
+    
+    const cardStep1 = document.getElementById("card-step1-pk");
+    if (cardStep1) cardStep1.textContent = pkStr;
+
     document.getElementById("input-corredor-nombre").value = defaultCorredorNombre;
     document.getElementById("input-tramo-nombre").value = `Subtramo ${nextSubNum}: (${pkStr})`;
     document.getElementById("input-tramo-detalle").value = "";
@@ -456,6 +573,9 @@ class TrazadorVialApp {
     this.selectColorButton("verde");
     this.resetPhotoPreview();
 
+    // Iniciar siempre en el Paso 1
+    this.goToWizardStep(1);
+
     if (modal) {
       modal.classList.remove("hidden");
       modal.classList.add("flex");
@@ -475,10 +595,15 @@ class TrazadorVialApp {
 
     const pkIni = RoadMapViewer.formatPK(subtramo.pkInicioM || 0);
     const pkFin = RoadMapViewer.formatPK(subtramo.pkFinM || (subtramo.pkInicioM + subtramo.longitudM));
+    const pkStr = `${pkIni} a ${pkFin}`;
 
     const modal = document.getElementById("modal-asignar-tramo");
     document.getElementById("modal-tramo-longitud").textContent = `${subtramo.longitudM} metros`;
-    document.getElementById("modal-tramo-pk").textContent = `${pkIni} a ${pkFin}`;
+    document.getElementById("modal-tramo-pk").textContent = pkStr;
+    
+    const cardStep1 = document.getElementById("card-step1-pk");
+    if (cardStep1) cardStep1.textContent = pkStr;
+
     document.getElementById("input-corredor-nombre").value = corredor.nombre;
     document.getElementById("input-tramo-nombre").value = subtramo.nombre;
     document.getElementById("input-tramo-detalle").value = subtramo.detalle || "";
@@ -521,6 +646,9 @@ class TrazadorVialApp {
     } else {
       this.resetPhotoPreview();
     }
+
+    // Iniciar en el Paso 1
+    this.goToWizardStep(1);
 
     if (modal) {
       modal.classList.remove("hidden");
@@ -591,13 +719,22 @@ class TrazadorVialApp {
     }
   }
 
-  selectColorButton(color) {
+  selectColorButton(color, autoAdvance = false) {
     this.selectedColor = color;
     document.querySelectorAll(".btn-color-pick").forEach(btn => {
       const isSelected = btn.dataset.color === color;
       btn.classList.toggle("ring-4", isSelected);
       btn.classList.toggle("ring-white/90", isSelected);
     });
+
+    // Avance táctil ergonómico automático al seleccionar estado en el Paso 3
+    if (autoAdvance && this.currentWizardStep === 3) {
+      setTimeout(() => {
+        if (this.currentWizardStep === 3) {
+          this.goToWizardStep(4);
+        }
+      }, 190);
+    }
   }
 
   showPhotoPreview(url) {
@@ -673,14 +810,14 @@ class TrazadorVialApp {
     const { pointsA, pointsB, lenA, lenB } = splitResult;
     const pkBase = sub.pkInicioM || 0;
 
-    // Subtramo A (se queda con los datos originales y primera mitad)
+    // Subtramo A (primera mitad)
     sub.nombre = `${sub.nombre} (Parte A)`;
     sub.puntos = pointsA;
     sub.longitudM = lenA;
     sub.pkInicioM = pkBase;
     sub.pkFinM = pkBase + lenA;
 
-    // Subtramo B (segunda mitad, sugerido en rojo para asignar nuevo estado)
+    // Subtramo B (segunda mitad)
     const subB = {
       id: `SUB-${Date.now()}`,
       nombre: `${sub.nombre.replace(' (Parte A)', '')} (Parte B)`,
@@ -701,7 +838,7 @@ class TrazadorVialApp {
 
     corr.subtramos.splice(subIndex + 1, 0, subB);
 
-    // Reajustar progresivas de los tramos subsiguientes
+    // Reajustar progresivas subsiguientes
     let acc = 0;
     corr.subtramos.forEach(s => {
       s.pkInicioM = acc;
@@ -714,7 +851,7 @@ class TrazadorVialApp {
     this.closeModal();
     this.refreshView();
 
-    alert(`¡Sub-tramo dividido con éxito!\n\n1) ${sub.nombre} (${lenA}m en ${sub.color})\n2) ${subB.nombre} (${lenB}m en Rojo)\n\nPuedes tocar cualquiera de los dos en el Diagrama de Cinta o en el mapa para ajustar su evaluación técnica.`);
+    alert(`¡Sub-tramo dividido con éxito!\n\n1) ${sub.nombre} (${lenA}m en ${sub.color})\n2) ${subB.nombre} (${lenB}m en Rojo)\n\nPuedes seleccionarlo en el Strip Map o tocarlo en el mapa para editar sus patologías.`);
   }
 
   setDrawingUiState(isDrawing) {
@@ -788,7 +925,6 @@ class TrazadorVialApp {
       }
     } else {
       // Modo Nuevo Trazo
-      // Buscar si ya existe un corredor con ese nombre
       targetCorredor = this.corredores.find(c => c.nombre.toLowerCase() === corredorNombre.toLowerCase());
 
       if (!targetCorredor) {
@@ -832,7 +968,6 @@ class TrazadorVialApp {
     }
 
     if (targetCorredor) {
-      // Recalcular longitud total del corredor
       let total = 0;
       targetCorredor.subtramos.forEach(s => total += (s.longitudM || 0));
       targetCorredor.longitudTotalM = total;
@@ -844,7 +979,30 @@ class TrazadorVialApp {
   }
 
   setupEventListeners() {
-    // 1. Selector de Jerarquía (Mutación Dinámica de Preguntas)
+    // 1. Navegación del Wizard Stepper
+    const btnNext = document.getElementById("btn-wizard-next");
+    if (btnNext) {
+      btnNext.addEventListener("click", () => {
+        this.goToWizardStep(this.currentWizardStep + 1);
+      });
+    }
+
+    const btnPrev = document.getElementById("btn-wizard-prev");
+    if (btnPrev) {
+      btnPrev.addEventListener("click", () => {
+        this.goToWizardStep(this.currentWizardStep - 1);
+      });
+    }
+
+    // Clic en burbujas numéricas del stepper
+    document.querySelectorAll(".wizard-step-bubble").forEach(b => {
+      b.addEventListener("click", () => {
+        const stepNum = parseInt(b.dataset.step, 10);
+        this.goToWizardStep(stepNum);
+      });
+    });
+
+    // 2. Selector de Jerarquía (Mutación Dinámica de Preguntas en Paso 4)
     const selectJerarquia = document.getElementById("select-tramo-jerarquia");
     if (selectJerarquia) {
       selectJerarquia.addEventListener("change", (e) => {
@@ -852,7 +1010,7 @@ class TrazadorVialApp {
       });
     }
 
-    // 2. Asistencia Crítica Reactiva
+    // 3. Asistencia Crítica Reactiva
     document.querySelectorAll("input[name='patologia_vial']").forEach(cb => {
       cb.addEventListener("change", () => this.evaluarAsistenciaCritica());
     });
@@ -866,7 +1024,7 @@ class TrazadorVialApp {
     const selectBombeo = document.getElementById("select-bombeo-agricola");
     if (selectBombeo) selectBombeo.addEventListener("change", () => this.evaluarAsistenciaCritica());
 
-    // 3. Botones de Trazado
+    // 4. Botones de Trazado
     const btnActivar = document.getElementById("btn-activar-trazo");
     if (btnActivar) {
       btnActivar.addEventListener("click", () => {
@@ -897,14 +1055,14 @@ class TrazadorVialApp {
       });
     }
 
-    // 4. Selector de Color
+    // 5. Selector de Color (con auto-avance opcional en Paso 3)
     document.querySelectorAll(".btn-color-pick").forEach(btn => {
       btn.addEventListener("click", () => {
-        this.selectColorButton(btn.dataset.color);
+        this.selectColorButton(btn.dataset.color, true);
       });
     });
 
-    // 5. Carga de Foto
+    // 6. Carga de Foto
     const cameraInput = document.getElementById("input-camera-file");
     if (cameraInput) {
       cameraInput.addEventListener("change", async (e) => {
@@ -929,7 +1087,7 @@ class TrazadorVialApp {
       });
     }
 
-    // 6. Guardar Solo Sub-Tramo
+    // 7. Guardar Solo Sub-Tramo
     const form = document.getElementById("form-guardar-tramo");
     if (form) {
       form.addEventListener("submit", (e) => {
@@ -940,7 +1098,7 @@ class TrazadorVialApp {
       });
     }
 
-    // 7. Guardar y Continuar Trazando Siguiente Sub-Tramo
+    // 8. Guardar y Continuar Trazando Siguiente Sub-Tramo
     const btnContinuar = document.getElementById("btn-guardar-y-continuar");
     if (btnContinuar) {
       btnContinuar.addEventListener("click", () => {
@@ -956,7 +1114,7 @@ class TrazadorVialApp {
       });
     }
 
-    // 8. Botón Dividir en Sub-Tramos
+    // 9. Botón Dividir en Sub-Tramos
     const btnDividir = document.getElementById("btn-dividir-tramo-en-dos");
     if (btnDividir) {
       btnDividir.addEventListener("click", () => {
@@ -964,7 +1122,7 @@ class TrazadorVialApp {
       });
     }
 
-    // 9. Botón rápido "Nuevo Sub-Tramo" desde la barra de cinta
+    // 10. Botón rápido "Nuevo Sub-Tramo" desde la barra de cinta
     const btnAddStrip = document.getElementById("btn-sidebar-add-subtramo");
     if (btnAddStrip) {
       btnAddStrip.addEventListener("click", () => {
@@ -977,7 +1135,7 @@ class TrazadorVialApp {
       });
     }
 
-    // 10. Cerrar Modal
+    // 11. Cerrar Modal
     const btnCloseModal = document.getElementById("btn-close-modal");
     const btnCancelModal = document.getElementById("btn-cancelar-modal");
     const closeModalFn = () => this.closeModal();
@@ -985,7 +1143,7 @@ class TrazadorVialApp {
     if (btnCloseModal) btnCloseModal.addEventListener("click", closeModalFn);
     if (btnCancelModal) btnCancelModal.addEventListener("click", closeModalFn);
 
-    // 11. Borrar Todo
+    // 12. Borrar Todo
     const btnBorrarTodo = document.getElementById("btn-borrar-todas");
     if (btnBorrarTodo) {
       btnBorrarTodo.addEventListener("click", () => {
@@ -998,7 +1156,7 @@ class TrazadorVialApp {
       });
     }
 
-    // 12. GPS
+    // 13. GPS
     const btnGps = document.getElementById("btn-gps-locate");
     if (btnGps) {
       btnGps.addEventListener("click", () => {
@@ -1021,11 +1179,24 @@ class TrazadorVialApp {
       });
     }
 
-    // 13. Exportar KML
+    // 14. Exportar KML
     const btnExportKml = document.getElementById("btn-export-kml-road");
     if (btnExportKml) {
       btnExportKml.addEventListener("click", () => this.exportKml());
     }
+
+    // 15. Atajo de Teclado en Modal: Enter avanza al siguiente paso
+    document.addEventListener("keydown", (e) => {
+      const modal = document.getElementById("modal-asignar-tramo");
+      if (!modal || modal.classList.contains("hidden")) return;
+
+      if (e.key === "Escape") {
+        this.closeModal();
+      } else if (e.key === "Enter" && this.currentWizardStep < 5 && e.target.tagName !== "TEXTAREA") {
+        e.preventDefault();
+        this.goToWizardStep(this.currentWizardStep + 1);
+      }
+    });
   }
 
   closeModal() {
