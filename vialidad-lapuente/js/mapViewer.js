@@ -226,13 +226,14 @@ export class RoadMapViewer {
   }
 
   /**
-   * Formateador estándar de Progresivas de Ingeniería Vial (PK X+XXX)
+   * Formateador de distancias claras en metros o kilómetros (cero jerga de PK)
    */
   static formatPK(meters) {
     const m = Math.round(meters || 0);
-    const km = Math.floor(m / 1000);
-    const rem = m % 1000;
-    return `PK ${km}+${rem.toString().padStart(3, "0")}`;
+    if (m >= 1000) {
+      return `${(m / 1000).toLocaleString('es-VE', { minimumFractionDigits: 1, maximumFractionDigits: 2 })} km`;
+    }
+    return `${m} m`;
   }
 
   /**
@@ -367,18 +368,18 @@ export class RoadMapViewer {
         }[sub.canalesAfectados] || "Calzada Completa";
 
         const tooltipContent = `
-          <div class="p-2 text-xs space-y-1.5 min-w-[210px]">
-            <div class="border-b border-[#2d1f85] pb-1">
-              <span class="text-[10px] text-amber-400 font-bold uppercase tracking-wider block">${corredor.nombre || "Corredor Vial"}</span>
-              <strong class="text-white block font-black text-sm">${sub.nombre}</strong>
+          <div class="p-2.5 text-sm space-y-2 min-w-[230px]">
+            <div class="border-b border-[#2d1f85] pb-1.5">
+              <span class="text-xs text-amber-400 font-bold uppercase tracking-wider block">${corredor.nombre || "Corredor Vial"}</span>
+              <strong class="text-white block font-black text-base">${sub.nombre}</strong>
             </div>
             
-            <div class="flex items-center justify-between font-mono text-[11px] text-slate-300">
-              <span class="bg-[#100b33] px-1.5 py-0.5 rounded border border-[#2d1f85] text-amber-300 font-bold">${pkIni} ➔ ${pkFin}</span>
+            <div class="flex items-center justify-between font-mono text-xs text-slate-200">
+              <span class="bg-[#100b33] px-2 py-0.5 rounded border border-[#2d1f85] text-amber-300 font-bold">De ${pkIni} a ${pkFin}</span>
               <span class="font-black uppercase" style="color: ${color}">● ${sub.color.toUpperCase()}</span>
             </div>
 
-            <div class="text-[11px] text-slate-300">
+            <div class="text-xs text-slate-200">
               <span class="text-slate-400">Longitud:</span> <strong>${sub.longitudM} m</strong>
               <span class="mx-1">•</span>
               <span class="text-amber-200">${canalLabel}</span>
@@ -422,7 +423,7 @@ export class RoadMapViewer {
         casing.on("click", handleClick);
         line.on("click", handleClick);
 
-        // Hito Visual de Progresiva (PK) en el inicio del subtramo
+        // Hito visual de distancia en el inicio del subtramo
         const startPoint = sub.puntos[0];
         const pkMarker = L.circleMarker(startPoint, {
           radius: 4.5,
@@ -431,7 +432,7 @@ export class RoadMapViewer {
           weight: 1.5,
           fillOpacity: 1,
           renderer: this.canvasRenderer
-        }).bindTooltip(`<span class="font-mono text-[10px] font-bold">${pkIni}</span>`, {
+        }).bindTooltip(`<span class="font-mono text-xs font-bold">${pkIni}</span>`, {
           permanent: false,
           direction: "top"
         });

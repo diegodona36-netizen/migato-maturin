@@ -50,7 +50,23 @@ class TrazadorVialApp {
     try {
       const dataV3 = localStorage.getItem(STORAGE_KEY_CORREDORES);
       if (dataV3) {
-        return JSON.parse(dataV3);
+        const corredores = JSON.parse(dataV3);
+        // Sanitizar nombres heredados con sufijos confusos
+        corredores.forEach(c => {
+          if (c.subtramos) {
+            c.subtramos.forEach(s => {
+              if (s.nombre) {
+                s.nombre = s.nombre
+                  .replace(/:\s*\(PK\s*[\d\+]+\s*a\s*PK\s*[\d\+]+\)/gi, '')
+                  .replace(/\(Sub-Tramo Único\)/gi, '')
+                  .replace(/\(Parte [A-Z]\)/gi, '')
+                  .replace(/\s+/g, ' ')
+                  .trim();
+              }
+            });
+          }
+        });
+        return corredores;
       }
 
       // Migración desde legacy (v2)
@@ -68,7 +84,7 @@ class TrazadorVialApp {
             subtramos: [
               {
                 id: `SUB-${item.id || Date.now() + idx}-1`,
-                nombre: `${item.nombre || 'Tramo'} (Sub-Tramo Único)`,
+                nombre: item.nombre || `Tramo 1`,
                 pkInicioM: 0,
                 pkFinM: len,
                 longitudM: len,
@@ -212,8 +228,8 @@ class TrazadorVialApp {
     let totalLen = 0;
     corredor.subtramos.forEach(s => totalLen += (s.longitudM || 0));
 
-    if (pkStartEl) pkStartEl.textContent = "PK 0+000";
-    if (pkEndEl) pkEndEl.textContent = RoadMapViewer.formatPK(totalLen);
+    if (pkStartEl) pkStartEl.textContent = "Inicio: 0 m";
+    if (pkEndEl) pkEndEl.textContent = "Total: " + RoadMapViewer.formatPK(totalLen);
 
     const colorClasses = {
       verde: "bg-emerald-500 hover:bg-emerald-400",
@@ -230,13 +246,13 @@ class TrazadorVialApp {
 
       return `
         <div 
-          class="strip-bar-segment ${colorClasses[sub.color] || 'bg-slate-500'} flex items-center justify-center text-[10px] font-mono font-black text-[#0e092e] relative" 
-          style="width: ${Math.max(pct, 4)}%" 
-          title="${sub.nombre} (${pkIni} - ${pkFin}) • ${sub.longitudM}m [${sub.color.toUpperCase()}]"
+          class="strip-bar-segment ${colorClasses[sub.color] || 'bg-slate-500'} flex items-center justify-center text-xs font-mono font-black text-[#0e092e] relative cursor-pointer" 
+          style="width: ${Math.max(pct, 5)}%" 
+          title="${sub.nombre} (De ${pkIni} a ${pkFin}) • ${sub.longitudM} m [${sub.color.toUpperCase()}]"
           onclick="window.trazadorApp.focusSubtramo('${corredor.id}', '${sub.id}')"
         >
-          ${hasBridge ? `<span class="absolute -top-1 right-0.5 text-xs drop-shadow">⚠️</span>` : ''}
-          ${pct > 14 ? `<span class="truncate px-0.5">${sub.longitudM}m</span>` : ''}
+          ${hasBridge ? `<span class="absolute -top-1.5 right-0.5 text-xs drop-shadow">⚠️</span>` : ''}
+          ${pct > 14 ? `<span class="truncate px-1 font-bold">${sub.longitudM}m</span>` : ''}
         </div>
       `;
     }).join("");
@@ -244,6 +260,7 @@ class TrazadorVialApp {
 
   /**
    * Renderizado de la lista lateral jerárquica (Corredores ➔ Sub-Tramos)
+   * Diseño limpio, sin saturación visual, con tipografía generosa (16px y 14px) y eliminación rápida
    */
   renderSidebarList() {
     const container = document.getElementById("lista-tramos-trazados");
@@ -251,10 +268,10 @@ class TrazadorVialApp {
 
     if (this.corredores.length === 0) {
       container.innerHTML = `
-        <div class="p-6 text-center border border-dashed border-[#2d1f85]/70 rounded-2xl text-slate-500 space-y-2">
-          <i data-lucide="map" class="w-8 h-8 mx-auto text-slate-500"></i>
-          <p class="text-xs font-bold text-slate-400">Aún no has trazado vías o autopistas.</p>
-          <p class="text-xs">Toca "+ Trazar Corredor / Vía" para empezar.</p>
+        <div class="p-6 text-center border border-dashed border-[#2d1f85]/70 rounded-2xl text-slate-400 space-y-2">
+          <i data-lucide="map" class="w-8 h-8 mx-auto text-amber-400/80"></i>
+          <p class="text-sm font-bold text-slate-200">Aún no has trazado vías o calles.</p>
+          <p class="text-xs text-slate-400">Toca "+ Trazar Vía / Calle" arriba para empezar.</p>
         </div>
       `;
       if (window.lucide) { try { window.lucide.createIcons(); } catch(e){} }
@@ -275,65 +292,77 @@ class TrazadorVialApp {
       subtramos.forEach(s => totalCorredorM += (s.longitudM || 0));
 
       return `
-        <div class="rounded-2xl border ${isActive ? 'border-amber-500/80 bg-[#1a1254]' : 'border-[#2d1f85] bg-[#160f47]'} p-3 space-y-2.5 transition">
+        <div class="rounded-2xl border-2 ${isActive ? 'border-amber-500/90 bg-[#1a1254]' : 'border-[#2d1f85] bg-[#160f47]'} p-4 space-y-3 transition shadow-lg">
           
-          <!-- Encabezado del Corredor -->
-          <div class="flex items-start justify-between gap-2 cursor-pointer" onclick="window.trazadorApp.setActiveCorredor('${corr.id}')">
-            <div class="overflow-hidden space-y-0.5">
-              <div class="flex items-center gap-1.5">
-                <span class="text-[10px] px-1.5 py-0.2 rounded bg-amber-500/20 text-amber-300 font-mono font-bold border border-amber-500/30">
-                  ${corr.jerarquia ? corr.jerarquia.split('/')[0].trim() : 'Vía'}
-                </span>
-                <span class="text-xs text-slate-400 font-mono font-bold">${totalCorredorM} m total</span>
-              </div>
-              <h4 class="text-xs font-black text-white truncate hover:text-amber-300">${corr.nombre}</h4>
+          <!-- Encabezado de la Vía -->
+          <div class="space-y-1.5 cursor-pointer" onclick="window.trazadorApp.setActiveCorredor('${corr.id}')">
+            <div class="flex items-center justify-between gap-2">
+              <span class="text-xs px-2.5 py-0.5 rounded-lg bg-amber-500/20 text-amber-300 font-bold border border-amber-500/30">
+                ${corr.jerarquia ? corr.jerarquia.split('/')[0].trim() : 'Vía'}
+              </span>
+              <span class="text-xs font-mono font-bold text-slate-300 bg-[#0e092e] px-2.5 py-0.5 rounded-lg border border-[#2d1f85]">
+                ${totalCorredorM} m evaluados
+              </span>
             </div>
-
-            <div class="flex items-center gap-1 shrink-0">
-              <button type="button" onclick="event.stopPropagation(); window.trazadorApp.startAddingSubtramoTo('${corr.id}')" class="p-1 text-amber-400 hover:text-amber-300 rounded" title="Agregar siguiente sub-tramo">
-                <i data-lucide="plus-circle" class="w-4 h-4"></i>
-              </button>
-              <button type="button" onclick="event.stopPropagation(); window.trazadorApp.deleteCorredor('${corr.id}')" class="p-1 text-slate-500 hover:text-red-400 rounded" title="Borrar corredor completo">
-                <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
-              </button>
-            </div>
+            
+            <h4 class="text-base font-black text-white hover:text-amber-300 transition leading-snug">
+              ${corr.nombre}
+            </h4>
           </div>
 
-          <!-- Mini Barra de Cinta del Corredor -->
-          <div class="w-full h-1.5 rounded-full bg-[#0e092e] flex overflow-hidden border border-[#2d1f85]/50">
+          <!-- Barra de Acciones Directas de la Vía (Eliminar / Continuar) -->
+          <div class="flex items-center justify-between gap-2 pt-1 border-t border-[#2d1f85]/50">
+            <button type="button" onclick="event.stopPropagation(); window.trazadorApp.startAddingSubtramoTo('${corr.id}')" class="px-2.5 py-1.5 text-xs font-bold text-amber-300 hover:text-amber-200 bg-amber-500/15 hover:bg-amber-500/25 rounded-xl border border-amber-500/40 flex items-center gap-1.5 transition">
+              <i data-lucide="plus-circle" class="w-3.5 h-3.5"></i>
+              <span>+ Continuar Trazo</span>
+            </button>
+
+            <button type="button" onclick="event.stopPropagation(); window.trazadorApp.deleteCorredor('${corr.id}')" class="px-2.5 py-1.5 text-xs font-bold text-red-300 hover:text-red-200 bg-red-500/15 hover:bg-red-500/25 rounded-xl border border-red-500/40 flex items-center gap-1.5 transition" title="Eliminar toda la vía">
+              <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+              <span>Eliminar Vía</span>
+            </button>
+          </div>
+
+          <!-- Mini Barra de Cinta de la Vía -->
+          <div class="w-full h-2 rounded-full bg-[#0e092e] flex overflow-hidden border border-[#2d1f85]/60">
             ${subtramos.map(s => {
               const p = totalCorredorM > 0 ? (s.longitudM / totalCorredorM) * 100 : 100;
               return `<div style="width: ${p}%" class="${colorPill[s.color] || 'bg-slate-500'} h-full"></div>`;
             }).join("")}
           </div>
 
-          <!-- Lista de Sub-Tramos de este Corredor -->
-          <div class="space-y-1.5 pt-1 border-t border-[#2d1f85]/50">
+          <!-- Lista de Tramos de la Vía -->
+          <div class="space-y-2 pt-1">
             ${subtramos.map((s) => {
               const pkIni = RoadMapViewer.formatPK(s.pkInicioM || 0);
               const pkFin = RoadMapViewer.formatPK(s.pkFinM || (s.pkInicioM + s.longitudM));
               const canalBadge = s.canalesAfectados === "canal_lento_pesado" 
-                ? `<span class="text-[9px] px-1.5 py-0.5 rounded bg-amber-950 text-amber-300 border border-amber-600 font-bold">Canal Lento</span>`
+                ? `<span class="text-[11px] px-2 py-0.5 rounded-lg bg-amber-950 text-amber-300 border border-amber-600 font-bold">Canal Lento</span>`
                 : '';
 
               const tieneObra = (s.obraArte && s.obraArte.tiene === 'si') || (s.puenteCritico && s.puenteCritico !== 'ninguno');
               const nombreEstructura = s.obraArte?.nombre ? s.obraArte.nombre.split('(')[0].trim() : 'OBRA';
               const obraBadge = tieneObra 
-                ? `<span class="text-[9px] px-1.5 py-0.5 rounded bg-red-950 text-red-300 border border-red-600 font-bold truncate max-w-[110px]" title="Estructura crítica">⚠️ ${nombreEstructura}</span>`
+                ? `<span class="text-[11px] px-2 py-0.5 rounded-lg bg-red-950 text-red-300 border border-red-600 font-bold truncate max-w-[130px]" title="Estructura crítica">⚠️ ${nombreEstructura}</span>`
                 : '';
 
-              // Limpiar posibles nombres históricos que incluían el PK redundante en el título
-              let cleanNombre = s.nombre || 'Subtramo';
-              cleanNombre = cleanNombre.replace(/:\s*\(PK\s*[\d\+]+\s*a\s*PK\s*[\d\+]+\)/gi, '');
+              // Limpiar posibles nombres históricos con sufijos de máquinas
+              let cleanNombre = s.nombre || 'Tramo';
+              cleanNombre = cleanNombre
+                .replace(/:\s*\(PK\s*[\d\+]+\s*a\s*PK\s*[\d\+]+\)/gi, '')
+                .replace(/\(Sub-Tramo Único\)/gi, '')
+                .replace(/\(Parte [A-Z]\)/gi, '')
+                .replace(/\s+/g, ' ')
+                .trim();
 
               return `
-                <div class="p-2.5 rounded-xl bg-[#0e092e]/90 hover:bg-[#201569] border border-[#2d1f85]/80 cursor-pointer flex items-center justify-between gap-2 group transition" onclick="window.trazadorApp.focusSubtramo('${corr.id}', '${s.id}')">
-                  <div class="flex items-center gap-2.5 overflow-hidden">
-                    <span class="w-3 h-3 rounded-full shrink-0 ${colorPill[s.color] || 'bg-slate-500'}"></span>
-                    <div class="overflow-hidden">
-                      <div class="text-xs font-bold text-slate-100 truncate group-hover:text-white">${cleanNombre}</div>
-                      <div class="flex flex-wrap items-center gap-1.5 text-[11px] text-slate-300 font-mono mt-0.5">
-                        <span class="text-amber-400 font-bold">${pkIni} ➔ ${pkFin}</span>
+                <div class="p-3 rounded-xl bg-[#0e092e] hover:bg-[#1f1463] border border-[#2d1f85] cursor-pointer flex items-center justify-between gap-3 group transition" onclick="window.trazadorApp.focusSubtramo('${corr.id}', '${s.id}')">
+                  <div class="flex items-center gap-3 overflow-hidden">
+                    <span class="w-3.5 h-3.5 rounded-full shrink-0 shadow-sm ${colorPill[s.color] || 'bg-slate-500'}"></span>
+                    <div class="overflow-hidden space-y-0.5">
+                      <div class="text-sm font-bold text-slate-100 truncate group-hover:text-white">${cleanNombre}</div>
+                      <div class="flex flex-wrap items-center gap-1.5 text-xs text-slate-300 font-mono">
+                        <span class="text-amber-400 font-bold">De ${pkIni} a ${pkFin}</span>
                         <span>•</span>
                         <span>${s.longitudM} m</span>
                         ${canalBadge}
@@ -342,10 +371,10 @@ class TrazadorVialApp {
                     </div>
                   </div>
 
-                  <div class="flex items-center gap-1 shrink-0">
-                    ${s.foto ? `<span class="text-xs" title="Tiene foto de evidencia">📷</span>` : ''}
-                    <button type="button" onclick="event.stopPropagation(); window.trazadorApp.deleteSubtramo('${corr.id}', '${s.id}')" class="p-1 text-slate-500 hover:text-red-400 rounded opacity-60 group-hover:opacity-100 transition" title="Borrar subtramo">
-                      <i data-lucide="trash" class="w-3.5 h-3.5"></i>
+                  <div class="flex items-center gap-1.5 shrink-0">
+                    ${s.foto ? `<span class="text-sm" title="Tiene foto de evidencia">📷</span>` : ''}
+                    <button type="button" onclick="event.stopPropagation(); window.trazadorApp.deleteSubtramo('${corr.id}', '${s.id}')" class="p-1.5 text-slate-400 hover:text-red-300 hover:bg-red-500/20 rounded-lg transition" title="Eliminar este tramo">
+                      <i data-lucide="trash-2" class="w-4 h-4"></i>
                     </button>
                   </div>
                 </div>
@@ -452,7 +481,7 @@ class TrazadorVialApp {
 
     // Actualizar texto del encabezado del paso
     const stepTitles = {
-      1: "Paso 1 de 5: Vía y Progresiva (PK)",
+      1: "Paso 1 de 5: Vía y Recorrido",
       2: "Paso 2 de 5: Jerarquía Técnica y Canales",
       3: "Paso 3 de 5: Condición General del Pavimento",
       4: "Paso 4 de 5: Patologías Específicas Dinámicas",
@@ -542,14 +571,14 @@ class TrazadorVialApp {
     }
 
     const pkFin = pkInicio + longitudM;
-    const pkStr = `${RoadMapViewer.formatPK(pkInicio)} a ${RoadMapViewer.formatPK(pkFin)}`;
+    const pkStr = `De ${RoadMapViewer.formatPK(pkInicio)} a ${RoadMapViewer.formatPK(pkFin)}`;
 
     const modal = document.getElementById("modal-asignar-tramo");
     document.getElementById("modal-tramo-longitud").textContent = `${longitudM} metros`;
     document.getElementById("modal-tramo-pk").textContent = pkStr;
 
     document.getElementById("input-corredor-nombre").value = defaultCorredorNombre;
-    document.getElementById("input-tramo-nombre").value = `Subtramo ${nextSubNum}`;
+    document.getElementById("input-tramo-nombre").value = `Tramo ${nextSubNum}`;
     document.getElementById("input-tramo-detalle").value = "";
 
     const selectJerarquia = document.getElementById("select-tramo-jerarquia");
@@ -611,16 +640,21 @@ class TrazadorVialApp {
 
     const pkIni = RoadMapViewer.formatPK(subtramo.pkInicioM || 0);
     const pkFin = RoadMapViewer.formatPK(subtramo.pkFinM || (subtramo.pkInicioM + subtramo.longitudM));
-    const pkStr = `${pkIni} a ${pkFin}`;
+    const pkStr = `De ${pkIni} a ${pkFin}`;
 
     const modal = document.getElementById("modal-asignar-tramo");
     document.getElementById("modal-tramo-longitud").textContent = `${subtramo.longitudM} metros`;
     document.getElementById("modal-tramo-pk").textContent = pkStr;
 
     document.getElementById("input-corredor-nombre").value = corredor.nombre;
-    // Limpiar posible PK redundante en el nombre editado
-    let cleanSubName = subtramo.nombre || `Subtramo`;
-    cleanSubName = cleanSubName.replace(/:\s*\(PK\s*[\d\+]+\s*a\s*PK\s*[\d\+]+\)/gi, '');
+    // Limpiar posible sufijo o PK redundante en el nombre editado
+    let cleanSubName = subtramo.nombre || `Tramo`;
+    cleanSubName = cleanSubName
+      .replace(/:\s*\(PK\s*[\d\+]+\s*a\s*PK\s*[\d\+]+\)/gi, '')
+      .replace(/\(Sub-Tramo Único\)/gi, '')
+      .replace(/\(Parte [A-Z]\)/gi, '')
+      .replace(/\s+/g, ' ')
+      .trim();
     document.getElementById("input-tramo-nombre").value = cleanSubName;
     document.getElementById("input-tramo-detalle").value = subtramo.detalle || "";
 
@@ -930,7 +964,7 @@ class TrazadorVialApp {
    */
   saveCurrentFormData() {
     const corredorNombre = document.getElementById("input-corredor-nombre").value.trim() || "Corredor Vial";
-    const subtramoNombre = document.getElementById("input-tramo-nombre").value.trim() || "Sub-Tramo";
+    const subtramoNombre = document.getElementById("input-tramo-nombre").value.trim() || "Tramo";
     const jerarquia = document.getElementById("select-tramo-jerarquia")?.value || "Troncal / Autopista (T-10, T-13)";
     const canales = document.getElementById("select-tramo-canales")?.value || "ambos";
     
@@ -1294,8 +1328,8 @@ class TrazadorVialApp {
     let kml = `<?xml version="1.0" encoding="UTF-8"?>
 <kml xmlns="http://www.opengis.net/kml/2.2">
   <Document>
-    <name>Inventario y Diagnóstico Vial de Precisión — Monagas 2026</name>
-    <description>Levantamiento técnico de autopistas multi-estado, progresivas (PK) y fallas de pavimento (MIGATO)</description>
+    <name>Inventario y Diagnóstico Vial de Precisión — MIGATO Monagas</name>
+    <description>Levantamiento técnico de vialidad y fallas de pavimento (MIGATO • El Gato Briceño)</description>
 
     <Style id="color_verde"><LineStyle><color>ff10b981</color><width>6</width></LineStyle></Style>
     <Style id="color_amarillo"><LineStyle><color>fff59e0b</color><width>6</width></LineStyle></Style>
@@ -1320,12 +1354,12 @@ class TrazadorVialApp {
 
           kml += `
       <Placemark>
-        <name>${sub.nombre} [${pkIni} - ${pkFin}]</name>
+        <name>${sub.nombre} [De ${pkIni} a ${pkFin}]</name>
         <description><![CDATA[
           <h3>${sub.nombre}</h3>
           <p><strong>Corredor:</strong> ${corr.nombre}</p>
           <p><strong>Jerarquía:</strong> ${corr.jerarquia}</p>
-          <p><strong>Progresiva:</strong> ${pkIni} a ${pkFin} (${sub.longitudM} m)</p>
+          <p><strong>Recorrido:</strong> De ${pkIni} a ${pkFin} (${sub.longitudM} m)</p>
           <p><strong>Condición:</strong> ${sub.color.toUpperCase()}</p>
           <p><strong>Canal Afectado:</strong> ${sub.canalesAfectados || "Calzada Completa"}</p>
           ${(sub.obraArte && sub.obraArte.tiene === 'si') 

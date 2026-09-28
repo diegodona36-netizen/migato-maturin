@@ -6,7 +6,7 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
-  <title>Trazador y Diagnóstico Vial • La Puente (MIGATO 2026)</title>
+  <title>MIGATO • Plan de Infraestructura Vial Monagas | El Gato Briceño</title>
 
   <!-- Blindaje de Ciberdefensa y Sesión MIGATO -->
   <script src="../js/auth.js?v=sec_reset_20260925_urgente"></script>
@@ -46,66 +46,69 @@
   <link rel="stylesheet" href="css/styles.css?v=6">
 </head>
 <body class="bg-[#0e092e] text-slate-100 h-screen flex flex-col antialiased select-none" style="background: radial-gradient(circle at 50% 25%, #201763 0%, #140e40 45%, #0c0828 100%);">
-<!-- ============================================================== -->
-  <!-- TOP NAVBAR -->
   <!-- ============================================================== -->
-  <header style="z-index: 2000;" class="bg-[#140e40]/95 backdrop-blur-md border-b border-[#2d1f85] px-4 py-2.5 flex items-center justify-between shadow-lg shrink-0">
+  <!-- TOP NAVBAR — IDENTIDAD INSTITUCIONAL MIGATO                    -->
+  <!-- ============================================================== -->
+  <header style="z-index: 2000;" class="bg-[#100b33]/95 backdrop-blur-md border-b border-[#2d1f85] px-4 py-2.5 flex items-center justify-between shadow-lg shrink-0">
     
-    <div class="flex items-center gap-3">
-      <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-500 to-orange-600 text-[#0e092e] flex items-center justify-center font-black shadow-md shrink-0">
-        <i data-lucide="layers" class="w-5 h-5"></i>
-      </div>
+    <div class="flex items-center gap-3.5">
+      <!-- Logo Oficial MIGATO -->
+      <a href="../" class="w-12 h-12 rounded-2xl bg-[#1a124a] p-1.5 border border-white/20 flex items-center justify-center shadow-lg transition hover:scale-105 shrink-0" title="Ir a Sala de Mando Central MIGATO">
+        <img src="../assets/logo-migato.png" alt="MIGATO" class="w-full h-full object-contain">
+      </a>
       <div>
-        <h1 class="text-base font-black text-white leading-tight flex items-center gap-2">
-          <span>Diagnóstico Vial de Precisión • Monagas 2026</span>
-          <span class="text-xs font-bold bg-amber-500/20 text-amber-400 border border-amber-500/30 px-2 py-0.5 rounded-full uppercase">
-            Multi-Estado & PK
-          </span>
+        <div class="flex items-center gap-2">
+          <span class="text-xs font-black text-amber-400 uppercase tracking-wider">MIGATO • INFRAESTRUCTURA VIAL</span>
+          <span class="text-slate-400">•</span>
+          <span class="text-xs text-slate-300 font-bold">Comando Monagas</span>
+        </div>
+        <h1 class="text-base sm:text-lg font-black text-white leading-tight">
+          Diagnóstico y Evaluación de Calles y Carreteras
         </h1>
-        <p class="text-xs text-slate-400 font-medium">Autopistas, avenidas y caminos rurales con tramos heterogéneos y progresivas PK</p>
+        <p class="text-xs text-amber-200/90 font-semibold">Conducción José Gregorio "El Gato" Briceño</p>
       </div>
     </div>
 
     <div class="flex items-center gap-2">
       
-      <!-- Botón Modo Trazar Nuevo Corredor -->
-      <button id="btn-activar-trazo" class="px-3.5 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-[#0e092e] text-sm font-black shadow transition flex items-center gap-1.5">
-        <i data-lucide="plus" class="w-4 h-4"></i>
-        <span>+ Trazar Corredor / Vía</span>
+      <!-- Botón Modo Trazar Nueva Vía -->
+      <button id="btn-activar-trazo" class="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-[#0e092e] text-sm font-black shadow-lg transition flex items-center gap-1.5">
+        <i data-lucide="plus-circle" class="w-4 h-4"></i>
+        <span>+ Trazar Vía / Calle</span>
       </button>
 
       <!-- Botón Deshacer Último Punto (Modo Trazando) -->
-      <button id="btn-deshacer-punto" class="hidden px-2.5 py-1.5 rounded-xl bg-[#0e092e] hover:bg-[#23176d] border border-[#2d1f85] text-amber-300 text-sm font-bold transition items-center gap-1">
-        <i data-lucide="undo" class="w-3.5 h-3.5"></i>
+      <button id="btn-deshacer-punto" class="hidden px-3 py-2 rounded-xl bg-[#0e092e] hover:bg-[#23176d] border border-[#2d1f85] text-amber-300 text-sm font-bold transition items-center gap-1">
+        <i data-lucide="undo" class="w-4 h-4"></i>
         <span class="hidden sm:inline">Deshacer Punto</span>
       </button>
 
       <!-- Botón Finalizar Trazo (Oculto al inicio) -->
-      <button id="btn-finalizar-trazo" class="hidden px-3.5 py-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-[#0e092e] text-sm font-black shadow transition items-center gap-1.5 animate-pulse">
+      <button id="btn-finalizar-trazo" class="hidden px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-[#0e092e] text-sm font-black shadow-lg transition items-center gap-1.5 animate-pulse">
         <i data-lucide="check" class="w-4 h-4"></i>
         <span>Listo: Evaluar Estados</span>
       </button>
 
       <!-- Botón Cancelar Trazo (Oculto al inicio) -->
-      <button id="btn-cancelar-trazo" class="hidden px-2.5 py-1.5 rounded-xl bg-[#0e092e] hover:bg-[#23176d] border border-[#2d1f85] text-slate-300 text-sm font-bold transition items-center gap-1">
-        <i data-lucide="x" class="w-3.5 h-3.5"></i>
+      <button id="btn-cancelar-trazo" class="hidden px-3 py-2 rounded-xl bg-[#0e092e] hover:bg-[#23176d] border border-[#2d1f85] text-slate-300 text-sm font-bold transition items-center gap-1">
+        <i data-lucide="x" class="w-4 h-4"></i>
         <span>Cancelar</span>
       </button>
 
       <!-- Botón GPS en Vivo -->
-      <button id="btn-gps-locate" class="px-2.5 py-1.5 rounded-xl bg-[#0e092e] hover:bg-[#23176d] border border-[#2d1f85] text-sky-400 text-sm font-bold transition flex items-center gap-1" title="Centrar mi ubicación GPS">
-        <i data-lucide="crosshair" class="w-3.5 h-3.5"></i>
+      <button id="btn-gps-locate" class="px-3 py-2 rounded-xl bg-[#0e092e] hover:bg-[#23176d] border border-[#2d1f85] text-sky-400 text-sm font-bold transition flex items-center gap-1" title="Centrar mi ubicación GPS">
+        <i data-lucide="crosshair" class="w-4 h-4"></i>
         <span class="hidden md:inline">Mi GPS</span>
       </button>
 
       <!-- Exportar KML para Google Earth -->
-      <button id="btn-export-kml-road" class="px-3 py-1.5 rounded-xl bg-[#0e092e] hover:bg-[#23176d] border border-[#2d1f85] text-slate-200 text-sm font-bold transition flex items-center gap-1.5" title="Descargar archivo KML con progresivas">
-        <i data-lucide="download" class="w-3.5 h-3.5 text-emerald-400"></i>
+      <button id="btn-export-kml-road" class="px-3.5 py-2 rounded-xl bg-[#0e092e] hover:bg-[#23176d] border border-[#2d1f85] text-slate-200 text-sm font-bold transition flex items-center gap-1.5" title="Descargar archivo KML">
+        <i data-lucide="download" class="w-4 h-4 text-emerald-400"></i>
         <span class="hidden sm:inline">KML</span>
       </button>
 
       <!-- Volver al portal -->
-      <a href="../" class="p-2 rounded-xl bg-[#0e092e] hover:bg-[#23176d] border border-[#2d1f85]/60 text-slate-400 hover:text-white transition" title="Ir al Portal Principal">
+      <a href="../" class="p-2.5 rounded-xl bg-[#0e092e] hover:bg-[#23176d] border border-[#2d1f85]/60 text-slate-400 hover:text-white transition" title="Ir al Portal Central MIGATO">
         <i data-lucide="home" class="w-4 h-4"></i>
       </a>
 
@@ -117,44 +120,44 @@
   <!-- ============================================================== -->
   <div class="flex-1 flex overflow-hidden relative">
 
-    <!-- SIDEBAR DE CORREDORES Y TRAMOS -->
+    <!-- SIDEBAR DE VÍAS Y TRAMOS -->
     <aside style="z-index: 1500;" class="w-80 sm:w-96 bg-[#140e40] border-r border-[#2d1f85] flex flex-col justify-between overflow-y-auto shrink-0 shadow-2xl">
       
       <div class="p-4 space-y-4">
 
-        <!-- Banner de Resumen de Red Vial -->
-        <div class="bg-[#18114a] p-3.5 rounded-2xl border border-[#2d1f85] space-y-2.5 shadow-sm">
+        <!-- Banner de Resumen de Vías -->
+        <div class="bg-[#18114a] p-4 rounded-2xl border border-[#2d1f85] space-y-3 shadow-md">
           <div class="flex items-center justify-between gap-2">
-            <h3 class="text-sm font-black text-white uppercase tracking-wider flex items-center gap-1.5">
-              <i data-lucide="activity" class="w-4 h-4 text-amber-400"></i>
-              <span>Red Vial Evaluada</span>
+            <h3 class="text-base font-black text-white uppercase tracking-wider flex items-center gap-2">
+              <i data-lucide="activity" class="w-5 h-5 text-amber-400"></i>
+              <span>Vías Evaluadas</span>
             </h3>
-            <span id="kpi-contador-calles" class="text-xs font-mono font-bold text-amber-400 bg-amber-500/10 border border-amber-500/20 px-2.5 py-0.5 rounded-md shrink-0">0 corredores</span>
+            <span id="kpi-contador-calles" class="text-sm font-mono font-bold text-amber-300 bg-amber-500/15 border border-amber-500/30 px-3 py-1 rounded-lg shrink-0">0 vías</span>
           </div>
 
           <!-- Barra de Distribución de Estados Físicos -->
-          <div class="pt-0.5">
-            <div class="w-full h-3 rounded-full bg-[#0e092e] flex overflow-hidden border border-[#2d1f85]">
+          <div>
+            <div class="w-full h-3.5 rounded-full bg-[#0e092e] flex overflow-hidden border border-[#2d1f85]">
               <div id="bar-rojo" style="width: 0%" class="bg-red-500 h-full transition-all" title="Crítico"></div>
               <div id="bar-naranja" style="width: 0%" class="bg-orange-500 h-full transition-all" title="Malo"></div>
               <div id="bar-amarillo" style="width: 0%" class="bg-amber-500 h-full transition-all" title="Regular"></div>
               <div id="bar-verde" style="width: 0%" class="bg-emerald-500 h-full transition-all" title="Bueno"></div>
             </div>
-            <div class="flex justify-between text-xs text-slate-300 font-mono mt-1.5">
+            <div class="flex justify-between text-sm text-slate-200 font-mono font-bold mt-2">
               <span id="txt-longitud-total">0 m evaluados</span>
-              <span id="txt-danada-pct" class="text-amber-400 font-bold">0% crítico/malo</span>
+              <span id="txt-danada-pct" class="text-amber-400">0% crítico/malo</span>
             </div>
           </div>
         </div>
 
-        <!-- DIAGRAMA DE CINTA PROGRESIVA (STRIP MAP) DEL CORREDOR ACTIVO -->
-        <div id="box-strip-map-sidebar" class="hidden bg-[#18114a] p-3.5 rounded-2xl border border-amber-500/40 space-y-2">
+        <!-- DIAGRAMA DE RECORRIDO CONTINUO (CERO SIGLA PK) -->
+        <div id="box-strip-map-sidebar" class="hidden bg-[#18114a] p-4 rounded-2xl border border-amber-500/50 space-y-2.5 shadow-md">
           <div class="flex items-center justify-between">
-            <div class="flex items-center gap-1.5">
+            <div class="flex items-center gap-2">
               <i data-lucide="git-commit" class="w-4 h-4 text-amber-400"></i>
-              <span class="text-xs font-bold text-white uppercase tracking-wider">Perfil Progresivo (PK)</span>
+              <span class="text-sm font-black text-white uppercase tracking-wider">Recorrido de la Vía</span>
             </div>
-            <span id="strip-map-corredor-title" class="text-xs text-amber-400 font-mono font-bold truncate max-w-[140px]">Corredor</span>
+            <span id="strip-map-corredor-title" class="text-sm text-amber-300 font-bold truncate max-w-[150px]">Vía</span>
           </div>
 
           <!-- Contenedor de la barra de cinta -->
@@ -162,58 +165,59 @@
             <div id="strip-map-track" class="strip-bar-track">
               <!-- Inyectado dinámicamente -->
             </div>
-            <div class="strip-bar-ticks">
-              <span id="strip-map-pk-start">PK 0+000</span>
-              <span id="strip-map-pk-end">PK 0+000</span>
+            <div class="strip-bar-ticks flex justify-between text-xs font-mono font-bold text-slate-300 mt-1.5">
+              <span id="strip-map-pk-start">Inicio: 0 m</span>
+              <span id="strip-map-pk-end" class="text-amber-400">Total: 0 m</span>
             </div>
           </div>
 
-          <div class="flex items-center justify-end pt-0.5">
-            <button type="button" id="btn-sidebar-add-subtramo" class="text-amber-400 hover:text-amber-300 text-xs font-bold flex items-center gap-1">
-              <i data-lucide="plus-circle" class="w-3.5 h-3.5"></i>
-              <span>+ Nuevo Sub-Tramo</span>
+          <div class="flex items-center justify-end pt-1">
+            <button type="button" id="btn-sidebar-add-subtramo" class="text-amber-400 hover:text-amber-300 text-sm font-bold flex items-center gap-1.5 bg-amber-500/10 hover:bg-amber-500/20 px-3 py-1.5 rounded-xl border border-amber-500/30 transition">
+              <i data-lucide="plus-circle" class="w-4 h-4"></i>
+              <span>+ Agregar Siguiente Tramo</span>
             </button>
           </div>
         </div>
 
-        <!-- Leyenda de Estados Físicos de Pavimento -->
-        <div class="bg-[#18114a] p-3 rounded-xl border border-[#2d1f85] text-xs grid grid-cols-2 gap-2">
-          <div class="flex items-center gap-1.5">
-            <span class="w-3 h-3 rounded-full bg-emerald-500 shrink-0 shadow-sm"></span>
-            <span>🟢 Bueno / Óptimo</span>
+        <!-- Leyenda de Estados Físicos de Pavimento (SOLO 1 CÍRCULO, CERO DOBLE EMOJI) -->
+        <div class="bg-[#18114a] p-3.5 rounded-2xl border border-[#2d1f85] grid grid-cols-2 gap-2.5 text-sm font-semibold">
+          <div class="flex items-center gap-2.5">
+            <span class="w-3.5 h-3.5 rounded-full bg-emerald-500 shrink-0 shadow-sm"></span>
+            <span class="text-slate-200">Bueno / Óptimo</span>
           </div>
-          <div class="flex items-center gap-1.5">
-            <span class="w-3 h-3 rounded-full bg-amber-500 shrink-0 shadow-sm"></span>
-            <span>🟡 Regular / Baches</span>
+          <div class="flex items-center gap-2.5">
+            <span class="w-3.5 h-3.5 rounded-full bg-amber-500 shrink-0 shadow-sm"></span>
+            <span class="text-slate-200">Regular / Desgaste</span>
           </div>
-          <div class="flex items-center gap-1.5">
-            <span class="w-3 h-3 rounded-full bg-orange-500 shrink-0 shadow-sm"></span>
-            <span>🟠 Malo / Ondulado</span>
+          <div class="flex items-center gap-2.5">
+            <span class="w-3.5 h-3.5 rounded-full bg-orange-500 shrink-0 shadow-sm"></span>
+            <span class="text-slate-200">Malo / Baches</span>
           </div>
-          <div class="flex items-center gap-1.5">
-            <span class="w-3 h-3 rounded-full bg-red-500 shrink-0 shadow-sm"></span>
-            <span>🔴 Crítico / Intransitable</span>
+          <div class="flex items-center gap-2.5">
+            <span class="w-3.5 h-3.5 rounded-full bg-red-500 shrink-0 shadow-sm"></span>
+            <span class="text-slate-200">Crítico / En Riesgo</span>
           </div>
         </div>
 
-        <!-- Lista de Corredores y Sub-Tramos Evaluados -->
-        <div class="space-y-2">
+        <!-- Lista de Vías y Tramos Registrados -->
+        <div class="space-y-2.5">
           <div class="flex items-center justify-between">
-            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Corredores y Vías:</span>
-            <button id="btn-borrar-todas" class="text-xs text-red-400 hover:text-red-300 font-bold transition">
-              Borrar Todo
+            <span class="text-sm font-bold text-slate-300 uppercase tracking-wider">Vías Registradas:</span>
+            <button id="btn-borrar-todas" class="text-sm text-red-400 hover:text-red-300 font-bold transition flex items-center gap-1 px-2.5 py-1 rounded-lg hover:bg-red-950/40">
+              <i data-lucide="trash-2" class="w-4 h-4"></i>
+              <span>Borrar Todo</span>
             </button>
           </div>
           
-          <div id="lista-tramos-trazados" class="space-y-2.5 max-h-[46vh] overflow-y-auto pr-1">
+          <div id="lista-tramos-trazados" class="space-y-3 max-h-[46vh] overflow-y-auto pr-1">
             <!-- Inyectado con JS -->
           </div>
         </div>
 
       </div>
 
-      <div class="p-3 border-t border-[#2d1f85] bg-[#100b33] text-xs text-slate-400 text-center font-mono">
-        MIGATO • Sistema de Precisión Vial Monagas
+      <div class="p-3.5 border-t border-[#2d1f85] bg-[#100b33] text-xs text-slate-300 text-center font-bold">
+        MIGATO • Plan de Vialidad y Ciberdefensa • Monagas
       </div>
 
     </aside>
@@ -240,32 +244,32 @@
   <div id="modal-asignar-tramo" style="z-index: 99999;" class="fixed inset-0 bg-[#0c0828]/85 backdrop-blur-md hidden items-center justify-center p-3 sm:p-4">
     <div class="bg-[#140e40] border border-[#2d1f85] w-full max-w-xl rounded-3xl p-5 sm:p-6 text-white shadow-2xl space-y-4 animate-in fade-in max-h-[92vh] overflow-y-auto flex flex-col justify-between">
       
-      <!-- ENCABEZADO CON PROGRESIVA (PK) Y BOTÓN CERRAR -->
+      <!-- ENCABEZADO CON RECORRIDO Y BOTÓN CERRAR -->
       <div class="border-b border-[#2d1f85] pb-3 space-y-2.5">
         <div class="flex items-start justify-between">
           <div>
-            <span class="text-xs font-bold text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
+            <span class="text-sm font-bold text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
               <i data-lucide="clipboard-check" class="w-4 h-4"></i>
               <span>Evaluación Técnica Vial • Formulario Guiado</span>
             </span>
-            <div class="flex flex-wrap items-center gap-2 mt-1">
-              <span id="modal-tramo-pk" class="font-mono text-xs font-black text-amber-300 bg-[#0e092e] px-2.5 py-0.5 rounded-lg border border-[#2d1f85]">PK 0+000 a PK 0+000</span>
-              <h3 id="modal-tramo-longitud" class="text-xs font-black text-slate-300 font-mono">0 metros</h3>
+            <div class="flex flex-wrap items-center gap-2 mt-1.5">
+              <span id="modal-tramo-pk" class="font-mono text-sm font-bold text-amber-300 bg-[#0e092e] px-3 py-1 rounded-lg border border-[#2d1f85]">De 0 m a 0 m</span>
+              <h3 id="modal-tramo-longitud" class="text-sm font-bold text-slate-300 font-mono">0 metros</h3>
             </div>
           </div>
-          <button id="btn-close-modal" class="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-[#23176d] transition">
+          <button id="btn-close-modal" class="text-slate-400 hover:text-white p-1.5 rounded-lg hover:bg-[#23176d] transition">
             <i data-lucide="x" class="w-5 h-5"></i>
           </button>
         </div>
 
         <!-- BARRA SUPERIOR DE PROGRESO DEL WIZARD (TIPO GOOGLE FORMS) -->
         <div class="space-y-1.5 pt-1">
-          <div class="flex items-center justify-between text-[11px] font-bold">
-            <span id="wizard-step-title" class="text-amber-400 uppercase tracking-wider font-mono">Paso 1 de 5: Vía y Progresiva</span>
+          <div class="flex items-center justify-between text-xs font-bold">
+            <span id="wizard-step-title" class="text-amber-400 uppercase tracking-wider font-mono">Paso 1 de 5: Vía y Recorrido</span>
             <span id="wizard-step-pct" class="text-slate-400 font-mono">20%</span>
           </div>
           
-          <div class="w-full bg-[#0e092e] h-2 rounded-full overflow-hidden border border-[#2d1f85]">
+          <div class="w-full bg-[#0e092e] h-2.5 rounded-full overflow-hidden border border-[#2d1f85]">
             <div id="wizard-progress-fill" style="width: 20%" class="h-full bg-gradient-to-r from-amber-500 to-orange-500 transition-all duration-300"></div>
           </div>
 
@@ -291,10 +295,10 @@
         <!-- PASO 1: IDENTIFICACIÓN DE LA VÍA Y SUB-TRAMO                   -->
         <!-- ============================================================== -->
         <div id="wizard-step-1" class="wizard-step-panel active space-y-4">
-          <div class="space-y-3.5">
+          <div class="space-y-4">
             <div>
               <label class="block text-sm font-bold text-slate-200 uppercase tracking-wide mb-1.5">Corredor / Vía Principal *</label>
-              <input type="text" id="input-corredor-nombre" list="lista-corredores-sugeridos" required placeholder="Ej: Troncal 10 (Maturín - Caripito)" class="w-full px-3.5 py-2.5 text-sm bg-[#0e092e] border border-[#2d1f85] rounded-xl text-white font-bold focus:border-amber-500 outline-none transition">
+              <input type="text" id="input-corredor-nombre" list="lista-corredores-sugeridos" required placeholder="Ej: Troncal 10 (Maturín - Caripito)" class="w-full px-4 py-3 text-base bg-[#0e092e] border border-[#2d1f85] rounded-xl text-white font-bold focus:border-amber-500 outline-none transition">
               <datalist id="lista-corredores-sugeridos">
                 <option value="Troncal 10 (Maturín - Parare - Caripito)">
                 <option value="Troncal 13 (La Ceiba - Maturín)">
@@ -311,7 +315,7 @@
 
             <div>
               <label class="block text-sm font-bold text-slate-200 uppercase tracking-wide mb-1.5">Nombre o Identificador del Sub-Tramo *</label>
-              <input type="text" id="input-tramo-nombre" required placeholder="Ej: Subtramo 1: Entrada a Redoma" class="w-full px-3.5 py-2.5 text-sm bg-[#0e092e] border border-[#2d1f85] rounded-xl text-white font-bold focus:border-amber-500 outline-none transition">
+              <input type="text" id="input-tramo-nombre" required placeholder="Ej: Tramo 1: Entrada a Redoma" class="w-full px-4 py-3 text-base bg-[#0e092e] border border-[#2d1f85] rounded-xl text-white font-bold focus:border-amber-500 outline-none transition">
             </div>
           </div>
         </div>
@@ -320,10 +324,10 @@
         <!-- PASO 2: JERARQUÍA TÉCNICA Y CALZADAS / CANALES                 -->
         <!-- ============================================================== -->
         <div id="wizard-step-2" class="wizard-step-panel space-y-4">
-          <div class="space-y-3.5">
+          <div class="space-y-4">
             <div>
               <label class="block text-sm font-bold text-slate-200 uppercase tracking-wide mb-1.5">Clasificación Técnica (10 Niveles Oficiales) *</label>
-              <select id="select-tramo-jerarquia" class="w-full px-3.5 py-2.5 text-sm bg-[#0e092e] border border-[#2d1f85] rounded-xl text-white font-bold focus:border-amber-500 outline-none transition">
+              <select id="select-tramo-jerarquia" class="w-full px-4 py-3 text-base bg-[#0e092e] border border-[#2d1f85] rounded-xl text-white font-bold focus:border-amber-500 outline-none transition">
                 <option value="Troncal / Autopista (T-10, T-13)">Troncal / Autopista (T-10, T-13)</option>
                 <option value="Vía Local">Vía Local (Conexión interurbana)</option>
                 <option value="Ramal">Ramal (Conexión parroquial)</option>
@@ -339,7 +343,7 @@
 
             <div>
               <label class="block text-sm font-bold text-slate-200 uppercase tracking-wide mb-1.5">Calzada y Canales Evaluados *</label>
-              <select id="select-tramo-canales" class="w-full px-3.5 py-2.5 text-sm bg-[#0e092e] border border-[#2d1f85] rounded-xl text-white font-bold focus:border-amber-500 outline-none transition">
+              <select id="select-tramo-canales" class="w-full px-4 py-3 text-base bg-[#0e092e] border border-[#2d1f85] rounded-xl text-white font-bold focus:border-amber-500 outline-none transition">
                 <option value="ambos">Calzada Completa (Ambos Canales)</option>
                 <option value="canal_lento_pesado">⚠️ Canal Lento (Carga Pesada / Gandolas Petroleras)</option>
                 <option value="canal_rapido">Canal Rápido (Canal Izquierdo)</option>
@@ -364,35 +368,35 @@
 
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
             
-            <button type="button" data-color="verde" class="btn-color-pick p-3.5 rounded-2xl bg-emerald-950/80 border-2 border-emerald-600 hover:bg-emerald-900 text-left transition flex items-center gap-3">
+            <button type="button" data-color="verde" class="btn-color-pick p-4 rounded-2xl bg-emerald-950/80 border-2 border-emerald-600 hover:bg-emerald-900 text-left transition flex items-center gap-3">
               <span class="w-5 h-5 rounded-full bg-emerald-500 shadow shrink-0"></span>
               <div>
-                <strong class="text-sm font-black text-emerald-300 block">🟢 BUENO / ÓPTIMO</strong>
-                <span class="text-xs text-slate-300 block leading-tight mt-0.5">Calzada uniforme, sin baches ni deformaciones</span>
+                <strong class="text-base font-black text-emerald-300 block">🟢 BUENO / ÓPTIMO</strong>
+                <span class="text-sm text-slate-200 block leading-tight mt-0.5">Calzada uniforme, sin baches ni deformaciones</span>
               </div>
             </button>
 
-            <button type="button" data-color="amarillo" class="btn-color-pick p-3.5 rounded-2xl bg-amber-950/80 border-2 border-amber-600 hover:bg-amber-900 text-left transition flex items-center gap-3">
+            <button type="button" data-color="amarillo" class="btn-color-pick p-4 rounded-2xl bg-amber-950/80 border-2 border-amber-600 hover:bg-amber-900 text-left transition flex items-center gap-3">
               <span class="w-5 h-5 rounded-full bg-amber-500 shadow shrink-0"></span>
               <div>
-                <strong class="text-sm font-black text-amber-300 block">🟡 REGULAR / DESGASTE</strong>
-                <span class="text-xs text-slate-300 block leading-tight mt-0.5">Desgaste superficial, fisuras o baches leves</span>
+                <strong class="text-base font-black text-amber-300 block">🟡 REGULAR / DESGASTE</strong>
+                <span class="text-sm text-slate-200 block leading-tight mt-0.5">Desgaste superficial, fisuras o baches leves</span>
               </div>
             </button>
 
-            <button type="button" data-color="naranja" class="btn-color-pick p-3.5 rounded-2xl bg-orange-950/80 border-2 border-orange-600 hover:bg-orange-900 text-left transition flex items-center gap-3">
+            <button type="button" data-color="naranja" class="btn-color-pick p-4 rounded-2xl bg-orange-950/80 border-2 border-orange-600 hover:bg-orange-900 text-left transition flex items-center gap-3">
               <span class="w-5 h-5 rounded-full bg-orange-500 shadow shrink-0"></span>
               <div>
-                <strong class="text-sm font-black text-orange-300 block">🟠 MALO / HUECOS</strong>
-                <span class="text-xs text-slate-300 block leading-tight mt-0.5">Baches profundos, cortes o pliegues de frenado</span>
+                <strong class="text-base font-black text-orange-300 block">🟠 MALO / HUECOS</strong>
+                <span class="text-sm text-slate-200 block leading-tight mt-0.5">Baches profundos, cortes o pliegues de frenado</span>
               </div>
             </button>
 
-            <button type="button" data-color="rojo" class="btn-color-pick p-3.5 rounded-2xl bg-red-950/80 border-2 border-red-600 hover:bg-red-900 text-left transition flex items-center gap-3">
+            <button type="button" data-color="rojo" class="btn-color-pick p-4 rounded-2xl bg-red-950/80 border-2 border-red-600 hover:bg-red-900 text-left transition flex items-center gap-3">
               <span class="w-5 h-5 rounded-full bg-red-500 shadow shrink-0"></span>
               <div>
-                <strong class="text-sm font-black text-red-300 block">🔴 CRÍTICO / RIESGO</strong>
-                <span class="text-xs text-slate-300 block leading-tight mt-0.5">Pérdida de base, cráteres, derrumbe o puente en falla</span>
+                <strong class="text-base font-black text-red-300 block">🔴 CRÍTICO / RIESGO</strong>
+                <span class="text-sm text-slate-200 block leading-tight mt-0.5">Pérdida de base, cráteres, derrumbe o puente en falla</span>
               </div>
             </button>
 
@@ -662,16 +666,11 @@
           <!-- Detalle u Observación -->
           <div>
             <label class="block text-sm font-bold text-slate-200 uppercase tracking-wide mb-1.5">Detalle u Observación Técnica</label>
-            <input type="text" id="input-tramo-detalle" placeholder="Ej: Bote cloacal en PK 1+450, canal derecho destruido..." class="w-full px-3.5 py-2.5 text-sm bg-[#0e092e] border border-[#2d1f85] rounded-xl text-white focus:border-amber-500 outline-none">
+            <input type="text" id="input-tramo-detalle" placeholder="Ej: Bote cloacal, canal derecho socavado a 150 metros..." class="w-full px-4 py-3 text-base bg-[#0e092e] border border-[#2d1f85] rounded-xl text-white focus:border-amber-500 outline-none">
           </div>
 
-          <!-- Botón Dividir en Sub-Tramos (Corte Progresivo) -->
-          <div id="box-dividir-tramo" class="hidden pt-1">
-            <button type="button" id="btn-dividir-tramo-en-dos" class="w-full py-2.5 px-3 rounded-xl bg-purple-950/80 hover:bg-purple-900 border border-purple-600 text-purple-200 text-xs font-bold transition flex items-center justify-center gap-2">
-              <i data-lucide="scissors" class="w-4 h-4"></i>
-              <span>✂️ Dividir este tramo por la mitad para asignar estados independientes (PK)</span>
-            </button>
-          </div>
+          <!-- Contenedor reservado invisible -->
+          <div id="box-dividir-tramo" class="hidden"></div>
         </div>
 
         <!-- ============================================================== -->
@@ -713,7 +712,7 @@
   </div>
 
   <!-- SCRIPT -->
-  <script type="module" src="js/app.js?v=8_20260928_desaturacion"></script>
+  <script type="module" src="js/app.js?v=9_20260928_migato_limpio"></script>
   <script src="../js/a11y.js"></script>
 </body>
 </html>
