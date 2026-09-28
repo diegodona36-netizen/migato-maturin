@@ -124,9 +124,16 @@ class TrazadorVialApp {
       <div class="p-3 rounded-xl border border-[#2d1f85] bg-[#18114a] hover:bg-[#23176d] cursor-pointer transition flex items-center justify-between gap-2 group" onclick="window.trazadorApp.focusAndEdit('${t.id}')">
         <div class="flex items-center gap-2.5 overflow-hidden">
           <span class="w-3.5 h-3.5 rounded-full shrink-0 shadow ${colorBadge[t.color] || 'bg-slate-500'}"></span>
-          <div class="overflow-hidden">
+          <div class="overflow-hidden space-y-0.5">
             <h4 class="text-sm font-bold text-slate-200 truncate group-hover:text-white">${t.nombre}</h4>
-            <p class="text-sm text-slate-400 font-mono">${t.longitudM} m • <span class="capitalize text-slate-300 font-bold">${t.color}</span></p>
+            <div class="flex flex-wrap items-center gap-1.5 text-xs text-slate-400 font-mono">
+              <span>${t.longitudM} m</span>
+              <span>•</span>
+              <span class="capitalize text-slate-300 font-bold">${t.color}</span>
+              ${t.jerarquia ? `<span class="text-[10px] px-1.5 py-0.2 rounded bg-[#100b33] border border-[#2d1f85] text-amber-300 font-bold">${t.jerarquia.split('/')[0].trim()}</span>` : ''}
+              ${t.puenteCritico && t.puenteCritico !== 'ninguno' ? `<span class="text-[10px] px-1.5 py-0.2 rounded bg-red-950 border border-red-600 text-red-300 font-bold">⚠️ PUENTE</span>` : ''}
+            </div>
+            ${t.patologias && t.patologias.length > 0 ? `<p class="text-[10px] text-amber-400 font-mono">🔧 ${t.patologias.length} patología(s) de pavimento</p>` : ''}
           </div>
         </div>
         <div class="flex items-center gap-1 shrink-0">
@@ -168,6 +175,23 @@ class TrazadorVialApp {
     document.getElementById("input-tramo-nombre").value = `Tramo ${this.tramos.length + 1}`;
     document.getElementById("input-tramo-detalle").value = "";
 
+    // Reset de nuevos campos técnicos
+    const selectJerarquia = document.getElementById("select-tramo-jerarquia");
+    if (selectJerarquia) selectJerarquia.value = "Sector Popular / Barrio";
+
+    const selectPuente = document.getElementById("select-puente-critico");
+    if (selectPuente) selectPuente.value = "ninguno";
+
+    const selectDrenaje = document.getElementById("select-tramo-drenaje");
+    if (selectDrenaje) selectDrenaje.value = "intactos";
+
+    document.querySelectorAll("input[name='patologia_vial']").forEach(cb => {
+      cb.checked = false;
+    });
+
+    const badgeCrit = document.getElementById("badge-asistencia-critica");
+    if (badgeCrit) badgeCrit.classList.add("hidden");
+
     // Ocultar botón dividir en nuevo tramo
     document.getElementById("box-dividir-tramo").classList.add("hidden");
 
@@ -192,6 +216,23 @@ class TrazadorVialApp {
     document.getElementById("input-tramo-nombre").value = tramo.nombre;
     document.getElementById("input-tramo-detalle").value = tramo.detalle || "";
 
+    // Cargar campos técnicos de ingeniería vial
+    const selectJerarquia = document.getElementById("select-tramo-jerarquia");
+    if (selectJerarquia) selectJerarquia.value = tramo.jerarquia || "Sector Popular / Barrio";
+
+    const selectPuente = document.getElementById("select-puente-critico");
+    if (selectPuente) selectPuente.value = tramo.puenteCritico || "ninguno";
+
+    const selectDrenaje = document.getElementById("select-tramo-drenaje");
+    if (selectDrenaje) selectDrenaje.value = tramo.drenaje || "intactos";
+
+    const tramoPatologias = tramo.patologias || [];
+    document.querySelectorAll("input[name='patologia_vial']").forEach(cb => {
+      cb.checked = tramoPatologias.includes(cb.value);
+    });
+
+    this.evaluarAsistenciaCritica();
+
     // Mostrar botón dividir si el tramo tiene más de 50 metros o más de 2 puntos
     const boxDividir = document.getElementById("box-dividir-tramo");
     if (tramo.puntos && tramo.puntos.length >= 2) {
@@ -211,6 +252,36 @@ class TrazadorVialApp {
     if (modal) {
       modal.classList.remove("hidden");
       modal.classList.add("flex");
+    }
+  }
+
+  evaluarAsistenciaCritica() {
+    const puente = document.getElementById("select-puente-critico")?.value || "ninguno";
+    const drenaje = document.getElementById("select-tramo-drenaje")?.value || "intactos";
+    const patologias = Array.from(document.querySelectorAll("input[name='patologia_vial']:checked")).map(cb => cb.value);
+
+    const esCritico = puente !== "ninguno" || 
+                      patologias.includes("perdida_carpeta") || 
+                      patologias.includes("piel_cocodrilo") || 
+                      patologias.includes("sobreasfaltado") ||
+                      patologias.includes("sumideros_colapsados") ||
+                      drenaje === "sepultados";
+
+    const badgeCrit = document.getElementById("badge-asistencia-critica");
+    if (badgeCrit) {
+      if (esCritico) {
+        badgeCrit.classList.remove("hidden");
+      } else {
+        badgeCrit.classList.add("hidden");
+      }
+    }
+
+    if (esCritico && (this.selectedColor === "verde" || this.selectedColor === "amarillo")) {
+      if (puente !== "ninguno" || patologias.includes("perdida_carpeta")) {
+        this.selectColorButton("rojo");
+      } else {
+        this.selectColorButton("naranja");
+      }
     }
   }
 
@@ -328,6 +399,10 @@ class TrazadorVialApp {
   saveCurrentFormData() {
     const nombre = document.getElementById("input-tramo-nombre").value.trim();
     const detalle = document.getElementById("input-tramo-detalle").value.trim();
+    const jerarquia = document.getElementById("select-tramo-jerarquia")?.value || "Sector Popular / Barrio";
+    const puenteCritico = document.getElementById("select-puente-critico")?.value || "ninguno";
+    const drenaje = document.getElementById("select-tramo-drenaje")?.value || "intactos";
+    const patologias = Array.from(document.querySelectorAll("input[name='patologia_vial']:checked")).map(cb => cb.value);
 
     let savedItem = null;
 
@@ -337,6 +412,10 @@ class TrazadorVialApp {
         this.tramos[index].nombre = nombre;
         this.tramos[index].color = this.selectedColor;
         this.tramos[index].detalle = detalle;
+        this.tramos[index].jerarquia = jerarquia;
+        this.tramos[index].puenteCritico = puenteCritico;
+        this.tramos[index].drenaje = drenaje;
+        this.tramos[index].patologias = patologias;
         this.tramos[index].foto = this.tempFoto;
         savedItem = this.tramos[index];
       }
@@ -348,6 +427,10 @@ class TrazadorVialApp {
         longitudM: this.tempLongitudM,
         puntos: this.tempPoints,
         detalle: detalle,
+        jerarquia: jerarquia,
+        puenteCritico: puenteCritico,
+        drenaje: drenaje,
+        patologias: patologias,
         foto: this.tempFoto,
         fecha: new Date().toISOString()
       };
@@ -359,6 +442,17 @@ class TrazadorVialApp {
   }
 
   setupEventListeners() {
+    // Listeners para asistencia crítica en vivo
+    document.querySelectorAll("input[name='patologia_vial']").forEach(cb => {
+      cb.addEventListener("change", () => this.evaluarAsistenciaCritica());
+    });
+
+    const selectPuente = document.getElementById("select-puente-critico");
+    if (selectPuente) selectPuente.addEventListener("change", () => this.evaluarAsistenciaCritica());
+
+    const selectDrenaje = document.getElementById("select-tramo-drenaje");
+    if (selectDrenaje) selectDrenaje.addEventListener("change", () => this.evaluarAsistenciaCritica());
+
     // 1. Botón Iniciar Trazo
     const btnActivar = document.getElementById("btn-activar-trazo");
     if (btnActivar) {

@@ -264,12 +264,18 @@ export class RoadMapViewer {
       });
 
       const tooltipContent = `
-        <div class="p-1 text-sm">
-          <strong class="text-white block font-bold">${t.nombre}</strong>
-          <span class="text-sm font-mono text-slate-300">${t.longitudM} metros</span>
-          <span class="block text-sm font-bold mt-0.5" style="color: ${color}">● Estado: ${t.color.toUpperCase()}</span>
-          ${t.detalle ? `<p class="text-sm text-slate-400 mt-0.5 italic">${t.detalle}</p>` : ''}
-          ${t.foto ? `<p class="text-sm text-amber-300 font-bold mt-0.5">📷 Con foto adjunta</p>` : ''}
+        <div class="p-1.5 text-xs space-y-1">
+          <strong class="text-white block font-bold text-sm">${t.nombre}</strong>
+          <div class="flex items-center gap-1.5 font-mono text-slate-300">
+            <span>${t.longitudM} metros</span>
+            <span>•</span>
+            <span class="font-bold uppercase" style="color: ${color}">● ${t.color}</span>
+          </div>
+          ${t.jerarquia ? `<span class="inline-block text-[11px] font-bold text-amber-300 bg-[#140e40] px-1.5 py-0.5 rounded border border-[#2d1f85]">${t.jerarquia}</span>` : ''}
+          ${t.puenteCritico && t.puenteCritico !== 'ninguno' ? `<p class="text-[11px] text-red-400 font-bold bg-red-950/80 px-1.5 py-0.5 rounded border border-red-700">⚠️ ${t.puenteCritico.replace('_', ' ').toUpperCase()}</p>` : ''}
+          ${t.patologias && t.patologias.length > 0 ? `<p class="text-[10px] text-amber-400 font-mono">🔧 ${t.patologias.length} patologías detectadas</p>` : ''}
+          ${t.detalle ? `<p class="text-slate-400 italic">${t.detalle}</p>` : ''}
+          ${t.foto ? `<p class="text-amber-300 font-bold">📷 Foto de evidencia adjunta</p>` : ''}
         </div>
       `;
 

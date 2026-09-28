@@ -3521,6 +3521,450 @@ function toggleModoLetraGrande() {
 }
 
 // ==============================================================
+// 10.1. AUDITORÍAS SOBERANAS DE RED ELÉCTRICA Y ALUMBRADO PÚBLICO
+// ==============================================================
+
+const STORAGE_KEY_AUDITORIAS_ELEC = "migato_auditorias_electricas_v1";
+let auditoriasElectricasState = [];
+let pasoActualElectrico = 1;
+
+const DATOS_SEMILLA_ELECTRICOS = [
+  {
+    id: "ELEC-1727500001",
+    fecha: "28/09/2026",
+    municipio: "Maturín",
+    parroquia: "Alto de Los Godos",
+    sector: "Los Godos, Sector 3 (Calle 4)",
+    subestacion: "S/E Maturín",
+    capacidad: "Bifásico / Trifásico 37.5 - 50 kVA",
+    estadoTransformador: "quemado",
+    familiasAfectadas: 48,
+    coberturaAlumbrado: "deficiente",
+    estadoPostes: "corroidos",
+    bajones: "extrema_4_o_mas",
+    horasCorte: "8_a_24h",
+    plantaVital: "sin_planta",
+    observaciones: "Transformador explotó hace 22 días; Corpoelec no tiene reposición. Hay niños y ancianos sin ventilación.",
+    semaforo: "ROJO"
+  },
+  {
+    id: "ELEC-1727500002",
+    fecha: "28/09/2026",
+    municipio: "Maturín",
+    parroquia: "Los Godos",
+    sector: "La Puente, Calle Principal con Los Guaros",
+    subestacion: "S/E Independencia",
+    capacidad: "Monofásico 15 - 25 kVA",
+    estadoTransformador: "puentes_alambre",
+    familiasAfectadas: 24,
+    coberturaAlumbrado: "oscuridad_total",
+    estadoPostes: "cables_caidos",
+    bajones: "extrema_4_o_mas",
+    horasCorte: "8_a_24h",
+    plantaVital: "sin_planta",
+    observaciones: "Tabacos cortacorrientes sustituidos por alambre de cobre directo tras explosión previa; peligro de incendio.",
+    semaforo: "ROJO"
+  },
+  {
+    id: "ELEC-1727500003",
+    fecha: "27/09/2026",
+    municipio: "Ezequiel Zamora",
+    parroquia: "Punta de Mata",
+    sector: "Av. Bolívar (Comercial)",
+    subestacion: "S/E Tejero / Punta de Mata",
+    capacidad: "Trifásico 75 - 100+ kVA",
+    estadoTransformador: "sobrecalentado",
+    familiasAfectadas: 60,
+    coberturaAlumbrado: "deficiente",
+    estadoPostes: "estables",
+    bajones: "moderada_1_a_3",
+    horasCorte: "2_a_8h",
+    plantaVital: "inoperativa_o_sin_gasoil",
+    observaciones: "Sobrecarga térmica con zumbido continuo. El ambulatorio cercano tiene planta pero sin gasoil.",
+    semaforo: "AMBAR"
+  },
+  {
+    id: "ELEC-1727500004",
+    fecha: "26/09/2026",
+    municipio: "Caripe",
+    parroquia: "Caripe",
+    sector: "El Guácharo (Acceso Turístico)",
+    subestacion: "S/E Caripe",
+    capacidad: "Bifásico / Trifásico 37.5 - 50 kVA",
+    estadoTransformador: "operativo",
+    familiasAfectadas: 30,
+    coberturaAlumbrado: "buena",
+    estadoPostes: "estables",
+    bajones: "estable",
+    horasCorte: "menos_2h",
+    plantaVital: "operativa_combustible",
+    observaciones: "Circuito estable con luminarias LED recientemente sustituidas.",
+    semaforo: "VERDE"
+  }
+];
+
+function initAuditoriasElectricas() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY_AUDITORIAS_ELEC);
+    if (raw) {
+      auditoriasElectricasState = JSON.parse(raw);
+    } else {
+      auditoriasElectricasState = [...DATOS_SEMILLA_ELECTRICOS];
+      guardarAuditoriasElectricasEnStorage();
+    }
+  } catch (e) {
+    auditoriasElectricasState = [...DATOS_SEMILLA_ELECTRICOS];
+  }
+  renderTablaAuditoriasElectricas();
+  actualizarKpisServiciosElectricos();
+}
+
+function guardarAuditoriasElectricasEnStorage() {
+  try {
+    localStorage.setItem(STORAGE_KEY_AUDITORIAS_ELEC, JSON.stringify(auditoriasElectricasState));
+  } catch (e) {
+    console.error("Error guardando auditorías eléctricas:", e);
+  }
+}
+
+function actualizarKpisServiciosElectricos() {
+  let quemados = 0;
+  let bajonesCont = 0;
+  let oscuridadCont = 0;
+
+  auditoriasElectricasState.forEach(a => {
+    if (a.estadoTransformador === 'quemado' || a.estadoTransformador === 'puentes_alambre') quemados++;
+    if (a.bajones === 'extrema_4_o_mas') bajonesCont++;
+    if (a.coberturaAlumbrado === 'oscuridad_total') oscuridadCont++;
+  });
+
+  const quemadosEl = document.getElementById("kpi-electrico-quemados");
+  if (quemadosEl) quemadosEl.textContent = `${quemados} censados (Riesgo Crítico)`;
+
+  const bajonesEl = document.getElementById("kpi-electrico-bajones");
+  if (bajonesEl) bajonesEl.textContent = `${bajonesCont} sectores con 4+ bajones/día`;
+
+  const coberturaEl = document.getElementById("kpi-alumbrado-cobertura");
+  if (coberturaEl) coberturaEl.textContent = `${oscuridadCont} corredores a oscuras`;
+}
+
+function renderTablaAuditoriasElectricas() {
+  const tbody = document.getElementById("tbody-auditorias-electricas");
+  if (!tbody) return;
+
+  if (auditoriasElectricasState.length === 0) {
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="7" class="p-6 text-center text-slate-400 italic">
+          No hay auditorías eléctricas registradas. Pulsa "+ Registrar Diagnóstico Eléctrico" para iniciar.
+        </td>
+      </tr>
+    `;
+    return;
+  }
+
+  const badgeSemaforo = {
+    ROJO: `<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-black bg-red-100 text-red-800 border border-red-300">
+             <span class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span> ROJO
+           </span>`,
+    AMBAR: `<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-black bg-amber-100 text-amber-900 border border-amber-300">
+             <span class="w-2 h-2 rounded-full bg-amber-500"></span> ÁMBAR
+           </span>`,
+    VERDE: `<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-black bg-emerald-100 text-emerald-800 border border-emerald-300">
+             <span class="w-2 h-2 rounded-full bg-emerald-500"></span> VERDE
+           </span>`
+  };
+
+  const labelsTransformador = {
+    operativo: "🟢 Operativo normal",
+    sobrecalentado: "🟡 Sobrecarga / Fuga",
+    quemado: "🔴 Quemado / Sin cambio",
+    puentes_alambre: "🔴 Puente directo alambre"
+  };
+
+  const labelsAlumbrado = {
+    buena: "🟢 >80% Iluminado",
+    deficiente: "🟡 30-70% Deficiente",
+    oscuridad_total: "🔴 Tinieblas (<30%)"
+  };
+
+  const labelsBajones = {
+    estable: "🟢 Estable",
+    moderada_1_a_3: "🟡 1-3 bajones/día",
+    extrema_4_o_mas: "🔴 4+ bajones destructivos"
+  };
+
+  const labelsPlanta = {
+    operativa_combustible: "🟢 Con planta & diésel",
+    inoperativa_o_sin_gasoil: "🔴 Planta dañada/sin gasoil",
+    sin_planta: "🟡 Sin planta"
+  };
+
+  tbody.innerHTML = auditoriasElectricasState.map(a => `
+    <tr class="hover:bg-slate-50 transition border-b border-slate-100">
+      <td class="p-3">
+        <strong class="text-slate-900 block text-xs">${a.sector || a.parroquia}</strong>
+        <span class="text-[11px] text-slate-500 font-mono">${a.municipio} • ${a.fecha}</span>
+      </td>
+      <td class="p-3">
+        <span class="font-bold text-xs">${labelsTransformador[a.estadoTransformador] || a.estadoTransformador}</span>
+        <span class="block text-[11px] text-slate-400 font-mono">${a.capacidad || ''} ${a.familiasAfectadas ? `(${a.familiasAfectadas} familias)` : ''}</span>
+      </td>
+      <td class="p-3">
+        <span class="font-bold text-xs">${labelsAlumbrado[a.coberturaAlumbrado] || a.coberturaAlumbrado}</span>
+      </td>
+      <td class="p-3">
+        <span class="font-bold text-xs">${labelsBajones[a.bajones] || a.bajones}</span>
+      </td>
+      <td class="p-3">
+        <span class="font-bold text-xs">${labelsPlanta[a.plantaVital] || a.plantaVital}</span>
+      </td>
+      <td class="p-3 text-center">
+        ${badgeSemaforo[a.semaforo] || badgeSemaforo.AMBAR}
+      </td>
+      <td class="p-3 text-right">
+        <div class="flex items-center justify-end gap-1.5">
+          <button type="button" onclick="window.eliminarDiagnosticoElectrico('${a.id}')" class="p-1 text-slate-400 hover:text-red-600 rounded transition" title="Eliminar auditoría">
+            <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+          </button>
+        </div>
+      </td>
+    </tr>
+  `).join("");
+
+  if (window.lucide && typeof window.lucide.createIcons === 'function') {
+    window.lucide.createIcons();
+  }
+}
+
+function abrirModalDiagnosticoElectrico(foco) {
+  pasoActualElectrico = 1;
+  const modal = document.getElementById("modal-asistente-diagnostico-electrico");
+  if (!modal) return;
+
+  const form = document.getElementById("form-asistente-electrico");
+  if (form) form.reset();
+
+  actualizarVistaPasosElectrico();
+  modal.classList.remove("hidden");
+  modal.classList.add("flex");
+
+  if (foco === 'alumbrado') {
+    const radioAlumbrado = document.querySelector("input[name='diag_cobertura_alumbrado'][value='oscuridad_total']");
+    if (radioAlumbrado) radioAlumbrado.checked = true;
+  } else if (foco === 'transformador') {
+    const radioTransf = document.querySelector("input[name='diag_estado_transformador'][value='quemado']");
+    if (radioTransf) radioTransf.checked = true;
+  }
+
+  if (window.lucide && typeof window.lucide.createIcons === 'function') {
+    window.lucide.createIcons();
+  }
+}
+
+function cerrarModalDiagnosticoElectrico() {
+  const modal = document.getElementById("modal-asistente-diagnostico-electrico");
+  if (modal) {
+    modal.classList.add("hidden");
+    modal.classList.remove("flex");
+  }
+}
+
+function actualizarVistaPasosElectrico() {
+  const pasos = [1, 2, 3, 4];
+  const titulos = [
+    "Paso 1: Ubicación y Jurisdicción",
+    "Paso 2: Transformadores y Carga",
+    "Paso 3: Alumbrado Público y Postes",
+    "Paso 4: Fluctuaciones y Respaldo Vital"
+  ];
+
+  pasos.forEach(p => {
+    const stepEl = document.getElementById(`step-diag-electrico-${p}`);
+    if (stepEl) {
+      if (p === pasoActualElectrico) {
+        stepEl.classList.remove("hidden");
+      } else {
+        stepEl.classList.add("hidden");
+      }
+    }
+  });
+
+  const labelPaso = document.getElementById("label-diag-electrico-paso");
+  if (labelPaso) labelPaso.textContent = titulos[pasoActualElectrico - 1];
+
+  const pct = Math.round((pasoActualElectrico / 4) * 100);
+  const labelPct = document.getElementById("label-diag-electrico-porcentaje");
+  if (labelPct) labelPct.textContent = `${pct}%`;
+
+  const bar = document.getElementById("bar-diag-electrico-progreso");
+  if (bar) bar.style.width = `${pct}%`;
+
+  const btnPrev = document.getElementById("btn-diag-electrico-prev");
+  const btnNext = document.getElementById("btn-diag-electrico-next");
+  const btnSave = document.getElementById("btn-diag-electrico-save");
+
+  if (btnPrev) {
+    if (pasoActualElectrico > 1) {
+      btnPrev.classList.remove("hidden");
+      btnPrev.classList.add("flex");
+    } else {
+      btnPrev.classList.add("hidden");
+      btnPrev.classList.remove("flex");
+    }
+  }
+
+  if (btnNext) {
+    if (pasoActualElectrico < 4) {
+      btnNext.classList.remove("hidden");
+      btnNext.classList.add("flex");
+    } else {
+      btnNext.classList.add("hidden");
+      btnNext.classList.remove("flex");
+    }
+  }
+
+  if (btnSave) {
+    if (pasoActualElectrico === 4) {
+      btnSave.classList.remove("hidden");
+      btnSave.classList.add("flex");
+    } else {
+      btnSave.classList.add("hidden");
+      btnSave.classList.remove("flex");
+    }
+  }
+}
+
+function validarPasoActualElectrico() {
+  if (pasoActualElectrico === 1) {
+    const mun = document.getElementById("diag-electrico-municipio")?.value?.trim();
+    const parr = document.getElementById("diag-electrico-parroquia")?.value?.trim();
+    const sec = document.getElementById("diag-electrico-sector")?.value?.trim();
+    if (!mun || !parr || !sec) {
+      alert("Por favor complete el Municipio, Parroquia y Sector antes de continuar.");
+      return false;
+    }
+  }
+  return true;
+}
+
+function siguientePasoDiagnosticoElectrico() {
+  if (!validarPasoActualElectrico()) return;
+  if (pasoActualElectrico < 4) {
+    pasoActualElectrico++;
+    actualizarVistaPasosElectrico();
+  }
+}
+
+function anteriorPasoDiagnosticoElectrico() {
+  if (pasoActualElectrico > 1) {
+    pasoActualElectrico--;
+    actualizarVistaPasosElectrico();
+  }
+}
+
+function guardarDiagnosticoElectrico() {
+  if (!validarPasoActualElectrico()) return;
+
+  const municipio = document.getElementById("diag-electrico-municipio")?.value || "Maturín";
+  const parroquia = document.getElementById("diag-electrico-parroquia")?.value || "";
+  const sector = document.getElementById("diag-electrico-sector")?.value || "";
+  const subestacion = document.getElementById("diag-electrico-subestacion")?.value || "";
+  const capacidad = document.getElementById("diag-electrico-capacidad")?.value || "";
+
+  const estadoTransformador = document.querySelector("input[name='diag_estado_transformador']:checked")?.value || "operativo";
+  const familiasAfectadas = parseInt(document.getElementById("diag-electrico-familias")?.value, 10) || 0;
+
+  const coberturaAlumbrado = document.querySelector("input[name='diag_cobertura_alumbrado']:checked")?.value || "buena";
+  const estadoPostes = document.querySelector("input[name='diag_estado_postes']:checked")?.value || "estables";
+
+  const bajones = document.getElementById("diag-electrico-bajones")?.value || "moderada_1_a_3";
+  const horasCorte = document.getElementById("diag-electrico-horas-corte")?.value || "2_a_8h";
+  const plantaVital = document.getElementById("diag-electrico-planta-vital")?.value || "sin_planta";
+  const observaciones = document.getElementById("diag-electrico-observaciones")?.value || "";
+
+  // Algoritmo de Criticidad y Falla Limitante
+  let semaforo = "VERDE";
+  const esRojo = (
+    estadoTransformador === 'quemado' ||
+    estadoTransformador === 'puentes_alambre' ||
+    coberturaAlumbrado === 'oscuridad_total' ||
+    bajones === 'extrema_4_o_mas' ||
+    plantaVital === 'inoperativa_o_sin_gasoil'
+  );
+
+  const esAmbar = (
+    estadoTransformador === 'sobrecalentado' ||
+    coberturaAlumbrado === 'deficiente' ||
+    bajones === 'moderada_1_a_3' ||
+    estadoPostes === 'corroidos' ||
+    plantaVital === 'sin_planta'
+  );
+
+  if (esRojo) {
+    semaforo = "ROJO";
+  } else if (esAmbar) {
+    semaforo = "AMBAR";
+  }
+
+  const nuevaAuditoria = {
+    id: `ELEC-${Date.now()}`,
+    fecha: new Date().toLocaleDateString('es-VE'),
+    municipio,
+    parroquia,
+    sector,
+    subestacion,
+    capacidad,
+    estadoTransformador,
+    familiasAfectadas,
+    coberturaAlumbrado,
+    estadoPostes,
+    bajones,
+    horasCorte,
+    plantaVital,
+    observaciones,
+    semaforo
+  };
+
+  auditoriasElectricasState.unshift(nuevaAuditoria);
+  guardarAuditoriasElectricasEnStorage();
+  cerrarModalDiagnosticoElectrico();
+  renderTablaAuditoriasElectricas();
+  actualizarKpisServiciosElectricos();
+
+  if (typeof window.mostrarToastAccion === 'function') {
+    window.mostrarToastAccion("Auditoría Eléctrica Guardada con Éxito (Soberana)");
+  } else {
+    alert("¡Auditoría Eléctrica y de Alumbrado registrada con éxito!");
+  }
+}
+
+function eliminarDiagnosticoElectrico(id) {
+  if (confirm("¿Deseas eliminar este registro de auditoría eléctrica?")) {
+    auditoriasElectricasState = auditoriasElectricasState.filter(a => a.id !== id);
+    guardarAuditoriasElectricasEnStorage();
+    renderTablaAuditoriasElectricas();
+    actualizarKpisServiciosElectricos();
+  }
+}
+
+function exportarDiagnosticosElectricosJSON() {
+  if (auditoriasElectricasState.length === 0) {
+    alert("No hay registros de auditorías para exportar.");
+    return;
+  }
+  const blob = new Blob([JSON.stringify(auditoriasElectricasState, null, 2)], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `MIGATO_Censo_Electrico_Alumbrado_${new Date().toISOString().split("T")[0]}.json`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+// ==============================================================
 // 11. INICIO INFALIBLE DE LA APLICACIÓN
 // ==============================================================
 
@@ -3548,6 +3992,7 @@ function iniciarAplicacion() {
     renderFallasChecks();
     actualizarContadoresKPI();
     renderDirectorioTabla();
+    initAuditoriasElectricas();
 
     if (typeof L !== 'undefined') {
       initMapaFormulario();
@@ -3640,6 +4085,15 @@ window.seleccionarCentroDesdeBuscadorForm = seleccionarCentroDesdeBuscadorForm;
 window.activarModoCentroNuevo = activarModoCentroNuevo;
 window.activarModoCentroNuevoConNombre = activarModoCentroNuevoConNombre;
 window.mostrarToastAccion = mostrarToastAccion;
+
+// Auditorías Eléctricas y de Alumbrado
+window.abrirModalDiagnosticoElectrico = abrirModalDiagnosticoElectrico;
+window.cerrarModalDiagnosticoElectrico = cerrarModalDiagnosticoElectrico;
+window.siguientePasoDiagnosticoElectrico = siguientePasoDiagnosticoElectrico;
+window.anteriorPasoDiagnosticoElectrico = anteriorPasoDiagnosticoElectrico;
+window.guardarDiagnosticoElectrico = guardarDiagnosticoElectrico;
+window.eliminarDiagnosticoElectrico = eliminarDiagnosticoElectrico;
+window.exportarDiagnosticosElectricosJSON = exportarDiagnosticosElectricosJSON;
 
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", iniciarAplicacion);

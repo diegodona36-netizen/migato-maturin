@@ -26,9 +26,19 @@
               "etiqueta": "Municipio",
               "requerido": true,
               "opciones": [
-                "Acosta", "Aguasay", "Bolívar", "Caripe", "Cedeño",
-                "Ezequiel Zamora", "Libertador", "Maturín", "Piar",
-                "Punceres", "Santa Bárbara", "Sotillo", "Uracoa"
+                "Acosta",
+                "Aguasay",
+                "Bolívar",
+                "Caripe",
+                "Cedeño",
+                "Ezequiel Zamora",
+                "Libertador",
+                "Maturín",
+                "Piar",
+                "Punceres",
+                "Santa Bárbara",
+                "Sotillo",
+                "Uracoa"
               ]
             },
             {
@@ -219,9 +229,19 @@
               "etiqueta": "Municipio",
               "requerido": true,
               "opciones": [
-                "Acosta", "Aguasay", "Bolívar", "Caripe", "Cedeño",
-                "Ezequiel Zamora", "Libertador", "Maturín", "Piar",
-                "Punceres", "Santa Bárbara", "Sotillo", "Uracoa"
+                "Acosta",
+                "Aguasay",
+                "Bolívar",
+                "Caripe",
+                "Cedeño",
+                "Ezequiel Zamora",
+                "Libertador",
+                "Maturín",
+                "Piar",
+                "Punceres",
+                "Santa Bárbara",
+                "Sotillo",
+                "Uracoa"
               ]
             },
             {
@@ -448,9 +468,19 @@
               "etiqueta": "Municipio",
               "requerido": true,
               "opciones": [
-                "Acosta", "Aguasay", "Bolívar", "Caripe", "Cedeño",
-                "Ezequiel Zamora", "Libertador", "Maturín", "Piar",
-                "Punceres", "Santa Bárbara", "Sotillo", "Uracoa"
+                "Acosta",
+                "Aguasay",
+                "Bolívar",
+                "Caripe",
+                "Cedeño",
+                "Ezequiel Zamora",
+                "Libertador",
+                "Maturín",
+                "Piar",
+                "Punceres",
+                "Santa Bárbara",
+                "Sotillo",
+                "Uracoa"
               ]
             },
             {
@@ -670,9 +700,19 @@
               "etiqueta": "Municipio",
               "requerido": true,
               "opciones": [
-                "Acosta", "Aguasay", "Bolívar", "Caripe", "Cedeño",
-                "Ezequiel Zamora", "Libertador", "Maturín", "Piar",
-                "Punceres", "Santa Bárbara", "Sotillo", "Uracoa"
+                "Acosta",
+                "Aguasay",
+                "Bolívar",
+                "Caripe",
+                "Cedeño",
+                "Ezequiel Zamora",
+                "Libertador",
+                "Maturín",
+                "Piar",
+                "Punceres",
+                "Santa Bárbara",
+                "Sotillo",
+                "Uracoa"
               ]
             },
             {
@@ -812,9 +852,19 @@
               "etiqueta": "Municipio",
               "requerido": true,
               "opciones": [
-                "Acosta", "Aguasay", "Bolívar", "Caripe", "Cedeño",
-                "Ezequiel Zamora", "Libertador", "Maturín", "Piar",
-                "Punceres", "Santa Bárbara", "Sotillo", "Uracoa"
+                "Acosta",
+                "Aguasay",
+                "Bolívar",
+                "Caripe",
+                "Cedeño",
+                "Ezequiel Zamora",
+                "Libertador",
+                "Maturín",
+                "Piar",
+                "Punceres",
+                "Santa Bárbara",
+                "Sotillo",
+                "Uracoa"
               ]
             },
             {
@@ -932,6 +982,543 @@
               "id": "observaciones",
               "tipo": "textarea",
               "etiqueta": "Detalles del Pozo o Falla",
+              "requerido": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "vialidad_red_vial",
+      "sector": "Vialidad, Carreteras y Obras de Arte",
+      "marco_legal": "Normas MOP / COVENIN - Jerarquía de Redes Viales y Pavimentos Urbanos e Interurbanos",
+      "icono": "🛣️",
+      "descripcion": "Evaluación técnica de calzadas, patologías del asfalto, drenajes pluviales, brocales y estabilidad estructural de puentes en el estado Monagas.",
+      "criterio_semaforo": "Principio de Criticidad Vial: Si un puente presenta riesgo de colapso (ej. Amana o Caripito), si la pérdida de carpeta supera 5 metros, o si el tramo es intransitable, califica en ROJO.",
+      "secciones": [
+        {
+          "titulo": "1. Ubicación y Jerarquía Vial",
+          "campos": [
+            {
+              "id": "municipio",
+              "tipo": "select",
+              "etiqueta": "Municipio",
+              "requerido": true,
+              "opciones": [
+                "Acosta",
+                "Aguasay",
+                "Bolívar",
+                "Caripe",
+                "Cedeño",
+                "Ezequiel Zamora",
+                "Libertador",
+                "Maturín",
+                "Piar",
+                "Punceres",
+                "Santa Bárbara",
+                "Sotillo",
+                "Uracoa"
+              ]
+            },
+            {
+              "id": "parroquia",
+              "tipo": "text",
+              "etiqueta": "Parroquia",
+              "requerido": true
+            },
+            {
+              "id": "sector_tramo",
+              "tipo": "text",
+              "etiqueta": "Nombre de la Vía, Avenida o Tramo Inspeccionado",
+              "requerido": true,
+              "descripcion": "Ej. Troncal 10 tramo La Pica, Calle Principal de La Puente, Av. Alirio Ugarte Pelayo"
+            },
+            {
+              "id": "jerarquia_vial",
+              "tipo": "select",
+              "etiqueta": "Clasificación Técnica de la Vía (9 Niveles)",
+              "requerido": true,
+              "opciones": [
+                "Troncal / Autopista (Intermunicipal / Interestatal, ej. T-10, T-13)",
+                "Vía Local",
+                "Ramal",
+                "Subramal",
+                "Vía Agrícola / Penetración Rural",
+                "Avenida Principal Urbana",
+                "Calle Urbana",
+                "Urbanismo / Conjunto Residencial",
+                "Sector Popular / Barrio"
+              ]
+            }
+          ]
+        },
+        {
+          "titulo": "2. Estado de la Calzada y Patologías de Pavimento",
+          "campos": [
+            {
+              "id": "estado_carpeta",
+              "tipo": "radio",
+              "etiqueta": "Condición General de la Superficie de Rodamiento",
+              "requerido": true,
+              "opciones": [
+                {
+                  "valor": "optimo",
+                  "texto": "🟢 Óptimo / Bueno: Rodamiento continuo sin deformaciones ni baches graves",
+                  "peso_semaforo": "VERDE"
+                },
+                {
+                  "valor": "regular_desgaste",
+                  "texto": "🟡 Regular: Desgaste superficial, baches aislados y fisuras incipientes",
+                  "peso_semaforo": "AMBAR"
+                },
+                {
+                  "valor": "malo_huecos",
+                  "texto": "🟠 Malo: Baches profundos reiterados, deformación de base y desprendimiento",
+                  "peso_semaforo": "AMBAR"
+                },
+                {
+                  "valor": "critico_intransitable",
+                  "texto": "🔴 Crítico / Intransitable: Pérdida total de rasante, fallas estructurales severas",
+                  "peso_semaforo": "ROJO"
+                }
+              ]
+            },
+            {
+              "id": "patologias_pavimento",
+              "tipo": "checkbox",
+              "etiqueta": "Patologías Específicas Detectadas (Ingeniería de Pavimentos)",
+              "requerido": false,
+              "opciones": [
+                {
+                  "valor": "piel_cocodrilo",
+                  "texto": "Piel de cocodrilo (fatiga severa por colapso de base/subbase)",
+                  "peso": "ROJO"
+                },
+                {
+                  "valor": "baches_profundos",
+                  "texto": "Baches profundos con bordes cortantes",
+                  "peso": "AMBAR"
+                },
+                {
+                  "valor": "perdida_carpeta_5m",
+                  "texto": "Pérdida continua de carpeta asfáltica (> 5 a 7 metros)",
+                  "peso": "ROJO"
+                },
+                {
+                  "valor": "falta_bombeo_oxidacion",
+                  "texto": "Oxidación bituminosa por falta de bombeo o pendiente transversal (aguas estancadas)",
+                  "peso": "AMBAR"
+                },
+                {
+                  "valor": "asentamiento_alcantarillas",
+                  "texto": "Asentamientos diferenciales o saltos bruscos sobre alcantarillas y ductos",
+                  "peso": "AMBAR"
+                },
+                {
+                  "valor": "grietas_longitudinales",
+                  "texto": "Grietas longitudinales y transversales abiertas sin sellado",
+                  "peso": "AMBAR"
+                },
+                {
+                  "valor": "sobreasfaltado_sin_fresado",
+                  "texto": "Sobreasfaltado sin fresado: asfalto que supera cota de acera y empotra brocales (inunda viviendas)",
+                  "peso": "ROJO"
+                },
+                {
+                  "valor": "falta_pintura_brocales",
+                  "texto": "Falta de pintura y señalización horizontal/vertical en brocales, reductores e islas",
+                  "peso": "AMBAR"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "titulo": "3. Drenajes Pluviales y Mobiliario Urbano",
+          "campos": [
+            {
+              "id": "estado_brocales_aceras",
+              "tipo": "radio",
+              "etiqueta": "Brocales y Aceras Peatonales",
+              "requerido": true,
+              "opciones": [
+                {
+                  "valor": "intactos",
+                  "texto": "🟢 Intactos y con altura de guarda reglamentaria",
+                  "peso_semaforo": "VERDE"
+                },
+                {
+                  "valor": "rotos_fracturados",
+                  "texto": "🟡 Fracturados, agrietados o con desmoronamiento",
+                  "peso_semaforo": "AMBAR"
+                },
+                {
+                  "valor": "sepultados_asfalto",
+                  "texto": "🔴 Sepultados / ahogados por capas sucesivas de asfalto (sin drenaje)",
+                  "peso_semaforo": "ROJO"
+                },
+                {
+                  "valor": "inexistentes",
+                  "texto": "🟡 Inexistentes (camino rústico / zanja natural)",
+                  "peso_semaforo": "AMBAR"
+                }
+              ]
+            },
+            {
+              "id": "estado_sumideros_alcantarillas",
+              "tipo": "radio",
+              "etiqueta": "Sumideros de Ventana y Rejas Pluviales",
+              "requerido": true,
+              "opciones": [
+                {
+                  "valor": "limpios_operativos",
+                  "texto": "🟢 Despejados y con capacidad de drenaje activa",
+                  "peso_semaforo": "VERDE"
+                },
+                {
+                  "valor": "tapados_sedimentos",
+                  "texto": "🟡 Tapados con arena, basura y maleza (>50% colapso)",
+                  "peso_semaforo": "AMBAR"
+                },
+                {
+                  "valor": "rejas_robadas_hueco",
+                  "texto": "🔴 Rejas metálicas hurtadas o destruidas (trampa vehicular mortal)",
+                  "peso_semaforo": "ROJO"
+                },
+                {
+                  "valor": "sin_drenaje",
+                  "texto": "🟡 Vía carece de red de drenaje pluvial",
+                  "peso_semaforo": "AMBAR"
+                }
+              ]
+            },
+            {
+              "id": "estado_bocas_visita",
+              "tipo": "radio",
+              "etiqueta": "Tapas de Bocas de Visita (Manholes)",
+              "requerido": true,
+              "opciones": [
+                {
+                  "valor": "niveladas",
+                  "texto": "🟢 Niveladas a ras de rasante y estables",
+                  "peso_semaforo": "VERDE"
+                },
+                {
+                  "valor": "hundidas_desnivel",
+                  "texto": "🟡 Hundidas o sobresalientes (golpe al tren delantero)",
+                  "peso_semaforo": "AMBAR"
+                },
+                {
+                  "valor": "tapa_hurtada_abierta",
+                  "texto": "🔴 Hueco abierto sin tapa / señalizado con ramas (riesgo fatal)",
+                  "peso_semaforo": "ROJO"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "titulo": "4. Obras de Arte y Puentes Críticos",
+          "campos": [
+            {
+              "id": "alerta_puente_critico",
+              "tipo": "radio",
+              "etiqueta": "Inspección de Puentes y Obras de Arte Mayores",
+              "requerido": true,
+              "opciones": [
+                {
+                  "valor": "sin_puentes_tramo_estable",
+                  "texto": "🟢 Tramo sin obras de arte mayores o puente en buen estado",
+                  "peso_semaforo": "VERDE"
+                },
+                {
+                  "valor": "puente_amana_socavacion",
+                  "texto": "🔴 PUENTE DE AMANA: Socavación severa en pilas/estribos (Riesgo inminente de colapso intermunicipal)",
+                  "peso_semaforo": "ROJO"
+                },
+                {
+                  "valor": "puente_caripito_falla",
+                  "texto": "🔴 PUENTE DE CARIPITO: Falla estructural, juntas de dilatación abiertas y vibración crítica",
+                  "peso_semaforo": "ROJO"
+                },
+                {
+                  "valor": "ponton_socavado",
+                  "texto": "🔴 Pontón o alcantarilla de lámina con socavación inferior y socavón activo bajo calzada",
+                  "peso_semaforo": "ROJO"
+                },
+                {
+                  "valor": "defensa_danada",
+                  "texto": "🟡 Barandas o defensas metálicas colisionadas / inexistentes",
+                  "peso_semaforo": "AMBAR"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "titulo": "5. Fuente Confidencial y Cierre",
+          "campos": [
+            {
+              "id": "rol_informante",
+              "tipo": "select",
+              "etiqueta": "Identificación de la Fuente",
+              "requerido": true,
+              "opciones": [
+                "Conductor habitual / Línea de transporte público",
+                "Ingeniero o técnico vial aliado",
+                "Vecino residente del tramo",
+                "Enlace territorial de Comando Gatero"
+              ]
+            },
+            {
+              "id": "observaciones",
+              "tipo": "textarea",
+              "etiqueta": "Detalle Técnico Adicional o Longitud Afectada",
+              "requerido": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "red_electrica_alumbrado",
+      "sector": "Energía Eléctrica y Alumbrado Público",
+      "marco_legal": "Normas Técnicas CADAFE / COVENIN de Distribución Eléctrica y Alumbrado Público",
+      "icono": "⚡",
+      "descripcion": "Diagnóstico de transformadores residenciales, corredores de alumbrado público, fluctuaciones destructivas y respaldo en infraestructura crítica.",
+      "criterio_semaforo": "Principio de Emergencia Eléctrica: Transformador quemado sin sustitución de Corpoelec que mantenga sectores sin energía, o centros de salud sin respaldo eléctrico, califica automáticamente en ROJO.",
+      "secciones": [
+        {
+          "titulo": "1. Ubicación y Jurisdicción Eléctrica",
+          "campos": [
+            {
+              "id": "municipio",
+              "tipo": "select",
+              "etiqueta": "Municipio",
+              "requerido": true,
+              "opciones": [
+                "Acosta",
+                "Aguasay",
+                "Bolívar",
+                "Caripe",
+                "Cedeño",
+                "Ezequiel Zamora",
+                "Libertador",
+                "Maturín",
+                "Piar",
+                "Punceres",
+                "Santa Bárbara",
+                "Sotillo",
+                "Uracoa"
+              ]
+            },
+            {
+              "id": "parroquia",
+              "tipo": "text",
+              "etiqueta": "Parroquia",
+              "requerido": true
+            },
+            {
+              "id": "sector_comunidad",
+              "tipo": "text",
+              "etiqueta": "Sector, Urbanismo o Circuito Afectado",
+              "requerido": true,
+              "descripcion": "Ej. Calle 5 de La Puente, Los Godos Sector 3, Brisas del Orinoco"
+            },
+            {
+              "id": "subestacion_referencia",
+              "tipo": "text",
+              "etiqueta": "Subestación Eléctrica que alimenta el circuito (Si se conoce)",
+              "requerido": false,
+              "descripcion": "Ej. S/E Independencia, S/E El Parque, S/E Maturín, S/E San Jaime"
+            }
+          ]
+        },
+        {
+          "titulo": "2. Diagnóstico del Banco de Transformadores",
+          "campos": [
+            {
+              "id": "capacidad_transformador",
+              "tipo": "select",
+              "etiqueta": "Capacidad Estimada del Banco de Transformadores",
+              "requerido": true,
+              "opciones": [
+                "Monofásico 15 - 25 kVA (Calle corta / pocas casas)",
+                "Bifásico / Trifásico 37.5 - 50 kVA (Sector residencial mediano)",
+                "Trifásico 75 - 100+ kVA (Comercial / Zona densa)",
+                "Banco múltiple de transformadores en poste o caseta",
+                "Desconocido / Requiere aforo técnico"
+              ]
+            },
+            {
+              "id": "estado_transformador",
+              "tipo": "radio",
+              "etiqueta": "Estado Operativo del Transformador",
+              "requerido": true,
+              "opciones": [
+                {
+                  "valor": "operativo_balanceado",
+                  "texto": "🟢 Operativo normal y con voltajes balanceados",
+                  "peso_semaforo": "VERDE"
+                },
+                {
+                  "valor": "sobrecalentado_fuga",
+                  "texto": "🟡 Sobrecargado térmicamente / Zumbido anormal / Fuga visible de aceite dieléctrico",
+                  "peso_semaforo": "AMBAR"
+                },
+                {
+                  "valor": "quemado_sin_sustitucion",
+                  "texto": "🔴 Transformador quemado / Explotado sin reposición oficial de Corpoelec",
+                  "peso_semaforo": "ROJO"
+                },
+                {
+                  "valor": "puentes_improvisados_alambre",
+                  "texto": "🔴 Conexiones improvisadas directas (puentes con alambre de cobre sustituyendo tabacos cortacorrientes)",
+                  "peso_semaforo": "ROJO"
+                }
+              ]
+            },
+            {
+              "id": "familias_afectadas_transformador",
+              "tipo": "number",
+              "etiqueta": "Número Aproximado de Familias sin Luz por Transformador Dañado",
+              "requerido": false
+            }
+          ]
+        },
+        {
+          "titulo": "3. Alumbrado Público y Corredores Oscuros",
+          "campos": [
+            {
+              "id": "cobertura_alumbrado",
+              "tipo": "radio",
+              "etiqueta": "Porcentaje de Iluminación Operativa en la Vía / Comunidad",
+              "requerido": true,
+              "opciones": [
+                {
+                  "valor": "buena_iluminacion",
+                  "texto": "🟢 Bien iluminado (>80% luminarias LED o vapor de sodio funcionando)",
+                  "peso_semaforo": "VERDE"
+                },
+                {
+                  "valor": "alumbrado_deficiente",
+                  "texto": "🟡 Parcialmente oscuro (30% a 70% luminarias quemadas o rotas)",
+                  "peso_semaforo": "AMBAR"
+                },
+                {
+                  "valor": "oscuridad_total",
+                  "texto": "🔴 Corredor oscuro (<30% operativo / Tinieblas totales que favorecen la delincuencia)",
+                  "peso_semaforo": "ROJO"
+                }
+              ]
+            },
+            {
+              "id": "estado_postes_red",
+              "tipo": "radio",
+              "etiqueta": "Estado Mecánico de Postes y Cableado",
+              "requerido": true,
+              "opciones": [
+                {
+                  "valor": "postes_estables",
+                  "texto": "🟢 Postes verticales y con cableado completo",
+                  "peso_semaforo": "VERDE"
+                },
+                {
+                  "valor": "postes_corroidos_base",
+                  "texto": "🟡 Postes con corrosión severa en base o inclinados con riesgo de caída",
+                  "peso_semaforo": "AMBAR"
+                },
+                {
+                  "valor": "cables_hurtados_sueltos",
+                  "texto": "🔴 Cables de baja tensión desprendidos, guindando a baja altura o hurtados",
+                  "peso_semaforo": "ROJO"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "titulo": "4. Fluctuaciones y Calidad de la Tensión",
+          "campos": [
+            {
+              "id": "bajones_voltaje_diarios",
+              "tipo": "radio",
+              "etiqueta": "Frecuencia de Bajones / Fluctuaciones de Voltaje",
+              "requerido": true,
+              "opciones": [
+                {
+                  "valor": "fluctuacion_rara",
+                  "texto": "🟢 Voltaje estable (Rara vez fluctúa)",
+                  "peso_semaforo": "VERDE"
+                },
+                {
+                  "valor": "bajones_1_a_3",
+                  "texto": "🟡 Moderada (1 a 3 bajones notables al día)",
+                  "peso_semaforo": "AMBAR"
+                },
+                {
+                  "valor": "bajones_extremos_destructivos",
+                  "texto": "🔴 Extrema (4 o más bajones al día / Quema continua de electrodomésticos, bombas y aires)",
+                  "peso_semaforo": "ROJO"
+                }
+              ]
+            },
+            {
+              "id": "horas_corte_semanales",
+              "tipo": "select",
+              "etiqueta": "Horas Promedio Semanales de Apagones No Programados",
+              "requerido": true,
+              "opciones": [
+                "Menos de 2 horas a la semana",
+                "Entre 2 y 8 horas a la semana",
+                "Entre 8 y 24 horas a la semana",
+                "Cortes críticos mayores a 24 horas a la semana"
+              ]
+            },
+            {
+              "id": "respaldo_planta_vital",
+              "tipo": "radio",
+              "etiqueta": "Respaldo con Planta Eléctrica en Centro Asistencial o Pozo del Sector",
+              "requerido": true,
+              "opciones": [
+                {
+                  "valor": "planta_operativa_con_gasoil",
+                  "texto": "🟢 Dispone de grupo electrógeno operativo y con combustible garantizado",
+                  "peso_semaforo": "VERDE"
+                },
+                {
+                  "valor": "planta_sin_gasoil_o_danada",
+                  "texto": "🔴 Posee planta pero inoperativa por falta de diésel o repuestos mecánicos",
+                  "peso_semaforo": "ROJO"
+                },
+                {
+                  "valor": "sin_planta",
+                  "texto": "🟡 No dispone de grupo electrógeno (quedan a oscuras ante apagones)",
+                  "peso_semaforo": "AMBAR"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "titulo": "5. Fuente Confidencial y Cierre",
+          "campos": [
+            {
+              "id": "rol_informante",
+              "tipo": "select",
+              "etiqueta": "Identificación de la Fuente",
+              "requerido": true,
+              "opciones": [
+                "Vecino residente afectado",
+                "Electricista o técnico comunitario",
+                "Comerciante afectado por cortes",
+                "Enlace territorial de Comando Gatero"
+              ]
+            },
+            {
+              "id": "observaciones",
+              "tipo": "textarea",
+              "etiqueta": "Detalle Adicional de la Avería o Daños Causados",
               "requerido": false
             }
           ]

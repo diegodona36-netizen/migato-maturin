@@ -3,7 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Trazador y Diagnóstico Vial • La Puente</title>
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+  <title>Trazador y Diagnóstico Vial • La Puente (MIGATO 2026)</title>
 
   <!-- Blindaje de Ciberdefensa y Sesión MIGATO -->
   <script src="../js/auth.js?v=sec_reset_20260925_urgente"></script>
@@ -227,20 +230,39 @@
         
         <!-- Nombre del Tramo -->
         <div>
-          <label class="block text-sm font-bold text-slate-300 uppercase mb-1">Nombre o Número de Tramo *</label>
+          <label class="block text-xs font-bold text-slate-300 uppercase mb-1">Nombre o Número de Tramo *</label>
           <input type="text" id="input-tramo-nombre" required placeholder="Ej: Tramo 1: Esquina Los Guaros" class="w-full px-3 py-2 text-sm bg-[#0e092e] border border-[#2d1f85] rounded-xl text-white focus:border-amber-500 font-bold">
+        </div>
+
+        <!-- Clasificación Técnica de la Vía (9 Niveles) -->
+        <div>
+          <label class="block text-xs font-bold text-slate-300 uppercase mb-1">Clasificación Técnica de la Vía (9 Niveles) *</label>
+          <select id="select-tramo-jerarquia" class="w-full px-3 py-2 text-sm bg-[#0e092e] border border-[#2d1f85] rounded-xl text-white font-medium focus:border-amber-500">
+            <option value="Sector Popular / Barrio">Sector Popular / Barrio</option>
+            <option value="Calle Urbana">Calle Urbana</option>
+            <option value="Avenida Principal Urbana">Avenida Principal Urbana</option>
+            <option value="Urbanismo / Conjunto Residencial">Urbanismo / Conjunto Residencial</option>
+            <option value="Troncal / Autopista (T-10, T-13)">Troncal / Autopista (T-10, T-13)</option>
+            <option value="Vía Local">Vía Local</option>
+            <option value="Ramal">Ramal</option>
+            <option value="Subramal">Subramal</option>
+            <option value="Vía Agrícola / Penetración Rural">Vía Agrícola / Penetración Rural</option>
+          </select>
         </div>
 
         <!-- 4 BOTONES GRANDES DE COLOR -->
         <div>
-          <label class="block text-sm font-bold text-slate-300 uppercase mb-2">Selecciona el Estado / Color para este Tramo *</label>
+          <div class="flex items-center justify-between mb-2">
+            <label class="block text-xs font-bold text-slate-300 uppercase">Condición General de la Calzada *</label>
+            <span id="badge-asistencia-critica" class="text-xs font-bold text-amber-400 hidden">⚠️ Asistencia Crítica Activa</span>
+          </div>
           <div class="grid grid-cols-2 gap-2">
             
             <button type="button" data-color="verde" class="btn-color-pick p-3 rounded-2xl bg-emerald-950/80 border-2 border-emerald-600 hover:bg-emerald-900 text-left transition flex items-center gap-2.5">
               <span class="w-5 h-5 rounded-full bg-emerald-500 shadow shrink-0"></span>
               <div>
                 <strong class="text-base font-black text-emerald-300 block">🟢 Bueno</strong>
-                <span class="text-base text-slate-400">Sin huecos graves</span>
+                <span class="text-xs text-slate-400">Sin huecos graves</span>
               </div>
             </button>
 
@@ -248,7 +270,7 @@
               <span class="w-5 h-5 rounded-full bg-amber-500 shadow shrink-0"></span>
               <div>
                 <strong class="text-base font-black text-amber-300 block">🟡 Regular</strong>
-                <span class="text-base text-slate-400">Desgaste / Baches</span>
+                <span class="text-xs text-slate-400">Desgaste / Baches</span>
               </div>
             </button>
 
@@ -256,7 +278,7 @@
               <span class="w-5 h-5 rounded-full bg-orange-500 shadow shrink-0"></span>
               <div>
                 <strong class="text-base font-black text-orange-300 block">🟠 Malo</strong>
-                <span class="text-base text-slate-400">Huecos profundos</span>
+                <span class="text-xs text-slate-400">Huecos profundos</span>
               </div>
             </button>
 
@@ -264,18 +286,89 @@
               <span class="w-5 h-5 rounded-full bg-red-500 shadow shrink-0"></span>
               <div>
                 <strong class="text-base font-black text-red-300 block">🔴 Crítico</strong>
-                <span class="text-base text-slate-400">Intransitable</span>
+                <span class="text-xs text-slate-400">Intransitable</span>
               </div>
             </button>
 
           </div>
         </div>
 
+        <!-- PATOLOGÍAS DE PAVIMENTO (CHECKLIST DE INGENIERÍA VIAL) -->
+        <div class="bg-[#0e092e] p-3 rounded-2xl border border-[#2d1f85] space-y-2">
+          <div class="flex items-center justify-between">
+            <label class="block text-xs font-bold text-amber-400 uppercase tracking-wider">Patologías Específicas Detectadas:</label>
+            <span class="text-[11px] text-slate-400 font-mono">Doctrina de Pavimentos</span>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-1.5 text-xs text-slate-300">
+            <label class="flex items-center gap-2 p-1.5 rounded-lg bg-[#140e40] hover:bg-[#1c145c] cursor-pointer">
+              <input type="checkbox" name="patologia_vial" value="piel_cocodrilo" class="accent-red-500 rounded">
+              <span>Piel de cocodrilo (falla base)</span>
+            </label>
+            <label class="flex items-center gap-2 p-1.5 rounded-lg bg-[#140e40] hover:bg-[#1c145c] cursor-pointer">
+              <input type="checkbox" name="patologia_vial" value="baches_profundos" class="accent-amber-500 rounded">
+              <span>Baches profundos / cortes</span>
+            </label>
+            <label class="flex items-center gap-2 p-1.5 rounded-lg bg-[#140e40] hover:bg-[#1c145c] cursor-pointer">
+              <input type="checkbox" name="patologia_vial" value="perdida_carpeta" class="accent-red-500 rounded">
+              <span>Pérdida de carpeta (>5m)</span>
+            </label>
+            <label class="flex items-center gap-2 p-1.5 rounded-lg bg-[#140e40] hover:bg-[#1c145c] cursor-pointer">
+              <input type="checkbox" name="patologia_vial" value="falta_bombeo" class="accent-amber-500 rounded">
+              <span>Oxidación / Falta de bombeo</span>
+            </label>
+            <label class="flex items-center gap-2 p-1.5 rounded-lg bg-[#140e40] hover:bg-[#1c145c] cursor-pointer">
+              <input type="checkbox" name="patologia_vial" value="asentamiento_alcantarilla" class="accent-amber-500 rounded">
+              <span>Asentamiento en ducto / tubo</span>
+            </label>
+            <label class="flex items-center gap-2 p-1.5 rounded-lg bg-[#140e40] hover:bg-[#1c145c] cursor-pointer">
+              <input type="checkbox" name="patologia_vial" value="sobreasfaltado" class="accent-red-500 rounded">
+              <span>Sobreasfaltado empotra brocal</span>
+            </label>
+            <label class="flex items-center gap-2 p-1.5 rounded-lg bg-[#140e40] hover:bg-[#1c145c] cursor-pointer">
+              <input type="checkbox" name="patologia_vial" value="falta_pintura" class="accent-amber-500 rounded">
+              <span>Falta pintura en brocales / islas</span>
+            </label>
+            <label class="flex items-center gap-2 p-1.5 rounded-lg bg-[#140e40] hover:bg-[#1c145c] cursor-pointer">
+              <input type="checkbox" name="patologia_vial" value="sumideros_colapsados" class="accent-red-500 rounded">
+              <span>Sumidero colapsado / sin reja</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- ALERTA DE OBRAS DE ARTE / PUENTES CRÍTICOS -->
+        <div class="bg-[#0e092e] p-3 rounded-2xl border border-red-900/60 space-y-1.5">
+          <div class="flex items-center justify-between text-rose-400">
+            <span class="text-xs font-bold uppercase tracking-wider flex items-center gap-1.5">
+              <span>⚠️</span>
+              <span>Alerta de Puente o Estructura Crítica:</span>
+            </span>
+            <span class="text-[10px] text-rose-300 font-mono">Prioridad Regional</span>
+          </div>
+          <select id="select-puente-critico" class="w-full px-3 py-2 text-xs bg-[#140e40] border border-[#2d1f85] rounded-xl text-white font-medium focus:border-red-500">
+            <option value="ninguno">Ninguno (Tramo continuo sin obras mayores)</option>
+            <option value="puente_amana">⚠️ PUENTE DE AMANA: Socavación severa en pilas/estribos</option>
+            <option value="puente_caripito">⚠️ PUENTE DE CARIPITO: Falla en juntas estructurales y losa</option>
+            <option value="ponton_socavado">⚠️ Pontón o alcantarilla con socavón activo bajo calzada</option>
+            <option value="boca_visita_sin_tapa">⚠️ Boca de visita abierta sin tapa (trampa mortal)</option>
+          </select>
+        </div>
+
+        <!-- DRENAJES Y BROCALES -->
+        <div>
+          <label class="block text-xs font-bold text-slate-300 uppercase mb-1">Estado de Brocales y Aceras</label>
+          <select id="select-tramo-drenaje" class="w-full px-3 py-2 text-xs bg-[#0e092e] border border-[#2d1f85] rounded-xl text-white font-medium focus:border-amber-500">
+            <option value="intactos">🟢 Brocales intactos con altura de guarda adecuada</option>
+            <option value="fracturados">🟡 Brocales fracturados o agrietados</option>
+            <option value="sepultados">🔴 Brocales sepultados por asfalto sucesivo (inunda casas)</option>
+            <option value="inexistentes">🟡 Sin aceras ni brocales (camino abierto)</option>
+          </select>
+        </div>
+
         <!-- FOTO DEL BACHE (OPCIONAL) -->
         <div class="bg-[#0e092e] p-3 rounded-2xl border border-[#2d1f85] space-y-2">
           <div class="flex items-center justify-between">
-            <label class="block text-sm font-bold text-slate-300 uppercase">Foto de Evidencia (Opcional):</label>
-            <span class="text-base text-slate-500">Cámara / WhatsApp</span>
+            <label class="block text-xs font-bold text-slate-300 uppercase">Foto de Evidencia (Opcional):</label>
+            <span class="text-xs text-slate-500">Cámara / WhatsApp</span>
           </div>
 
           <button type="button" onclick="document.getElementById('input-camera-file').click()" class="w-full py-2 px-3 rounded-xl bg-[#18114a] hover:bg-[#23176d] border border-[#2d1f85] text-sm font-bold text-amber-400 transition flex items-center justify-center gap-2">
@@ -294,7 +387,7 @@
 
         <!-- Observación rápida -->
         <div>
-          <label class="block text-sm font-bold text-slate-300 uppercase mb-1">Detalle o Falla (Opcional)</label>
+          <label class="block text-xs font-bold text-slate-300 uppercase mb-1">Detalle o Falla (Opcional)</label>
           <input type="text" id="input-tramo-detalle" placeholder="Ej: Bote de agua cloacal, bache en canal derecho..." class="w-full px-3 py-2 text-sm bg-[#0e092e] border border-[#2d1f85] rounded-xl text-white focus:border-amber-500">
         </div>
 
@@ -333,7 +426,7 @@
   </div>
 
   <!-- SCRIPT -->
-  <script type="module" src="js/app.js?v=6"></script>
+  <script type="module" src="js/app.js?v=7_20260928_vialidad"></script>
   <script src="../js/a11y.js"></script>
 </body>
 </html>

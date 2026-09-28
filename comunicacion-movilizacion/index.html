@@ -137,8 +137,8 @@
         </button>
 
         <button id="btnTabEventos" onclick="switchTab('eventos')" class="tab-btn px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-xl text-xs sm:text-sm font-bold text-slate-300 hover:text-white flex items-center gap-2 border border-transparent transition whitespace-nowrap">
-          <i data-lucide="calendar" class="w-4 h-4 text-amber-400"></i>
-          <span>Movilización & Eventos</span>
+          <i data-lucide="check-square" class="w-4 h-4 text-amber-400"></i>
+          <span>Movilización & Actividades</span>
           <span id="badgeEventos" class="bg-amber-950/80 text-amber-300 text-[10px] font-mono px-1.5 py-0.5 rounded-full border border-amber-500/30">0</span>
         </button>
 
@@ -399,21 +399,114 @@
     </section>
 
     <!-- ============================================================ -->
-    <!-- PESTAÑA 2: MOVILIZACIÓN & AGENDA DE EVENTOS EN TERRENO       -->
+    <!-- PESTAÑA 2: MOVILIZACIÓN & FICHERO DE ACTIVIDADES (ODOO CRM)  -->
     <!-- ============================================================ -->
-    <section id="paneEventos" class="tab-pane space-y-6">
+    <section id="paneEventos" class="tab-pane space-y-5">
 
-      <!-- Barra de Filtros y Acción Nuevo Evento -->
-      <div class="bg-[#111633] border border-[#202854] rounded-2xl p-4 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
-        
-        <!-- Búsqueda y Filtro por Parroquia -->
-        <div class="flex flex-wrap items-center gap-2 flex-1">
-          <div class="relative flex-1 min-w-[220px]">
-            <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3 top-3"></i>
-            <input type="text" id="searchEventoTxt" oninput="renderEventos()" placeholder="Buscar evento, sector o responsable..." class="w-full pl-9 pr-3 py-2 bg-[#0c1029] border border-[#202854] rounded-xl text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none focus:border-amber-500">
+      <!-- Encabezado de Movilización y Conmutador de Vistas (Estilo Odoo CRM) -->
+      <div class="bg-[#111633] border border-[#202854] rounded-2xl p-4 sm:p-5 flex flex-col lg:flex-row lg:items-center justify-between gap-4 shadow-xl">
+        <div class="space-y-1">
+          <div class="flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse"></span>
+            <span class="text-[11px] font-mono uppercase tracking-widest text-amber-400 font-bold">Doctrina Odoo CRM • Movilización MIGATO 2026</span>
+          </div>
+          <h3 class="text-lg sm:text-xl font-display font-extrabold text-white flex items-center gap-2">
+            <span>Fichero Semanal de Movilización & Compromisos Territoriales</span>
+          </h3>
+          <p class="text-xs text-slate-400">Seguimiento en caliente a llamadas, visitas casa por casa, reuniones de comando y cuadres de padrón en las 44 parroquias.</p>
+        </div>
+
+        <!-- Conmutador de Vistas y Botones Principales -->
+        <div class="flex flex-wrap items-center gap-2.5">
+          <!-- Switcher Vistas Odoo -->
+          <div class="bg-[#0c1029] p-1 rounded-xl border border-[#202854] flex items-center">
+            <button id="btnViewMatriz" onclick="switchMovilizacionView('matriz')" class="px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-amber-500 text-slate-950 shadow-sm" title="Matriz de Actividades por Comando">
+              <i data-lucide="layout-grid" class="w-3.5 h-3.5"></i>
+              <span>Matriz Odoo</span>
+            </button>
+            <button id="btnViewLista" onclick="switchMovilizacionView('lista')" class="px-3 py-1.5 rounded-lg text-xs font-bold text-slate-400 hover:text-white transition flex items-center gap-1.5" title="Fichero en Lista de Compromisos">
+              <i data-lucide="list-todo" class="w-3.5 h-3.5"></i>
+              <span>Fichero (Lista)</span>
+            </button>
+            <button id="btnViewEventos" onclick="switchMovilizacionView('eventos')" class="px-3 py-1.5 rounded-lg text-xs font-bold text-slate-400 hover:text-white transition flex items-center gap-1.5" title="Concentraciones y Actos de Masas">
+              <i data-lucide="calendar" class="w-3.5 h-3.5"></i>
+              <span>Concentraciones</span>
+            </button>
           </div>
 
-          <select id="filterEventoParroquia" onchange="renderEventos()" class="bg-[#0c1029] border border-[#202854] rounded-xl px-3 py-2 text-xs sm:text-sm text-slate-200 focus:outline-none focus:border-amber-500">
+          <!-- Acciones Rápidas -->
+          <button onclick="openModalPlanificarActividad()" class="px-3.5 py-2 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-extrabold text-xs sm:text-sm rounded-xl flex items-center gap-2 shadow-lg shadow-amber-500/20 active:scale-95 transition">
+            <i data-lucide="plus-circle" class="w-4 h-4"></i>
+            <span>Planificar Actividad</span>
+          </button>
+
+          <button onclick="openModalNuevoEvento()" class="px-3 py-2 bg-[#18204a] hover:bg-[#202b66] border border-amber-500/40 text-amber-300 font-bold text-xs rounded-xl flex items-center gap-1.5 transition active:scale-95">
+            <i data-lucide="flag" class="w-3.5 h-3.5 text-amber-400"></i>
+            <span>Nuevo Acto Masivo</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Métricas Odoo: KPIs Semanales del Fichero -->
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
+        <!-- KPI 1: Total compromisos activos -->
+        <div class="bg-[#111633] border border-[#202854] rounded-2xl p-3.5 flex items-center justify-between shadow-md">
+          <div>
+            <span class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Compromisos Activos</span>
+            <strong id="kpiTotalActividadesSemana" class="text-2xl font-display font-extrabold text-white block tabular-nums">0</strong>
+            <span class="text-[10px] text-amber-400">Total en cartera semanal</span>
+          </div>
+          <div class="w-10 h-10 rounded-xl bg-amber-950/60 border border-amber-500/40 flex items-center justify-center text-amber-400 shrink-0">
+            <i data-lucide="clipboard-list" class="w-5 h-5"></i>
+          </div>
+        </div>
+
+        <!-- KPI 2: Atrasadas (Rojo) -->
+        <div class="bg-[#111633] border border-rose-500/30 rounded-2xl p-3.5 flex items-center justify-between shadow-md">
+          <div>
+            <span class="text-[10px] uppercase font-bold text-rose-400 tracking-wider">Atrasadas (Alerta)</span>
+            <strong id="kpiAtrasadas" class="text-2xl font-display font-extrabold text-rose-300 block tabular-nums">0</strong>
+            <span class="text-[10px] text-rose-400/80">Requieren cierre o reprogramar</span>
+          </div>
+          <div class="w-10 h-10 rounded-xl bg-rose-950/70 border border-rose-500/50 flex items-center justify-center text-rose-400 shrink-0">
+            <i data-lucide="alert-circle" class="w-5 h-5"></i>
+          </div>
+        </div>
+
+        <!-- KPI 3: Para Hoy (Verde) -->
+        <div class="bg-[#111633] border border-emerald-500/30 rounded-2xl p-3.5 flex items-center justify-between shadow-md">
+          <div>
+            <span class="text-[10px] uppercase font-bold text-emerald-400 tracking-wider">Para Hoy (Prioridad)</span>
+            <strong id="kpiParaHoy" class="text-2xl font-display font-extrabold text-emerald-300 block tabular-nums">0</strong>
+            <span class="text-[10px] text-emerald-400/80">Planificadas para ejecución hoy</span>
+          </div>
+          <div class="w-10 h-10 rounded-xl bg-emerald-950/70 border border-emerald-500/50 flex items-center justify-center text-emerald-400 shrink-0">
+            <i data-lucide="calendar-check-2" class="w-5 h-5"></i>
+          </div>
+        </div>
+
+        <!-- KPI 4: Efectividad de Cumplimiento -->
+        <div class="bg-[#111633] border border-cyan-500/30 rounded-2xl p-3.5 flex items-center justify-between shadow-md">
+          <div>
+            <span class="text-[10px] uppercase font-bold text-cyan-400 tracking-wider">Tasa de Cierre</span>
+            <strong id="kpiEfectividad" class="text-2xl font-display font-extrabold text-cyan-300 block tabular-nums">0%</strong>
+            <span id="kpiCompletadasTxt" class="text-[10px] text-cyan-400/80">0 cerradas con minuta</span>
+          </div>
+          <div class="w-10 h-10 rounded-xl bg-cyan-950/70 border border-cyan-500/50 flex items-center justify-center text-cyan-400 shrink-0">
+            <i data-lucide="check-check" class="w-5 h-5"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Barra de Filtros Rápidos (Búsqueda, Parroquia y Chips Semafóricos) -->
+      <div class="bg-[#111633] border border-[#202854] rounded-2xl p-3 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
+        <div class="flex flex-wrap items-center gap-2 flex-1">
+          <div class="relative flex-1 min-w-[200px]">
+            <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3 top-2.5"></i>
+            <input type="text" id="searchActividadTxt" oninput="renderMovilizacionOdoo()" placeholder="Buscar comando, sector, responsable o tema..." class="w-full pl-9 pr-3 py-1.5 bg-[#0c1029] border border-[#202854] rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-500">
+          </div>
+
+          <select id="filterActividadParroquia" onchange="renderMovilizacionOdoo()" class="bg-[#0c1029] border border-[#202854] rounded-xl px-3 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-amber-500">
             <option value="todas">Todas las Parroquias</option>
             <option value="San Simón">San Simón</option>
             <option value="Alto de Los Godos">Alto de Los Godos</option>
@@ -425,20 +518,106 @@
             <option value="El Furrial">El Furrial</option>
             <option value="San Vicente">San Vicente</option>
             <option value="El Corozo">El Corozo</option>
-            <option value="Foráneo / Municipios">Otros Municipios de Monagas</option>
+            <option value="Ezequiel Zamora">Ezequiel Zamora (Punta de Mata)</option>
+            <option value="Piar">Piar (Aragua)</option>
+            <option value="Bolívar">Bolívar (Caripito)</option>
+            <option value="Otros Municipios">Otros Municipios</option>
           </select>
         </div>
 
-        <!-- Botón Programar Nuevo Evento -->
-        <button onclick="openModalNuevoEvento()" class="px-4 py-2.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-sm rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-amber-500/20 active:scale-95 transition">
-          <i data-lucide="calendar-plus" class="w-4 h-4"></i>
-          <span>Programar Nuevo Evento</span>
-        </button>
+        <!-- Chips Semafóricos Odoo -->
+        <div class="flex items-center gap-1.5 overflow-x-auto scrollbar-none shrink-0" id="chipsFiltroOdoo">
+          <button onclick="setOdooFiltroChip('todas')" class="chip-odoo active px-2.5 py-1 rounded-lg text-[11px] font-bold bg-[#202854] text-white transition whitespace-nowrap" data-chip="todas">
+            Todas
+          </button>
+          <button onclick="setOdooFiltroChip('atrasadas')" class="chip-odoo px-2.5 py-1 rounded-lg text-[11px] font-bold bg-[#141a3d] text-rose-400 hover:bg-rose-950/60 border border-rose-500/20 transition whitespace-nowrap flex items-center gap-1" data-chip="atrasadas">
+            <span class="w-2 h-2 rounded-full bg-rose-500"></span>
+            <span>Atrasadas</span>
+          </button>
+          <button onclick="setOdooFiltroChip('hoy')" class="chip-odoo px-2.5 py-1 rounded-lg text-[11px] font-bold bg-[#141a3d] text-emerald-400 hover:bg-emerald-950/60 border border-emerald-500/20 transition whitespace-nowrap flex items-center gap-1" data-chip="hoy">
+            <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+            <span>Hoy</span>
+          </button>
+          <button onclick="setOdooFiltroChip('semana')" class="chip-odoo px-2.5 py-1 rounded-lg text-[11px] font-bold bg-[#141a3d] text-amber-400 hover:bg-amber-950/60 border border-amber-500/20 transition whitespace-nowrap flex items-center gap-1" data-chip="semana">
+            <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+            <span>Esta Semana</span>
+          </button>
+          <button onclick="setOdooFiltroChip('completadas')" class="chip-odoo px-2.5 py-1 rounded-lg text-[11px] font-bold bg-[#141a3d] text-slate-400 hover:bg-slate-800 border border-slate-700/40 transition whitespace-nowrap flex items-center gap-1" data-chip="completadas">
+            <i data-lucide="check" class="w-3 h-3 text-slate-400"></i>
+            <span>Completadas</span>
+          </button>
+        </div>
       </div>
 
-      <!-- Listado de Eventos (Cards Detalladas) -->
-      <div id="listaEventosGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-        <!-- Renderizado dinámico de tarjetas de evento por JS -->
+      <!-- VISTA 1: MATRIZ DE ACTIVIDADES ESTILO ODOO CRM -->
+      <div id="containerMatrizActividades" class="space-y-3">
+        <div class="bg-[#111633] border border-[#202854] rounded-2xl overflow-hidden shadow-xl">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse text-xs">
+              <thead>
+                <tr class="bg-[#0c1029] border-b border-[#202854] text-slate-300 font-mono text-[11px] uppercase">
+                  <th class="py-3 px-4 min-w-[240px]">Comando Territorial / Enlace</th>
+                  <th class="py-3 px-3 text-center min-w-[130px]">
+                    <div class="flex items-center justify-center gap-1.5 text-cyan-400">
+                      <i data-lucide="phone-call" class="w-3.5 h-3.5"></i>
+                      <span>Llamada</span>
+                    </div>
+                  </th>
+                  <th class="py-3 px-3 text-center min-w-[140px]">
+                    <div class="flex items-center justify-center gap-1.5 text-emerald-400">
+                      <i data-lucide="home" class="w-3.5 h-3.5"></i>
+                      <span>Visita Casa x Casa</span>
+                    </div>
+                  </th>
+                  <th class="py-3 px-3 text-center min-w-[140px]">
+                    <div class="flex items-center justify-center gap-1.5 text-amber-400">
+                      <i data-lucide="users" class="w-3.5 h-3.5"></i>
+                      <span>Reunión Comando</span>
+                    </div>
+                  </th>
+                  <th class="py-3 px-3 text-center min-w-[140px]">
+                    <div class="flex items-center justify-center gap-1.5 text-purple-400">
+                      <i data-lucide="clipboard-check" class="w-3.5 h-3.5"></i>
+                      <span>Cuadre Padrón</span>
+                    </div>
+                  </th>
+                  <th class="py-3 px-3 text-center min-w-[130px]">
+                    <div class="flex items-center justify-center gap-1.5 text-blue-400">
+                      <i data-lucide="truck" class="w-3.5 h-3.5"></i>
+                      <span>Logística</span>
+                    </div>
+                  </th>
+                  <th class="py-3 px-4 text-center min-w-[90px]">Chatter</th>
+                </tr>
+              </thead>
+              <tbody id="tbodyMatrizActividades" class="divide-y divide-[#18204a]">
+                <!-- Generado por renderMatrizActividades() -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- VISTA 2: LISTA DE COMPROMISOS / FICHERO -->
+      <div id="containerListaActividades" class="hidden space-y-3">
+        <div id="listaActividadesCards" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <!-- Generado por renderListaActividades() -->
+        </div>
+      </div>
+
+      <!-- VISTA 3: CONCENTRACIONES & EVENTOS DE CALLE (EXISTENTE MEJORADA) -->
+      <div id="containerEventosCalle" class="hidden space-y-4">
+        <div class="flex items-center justify-between pb-1">
+          <h4 class="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
+            <i data-lucide="megaphone" class="w-4 h-4 text-amber-400"></i>
+            <span>Actos de Masas, Asambleas y Caminatas Programadas</span>
+          </h4>
+          <span class="text-xs text-slate-400 font-mono">Monagas 2026</span>
+        </div>
+        <!-- Listado de Eventos (Cards Detalladas) -->
+        <div id="listaEventosGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          <!-- Renderizado dinámico de tarjetas de evento por JS -->
+        </div>
       </div>
 
     </section>
@@ -1023,12 +1202,372 @@
     </div>
   </div>
 
-  <!-- ============================================================== -->
+  <!-- Modal E: Planificar Actividad Odoo CRM -->
+  <div id="modalPlanificarActividad" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-[#111633] border border-amber-500/40 rounded-3xl max-w-xl w-full p-6 shadow-2xl space-y-4 max-h-[92vh] overflow-y-auto">
+      <div class="flex items-center justify-between border-b border-[#202854] pb-3">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400">
+            <i data-lucide="plus-circle" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h3 class="font-display font-extrabold text-white text-base">Planificar Actividad / Compromiso</h3>
+            <span class="text-[11px] text-slate-400 font-mono">Fichero Territorial Estilo Odoo</span>
+          </div>
+        </div>
+        <button onclick="closeModal('modalPlanificarActividad')" class="text-slate-400 hover:text-white p-1 rounded-lg">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <form id="formPlanificarActividad" onsubmit="guardarNuevaActividad(event)" class="space-y-4 text-xs sm:text-sm">
+        <!-- Comando / Enlace Territorial -->
+        <div>
+          <label class="block text-xs font-bold text-slate-300 uppercase mb-1">Comando Territorial / Enlace Responsable *</label>
+          <select id="paComandoId" required class="w-full bg-[#18204a] border border-[#202854] rounded-xl px-3 py-2 text-white focus:outline-none focus:border-amber-400">
+            <!-- Rellenado dinámicamente con COMANDOS_MONAGAS -->
+          </select>
+        </div>
+
+        <!-- Tipo de Actividad (Botones tipo Odoo) -->
+        <div>
+          <label class="block text-xs font-bold text-slate-300 uppercase mb-1.5">Tipo de Actividad *</label>
+          <div class="grid grid-cols-2 sm:grid-cols-3 gap-2" id="selectorTipoActividad">
+            <button type="button" onclick="selectTipoActividad('llamada')" class="btn-tipo-act px-3 py-2 rounded-xl border border-cyan-500/60 bg-cyan-950/60 text-cyan-300 flex items-center gap-2 transition" data-tipo="llamada">
+              <i data-lucide="phone-call" class="w-4 h-4 text-cyan-400"></i>
+              <span class="text-xs font-semibold">Llamada</span>
+            </button>
+            <button type="button" onclick="selectTipoActividad('visita')" class="btn-tipo-act px-3 py-2 rounded-xl border border-[#202854] bg-[#0c1029] text-slate-300 hover:border-emerald-500/50 flex items-center gap-2 transition" data-tipo="visita">
+              <i data-lucide="home" class="w-4 h-4 text-emerald-400"></i>
+              <span class="text-xs font-semibold">Visita Casa x Casa</span>
+            </button>
+            <button type="button" onclick="selectTipoActividad('reunion')" class="btn-tipo-act px-3 py-2 rounded-xl border border-[#202854] bg-[#0c1029] text-slate-300 hover:border-amber-500/50 flex items-center gap-2 transition" data-tipo="reunion">
+              <i data-lucide="users" class="w-4 h-4 text-amber-400"></i>
+              <span class="text-xs font-semibold">Reunión Comando</span>
+            </button>
+            <button type="button" onclick="selectTipoActividad('padron')" class="btn-tipo-act px-3 py-2 rounded-xl border border-[#202854] bg-[#0c1029] text-slate-300 hover:border-purple-500/50 flex items-center gap-2 transition" data-tipo="padron">
+              <i data-lucide="clipboard-check" class="w-4 h-4 text-purple-400"></i>
+              <span class="text-xs font-semibold">Cuadre Padrón</span>
+            </button>
+            <button type="button" onclick="selectTipoActividad('logistica')" class="btn-tipo-act px-3 py-2 rounded-xl border border-[#202854] bg-[#0c1029] text-slate-300 hover:border-blue-500/50 flex items-center gap-2 transition col-span-2 sm:col-span-2" data-tipo="logistica">
+              <i data-lucide="truck" class="w-4 h-4 text-blue-400"></i>
+              <span class="text-xs font-semibold">Logística & Movilización</span>
+            </button>
+          </div>
+          <input type="hidden" id="paTipo" value="llamada" required>
+        </div>
+
+        <!-- Resumen / Objetivo -->
+        <div>
+          <label class="block text-xs font-bold text-slate-300 uppercase mb-1">Resumen / Objetivo del Compromiso *</label>
+          <input type="text" id="paResumen" required placeholder="Ej: Confirmar los 12 testigos del Centro Escuela República del Uruguay" class="w-full bg-[#18204a] border border-[#202854] rounded-xl px-3 py-2 text-white focus:outline-none focus:border-amber-400">
+        </div>
+
+        <!-- Fecha de Vencimiento + Atajos Rápidos -->
+        <div class="space-y-1.5">
+          <div class="flex items-center justify-between">
+            <label class="block text-xs font-bold text-slate-300 uppercase">Fecha de Vencimiento *</label>
+            <!-- Atajos rápidos estilo Odoo -->
+            <div class="flex items-center gap-1">
+              <button type="button" onclick="setPaFechaOffset(0)" class="px-2 py-0.5 rounded bg-[#18204a] hover:bg-amber-500/20 text-[10px] text-amber-300 font-mono border border-amber-500/30">Hoy</button>
+              <button type="button" onclick="setPaFechaOffset(1)" class="px-2 py-0.5 rounded bg-[#18204a] hover:bg-amber-500/20 text-[10px] text-amber-300 font-mono border border-amber-500/30">Mañana</button>
+              <button type="button" onclick="setPaFechaOffset(3)" class="px-2 py-0.5 rounded bg-[#18204a] hover:bg-amber-500/20 text-[10px] text-amber-300 font-mono border border-amber-500/30">+3 días</button>
+              <button type="button" onclick="setPaFechaProximoSabado()" class="px-2 py-0.5 rounded bg-[#18204a] hover:bg-amber-500/20 text-[10px] text-amber-300 font-mono border border-amber-500/30">Sábado</button>
+            </div>
+          </div>
+          <div class="grid grid-cols-2 gap-3">
+            <input type="date" id="paFecha" required class="w-full bg-[#18204a] border border-[#202854] rounded-xl px-3 py-2 text-white focus:outline-none focus:border-amber-400">
+            <input type="time" id="paHora" value="10:00" class="w-full bg-[#18204a] border border-[#202854] rounded-xl px-3 py-2 text-white focus:outline-none focus:border-amber-400">
+          </div>
+        </div>
+
+        <!-- Responsable y Prioridad -->
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-slate-300 uppercase mb-1">Asignado a *</label>
+            <input type="text" id="paAsignado" required value="Ing. Diego Donado" class="w-full bg-[#18204a] border border-[#202854] rounded-xl px-3 py-2 text-white focus:outline-none focus:border-amber-400">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-300 uppercase mb-1">Prioridad</label>
+            <select id="paPrioridad" class="w-full bg-[#18204a] border border-[#202854] rounded-xl px-3 py-2 text-white focus:outline-none focus:border-amber-400">
+              <option value="Normal">Normal</option>
+              <option value="Alta">Alta 🔥</option>
+              <option value="Urgente">Urgente 🚨</option>
+              <option value="Baja">Baja</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Notas / Instrucciones específicas -->
+        <div>
+          <label class="block text-xs font-bold text-slate-300 uppercase mb-1">Instrucciones / Observaciones previas</label>
+          <textarea id="paNotas" rows="2" placeholder="Detalles de contacto, temas a tratar o acuerdos de la asamblea previa..." class="w-full bg-[#18204a] border border-[#202854] rounded-xl px-3 py-2 text-white focus:outline-none focus:border-amber-400 text-xs"></textarea>
+        </div>
+
+        <!-- Botones de Acción -->
+        <div class="pt-3 border-t border-[#202854] flex items-center justify-end gap-2.5">
+          <button type="button" onclick="closeModal('modalPlanificarActividad')" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold rounded-xl transition text-xs">
+            Cancelar
+          </button>
+          <button type="submit" class="px-5 py-2 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black rounded-xl shadow-lg shadow-amber-500/20 active:scale-95 transition text-xs flex items-center gap-1.5">
+            <i data-lucide="check" class="w-4 h-4"></i>
+            <span>Planificar</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal F: Cerrar Actividad Odoo (Marcar Hecho / Hecho y Siguiente) -->
+  <div id="modalCerrarActividad" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-[#111633] border border-emerald-500/40 rounded-3xl max-w-lg w-full p-6 shadow-2xl space-y-4 max-h-[92vh] overflow-y-auto">
+      <div class="flex items-center justify-between border-b border-[#202854] pb-3">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400">
+            <i data-lucide="check-check" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h3 class="font-display font-extrabold text-white text-base">Cierre de Actividad Territorial</h3>
+            <span class="text-[11px] text-emerald-400 font-mono">Registro en Chatter & Minuta Odoo</span>
+          </div>
+        </div>
+        <button onclick="closeModal('modalCerrarActividad')" class="text-slate-400 hover:text-white p-1 rounded-lg">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div class="bg-[#0c1029] p-3.5 rounded-2xl border border-[#202854] space-y-1.5">
+        <div class="flex items-center justify-between">
+          <span id="closeActTipoBadge" class="px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase bg-cyan-950 text-cyan-300 border border-cyan-500/30">Llamada</span>
+          <span id="closeActFechaVenc" class="text-[11px] text-slate-400 font-mono">Vencimiento: 2026-09-28</span>
+        </div>
+        <h4 id="closeActResumen" class="text-sm font-bold text-white leading-snug">Resumen de la actividad</h4>
+        <div class="text-xs text-slate-300 flex items-center gap-2">
+          <i data-lucide="map-pin" class="w-3.5 h-3.5 text-amber-400"></i>
+          <span id="closeActComando">Comando San Simón</span>
+        </div>
+      </div>
+
+      <div class="space-y-2">
+        <label class="block text-xs font-bold text-slate-300 uppercase">
+          Minuta / Resultado del Contacto *
+          <span class="text-[10px] text-slate-400 lowercase font-normal">(quedará guardada en el historial del comando)</span>
+        </label>
+        <textarea id="closeActFeedback" rows="3" required placeholder="Ej: Se conversó con el enlace Mariela Rivas. Confirmó asistencia de 8 testigos y solicitó 2 pancartas para el portón de la escuela..." class="w-full bg-[#18204a] border border-[#202854] rounded-xl px-3 py-2 text-white focus:outline-none focus:border-emerald-400 text-xs"></textarea>
+      </div>
+
+      <input type="hidden" id="closeActId">
+
+      <div class="pt-3 border-t border-[#202854] flex flex-col sm:flex-row items-stretch sm:items-center justify-end gap-2">
+        <button type="button" onclick="closeModal('modalCerrarActividad')" class="px-3.5 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold rounded-xl transition text-xs text-center">
+          Cancelar
+        </button>
+        <button type="button" onclick="ejecutarCierreActividad(false)" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl transition text-xs flex items-center justify-center gap-1.5 shadow-md active:scale-95">
+          <i data-lucide="check" class="w-4 h-4"></i>
+          <span>Marcar como Hecho</span>
+        </button>
+        <button type="button" onclick="ejecutarCierreActividad(true)" class="px-4 py-2 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black rounded-xl transition text-xs flex items-center justify-center gap-1.5 shadow-md active:scale-95" title="Cierra esta actividad y abre inmediatamente la ventana para agendar la próxima">
+          <i data-lucide="calendar-plus" class="w-4 h-4"></i>
+          <span>Hecho y Planificar Siguiente</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal G: Chatter / Historial Territorial de un Comando -->
+  <div id="modalChatterHistorial" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-[#111633] border border-cyan-500/40 rounded-3xl max-w-2xl w-full p-6 shadow-2xl space-y-4 max-h-[92vh] overflow-y-auto">
+      <div class="flex items-center justify-between border-b border-[#202854] pb-3">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-xl bg-cyan-500/20 border border-cyan-500/40 flex items-center justify-center text-cyan-400">
+            <i data-lucide="message-square" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h3 id="chatterComandoTitulo" class="font-display font-extrabold text-white text-base">Historial & Chatter Territorial</h3>
+            <span id="chatterComandoSub" class="text-[11px] text-slate-400 font-mono">Seguimiento de Contactos</span>
+          </div>
+        </div>
+        <button onclick="closeModal('modalChatterHistorial')" class="text-slate-400 hover:text-white p-1 rounded-lg">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <!-- Timeline del Chatter -->
+      <div id="chatterTimelineContainer" class="space-y-3.5 max-h-[55vh] overflow-y-auto pr-1">
+        <!-- Generado dinámicamente -->
+      </div>
+
+      <div class="pt-3 border-t border-[#202854] flex items-center justify-between">
+        <span class="text-[11px] text-slate-400 font-mono">Registro auditado • Comando Regional MIGATO</span>
+        <button type="button" onclick="closeModal('modalChatterHistorial')" class="px-4 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold rounded-xl text-xs transition">
+          Cerrar
+        </button>
+      </div>
+    </div>
+  </div>
   <!-- 5. LÓGICA DE CONTROL JAVASCRIPT                                 -->
   <!-- ============================================================== -->
   <script>
     // ESTADO GLOBAL DE DATOS (Módulo VII)
     const STORAGE_KEY = "MIGATO_MODULO_VII_2026";
+
+    // COMANDOS TERRITORIALES BASE DE MONAGAS (DOCTRINA MIGATO 2026)
+    const COMANDOS_MONAGAS = [
+      { id: "cmd-san-simon", nombre: "Comando Parroquial San Simón", parroquia: "San Simón", municipio: "Maturín", responsable: "Prof. Carlos Bello", telefono: "+584147654321", centrosVotacion: 32 },
+      { id: "cmd-la-puente", nombre: "Comando Sectorial La Puente", parroquia: "Alto de Los Godos", municipio: "Maturín", responsable: "Mariela Rivas", telefono: "+584249123456", centrosVotacion: 18 },
+      { id: "cmd-boqueron", nombre: "Comando Parroquial Boquerón", parroquia: "Boquerón", municipio: "Maturín", responsable: "Luis Morales", telefono: "+584128899001", centrosVotacion: 22 },
+      { id: "cmd-las-cocuizas", nombre: "Comando Parroquial Las Cocuizas", parroquia: "Las Cocuizas", municipio: "Maturín", responsable: "Dra. Carmen Rondón", telefono: "+584163456789", centrosVotacion: 26 },
+      { id: "cmd-santa-cruz", nombre: "Comando Parroquial Santa Cruz", parroquia: "Santa Cruz", municipio: "Maturín", responsable: "Ing. Pedro Salazar", telefono: "+584148765432", centrosVotacion: 14 },
+      { id: "cmd-zamora", nombre: "Comando Municipal Punta de Mata", parroquia: "Ezequiel Zamora", municipio: "Ezequiel Zamora", responsable: "Ing. Roberto Gómez", telefono: "+584249876543", centrosVotacion: 28 },
+      { id: "cmd-piar", nombre: "Comando Parroquial Aragua de Maturín", parroquia: "Piar", municipio: "Piar", responsable: "José Manuel Silva", telefono: "+584121234567", centrosVotacion: 16 },
+      { id: "cmd-bolivar", nombre: "Comando Parroquial Caripito", parroquia: "Bolívar", municipio: "Bolívar", responsable: "Elena Salazar", telefono: "+584145678901", centrosVotacion: 20 }
+    ];
+
+    function getFechaOffset(dias) {
+      const d = new Date();
+      d.setDate(d.getDate() + dias);
+      return d.toISOString().split("T")[0];
+    }
+
+    function generarActividadesSemilla() {
+      return [
+        {
+          id: "act-seed-1",
+          comandoId: "cmd-san-simon",
+          tipo: "llamada",
+          resumen: "Coordinar padrón de testigos en el Liceo Francisco Isnardi",
+          fecha: getFechaOffset(-1), // Atrasada (Rojo)
+          hora: "09:30",
+          asignado: "Ing. Diego Donado",
+          prioridad: "Alta",
+          notas: "Verificar si ya recibieron las planillas de acreditación para los 3 turnos.",
+          hecho: false,
+          feedback: "",
+          fechaCierre: null,
+          creadoEn: new Date().toISOString()
+        },
+        {
+          id: "act-seed-2",
+          comandoId: "cmd-la-puente",
+          tipo: "visita",
+          resumen: "Casa por casa en Sector 2 de La Puente con líderes de manzana",
+          fecha: getFechaOffset(0), // Hoy (Verde)
+          hora: "15:00",
+          asignado: "Mariela Rivas / Voluntariado",
+          prioridad: "Alta",
+          notas: "Entrega de 150 cartas de compromiso firmadas por El Gato Briceño.",
+          hecho: false,
+          feedback: "",
+          fechaCierre: null,
+          creadoEn: new Date().toISOString()
+        },
+        {
+          id: "act-seed-3",
+          comandoId: "cmd-la-puente",
+          tipo: "reunion",
+          resumen: "Círculo Gatero y asamblea relámpago en Cancha Techada",
+          fecha: getFechaOffset(2), // Esta semana (Amarillo)
+          hora: "17:30",
+          asignado: "Ing. Diego Donado",
+          prioridad: "Normal",
+          notas: "Revisar logística de sonido portátil y megáfonos.",
+          hecho: false,
+          feedback: "",
+          fechaCierre: null,
+          creadoEn: new Date().toISOString()
+        },
+        {
+          id: "act-seed-4",
+          comandoId: "cmd-boqueron",
+          tipo: "padron",
+          resumen: "Cotejo de cuadernos y centros de votación en Costo Arriba",
+          fecha: getFechaOffset(0), // Hoy (Verde)
+          hora: "11:00",
+          asignado: "Luis Morales",
+          prioridad: "Urgente",
+          notas: "Faltan 4 suplentes en la Escuela Básica Boquerón.",
+          hecho: false,
+          feedback: "",
+          fechaCierre: null,
+          creadoEn: new Date().toISOString()
+        },
+        {
+          id: "act-seed-5",
+          comandoId: "cmd-las-cocuizas",
+          tipo: "logistica",
+          resumen: "Ruta de transporte para movilizadores del sector El Silencio",
+          fecha: getFechaOffset(3), // Esta semana (Amarillo)
+          hora: "08:00",
+          asignado: "Dra. Carmen Rondón",
+          prioridad: "Normal",
+          notas: "Confirmar 3 camionetas y disponibilidad de combustible para el fin de semana.",
+          hecho: false,
+          feedback: "",
+          fechaCierre: null,
+          creadoEn: new Date().toISOString()
+        },
+        {
+          id: "act-seed-6",
+          comandoId: "cmd-zamora",
+          tipo: "llamada",
+          resumen: "Contactar a comerciantes de Punta de Mata para punto de encuentro",
+          fecha: getFechaOffset(-2), // Atrasada (Rojo)
+          hora: "14:00",
+          asignado: "Ing. Roberto Gómez",
+          prioridad: "Alta",
+          notas: "Acordar logística del Club Árabe para la visita del fin de semana.",
+          hecho: false,
+          feedback: "",
+          fechaCierre: null,
+          creadoEn: new Date().toISOString()
+        },
+        {
+          id: "act-seed-7",
+          comandoId: "cmd-piar",
+          tipo: "visita",
+          resumen: "Recorrido de campo con productores agrícolas de Taguaya",
+          fecha: getFechaOffset(4), // Esta semana (Amarillo)
+          hora: "10:00",
+          asignado: "José Manuel Silva",
+          prioridad: "Normal",
+          notas: "Levantamiento de peticiones de vialidad agrícola para el Plan de 100 Días.",
+          hecho: false,
+          feedback: "",
+          fechaCierre: null,
+          creadoEn: new Date().toISOString()
+        },
+        {
+          id: "act-seed-8",
+          comandoId: "cmd-san-simon",
+          tipo: "reunion",
+          resumen: "Reunión de balance semanal con los 32 jefes de centro",
+          fecha: getFechaOffset(-4),
+          hora: "18:00",
+          asignado: "Prof. Carlos Bello",
+          prioridad: "Alta",
+          notas: "Revisión 100% de la estructura de testigos.",
+          hecho: true,
+          feedback: "Asistieron 30 de los 32 jefes de centro. Se ratificó el compromiso electoral y se entregaron credenciales preliminares. Moral en alto con El Gato Briceño.",
+          fechaCierre: getFechaOffset(-4) + "T19:45:00Z",
+          creadoEn: new Date().toISOString()
+        },
+        {
+          id: "act-seed-9",
+          comandoId: "cmd-bolivar",
+          tipo: "llamada",
+          resumen: "Llamada de enlace con sindicatos azucareros y pesqueros de Caripito",
+          fecha: getFechaOffset(-3),
+          hora: "16:00",
+          asignado: "Elena Salazar",
+          prioridad: "Normal",
+          notas: "Sondeo de respaldo de trabajadores.",
+          hecho: true,
+          feedback: "Contacto muy positivo. 4 voceros gremiales se sumaron activamente al voluntariado de MIGATO.",
+          fechaCierre: getFechaOffset(-3) + "T17:15:00Z",
+          creadoEn: new Date().toISOString()
+        }
+      ];
+    }
 
     // Datos por defecto (Realistas de Monagas 2026)
     const DEFAULT_DATA = {
@@ -1184,20 +1723,29 @@
           detalle: "Transmisión en vivo por emisoras aliadas de Maturín y señal abierta por redes sociales.",
           notificado: false
         }
-      ]
+      ],
+      actividades: generarActividadesSemilla()
     };
 
     // Inicializar datos
     let AppData = loadData();
 
     function loadData() {
+      let data = null;
       try {
         const raw = localStorage.getItem(STORAGE_KEY);
-        if (raw) return JSON.parse(raw);
+        if (raw) data = JSON.parse(raw);
       } catch (e) {
         console.warn("Error leyendo localStorage", e);
       }
-      return JSON.parse(JSON.stringify(DEFAULT_DATA));
+      if (!data) {
+        data = JSON.parse(JSON.stringify(DEFAULT_DATA));
+      }
+      // Garantizar que existan actividades Odoo inicializadas
+      if (!data.actividades || !Array.isArray(data.actividades) || data.actividades.length === 0) {
+        data.actividades = generarActividadesSemilla();
+      }
+      return data;
     }
 
     function saveData() {
@@ -1221,7 +1769,7 @@
       } else if (tabId === "eventos") {
         document.getElementById("btnTabEventos").classList.add("active");
         document.getElementById("paneEventos").classList.add("active");
-        renderEventos();
+        renderMovilizacionOdoo();
       } else if (tabId === "recordatorios") {
         document.getElementById("btnTabRecordatorios").classList.add("active");
         document.getElementById("paneRecordatorios").classList.add("active");
@@ -1431,14 +1979,635 @@ MIGATO Monagas 2026 • José Gregorio 'El Gato' Briceño`;
     }
 
     // ==============================================================
-    // AGENDA DE MOVILIZACIÓN Y EVENTOS EN TERRENO
+    // DOCTRINA ODOO CRM: FICHERO DE MOVILIZACIÓN & COMPROMISOS SEMANALES
+    // ==============================================================
+    let currentMovilizacionView = "matriz"; // 'matriz', 'lista', 'eventos'
+    let currentOdooChipFilter = "todas";   // 'todas', 'atrasadas', 'hoy', 'semana', 'completadas'
+
+    function evaluarEstadoOdoo(act) {
+      if (act.hecho) {
+        return { estado: "completada", color: "gray", label: "Completada", border: "border-slate-700", bg: "bg-slate-800 text-slate-300" };
+      }
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      const actDate = new Date(act.fecha + "T00:00:00");
+      actDate.setHours(0, 0, 0, 0);
+
+      const diffTime = actDate - today;
+      const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
+
+      if (diffDays < 0) {
+        return { estado: "atrasada", color: "rose", label: `Atrasada (${Math.abs(diffDays)}d)`, border: "border-rose-500/60", bg: "bg-rose-950/80 text-rose-300" };
+      } else if (diffDays === 0) {
+        return { estado: "hoy", color: "emerald", label: "Para Hoy", border: "border-emerald-500/60", bg: "bg-emerald-950/80 text-emerald-300" };
+      } else if (diffDays <= 7) {
+        return { estado: "semana", color: "amber", label: `En ${diffDays}d`, border: "border-amber-500/60", bg: "bg-amber-950/80 text-amber-300" };
+      } else {
+        return { estado: "futura", color: "blue", label: `En ${diffDays}d`, border: "border-blue-500/60", bg: "bg-blue-950/80 text-blue-300" };
+      }
+    }
+
+    function switchMovilizacionView(view) {
+      currentMovilizacionView = view;
+      const bMatriz = document.getElementById("btnViewMatriz");
+      const bLista = document.getElementById("btnViewLista");
+      const bEvt = document.getElementById("btnViewEventos");
+
+      const cMatriz = document.getElementById("containerMatrizActividades");
+      const cLista = document.getElementById("containerListaActividades");
+      const cEvt = document.getElementById("containerEventosCalle");
+
+      // Reset botones
+      [bMatriz, bLista, bEvt].forEach(b => {
+        if (!b) return;
+        b.classList.remove("bg-amber-500", "text-slate-950", "shadow-sm");
+        b.classList.add("text-slate-400");
+      });
+
+      // Ocultar contenedores
+      if (cMatriz) cMatriz.classList.add("hidden");
+      if (cLista) cLista.classList.add("hidden");
+      if (cEvt) cEvt.classList.add("hidden");
+
+      if (view === "matriz") {
+        if (bMatriz) {
+          bMatriz.classList.add("bg-amber-500", "text-slate-950", "shadow-sm");
+          bMatriz.classList.remove("text-slate-400");
+        }
+        if (cMatriz) cMatriz.classList.remove("hidden");
+      } else if (view === "lista") {
+        if (bLista) {
+          bLista.classList.add("bg-amber-500", "text-slate-950", "shadow-sm");
+          bLista.classList.remove("text-slate-400");
+        }
+        if (cLista) cLista.classList.remove("hidden");
+      } else if (view === "eventos") {
+        if (bEvt) {
+          bEvt.classList.add("bg-amber-500", "text-slate-950", "shadow-sm");
+          bEvt.classList.remove("text-slate-400");
+        }
+        if (cEvt) cEvt.classList.remove("hidden");
+      }
+
+      renderMovilizacionOdoo();
+    }
+
+    function setOdooFiltroChip(chip) {
+      currentOdooChipFilter = chip;
+      document.querySelectorAll(".chip-odoo").forEach(btn => {
+        btn.classList.remove("active", "bg-[#202854]", "text-white");
+        btn.classList.add("bg-[#141a3d]");
+        if (btn.getAttribute("data-chip") === chip) {
+          btn.classList.add("active", "bg-[#202854]", "text-white");
+          btn.classList.remove("bg-[#141a3d]");
+        }
+      });
+      renderMovilizacionOdoo();
+    }
+
+    function renderMovilizacionOdoo() {
+      if (!AppData.actividades) AppData.actividades = generarActividadesSemilla();
+
+      // Recalcular métricas
+      const pendientes = AppData.actividades.filter(a => !a.hecho);
+      const atrasadas = AppData.actividades.filter(a => !a.hecho && evaluarEstadoOdoo(a).estado === "atrasada");
+      const hoy = AppData.actividades.filter(a => !a.hecho && evaluarEstadoOdoo(a).estado === "hoy");
+      const completadas = AppData.actividades.filter(a => a.hecho);
+
+      const kpiTotal = document.getElementById("kpiTotalActividadesSemana");
+      const kpiAtr = document.getElementById("kpiAtrasadas");
+      const kpiHoy = document.getElementById("kpiParaHoy");
+      const kpiEf = document.getElementById("kpiEfectividad");
+      const kpiCompTxt = document.getElementById("kpiCompletadasTxt");
+      const badgeEvt = document.getElementById("badgeEventos");
+      const kpiGlobalEvt = document.getElementById("kpiTotalEventos");
+
+      if (kpiTotal) kpiTotal.textContent = pendientes.length;
+      if (kpiAtr) kpiAtr.textContent = atrasadas.length;
+      if (kpiHoy) kpiHoy.textContent = hoy.length;
+      if (badgeEvt) badgeEvt.textContent = pendientes.length;
+      if (kpiGlobalEvt) kpiGlobalEvt.textContent = pendientes.length;
+
+      const totalGeneral = AppData.actividades.length;
+      const tasa = totalGeneral > 0 ? Math.round((completadas.length / totalGeneral) * 100) : 0;
+      if (kpiEf) kpiEf.textContent = `${tasa}%`;
+      if (kpiCompTxt) kpiCompTxt.textContent = `${completadas.length} cerradas con minuta`;
+
+      if (currentMovilizacionView === "matriz") {
+        renderMatrizActividades();
+      } else if (currentMovilizacionView === "lista") {
+        renderListaActividades();
+      } else if (currentMovilizacionView === "eventos") {
+        renderEventos();
+      }
+    }
+
+    function renderMatrizActividades() {
+      const tbody = document.getElementById("tbodyMatrizActividades");
+      if (!tbody) return;
+      tbody.innerHTML = "";
+
+      const busquedaInput = document.getElementById("searchActividadTxt");
+      const busqueda = (busquedaInput ? busquedaInput.value : "").toLowerCase();
+      const filtroPSelect = document.getElementById("filterActividadParroquia");
+      const filtroP = filtroPSelect ? filtroPSelect.value : "todas";
+
+      const comandosFiltrados = COMANDOS_MONAGAS.filter(cmd => {
+        const matchTxt = cmd.nombre.toLowerCase().includes(busqueda) ||
+                         cmd.parroquia.toLowerCase().includes(busqueda) ||
+                         cmd.responsable.toLowerCase().includes(busqueda);
+        const matchP = filtroP === "todas" || cmd.parroquia === filtroP;
+        return matchTxt && matchP;
+      });
+
+      if (comandosFiltrados.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="7" class="py-8 text-center text-slate-500 text-xs">
+              No se encontraron comandos territoriales para el filtro seleccionado.
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      comandosFiltrados.forEach(cmd => {
+        const tr = document.createElement("tr");
+        tr.className = "hover:bg-[#141b3d]/50 transition group";
+
+        // Obtener actividades de este comando
+        const actsCmd = AppData.actividades.filter(a => a.comandoId === cmd.id);
+
+        // Tipos de columna
+        const tipos = ["llamada", "visita", "reunion", "padron", "logistica"];
+
+        let celdasActividadesHtml = "";
+        tipos.forEach(tipo => {
+          let actsTipo = actsCmd.filter(a => a.tipo === tipo);
+
+          // Si hay filtro de chip semafórico activo
+          if (currentOdooChipFilter !== "todas") {
+            actsTipo = actsTipo.filter(a => {
+              const est = evaluarEstadoOdoo(a);
+              if (currentOdooChipFilter === "atrasadas") return !a.hecho && est.estado === "atrasada";
+              if (currentOdooChipFilter === "hoy") return !a.hecho && est.estado === "hoy";
+              if (currentOdooChipFilter === "semana") return !a.hecho && est.estado === "semana";
+              if (currentOdooChipFilter === "completadas") return a.hecho;
+              return true;
+            });
+          }
+
+          let badgesHtml = "";
+          if (actsTipo.length > 0) {
+            badgesHtml = actsTipo.map(a => {
+              const est = evaluarEstadoOdoo(a);
+              const clickFn = a.hecho ? `verChatterHistorial('${cmd.id}')` : `openModalCerrarActividad('${a.id}')`;
+              const titleTip = `${escapeHtml(a.resumen)} (${est.label})`;
+              return `
+                <button onclick="${clickFn}" title="${titleTip}" class="px-2 py-0.5 rounded-lg text-[10px] font-bold border ${est.border} ${est.bg} hover:brightness-125 transition flex items-center gap-1 shadow-sm whitespace-nowrap active:scale-95">
+                  <span class="w-1.5 h-1.5 rounded-full ${a.hecho ? 'bg-slate-400' : est.color === 'rose' ? 'bg-rose-500 animate-pulse' : est.color === 'emerald' ? 'bg-emerald-400' : 'bg-amber-400'}"></span>
+                  <span class="max-w-[70px] truncate">${escapeHtml(a.resumen.slice(0, 11))}..</span>
+                  <span class="text-[9px] font-mono opacity-80">${est.label}</span>
+                </button>
+              `;
+            }).join("");
+          }
+
+          celdasActividadesHtml += `
+            <td class="py-2.5 px-2 text-center align-middle">
+              <div class="flex flex-col items-center justify-center gap-1 min-h-[36px]">
+                ${badgesHtml}
+                <button onclick="openModalPlanificarActividad('${cmd.id}', '${tipo}')" class="w-5 h-5 rounded-md bg-[#0c1029] hover:bg-amber-500/20 text-slate-500 hover:text-amber-400 border border-[#202854] flex items-center justify-center transition text-xs font-bold opacity-30 group-hover:opacity-100" title="Agendar ${tipo} para ${cmd.nombre}">
+                  +
+                </button>
+              </div>
+            </td>
+          `;
+        });
+
+        // Contar completadas para chatter
+        const completadasCount = actsCmd.filter(a => a.hecho).length;
+
+        tr.innerHTML = `
+          <td class="py-3 px-4 align-middle">
+            <div class="space-y-0.5">
+              <div class="flex items-center gap-1.5">
+                <span class="font-bold text-white text-xs hover:text-amber-400 transition cursor-pointer" onclick="verChatterHistorial('${cmd.id}')">${escapeHtml(cmd.nombre)}</span>
+                <span class="text-[9px] px-1.5 py-0.2 bg-amber-950 text-amber-300 rounded border border-amber-500/30 font-mono">${cmd.centrosVotacion} CV</span>
+              </div>
+              <div class="text-[11px] text-slate-400 flex items-center gap-2">
+                <span>📍 ${escapeHtml(cmd.parroquia)}</span>
+                <span>👤 ${escapeHtml(cmd.responsable)}</span>
+              </div>
+            </div>
+          </td>
+          ${celdasActividadesHtml}
+          <td class="py-3 px-4 text-center align-middle">
+            <button onclick="verChatterHistorial('${cmd.id}')" class="px-2.5 py-1 bg-cyan-950/60 hover:bg-cyan-900 border border-cyan-500/30 text-cyan-300 rounded-lg text-xs font-semibold flex items-center justify-center gap-1 transition mx-auto" title="Ver Chatter y Minutas">
+              <i data-lucide="message-square" class="w-3.5 h-3.5"></i>
+              <span class="font-mono">${completadasCount}</span>
+            </button>
+          </td>
+        `;
+
+        tbody.appendChild(tr);
+      });
+
+      lucide.createIcons();
+    }
+
+    function renderListaActividades() {
+      const container = document.getElementById("listaActividadesCards");
+      if (!container) return;
+      container.innerHTML = "";
+
+      const busquedaInput = document.getElementById("searchActividadTxt");
+      const busqueda = (busquedaInput ? busquedaInput.value : "").toLowerCase();
+      const filtroPSelect = document.getElementById("filterActividadParroquia");
+      const filtroP = filtroPSelect ? filtroPSelect.value : "todas";
+
+      const filtradas = AppData.actividades.filter(a => {
+        const cmd = COMANDOS_MONAGAS.find(c => c.id === a.comandoId) || { nombre: "", parroquia: "", responsable: "" };
+        const matchTxt = a.resumen.toLowerCase().includes(busqueda) ||
+                         cmd.nombre.toLowerCase().includes(busqueda) ||
+                         cmd.parroquia.toLowerCase().includes(busqueda) ||
+                         a.asignado.toLowerCase().includes(busqueda) ||
+                         (a.notas && a.notas.toLowerCase().includes(busqueda));
+
+        const matchP = filtroP === "todas" || cmd.parroquia === filtroP;
+
+        const est = evaluarEstadoOdoo(a);
+        let matchChip = true;
+        if (currentOdooChipFilter === "atrasadas") matchChip = (!a.hecho && est.estado === "atrasada");
+        if (currentOdooChipFilter === "hoy") matchChip = (!a.hecho && est.estado === "hoy");
+        if (currentOdooChipFilter === "semana") matchChip = (!a.hecho && est.estado === "semana");
+        if (currentOdooChipFilter === "completadas") matchChip = a.hecho;
+
+        return matchTxt && matchP && matchChip;
+      });
+
+      if (filtradas.length === 0) {
+        container.innerHTML = `
+          <div class="col-span-full py-12 text-center text-slate-500 text-xs">
+            <i data-lucide="clipboard-list" class="w-10 h-10 mx-auto mb-2 text-slate-600"></i>
+            <p>No hay compromisos que coincidan con los filtros seleccionados.</p>
+          </div>
+        `;
+        lucide.createIcons();
+        return;
+      }
+
+      filtradas.forEach(a => {
+        const cmd = COMANDOS_MONAGAS.find(c => c.id === a.comandoId) || { nombre: "Comando Territorial", parroquia: "Monagas", telefono: "" };
+        const est = evaluarEstadoOdoo(a);
+
+        let iconTipo = "phone-call";
+        let colorTipo = "text-cyan-400";
+        if (a.tipo === "visita") { iconTipo = "home"; colorTipo = "text-emerald-400"; }
+        if (a.tipo === "reunion") { iconTipo = "users"; colorTipo = "text-amber-400"; }
+        if (a.tipo === "padron") { iconTipo = "clipboard-check"; colorTipo = "text-purple-400"; }
+        if (a.tipo === "logistica") { iconTipo = "truck"; colorTipo = "text-blue-400"; }
+
+        // WhatsApp direct link
+        const cleanPhone = (cmd.telefono || "").replace(/[^0-9]/g, "");
+        const waText = encodeURIComponent(`Hola ${cmd.responsable}, te saludo del Comando MIGATO Monagas 2026 de El Gato Briceño. Sobre el compromiso pendiente: "${a.resumen}"...`);
+        const waLink = cleanPhone ? `https://wa.me/${cleanPhone}?text=${waText}` : "#";
+
+        const card = document.createElement("div");
+        card.className = `bg-[#111633] border ${est.border} rounded-2xl p-4 flex flex-col justify-between space-y-3.5 shadow-lg transition hover:border-amber-500/60`;
+
+        card.innerHTML = `
+          <div class="space-y-2.5">
+            <div class="flex items-center justify-between gap-1 text-xs">
+              <span class="flex items-center gap-1.5 font-bold uppercase text-[11px] font-mono ${colorTipo}">
+                <i data-lucide="${iconTipo}" class="w-3.5 h-3.5"></i>
+                <span>${a.tipo}</span>
+              </span>
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold ${est.bg} border ${est.border}">
+                ${est.label}
+              </span>
+            </div>
+
+            <h4 class="text-sm font-bold text-white leading-snug">${escapeHtml(a.resumen)}</h4>
+
+            <div class="space-y-1 text-xs text-slate-300">
+              <div class="flex items-center gap-1.5 text-slate-400">
+                <i data-lucide="map-pin" class="w-3.5 h-3.5 text-amber-400 shrink-0"></i>
+                <span class="font-semibold text-white">${escapeHtml(cmd.nombre)}</span>
+                <span>(${escapeHtml(cmd.parroquia)})</span>
+              </div>
+              <div class="flex items-center justify-between text-[11px] text-slate-400 pt-0.5">
+                <span>Asignado: <strong class="text-slate-200">${escapeHtml(a.asignado)}</strong></span>
+                <span class="font-mono text-amber-300/90">${a.fecha} ${a.hora || ''}</span>
+              </div>
+            </div>
+
+            ${a.notas ? `
+              <p class="text-[11px] text-slate-400 bg-[#0c1029] p-2 rounded-xl border border-[#202854]">
+                ${escapeHtml(a.notas)}
+              </p>
+            ` : ''}
+
+            ${a.hecho && a.feedback ? `
+              <div class="text-[11px] bg-emerald-950/40 border border-emerald-500/30 p-2.5 rounded-xl text-emerald-200">
+                <div class="flex items-center gap-1 text-emerald-400 font-bold mb-0.5">
+                  <i data-lucide="check" class="w-3 h-3"></i>
+                  <span>Minuta de Resultado:</span>
+                </div>
+                <p>${escapeHtml(a.feedback)}</p>
+              </div>
+            ` : ''}
+          </div>
+
+          <div class="pt-2 border-t border-[#202854] flex items-center justify-between gap-1.5">
+            <div class="flex items-center gap-1.5">
+              ${cleanPhone ? `
+                <a href="${waLink}" target="_blank" class="px-2 py-1 bg-emerald-950 hover:bg-emerald-900 border border-emerald-500/30 text-emerald-300 rounded-lg text-xs font-semibold flex items-center gap-1 transition" title="Contactar por WhatsApp">
+                  <i data-lucide="message-circle" class="w-3 h-3"></i>
+                  <span class="hidden sm:inline">WhatsApp</span>
+                </a>
+              ` : ''}
+              <button onclick="verChatterHistorial('${cmd.id}')" class="px-2 py-1 bg-[#18204a] hover:bg-cyan-950 border border-cyan-500/30 text-cyan-300 rounded-lg text-xs font-semibold flex items-center gap-1 transition" title="Ver Chatter">
+                <i data-lucide="message-square" class="w-3 h-3"></i>
+                <span>Chatter</span>
+              </button>
+            </div>
+
+            <div class="flex items-center gap-1.5">
+              ${!a.hecho ? `
+                <button onclick="openModalCerrarActividad('${a.id}')" class="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-bold flex items-center gap-1 shadow-sm transition active:scale-95" title="Marcar como Hecho">
+                  <i data-lucide="check" class="w-3.5 h-3.5"></i>
+                  <span>Hecho</span>
+                </button>
+              ` : `
+                <span class="text-[10px] text-emerald-400 font-bold flex items-center gap-1">
+                  <i data-lucide="check-check" class="w-3 h-3"></i>
+                  <span>Cerrada</span>
+                </span>
+              `}
+              <button onclick="eliminarActividad('${a.id}')" class="p-1 text-slate-500 hover:text-rose-400 rounded-lg transition" title="Eliminar actividad">
+                <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+              </button>
+            </div>
+          </div>
+        `;
+
+        container.appendChild(card);
+      });
+
+      lucide.createIcons();
+    }
+
+    function poblarSelectComandos() {
+      const sel = document.getElementById("paComandoId");
+      if (!sel) return;
+      sel.innerHTML = "";
+      COMANDOS_MONAGAS.forEach(cmd => {
+        const opt = document.createElement("option");
+        opt.value = cmd.id;
+        opt.textContent = `${cmd.nombre} (${cmd.parroquia} • ${cmd.responsable})`;
+        sel.appendChild(opt);
+      });
+    }
+
+    function selectTipoActividad(tipo) {
+      const input = document.getElementById("paTipo");
+      if (input) input.value = tipo;
+      document.querySelectorAll(".btn-tipo-act").forEach(btn => {
+        const t = btn.getAttribute("data-tipo");
+        btn.classList.remove("border-cyan-500/60", "border-emerald-500/60", "border-amber-500/60", "border-purple-500/60", "border-blue-500/60", "bg-cyan-950/60", "bg-emerald-950/60", "bg-amber-950/60", "bg-purple-950/60", "bg-blue-950/60", "text-cyan-300", "text-emerald-300", "text-amber-300", "text-purple-300", "text-blue-300");
+        btn.classList.add("bg-[#0c1029]", "text-slate-300");
+        if (t === tipo) {
+          btn.classList.remove("bg-[#0c1029]", "text-slate-300");
+          if (t === "llamada") btn.classList.add("border-cyan-500/60", "bg-cyan-950/60", "text-cyan-300");
+          if (t === "visita") btn.classList.add("border-emerald-500/60", "bg-emerald-950/60", "text-emerald-300");
+          if (t === "reunion") btn.classList.add("border-amber-500/60", "bg-amber-950/60", "text-amber-300");
+          if (t === "padron") btn.classList.add("border-purple-500/60", "bg-purple-950/60", "text-purple-300");
+          if (t === "logistica") btn.classList.add("border-blue-500/60", "bg-blue-950/60", "text-blue-300");
+        }
+      });
+    }
+
+    function setPaFechaOffset(days) {
+      const input = document.getElementById("paFecha");
+      if (input) input.value = getFechaOffset(days);
+    }
+
+    function setPaFechaProximoSabado() {
+      const d = new Date();
+      const day = d.getDay();
+      const diff = (6 - day + 7) % 7 || 7;
+      d.setDate(d.getDate() + diff);
+      const input = document.getElementById("paFecha");
+      if (input) input.value = d.toISOString().split("T")[0];
+    }
+
+    function openModalPlanificarActividad(comandoId = null, tipo = null) {
+      poblarSelectComandos();
+      document.getElementById("formPlanificarActividad").reset();
+      setPaFechaOffset(0);
+      document.getElementById("paHora").value = "10:00";
+      document.getElementById("paAsignado").value = "Ing. Diego Donado";
+
+      if (comandoId) {
+        document.getElementById("paComandoId").value = comandoId;
+      }
+      selectTipoActividad(tipo || "llamada");
+      openModal("modalPlanificarActividad");
+      lucide.createIcons();
+    }
+
+    function guardarNuevaActividad(e) {
+      e.preventDefault();
+      const comandoId = document.getElementById("paComandoId").value;
+      const tipo = document.getElementById("paTipo").value;
+      const resumen = document.getElementById("paResumen").value.trim();
+      const fecha = document.getElementById("paFecha").value;
+      const hora = document.getElementById("paHora").value;
+      const asignado = document.getElementById("paAsignado").value.trim();
+      const prioridad = document.getElementById("paPrioridad").value;
+      const notas = document.getElementById("paNotas").value.trim();
+
+      const nueva = {
+        id: "act-" + Date.now(),
+        comandoId: comandoId,
+        tipo: tipo,
+        resumen: resumen,
+        fecha: fecha,
+        hora: hora,
+        asignado: asignado,
+        prioridad: prioridad,
+        notas: notas,
+        hecho: false,
+        feedback: "",
+        fechaCierre: null,
+        creadoEn: new Date().toISOString()
+      };
+
+      AppData.actividades.unshift(nueva);
+      saveData();
+      closeModal("modalPlanificarActividad");
+      renderMovilizacionOdoo();
+    }
+
+    let currentCerrarActId = null;
+
+    function openModalCerrarActividad(actId) {
+      const act = AppData.actividades.find(a => a.id === actId);
+      if (!act) return;
+      currentCerrarActId = actId;
+
+      const cmd = COMANDOS_MONAGAS.find(c => c.id === act.comandoId) || { nombre: "Comando Territorial", parroquia: "" };
+
+      document.getElementById("closeActId").value = actId;
+      document.getElementById("closeActResumen").textContent = act.resumen;
+      document.getElementById("closeActComando").textContent = `${cmd.nombre} (${cmd.parroquia})`;
+      document.getElementById("closeActFechaVenc").textContent = `Vencimiento: ${act.fecha} ${act.hora || ''}`;
+
+      const badgeTipo = document.getElementById("closeActTipoBadge");
+      badgeTipo.textContent = act.tipo.toUpperCase();
+      badgeTipo.className = "px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase " +
+        (act.tipo === 'llamada' ? 'bg-cyan-950 text-cyan-300 border border-cyan-500/30' :
+         act.tipo === 'visita' ? 'bg-emerald-950 text-emerald-300 border border-emerald-500/30' :
+         act.tipo === 'reunion' ? 'bg-amber-950 text-amber-300 border border-amber-500/30' :
+         act.tipo === 'padron' ? 'bg-purple-950 text-purple-300 border border-purple-500/30' :
+         'bg-blue-950 text-blue-300 border border-blue-500/30');
+
+      document.getElementById("closeActFeedback").value = "";
+      openModal("modalCerrarActividad");
+      lucide.createIcons();
+    }
+
+    function ejecutarCierreActividad(planificarSiguiente = false) {
+      const actId = document.getElementById("closeActId").value || currentCerrarActId;
+      const feedback = document.getElementById("closeActFeedback").value.trim();
+
+      if (!feedback) {
+        alert("⚠️ Por favor ingresa la minuta o resultado del contacto para registrarlo en el historial del comando.");
+        return;
+      }
+
+      const act = AppData.actividades.find(a => a.id === actId);
+      if (!act) return;
+
+      act.hecho = true;
+      act.feedback = feedback;
+      act.fechaCierre = new Date().toISOString();
+
+      saveData();
+      closeModal("modalCerrarActividad");
+      renderMovilizacionOdoo();
+
+      if (planificarSiguiente) {
+        // Flujo Odoo: Hecho y Planificar Siguiente
+        setTimeout(() => {
+          openModalPlanificarActividad(act.comandoId, act.tipo);
+        }, 150);
+      }
+    }
+
+    function verChatterHistorial(comandoId) {
+      const cmd = COMANDOS_MONAGAS.find(c => c.id === comandoId);
+      if (!cmd) return;
+
+      document.getElementById("chatterComandoTitulo").textContent = cmd.nombre;
+      document.getElementById("chatterComandoSub").textContent = `${cmd.parroquia} • Responsable: ${cmd.responsable} • Tel: ${cmd.telefono}`;
+
+      const timeline = document.getElementById("chatterTimelineContainer");
+      timeline.innerHTML = "";
+
+      const acts = AppData.actividades
+        .filter(a => a.comandoId === comandoId)
+        .sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
+
+      if (acts.length === 0) {
+        timeline.innerHTML = `
+          <div class="text-center py-8 text-slate-500 text-xs">
+            <i data-lucide="inbox" class="w-8 h-8 mx-auto mb-2 text-slate-600"></i>
+            <p>No hay actividades registradas en el historial de este comando.</p>
+          </div>
+        `;
+      } else {
+        acts.forEach(a => {
+          const item = document.createElement("div");
+          item.className = "p-3.5 bg-[#0c1029] border border-[#202854] rounded-2xl space-y-2 relative";
+
+          const estadoInfo = evaluarEstadoOdoo(a);
+
+          let iconTipo = "phone-call";
+          if (a.tipo === "visita") iconTipo = "home";
+          if (a.tipo === "reunion") iconTipo = "users";
+          if (a.tipo === "padron") iconTipo = "clipboard-check";
+          if (a.tipo === "logistica") iconTipo = "truck";
+
+          item.innerHTML = `
+            <div class="flex items-center justify-between gap-2 text-xs">
+              <div class="flex items-center gap-2">
+                <span class="p-1 rounded bg-[#18204a] text-amber-400">
+                  <i data-lucide="${iconTipo}" class="w-3.5 h-3.5"></i>
+                </span>
+                <span class="font-bold text-white uppercase text-[11px] font-mono">${a.tipo}</span>
+                <span class="text-slate-400 text-[11px]">${a.fecha} ${a.hora || ''}</span>
+              </div>
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${estadoInfo.bg} border ${estadoInfo.border}">
+                ${estadoInfo.label}
+              </span>
+            </div>
+
+            <p class="text-xs font-semibold text-slate-200">${escapeHtml(a.resumen)}</p>
+
+            ${a.notas ? `
+              <div class="text-[11px] text-slate-400 bg-[#121838] p-2 rounded-xl border border-[#202854]/60">
+                <strong>Instrucción previa:</strong> ${escapeHtml(a.notas)}
+              </div>
+            ` : ''}
+
+            ${a.hecho ? `
+              <div class="text-[11px] bg-emerald-950/40 border border-emerald-500/30 p-2.5 rounded-xl space-y-1">
+                <div class="flex items-center gap-1.5 text-emerald-400 font-bold">
+                  <i data-lucide="check-circle" class="w-3.5 h-3.5"></i>
+                  <span>Minuta de Cierre:</span>
+                </div>
+                <p class="text-emerald-200/90 leading-relaxed">${escapeHtml(a.feedback || 'Actividad completada sin observaciones.')}</p>
+                <span class="text-[9px] text-slate-400 block pt-0.5 font-mono">Cerrada el: ${new Date(a.fechaCierre || a.fecha).toLocaleString('es-VE')}</span>
+              </div>
+            ` : `
+              <div class="pt-1 flex items-center justify-end">
+                <button onclick="closeModal('modalChatterHistorial'); openModalCerrarActividad('${a.id}');" class="px-3 py-1 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-bold flex items-center gap-1">
+                  <i data-lucide="check" class="w-3.5 h-3.5"></i>
+                  <span>Marcar como Hecho</span>
+                </button>
+              </div>
+            `}
+          `;
+          timeline.appendChild(item);
+        });
+      }
+
+      openModal("modalChatterHistorial");
+      lucide.createIcons();
+    }
+
+    function eliminarActividad(actId) {
+      if (!confirm("¿Deseas eliminar este compromiso de la cartera semanal?")) return;
+      AppData.actividades = AppData.actividades.filter(a => a.id !== actId);
+      saveData();
+      renderMovilizacionOdoo();
+    }
+
+    // ==============================================================
+    // AGENDA DE MOVILIZACIÓN Y EVENTOS EN TERRENO (CONCENTRACIONES)
     // ==============================================================
     function renderEventos() {
       const grid = document.getElementById("listaEventosGrid");
+      if (!grid) return;
       grid.innerHTML = "";
 
-      const busqueda = (document.getElementById("searchEventoTxt").value || "").toLowerCase();
-      const filtroP = document.getElementById("filterEventoParroquia").value;
+      const searchInput = document.getElementById("searchActividadTxt") || document.getElementById("searchEventoTxt");
+      const busqueda = (searchInput ? searchInput.value : "").toLowerCase();
+      const filterSelect = document.getElementById("filterActividadParroquia") || document.getElementById("filterEventoParroquia");
+      const filtroP = filterSelect ? filterSelect.value : "todas";
 
       let metaAcumulada = 0;
       let totalFiltrados = 0;
@@ -1538,9 +2707,15 @@ MIGATO Monagas 2026 • José Gregorio 'El Gato' Briceño`;
         }
       });
 
-      document.getElementById("badgeEventos").textContent = totalFiltrados;
-      document.getElementById("kpiTotalEventos").textContent = AppData.eventos.length;
-      document.getElementById("kpiMetaMovilizados").textContent = metaAcumulada.toLocaleString();
+      if (document.getElementById("badgeEventos") && currentMovilizacionView === "eventos") {
+        document.getElementById("badgeEventos").textContent = totalFiltrados;
+      }
+      if (document.getElementById("kpiTotalEventos") && currentMovilizacionView === "eventos") {
+        document.getElementById("kpiTotalEventos").textContent = AppData.eventos.length;
+      }
+      if (document.getElementById("kpiMetaMovilizados")) {
+        document.getElementById("kpiMetaMovilizados").textContent = metaAcumulada.toLocaleString();
+      }
 
       lucide.createIcons();
     }
@@ -1897,9 +3072,11 @@ Convocatoria a todos los medios regionales y corresponsales nacionales.`;
     }
 
     function updateAllCounters() {
-      document.getElementById("kpiTotalContenidos").textContent = AppData.contenidos.length;
-      document.getElementById("kpiTotalEventos").textContent = AppData.eventos.length;
-      document.getElementById("kpiTotalAlertas").textContent = AppData.recordatorios.length;
+      if (document.getElementById("kpiTotalContenidos")) document.getElementById("kpiTotalContenidos").textContent = AppData.contenidos.length;
+      const pendientes = (AppData.actividades || []).filter(a => !a.hecho);
+      if (document.getElementById("kpiTotalEventos")) document.getElementById("kpiTotalEventos").textContent = pendientes.length;
+      if (document.getElementById("badgeEventos")) document.getElementById("badgeEventos").textContent = pendientes.length;
+      if (document.getElementById("kpiTotalAlertas")) document.getElementById("kpiTotalAlertas").textContent = AppData.recordatorios.length;
     }
 
     function escapeHtml(text) {
@@ -2219,8 +3396,9 @@ Convocatoria a todos los medios regionales y corresponsales nacionales.`;
 
     // INICIALIZACIÓN
     document.addEventListener("DOMContentLoaded", () => {
+      poblarSelectComandos();
       renderPipeline();
-      renderEventos();
+      renderMovilizacionOdoo();
       renderRecordatorios();
       updateAllCounters();
       sincronizarMuroInicial();
