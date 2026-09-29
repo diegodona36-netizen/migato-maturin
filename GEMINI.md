@@ -24,3 +24,11 @@
 ## 3. Bóveda de Conocimiento Obsidian y Word Tree
 - Las decisiones clave, infraestructura, módulos y acuerdos de campaña se sincronizan en la Bóveda de Obsidian local (`vault/` enlazada a `~/Obsidian/MIGATO-Vault`).
 - Utilizar siempre enlaces bidireccionales `[[...]]` para mantener conectado el Grafo de Conocimiento (Word Tree) y permitir consultas relacionales a la IA.
+
+## 4. Metodología Obligatoria: Spec-Driven Development (SDD)
+- Regido formalmente por `docs/constitution.md` y `AGENTS.md`.
+- **Prohibición de 'Vibe Coding':** Ningún agente programará módulos o interfaces sin una especificación activa en `.sdd/specs/` validada por el Ing. Diego Donado.
+- **Notación EARS en Requisitos:** Todos los requisitos funcionales deben estructurarse bajo sintaxis EARS (`CUANDO...`, `SI... ENTONCES...`, `MIENTRAS...`, `EL SISTEMA...`).
+- **Ergonomía de Interfaces:** Tipografía base de 16px (`text-base`) y 14px (`text-sm`). Prohibidas fuentes <12px. Cero siglas oscuras (terminantemente prohibida la sigla "PK"; usar distancias directas "De 0 m a 300 m").
+- **Flujo de Modificaciones:** Ante cualquier ajuste o cambio de requerimientos, se actualizará primero la especificación (`spec.md`) antes de tocar el código.
+
